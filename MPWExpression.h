@@ -1,0 +1,35 @@
+//
+//  MPWExpression.h
+//  MPWTalk
+//
+//  Created by marcel on Mon Jul 02 2001.
+//  Copyright (c) 2001 Marcel Weiher. All rights reserved.
+//
+
+#import <MPWFoundation/MPWFoundation.h>
+#import <MPWTalk/MPWEvaluable.h>
+
+@interface MPWExpression : MPWObject <MPWEvaluable> {
+
+}
+
+-variablesRead;
+-variablesWritten;
+
+
+@end
+
+@interface NSObject(evaluating)
+
+-(void)addToVariablesRead:(NSMutableSet*)variableList;
+-(void)addToVariablesWritten:(NSMutableSet*)variableList;
+-evaluateIn:aContext;
+
+@end
+
+
+@interface NSObject(compiling)
+
+-compileIn:aContext;
+
+@end

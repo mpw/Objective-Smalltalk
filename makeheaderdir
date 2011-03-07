@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p .headers/MPWTalk
+cd .headers/MPWTalk
+apply 'ln -s %1' `find ../.. -type f -name '*.h' `

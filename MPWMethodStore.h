@@ -1,0 +1,27 @@
+//
+//  MPWMethodStore.h
+//  MPWTalk
+//
+//  Created by Marcel Weiher on 25/01/2006.
+//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//
+
+#import <MPWFoundation/MPWFoundation.h>
+
+@class MPWMethodHeader;
+
+@interface MPWMethodStore : MPWObject {
+	id methodDicts;
+	id callbackDicts;
+    id typeDict;
+	id compiler;
+}
+
+-initWithCompiler:aCompiler;
+-(void)defineMethodsInExternalDict:(NSDictionary*)scriptDict;
+-methodDictionaryForClassNamed:(NSString*)className;
+-(NSArray*)classesWithScripts;
+-(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeader:(MPWMethodHeader*)header;
+	//  private
+
+@end

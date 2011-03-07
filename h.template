@@ -1,0 +1,11 @@
+$$
+/* $FILENAME$ created by $USERNAME$ on $DATE$ */
+
+#import <MPWFoundation/MPWFoundation.h>
+
+@interface $FILENAMESANSEXTENSION$ : MPWObject
+{
+
+}
+
+@end

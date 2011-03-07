@@ -1,0 +1,192 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx565\tx1133\tx1700\tx2266\tx2832\tx3401\tx3967\tx4535\tx5102\tx5669\tx6235\tx6802\ql\qnatural
+
+\f0\fs24 \cf0 \
+Notes:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \
+local connectors / \
+	1. connector-variable\
+	2. variable-connector (use of a connector variable, has 'normal' connector and the variable ref)\
+	3. evaluation of ref:  lookup of the connector-variable, consolidation of both connectors, evaluation of result\
+\
+\
+- turning assignment ':=' into a connector\
+	- 'selectors' map to connectors, pluggable\
+		- extra level of indirection I have been after for a while\
+		- managing of the 'selector-space' with something a bit\
+			better than just symbols...\
+	- ':=' is a kind of message that sends the message to the\
+		binding itself, not to the value of the binding\
+	- we can define other types of messages that do the same thing\
+	- for example, we could define\
+\
+- handling simple constraints:\
+	- have bindings be 2-step:  (local) name -> binding -> value\
+	- have an assignment that assigns to the binding, no the value\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs22 \cf0 \'a0	- now, both can assign new values and they will always be the same\
+\
+\
+- compilation to do:\
+	- use the method header string to figure out # of arguments to initialize method with\
+	- allow more than 1 arg in message sends (have to generalize code in MPWCodeGen as well)\
+\
+- idea from COLA:  stack-frame as an object by placing an isa-pointer\
+	(also:  message an object as well, again with stack-frame)\
+\
+- use in WODs for custom Objective-C WO?\
+\
+ \
+\pard\tx565\tx1133\tx1700\tx2266\tx2832\tx3401\tx3967\tx4535\tx5102\tx5669\tx6235\tx6802\ql\qnatural
+
+\fs24 \cf0 \
+\pard\tx565\tx1133\tx1700\tx2266\tx2832\tx3401\tx3967\tx4535\tx5102\tx5669\tx6235\tx6802\ql\qnatural
+
+\b \cf0 Log
+\b0 \
+2004.11.15 \
+- added variable assignment (with test)\
+2004.11.22\
+- refactored message sending\
+	- separated receiver and arg evaluation\
+	- separate message class\
+	- separated creation of NSInvocatin and extraction return value\
+- added:  fallback return-value conversion uses NSValue to wrap the ObjC type\
+- issue: can't delegate to the receiver\
+	- resolved\
+- added:  blocks + blockContext ifTrue:ifFalse, whileTrue:, >,<,=,\
+- added:  c/C return value handling (also as NSNumbers)\
+2005.4.21\
+- added integration with Objective-C message lookup\
+	- installs methods straight into the method_lists, no extra lookup\
+	- every method has a "context" that is used to figure out the script etc.\
+	- the context is determined relative to the start of the function itself (via the PC)\
+	- this is done by copying the function body (actual code) into the context object\
+	- the function is designed to use its own address as the relative base-ptr\
+		-> fortuitously, with PC-relative addressing, this moves as the fn is copied\
+2005.4.24\
+- added initial support for methods with arguments via varargs\
+	- helper function copies the additional arguments into an array\
+	- needs to be an actual C function, doing the exact same in a Method\
+		crashes.  Apparently va_arg does an additional deref inside methods\
+2005.5.3\
+- refactored objc -> method code to make glue functions simpler and\
+	the model more straightforward:  there are now two methods in\
+	MPWMethodCallback that are invoked (one with args, one without)\
+	Those methods than do any further processing, such as actually\
+	invoking a script.  They can be overriden in subclasses\
+- cleaned up significantly so only a few warnings left\
+- added script evaluation with named parameters:\
+	evaluate:withFormalParameterList:actualParameters:\
+	the formal parameter list is a list of strings, naming variables in the script\
+		(hopefully unbound)\
+	the actual parameter list is a list of objects that will be bound to the formals\
+2005.5.4\
+- added method evaluation with parameters\
+	currently only supports object arguments\
+2005.5.6\
+- added NSRange (MPWInterval), NSPoint and NSSize (MPWPoint) conversions\
+- added NSRect (MPWRect)\
+- refactored to make class for integers and floats settable (strings, too, but that isn't hooked up yet)\
+- bug:  classes can't be passed or returned ( '#' type not recognized )\
+	- fixed\
+- issue: most evaluation methods need string that is compiled\
+	- fix: can now take either a string (will be compiled) or a compiled\
+		expression that is simply evaluated (returns self when it is\
+		asked to compile itself...)\
+- added support for scripted methods to have int or float parameters\
+- added support for scripted methods to have int returns\
+2005.5.12\
+- implement method header definition object with parser from strings\
+	- unary and keyword methods\
+	- correct typeStrings\
+	- typed return value (so far:  integers only)\
+	- added floats and typed arguments (again, only int and float so far)\
+- added cover method in MPWStCompiler that takes a method header string\
+2005.5.18\
+- refactor:  MethodCallBack now uses MethodHeader directly\
+	+ methods for creating methods without MethodHeader removed from MPWStCompiler\
+- add:  method header can now return the method header string needed to create it\
+- add:  MPWStCompiler can 'externalize' its methods to a (nested dictionary)\
+	overall-method-dict: 		class-names -> method-dict-for-class\
+	method-dict-for-class:	method-headers -> method-bodies (scripts)\
+- add:  loading methods from an externalized dict\
+\
+2005.6.20\
+- add: add subclass, add subclass with ivars, ivar-descriptions\
+2005.6.21\
+- add: access instance variables via the instance variable 'descriptors'\
+- refactor:  MethodCallback now has a single method that invokes the argument\
+- add:  generateAccessorsFor:varName  generates both the set and get accessors\
+2005.9.12\
+- tried to add true local variables, backed out\
+- extracted Method from MethodCallBack, with subclass ScriptedMethod\
+	+ made the Get/Set accessor classes subclasses of Method instead of MethodCallBack\
+	- issue(s):  now have MethodCallBack and Method to deal with, where is each located, remembered\
+		- MethodCallBacks need to be uniqued and associated closely with the class\
+		- Methods are probably more closely associated with the \
+2005.10.15\
+- renamed:  variableNamed:  to valueOfVariableNamed: \
+	(in order to then have a true variableNamed: that returns the var instead of the value)\
+- turned on local-context creation:  works except for some synthetic tests \
+	- these tests set a custom evaluator and expect that to be used\
+	- but:  the context currently is also the evaluator, so creating a new context for the\
+		method also created a new evaluator. hmph.\
+	- however:  all other tests seem to work (yay!)\
+2006.1.10\
+- added to:do: method to NSNumber\
+	(I thought I didn't get something about ST precedence rules, but ST simply cheats!)\
+- bug: actually, my looping disagrees with real Smalltalk in that it runs min < max, instead of min <= max as ST does\
+	- fixed to reflect ST behavior\
+- bug:  special selectors don't have higher precedence\
+	- test added\
+    	- fix:  if we encounter a special selector, put in a little recursive descent..\
+2006.1.12\
+- added collect: to intervals and do:/collect: to NSArray\
+2006.1.17\
+- added support for 'by reference' object parameters\
+	- simply takes the pointer of the object in question (if encoded type is ^@ )\
+- slightly improved nil support\
+	- can now actually pass nil as a parameter to methods via NSNil support\
+2006.1.20\
+- bugfix:  redefining methods didn't work (psdb)\
+	- had to do with methods compiling scripts and not knowing to remove the compiled result when a new script-string was set\
+2006.1.25\
+- refactor:  extracted method/dict management from MPWStCompiler to MPWMethodStore\
+	- issues:  now have a circular depencency between these two\
+		-> resolve by making the method-store the 'master' which includes one or more compilers/interpreters\
+	- next steps:  add archiving , separate method (descriptions) from actually inserting methods into the runtime\
+2006.2.1\
+- better nil handling\
+	- can now actually check for nil in Objective-Smalltalk code\
+	- nil receivers are converted to NSNil iff the selecter is one that NSNil\
+		understands, that way we can ask "isNil" for example\
+	- return values converted to NSNil (will be converted to nil on send/args)\
+2006.2.3\
+- added archiving for MethodStore (and consequently:  methods, method headers )\
+	- refactor storage so methods and callbacks are stored separately (so methods can be stored without requiring a callback)\
+	- added encoding methods all over...\
+	- issues:  circular reference(s) back to method store / st-compiler, lots of structurally duplicated/very similar code\
+2006.4.21\
+ - added NSValue to struct conversion when converting arguments\
+        if the objCType of the NSValue matches the exact type\
+        of the parameters, use it.\
+	This gives us a round-tripping capability for arbitrary\
+	structs: we can get them out as NSValues and pass them\
+	back in, withouth having to manually map them.\
+	Could have specialized \
+2006.8.18\
+- compilation of methods to machine code via LLVM\
+	- literals, message sends (with max 1 arg.), receiver ('self'), a parameter\
+2006.9.14\
+- some execution optimizations\
+	- fast message send object avoids creating an NSInvocation\
+		- for messages with a few object-only arguments\
+	- avoid creating temporary objects (array of arguments, for example)\
+	- keep a cache of Message objects, which caches the method signature\
+- memory optimization:  to:do: \
+}
