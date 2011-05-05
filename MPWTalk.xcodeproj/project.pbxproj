@@ -162,6 +162,7 @@
 		1F5E508709B4B754000298D9 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
+		1FCE1F931372F8690035A429 /* PLBlockIMP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FCE1F921372F8690035A429 /* PLBlockIMP.framework */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
 		1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */; };
@@ -219,6 +220,7 @@
 		1FCD34B108D5B32A0098DA56 /* MPWScriptedMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWScriptedMethod.m; sourceTree = "<group>"; };
 		1FCD360508D5D9B10098DA56 /* MPWMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethod.h; sourceTree = "<group>"; };
 		1FCD360608D5D9B10098DA56 /* MPWMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethod.m; sourceTree = "<group>"; };
+		1FCE1F921372F8690035A429 /* PLBlockIMP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PLBlockIMP.framework; path = ../../Build/Release/PLBlockIMP.framework; sourceTree = SOURCE_ROOT; };
 		1FCEB7EA099C03ED00867A95 /* MPWConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnector.h; sourceTree = "<group>"; };
 		1FCEB7EB099C03ED00867A95 /* MPWConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnector.m; sourceTree = "<group>"; };
 		1FD2F6CF075227AC00547D6F /* MPWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessage.h; sourceTree = SOURCE_ROOT; };
@@ -276,6 +278,7 @@
 			files = (
 				1F5E508609B4B754000298D9 /* Foundation.framework in Frameworks */,
 				1F5E508709B4B754000298D9 /* MPWFoundation.framework in Frameworks */,
+				1FCE1F931372F8690035A429 /* PLBlockIMP.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,6 +406,7 @@
 		F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1FCE1F921372F8690035A429 /* PLBlockIMP.framework */,
 				1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */,
 				F5A74ACB00F0A61B015ADD82 /* Foundation.framework */,
 			);
@@ -749,7 +753,10 @@
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"$(LOCAL_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(LOCAL_LIBRARY_DIR)/Frameworks\"",
+					"\"$(SRCROOT)/../../Build/Release\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
@@ -883,7 +890,10 @@
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"$(LOCAL_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(LOCAL_LIBRARY_DIR)/Frameworks\"",
+					"\"$(SRCROOT)/../../Build/Release\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -918,7 +928,10 @@
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"$(LOCAL_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(LOCAL_LIBRARY_DIR)/Frameworks\"",
+					"\"$(SRCROOT)/../../Build/Release\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;

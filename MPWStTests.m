@@ -785,10 +785,8 @@
 		@"testRefSchemeAccessesBinding",
 		@"testRefSchemeWorksOnTopOfOtherScheme",
 		@"testDotAllowedInIdentifiers",
-#ifndef __x86_64__			
 		@"testMethodWithParameters",
 		@"testRedefiningMethod",
-#endif
 			@"testHttpArgWithLeadingZero",
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
