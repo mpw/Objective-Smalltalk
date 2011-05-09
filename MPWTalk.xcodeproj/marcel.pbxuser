@@ -49,9 +49,9 @@
 	};
 	1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {815, 305}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 262}}";
 			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 196}";
+			sepNavVisRange = "{0, 199}";
 		};
 	};
 	1F03A14A1218C8F5001EE7AD /* PBXTextBookmark */ = {
@@ -313,16 +313,16 @@
 	};
 	1F45D541075D37A200D924C3 /* MPWEvaluator.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1069, 819}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 819}}";
 			sepNavSelRange = "{1153, 3}";
-			sepNavVisRange = "{890, 554}";
+			sepNavVisRange = "{890, 528}";
 		};
 	};
 	1F45D542075D37A200D924C3 /* MPWEvaluator.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1002, 4394}}";
-			sepNavSelRange = "{1538, 0}";
-			sepNavVisRange = "{140, 552}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 4381}}";
+			sepNavSelRange = "{1414, 580}";
+			sepNavVisRange = "{267, 427}";
 			sepNavWindowFrame = "{{226, 0}, {1054, 746}}";
 		};
 	};
@@ -444,9 +444,9 @@
 	};
 	1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1188, 3900}}";
-			sepNavSelRange = "{8462, 0}";
-			sepNavVisRange = "{7778, 690}";
+			sepNavIntBoundsRect = "{{0, 0}, {1153, 4004}}";
+			sepNavSelRange = "{7161, 0}";
+			sepNavVisRange = "{6730, 758}";
 		};
 	};
 	1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {
@@ -655,7 +655,7 @@
 		fRef = 1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */;
 		name = "MPWMethodCallBack.h: 28";
 		rLen = 0;
-		rLoc = 630;
+		rLoc = 627;
 		rType = 0;
 		vrLen = 433;
 		vrLoc = 395;
@@ -665,7 +665,7 @@
 		fRef = 1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */;
 		name = "MPWMethodCallBack.m: 358";
 		rLen = 16;
-		rLoc = 9473;
+		rLoc = 9468;
 		rType = 0;
 		vrLen = 630;
 		vrLoc = 8904;
@@ -692,7 +692,7 @@
 		fRef = 1FA741A50886DAFB00121867 /* MPWStTests.m */;
 		name = "MPWStTests.m: 790";
 		rLen = 0;
-		rLoc = 28528;
+		rLoc = 28525;
 		rType = 0;
 		vrLen = 509;
 		vrLoc = 28169;
@@ -784,23 +784,30 @@
 	};
 	1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {815, 330}}";
-			sepNavSelRange = "{205, 0}";
-			sepNavVisRange = "{0, 254}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 310}}";
+			sepNavSelRange = "{353, 0}";
+			sepNavVisRange = "{0, 360}";
+		};
+	};
+	1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 767}}";
+			sepNavSelRange = "{541, 81}";
+			sepNavVisRange = "{383, 549}";
 		};
 	};
 	1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1002, 546}}";
-			sepNavSelRange = "{810, 0}";
-			sepNavVisRange = "{409, 537}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 559}}";
+			sepNavSelRange = "{203, 0}";
+			sepNavVisRange = "{39, 536}";
 		};
 	};
 	1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1002, 4433}}";
-			sepNavSelRange = "{1500, 30}";
-			sepNavVisRange = "{1079, 581}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 4823}}";
+			sepNavSelRange = "{653, 0}";
+			sepNavVisRange = "{444, 412}";
 		};
 	};
 	1FE08EF213780886003B18B9 /* PBXTextBookmark */ = {
@@ -863,7 +870,7 @@
 		fRef = 1F45D542075D37A200D924C3 /* MPWEvaluator.m */;
 		name = "MPWEvaluator.m: 112";
 		rLen = 14;
-		rLoc = 2578;
+		rLoc = 2602;
 		rType = 0;
 		vrLen = 535;
 		vrLoc = 1859;
@@ -871,10 +878,10 @@
 	F5A74ABA00F0A61B015ADD82 /* Project object */ = {
 		activeArchitecturePreference = i386;
 		activeBuildConfigurationName = Release;
-		activeSDKPreference = macosx10.5;
-		activeTarget = 1FE08F01137808B8003B18B9 /* MPWTalk-iOS */;
+		activeSDKPreference = macosx10.6;
+		activeTarget = 1F5E504B09B4B754000298D9 /* MPWTalk (Framework) */;
 		addToTargets = (
-			1F5E504B09B4B754000298D9 /* MPWTalk (Framework) */,
+			1FE08F01137808B8003B18B9 /* MPWTalk-iOS */,
 		);
 		breakpoints = (
 			1FCE1FBE1372FDDE0035A429 /* MPWMethodStore.m:285 */,
@@ -992,9 +999,9 @@
 	};
 	F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {909, 1708}}";
-			sepNavSelRange = "{154, 0}";
-			sepNavVisRange = "{0, 389}";
+			sepNavIntBoundsRect = "{{0, 0}, {1002, 1521}}";
+			sepNavSelRange = "{187, 0}";
+			sepNavVisRange = "{0, 341}";
 		};
 	};
 	F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */ = {

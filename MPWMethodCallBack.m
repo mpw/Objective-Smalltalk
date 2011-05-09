@@ -20,7 +20,7 @@
 #import "MPWStCompiler.h"
 #import <MPWTalk/MPWMethod.h>
 #import <objc/objc.h>
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 #import <stdarg.h>
 #import <MPWFoundation/NSNil.h>
 #import <PLBlockIMP/PLBlockIMP.h>

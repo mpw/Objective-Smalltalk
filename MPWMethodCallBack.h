@@ -7,7 +7,7 @@
 //
 
 #import <MPWFoundation/MPWBlockInvocable.h>
-#import <objc/objc-class.h>
+#import <objc/runtime.h>
 
 @class MPWMethodHeader;
 

@@ -13,7 +13,7 @@
 #import "MPWInstanceVariable.h"
 #import "NSObjectScripting.h"
 #import "MPWIdentifierExpression.h"
-#import <objc/objc-class.h>
+#import <objc/runtime.h>
 #import "MPWObjCGenerator.h"
 #import <MPWFoundation/NSNil.h>
 

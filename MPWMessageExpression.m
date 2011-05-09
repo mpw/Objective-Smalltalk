@@ -5,7 +5,7 @@
 #import "MPWObjCGenerator.h"
 
 #ifndef GNUSTEP
-#include <objc/objc-runtime.h>
+#include <objc/runtime.h>
 #endif
 #import <MPWFoundation/NSNil.h>
 
