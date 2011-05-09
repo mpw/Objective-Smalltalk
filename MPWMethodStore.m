@@ -254,6 +254,8 @@ scalarAccessor( id , compiler , setCompiler )
     return [[[self alloc] initWithCompiler:[[[MPWStCompiler alloc] init] autorelease]] autorelease];
 }
 
+#if !TARGET_OS_IPHONE
+
 +(void)testArchivingWithoutInstallingMethods
 {
 	MPWMethodStore* store = [self store];
@@ -289,6 +291,7 @@ scalarAccessor( id , compiler , setCompiler )
 	INTEXPECT( [resultnumber intValue], 6, @"after install, should have multipled");
 }
 
+
 +testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -296,5 +299,5 @@ scalarAccessor( id , compiler , setCompiler )
 		@"testArchivingAndInstallingMethodsAfterwards",
         nil];
 }
-
+#endif
 @end

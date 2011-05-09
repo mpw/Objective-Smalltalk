@@ -10,7 +10,10 @@
 
 
 @interface MPWSchemeScheme : MPWVarScheme  {
-	NSMutableDictionary *schemes;
+	NSMutableDictionary *_schemes;
 }
+
+-(NSDictionary*)schemes;
+-(void)setSchemeHandler:(MPWScheme*)aSchem   forSchemeName:(NSString*)schemeName;
 
 @end

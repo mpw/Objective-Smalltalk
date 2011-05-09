@@ -12,7 +12,9 @@
 
 @implementation MPWSchemeScheme
 
-objectAccessor( NSMutableDictionary *, schemes, setSchemes )
+objectAccessor( NSMutableDictionary *, _schemes, setSchemes )
+
+-(NSDictionary*)schemes { return [self _schemes]; }
 
 -init
 {
@@ -23,8 +25,14 @@ objectAccessor( NSMutableDictionary *, schemes, setSchemes )
 
 -localVarsForContext:aContext
 {
-	return schemes;
+	return [self schemes];
 }
+
+-(void)setSchemeHandler:(MPWScheme*)aSchem   forSchemeName:(NSString*)schemeName
+{
+	[[self _schemes] setObject:aSchem forKey:schemeName];
+}
+
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {
@@ -43,6 +51,12 @@ objectAccessor( NSMutableDictionary *, schemes, setSchemes )
 -description
 {
 	return [NSString stringWithFormat:@"scheme-resolver with the following schemes: %@",[[self schemes] allKeys]];
+}
+
+-(void)dealloc
+{
+	[_schemes release];
+	[super dealloc];
 }
 
 @end

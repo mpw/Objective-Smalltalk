@@ -86,12 +86,12 @@ idAccessor( _schemes, setSchemes )
 {
 	MPWSchemeScheme *schemes=[[[MPWSchemeScheme alloc] init] autorelease];
 	id varScheme = [[MPWVarScheme new] autorelease];
-	[[schemes schemes] setObject:varScheme forKey:@"var"];
-	[[schemes schemes] setObject:[[MPWClassScheme new] autorelease] forKey:@"class"];
-	[[schemes schemes] setObject:[[MPWRefScheme new] autorelease] forKey:@"ref"];
-	[[schemes schemes] setObject:[[MPWSELScheme new] autorelease] forKey:@"sel"];
-	[[schemes schemes] setObject:schemes forKey:@"scheme"];
-	[[schemes schemes] setObject:varScheme forKey:@"default"];
+	[schemes setSchemeHandler:varScheme forSchemeName:@"var"];
+	[schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];
+	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
+	[schemes setSchemeHandler:[[MPWSELScheme new] autorelease] forSchemeName:@"sel"];
+	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
+	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];
 	return schemes;
 }
 
