@@ -699,11 +699,6 @@
 	IDEXPECT( [identifer identifierName], @"//www.livescribe.com/cgi-bin/WebObjects/LDApp.woa/wa/flashXML?xml=0000C0A8011700003A9B943B0000012A1F327D6595DF6E07",@"identifier with leading zeros" );
 }
 
-+(void)testSELScheme
-{
-	[self testexpr:@" var:mul:  " expected:@"42"];
-}
-
 +(void)testStringToBinding
 {
 	[self testexpr:@" a := '42'. b := context bindingForString:'a'. b value. " expected:@"42"];
@@ -712,6 +707,15 @@
 +(void)testBinarySelectorPriorityOverKeyword
 {
 	[self testexpr:@" ( 2@3 extent:10@20 ) origin y  " expected:@"3"];
+}
+
++(void)testRelScheme
+{
+	id defScheme = @" a := NSMutableDictionary dictionary. a setObject:'there' forKey:'hi'. scheme:my := MPWRelScheme alloc initWithBaseScheme: scheme:var baseURL:'a'. ";
+	id useScheme = @" my:hi ";
+	id evaluator = [[[self alloc] init] autorelease];
+	[evaluator evaluateScriptString:defScheme];
+	IDEXPECT( [evaluator evaluateScriptString:useScheme], @"there", @"evaluating scheme");
 }
 
 +(NSArray*)testSelectors
@@ -790,7 +794,7 @@
 			@"testHttpArgWithLeadingZero",
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
-//		@"testSELScheme",
+			@"testRelScheme",
         nil];
 }
 

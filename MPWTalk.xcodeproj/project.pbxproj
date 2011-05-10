@@ -206,6 +206,12 @@
 		1FE08FEB137817EB003B18B9 /* libPLBlockIMP-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE08FEA137817EB003B18B9 /* libPLBlockIMP-iOS.a */; };
 		1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */; };
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
+		1FF6C6101379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
+		1FF6C6111379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
+		1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
+		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
+		1FF6C6141379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
+		1FF6C6151379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -283,6 +289,8 @@
 		1FF6ACA50752977F00A306C8 /* MPWBlockExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockExpression.m; sourceTree = SOURCE_ROOT; };
 		1FF6ACB20752982900A306C8 /* MPWBlockContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockContext.h; sourceTree = SOURCE_ROOT; };
 		1FF6ACB30752982900A306C8 /* MPWBlockContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockContext.m; sourceTree = SOURCE_ROOT; };
+		1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRelScheme.h; sourceTree = "<group>"; };
+		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
 		F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStCompiler.m; sourceTree = "<group>"; };
 		F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStScanner.m; sourceTree = "<group>"; };
 		F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWMessageExpression.m; sourceTree = "<group>"; };
@@ -396,6 +404,8 @@
 				1F406EBD10F5354C0054957A /* MPWRecursiveIdentifier.m */,
 				1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */,
 				1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */,
+				1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */,
+				1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -520,6 +530,7 @@
 				1F4CB53F1253D53C00B30C99 /* MPWRecursiveIdentifier.h in Headers */,
 				1F4CB5401253D53C00B30C99 /* MPWSchemeScheme.h in Headers */,
 				1F4CB5411253D53C00B30C99 /* MPWSELScheme.h in Headers */,
+				1FF6C6141379DF1300CCB7AE /* MPWRelScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,6 +577,7 @@
 				1F406EBE10F5354C0054957A /* MPWRecursiveIdentifier.h in Headers */,
 				1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */,
 				1F03A1401218C7A2001EE7AD /* MPWSELScheme.h in Headers */,
+				1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,6 +585,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FF6C6101379DF1300CCB7AE /* MPWRelScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,6 +771,7 @@
 				1F4CB5681253D53C00B30C99 /* MPWRecursiveIdentifier.m in Sources */,
 				1F4CB5691253D53C00B30C99 /* MPWSchemeScheme.m in Sources */,
 				1F4CB56A1253D53C00B30C99 /* MPWSELScheme.m in Sources */,
+				1FF6C6151379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -803,6 +817,7 @@
 				1F406EBF10F5354C0054957A /* MPWRecursiveIdentifier.m in Sources */,
 				1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */,
 				1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */,
+				1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -847,6 +862,7 @@
 				1FE08F2D137808EA003B18B9 /* MPWNamedIdentifier.m in Sources */,
 				1FE08F2F137808EA003B18B9 /* MPWRecursiveIdentifier.m in Sources */,
 				1FE08F31137808EA003B18B9 /* MPWSELScheme.m in Sources */,
+				1FF6C6111379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
