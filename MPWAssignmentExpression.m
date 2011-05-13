@@ -34,7 +34,7 @@ idAccessor( lhs, setLhs )
 {
 	id value = [aContext evaluate:[self rhs]];
 //	NSLog(@"rhs: %@ value: %@, varName: %@",[self rhs],value,varName);
-	[aContext bindValue:value toVariableNamed:[lhs name] withScheme:[lhs scheme]];
+	[aContext bindValue:value toVariableNamed:[[lhs identifier] evaluatedIdentifierNameInContext:aContext] withScheme:[lhs scheme]];
 	return value;
 }
 

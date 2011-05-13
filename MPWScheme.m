@@ -18,7 +18,7 @@
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
-	return [self bindingForName:[anIdentifier identifierName] inContext:aContext];
+	return [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
 }
 
 -evaluteIdentifier:anIdentifer withContext:aContext

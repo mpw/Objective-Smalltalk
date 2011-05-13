@@ -718,6 +718,17 @@
 	IDEXPECT( [evaluator evaluateScriptString:useScheme], @"there", @"evaluating scheme");
 }
 
++(void)testIdentifierInterpolation
+{
+	[self testexpr:@" a:=42. c:=43. b:='a'. var:{b} " expected:@"42"];
+}
+
+
++(void)testIdentifierInterpolationWorksAsAssignmentTarget
+{
+	[self testexpr:@" a:=42. c:=43. b:='a'. var:{b} := 45. a. " expected:@"45"];
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -795,6 +806,8 @@
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
 			@"testRelScheme",
+			@"testIdentifierInterpolation",
+			@"testIdentifierInterpolationWorksAsAssignmentTarget",
         nil];
 }
 
