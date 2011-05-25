@@ -12,6 +12,9 @@
 #import "MPWIdentifier.h"
 #import "MPWNamedIdentifier.h"
 #import "MPWRecursiveIdentifier.h"
+#import "MPWURLSchemeResolver.h"
+#import "MPWFileSchemeResolver.h"
+#import "MPWEnvScheme.h"
 
 #import <MPWFoundation/NSNil.h>
 
@@ -100,6 +103,19 @@ idAccessor( connectorMap, setConnectorMap );
 {
 	return [[self methodStore] methodForClass:aClassName name:aMethodName];
 }
+
+-createSchemes
+{
+	id schemes=[super createSchemes];
+	id httpResolver=[[[MPWURLSchemeResolver alloc] init] autorelease];
+	[[schemes schemes] setObject:[[[MPWFileSchemeResolver alloc] init] autorelease] forKey:@"file"];
+	[[schemes schemes] setObject:httpResolver forKey:@"http"];
+	[[schemes schemes] setObject:httpResolver forKey:@"ftp"];
+	[[schemes schemes] setObject:[[[MPWEnvScheme alloc] init] autorelease] forKey:@"env"];
+	return schemes;
+}
+
+
 
 
 //--- true compiler methods

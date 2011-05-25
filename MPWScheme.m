@@ -16,6 +16,11 @@
 	return self;		// FIXME:  this is a workaround for not returning proper bindings from the scheme scheme
 }
 
+-bindingForName:(NSString*)variableName inContext:aContext
+{
+	return nil;
+}
+
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
 	return [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
