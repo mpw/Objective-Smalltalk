@@ -35,6 +35,7 @@ idAccessor( identifierName, setIdentifierName )
 		if ( [component hasPrefix:@"{"] && [component hasSuffix:@"}"] ) {
 			NSString *nested=[component substringWithRange:NSMakeRange(1, [component length]-2)];
 			component=[aContext evaluateScriptString:nested];
+			component = [[component  stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		}
 		[evaluated addObject:component];
 	}

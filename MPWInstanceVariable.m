@@ -11,8 +11,8 @@
 
 @implementation MPWInstanceVariable
 
-objectAccessor( NSString*, name, setName )
-objectAccessor( NSString*, type, setType )
+objectAccessor( NSString, name, setName )
+objectAccessor( NSString, type, setType )
 intAccessor( offset, setOffset )
 
 -initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType

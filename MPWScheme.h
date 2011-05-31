@@ -14,5 +14,6 @@
 }
 
 -evaluteIdentifier:anIdentifer withContext:aContext;
+-bindingForName:(NSString*)variableName inContext:aContext;
 
 @end

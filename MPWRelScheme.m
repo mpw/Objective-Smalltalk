@@ -12,8 +12,8 @@
 
 @implementation MPWRelScheme
 
-objectAccessor( MPWScheme*, baseScheme, setBaseScheme )
-objectAccessor( NSString*, baseIdentifier, setBaseIdentifier )
+objectAccessor( MPWScheme, baseScheme, setBaseScheme )
+objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 
 -bindingForName:anIdentifierName inContext:aContext
 {
@@ -37,3 +37,4 @@ objectAccessor( NSString*, baseIdentifier, setBaseIdentifier )
 }
 
 @end
+

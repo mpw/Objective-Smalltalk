@@ -20,22 +20,17 @@
 
 
 @end
-#if 0
-#import "MPWStsh.h"
+#import "MPWStCompiler.h"
 
 @implementation MPWFileSchemeResolver(testing)
 
 
 +(void)testGettingASimpleFile
 {
-	id shell=[[[MPWStsh alloc] init] autorelease];
-	NSBundle* bundle = [NSBundle bundleForClass:self];
-	id resourcesDirectory = [bundle resourcePath];
-	id expr,result;
-	[shell cd:resourcesDirectory];
-	expr = [[shell evaluator] compile:@"file:testfile.txt ."];
-	result = [[shell evaluator] executeShellExpression:expr];
-	IDEXPECT( [result stringValue], @"this is a test file", @"result of file:testfile.txt");
+	NSString *tempUrlString = @"file:/tmp/fileSchemeTest.txt";
+	NSString *textString = @"hello world!";
+	[textString writeToURL:[NSURL URLWithString:tempUrlString] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+	IDEXPECT([[MPWStCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
 }
 
 
@@ -49,4 +44,3 @@
 
 @end
 
-#endif

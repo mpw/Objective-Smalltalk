@@ -13,7 +13,7 @@
 @implementation MPWMethod
 
 
-objectAccessor( MPWMethodHeader*, methodHeader, setMethodHeader )
+objectAccessor( MPWMethodHeader, methodHeader, setMethodHeader )
 idAccessor( context, setContext )
 idAccessor( methodType, setMethodType )
 

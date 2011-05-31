@@ -17,8 +17,8 @@
 	id					contextClass;
 }
 
-objectAccessor_h( MPWExpression*, methodBody, setMethodBody )
-objectAccessor_h( NSArray*, localVars, setLocalVars )
+objectAccessor_h( MPWExpression, methodBody, setMethodBody )
+objectAccessor_h( NSArray, localVars, setLocalVars )
 idAccessor_h( script, setScript )
 
 

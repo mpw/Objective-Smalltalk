@@ -11,7 +11,7 @@
 
 @implementation MPWGenericBinding
 
-objectAccessor( NSString*, name, setName )
+objectAccessor( NSString, name, setName )
 idAccessor( scheme, setScheme )
 
 -initWithName:(NSString*)envName scheme:newScheme

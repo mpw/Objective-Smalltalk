@@ -10,8 +10,11 @@
 
 
 @interface MPWVARBinding : MPWBinding {
-	id		baseObject;
-	NSString *kvpath;
+	id			baseObject;
+	NSArray*	pathComponents;
 }
+
+-initWithBaseObject:newBase pathComponents:(NSArray*)newPathComponents;
+-initWithBaseObject:newBase path:newPath;
 
 @end

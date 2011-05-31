@@ -11,11 +11,11 @@
 
 @implementation MPWMethodHeader
 
-objectAccessor( NSString* , methodName, setMethodName )
-objectAccessor( NSString* , returnTypeName, setReturnTypeName )
-objectAccessor(NSMutableArray *, parameterNames, setParameterNames )
-objectAccessor(NSMutableArray *, parameterTypes, setParameterTypes )
-objectAccessor(NSMutableArray *, methodKeyWords, setMethodKeyWords )
+objectAccessor( NSString , methodName, setMethodName )
+objectAccessor( NSString , returnTypeName, setReturnTypeName )
+objectAccessor(NSMutableArray , parameterNames, setParameterNames )
+objectAccessor(NSMutableArray , parameterTypes, setParameterTypes )
+objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 -init
 {

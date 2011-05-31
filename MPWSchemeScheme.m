@@ -12,7 +12,7 @@
 
 @implementation MPWSchemeScheme
 
-objectAccessor( NSMutableDictionary *, _schemes, setSchemes )
+objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 
 -(NSDictionary*)schemes { return [self _schemes]; }
 
@@ -38,7 +38,7 @@ objectAccessor( NSMutableDictionary *, _schemes, setSchemes )
 {
 	id localVars = [self localVarsForContext:aContext];
 	id binding=nil;
-	binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars kvpath:variableName] autorelease];		
+	binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];		
 	return binding;
 }
 

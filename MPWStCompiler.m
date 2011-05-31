@@ -15,6 +15,8 @@
 #import "MPWURLSchemeResolver.h"
 #import "MPWFileSchemeResolver.h"
 #import "MPWEnvScheme.h"
+#import "MPWBundleScheme.h"
+#import "MPWScriptingBridgeScheme.h"
 
 #import <MPWFoundation/NSNil.h>
 
@@ -104,6 +106,7 @@ idAccessor( connectorMap, setConnectorMap );
 	return [[self methodStore] methodForClass:aClassName name:aMethodName];
 }
 
+
 -createSchemes
 {
 	id schemes=[super createSchemes];
@@ -112,6 +115,9 @@ idAccessor( connectorMap, setConnectorMap );
 	[[schemes schemes] setObject:httpResolver forKey:@"http"];
 	[[schemes schemes] setObject:httpResolver forKey:@"ftp"];
 	[[schemes schemes] setObject:[[[MPWEnvScheme alloc] init] autorelease] forKey:@"env"];
+	[[schemes schemes] setObject:[[[MPWBundleScheme alloc] init] autorelease] forKey:@"bundle"];
+	[[schemes schemes] setObject:[MPWBundleScheme mainBundleScheme] forKey:@"mainbundle"];
+	[[schemes schemes] setObject:[[[MPWScriptingBridgeScheme alloc] init] autorelease] forKey:@"app"];
 	return schemes;
 }
 

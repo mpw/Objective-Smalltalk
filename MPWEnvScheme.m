@@ -52,3 +52,45 @@
 
 
 @end
+
+#import "MPWStCompiler.h"
+
+@implementation MPWEnvScheme(testing)
+
++(void)testEnvGetAndPut
+{
+//	EXPECTNIL([MPWStCompiler evaluate:@"env:myvar"] , @"myvar not in env");			   
+	putenv("myvar=hi");
+	IDEXPECT([MPWStCompiler evaluate:@"env:myvar"],@"hi",@"env:myvar");
+	putenv("myvar=hi2");
+	IDEXPECT([MPWStCompiler evaluate:@"env:myvar"],@"hi2",@"env:myvar");
+	[MPWStCompiler evaluate:@"env:myvar := 42"];
+	IDEXPECT( [NSString stringWithUTF8String:getenv("myvar")], @"42", @"getenv after env:myvar := 42");
+	[MPWStCompiler evaluate:@"env:myvar := 44"];
+	IDEXPECT( [NSString stringWithUTF8String:getenv("myvar")], @"44", @"getenv after env:myvar := 42");
+}
+
++(void)testEnvironmentIsInherited
+{
+	[MPWStCompiler evaluate:@"env:myvar := 900"];
+	FILE *fin = popen("echo -n $myvar", "r");
+	NSString *echoResult=@"Did not read at all";
+	if ( fin ) {
+		char buffer[90]="";
+		fgets(buffer, 20, fin);
+		pclose(fin);
+		echoResult=[NSString stringWithUTF8String:buffer];
+	}
+	IDEXPECT( echoResult, @"900", @"inherited var");
+}
+
++testSelectors
+{
+	return [NSArray arrayWithObjects:
+			@"testEnvGetAndPut",
+			@"testEnvironmentIsInherited",
+			nil];
+}
+
+@end
+

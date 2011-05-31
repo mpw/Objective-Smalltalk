@@ -11,8 +11,8 @@
 
 @implementation MPWResource
 
-objectAccessor( NSData *, rawData, setRawData )
-objectAccessor( NSString*, mimetype, setMimetype )
+objectAccessor( NSData, rawData, setRawData )
+objectAccessor( NSString, mimetype, setMimetype )
 idAccessor( _value, setValue )
 idAccessor( source, setSource )
 

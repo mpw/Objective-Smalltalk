@@ -21,8 +21,7 @@
 	id localVars = [self localVarsForContext:aContext];
 	id binding=nil;
 	if ( [variableName rangeOfString:@"/"].location != NSNotFound ) {
-		NSString* kvPath=[[variableName componentsSeparatedByString:@"/"] componentsJoinedByString:@"."];
-		binding= [[[MPWVARBinding alloc] initWithBaseObject:localVars kvpath:kvPath] autorelease];
+		binding= [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
 		//		NSLog(@"kvbinding %@ ",variableName);
 	} else {
 		binding = [localVars objectForKey:variableName];
