@@ -35,7 +35,7 @@ idAccessor( scheme, setScheme )
 
 -(void)_setValue:newValue
 {
-	[[self scheme] setValue:newValue forBidning:self];
+	[[self scheme] setValue:newValue forBinding:self];
 }
 
 

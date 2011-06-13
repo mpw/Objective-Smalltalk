@@ -39,7 +39,7 @@
 	}
 }
 
--(void)setValue:newValue forBidning:aBinding
+-(void)setValue:newValue forBinding:aBinding
 {
 	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
 		newValue=[newValue value];
@@ -47,6 +47,8 @@
 	newValue=[newValue stringValue];
 	if ( newValue  ) {
 		setenv( [[aBinding name] UTF8String],[newValue UTF8String], 1 );
+	} else {
+		unsetenv([[aBinding name] UTF8String]);
 	}
 }
 

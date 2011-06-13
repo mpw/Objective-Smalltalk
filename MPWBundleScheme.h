@@ -13,4 +13,8 @@
 	NSBundle *bundle;
 }
 
++schemeWithBundle:(NSBundle*)aBundle;
++mainBundleScheme;
++classBundleSchme:(Class)aClass;
+
 @end

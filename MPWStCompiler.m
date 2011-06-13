@@ -17,6 +17,8 @@
 #import "MPWEnvScheme.h"
 #import "MPWBundleScheme.h"
 #import "MPWScriptingBridgeScheme.h"
+#import "MPWDefaultsScheme.h"
+#import "MPWSchemeScheme.h"
 
 #import <MPWFoundation/NSNil.h>
 
@@ -110,14 +112,17 @@ idAccessor( connectorMap, setConnectorMap );
 -createSchemes
 {
 	id schemes=[super createSchemes];
-	id httpResolver=[[[MPWURLSchemeResolver alloc] init] autorelease];
-	[[schemes schemes] setObject:[[[MPWFileSchemeResolver alloc] init] autorelease] forKey:@"file"];
-	[[schemes schemes] setObject:httpResolver forKey:@"http"];
-	[[schemes schemes] setObject:httpResolver forKey:@"ftp"];
-	[[schemes schemes] setObject:[[[MPWEnvScheme alloc] init] autorelease] forKey:@"env"];
-	[[schemes schemes] setObject:[[[MPWBundleScheme alloc] init] autorelease] forKey:@"bundle"];
-	[[schemes schemes] setObject:[MPWBundleScheme mainBundleScheme] forKey:@"mainbundle"];
-	[[schemes schemes] setObject:[[[MPWScriptingBridgeScheme alloc] init] autorelease] forKey:@"app"];
+	id  httpResolver=[MPWURLSchemeResolver scheme];
+	[schemes setSchemeHandler:[MPWDefaultsScheme scheme]  forSchemeName:@"defaults"];
+	[schemes setSchemeHandler:[MPWFileSchemeResolver scheme]  forSchemeName:@"file"];
+	[schemes setSchemeHandler:httpResolver  forSchemeName:@"http"];
+	[schemes setSchemeHandler:httpResolver  forSchemeName:@"https"];
+	[schemes setSchemeHandler:httpResolver  forSchemeName:@"ftp"];
+	[schemes setSchemeHandler:[MPWEnvScheme scheme]  forSchemeName:@"env"];
+	[schemes setSchemeHandler:[MPWBundleScheme scheme]  forSchemeName:@"bundle"];
+	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
+	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
+	
 	return schemes;
 }
 

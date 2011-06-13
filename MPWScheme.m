@@ -11,6 +11,11 @@
 
 @implementation MPWScheme
 
++scheme
+{
+	return [[[self alloc] init] autorelease];
+}
+
 -value
 {
 	return self;		// FIXME:  this is a workaround for not returning proper bindings from the scheme scheme

@@ -30,10 +30,26 @@ idAccessor( url , setUrl )
 	return [self initWithURL:[NSURL URLWithString:urlString]];
 }
 
+-(NSString*)fileSystemPath
+{
+	return [[self url] path];
+}
+
+-(BOOL)existsAndIsDirectory:(BOOL*)isDirectory
+{
+	NSFileManager *manager=[NSFileManager defaultManager];
+	return [manager fileExistsAtPath:[self fileSystemPath] isDirectory:isDirectory];;
+}
 
 -(BOOL)isBound
 {
-	return YES;
+	return [self existsAndIsDirectory:NULL];;
+}
+
+-(BOOL)isDirectory
+{
+	BOOL isDirectory = NO;
+	return [self existsAndIsDirectory:&isDirectory] && isDirectory;
 }
 
 -_valueWithURL:(NSURL*)aURL
@@ -41,7 +57,7 @@ idAccessor( url , setUrl )
 	NSFileManager *manager=[NSFileManager defaultManager];
 	NSString *path=[aURL path];
 	BOOL isDirectory=NO;
-	if (  [manager fileExistsAtPath:path isDirectory:&isDirectory]) {
+	if (  [self existsAndIsDirectory:&isDirectory]) {
 		if ( isDirectory ) {
 			return [manager contentsOfDirectoryAtPath:path error:nil];
 		} else {
@@ -62,6 +78,30 @@ idAccessor( url , setUrl )
 		newValue=[newValue value];
 	}
 	[newValue writeToURL:[self url] atomically:YES];
+}
+
+-(MPWFileBinding*)with:otherPath
+{
+	NSString *selfPath = [self fileSystemPath];
+	NSString *newPath = nil;
+	if ( [self isDirectory] ) {
+		if ( selfPath && otherPath ) {
+			if ( [otherPath isEqual:@".."] ) {
+				newPath=[selfPath stringByDeletingLastPathComponent];
+			} else {
+				newPath=[selfPath stringByAppendingPathComponent:otherPath];
+			}
+			return [[[self class] alloc] initWithPath:newPath];
+		}
+	}
+	return nil;
+}
+
+-(void)mkdir
+{
+	if ( ![self isBound] ) {
+		[[NSFileManager defaultManager] createDirectoryAtPath:[self fileSystemPath] attributes:nil];
+	}
 }
 
 -(void)dealloc

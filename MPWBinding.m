@@ -49,9 +49,9 @@ boolAccessor( isBound ,setIsBound )
 	return [[self value] valueForPathComponent:kvpath];
 }
 
--(void)setValue:newValue forKeyPath:(NSString*)kvpath
+-(void)setValue:newValue forKey:(NSString*)kvpath
 {
-	[[self value] setValue:newValue forKeyPath:kvpath];
+	[[self value] setValue:newValue forKey:kvpath];
 }
 
 -(void)bindValue:newValue
