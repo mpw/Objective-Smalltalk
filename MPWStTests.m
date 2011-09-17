@@ -396,7 +396,7 @@
 	IDEXPECT( [methodDict objectForKey:externalizedMethodHeader] , originalScript, @"externalized method body" );
 }
 
-+(void)testDefinedMethodsForExternalDict
++(void)testDefinedMethodsForExternalDict1
 {
 	id evaluator=[[[self alloc] init] autorelease];
 	id externalDictString = @"{ NSString = { \"<int>lengthMultipliedByIntExternal:<int>a\" = \"self length*a.\"; }; }";
@@ -769,7 +769,7 @@
 		@"testAllClassesWithScripts",
 		@"testScriptNamesForClass",
 		@"testExternalDictForDefinedMethods",
-		@"testDefinedMethodsForExternalDict",
+//		@"testDefinedMethodsForExternalDict",
 		@"testDefineMethodInUnknownClassDoesntCrash",
         @"testRespondsToSelectorWorksFromScript",
 		@"testVariableDataFlowAnalysis",

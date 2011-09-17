@@ -16,7 +16,7 @@
 #import "MPWFileSchemeResolver.h"
 #import "MPWEnvScheme.h"
 #import "MPWBundleScheme.h"
-#import "MPWScriptingBridgeScheme.h"
+//#import "MPWScriptingBridgeScheme.h"
 #import "MPWDefaultsScheme.h"
 #import "MPWSchemeScheme.h"
 
@@ -121,7 +121,7 @@ idAccessor( connectorMap, setConnectorMap );
 	[schemes setSchemeHandler:[MPWEnvScheme scheme]  forSchemeName:@"env"];
 	[schemes setSchemeHandler:[MPWBundleScheme scheme]  forSchemeName:@"bundle"];
 	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
-	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
+//	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
 	
 	return schemes;
 }

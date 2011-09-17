@@ -23,7 +23,9 @@
 #import <objc/runtime.h>
 #import <stdarg.h>
 #import <MPWFoundation/NSNil.h>
+#if !TARGET_OS_IPHONE
 #import <PLBlockIMP/PLBlockIMP.h>
+#endif
 
 @implementation MPWMethodCallBack
 
@@ -63,9 +65,12 @@ idAccessor( method, _setMethod )
 			oldIMP= class_getMethodImplementation(aClass, selname);
 		}
 		//---   setup undo 
-        
+   
+#if TARGET_OS_IPHONE        
+		stub=imp_implementationWithBlock( self );
+#else        
 		stub=pl_imp_implementationWithBlock( self );
-		
+#endif	
 		if ( methodDescriptor ) {
 			method_setImplementation(methodDescriptor, (IMP)stub);
 			installed = YES;
@@ -107,7 +112,18 @@ idAccessor( method, _setMethod )
 	id formalParameters = [self formalParameters];
 	id parameters=[NSMutableArray array];
 	int i;
-	const char *signature=[self typeSignature];
+	const char *sig_in=[self typeSignature];
+    char signature[30];
+    const char *source=sig_in;
+    char *dest=signature;
+    while ( *source ) {
+        if ( !isdigit(*source)  ) {
+            *dest++=*source;
+        }
+        source++;
+    }
+    *dest++=0;
+    
 	id returnVal;
 //	NSLog(@"selector: %s",selname);
 //	NSLog(@"signature: %s",signature);
@@ -143,7 +159,7 @@ idAccessor( method, _setMethod )
 				break;
 			default:
 				va_arg( args, void* );
-				[parameters addObject:@"unhandled parameters "];
+				[parameters addObject:[NSString stringWithFormat:@"unhandled parameter at %d '%c'",i,signature[i+3]]];
 		}
 	}
 	returnVal = [self invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters];
