@@ -38,6 +38,11 @@ boolAccessor( isBound ,setIsBound )
 	}
 }
 
+-fileSystemValue
+{
+    return [self value];
+}
+
 -valueForKeyPath:(NSString*)kvpath
 {
 	return [[self value] valueForKeyPath:kvpath];

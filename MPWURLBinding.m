@@ -131,6 +131,10 @@ idAccessor( target, setTarget )
 	return result;
 }
 
+-fileSystemValue
+{
+    return [NSDictionary dictionaryWithObject:[[self url] stringValue] forKey:@"URL"];
+}
 
 @end
 

@@ -8,6 +8,7 @@
 
 #import "MPWFileBinding.h"
 #import <MPWFoundation/AccessorMacros.h>
+#import "MPWURLBinding.h"
 
 @implementation MPWFileBinding
 
@@ -74,10 +75,25 @@ idAccessor( url , setUrl )
 
 -(void)_setValue:newValue
 {
-	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
-		newValue=[newValue value];
+ 	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
+        newValue=[newValue fileSystemValue];
 	}
 	[newValue writeToURL:[self url] atomically:YES];
+}
+
+-(BOOL)writeToURL:(NSURL*)targetURL atomically:(BOOL)atomically
+{
+    NSString *sourcePath=[self fileSystemPath];
+    NSString *targetPath = [targetURL path];
+    if ( sourcePath && targetPath ) {
+        symlink([sourcePath fileSystemRepresentation], [targetPath fileSystemRepresentation]);
+    }
+    return YES;
+}
+
+-fileSystemValue
+{
+    return self;
 }
 
 -(MPWFileBinding*)with:otherPath

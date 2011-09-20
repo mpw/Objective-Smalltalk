@@ -1094,6 +1094,7 @@
 					ppc,
 					i386,
 				);
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 			};
@@ -1322,6 +1323,7 @@
 					ppc,
 					i386,
 				);
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 			};
@@ -1332,6 +1334,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 			};
@@ -1340,7 +1343,7 @@
 		1FE08F03137808B8003B18B9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				COPY_PHASE_STRIP = NO;
@@ -1355,18 +1358,18 @@
 				PRODUCT_NAME = "MPWTalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "/Library/Frameworks ${TARGET_BUILD_DIR}/../Release/";
 			};
 			name = Development;
 		};
 		1FE08F04137808B8003B18B9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}/../Release/";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
@@ -1377,6 +1380,7 @@
 				PRODUCT_NAME = "MPWTalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "/Library/Frameworks ${TARGET_BUILD_DIR}/../Release/";
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -1384,7 +1388,7 @@
 		1FE08F05137808B8003B18B9 /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
@@ -1396,6 +1400,7 @@
 				PRODUCT_NAME = "MPWTalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = /Library/Frameworks;
 			};
 			name = "Release Tiger";
 		};
