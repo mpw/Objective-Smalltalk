@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>MPWTalk (Framework).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>27</integer>
+		</dict>
+		<key>MPWTalk Linux Cocotron.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>26</integer>
+		</dict>
+		<key>MPWTalk-iOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>28</integer>
+		</dict>
+		<key>MethodEditor.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>51</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>1F2E6EF9142EF26E00B5C827</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1F4CB5191253D53C00B30C99</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1F5E504B09B4B754000298D9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1FE08F01137808B8003B18B9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
