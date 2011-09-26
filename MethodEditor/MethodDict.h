@@ -13,10 +13,13 @@
     IBOutlet NSTextField *methodHeader;
     IBOutlet NSTextView  *methodBody;
     IBOutlet NSBrowser   *methodBrowser;
+    IBOutlet NSTextField *address;
+    IBOutlet NSTextField *evalText;
     NSMutableDictionary *dict;
+    
 }
 
-
+-(IBAction)eval:sender;
 -(IBAction)didSelect:(NSBrowser*)sender;
 
 @end

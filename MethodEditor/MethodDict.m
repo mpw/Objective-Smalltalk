@@ -97,13 +97,33 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     [self saveMethodAtPath:[methodBrowser path]];
 }
 
+
+
+- (void)upload {
+    NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"http://%@:51000/methods\"";
+    NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];
+    NSString *serverIP=[address stringValue];
+    NSString *cmd=[NSString stringWithFormat:cmdTemplate,dir,serverIP];
+    system([cmd UTF8String]);
+}
+
 -(void)saveDocument:(id)sender
 {
     [self saveMethodAtCurrentBrowserPath];
     [super saveDocument:sender];
+    [self performSelector:@selector(upload) withObject:nil afterDelay:0.6];
 }
 
 
+-(IBAction)eval:sender
+{
+    NSString *statementToEval = [evalText stringValue];
+    NSString *cmdTemplate=@"curl -F \"eval=%@\"  \"http://%@:51000/eval\"";
+    NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];
+    NSString *serverIP=[address stringValue];
+    NSString *cmd=[NSString stringWithFormat:cmdTemplate,statementToEval,serverIP];
+    system([cmd UTF8String]);
+}
 
 -(void)loadMethodFromPath:(NSString*)path
 {

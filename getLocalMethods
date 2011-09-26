@@ -1,0 +1,3 @@
+#!/bin/sh
+echo checking $1
+curl --connect-timeout 1 "http://10.0.0.$1:51000/files" 

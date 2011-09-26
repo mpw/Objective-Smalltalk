@@ -8,6 +8,7 @@
 
 #import "MPWBlockExpression.h"
 #import "MPWBlockContext.h"
+#import <MPWFoundation/NSNil.h>
 
 @implementation MPWBlockExpression
 
@@ -48,6 +49,25 @@ idAccessor( arguments, setArguments )
 	[statements release];
 	[arguments release];
 	[super dealloc];
+}
+
+@end
+
+@implementation NSObject(ifNotNil)
+
+-ifNotNil:aBlock
+{
+    return [aBlock value];
+}
+
+@end
+
+
+@implementation NSNil(ifNotNil)
+
+-ifNotNil:aBlock
+{
+    return nil;
 }
 
 @end

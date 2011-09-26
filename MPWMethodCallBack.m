@@ -135,7 +135,7 @@ idAccessor( method, _setMethod )
 			case '@':
 			case '#':
 				theArg = va_arg( args, id );
-				NSLog(@"object arg: %@",theArg);
+//				NSLog(@"object arg: %@",theArg);
 				if ( theArg == nil ) {
 					theArg=[NSNil nsNil];
 				}
