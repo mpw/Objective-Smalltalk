@@ -70,7 +70,7 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     return [[[self dict] objectForKey:className] objectForKey:methodName];
 }
 
--(void)setMethod:(NSString*)methodBody forClass:(NSString*)className methodName:(NSString*)methodName
+-(void)_setMethod:(NSString*)methodBody name:(NSString*)methodName  forClass:(NSString*)className
 {
     NSMutableDictionary *perClassDict = [[self dict] objectForKey:className];
     if ( !perClassDict ) {
@@ -80,15 +80,58 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     [perClassDict setObject:methodBody forKey:methodName];
 }
 
+-(void)_deleteMethodName:(NSString*)methodName forClass:(NSString*)className
+{ 
+    [[[self dict] objectForKey:className] removeObjectForKey:methodName];
+}
+
+-(void)deleteMethodName:(NSString*)methodName forClass:(NSString*)className
+{ 
+    NSString *oldMethod=[self methodForClass:className methodName:methodName];
+    if ( oldMethod ) {
+        [[[self undoManager] prepareWithInvocationTarget:self] setMethod:oldMethod name:methodName  forClass:className];
+    }
+    [self _deleteMethodName:methodName forClass:className];
+    [methodBrowser reloadColumn:0];
+    [methodBrowser reloadColumn:1];
+    [methodBrowser setPath:[NSString stringWithFormat:@"/%@",className]];
+    [self clearMethodFromUI];
+}
+
+-(void)setUIForMethodHeader:(NSString*)header body:(NSString*)body
+{
+    [methodHeader setStringValue:header];
+    [methodBody setString:body];
+    
+}
+
+
+-(void)setMethod:(NSString*)methodBody name:(NSString*)methodName  forClass:(NSString*)className
+{
+    NSString *oldMethod = [self methodForClass:className methodName:methodName];
+    if ( oldMethod ) {
+        [[[self undoManager] prepareWithInvocationTarget:self] setMethod:oldMethod name:methodName  forClass:className];
+    } else {
+        [[[self undoManager] prepareWithInvocationTarget:self] deleteMethodName:methodName forClass:className];
+    }
+    [self _setMethod:methodBody name:methodName forClass:className];
+    NSString *newPath=[NSString stringWithFormat:@"/%@/%@",className,methodName];
+    [methodBrowser reloadColumn:0];
+    [methodBrowser reloadColumn:1];
+    [methodBrowser setPath:newPath];
+    [self setUIForMethodHeader:methodName body:methodBody];
+}
+
+
+
 -(void)saveMethodAtPath:(NSString*)path
 {
     NSArray *components=[path componentsSeparatedByString:@"/"];
     NSLog(@"path: %@, components: %@",path,components);
     if ( [components count]>= 2 ) {
-        [self setMethod:[[[methodBody string] copy] autorelease] forClass:[components objectAtIndex:1] methodName:[methodHeader stringValue]];
-        if ( ![[methodHeader stringValue] isEqualToString:[components lastObject]] ) {
-            [methodBrowser reloadColumn:1];
-        }
+        NSString *className =  [components objectAtIndex:1];
+        NSString *methodName = [methodHeader stringValue];
+        [self setMethod:[[[methodBody string] copy] autorelease] name:className forClass:methodName];
     }
 }
 
@@ -97,7 +140,14 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     [self saveMethodAtPath:[methodBrowser path]];
 }
 
-
+-(void)delete:sender
+{
+    NSString *path=[methodBrowser path];
+    NSArray *components=[path componentsSeparatedByString:@"/"];
+    if ( [components count] == 3 ) {
+        [self deleteMethodName:[components lastObject] forClass:[components objectAtIndex:1]];
+    }
+}
 
 - (void)upload {
     NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"http://%@:51000/methods\"";
@@ -125,13 +175,19 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     system([cmd UTF8String]);
 }
 
+-(void)clearMethodFromUI
+{
+    [self setUIForMethodHeader:@"" body:@""];
+}
+
 -(void)loadMethodFromPath:(NSString*)path
 {
     NSArray *components=[path componentsSeparatedByString:@"/"];
     NSLog(@"path: %@, components: %@",path,components);
     if ( [components count]==3 ) {
-        [methodHeader setStringValue:[components lastObject]];
-        [methodBody setString:[self methodForClass:[components objectAtIndex:1] methodName:[components lastObject]]];
+        [self setUIForMethodHeader:[components lastObject] body:[self methodForClass:[components objectAtIndex:1] methodName:[components lastObject]]];
+    } else {
+        [self clearMethodFromUI];
     }
 }
 
