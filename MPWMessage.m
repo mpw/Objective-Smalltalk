@@ -262,7 +262,7 @@ idAccessor( _signature, setSignature )
 					NSPoint pointVal = *(NSPoint*)returnBuffer;
 					returnValue=[MPWPoint pointWithNSPoint:pointVal];
 					break;
-				} else if ( !strcmp( returnType, "{?=dd}" ) || !strcmp( returnType, "{CGPoint=dd}" )) {
+				} else if ( !strcmp( returnType, "{?=dd}" ) || !strcmp( returnType, "{CGPoint=dd}") ||  !strcmp( returnType, "{CGPoint=ff}" )) {
 					NSPoint pointVal = *(NSPoint*)returnBuffer;
 					returnValue=[MPWPoint pointWithNSPoint:pointVal];
 					break;
@@ -270,7 +270,7 @@ idAccessor( _signature, setSignature )
 					NSSize sizeVal = *(NSSize*)returnBuffer;
 					returnValue=[MPWPoint pointWithNSSize:sizeVal];
 					break;
-				} else if (  !strcmp( returnType, "{CGSize=dd}" )  ) {
+				} else if (  !strcmp( returnType, "{CGSize=dd}") || !strcmp( returnType, "{CGSize=ff}" )  ) {
 					NSSize sizeVal = *(NSSize*)returnBuffer;
 					returnValue=[MPWPoint pointWithNSSize:sizeVal];
 					break;
