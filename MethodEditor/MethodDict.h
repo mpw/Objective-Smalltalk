@@ -1,25 +1,16 @@
 //
 //  MethodDict.h
-//  MethodEditor
+//  MPWTalk
 //
-//  Created by Marcel Weiher on 9/25/11.
-//  Copyright 2011 metaobject ltd. All rights reserved.
+//  Created by Marcel Weiher on 10/16/11.
+//  Copyright (c) 2011 metaobject ltd. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
-@interface MethodDict : NSDocument
+@interface MethodDict : NSObject
 {
-    IBOutlet NSTextField *methodHeader;
-    IBOutlet NSTextView  *methodBody;
-    IBOutlet NSBrowser   *methodBrowser;
-    IBOutlet NSTextField *address;
-    IBOutlet NSTextField *evalText;
     NSMutableDictionary *dict;
-    
 }
-
--(IBAction)eval:sender;
--(IBAction)didSelect:(NSBrowser*)sender;
 
 @end

@@ -14,8 +14,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F4CB5191253D53C00B30C99"
-               BuildableName = "MPWTalk.framework"
-               BlueprintName = "MPWTalk Linix Cocotron"
+               BuildableName = "MPWLinuxTalk.framework"
+               BlueprintName = "MPWTalk Linux Cocotron"
                ReferencedContainer = "container:MPWTalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
