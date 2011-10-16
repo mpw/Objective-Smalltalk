@@ -8,8 +8,20 @@
 
 #import "MethodDict.h"
 #import <MPWFoundation/MPWFoundation.h>
+#import <MPWTalk/MPWMethodHeader.h>
+
+@implementation NSString(methodName)
+
+-methodName
+{
+    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:self];
+    return [header methodName];
+}
+
+@end
 
 @implementation MethodDict
+
 
 
 objectAccessor(NSMutableDictionary, dict, setDict)
@@ -24,24 +36,36 @@ objectAccessor(NSMutableDictionary, dict, setDict)
 -initWithXml:(NSData*)data
 {
     self = [super init];
-    NSDictionary *d=[NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainers format:nil errorDescription:nil];
+    NSMutableDictionary *d=[NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainers format:nil errorDescription:nil];
     [self setDict:d];
     return self;
 }
 
 -(NSArray*)classes
 {
-    return [[self dict] allKeys];
+    return [[[self dict] allKeys] sortedArrayUsingSelector:@selector(compare:)];
 }
 
 -(NSArray*)methodsForClass:(NSString*)className
 {
-    return [[[self dict] objectForKey:className] allKeys];
+    return [[[[[[self dict] objectForKey:className] allKeys] collect] methodName] sortedArrayUsingSelector:@selector(compare:)];
+}
+
+-(NSString*)fullNameForMethodName:(NSString*)shortName ofClass:(NSString*)className
+{
+    NSArray *fullNames = [[[self dict] objectForKey:className] allKeys];
+    for ( NSString *fullName in fullNames ) {
+        if ( [[fullName methodName] isEqual:shortName] ) {
+            return fullName;
+        }
+    }
+    return nil;
 }
 
 -(NSString*)methodForClass:(NSString*)className methodName:(NSString*)methodName
 {
-    return [[[self dict] objectForKey:className] objectForKey:methodName];
+    
+    return [[[self dict] objectForKey:className] objectForKey:[self fullNameForMethodName:methodName ofClass:className]];
 }
 
 -(void)_setMethod:(NSString*)methodBody name:(NSString*)methodName  forClass:(NSString*)className
@@ -58,7 +82,7 @@ objectAccessor(NSMutableDictionary, dict, setDict)
 
 -(void)_deleteMethodName:(NSString*)methodName forClass:(NSString*)className
 { 
-    [[[self dict] objectForKey:className] removeObjectForKey:methodName];
+    [[[self dict] objectForKey:className] removeObjectForKey:[self fullNameForMethodName:methodName ofClass:className]];
 }
 
 @end

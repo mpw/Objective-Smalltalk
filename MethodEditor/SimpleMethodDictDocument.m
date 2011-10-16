@@ -51,9 +51,9 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 
 -(void)deleteMethodName:(NSString*)methodName forClass:(NSString*)className
 { 
-    NSString *oldMethod=[self methodForClass:className methodName:methodName];
+    NSString *oldMethod=[[self dict] methodForClass:className methodName:methodName];
     if ( oldMethod ) {
-        [[[self undoManager] prepareWithInvocationTarget:self] setMethod:oldMethod name:methodName  forClass:className];
+        NSString *longMethodName = [[self dict] fullNameForMethodName:methodName ofClass:className];        [[[self undoManager] prepareWithInvocationTarget:self] setMethod:oldMethod name:longMethodName  forClass:className];
     }
     [[self dict] _deleteMethodName:methodName forClass:className];
     [methodBrowser reloadColumn:0];
@@ -153,7 +153,10 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     NSArray *components=[path componentsSeparatedByString:@"/"];
     //    NSLog(@"path: %@, components: %@",path,components);
     if ( [components count]==3 ) {
-        [self setUIForMethodHeader:[components lastObject] body:[[self dict] methodForClass:[components objectAtIndex:1] methodName:[components lastObject]]];
+        NSString *className = [components objectAtIndex:1];
+        NSString *shortMethodName = [components lastObject];
+        NSString *longMethodName = [[self dict] fullNameForMethodName:shortMethodName ofClass:className];
+        [self setUIForMethodHeader:longMethodName body:[[self dict] methodForClass:className methodName:shortMethodName]];
     } else {
         [self clearMethodFromUI];
     }

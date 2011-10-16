@@ -4,6 +4,8 @@
 <dict>
 	<key>MethodDictDocument</key>
 	<dict>
+		<key>&lt;int&gt;newAnswer</key>
+		<string>42+2</string>
 		<key>&lt;int&gt;theAnswer</key>
 		<string>42</string>
 		<key>&lt;void&gt;setUIForMethodHeader:header body:body</key>
