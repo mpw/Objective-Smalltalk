@@ -191,6 +191,15 @@
 		1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F12142EF26E00B5C827 /* MethodDictDocument.xib */; };
 		1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F15142EF26F00B5C827 /* MainMenu.xib */; };
 		1F7A3FA314485DDF00521C07 /* methods.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* methods.plist */; };
+		1F7E05A7144B3E22008F349D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7E05A5144B3E22008F349D /* InfoPlist.strings */; };
+		1F7E05AB144B3E22008F349D /* MethodServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E05AA144B3E22008F349D /* MethodServer.m */; };
+		1F7E05B6144B3E7D008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05B5144B3E7D008F349D /* Foundation.framework */; };
+		1F7E05C1144B3F3F008F349D /* MethodServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E05AA144B3E22008F349D /* MethodServer.m */; };
+		1F7E05C9144B414C008F349D /* MethodServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7E05A9144B3E22008F349D /* MethodServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F7E05CA144B417D008F349D /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
+		1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1F7E05CD144B417D008F349D /* MPWSideweb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CC144B417D008F349D /* MPWSideweb.framework */; };
+		1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CE144B4188008F349D /* Foundation.framework */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; };
@@ -375,6 +384,19 @@
 		1F6F637F0987C803006F3936 /* NSObjectScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectScripting.m; sourceTree = "<group>"; };
 		1F7A3FA814485DDF00521C07 /* MethodEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MethodEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SimpleMethodEditor copy-Info.plist"; path = "/Users/marcel/programming/Kits/MPWTalk/SimpleMethodEditor copy-Info.plist"; sourceTree = "<absolute>"; };
+		1F7E05A0144B3E22008F349D /* MethodServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MethodServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F7E05A4144B3E22008F349D /* MethodServer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MethodServer-Info.plist"; sourceTree = "<group>"; };
+		1F7E05A6144B3E22008F349D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1F7E05A8144B3E22008F349D /* MethodServer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MethodServer-Prefix.pch"; sourceTree = "<group>"; };
+		1F7E05A9144B3E22008F349D /* MethodServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodServer.h; sourceTree = "<group>"; };
+		1F7E05AA144B3E22008F349D /* MethodServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodServer.m; sourceTree = "<group>"; };
+		1F7E05B4144B3E7D008F349D /* libiMethodServer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiMethodServer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F7E05B5144B3E7D008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		1F7E05B9144B3E7D008F349D /* iMethodServer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iMethodServer-Prefix.pch"; sourceTree = "<group>"; };
+		1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMPWFoundationTouch.a; path = "../../Build/Development-iphoneos/libMPWFoundationTouch.a"; sourceTree = "<group>"; };
+		1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMPWSideWeb.a; path = "../../Build/Release-iphoneos/libMPWSideWeb.a"; sourceTree = "<group>"; };
+		1F7E05CC144B417D008F349D /* MPWSideweb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWSideweb.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release/MPWSideweb.framework"; sourceTree = "<group>"; };
+		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
 		1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFileSchemeResolver.h; sourceTree = "<group>"; };
@@ -501,6 +523,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F7E059C144B3E22008F349D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */,
+				1F7E05CD144B417D008F349D /* MPWSideweb.framework in Frameworks */,
+				1F7E05CA144B417D008F349D /* MPWTalk.framework in Frameworks */,
+				1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F7E05B1144B3E7D008F349D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7E05B6144B3E7D008F349D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FE08F00137808B8003B18B9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -555,6 +596,7 @@
 			isa = PBXGroup;
 			children = (
 				1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */,
+				1F7E05B5144B3E7D008F349D /* Foundation.framework */,
 				1F2E6EFF142EF26E00B5C827 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -599,6 +641,42 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		1F7E05A2144B3E22008F349D /* MethodServer */ = {
+			isa = PBXGroup;
+			children = (
+				1F7E05A9144B3E22008F349D /* MethodServer.h */,
+				1F7E05AA144B3E22008F349D /* MethodServer.m */,
+				1F7E05A3144B3E22008F349D /* Supporting Files */,
+			);
+			path = MethodServer;
+			sourceTree = "<group>";
+		};
+		1F7E05A3144B3E22008F349D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F7E05A4144B3E22008F349D /* MethodServer-Info.plist */,
+				1F7E05A5144B3E22008F349D /* InfoPlist.strings */,
+				1F7E05A8144B3E22008F349D /* MethodServer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1F7E05B7144B3E7D008F349D /* iMethodServer */ = {
+			isa = PBXGroup;
+			children = (
+				1F7E05B8144B3E7D008F349D /* Supporting Files */,
+			);
+			path = iMethodServer;
+			sourceTree = "<group>";
+		};
+		1F7E05B8144B3E7D008F349D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F7E05B9144B3E7D008F349D /* iMethodServer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		1FE8F22513802EB500B37A71 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -611,6 +689,10 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F7E05CE144B4188008F349D /* Foundation.framework */,
+				1F7E05CC144B417D008F349D /* MPWSideweb.framework */,
+				1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */,
+				1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */,
 				1FBAD8131436297C0050D6DE /* MPWFoundation.framework */,
 				1F222C881394CB90007AE2FB /* Schemes */,
 				1FE8F22513802EB500B37A71 /* Resources */,
@@ -619,6 +701,8 @@
 				F5A74AC400F0A61B015ADD82 /* Supporting Files */,
 				F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */,
 				1F2E6F03142EF26E00B5C827 /* MethodEditor */,
+				1F7E05A2144B3E22008F349D /* MethodServer */,
+				1F7E05B7144B3E7D008F349D /* iMethodServer */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-MPWTalk__Framework___Upgraded_.plist */,
@@ -747,6 +831,8 @@
 				1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */,
 				1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */,
 				1F7A3FA814485DDF00521C07 /* MethodEditor.app */,
+				1F7E05A0144B3E22008F349D /* MethodServer.framework */,
+				1F7E05B4144B3E7D008F349D /* libiMethodServer.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -874,6 +960,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F7E059D144B3E22008F349D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7E05C9144B414C008F349D /* MethodServer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F7E05B2144B3E7D008F349D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FE08EFE137808B8003B18B9 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -970,6 +1071,41 @@
 			productReference = 1F7A3FA814485DDF00521C07 /* MethodEditor.app */;
 			productType = "com.apple.product-type.application";
 		};
+		1F7E059F144B3E22008F349D /* MethodServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F7E05AF144B3E23008F349D /* Build configuration list for PBXNativeTarget "MethodServer" */;
+			buildPhases = (
+				1F7E059B144B3E22008F349D /* Sources */,
+				1F7E059C144B3E22008F349D /* Frameworks */,
+				1F7E059D144B3E22008F349D /* Headers */,
+				1F7E059E144B3E22008F349D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MethodServer;
+			productName = MethodServer;
+			productReference = 1F7E05A0144B3E22008F349D /* MethodServer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		1F7E05B3144B3E7D008F349D /* iMethodServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F7E05BD144B3E7D008F349D /* Build configuration list for PBXNativeTarget "iMethodServer" */;
+			buildPhases = (
+				1F7E05B0144B3E7D008F349D /* Sources */,
+				1F7E05B1144B3E7D008F349D /* Frameworks */,
+				1F7E05B2144B3E7D008F349D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iMethodServer;
+			productName = iMethodServer;
+			productReference = 1F7E05B4144B3E7D008F349D /* libiMethodServer.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		1FE08F01137808B8003B18B9 /* MPWTalk-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1FE08F06137808E4003B18B9 /* Build configuration list for PBXNativeTarget "MPWTalk-iOS" */;
@@ -1013,6 +1149,8 @@
 				1FE08F01137808B8003B18B9 /* MPWTalk-iOS */,
 				1F2E6EF9142EF26E00B5C827 /* SimpleMethodEditor */,
 				1F7A3F9614485DDF00521C07 /* MethodEditor */,
+				1F7E059F144B3E22008F349D /* MethodServer */,
+				1F7E05B3144B3E7D008F349D /* iMethodServer */,
 			);
 		};
 /* End PBXProject section */
@@ -1059,6 +1197,14 @@
 				1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */,
 				1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */,
 				1F7A3FA314485DDF00521C07 /* methods.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F7E059E144B3E22008F349D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7E05A7144B3E22008F349D /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1229,6 +1375,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F7E059B144B3E22008F349D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7E05AB144B3E22008F349D /* MethodServer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F7E05B0144B3E7D008F349D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7E05C1144B3F3F008F349D /* MethodServer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FE08EFF137808B8003B18B9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1318,6 +1480,14 @@
 				1F2E6F16142EF26F00B5C827 /* en */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		1F7E05A5144B3E22008F349D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F7E05A6144B3E22008F349D /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1750,6 +1920,201 @@
 			};
 			name = "Release Tiger";
 		};
+		1F7E05AC144B3E22008F349D /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MethodServer/MethodServer-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_64)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Development;
+		};
+		1F7E05AD144B3E22008F349D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MethodServer/MethodServer-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1F7E05AE144B3E22008F349D /* Release Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MethodServer/MethodServer-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release Tiger";
+		};
+		1F7E05BE144B3E7D008F349D /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/iMethodServer.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMethodServer/iMethodServer-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Development;
+		};
+		1F7E05BF144B3E7D008F349D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/iMethodServer.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMethodServer/iMethodServer-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1F7E05C0144B3E7D008F349D /* Release Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/iMethodServer.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMethodServer/iMethodServer-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release Tiger";
+		};
 		1FA354020854F75C0056996B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1880,6 +2245,24 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
+		};
+		1F7E05AF144B3E23008F349D /* Build configuration list for PBXNativeTarget "MethodServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F7E05AC144B3E22008F349D /* Development */,
+				1F7E05AD144B3E22008F349D /* Release */,
+				1F7E05AE144B3E22008F349D /* Release Tiger */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1F7E05BD144B3E7D008F349D /* Build configuration list for PBXNativeTarget "iMethodServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F7E05BE144B3E7D008F349D /* Development */,
+				1F7E05BF144B3E7D008F349D /* Release */,
+				1F7E05C0144B3E7D008F349D /* Release Tiger */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		1FA354010854F75C0056996B /* Build configuration list for PBXProject "MPWTalk" */ = {
 			isa = XCConfigurationList;

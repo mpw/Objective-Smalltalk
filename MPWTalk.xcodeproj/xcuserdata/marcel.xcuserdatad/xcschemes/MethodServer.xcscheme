@@ -13,9 +13,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-               BuildableName = "MethodEditor.app"
-               BlueprintName = "MethodEditor"
+               BlueprintIdentifier = "1F7E059F144B3E22008F349D"
+               BuildableName = "MethodServer.framework"
+               BlueprintName = "MethodServer"
                ReferencedContainer = "container:MPWTalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,15 +28,6 @@
       buildConfiguration = "Release">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-            BuildableName = "MethodEditor.app"
-            BlueprintName = "MethodEditor"
-            ReferencedContainer = "container:MPWTalk.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
@@ -46,15 +37,6 @@
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-            BuildableName = "MethodEditor.app"
-            BlueprintName = "MethodEditor"
-            ReferencedContainer = "container:MPWTalk.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -64,15 +46,6 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-            BuildableName = "MethodEditor.app"
-            BlueprintName = "MethodEditor"
-            ReferencedContainer = "container:MPWTalk.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Release">

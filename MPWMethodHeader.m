@@ -145,7 +145,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(NSString*)headerString
 {
 	NSMutableString *headerString = [NSMutableString string];
-	if ( ![[self returnTypeName] isEqualTo:@"id"] ) {
+	if ( ![[self returnTypeName] isEqual:@"id"] ) {
 		[headerString appendFormat:@"<%@>",[self returnTypeName]];
 	}
 	if ( [parameterNames count] == 0 ) {

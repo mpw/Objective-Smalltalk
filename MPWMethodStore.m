@@ -66,7 +66,8 @@ scalarAccessor( id , compiler , setCompiler )
 {
 	NSDictionary *methodDict = [self methodDictionaryForClassNamed:className];
 	NSArray* methods = [methodDict allValues];
-	NSArray* methodHeaderStrings = (NSArray*)[[[[methods collect] header] collect] headerString];
+	NSArray* methodHeaders = (NSArray*)[[methods collect] header];
+	NSArray* methodHeaderStrings = (NSArray*)[[methodHeaders collect] headerString];
 	NSArray* scripts = [[methods collect] script];
 	return [NSDictionary dictionaryWithObjects:scripts forKeys:methodHeaderStrings];
 }
