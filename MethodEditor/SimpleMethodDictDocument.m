@@ -48,6 +48,19 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     return YES;
 }
 
+-(void)setUIForMethodHeader:(NSString*)header body:(NSString*)body
+{
+//    NSLog(@"will set methodHeader: %@ to %@",[self methodHeader],header);
+//    NSLog(@"will set methodBody: %@ to %@",[self methodBody],body);
+    [[self methodHeader] setStringValue:header];
+    [[self methodBody] setString:body];
+    
+}
+
+-(void)clearMethodFromUI
+{
+    [self setUIForMethodHeader:@"" body:@""];
+}
 
 -(void)deleteMethodName:(NSString*)methodName forClass:(NSString*)className
 { 
@@ -55,24 +68,15 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     if ( oldMethod ) {
         NSString *longMethodName = [[self dict] fullNameForMethodName:methodName ofClass:className];        [[[self undoManager] prepareWithInvocationTarget:self] setMethod:oldMethod name:longMethodName  forClass:className];
     }
-    [[self dict] _deleteMethodName:methodName forClass:className];
+    [[self dict] deleteMethodName:methodName forClass:className];
     [methodBrowser reloadColumn:0];
     [methodBrowser reloadColumn:1];
     [methodBrowser setPath:[NSString stringWithFormat:@"/%@",className]];
     [self clearMethodFromUI];
 }
 
--(void)setUIForMethodHeader:(NSString*)header body:(NSString*)body
-{
-    NSLog(@"will set methodHeader: %@ to %@",[self methodHeader],header);
-    NSLog(@"will set methodBody: %@ to %@",[self methodBody],body);
-    [[self methodHeader] setStringValue:header];
-    [[self methodBody] setString:body];
-    
-}
 
-
--(void)setMethod:(NSString*)methodBody name:(NSString*)methodName  forClass:(NSString*)className
+-(void)setMethod:(NSString*)methodBodyString name:(NSString*)methodName  forClass:(NSString*)className
 {
     NSString *oldMethod = [[self dict] methodForClass:className methodName:methodName];
     if ( oldMethod ) {
@@ -80,12 +84,12 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     } else {
         [[[self undoManager] prepareWithInvocationTarget:self] deleteMethodName:methodName forClass:className];
     }
-    [[self dict] _setMethod:methodBody name:methodName forClass:className];
+    [[self dict] setMethod:methodBodyString name:methodName forClass:className];
     NSString *newPath=[NSString stringWithFormat:@"/%@/%@",className,methodName];
     [methodBrowser reloadColumn:0];
     [methodBrowser reloadColumn:1];
     [methodBrowser setPath:newPath];
-    [self setUIForMethodHeader:methodName body:methodBody];
+    [self setUIForMethodHeader:methodName body:methodBodyString];
 }
 
 
@@ -137,15 +141,9 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 {
     NSString *statementToEval = [evalText stringValue];
     NSString *cmdTemplate=@"curl -F \"eval=%@\"  \"http://%@:51000/eval\"";
-    NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];
     NSString *serverIP=[address stringValue];
     NSString *cmd=[NSString stringWithFormat:cmdTemplate,statementToEval,serverIP];
     system([cmd UTF8String]);
-}
-
--(void)clearMethodFromUI
-{
-    [self setUIForMethodHeader:@"" body:@""];
 }
 
 -(void)loadMethodFromPath:(NSString*)path

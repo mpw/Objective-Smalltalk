@@ -373,7 +373,7 @@
 		1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodStore.m; sourceTree = "<group>"; };
 		1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectScripting.h; sourceTree = "<group>"; };
 		1F6F637F0987C803006F3936 /* NSObjectScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectScripting.m; sourceTree = "<group>"; };
-		1F7A3FA814485DDF00521C07 /* SimpleMethodEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleMethodEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F7A3FA814485DDF00521C07 /* MethodEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MethodEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SimpleMethodEditor copy-Info.plist"; path = "/Users/marcel/programming/Kits/MPWTalk/SimpleMethodEditor copy-Info.plist"; sourceTree = "<absolute>"; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
@@ -746,7 +746,7 @@
 				1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */,
 				1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */,
 				1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */,
-				1F7A3FA814485DDF00521C07 /* SimpleMethodEditor.app */,
+				1F7A3FA814485DDF00521C07 /* MethodEditor.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -967,7 +967,7 @@
 			);
 			name = MethodEditor;
 			productName = MethodEditor;
-			productReference = 1F7A3FA814485DDF00521C07 /* SimpleMethodEditor.app */;
+			productReference = 1F7A3FA814485DDF00521C07 /* MethodEditor.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1FE08F01137808B8003B18B9 /* MPWTalk-iOS */ = {
@@ -1682,7 +1682,7 @@
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_ACTUAL)";
-				PRODUCT_NAME = SimpleMethodEditor;
+				PRODUCT_NAME = MethodEditor;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1713,7 +1713,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = SimpleMethodEditor;
+				PRODUCT_NAME = MethodEditor;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1744,7 +1744,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = SimpleMethodEditor;
+				PRODUCT_NAME = MethodEditor;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};

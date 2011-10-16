@@ -22,8 +22,6 @@
 
 @implementation MethodDict
 
-
-
 objectAccessor(NSMutableDictionary, dict, setDict)
 
 
@@ -48,7 +46,7 @@ objectAccessor(NSMutableDictionary, dict, setDict)
 
 -(NSArray*)methodsForClass:(NSString*)className
 {
-    return [[[[[[self dict] objectForKey:className] allKeys] collect] methodName] sortedArrayUsingSelector:@selector(compare:)];
+    return [(NSArray*)[[[[[self dict] objectForKey:className] allKeys] collect] methodName] sortedArrayUsingSelector:@selector(compare:)];
 }
 
 -(NSString*)fullNameForMethodName:(NSString*)shortName ofClass:(NSString*)className
@@ -68,7 +66,7 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     return [[[self dict] objectForKey:className] objectForKey:[self fullNameForMethodName:methodName ofClass:className]];
 }
 
--(void)_setMethod:(NSString*)methodBody name:(NSString*)methodName  forClass:(NSString*)className
+-(void)setMethod:(NSString*)methodBody name:(NSString*)methodName  forClass:(NSString*)className
 {
     NSMutableDictionary *perClassDict = [[self dict] objectForKey:className];
     if ( !perClassDict ) {
@@ -80,7 +78,7 @@ objectAccessor(NSMutableDictionary, dict, setDict)
 
 
 
--(void)_deleteMethodName:(NSString*)methodName forClass:(NSString*)className
+-(void)deleteMethodName:(NSString*)methodName forClass:(NSString*)className
 { 
     [[[self dict] objectForKey:className] removeObjectForKey:[self fullNameForMethodName:methodName ofClass:className]];
 }

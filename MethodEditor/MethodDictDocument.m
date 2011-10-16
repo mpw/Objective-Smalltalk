@@ -16,6 +16,7 @@ objectAccessor(MPWStCompiler , interpreter, setInterpreter)
 
 - (id)init
 {
+    NSLog(@"environment: %@",[[NSProcessInfo processInfo] environment]);
     self = [super init];
     if (self) {
         [self setInterpreter:[[[MPWStCompiler alloc] init] autorelease]];

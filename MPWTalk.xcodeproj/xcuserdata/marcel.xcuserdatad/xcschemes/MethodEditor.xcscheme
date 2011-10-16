@@ -6,6 +6,20 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1F2E6EF9142EF26E00B5C827"
+               BuildableName = "SimpleMethodEditor.app"
+               BlueprintName = "SimpleMethodEditor"
+               ReferencedContainer = "container:MPWTalk.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
@@ -13,9 +27,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1F2E6EF9142EF26E00B5C827"
-               BuildableName = "SimpleMethodEditor.app"
-               BlueprintName = "SimpleMethodEditor"
+               BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
+               BuildableName = "MethodEditor.app"
+               BlueprintName = "MethodEditor"
                ReferencedContainer = "container:MPWTalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -31,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F2E6EF9142EF26E00B5C827"
-            BuildableName = "SimpleMethodEditor.app"
-            BlueprintName = "SimpleMethodEditor"
+            BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
+            BuildableName = "MethodEditor.app"
+            BlueprintName = "MethodEditor"
             ReferencedContainer = "container:MPWTalk.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -49,9 +63,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F2E6EF9142EF26E00B5C827"
-            BuildableName = "SimpleMethodEditor.app"
-            BlueprintName = "SimpleMethodEditor"
+            BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
+            BuildableName = "MethodEditor.app"
+            BlueprintName = "MethodEditor"
             ReferencedContainer = "container:MPWTalk.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
