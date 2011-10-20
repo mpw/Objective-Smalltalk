@@ -86,6 +86,13 @@ objectAccessor(MPWHTTPServer, server, setServer)
     return [uri asData];
 }
 
+-(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
+{
+//    NSLog(@"PUT to %@",uri);
+    [putData writeToFile:@"/tmp/putData" atomically:YES];
+    NSLog(@"data length: %d",[putData length]);
+    return [uri asData];
+}
 
 -(void)setupWebServer
 {

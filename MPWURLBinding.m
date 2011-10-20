@@ -136,6 +136,24 @@ objectAccessor(NSError, error, setError)
     return [NSDictionary dictionaryWithObject:[[self url] stringValue] forKey:@"URL"];
 }
 
+-(void)put:data
+{
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self url]];
+    [urlRequest setHTTPMethod:@"PUT"];
+    
+    
+    [urlRequest setHTTPBody:data];
+    NSURLConnection *postConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    if ( inPOST ) {
+        [NSException raise:@"PUT in progress" format:@"PUT to %@/%@ already in progress",self,[self url]];
+    }
+    inPOST=YES;
+    while (inPOST) {
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    }
+}
+
+
 -(void)post:data
 {
     NSString *boundary=@"0xKhTmLbOuNdArY";
@@ -175,7 +193,7 @@ objectAccessor(NSError, error, setError)
 -(void)_setValue:newValue
 {
     if (newValue) {
-        [self post:newValue];
+        [self put:newValue];
     }
 }
 
