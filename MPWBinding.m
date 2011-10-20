@@ -16,7 +16,9 @@
 -initWithValue:aValue
 {
 	self=[super init];
-	[self bindValue:aValue];
+    if (aValue) {
+        [self bindValue:aValue];
+    }
 	return self;
 }
 

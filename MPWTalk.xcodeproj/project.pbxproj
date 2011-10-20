@@ -393,8 +393,8 @@
 		1F7E05B4144B3E7D008F349D /* libiMethodServer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiMethodServer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7E05B5144B3E7D008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		1F7E05B9144B3E7D008F349D /* iMethodServer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iMethodServer-Prefix.pch"; sourceTree = "<group>"; };
-		1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMPWFoundationTouch.a; path = "../../Build/Development-iphoneos/libMPWFoundationTouch.a"; sourceTree = "<group>"; };
-		1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMPWSideWeb.a; path = "../../Build/Release-iphoneos/libMPWSideWeb.a"; sourceTree = "<group>"; };
+		1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = "../../Build/Development-iphoneos/libMPWFoundationTouch.a"; sourceTree = "<group>"; };
+		1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWSideWeb.a; path = "../../Build/Release-iphoneos/libMPWSideWeb.a"; sourceTree = "<group>"; };
 		1F7E05CC144B417D008F349D /* MPWSideweb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWSideweb.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release/MPWSideweb.framework"; sourceTree = "<group>"; };
 		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
@@ -1952,7 +1952,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_64)";
+				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_ACTUAL)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
@@ -1963,8 +1963,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1996,8 +1996,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2254,6 +2254,7 @@
 				1F7E05AE144B3E22008F349D /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
 		};
 		1F7E05BD144B3E7D008F349D /* Build configuration list for PBXNativeTarget "iMethodServer" */ = {
 			isa = XCConfigurationList;
@@ -2263,6 +2264,7 @@
 				1F7E05C0144B3E7D008F349D /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
 		};
 		1FA354010854F75C0056996B /* Build configuration list for PBXProject "MPWTalk" */ = {
 			isa = XCConfigurationList;

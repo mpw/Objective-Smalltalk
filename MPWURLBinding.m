@@ -57,14 +57,14 @@ idAccessor( target, setTarget )
 
 @implementation MPWURLBinding
 
--error
-{
-	return error;
-}
-
+objectAccessor(NSError, error, setError)
 -get
 {
-	return [self value];
+	return [self _value];
+}
+-(BOOL)isBound
+{
+	return YES;
 }
 
 -_valueWithURL:(NSURL*)aURL
@@ -134,6 +134,49 @@ idAccessor( target, setTarget )
 -fileSystemValue
 {
     return [NSDictionary dictionaryWithObject:[[self url] stringValue] forKey:@"URL"];
+}
+
+-(void)post:data
+{
+    NSString *boundary=@"0xKhTmLbOuNdArY";
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self url]];
+    [urlRequest setHTTPMethod:@"POST"];
+    
+    [urlRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData *postData = [NSMutableData data];
+    [postData appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", @"methods", @"methods"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postData appendData:data];
+    [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [urlRequest setHTTPBody:postData];
+    NSURLConnection *postConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    if ( inPOST ) {
+        [NSException raise:@"POST in progress" format:@"POST to %@/%@ already in progress",self,[self url]];
+    }
+    inPOST=YES;
+    while (inPOST) {
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    }
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    inPOST=NO;
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    inPOST=NO;
+    [self setError:error];
+}
+
+
+-(void)_setValue:newValue
+{
+    if (newValue) {
+        [self post:newValue];
+    }
 }
 
 @end

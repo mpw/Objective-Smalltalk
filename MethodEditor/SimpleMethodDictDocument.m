@@ -132,6 +132,7 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 -(void)saveDocument:(id)sender
 {
     [self saveMethodAtCurrentBrowserPath];
+    NSLog(@"saveDocument");
     [super saveDocument:sender];
     [self performSelector:@selector(upload) withObject:nil afterDelay:0.6];
 }

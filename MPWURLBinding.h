@@ -11,6 +11,7 @@
 
 @interface MPWURLBinding : MPWFileBinding {
 	NSError	*error;
+    BOOL inPOST;
 }
 
 @end

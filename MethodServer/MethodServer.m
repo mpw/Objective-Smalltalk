@@ -44,6 +44,7 @@ objectAccessor(MPWHTTPServer, server, setServer)
     return [[methods description] asData];
 }
 
+
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
     if ( [uri hasPrefix:@"/methods"] ) {
@@ -70,6 +71,7 @@ objectAccessor(MPWHTTPServer, server, setServer)
 
 -(NSData*)post:(NSString*)uri parameters:(MPWPOSTProcessor*)postData
 {
+    NSLog(@"POST to %@",uri);
     if ( [uri hasPrefix:@"/methods"] ) {
         NSData *methodData=[[postData values] objectForKey:@"methods"];
         [self defineMethodsInExternalDict:[self dictionaryFromData:methodData]];
