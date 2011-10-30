@@ -7,14 +7,13 @@
 //
 
 #import "MethodServer.h"
-#import <MPWSideWeb/MPWHTTPServer.h>
-#import <MPWSideWeb/MPWPOSTProcessor.h>
 #import "MPWStCompiler.h"
+#import "MPWMethodScheme.h"
+#import "MPWBinding.h"
 
 @implementation MethodServer
 
 objectAccessor(MPWStCompiler, interpreter, setInterpreter)
-objectAccessor(MPWHTTPServer, server, setServer)
 
 - (id)init
 {
@@ -26,6 +25,16 @@ objectAccessor(MPWHTTPServer, server, setServer)
     return self;
 }
 
+-(id)deserializeData:(NSData*)inputData at:(MPWBinding*)aBinding
+{
+    if ( [[aBinding name] isEqual:@"methods"] ) {
+        return [self dictionaryFromData:inputData];
+    }
+    return [super deserializeData:inputData at:aBinding];
+}
+
+
+
 -(void)setup
 {
     [self setInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
@@ -34,27 +43,25 @@ objectAccessor(MPWHTTPServer, server, setServer)
     NSLog(@"PATH: %@",[MPWStCompiler evaluate:@"env:PATH"]);
     [self defineMethodsInExternalDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
+    [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
     [self setupWebServer];
 
 }
 
--(NSData*)methodList
+-(NSDictionary*)dictionaryFromData:(NSData*)dictData
 {
-    NSDictionary *methods=[[self interpreter] externalScriptDict];
-    return [[methods description] asData];
+    return [NSPropertyListSerialization propertyListFromData: dictData mutabilityOption:NSPropertyListImmutable format:nil errorDescription:nil];
+    
 }
 
 
--(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
+-(NSDictionary*)externalMethodsDict
 {
-    if ( [uri hasPrefix:@"/methods"] ) {
-        return [self methodList];
-    } else if ( [uri hasPrefix:@"/theAnswer"] ) {
-        return [[NSString stringWithFormat:@"the answer: %d",[self theAnswer]] asData];
-    } else {
-        return [uri asData];
-    }
+    NSData *dictData = [[NSBundle mainBundle] resourceWithName:@"methods" type:@"plist"];
+    NSLog(@"data %p len: %d",dictData,[dictData length]);
+    return [self dictionaryFromData:dictData];
 }
+
 
 -eval:(NSString*)aString
 {
@@ -69,41 +76,16 @@ objectAccessor(MPWHTTPServer, server, setServer)
     return result;
 }
 
--(NSData*)post:(NSString*)uri parameters:(MPWPOSTProcessor*)postData
+
+-(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
-    NSLog(@"POST to %@",uri);
-    if ( [uri hasPrefix:@"/methods"] ) {
-        NSData *methodData=[[postData values] objectForKey:@"methods"];
-        [self defineMethodsInExternalDict:[self dictionaryFromData:methodData]];
-        return [@"Defined some methods\n" asData];
-    } else  if ( [uri hasPrefix:@"/eval"] ) {
-        NSData *evalData=[[postData values] objectForKey:@"eval"];
-        NSString *evalString = [evalData stringValue];
-        NSLog(@"should eval: %@",evalString);
-        [self performSelectorOnMainThread:@selector(eval:) withObject:evalString waitUntilDone:YES];
-        return [@"did evaluate" asData];
+    NSLog(@"uri: %@",uri);
+    if ( [uri hasPrefix:@"/theAnswer"] ) {
+        return [NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]];
+    } else {
+        return [super get:uri parameters:params];
     }
-    return [uri asData];
 }
-
--(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
-{
-//    NSLog(@"PUT to %@",uri);
-    [putData writeToFile:@"/tmp/putData" atomically:YES];
-    NSLog(@"data length: %d",[putData length]);
-    return [uri asData];
-}
-
--(void)setupWebServer
-{
-    [self setServer:[[[MPWHTTPServer alloc] init] autorelease]];
-    [[self server] setPort:51000];
-    [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];
-    [[self server] setDelegate:self];
-    [[self server] start:nil];
-    
-}
-
 
 -(void)defineMethodsInExternalDict:(NSDictionary*)dict
 {
@@ -113,18 +95,6 @@ objectAccessor(MPWHTTPServer, server, setServer)
     }
 }
 
--(NSDictionary*)dictionaryFromData:(NSData*)dictData
-{
-    return [NSPropertyListSerialization propertyListFromData: dictData mutabilityOption:NSPropertyListImmutable format:nil errorDescription:nil];
-    
-}
-
--(NSDictionary*)externalMethodsDict
-{
-    NSData *dictData = [[NSBundle mainBundle] resourceWithName:@"methods" type:@"plist"];
-    NSLog(@"data %p len: %d",dictData,[dictData length]);
-    return [self dictionaryFromData:dictData];
-}
 
 scalarAccessor(id, delegate, setDelegate)
 

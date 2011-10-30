@@ -74,6 +74,13 @@ idAccessor( script, _setScript )
 	return returnVal;
 }
 
+-(NSString *)stringValue
+{
+    return [NSString stringWithFormat:@"%@\n%@",
+            [[self methodHeader] headerString],
+            [[self script] stringValue]];
+}
+
 -(void)encodeWithCoder:aCoder
 {
 	id scriptData = [script dataUsingEncoding:NSUTF8StringEncoding];

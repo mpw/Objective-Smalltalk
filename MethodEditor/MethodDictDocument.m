@@ -27,10 +27,13 @@ objectAccessor(MPWStCompiler , interpreter, setInterpreter)
             NSLog(@"setting methods: %@",methods);
             [[self interpreter] defineMethodsInExternalDict:methods];
         }
-        NSLog(@"the answer: %d",[self theAnswer]);
+        NSLog(@"the answer: %d",(int)[self theAnswer]);
     }
     return self;
 }
 
+- (void)upload {
+    [[self interpreter] evaluateScriptString:[NSString stringWithFormat:@"http://%@:51000/methods := document dict asXml. ",[address stringValue]]];
+}
 
 @end

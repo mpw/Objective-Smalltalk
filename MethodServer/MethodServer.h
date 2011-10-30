@@ -6,14 +6,15 @@
 //  Copyright (c) 2011 metaobject ltd. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
-@class MPWStCompiler,MPWHTTPServer;
+#import "MPWSchemeHttpServer.h"
 
-@interface MethodServer : NSObject
+@class MPWStCompiler;
+
+
+@interface MethodServer : MPWSchemeHttpServer
 {
     MPWStCompiler *interpreter;
-    MPWHTTPServer *server;
     id delegate;
 }
 @end
