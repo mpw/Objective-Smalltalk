@@ -81,6 +81,11 @@ idAccessor( source, setSource )
 	}
 }
 
+-(void)writeToURL:(NSURL*)url atomically:(BOOL)atomically
+{
+    [[self rawData] writeToURL:url atomically:atomically];
+}
+
 -(NSString*)name 
 {
 	return [[[self source] path] lastPathComponent];
