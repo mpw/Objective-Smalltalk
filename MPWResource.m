@@ -19,8 +19,10 @@ idAccessor( source, setSource )
 -convertRawDataToObject
 {
 	if ( [[self mimetype] hasPrefix:@"image/"] ) {
-		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]];
-	}
+		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]] ;
+	} else if ( [[self mimetype] hasPrefix:@"application/json"] ) {
+		return [NSJSONSerialization JSONObjectWithData:[self rawData] options:0 error:nil] ;
+	} 
 	return nil;
 }
 
