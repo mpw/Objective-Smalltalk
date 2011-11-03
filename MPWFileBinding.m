@@ -53,6 +53,11 @@ idAccessor( url , setUrl )
 	return [self existsAndIsDirectory:&isDirectory] && isDirectory;
 }
 
+-(BOOL)hasChildren
+{
+    return [self isDirectory];
+}
+
 -_valueWithURL:(NSURL*)aURL
 {
 	NSFileManager *manager=[NSFileManager defaultManager];

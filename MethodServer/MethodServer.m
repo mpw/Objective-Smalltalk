@@ -96,6 +96,16 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 }
 
 
+-(void)setupWebServer
+{
+    [super setupWebServer];
+    [[self server] setPort:51000];
+    [[self server] setBonjourName:@"Methods"];
+    [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];
+    [self starServer:nil];
+}
+
+
 scalarAccessor(id, delegate, setDelegate)
 
 @end

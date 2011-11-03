@@ -73,6 +73,13 @@ boolAccessor( isBound ,setIsBound )
 	[self _setValue:nil];
 }
 
+-(BOOL)hasChildren
+{
+    return NO;
+}
+
+
+
 -(void)dealloc
 {
 	[_value release];

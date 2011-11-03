@@ -29,6 +29,11 @@
 			<key>orderHint</key>
 			<integer>54</integer>
 		</dict>
+		<key>SchemeFS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>56</integer>
+		</dict>
 		<key>SimpleMethodEditor.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -58,6 +63,11 @@
 			<true/>
 		</dict>
 		<key>1F7A3F9614485DDF00521C07</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1F7B75AE14629431002F38D1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
