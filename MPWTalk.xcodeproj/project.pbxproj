@@ -761,12 +761,6 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
-				1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */,
-				1F7E05CE144B4188008F349D /* Foundation.framework */,
-				1F7E05CC144B417D008F349D /* MPWSideweb.framework */,
-				1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */,
-				1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */,
-				1FBAD8131436297C0050D6DE /* MPWFoundation.framework */,
 				1F222C881394CB90007AE2FB /* Schemes */,
 				1FE8F22513802EB500B37A71 /* Resources */,
 				F5A74ABC00F0A61B015ADD82 /* Classes */,
@@ -889,6 +883,12 @@
 		F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */,
+				1F7E05CE144B4188008F349D /* Foundation.framework */,
+				1F7E05CC144B417D008F349D /* MPWSideweb.framework */,
+				1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */,
+				1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */,
+				1FBAD8131436297C0050D6DE /* MPWFoundation.framework */,
 				1FE08FEA137817EB003B18B9 /* libPLBlockIMP-iOS.a */,
 				1FCE1F921372F8690035A429 /* PLBlockIMP.framework */,
 				1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */,
@@ -2492,6 +2492,7 @@
 				1F7B75C714629431002F38D1 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
 		};
 		1F7E05AF144B3E23008F349D /* Build configuration list for PBXNativeTarget "MethodServer" */ = {
 			isa = XCConfigurationList;

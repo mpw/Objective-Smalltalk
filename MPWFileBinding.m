@@ -83,6 +83,7 @@ idAccessor( url , setUrl )
  	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
         newValue=[newValue fileSystemValue];
 	}
+    [[self parent] mkdir];
 	[newValue writeToURL:[self url] atomically:YES];
 }
 
@@ -118,9 +119,15 @@ idAccessor( url , setUrl )
 	return nil;
 }
 
+-parent
+{
+    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByDeletingLastPathComponent]] autorelease];
+}
+
 -(void)mkdir
 {
 	if ( ![self isBound] ) {
+        [[self parent] mkdir];
 		[[NSFileManager defaultManager] createDirectoryAtPath:[self fileSystemPath] attributes:nil];
 	}
 }

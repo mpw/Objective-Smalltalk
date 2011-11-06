@@ -146,9 +146,14 @@ idAccessor( connectorMap, setConnectorMap );
     return [[[[self alloc] init] autorelease] evaluateScriptString:aString];
 }
 
--evaluateScriptString:aString
+-evaluateScriptString:script 
 {
-	return [super evaluate:[aString compileIn:self]];
+    if ( [script isKindOfClass:[NSString class]]) {
+        script  = [script compileIn:self];
+    
+    }
+//    NSLog(@"script from '%@'/%@ ->  '%@'",aString,[aString class],script);
+	return [super evaluate:script];
 }
 
 -lookupScriptNamed:methodName forClassName:className
