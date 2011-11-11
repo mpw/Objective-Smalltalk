@@ -23,7 +23,7 @@
 #import <objc/runtime.h>
 #import <stdarg.h>
 #import <MPWFoundation/NSNil.h>
-#if !TARGET_OS_IPHONE
+#if 0 // !TARGET_OS_IPHONE 
 #import <PLBlockIMP/PLBlockIMP.h>
 #endif
 
@@ -66,7 +66,7 @@ idAccessor( method, _setMethod )
 		}
 		//---   setup undo 
    
-#if TARGET_OS_IPHONE        
+#if 1 // TARGET_OS_IPHONE        
 		stub=imp_implementationWithBlock( self );
 #else        
 		stub=pl_imp_implementationWithBlock( self );

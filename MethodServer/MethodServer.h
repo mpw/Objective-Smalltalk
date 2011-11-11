@@ -7,7 +7,7 @@
 //
 
 
-#import <MPWSideweb/MPWSchemeHttpServer.h>
+#import <MPWSideWeb/MPWSchemeHttpServer.h>
 
 @class MPWStCompiler;
 
