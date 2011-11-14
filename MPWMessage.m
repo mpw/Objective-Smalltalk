@@ -275,7 +275,8 @@ idAccessor( _signature, setSignature )
 					returnValue=[MPWPoint pointWithNSSize:sizeVal];
 					break;
 				}   if ( !strcmp( returnType, "{?={?=ff}{?=ff}}" ) || !strcmp( returnType, "{_NSRect={_NSPoint=ff}{_NSSize=ff}}" ) || 
-						   !strcmp( returnType, "{CGRect={CGPoint=ff}{CGSize=ff}}" ) ) {
+                        !strcmp( returnType, "{CGRect={CGPoint=ff}{CGSize=ff}}" )  || 
+                        !strcmp( returnType, "{CGRect={CGPoint=dd}{CGSize=dd}}" ) ) {
 					NSRect rectVal = *(NSRect*)returnBuffer;
 					returnValue=[[[MPWRect alloc] initWithRect:rectVal] autorelease];
 					break;
