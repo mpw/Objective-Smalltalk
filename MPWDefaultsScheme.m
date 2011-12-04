@@ -17,7 +17,7 @@
 	if ( [aName hasPrefix:@"/"] ) {
 		aName=[aName substringFromIndex:1];
 	}
-	return [[[MPWGenericBinding alloc] initWithName:aName scheme:self] autorelease];
+	return [super bindingForName:aName inContext:aContext];
 }
 
 

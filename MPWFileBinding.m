@@ -58,19 +58,34 @@ idAccessor( url , setUrl )
     return [self isDirectory];
 }
 
+-(NSArray*)directoryContents
+{
+	return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self fileSystemPath] error:nil];
+    
+}
+
+-childWithName:(NSString*)name
+{
+    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByAppendingPathComponent:name]] autorelease];
+}
+
+-(NSArray*)children
+{
+    if ( [self hasChildren] ) {
+        NSArray *childNames = [self directoryContents];
+        return [[self collect] childWithName:[childNames each]];
+    } else {
+        return [super children];
+    }
+}
+
 -_valueWithURL:(NSURL*)aURL
 {
-	NSFileManager *manager=[NSFileManager defaultManager];
-	NSString *path=[aURL path];
-	BOOL isDirectory=NO;
-	if (  [self existsAndIsDirectory:&isDirectory]) {
-		if ( isDirectory ) {
-			return [manager contentsOfDirectoryAtPath:path error:nil];
-		} else {
-			return [NSData dataWithContentsOfURL:aURL];
-		}
-	}
-	return nil;
+    if ( [self hasChildren] ) {
+        return [self directoryContents];
+    } else {
+        return [NSData dataWithContentsOfURL:aURL];
+    }
 }
 
 -_value
@@ -122,6 +137,11 @@ idAccessor( url , setUrl )
 -parent
 {
     return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByDeletingLastPathComponent]] autorelease];
+}
+
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"file:%@",[self fileSystemPath]];
 }
 
 -(void)mkdir

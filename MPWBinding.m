@@ -61,6 +61,16 @@ boolAccessor( isBound ,setIsBound )
 	[[self value] setValue:newValue forKey:kvpath];
 }
 
+-(NSArray*)children
+{
+    return [NSArray array];
+}
+
+-(NSArray*)allLinks
+{
+    return [self children];
+}
+
 -(void)bindValue:newValue
 {
 	[self _setValue:newValue];

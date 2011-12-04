@@ -6,11 +6,11 @@
 //  Copyright (c) 2011 metaobject ltd. All rights reserved.
 //
 
-#import "MPWScheme.h"
+#import "MPWGenericScheme.h"
 
 @class MPWStCompiler;
 
-@interface MPWMethodScheme : MPWScheme
+@interface MPWMethodScheme : MPWGenericScheme
 {
     MPWStCompiler *interpreter;
 }

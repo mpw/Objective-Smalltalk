@@ -27,14 +27,9 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
 	if ( [aName hasPrefix:@"/"] ) {
 		aName=[aName substringFromIndex:1];
 	}
-	return [[[MPWGenericBinding alloc] initWithName:aName scheme:self] autorelease];
+    return [super bindingForName:aName inContext:aContext];
 }
 
-
--(BOOL)isBoundBinding:(MPWGenericBinding*)aBinding
-{
-    return YES;
-}
 
 -(MPWMethodStore*)methodStore
 {
@@ -68,6 +63,8 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
             return [methodDict allKeys];
         } else   if ( [components count] == 2 ){
             return [methodDict objectForKey:[components objectAtIndex:1]];
+        } else {
+            return nil;
         }
     }
     else {
@@ -75,13 +72,8 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
     }
 }
 
--valueForBinding:(MPWGenericBinding*)aBinding
+-contentForPath:(NSArray*)components
 {
-    NSString *uri=[aBinding name];
-    NSArray *components = [uri componentsSeparatedByString:@"/"];
-    if ( [[components lastObject] length] == 0 ) {
-        components=[components subarrayWithRange:NSMakeRange(0, [components count] -1)];
-    }
     if ( [components count] > 0 ) {
         NSString *first=[components objectAtIndex:0];
         if ( [first isEqual:@"classes"] ) {
@@ -92,7 +84,7 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
             return [[NSString stringWithFormat:@"the answer: %d",[self theAnswer]] asData];
         }    
     }
-    return [uri asData];
+    return [[components componentsJoinedByString:@"/"] asData];
 }
 
 -(void)setValue:newValue forBinding:(MPWGenericBinding*)aBinding

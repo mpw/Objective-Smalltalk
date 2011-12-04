@@ -11,12 +11,6 @@
 
 @implementation MPWEnvScheme
 
--bindingForName:aName inContext:aContext
-{
-	id binding = [[[MPWGenericBinding alloc] initWithName:aName scheme:self] autorelease];
-	return binding;
-}
-
 -(const char*)cstringValueOfBinding:aBinding
 {
 	return getenv([[aBinding name] UTF8String]);

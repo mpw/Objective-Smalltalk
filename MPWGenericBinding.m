@@ -38,7 +38,10 @@ idAccessor( scheme, setScheme )
 	[[self scheme] setValue:newValue forBinding:self];
 }
 
-
+-(BOOL)isRoot
+{
+    return [[self name] isEqualToString:@"/"];
+}
 
 -(void)dealloc
 {
