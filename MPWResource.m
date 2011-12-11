@@ -38,7 +38,7 @@ idAccessor( source, setSource )
 
 -(void)forwardInvocation:(NSInvocation*)invocation
 {
-	if ( [self value] ) {
+	if ( [self value] && [[self value] respondsToSelector:[invocation selector]]) {
 		[invocation invokeWithTarget:[self value]];
 	} else if ( [self rawData] ) {
 		[invocation invokeWithTarget:[self rawData]];

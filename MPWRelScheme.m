@@ -9,6 +9,7 @@
 #import "MPWRelScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWIdentifier.h"
+#import "MPWBinding.h"
 
 @implementation MPWRelScheme
 
@@ -27,6 +28,11 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 	[self setBaseScheme:aScheme];
 	[self setBaseIdentifier:str];
 	return self;
+}
+
+-initWithBaseRef:(MPWBinding*)aBinding
+{
+    [aBinding scheme];
 }
 
 -(void)dealloc

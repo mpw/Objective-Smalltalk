@@ -76,10 +76,14 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
     return result;
 }
 
+-(NSData*)get:(NSString*)uri
+{
+    return [uri asData];
+}
 
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
-    NSLog(@"uri: %@",uri);
+//  NSLog(@"uri: %@",uri);
     if ( [uri hasPrefix:@"/theAnswer"] ) {
         return [NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]];
     } else {

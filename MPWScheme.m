@@ -47,4 +47,23 @@
 }
 
 
+-get:uri
+{
+    MPWBinding *binding=[self bindingForName:uri inContext:nil];
+    return [binding value];
+}
+
+-get:uri parameters:params
+{
+    return [self get:uri];
+}
+
+
+-(BOOL)isBoundBinding:(MPWBinding*)aBinding
+{
+    return YES;
+}
+
+
+
 @end

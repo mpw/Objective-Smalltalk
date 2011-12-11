@@ -77,6 +77,20 @@ idAccessor( content, setContent )
 	return nil;
 }
 
+
+-mkdirs:(NSEnumerator*)pathEnumerator
+{
+    NSString *nextName=[pathEnumerator nextObject];
+    if ( nextName ) {
+        MPWTreeNode *nextNode=[self childWithName:nextName];
+        if ( !nextNode ) {
+            nextNode=[self mkdir:nextName];
+        }
+        return [nextNode mkdirs:pathEnumerator];
+    }
+    return self;
+}
+
 -nodeForPathComponent:(NSString*)pathComponent
 {
 	if ( [pathComponent length] == 0 || [pathComponent isEqual:@"."] ) {
@@ -236,6 +250,16 @@ idAccessor( content, setContent )
 	INTEXPECT( [allSubnodes count] ,3 ,@"allSubnodes with root and 2 children");
 }
 
++(void)testMkdirs
+{
+	id root = [self root];
+    NSString *path=@"hi/there";
+    NSArray *pathArray=[path componentsSeparatedByString:@"/"];
+    EXPECTNIL([root nodeForPath:path] , @"shouldn't have path before mkdir" );
+    [root mkdirs:[pathArray objectEnumerator]];
+    EXPECTNOTNIL([root nodeForPath:path] , @"should  have path after mkdir" );
+}
+
 
 +testSelectors
 {
@@ -246,6 +270,7 @@ idAccessor( content, setContent )
 			@"testPathRetrieving",
 			@"testKnowsRoot",
 			@"testAllSubnodes",
+			@"testMkdirs",
 			nil];
 }
 

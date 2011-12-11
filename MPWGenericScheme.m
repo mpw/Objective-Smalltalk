@@ -40,22 +40,4 @@
     NSString *uri=[aBinding name];
     return [self contentForURI:uri];
 }
-
--get:uri
-{
-    MPWBinding *binding=[self bindingForName:uri inContext:nil];
-    return [binding value];
-}
-
--get:uri parameters:params
-{
-    return [self get:uri];
-}
-
-
--(BOOL)isBoundBinding:(MPWGenericBinding*)aBinding
-{
-    return YES;
-}
-
 @end
