@@ -75,7 +75,7 @@ idAccessor( url , setUrl )
         NSArray *childNames = [self directoryContents];
         return [[self collect] childWithName:[childNames each]];
     } else {
-        return [super children];
+        return [NSArray array];
     }
 }
 

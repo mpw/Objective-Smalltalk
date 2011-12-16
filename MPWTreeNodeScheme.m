@@ -38,6 +38,13 @@ idAccessor( root, setRoot )
     return [root nodeForPathEnumerator:[pathArray objectEnumerator]];
 }
 
+
+-nodeFoBinding:(MPWGenericBinding*)aBinding
+{
+    NSString *uri=[aBinding name];
+    return [self nodeForPath:[self pathArrayForPathString:uri]];
+}
+
 -contentForPath:(NSArray*)array
 {
 	return [[self nodeForPath:array] content];
@@ -46,8 +53,7 @@ idAccessor( root, setRoot )
 
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
-    NSString *uri=[aBinding name];
-    return [self contentForURI:uri];
+    return [[self nodeFoBinding:aBinding] content];
 }
 
 -(void)setValue:newValue forBinding:(MPWGenericBinding*)aBinding
@@ -59,6 +65,23 @@ idAccessor( root, setRoot )
     }
     [node setContent:newValue];
 }
+
+
+-(BOOL)hasChildren:(MPWGenericBinding*)binding
+{
+    return [[self nodeFoBinding:binding] hasChildren];
+}
+
+-childWithName:(NSString*)name of:(MPWGenericBinding*)binding
+{
+    return [[self nodeFoBinding:binding] childWithName:name];
+}
+
+-(NSArray*)childrenOf:(MPWGenericBinding*)binding
+{
+    return [[self nodeFoBinding:binding] children];
+}
+
 
 
 -(void)dealloc

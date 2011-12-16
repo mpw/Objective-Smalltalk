@@ -43,6 +43,27 @@ idAccessor( scheme, setScheme )
     return [[self name] isEqualToString:@"/"];
 }
 
+-(BOOL)hasChildren
+{
+    return [[self scheme] hasChildren:self];
+}
+
+-childWithName:(NSString*)name
+{
+    return [[self scheme] childWithName:name of:self];
+}
+
+-(NSArray*)children
+{
+    return [[self scheme] childrenOf:self];
+}
+
+-(NSArray*)childNames
+{
+    return [[[[[self children] collect] path] collect] lastPathComponent];
+}
+
+
 -(void)dealloc
 {
 	[name release];

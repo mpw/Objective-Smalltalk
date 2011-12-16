@@ -66,6 +66,11 @@ boolAccessor( isBound ,setIsBound )
     return [NSArray array];
 }
 
+-(NSArray*)childNames
+{
+    return [self children];
+}
+
 -(NSArray*)allLinks
 {
     return [self children];

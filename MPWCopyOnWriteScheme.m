@@ -15,12 +15,12 @@
 objectAccessor(MPWScheme, readOnly, setReadOnly)
 objectAccessor(MPWScheme, readWrite, setReadWrite)
 
--contentForPath:(NSArray*)array
+-valueForBinding:aBinding
 {
     id result=nil;
-   result=[[self readWrite] contentForPath:array];
+   result=[[self readWrite] valueForBinding:aBinding];
     if ( !result ) {
-        result=[[self readOnly] contentForPath:array];
+        result=[[self readOnly] valueForBinding:aBinding];
     }
     return result;
 }

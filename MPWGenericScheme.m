@@ -37,7 +37,24 @@
 
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
-    NSString *uri=[aBinding name];
-    return [self contentForURI:uri];
+    return nil;
 }
+
+-(BOOL)hasChildren:(MPWGenericBinding*)binding
+{
+    return NO;
+}
+
+-childWithName:(NSString*)name of:(MPWGenericBinding*)binding
+{
+    return nil;
+}
+
+-(NSArray*)childrenOf:(MPWGenericBinding*)binding
+{
+    return [NSArray array];
+}
+
+
+
 @end

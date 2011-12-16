@@ -52,6 +52,11 @@ idAccessor( content, setContent )
 	return children;
 }
 
+-(BOOL)hasChildren
+{
+    return [[self children] count] > 0;
+}
+
 -addChild:newChild
 {
 	[newChild setParent:self];
