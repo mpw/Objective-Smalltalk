@@ -36,6 +36,11 @@ idAccessor( url , setUrl )
 	return [[self url] path];
 }
 
+-path
+{
+    return [self fileSystemPath];
+}
+
 -(BOOL)existsAndIsDirectory:(BOOL*)isDirectory
 {
 	NSFileManager *manager=[NSFileManager defaultManager];

@@ -19,7 +19,9 @@ objectAccessor(MPWScheme, readWrite, setReadWrite)
 {
     id result=nil;
    result=[[self readWrite] valueForBinding:aBinding];
+//    NSLog(@"COW:  readWrite %@ for %@ returned %@",[self readWrite],[aBinding name],result);
     if ( !result ) {
+//        NSLog(@"COW:  readOnly %@ for %@ returned %@",[self readOnly],[aBinding name],result);
         result=[[self readOnly] valueForBinding:aBinding];
     }
     return result;
@@ -84,12 +86,28 @@ objectAccessor(MPWScheme, readWrite, setReadWrite)
     IDEXPECT([interpreter evaluateScriptString:@" cms:/hi "],@"hello world",@"read of base");
 }
 
++(void)testCOWWithRelativeScheme
+{
+    MPWStCompiler *interpreter = [self _testInterpreterWithCOW];
+    [interpreter evaluateScriptString:@" scheme:rel := MPWRelScheme alloc initWithBaseScheme: scheme:cms baseURL:'dir'."];
+    [interpreter evaluateScriptString:@" cms:/dir/hi := 'Hello Relative World'"];
+
+
+    IDEXPECT([interpreter evaluateScriptString:@" rel:hi "],@"Hello Relative World",@"read via relative scheme");
+    [interpreter evaluateScriptString:@" cms:/writes/baseWrite := 'do not read me'"];
+    [interpreter evaluateScriptString:@" scheme:cow setReadOnly: scheme:rel . "];
+    IDEXPECT([interpreter evaluateScriptString:@" cow:hi "],@"Hello Relative World",@"read via copy on write via relativexw");
+    
+    // FIXME: finish
+}
+
 +testSelectors
 {
     return [NSArray arrayWithObjects:   
             @"testReadFromBase",
             @"testCopyOverridesBase",
             @"testWriteOnCOWDoesntAffectBase",
+            @"testCOWWithRelativeScheme",
             nil];
 }
 

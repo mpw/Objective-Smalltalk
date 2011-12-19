@@ -22,6 +22,10 @@ idAccessor( scheme, setScheme )
 	return self;
 }
 
+-path
+{
+    return name;
+}
 
 -(BOOL)isBound
 {

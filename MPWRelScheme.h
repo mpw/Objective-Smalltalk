@@ -6,10 +6,10 @@
 //  Copyright 2011 metaobject ltd. All rights reserved.
 //
 
-#import "MPWScheme.h"
+#import "MPWGenericScheme.h"
 
 
-@interface MPWRelScheme : MPWScheme {
+@interface MPWRelScheme : MPWGenericScheme {
 	MPWScheme* baseScheme;
 	NSString* baseIdentifier;
 }

@@ -1,0 +1,10 @@
+#!/usr/local/bin/stsh
+context loadFramework:'MPWSideWeb'
+server := MPWHTTPServer new.
+server setPort:8080.
+server start:nil.
+
+scheme:cms := MPWSiteMap new.
+
+shell runInteractiveLoop
+

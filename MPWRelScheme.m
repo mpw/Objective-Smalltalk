@@ -21,6 +21,14 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 	return [[self baseScheme] bindingForName:[[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName] inContext:aContext];
 }
 
+//  FIXME
+-valueForBinding:aBinding
+{
+    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
+//    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@/%@ -> value %@",
+  //        aBinding,[aBinding path],binding,[binding path],[binding value]);
+    return [binding value];
+}
 
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
 {
@@ -28,11 +36,6 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 	[self setBaseScheme:aScheme];
 	[self setBaseIdentifier:str];
 	return self;
-}
-
--initWithBaseRef:(MPWBinding*)aBinding
-{
-    [aBinding scheme];
 }
 
 -(void)dealloc
