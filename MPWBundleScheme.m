@@ -24,7 +24,7 @@ objectAccessor( NSBundle, bundle ,setBundle )
 	return [self schemeWithBundle:[NSBundle mainBundle]];
 }
 
-+classBundleSchme:(Class)aClass
++classBundleScheme:(Class)aClass
 {
 	return [self schemeWithBundle:[NSBundle bundleForClass:aClass]];
 }

@@ -15,6 +15,6 @@
 
 +schemeWithBundle:(NSBundle*)aBundle;
 +mainBundleScheme;
-+classBundleSchme:(Class)aClass;
++classBundleScheme:(Class)aClass;
 
 @end
