@@ -22,8 +22,15 @@ idAccessor( source, setSource )
 		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]] ;
 	} else if ( [[self mimetype] hasPrefix:@"application/json"] ) {
 		return [NSJSONSerialization JSONObjectWithData:[self rawData] options:0 error:nil] ;
-	} 
-	return nil;
+	}  else if ( [[self extension] isEqual:@"newsplist"] ||
+                [[self extension] isEqual:@"plist"] ) {
+#if TARGET_OS_IPHONE
+        return [NSPropertyListSerialization propertyListFromData:[self rawData] mutabilityOption:0 format:nil errorDescription:nil];
+#else
+        return [[[self rawData] stringValue] propertyList];
+#endif
+    }
+    return nil;
 }
 
 
@@ -71,6 +78,15 @@ idAccessor( source, setSource )
 		return [[self value] description];
 	} else {
 		return [[self rawData] description];
+	}
+}
+
+-(NSString *)stringValue
+{
+	if ( [self value] ) {
+		return [[self value] stringValue];
+	} else {
+		return [[self rawData] stringValue];
 	}
 }
 

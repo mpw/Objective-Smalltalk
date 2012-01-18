@@ -289,9 +289,9 @@
 		1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FBAD8141436297D0050D6DE /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAD8131436297C0050D6DE /* MPWFoundation.framework */; };
 		1FBAD81714362D850050D6DE /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
-		1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; };
-		1FD1B4481492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; };
-		1FD1B4491492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; };
+		1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD1B4481492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD1B4491492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD1B44B1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD1B44C1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };

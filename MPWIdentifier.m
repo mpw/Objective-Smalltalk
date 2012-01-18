@@ -19,7 +19,10 @@ idAccessor( identifierName, setIdentifierName )
 -schemeWithContext:aContext
 {
 	id theScheme=[self scheme];
-	NSAssert1( theScheme!=nil , @"scheme %@ could not be evaluated", [self schemeName]);
+    if ( theScheme == nil ) {
+        [NSException raise:@"invalidscheme" format:@"scheme %@ could not be evaluated", [self schemeName]];
+    }
+//	NSAssert1( theScheme!=nil , );
 	return theScheme;
 }
 

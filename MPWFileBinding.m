@@ -9,6 +9,7 @@
 #import "MPWFileBinding.h"
 #import <MPWFoundation/AccessorMacros.h>
 #import "MPWURLBinding.h"
+#import "MPWResource.h"
 
 @implementation MPWFileBinding
 
@@ -84,12 +85,24 @@ idAccessor( url , setUrl )
     }
 }
 
+
+
+-_valueWithDataURL:(NSURL*)aURL
+{
+	NSData *rawData = [NSData dataWithContentsOfURL:aURL];
+	MPWResource *result=[[[MPWResource alloc] init] autorelease];
+	[result setSource:aURL];
+	[result setRawData:rawData];
+	return result;
+}
+
+
 -_valueWithURL:(NSURL*)aURL
 {
     if ( [self hasChildren] ) {
         return [self directoryContents];
     } else {
-        return [NSData dataWithContentsOfURL:aURL];
+        return [self _valueWithDataURL:aURL];
     }
 }
 
