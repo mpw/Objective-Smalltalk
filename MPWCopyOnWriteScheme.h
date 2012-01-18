@@ -7,10 +7,14 @@
 //
 
 #import "MPWTreeNodeScheme.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 @interface MPWCopyOnWriteScheme : MPWGenericScheme
 {
     MPWScheme *readOnly,*readWrite;
+    BOOL cacheReads;
 }
+
+boolAccessor_h(cacheReads, setCacheReads)
 
 @end

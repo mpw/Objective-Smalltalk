@@ -14,6 +14,7 @@
 
 objectAccessor(MPWScheme, readOnly, setReadOnly)
 objectAccessor(MPWScheme, readWrite, setReadWrite)
+boolAccessor(cacheReads, setCacheReads)
 
 -valueForBinding:aBinding
 {
@@ -23,6 +24,9 @@ objectAccessor(MPWScheme, readWrite, setReadWrite)
     if ( !result ) {
 //        NSLog(@"COW:  readOnly %@ for %@ returned %@",[self readOnly],[aBinding name],result);
         result=[[self readOnly] valueForBinding:aBinding];
+        if ( [self cacheReads] ) {
+            [[self readWrite] setValue:result forBinding:aBinding];
+        }
     }
     return result;
 }
