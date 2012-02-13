@@ -1,0 +1,16 @@
+#!/usr/local/bin/stsh
+context loadFramework:'MPWSideWeb'
+server := MPWHTTPServer new.
+server setPort:8081.
+server start:nil.
+
+ cache := MPWCopyOnWriteScheme scheme.
+ cache setReadOnly: scheme:file
+ cache setReadWrite: MPWSiteMap scheme.
+ cache setCacheReads: 1.
+ server setDelegate: cache .
+
+# server setDelegate: scheme:file 
+
+shell runInteractiveLoop
+
