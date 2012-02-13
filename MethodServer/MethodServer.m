@@ -35,9 +35,9 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 
 
 
--(void)setup
+-(void)setupWithInterpreter:anInterpreter
 {
-    [self setInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
+    [self setInterpreter:anInterpreter];
     [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
     [[self interpreter] bindValue:self toVariableNamed:@"appDelegate"];
     NSLog(@"PATH: %@",[MPWStCompiler evaluate:@"env:PATH"]);
@@ -46,6 +46,12 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
     [self setupWebServer];
 
+}
+
+
+-(void)setup
+{
+    [self setupWithInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
 }
 
 -(NSDictionary*)dictionaryFromData:(NSData*)dictData
@@ -91,9 +97,29 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
     }
 }
 
+-(NSData*)post:(NSString*)uri parameters:postData
+{
+    NSLog(@"POST to %@",uri);
+    NSLog(@"values: %@",[postData values]);
+    postData=[[[postData values] objectForKey:@"eval"] stringValue];
+    NSLog(@"values: %@",postData);
+    
+    [self eval:postData];
+    return [@"" asData];
+}
+
+-(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
+{
+    NSData *retval =[super put:uri data:putData parameters:params];
+    if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
+        [delegate didDefineMethods:self];
+    }
+    return retval;
+}
+
 -(void)defineMethodsInExternalDict:(NSDictionary*)dict
 {
-    NSLog(@"define methods: %@",dict);
+    NSLog(@" define methods in MethodServer: %@",dict);
     if ( dict ) {
         [[self interpreter] defineMethodsInExternalDict:dict];
     }

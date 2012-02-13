@@ -17,4 +17,7 @@
     MPWStCompiler *interpreter;
     id delegate;
 }
+
+-(void)setupWithInterpreter:anInterpreter;
+
 @end

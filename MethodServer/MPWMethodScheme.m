@@ -104,7 +104,7 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
 
 -(void)defineMethodsInExternalDict:(NSDictionary*)dict
 {
-    NSLog(@"define methods: %@",dict);
+    NSLog(@"scheme -- define methods: %@",dict);
     if ( dict ) {
         [[self interpreter] defineMethodsInExternalDict:dict];
     }
