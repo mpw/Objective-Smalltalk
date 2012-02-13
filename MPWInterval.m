@@ -211,6 +211,11 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	return self;
 }
 
+-(void)writeOnStream:(id<Streaming>)aStream
+{
+    [aStream writeEnumerator:self];
+}
+
 @end
 
 @implementation MPWInterval(testing)

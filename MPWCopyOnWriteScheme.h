@@ -16,5 +16,7 @@
 }
 
 boolAccessor_h(cacheReads, setCacheReads)
+objectAccessor_h(MPWScheme, readOnly, setReadOnly)
+objectAccessor_h(MPWScheme, readWrite, setReadWrite)
 
 @end

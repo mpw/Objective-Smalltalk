@@ -93,6 +93,7 @@ scalarAccessor( id , compiler , setCompiler )
 	NSArray* classNames = [scriptDict allKeys];
 	NSArray* localMethodDicts = [[scriptDict collect] objectForKey:[classNames each]];
 	[[self do] defineMethodsInExternalMethodDict:[localMethodDicts each] forClass:[classNames each]];
+    NSLog(@"=== after MethdStore defineMethodsInExternalDict");
 }
 
 -methodDictionaryForClassNamed:(NSString*)className

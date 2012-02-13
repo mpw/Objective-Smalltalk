@@ -171,12 +171,13 @@ idAccessor( _signature, setSignature )
 								argp=&pointArg;
 								
 								break;
-							} else if (  !strcmp( type, "{_NSSize=ff}" ) || !strcmp( type, "{CGSize=ff}" ) ) {
+							} else if (  !strcmp( type, "{_NSSize=ff}" ) || !strcmp( type, "{CGSize=ff}") ||  !strcmp( type, "{CGSize=dd}" ) ) {
 								sizeArg = [arg asSize];
 								argp=&sizeArg;
 								break;
 							}  if (   !strcmp( type, "{?=ffff}" ) || !strcmp( type, "{_NSRect={_NSPoint=ff}{_NSSize=ff}}" )||
-									  !strcmp( type, "{CGRect={CGPoint=ff}{CGSize=ff}}" )) {
+									  !strcmp( type, "{CGRect={CGPoint=ff}{CGSize=ff}}") ||
+                                              !strcmp( type, "{CGRect={CGPoint=dd}{CGSize=dd}}"  )) {
 								rectArg = [arg rect];
 								argp=&rectArg;
 								break;
