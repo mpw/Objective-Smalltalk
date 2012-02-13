@@ -131,10 +131,12 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 
 -(void)saveDocument:(id)sender
 {
+    NSString *browserPath = [[[methodBrowser path] retain] autorelease];
     [self saveMethodAtCurrentBrowserPath];
     NSLog(@"saveDocument");
     [super saveDocument:sender];
     [self performSelector:@selector(upload) withObject:nil afterDelay:0.6];
+    [methodBrowser setPath:browserPath];
 }
 
 
