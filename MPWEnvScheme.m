@@ -69,7 +69,7 @@
 +(void)testEnvironmentIsInherited
 {
 	[MPWStCompiler evaluate:@"env:myvar := 900"];
-	FILE *fin = popen("echo -n $myvar", "r");
+	FILE *fin = popen("/bin/echo -n $myvar", "r");
 	NSString *echoResult=@"Did not read at all";
 	if ( fin ) {
 		char buffer[90]="";
