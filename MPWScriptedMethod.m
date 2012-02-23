@@ -21,7 +21,7 @@ idAccessor( script, _setScript )
 -(void)setScript:newScript
 {
 	[self setMethodBody:nil];
-    NSLog(@"setScript: '%@'",newScript);
+//    NSLog(@"setScript: '%@'",newScript);
 	[self _setScript:newScript];
 }
 

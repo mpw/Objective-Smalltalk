@@ -16,10 +16,27 @@ objectAccessor(MPWScheme, readOnly, setReadOnly)
 objectAccessor(MPWScheme, readWrite, setReadWrite)
 boolAccessor(cacheReads, setCacheReads)
 
+
+-initWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache
+{
+    self=[super init];
+    [self setReadOnly:newBase];
+    [self setReadWrite:newCache];
+    return self;
+
+}
+     
++cacheWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache
+{
+    MPWCopyOnWriteScheme *newScheme=[[[self alloc] initWithBase:newBase cache:newCache] autorelease];
+    [newScheme setCacheReads:YES];
+    return newScheme;
+}
+
 -valueForBinding:aBinding
 {
     id result=nil;
-   result=[[self readWrite] valueForBinding:aBinding];
+    result=[[self readWrite] valueForBinding:aBinding];
 //    NSLog(@"COW:  readWrite %@ for %@ returned %@",[self readWrite],[aBinding name],result);
     if ( !result ) {
 //        NSLog(@"COW:  readOnly %@ for %@ returned %@",[self readOnly],[aBinding name],result);

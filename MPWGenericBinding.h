@@ -11,7 +11,6 @@
 
 @interface MPWGenericBinding : MPWBinding {
 	NSString* name;
-	id		scheme;
 }
 
 -initWithName:(NSString*)envName scheme:newScheme;

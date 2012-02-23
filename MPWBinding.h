@@ -12,6 +12,9 @@
 @interface MPWBinding : MPWObject {
 	BOOL	isBound;
 	id		_value;
+    id		scheme;
+    id      identifier;
+
 }
 
 +bindingWithValue:aValue;

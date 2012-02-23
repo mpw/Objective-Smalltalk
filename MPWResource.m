@@ -114,6 +114,11 @@ idAccessor( source, setSource )
 	return [[self name] pathExtension];
 }
 
+-(NSData *)asData
+{
+    return [self rawData];
+}
+
 -(void)dealloc
 {
 	[source release];

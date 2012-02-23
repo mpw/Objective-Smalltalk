@@ -10,24 +10,50 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWIdentifier.h"
 #import "MPWBinding.h"
+#import "MPWGenericBinding.h"
+#import "MPWVarScheme.h"
 
 @implementation MPWRelScheme
 
 objectAccessor( MPWScheme, baseScheme, setBaseScheme )
 objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 
+-myBindingForName:anIdentifierName inContext:aContext
+{
+    NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
+    NSLog(@"combined name: '%@'",combinedPath);
+    MPWIdentifier *newIdentifier=[[[MPWIdentifier alloc] init] autorelease];
+    [newIdentifier setSchemeName:nil];
+    [newIdentifier setIdentifierName:combinedPath];
+	return [[self baseScheme] bindingWithIdentifier:newIdentifier withContext:aContext];
+}
+
+//  FIXME
 -bindingForName:anIdentifierName inContext:aContext
 {
-	return [[self baseScheme] bindingForName:[[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName] inContext:aContext];
+    NSLog(@"bindingForName with base scheme: %@",[self baseScheme]);
+    MPWBinding *binding;
+    if ( ![[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
+        NSLog(@"modifying var-scheme now");
+        binding=[self myBindingForName:anIdentifierName inContext:aContext];
+    } else {
+        binding=[super bindingForName:anIdentifierName inContext:aContext];
+    }
+    return binding;
 }
 
 //  FIXME
 -valueForBinding:aBinding
 {
-    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
-//    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@/%@ -> value %@",
-  //        aBinding,[aBinding path],binding,[binding path],[binding value]);
-    return [binding value];
+    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
+    if ( [[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
+        NSLog(@"modifying non var-scheme later");
+        aBinding=[self myBindingForName:[aBinding path] inContext:nil];
+    }
+//    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
+//    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
+//        aBinding,[aBinding path],binding,[binding value]);
+    return [aBinding value];
 }
 
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
@@ -36,6 +62,11 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 	[self setBaseScheme:aScheme];
 	[self setBaseIdentifier:str];
 	return self;
+}
+
+-initWithRef:(MPWBinding*)aBinding
+{
+    return [self initWithBaseScheme:[aBinding scheme] baseURL:[[aBinding identifier] identifierName]];
 }
 
 -(void)dealloc

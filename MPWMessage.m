@@ -166,7 +166,7 @@ idAccessor( _signature, setSignature )
 								rangeArg = [arg asNSRange];
 								argp=&rangeArg;
 								break;
-							}  else if ( !strcmp(type,"{?=ff}") || !strcmp( type, "{_NSPoint=ff}" ) || !strcmp( type, "{CGPoint=ff}" )) {
+							}  else if ( !strcmp(type,"{?=ff}") || !strcmp( type, "{_NSPoint=ff}" ) || !strcmp( type, "{CGPoint=ff}" )|| !strcmp( type, "{CGPoint=dd}" )) {
 								pointArg = [arg point];
 								argp=&pointArg;
 								

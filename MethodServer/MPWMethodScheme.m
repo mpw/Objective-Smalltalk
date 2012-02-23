@@ -90,13 +90,13 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
 -(void)setValue:newValue forBinding:(MPWGenericBinding*)aBinding
 {
     NSString *uri=[aBinding name];
-    NSLog(@"setValue to %@",uri);
+//    NSLog(@"setValue to %@",uri);
     if ( [uri hasPrefix:@"methods"] ) {
         [self defineMethodsInExternalDict:newValue];
         return ;
     } else  if ( [uri hasPrefix:@"/eval"] ) {
         NSString *evalString = [newValue stringValue];
-        NSLog(@"should eval: %@",evalString);
+//        NSLog(@"should eval: %@",evalString);
         [self performSelectorOnMainThread:@selector(eval:) withObject:evalString waitUntilDone:YES];
         return ;
     }
@@ -104,7 +104,7 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
 
 -(void)defineMethodsInExternalDict:(NSDictionary*)dict
 {
-    NSLog(@"scheme -- define methods: %@",dict);
+//    NSLog(@"scheme -- define methods: %@",dict);
     if ( dict ) {
         [[self interpreter] defineMethodsInExternalDict:dict];
     }

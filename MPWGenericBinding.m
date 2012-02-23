@@ -12,7 +12,6 @@
 @implementation MPWGenericBinding
 
 objectAccessor( NSString, name, setName )
-idAccessor( scheme, setScheme )
 
 -initWithName:(NSString*)envName scheme:newScheme
 {
@@ -71,7 +70,6 @@ idAccessor( scheme, setScheme )
 -(void)dealloc
 {
 	[name release];
-	[scheme release];
 	[super dealloc];
 }
 

@@ -119,7 +119,7 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 
 -(void)defineMethodsInExternalDict:(NSDictionary*)dict
 {
-    NSLog(@" define methods in MethodServer: %@",dict);
+//    NSLog(@" define methods in MethodServer: %@",dict);
     if ( dict ) {
         [[self interpreter] defineMethodsInExternalDict:dict];
     }

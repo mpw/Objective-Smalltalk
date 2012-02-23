@@ -15,6 +15,10 @@
     BOOL cacheReads;
 }
 
+-initWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache;
++cacheWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache;
+
+
 boolAccessor_h(cacheReads, setCacheReads)
 objectAccessor_h(MPWScheme, readOnly, setReadOnly)
 objectAccessor_h(MPWScheme, readWrite, setReadWrite)

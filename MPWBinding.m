@@ -7,11 +7,14 @@
 //
 
 #import "MPWBinding.h"
-
+#import "MPWRelScheme.h"
 
 @implementation MPWBinding
 
-
+idAccessor( scheme, setScheme )
+idAccessor( _value, _setValue )
+boolAccessor( isBound ,setIsBound )
+idAccessor(identifier, setIdentifier)
 
 -initWithValue:aValue
 {
@@ -27,8 +30,6 @@
 	return [[[self alloc] initWithValue:aValue] autorelease];
 }
 
-idAccessor( _value, _setValue )
-boolAccessor( isBound ,setIsBound )
 
 -value
 {
@@ -93,11 +94,17 @@ boolAccessor( isBound ,setIsBound )
     return NO;
 }
 
+-asScheme
+{
+    return [[[MPWRelScheme alloc] initWithRef:self] autorelease];
+}
 
 
 -(void)dealloc
 {
 	[_value release];
+	[scheme release];
+	[identifier release];
 	[super dealloc];
 }
 

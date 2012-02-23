@@ -28,7 +28,10 @@
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
-	return [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
+	MPWBinding *binding = [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
+    [binding setScheme:self];
+    [binding setIdentifier:anIdentifier];
+    return binding;
 }
 
 -evaluteIdentifier:anIdentifer withContext:aContext
@@ -43,7 +46,6 @@
 		value=nil;
 	}
 	return value;
-	//	return [aContext valueOfVariableNamed:[anIdentifer identifierName] withScheme:[anIdentifer schemeName]];
 }
 
 

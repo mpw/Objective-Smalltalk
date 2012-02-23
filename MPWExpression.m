@@ -60,6 +60,12 @@
 
 @end
 
+@implementation NSString(stringValue)
+
+-(NSString *)stringValue { return self; }
+
+@end
+
 @implementation NSObject(compiling)
 
 -compileIn:aContext

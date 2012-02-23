@@ -18,6 +18,15 @@
 	return binding;
 }
 
+-valueForBinding:aBinding
+{
+    if ( [aBinding isKindOfClass:[MPWFileBinding class]] ) {
+        return [aBinding value];
+    } else {
+//        return [[[self bindingForName:[aBinding name] inContext:nil] value] rawData];
+        return [[self bindingForName:[aBinding name] inContext:nil] value];
+    }
+}
 
 @end
 #import "MPWStCompiler.h"
