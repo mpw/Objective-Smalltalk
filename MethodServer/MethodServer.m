@@ -14,15 +14,25 @@
 @implementation MethodServer
 
 objectAccessor(MPWStCompiler, interpreter, setInterpreter)
+objectAccessor(NSString, methodDictName, setMethodDictName)
+objectAccessor(NSString, projectDir, setProjectDir)
 
-- (id)init
+
+- (id)initWithMethodDictName:(NSString*)newName
 {
     self = [super init];
     if (self) {
+        [self setMethodDictName:newName];
+        [self setProjectDir:[[[NSProcessInfo processInfo] environment] objectForKey:@"PROJECT_DIR"]];
         // Initialization code here.
     }
     
     return self;
+}
+
+-(id)init
+{
+    return [self initWithMethodDictName:@"methods"];
 }
 
 -(id)deserializeData:(NSData*)inputData at:(MPWBinding*)aBinding
@@ -40,7 +50,7 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
     [self setInterpreter:anInterpreter];
     [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
     [[self interpreter] bindValue:self toVariableNamed:@"appDelegate"];
-    NSLog(@"PATH: %@",[MPWStCompiler evaluate:@"env:PATH"]);
+//    NSLog(@"PATH: %@",[MPWStCompiler evaluate:@"env:PATH"]);
     [self defineMethodsInExternalDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
@@ -63,7 +73,7 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 
 -(NSDictionary*)externalMethodsDict
 {
-    NSData *dictData = [[NSBundle mainBundle] resourceWithName:@"methods" type:@"plist"];
+    NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"plist"];
     NSLog(@"data %p len: %d",dictData,[dictData length]);
     return [self dictionaryFromData:dictData];
 }
@@ -89,18 +99,20 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
-//  NSLog(@"uri: %@",uri);
+  NSLog(@"uri: %@",uri);
     if ( [uri hasPrefix:@"/theAnswer"] ) {
-        return [NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]];
-    } else {
+        return [[NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]] asData];
+    } else if ( [uri hasPrefix:@"/projectDir"] ) {
+        return [[self projectDir] asData];
+    } else{
         return [super get:uri parameters:params];
     }
 }
 
 -(NSData*)post:(NSString*)uri parameters:postData
 {
-    NSLog(@"POST to %@",uri);
-    NSLog(@"values: %@",[postData values]);
+//    NSLog(@"POST to %@",uri);
+//    NSLog(@"values: %@",[postData values]);
     postData=[[[postData values] objectForKey:@"eval"] stringValue];
     NSLog(@"values: %@",postData);
     
@@ -110,6 +122,7 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
 {
+    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
     NSData *retval =[super put:uri data:putData parameters:params];
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
         [delegate didDefineMethods:self];

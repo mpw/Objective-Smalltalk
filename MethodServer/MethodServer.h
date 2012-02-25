@@ -16,6 +16,8 @@
 {
     MPWStCompiler *interpreter;
     id delegate;
+    NSString *methodDictName,*projectDir;
+
 }
 
 -(void)setupWithInterpreter:anInterpreter;

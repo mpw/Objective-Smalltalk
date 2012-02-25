@@ -121,6 +121,12 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     }
 }
 
+-(NSString*)determineServer
+{
+    
+}
+
+
 - (void)upload {
     NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"http://%@:51000/methods\"";
     NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];

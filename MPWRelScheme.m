@@ -18,10 +18,33 @@
 objectAccessor( MPWScheme, baseScheme, setBaseScheme )
 objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 
+/*
+   FIXME!!
+ 
+   Different kinds of source schemes/bindings need to be adjusted at different times.
+ 
+   GenericBindings only start evaluating their identifiers at valueForBinding: time,
+   so the path adjustment needs to be done then.  (Or rather:  some other scheme
+   may have created the binding, in which case we only find out about it at valueForBinding:
+   time and thus didn't have the opportunity to adjust the path during creation).
+ 
+   However, that's too late for var: bindings and evaluation of embedded expressions
+     (for example  {env:HOME} because at valueForBinding: time there is no context,
+     and the context is required to evaluat these.
+ 
+   Not entirely sure how to fix this (might go away if I do away with GenericBindings?)
+   Alternatively:   keep the context around for later.
+
+ 
+   Also:  this problem only started manifesting itself when I added storing the scheme
+       to MPWBinding (and therefore all MPWBindings).  That probably 
+*/
+
+
 -myBindingForName:anIdentifierName inContext:aContext
 {
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
-    NSLog(@"combined name: '%@'",combinedPath);
+//    NSLog(@"combined name: '%@'",combinedPath);
     MPWIdentifier *newIdentifier=[[[MPWIdentifier alloc] init] autorelease];
     [newIdentifier setSchemeName:nil];
     [newIdentifier setIdentifierName:combinedPath];
@@ -31,10 +54,10 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 //  FIXME
 -bindingForName:anIdentifierName inContext:aContext
 {
-    NSLog(@"bindingForName with base scheme: %@",[self baseScheme]);
+//    NSLog(@"bindingForName with base scheme: %@",[self baseScheme]);
     MPWBinding *binding;
     if ( ![[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
-        NSLog(@"modifying var-scheme now");
+//        NSLog(@"modifying var-scheme now");
         binding=[self myBindingForName:anIdentifierName inContext:aContext];
     } else {
         binding=[super bindingForName:anIdentifierName inContext:aContext];
@@ -45,9 +68,9 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 //  FIXME
 -valueForBinding:aBinding
 {
-    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
+//    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if ( [[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
-        NSLog(@"modifying non var-scheme later");
+//        NSLog(@"modifying non var-scheme later");
         aBinding=[self myBindingForName:[aBinding path] inContext:nil];
     }
 //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
