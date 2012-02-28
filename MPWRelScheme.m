@@ -47,7 +47,7 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
     return binding;
 }
     
--myBindingForName:anIdentifierName inContext:aContext
+-bindingForName:anIdentifierName inContext:aContext
 {
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
 //    NSLog(@"combined name: '%@'",combinedPath);
@@ -58,26 +58,12 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 }
 
 //  FIXME
--bindingForName:anIdentifierName inContext:aContext
-{
-//    NSLog(@"bindingForName with base scheme: %@",[self baseScheme]);
-    MPWBinding *binding;
-    if ( YES || ![[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
-//        NSLog(@"modifying var-scheme now");
-        binding=[self myBindingForName:anIdentifierName inContext:aContext];
-    } else {
-        binding=[super bindingForName:anIdentifierName inContext:aContext];
-    }
-    return binding;
-}
-
-//  FIXME
 -valueForBinding:aBinding
 {
 //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if (  [aBinding scheme] != [self baseScheme] ) {
 //        NSLog(@"modifying non var-scheme later");
-        aBinding=[self myBindingForName:[aBinding path] inContext:[aBinding defaultContext]];
+        aBinding=[self bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
 //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
 //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
