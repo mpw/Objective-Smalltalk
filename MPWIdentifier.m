@@ -35,12 +35,14 @@ idAccessor( identifierName, setIdentifierName )
 {
 	NSMutableArray *evaluated = [NSMutableArray array];
 	for ( id component in [self pathComponents] ) {
+        id evaluatedComponent=component;
 		if ( [component hasPrefix:@"{"] && [component hasSuffix:@"}"] ) {
 			NSString *nested=[component substringWithRange:NSMakeRange(1, [component length]-2)];
-			component=[aContext evaluateScriptString:nested];
-			component = [[component  stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			evaluatedComponent=[aContext evaluateScriptString:nested];
+			evaluatedComponent = [[evaluatedComponent  stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		}
-		[evaluated addObject:component];
+        NSAssert3(evaluatedComponent!=nil, @"component '%@' of %@ in evaluated in %@ nil",component, [self identifierName],aContext);
+		[evaluated addObject:evaluatedComponent];
 	}
 	return evaluated;
 	

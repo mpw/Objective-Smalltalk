@@ -8,12 +8,14 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
+@class MPWScheme,MPWIdentifier,MPWEvaluator;
 
 @interface MPWBinding : MPWObject {
 	BOOL	isBound;
 	id		_value;
     id		scheme;
     id      identifier;
+    MPWEvaluator    *defaultContext;
 
 }
 

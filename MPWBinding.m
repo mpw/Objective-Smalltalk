@@ -15,6 +15,7 @@ idAccessor( scheme, setScheme )
 idAccessor( _value, _setValue )
 boolAccessor( isBound ,setIsBound )
 idAccessor(identifier, setIdentifier)
+scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 
 -initWithValue:aValue
 {
@@ -99,6 +100,24 @@ idAccessor(identifier, setIdentifier)
     return [[[MPWRelScheme alloc] initWithRef:self] autorelease];
 }
 
+-name
+{
+    return [[self identifier] identifierName];
+}
+
+
+-bindNames
+{
+    MPWBinding *evaluated = [[[self class] alloc] init];
+    [evaluated setScheme:[self scheme]];
+    NSString *name=[[self identifier] evaluatedIdentifierNameInContext:[self defaultContext]];
+    id newIdentifier=[[[[[self identifier] class] alloc] init] autorelease];
+    [newIdentifier setIdentifierName:name];
+    [newIdentifier setScheme:[[self identifier] scheme]];
+    [newIdentifier setSchemeName:[[self identifier] schemeName]]; 
+    [evaluated setIdentifier:newIdentifier];
+    return evaluated;
+}
 
 -(void)dealloc
 {

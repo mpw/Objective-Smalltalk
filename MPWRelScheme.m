@@ -40,7 +40,13 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
        to MPWBinding (and therefore all MPWBindings).  That probably 
 */
 
-
+-bindingWithIdentifier:anIdentifier withContext:aContext
+{
+    MPWBinding *binding=[super bindingWithIdentifier:anIdentifier withContext:aContext];
+    [binding setScheme:[self baseScheme]];
+    return binding;
+}
+    
 -myBindingForName:anIdentifierName inContext:aContext
 {
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
@@ -56,7 +62,7 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 {
 //    NSLog(@"bindingForName with base scheme: %@",[self baseScheme]);
     MPWBinding *binding;
-    if ( ![[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
+    if ( YES || ![[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
 //        NSLog(@"modifying var-scheme now");
         binding=[self myBindingForName:anIdentifierName inContext:aContext];
     } else {
@@ -69,13 +75,13 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 -valueForBinding:aBinding
 {
 //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
-    if ( [[self baseScheme] isKindOfClass:[MPWGenericScheme class]] ) {
+    if (  [aBinding scheme] != [self baseScheme] ) {
 //        NSLog(@"modifying non var-scheme later");
-        aBinding=[self myBindingForName:[aBinding path] inContext:nil];
+        aBinding=[self myBindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
 //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
 //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
-//        aBinding,[aBinding path],binding,[binding value]);
+//          aBinding,[aBinding name],aBinding,[aBinding value]);
     return [aBinding value];
 }
 
@@ -89,7 +95,8 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 
 -initWithRef:(MPWBinding*)aBinding
 {
-    return [self initWithBaseScheme:[aBinding scheme] baseURL:[[aBinding identifier] identifierName]];
+    MPWBinding *resolved=[aBinding bindNames];
+    return [self initWithBaseScheme:[resolved scheme] baseURL:[[resolved identifier] identifierName]];
 }
 
 -(void)dealloc
@@ -138,6 +145,24 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
     IDEXPECT([interpreter evaluateScriptString:@"rel:/relativeSchemeTests.txt stringValue"] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
 }
 
++(void)testRelativeFileSchemeGET
+{
+    MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
+    NSString *path = @"/tmp/relativeSchemeTests.txt";
+    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    id rel=[interpreter evaluateScriptString:@"MPWRelScheme alloc initWithBaseScheme: scheme:file baseURL:'/tmp'."];
+    IDEXPECT([[rel get:@"/relativeSchemeTests.txt" parameters:nil] stringValue] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
+}
+
++(void)testRelativeFileSchemeGETViaEvaluatedRef
+{
+    MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
+    NSString *path = @"/tmp/relativeSchemeTests.txt";
+    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    [interpreter evaluateScriptString:@"env:a :='tmp'. rel := ref:file:/{env:a} asScheme."];
+    IDEXPECT([interpreter evaluateScriptString:@"(rel get:'/relativeSchemeTests.txt' parameters:nil) stringValue"] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
+}
+
 
 +testSelectors
 {
@@ -145,6 +170,8 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
             @"testBasicLookup",
             @"testRelativeLookup",
             @"testRelativeFileScheme",
+            @"testRelativeFileSchemeGET",
+//            @"testRelativeFileSchemeGETViaEvaluatedRef",
             nil];
 }
 

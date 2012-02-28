@@ -8,6 +8,7 @@
 
 #import "MPWScheme.h"
 #import "MPWBinding.h"
+#import "MPWCopyOnWriteScheme.h"
 
 @implementation MPWScheme
 
@@ -31,6 +32,7 @@
 	MPWBinding *binding = [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
     [binding setScheme:self];
     [binding setIdentifier:anIdentifier];
+    [binding setDefaultContext:aContext];
     return binding;
 }
 
@@ -66,6 +68,9 @@
     return YES;
 }
 
-
+-(MPWScheme*)cachedBy:cacheScheme
+{
+    return [MPWCopyOnWriteScheme cacheWithBase:self cache:cacheScheme];
+}
 
 @end

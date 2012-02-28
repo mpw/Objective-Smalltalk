@@ -3,10 +3,11 @@ context loadFramework:'MPWSideWeb'
 server := MPWHTTPServer new.
 server setPort:8081.
 server start:nil.
+base := ref:file:{env:HOME} asScheme.
+cache := base cachedBy: MPWSiteMap scheme.
 
-
-# server setDelegate: scheme:file 
- server setDelegate: (scheme:file cachedBy: MPWSiteMap scheme).
+server setDelegate: cache .
+#server setDelegate: base.
 
 shell runInteractiveLoop
 
