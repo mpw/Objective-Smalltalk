@@ -3,7 +3,7 @@
 //  
 //
 //  Created by Marcel Weiher on 10/16/11.
-//  Copyright (c) 2011 metaobject ltd. All rights reserved.
+//  Copyright (c) 2012 metaobject ltd. All rights reserved.
 //
 
 #import "SimpleMethodDictDocument.h"
@@ -98,7 +98,7 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 {
     NSArray *components=[path componentsSeparatedByString:@"/"];
     //    NSLog(@"path: %@, components: %@",path,components);
-    if ( [components count]>= 3 ) {
+    if ( [components count]>= 2 ) {
         NSString *className =  [components objectAtIndex:1];
         NSString *methodName = [methodHeader stringValue];
         if ( [methodName length] && [className length] ) {
@@ -107,10 +107,12 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     }
 }
 
--(void)saveMethodAtCurrentBrowserPath
+
+-(void)saveCurrentMethod
 {
     [self saveMethodAtPath:[methodBrowser path]];
 }
+
 
 -(void)delete:sender
 {
@@ -138,7 +140,7 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 -(void)saveDocument:(id)sender
 {
     NSString *browserPath = [[[methodBrowser path] retain] autorelease];
-    [self saveMethodAtCurrentBrowserPath];
+    [self saveCurrentMethod];
     NSLog(@"saveDocument");
     [super saveDocument:sender];
     [self performSelector:@selector(upload) withObject:nil afterDelay:0.6];

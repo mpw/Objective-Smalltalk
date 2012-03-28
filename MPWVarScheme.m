@@ -29,6 +29,10 @@
 	return binding;
 }
 
+-(id)valueForBinding:aBinding
+{
+    return [[self bindingForName:[aBinding name] inContext:[aBinding defaultContext]] value ];
+}
 
 @end
 

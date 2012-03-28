@@ -3,7 +3,7 @@
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 10/16/11.
-//  Copyright (c) 2011 metaobject ltd. All rights reserved.
+//  Copyright (c) 2012 metaobject ltd. All rights reserved.
 //
 
 #import "MethodDict.h"

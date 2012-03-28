@@ -296,6 +296,36 @@
 		1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD1B44B1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD1B44C1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
+		1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
+		1FD713CD1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
+		1FD713CE1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
+		1FD713CF1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
+		1FD713D01522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
+		1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
+		1FD713D21522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
+		1FD713D31522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
+		1FD713D41522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
+		1FD713D51522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
+		1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
+		1FD713D91522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
+		1FD713DA1522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
+		1FD713DB1522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
+		1FD713DC1522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
+		1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
+		1FD713DE1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
+		1FD713DF1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
+		1FD713E01522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
+		1FD713E11522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
+		1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
+		1FD713E51522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
+		1FD713E61522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
+		1FD713E71522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
+		1FD713E81522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
+		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FD713EA1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FD713EB1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FD713EC1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FD713ED1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
 		1FDCCB38139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */; };
@@ -425,7 +455,7 @@
 		1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodStore.m; sourceTree = "<group>"; };
 		1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectScripting.h; sourceTree = "<group>"; };
 		1F6F637F0987C803006F3936 /* NSObjectScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectScripting.m; sourceTree = "<group>"; };
-		1F7A3FA814485DDF00521C07 /* MethodEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MethodEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F7A3FA814485DDF00521C07 /* ViewBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SimpleMethodEditor copy-Info.plist"; path = "/Users/marcel/programming/Kits/MPWTalk/SimpleMethodEditor copy-Info.plist"; sourceTree = "<absolute>"; };
 		1F7B75AF14629431002F38D1 /* SchemeFS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchemeFS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7B75B414629431002F38D1 /* SchemeFS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SchemeFS-Info.plist"; sourceTree = "<group>"; };
@@ -505,6 +535,12 @@
 		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = SOURCE_ROOT; };
 		1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjCGenerator.h; sourceTree = "<group>"; };
 		1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjCGenerator.m; sourceTree = "<group>"; };
+		1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMirror.h; sourceTree = "<group>"; };
+		1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMirror.m; sourceTree = "<group>"; };
+		1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodMirror.h; sourceTree = "<group>"; };
+		1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodMirror.m; sourceTree = "<group>"; };
+		1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjectMirror.h; sourceTree = "<group>"; };
+		1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjectMirror.m; sourceTree = "<group>"; };
 		1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSchemeScheme.h; sourceTree = "<group>"; };
 		1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSchemeScheme.m; sourceTree = "<group>"; };
 		1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDefaultsScheme.h; sourceTree = "<group>"; };
@@ -826,6 +862,12 @@
 		F5A74ABC00F0A61B015ADD82 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */,
+				1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */,
+				1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */,
+				1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */,
+				1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */,
+				1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */,
 				1F88E8D9138ADCCA00199F03 /* MPWResource.h */,
 				1F88E8DA138ADCCA00199F03 /* MPWResource.m */,
 				1F88E8A9138ADC1600199F03 /* MPWGenericBinding.h */,
@@ -947,7 +989,7 @@
 				1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */,
 				1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */,
 				1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */,
-				1F7A3FA814485DDF00521C07 /* MethodEditor.app */,
+				1F7A3FA814485DDF00521C07 /* ViewBuilder.app */,
 				1F7E05A0144B3E22008F349D /* MethodServer.framework */,
 				1F7E05B4144B3E7D008F349D /* libiMethodServer.a */,
 				1F7B75AF14629431002F38D1 /* SchemeFS.app */,
@@ -1020,6 +1062,9 @@
 				1FA5F489147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1FA5F491147CE04A007EE753 /* MPWTreeNode.h in Headers */,
 				1FD1B4481492657300919385 /* MPWCopyOnWriteScheme.h in Headers */,
+				1FD713CD1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
+				1FD713D91522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
+				1FD713E51522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1085,6 +1130,9 @@
 				1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1FA5F490147CE04A007EE753 /* MPWTreeNode.h in Headers */,
 				1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */,
+				1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
+				1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
+				1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1093,6 +1141,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05C9144B414C008F349D /* MethodServer.h in Headers */,
+				1FD713CF1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
+				1FD713DB1522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
+				1FD713E71522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1100,6 +1151,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD713D01522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
+				1FD713DC1522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
+				1FD713E81522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1124,6 +1178,9 @@
 				1FA5F48A147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1FA5F492147CE04A007EE753 /* MPWTreeNode.h in Headers */,
 				1FD1B4491492657300919385 /* MPWCopyOnWriteScheme.h in Headers */,
+				1FD713CE1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
+				1FD713DA1522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
+				1FD713E61522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1187,9 +1244,9 @@
 			productReference = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		1F7A3F9614485DDF00521C07 /* MethodEditor */ = {
+		1F7A3F9614485DDF00521C07 /* ViewBuilder */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F7A3FA414485DDF00521C07 /* Build configuration list for PBXNativeTarget "MethodEditor" */;
+			buildConfigurationList = 1F7A3FA414485DDF00521C07 /* Build configuration list for PBXNativeTarget "ViewBuilder" */;
 			buildPhases = (
 				1F7A3F9714485DDF00521C07 /* Sources */,
 				1F7A3F9A14485DDF00521C07 /* Frameworks */,
@@ -1199,9 +1256,9 @@
 			);
 			dependencies = (
 			);
-			name = MethodEditor;
+			name = ViewBuilder;
 			productName = MethodEditor;
-			productReference = 1F7A3FA814485DDF00521C07 /* MethodEditor.app */;
+			productReference = 1F7A3FA814485DDF00521C07 /* ViewBuilder.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1F7B75AE14629431002F38D1 /* SchemeFS */ = {
@@ -1298,7 +1355,7 @@
 				1F4CB5191253D53C00B30C99 /* MPWTalk Linux Cocotron */,
 				1FE08F01137808B8003B18B9 /* MPWTalk-iOS */,
 				1F2E6EF9142EF26E00B5C827 /* SimpleMethodEditor */,
-				1F7A3F9614485DDF00521C07 /* MethodEditor */,
+				1F7A3F9614485DDF00521C07 /* ViewBuilder */,
 				1F7E059F144B3E22008F349D /* MethodServer */,
 				1F7E05B3144B3E7D008F349D /* iMethodServer */,
 				1F7B75AE14629431002F38D1 /* SchemeFS */,
@@ -1470,6 +1527,9 @@
 				1FA5F48C147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */,
 				1FA5F494147CE04A007EE753 /* MPWTreeNode.m in Sources */,
 				1FD1B44B1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */,
+				1FD713D21522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
+				1FD713DE1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
+				1FD713EA1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1534,6 +1594,9 @@
 				1FA5F48B147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */,
 				1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */,
 				1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */,
+				1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
+				1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
+				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1564,6 +1627,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05AB144B3E22008F349D /* MethodServer.m in Sources */,
+				1FD713D41522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
+				1FD713E01522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
+				1FD713EC1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1572,6 +1638,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05C1144B3F3F008F349D /* MethodServer.m in Sources */,
+				1FD713D51522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
+				1FD713E11522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
+				1FD713ED1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1633,6 +1702,9 @@
 				1FA5F48D147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */,
 				1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */,
 				1FD1B44C1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */,
+				1FD713D31522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
+				1FD713DF1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
+				1FD713EB1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1737,7 +1809,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -1976,7 +2048,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -2014,7 +2086,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -2065,7 +2137,7 @@
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_ACTUAL)";
-				PRODUCT_NAME = MethodEditor;
+				PRODUCT_NAME = ViewBuilder;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2096,7 +2168,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = MethodEditor;
+				PRODUCT_NAME = ViewBuilder;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2127,7 +2199,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = MethodEditor;
+				PRODUCT_NAME = ViewBuilder;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2542,7 +2614,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1F7A3FA414485DDF00521C07 /* Build configuration list for PBXNativeTarget "MethodEditor" */ = {
+		1F7A3FA414485DDF00521C07 /* Build configuration list for PBXNativeTarget "ViewBuilder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F7A3FA514485DDF00521C07 /* Development */,

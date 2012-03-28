@@ -10,6 +10,7 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>plist</string>
+				<string>st</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string></string>
@@ -48,7 +49,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2011 metaobject ltd. All rights reserved.</string>
+	<string>Copyright © 2012 metaobject ltd. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

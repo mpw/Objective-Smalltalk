@@ -3,7 +3,7 @@
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 12/9/11.
-//  Copyright (c) 2011 metaobject ltd. All rights reserved.
+//  Copyright (c) 2012 metaobject ltd. All rights reserved.
 //
 
 #import "MPWCopyOnWriteScheme.h"

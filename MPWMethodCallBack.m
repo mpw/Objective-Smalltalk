@@ -202,9 +202,12 @@ idAccessor( method, _setMethod )
 
 -invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters
 {
-	id returnVal;
-	
-	returnVal = [[self method] evaluateOnObject:target parameters:parameters];
+	id returnVal=nil;
+	@try {
+        returnVal = [[self method] evaluateOnObject:target parameters:parameters];
+    } @catch (id exception) {
+        NSLog(@"exception %@ executing %@",exception,[self header]);
+    }
 	return returnVal;
 }
 

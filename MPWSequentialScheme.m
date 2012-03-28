@@ -3,7 +3,7 @@
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 6/13/11.
-//  Copyright 2011 metaobject ltd. All rights reserved.
+//  Copyright 2012 metaobject ltd. All rights reserved.
 //
 
 #import "MPWSequentialScheme.h"

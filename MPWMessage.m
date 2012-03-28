@@ -306,6 +306,7 @@ idAccessor( _signature, setSignature )
 			returnValue=[self invocationReturnValue:invocation];
 		}
 	} else {
+        NSLog(@"**** doesNotUnderstand:  %@/%p  does not understand %@",[msgReceiver class],msgReceiver,NSStringFromSelector(selector));
 		[NSException raise:@"doesNotUnderstand" format:@"receiver %@/%p does not understand: %@",[msgReceiver class],msgReceiver,NSStringFromSelector(selector)];
 	}
 	

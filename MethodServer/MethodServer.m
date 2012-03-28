@@ -3,13 +3,14 @@
 //  MethodServer
 //
 //  Created by Marcel Weiher on 10/16/11.
-//  Copyright (c) 2011 metaobject ltd. All rights reserved.
+//  Copyright (c) 2012 metaobject ltd. All rights reserved.
 //
 
 #import "MethodServer.h"
 #import "MPWStCompiler.h"
 #import "MPWMethodScheme.h"
 #import "MPWBinding.h"
+#import "MPWClassMirror.h"
 
 @implementation MethodServer
 
@@ -99,11 +100,13 @@ objectAccessor(NSString, projectDir, setProjectDir)
 
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
-  NSLog(@"uri: %@",uri);
+//  NSLog(@"uri: %@",uri);
     if ( [uri hasPrefix:@"/theAnswer"] ) {
         return [[NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]] asData];
     } else if ( [uri hasPrefix:@"/projectDir"] ) {
         return [[self projectDir] asData];
+    } else if ( [uri hasPrefix:@"/classes"] ) {
+        return [[[[[MPWClassMirror allUsefulClasses] collect] name] description] asData];
     } else{
         return [super get:uri parameters:params];
     }
@@ -127,6 +130,7 @@ objectAccessor(NSString, projectDir, setProjectDir)
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
         [delegate didDefineMethods:self];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"methodsDefined" object:self];
     return retval;
 }
 

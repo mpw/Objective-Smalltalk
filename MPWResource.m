@@ -20,8 +20,8 @@ idAccessor( source, setSource )
 {
 	if ( [[self mimetype] hasPrefix:@"image/"] ) {
 		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]] ;
-	} else if ( [[self mimetype] hasPrefix:@"application/json"] ) {
-		return [NSJSONSerialization JSONObjectWithData:[self rawData] options:0 error:nil] ;
+	} else if ( [[self mimetype] hasPrefix:@"application/json"] && NSClassFromString(@"NSJSONSerialization")) {
+		return [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:[self rawData] options:0 error:nil] ;
 	}  else if ( [[self extension] isEqual:@"newsplist"] ||
                 [[self extension] isEqual:@"plist"] ) {
 #if TARGET_OS_IPHONE

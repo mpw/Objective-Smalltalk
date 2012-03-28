@@ -28,8 +28,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-               BuildableName = "MethodEditor.app"
-               BlueprintName = "MethodEditor"
+               BuildableName = "ViewBuilder.app"
+               BlueprintName = "ViewBuilder"
                ReferencedContainer = "container:MPWTalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,8 +46,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-            BuildableName = "MethodEditor.app"
-            BlueprintName = "MethodEditor"
+            BuildableName = "ViewBuilder.app"
+            BlueprintName = "ViewBuilder"
             ReferencedContainer = "container:MPWTalk.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -58,14 +58,15 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
+      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F7A3F9614485DDF00521C07"
-            BuildableName = "MethodEditor.app"
-            BlueprintName = "MethodEditor"
+            BuildableName = "ViewBuilder.app"
+            BlueprintName = "ViewBuilder"
             ReferencedContainer = "container:MPWTalk.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

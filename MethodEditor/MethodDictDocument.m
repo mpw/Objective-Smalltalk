@@ -3,7 +3,7 @@
 //  MethodEditor
 //
 //  Created by Marcel Weiher on 9/25/11.
-//  Copyright 2011 metaobject ltd. All rights reserved.
+//  Copyright 2012 metaobject ltd. All rights reserved.
 //
 
 #import "MethodDictDocument.h"
@@ -49,7 +49,12 @@ objectAccessor(NSString , baseURL, setBaseURL)
 }
 
 - (void)upload {
-    [[self interpreter] evaluateScriptString:[NSString stringWithFormat:@"%@methods := document dict asXml. ",[self url]]];
+    NSString *urlstring=[self url];
+    if ( [urlstring length]>2 ) {
+        [[self interpreter] evaluateScriptString:[NSString stringWithFormat:@"%@methods := document dict asXml. ",urlstring]];
+    } else {
+        NSLog(@"not uploading because I didn't get a URL: %@",urlstring);
+    }
 }
 
 -(void)autoresolveFromURLS:(NSArray*)urls
