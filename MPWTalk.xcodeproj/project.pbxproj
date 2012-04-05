@@ -304,8 +304,6 @@
 		1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
 		1FD713D21522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
 		1FD713D31522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
-		1FD713D41522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
-		1FD713D51522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
 		1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
 		1FD713D91522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
 		1FD713DA1522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
@@ -314,8 +312,6 @@
 		1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
 		1FD713DE1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
 		1FD713DF1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
-		1FD713E01522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
-		1FD713E11522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
 		1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
 		1FD713E51522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
 		1FD713E61522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
@@ -324,8 +320,6 @@
 		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FD713EA1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FD713EB1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
-		1FD713EC1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
-		1FD713ED1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
 		1FDCCB38139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */; };
@@ -734,7 +728,7 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		1F2E6F03142EF26E00B5C827 /* MethodEditor */ = {
+		1F2E6F03142EF26E00B5C827 /* ViewBuilder */ = {
 			isa = PBXGroup;
 			children = (
 				1F00AD5E144AE38400EA6AF0 /* MethodDict.h */,
@@ -750,6 +744,7 @@
 				1F2E6F04142EF26E00B5C827 /* Supporting Files */,
 				1F0A395314362DF900626286 /* methods.plist */,
 			);
+			name = ViewBuilder;
 			path = MethodEditor;
 			sourceTree = "<group>";
 		};
@@ -846,7 +841,7 @@
 				F5A74AC000F0A61B015ADD82 /* Headers */,
 				F5A74AC400F0A61B015ADD82 /* Supporting Files */,
 				F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */,
-				1F2E6F03142EF26E00B5C827 /* MethodEditor */,
+				1F2E6F03142EF26E00B5C827 /* ViewBuilder */,
 				1F7E05A2144B3E22008F349D /* MethodServer */,
 				1F7E05B7144B3E7D008F349D /* iMethodServer */,
 				1F7B75B214629431002F38D1 /* SchemeFS */,
@@ -1627,9 +1622,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05AB144B3E22008F349D /* MethodServer.m in Sources */,
-				1FD713D41522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
-				1FD713E01522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
-				1FD713EC1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1638,9 +1630,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05C1144B3F3F008F349D /* MethodServer.m in Sources */,
-				1FD713D51522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
-				1FD713E11522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
-				1FD713ED1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

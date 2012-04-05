@@ -19,11 +19,6 @@
 			<key>orderHint</key>
 			<integer>38</integer>
 		</dict>
-		<key>MethodEditor.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>10</integer>
-		</dict>
 		<key>MethodServer.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -38,6 +33,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>11</integer>
+		</dict>
+		<key>ViewBuilder.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>10</integer>
 		</dict>
 		<key>iMethodServer.xcscheme</key>
 		<dict>

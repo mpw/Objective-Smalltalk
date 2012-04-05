@@ -105,8 +105,33 @@ objectAccessor(NSString, projectDir, setProjectDir)
         return [[NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]] asData];
     } else if ( [uri hasPrefix:@"/projectDir"] ) {
         return [[self projectDir] asData];
+    } else if ( [uri hasPrefix:@"/frameworks"] ) {
+        return [[[[[[NSBundle allFrameworks] collect] bundleIdentifier] sortedArrayUsingSelector:@selector(compare:)] description] asData];
+    } else if ( [uri hasPrefix:@"/bundles"] ) {
+        return [[[[[NSBundle allBundles] collect] bundleIdentifier] description] asData];
     } else if ( [uri hasPrefix:@"/classes"] ) {
-        return [[[[[MPWClassMirror allUsefulClasses] collect] name] description] asData];
+        NSString *whichClasses=[uri lastPathComponent];
+        NSArray *classes=[MPWClassMirror allUsefulClasses];
+        if ([whichClasses isEqualToString:@"all"] ||
+            [whichClasses isEqualToString:@"classes"] ) {
+            ;   // already have all classes
+        } else  {
+            NSBundle *bundleToCheck=nil;
+            if ( [whichClasses isEqualToString:@"main"] ) {
+                bundleToCheck=[NSBundle mainBundle];
+            } else {
+                bundleToCheck=[NSBundle bundleWithIdentifier:whichClasses];
+            }
+            NSMutableArray *bundleFilteredClasses=[NSMutableArray array];
+            for ( MPWClassMirror *mirror in classes ) {
+                if ( [NSBundle bundleForClass:[mirror theClass]] == bundleToCheck ) {
+                    [bundleFilteredClasses addObject:mirror];
+                }
+
+            }
+            classes=bundleFilteredClasses;
+        }
+        return [[[[classes collect] name] description] asData];
     } else{
         return [super get:uri parameters:params];
     }
