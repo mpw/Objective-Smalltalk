@@ -729,6 +729,19 @@
 	[self testexpr:@" a:=42. c:=43. b:='a'. var:{b} := 45. a. " expected:@"45"];
 }
 
++(void)testGetReasonableCompilerErrorOnMissingBinaryArgument
+{
+    NSString *exprWithSyntaxError=@"a:=4.  a + ";
+	MPWStCompiler *compiler=[[[MPWStCompiler alloc] init] autorelease];
+    @try {
+        id compiled=[compiler compile:exprWithSyntaxError];
+        EXPECTTRUE(NO, @"should have gotten an exception here");
+    }
+    @catch (NSException *exception) {
+        IDEXPECT([exception name], @"argumentmissing", @"exception ");
+    }
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -808,6 +821,7 @@
 			@"testRelScheme",
 			@"testIdentifierInterpolation",
 			@"testIdentifierInterpolationWorksAsAssignmentTarget",
+			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
         nil];
 }
 
