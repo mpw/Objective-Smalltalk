@@ -13,7 +13,7 @@
 @implementation MethodDictDocument
 
 objectAccessor(MPWStCompiler , interpreter, setInterpreter)
-objectAccessor(NSString , baseURL, setBaseURL)
+objectAccessor(NSString , baseURL, _setBaseURL)
 
 - (id)init
 {
@@ -38,6 +38,26 @@ objectAccessor(NSString , baseURL, setBaseURL)
     return [[address stringValue] length] > 2 ? [NSString stringWithFormat:@"http://%@:51000/"] : nil;
 }
 
+-(void)checkMethodBody
+{
+    NSString *methodBodyText=[self methodBodyString];
+    @try {
+        [interpreter compile:methodBodyText];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"compile failed: %@",exception);
+    }
+    @finally {
+    }
+}
+
+
+-(void)saveMethodAtPath:(NSString*)path
+{
+    [self checkMethodBody];
+    [super saveMethodAtPath:path];
+}
+
 -(NSString*)url
 {
     NSString *address=[self manualAddress];
@@ -48,17 +68,30 @@ objectAccessor(NSString , baseURL, setBaseURL)
     return address;
 }
 
+
 - (void)upload {
     NSString *urlstring=[self url];
     if ( [urlstring length]>2 ) {
-        [[self interpreter] evaluateScriptString:[NSString stringWithFormat:@"%@methods := document dict asXml. ",urlstring]];
+        id baseRef=[[self interpreter] bindingForString:urlstring];
+        [[self interpreter] bindValue:baseRef toVariableNamed:@"baseRef"];
+        [[self interpreter] evaluateScriptString:@"scheme:base := baseRef asScheme. "];
+        NSLog(@"scheme: %@",[[self interpreter] evaluateScriptString:@"scheme:base"]);
+        [[self interpreter] evaluateScriptString:@"base:methods := document dict asXml. "];
+
+//        [[self interpreter] evaluateScriptString:[NSString stringWithFormat:@"%@methods := document dict asXml. ",urlstring]];
     } else {
         NSLog(@"not uploading because I didn't get a URL: %@",urlstring);
     }
 }
 
+-(void)setBaseURL:(NSString*)urlstring
+{
+    [[address cell] setPlaceholderString:urlstring];
+}
+
 -(void)autoresolveFromURLS:(NSArray*)urls
 {
+    NSLog(@"autoresolveFromURLs: %@",urls);
     NSString *documentPath=[[self fileURL] path];
     [self setBaseURL:nil];
     for (NSString *urlstring in urls ) {

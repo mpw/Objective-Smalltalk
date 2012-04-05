@@ -66,6 +66,7 @@
 {
     NSLog(@"did remove service: %p/%@ more coming: %d",aNetService,aNetService,moreComing); 
     [[self services] removeObject:aNetService];
+    [self updateDocs];
 }
 
 
