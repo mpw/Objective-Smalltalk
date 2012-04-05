@@ -454,7 +454,12 @@ idAccessor( connectorMap, setConnectorMap );
 		if ( [selector isEqual:@":="] || [selector isEqual:@"::="]) {
 			[NSException raise:@"unexpected" format:@"not expecting ':=' in parseSelectorAndArgs:"];
 		} else {
-			args=[NSArray arrayWithObject:[self parseUnary]];
+            id arg=[self parseUnary];
+            if ( arg ) {
+                args=[NSArray arrayWithObject:arg];
+            } else {
+                [NSException raise:@"argumentmissing" format:@"argument missing"];
+            }
 		}
 //		NSLog(@"parse unary: args=%@",args);
     }
@@ -606,20 +611,24 @@ idAccessor( connectorMap, setConnectorMap );
     return expr;
 }
 
--bindingForScheme:(NSString*)schemeName path:(NSString*)path
+-bindingForIdentifier:(MPWIdentifier*)anIdentifier
 {
-	return [[self schemeForName:schemeName] bindingForName:path inContext:self];
+	return [[self schemeForName:[anIdentifier schemeName]] bindingWithIdentifier:anIdentifier withContext:self];
 }
 
 -bindingForString:(NSString*)fullPath
 {
+    MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	NSArray *parts=[fullPath componentsSeparatedByString:@":"];
 	NSString *schemeName = @"default";
-	NSString *path=[parts lastObject];
-	if ( [parts count]==2 ) {
+	NSString *path=fullPath;
+	if ( [parts count] >= 2 ) {
 		schemeName = [parts objectAtIndex:0];
+        path=[path substringFromIndex:[schemeName length]+1];
 	}
-	return [self bindingForScheme:schemeName path:path];
+    [identifier setSchemeName:schemeName];
+    [identifier setIdentifierName:path];
+	return [self bindingForIdentifier:identifier];
 }
 
 -(void)dealloc
