@@ -50,25 +50,36 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 -bindingForName:anIdentifierName inContext:aContext
 {
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
-//    NSLog(@"combined name: '%@'",combinedPath);
+    NSLog(@"combined name: '%@'",combinedPath);
     MPWIdentifier *newIdentifier=[[[MPWIdentifier alloc] init] autorelease];
     [newIdentifier setSchemeName:nil];
     [newIdentifier setIdentifierName:combinedPath];
 	return [[self baseScheme] bindingWithIdentifier:newIdentifier withContext:aContext];
 }
 
-//  FIXME
--valueForBinding:aBinding
+-_baseBindingForBinding:aBinding
 {
-//    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
+    //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if (  [aBinding scheme] != [self baseScheme] ) {
-//        NSLog(@"modifying non var-scheme later");
+        //        NSLog(@"modifying non var-scheme later");
         aBinding=[self bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
-//    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
-//    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
-//          aBinding,[aBinding name],aBinding,[aBinding value]);
-    return [aBinding value];
+    //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
+    return aBinding;
+}
+
+-valueForBinding:aBinding
+{
+    //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
+    //          aBinding,[aBinding name],aBinding,[aBinding value]);
+    return [[self _baseBindingForBinding:aBinding] value];
+}
+
+-(void)setValue:newValue forBinding:aBinding
+{
+    //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
+    //          aBinding,[aBinding name],aBinding,[aBinding value]);
+    return [[self _baseBindingForBinding:aBinding] setValue:newValue];
 }
 
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
