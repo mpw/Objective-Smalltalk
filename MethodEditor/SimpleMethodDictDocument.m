@@ -92,7 +92,10 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
     [self setUIForMethodHeader:methodName body:methodBodyString];
 }
 
-
+-(NSString*)methodBodyString
+{
+    return [[[methodBody string] copy] autorelease];
+}
 
 -(void)saveMethodAtPath:(NSString*)path
 {
@@ -102,7 +105,7 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
         NSString *className =  [components objectAtIndex:1];
         NSString *methodName = [methodHeader stringValue];
         if ( [methodName length] && [className length] ) {
-            [self setMethod:[[[methodBody string] copy] autorelease] name:methodName forClass:className  ];
+            [self setMethod:[self methodBodyString] name:methodName forClass:className  ];
         }
     }
 }
@@ -130,10 +133,11 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 
 
 - (void)upload {
-    NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"http://%@:51000/methods\"";
+    NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"%@methods\"";
+    NSLog(@"commandtemplate: '%@'",cmdTemplate);
     NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];
-    NSString *serverIP=[address stringValue];
-    NSString *cmd=[NSString stringWithFormat:cmdTemplate,dir,serverIP];
+    NSString *cmd=[NSString stringWithFormat:cmdTemplate,dir,[self baseURL]];
+    NSLog(@"cmd = '%@'",cmd);
     system([cmd UTF8String]);
 }
 
@@ -151,9 +155,10 @@ objectAccessor(NSTextView, methodBody, setMethodBody)
 -(IBAction)eval:sender
 {
     NSString *statementToEval = [evalText stringValue];
-    NSString *cmdTemplate=@"curl -F \"eval=%@\"  \"http://%@:51000/eval\"";
-    NSString *serverIP=[address stringValue];
-    NSString *cmd=[NSString stringWithFormat:cmdTemplate,statementToEval,serverIP];
+    NSString *cmdTemplate=@"curl -F \"eval=%@\"  \"%@eval\"";
+
+    NSString *cmd=[NSString stringWithFormat:cmdTemplate,statementToEval,[self baseURL]];
+    NSLog(@"cmd = '%@'",cmd);
     system([cmd UTF8String]);
 }
 
