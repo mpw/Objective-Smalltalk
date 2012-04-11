@@ -35,7 +35,7 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 
 -(NSString*)manualAddress
 {
-    return [[address stringValue] length] > 2 ? [NSString stringWithFormat:@"http://%@:51000/"] : nil;
+    return [[address stringValue] length] > 2 ? [NSString stringWithFormat:@"http://%@:51000/",[address stringValue]] : nil;
 }
 
 -(void)checkMethodBody
@@ -77,8 +77,6 @@ objectAccessor(NSString , baseURL, _setBaseURL)
         [[self interpreter] evaluateScriptString:@"scheme:base := baseRef asScheme. "];
         NSLog(@"scheme: %@",[[self interpreter] evaluateScriptString:@"scheme:base"]);
         [[self interpreter] evaluateScriptString:@"base:methods := document dict asXml. "];
-
-//        [[self interpreter] evaluateScriptString:[NSString stringWithFormat:@"%@methods := document dict asXml. ",urlstring]];
     } else {
         NSLog(@"not uploading because I didn't get a URL: %@",urlstring);
     }
@@ -86,6 +84,7 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 
 -(void)setBaseURL:(NSString*)urlstring
 {
+    [self _setBaseURL:urlstring];
     [[address cell] setPlaceholderString:urlstring];
 }
 
