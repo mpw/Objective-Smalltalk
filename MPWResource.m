@@ -81,6 +81,15 @@ idAccessor( source, setSource )
 	}
 }
 
+-(id)valueForKey:(NSString *)key
+{
+    if ( [self value] ) {
+        return [[self value] valueForKey:key];
+    } else {
+        return [[self rawData] valueForKey:key];
+    }
+}
+
 -(NSString *)stringValue
 {
 	if ( [self value] ) {
