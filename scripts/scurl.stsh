@@ -1,0 +1,5 @@
+#!/usr/local/bin/stsh
+#-<void>scurl:urlstring
+fileCompoenent := urlstring lastPathComponent.
+urlref := context bindingForString:urlstring.
+file:{fileCompoenent} := urlref value.
