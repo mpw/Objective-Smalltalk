@@ -52,22 +52,3 @@ idAccessor( arguments, setArguments )
 }
 
 @end
-
-@implementation NSObject(ifNotNil)
-
--ifNotNil:aBlock
-{
-    return [aBlock value];
-}
-
-@end
-
-
-@implementation NSNil(ifNotNil)
-
--ifNotNil:aBlock
-{
-    return nil;
-}
-
-@end
