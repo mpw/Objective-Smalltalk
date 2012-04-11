@@ -160,6 +160,25 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
     IDEXPECT([interpreter evaluateScriptString:@"(rel get:'/relativeSchemeTests.txt' parameters:nil) stringValue"] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
 }
 
++(void)testWriteThrough
+{
+    MPWStCompiler *interpreter = [self _testSchemeInterpreter];
+    IDEXPECT([interpreter evaluateScriptString:@"base:/"] , @"root", @"eval rel:/");
+    IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"root", @"eval rel:/");
+    [interpreter evaluateScriptString:@"rel:/ := 'new root'"];
+    IDEXPECT([interpreter evaluateScriptString:@"base:/"] , @"new root", @"eval base:/");
+    IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"new root", @"eval rel:/");
+}
+
++(void)testRelativeWriteThrough
+{
+    MPWStCompiler *interpreter = [self _testSchemeInterpreter];
+    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
+    IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"subtree-content", @"eval rel:/");
+    [interpreter evaluateScriptString:@"rel:/ := 'new subtree'"];
+    IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"new subtree", @"eval rel:/");
+    IDEXPECT([interpreter evaluateScriptString:@"base:/subtree"] , @"new subtree", @"eval rel:/");
+}
 
 +testSelectors
 {
@@ -168,6 +187,8 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
             @"testRelativeLookup",
             @"testRelativeFileScheme",
             @"testRelativeFileSchemeGET",
+            @"testWriteThrough",
+            @"testRelativeWriteThrough",
 //            @"testRelativeFileSchemeGETViaEvaluatedRef",
             nil];
 }
