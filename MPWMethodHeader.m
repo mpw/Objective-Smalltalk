@@ -190,6 +190,10 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	return [[class methodHeaderWithString:[headerString stringValue]] retain];
 }
 
+-(NSString *)description
+{
+    return [self headerString];
+}
 
 -(void)dealloc
 {
