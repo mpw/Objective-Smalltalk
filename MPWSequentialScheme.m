@@ -43,7 +43,7 @@ objectAccessor( NSMutableArray, schemes, setSchemes)
 //		NSLog(@"scheme: %@",scheme);
 		binding = [scheme bindingWithIdentifier:anIdentifier withContext:aContext];
 //		NSLog(@"binding: %@",binding);
-		if ( binding && [binding isBound] ) {
+		if ( binding /* && [binding isBound] */ ) {
 //			NSLog(@"found it!");
 			break;
 		}
