@@ -17,6 +17,7 @@
 objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 objectAccessor(NSString, methodDictName, setMethodDictName)
 objectAccessor(NSString, projectDir, setProjectDir)
+objectAccessor(NSString, uniqueID, setUniqueID)
 
 
 - (id)initWithMethodDictName:(NSString*)newName
@@ -76,7 +77,13 @@ objectAccessor(NSString, projectDir, setProjectDir)
 {
     NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"plist"];
     NSLog(@"data %p len: %d",dictData,[dictData length]);
-    return [self dictionaryFromData:dictData];
+    NSDictionary *dict = [self dictionaryFromData:dictData];
+    NSString *uid=[dict objectForKey:@"uniqueID"];
+    if ( uid ) {
+        [self setUniqueID:uid];
+        dict=[dict objectForKey:@"methodDict"];
+    }
+    return  dict;
 }
 
 
@@ -100,11 +107,13 @@ objectAccessor(NSString, projectDir, setProjectDir)
 
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
-//  NSLog(@"uri: %@",uri);
+    NSLog(@"MethodServer get uri: %@",uri);
     if ( [uri hasPrefix:@"/theAnswer"] ) {
         return [[NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]] asData];
     } else if ( [uri hasPrefix:@"/projectDir"] ) {
         return [[self projectDir] asData];
+    } else if ( [uri hasPrefix:@"/uniqueID"] ) {
+        return [[self uniqueID] asData];
     } else if ( [uri hasPrefix:@"/frameworks"] ) {
         return [[[[[[NSBundle allFrameworks] collect] bundleIdentifier] sortedArrayUsingSelector:@selector(compare:)] description] asData];
     } else if ( [uri hasPrefix:@"/bundles"] ) {

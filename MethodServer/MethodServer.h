@@ -17,6 +17,7 @@
     MPWStCompiler *interpreter;
     id delegate;
     NSString *methodDictName,*projectDir;
+    NSString *uniqueID;
 
 }
 
