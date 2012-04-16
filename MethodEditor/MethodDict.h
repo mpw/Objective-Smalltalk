@@ -15,8 +15,8 @@
 
 
 
-- (NSData *)asXml;
--initWithXml:(NSData*)data;
+- (NSDictionary *)dict;
+-initWithDict:(NSDictionary*)newDict;
 -(NSArray*)classes;
 -(NSArray*)methodsForClass:(NSString*)className;
 -(NSString*)fullNameForMethodName:(NSString*)shortName ofClass:(NSString*)className;

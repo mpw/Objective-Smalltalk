@@ -17,11 +17,13 @@
     IBOutlet NSBrowser   *methodBrowser;
     IBOutlet NSTextField *address;
     IBOutlet NSTextField *evalText;
-    MethodDict *dict;
+
+    MethodDict *methodDict;
+    NSString   *uniqueID;
 }
 
 -(IBAction)eval:sender;
 -(IBAction)didSelect:(NSBrowser*)sender;
-
+-(NSString*)uniqueID;
 
 @end

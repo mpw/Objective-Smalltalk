@@ -90,16 +90,15 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 
 -(void)autoresolveFromURLS:(NSArray*)urls
 {
-    NSLog(@"autoresolveFromURLs: %@",urls);
-    NSString *documentPath=[[self fileURL] path];
+//    NSLog(@"autoresolveFromURLs: %@",urls);
     [self setBaseURL:nil];
     for (NSString *urlstring in urls ) {
-        NSString *checkURL=[NSString stringWithFormat:@"%@projectDir",urlstring];
-        NSLog(@"base url: '%@' checkURL: '%@'",urlstring,checkURL );
-        NSString *dir=[NSString stringWithContentsOfURL:[NSURL URLWithString:checkURL]];
-        NSLog(@"project path: %@",dir);
-        if ( [documentPath hasPrefix:dir] ) {
-            NSLog(@"project path matches doc path: '%@'",documentPath);
+        NSString *checkURL=[NSString stringWithFormat:@"%@uniqueID",urlstring];
+//        NSLog(@"base url: '%@' checkURL: '%@'",urlstring,checkURL );
+        NSString *targetID=[NSString stringWithContentsOfURL:[NSURL URLWithString:checkURL]];
+//        NSLog(@"targetID: %@",targetID);
+        if ( [[self uniqueID] isEqualToString:targetID] ) {
+            NSLog(@"matched unique ID: '%@' setting URL to: %@",targetID,urlstring);
             [self setBaseURL:urlstring];
             break;
         }

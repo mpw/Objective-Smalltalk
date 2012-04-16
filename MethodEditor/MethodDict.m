@@ -25,17 +25,10 @@
 objectAccessor(NSMutableDictionary, dict, setDict)
 
 
-- (NSData *)asXml
-{
-    NSData *data=[NSPropertyListSerialization dataFromPropertyList:[self dict] format:NSPropertyListXMLFormat_v1_0 errorDescription:nil];
-    return data;
-}
-
--initWithXml:(NSData*)data
+-initWithDict:(NSDictionary*)newDict
 {
     self = [super init];
-    NSMutableDictionary *d=[NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainers format:nil errorDescription:nil];
-    [self setDict:d];
+    [self setDict:[[newDict mutableCopy] autorelease]];
     return self;
 }
 
