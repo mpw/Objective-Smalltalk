@@ -22,5 +22,6 @@
 }
 
 -(void)setupWithInterpreter:anInterpreter;
+- (id)initWithMethodDictName:(NSString*)newName;
 
 @end

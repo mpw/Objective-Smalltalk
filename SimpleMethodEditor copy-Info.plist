@@ -15,13 +15,29 @@
 			<key>CFBundleTypeIconFile</key>
 			<string></string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>PlistMethodDict</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>????</string>
 			</array>
 			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>NSDocumentClass</key>
+			<string>MethodDictDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>classdict</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>ClassDict</string>
+			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.metaobject.classdict</string>
+			</array>
 			<key>NSDocumentClass</key>
 			<string>MethodDictDocument</string>
 		</dict>
@@ -54,5 +70,25 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.property-list</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ClassDefDict</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.metaobject.classdict</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>classdict</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

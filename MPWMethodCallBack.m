@@ -53,13 +53,30 @@ idAccessor( method, _setMethod )
 	}
 }
 
-
+-(Method)getMethodForMessage:(SEL)selname inClass:(Class)aClass
+{
+    unsigned int methodCount=0;
+    Method *methods = class_copyMethodList(aClass, &methodCount);
+    Method result=NULL;
+    
+    if ( methods ) {
+        for ( int i=0;i< methodCount; i++ ) {
+            if ( method_getName(methods[i]) == selname ) {
+                result = methods[i];
+                break;
+            }
+        }
+        free(methods);
+    }
+   return result;
+}
 
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature
 {
 	//--- setup the method structure
+    NSLog(@"install %@ in %@",NSStringFromSelector(selname),aClass);
 	if ( aClass != nil ) {
-		methodDescriptor=class_getInstanceMethod( aClass, selname);
+		methodDescriptor=[self getMethodForMessage:selname inClass:aClass];
 		
 		if ( methodDescriptor ) {
 			oldIMP= class_getMethodImplementation(aClass, selname);
@@ -240,6 +257,8 @@ idAccessor( method, _setMethod )
 @end
 
 @interface __MPWMethodCallBackDummyTestClass : NSObject {}
+-(int)answerToEverythingWillOverrideInSubclass;
+
 @end
 
 @implementation __MPWMethodCallBackDummyTestClass
@@ -268,6 +287,11 @@ idAccessor( method, _setMethod )
     return 42;
 }
 
+-(id)answerToEverythingWillOverrideInSubclass
+{
+    return @"43";
+}
+
 @end
 
 
@@ -277,6 +301,14 @@ idAccessor( method, _setMethod )
 -xxxDummyMulti:anArg andMore:moreArgs;
 
 @end
+
+@interface __MPWMethodCallBackDummyTestClassSubclass : __MPWMethodCallBackDummyTestClass
+
+@end
+
+@implementation  __MPWMethodCallBackDummyTestClassSubclass 
+@end
+
 
 @implementation MPWMethodCallBack(testing)
 
@@ -369,6 +401,31 @@ idAccessor( method, _setMethod )
 	IDEXPECT( returnValue, expectedReturn, @"expected return of install");
 }
 
++(void)testNewSubclassMethodDoesNotGoToSuperclassThatDefinesIt
+{
+	MPWMethodCallBack* callback=[[[self alloc] init] autorelease];
+	id target =[[[__MPWMethodCallBackDummyTestClassSubclass alloc] init] autorelease];
+	id superclassTarget =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
+	id returnValue;
+	id expectedReturn = @"47"; // [target evaluateScript:@"45" onObject:target];
+	id expectedSuperclassReturn = @"43"; // [target evaluateScript:@"45" onObject:target];
+	IMP function;
+	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+    //	[method setContext:target];
+	[method setScript:@"47"];
+    [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:@"answerToEverythingWillOverrideInSubclass"]];
+	[callback setMethod:method];
+	[callback setName:@"answerToEverythingWillOverrideInSubclass"];
+	[callback installInClass:[target class] withSignature:"@@:"];
+	function = [callback function];
+    returnValue = (id)[target answerToEverythingWillOverrideInSubclass];
+
+	IDEXPECT( returnValue, expectedReturn, @"expected return for subclass we installed the method in");
+    returnValue = (id)[superclassTarget answerToEverythingWillOverrideInSubclass];
+	IDEXPECT( returnValue, expectedSuperclassReturn, @"expected return for superclass that has the original method (and should not be overridden");
+    
+}
+
 +(NSArray*)testSelectors
 {
 	return [NSArray arrayWithObjects:
@@ -376,8 +433,9 @@ idAccessor( method, _setMethod )
 		@"testActualCallbackDirect",
 //		@"testUndoOverride",
 		@"testActualCallbackViaMessageSend",
-		@"testMultiArgMessageSend",
-		nil
+        @"testMultiArgMessageSend",
+        @"testNewSubclassMethodDoesNotGoToSuperclassThatDefinesIt",
+         nil
 		];
 }
 

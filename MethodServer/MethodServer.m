@@ -75,7 +75,7 @@ objectAccessor(NSString, uniqueID, setUniqueID)
 
 -(NSDictionary*)externalMethodsDict
 {
-    NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"plist"];
+    NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"classdict"];
     NSLog(@"data %p len: %d",dictData,[dictData length]);
     NSDictionary *dict = [self dictionaryFromData:dictData];
     NSString *uid=[dict objectForKey:@"uniqueID"];
