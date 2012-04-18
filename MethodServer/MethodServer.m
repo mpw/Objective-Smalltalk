@@ -56,7 +56,7 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     [self defineMethodsInExternalDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
-    [self setupWebServer];
+    [[self async] setupWebServer];
 
 }
 
@@ -164,6 +164,7 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
         [delegate didDefineMethods:self];
     }
+    NSLog(@"will send notification");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"methodsDefined" object:self];
     return retval;
 }
@@ -185,6 +186,10 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     [self start:nil];
 }
 
+-(void)stop
+{
+    [[self server] stop];
+}
 
 scalarAccessor(id, delegate, setDelegate)
 

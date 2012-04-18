@@ -76,7 +76,7 @@ objectAccessor(NSString , baseURL, _setBaseURL)
         [[self interpreter] bindValue:baseRef toVariableNamed:@"baseRef"];
         [[self interpreter] evaluateScriptString:@"scheme:base := baseRef asScheme. "];
         NSLog(@"scheme: %@",[[self interpreter] evaluateScriptString:@"scheme:base"]);
-        [[self interpreter] evaluateScriptString:@"base:methods := document dict asXml. "];
+        [[self interpreter] evaluateScriptString:@"base:methods := document methodDict asXml. "];
     } else {
         NSLog(@"not uploading because I didn't get a URL: %@",urlstring);
     }

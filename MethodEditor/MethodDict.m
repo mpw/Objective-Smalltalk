@@ -32,6 +32,12 @@ objectAccessor(NSMutableDictionary, dict, setDict)
     return self;
 }
 
+-(NSData*)asXml
+{
+    NSData *data=[NSPropertyListSerialization dataFromPropertyList:[self dict] format:NSPropertyListXMLFormat_v1_0 errorDescription:nil];
+    return data;
+}
+
 -(NSArray*)classes
 {
     return [[[self dict] allKeys] sortedArrayUsingSelector:@selector(compare:)];
