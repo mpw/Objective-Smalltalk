@@ -7,9 +7,10 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundation/MPWBlockInvocable.h>
 
 
-@interface MPWBlockContext : MPWObject {
+@interface MPWBlockContext : MPWBlockInvocable {
 	id	context;
 	id	block;
 }

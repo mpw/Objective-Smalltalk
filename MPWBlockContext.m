@@ -37,6 +37,14 @@ idAccessor( context, setContext )
 	}
 }
 
+-invokeWithArgs:(va_list)args
+{
+    for ( NSString *paramName in [[self block] arguments] ) {
+        [[self context] bindValue:va_arg(args, id) toVariableNamed:paramName];
+    }
+    return [self value];
+}
+
 -value
 {
 	return [self evaluateIn:[self context]];
@@ -62,6 +70,30 @@ idAccessor( context, setContext )
 	[block release];
 	[context release];
 	[super dealloc];
+}
+
+@end
+
+#import "MPWStCompiler.h"
+
+@implementation MPWBlockContext(tests)
+
++(void)testObjcBlocksWithNoArgsAreMapped
+{
+    IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1 2 3 4 ) enumerateObjectsUsingBlock:[ a := a+1. ]. a."], [NSNumber numberWithInt:4], @"just counted the elements in an array using block enumeration");
+}
+
++(void)testObjcBlocksWithObjectArgsAreMapped
+{
+    IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1 2 3 4 ) enumerateObjectsUsingBlock:[ :obj |  a := a+obj. ]. a."], [NSNumber numberWithInt:10], @"added the elements in an array using block enumeration");
+}
+
++(NSArray*)testSelectors
+{
+    return [NSArray arrayWithObjects:
+            @"testObjcBlocksWithNoArgsAreMapped",
+            @"testObjcBlocksWithObjectArgsAreMapped",
+            nil];
 }
 
 @end
