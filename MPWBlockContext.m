@@ -65,6 +65,11 @@ idAccessor( context, setContext )
     return retval;
 }
 
+-copyWithZone:aZone
+{
+    return [self retain];
+}
+
 -(void)dealloc
 {
 	[block release];
