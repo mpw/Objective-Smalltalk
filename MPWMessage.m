@@ -83,11 +83,12 @@ idAccessor( _signature, setSignature )
 		double doubleVal;
 		long long longLongVal;
 		NSMethodSignature* sig=[self signatureForTarget:msgReceiver];
+//      NSLog(@"invoking: %@",NSStringFromSelector(selector));
 //		NSLog(@"sig: %@",sig);
 		if ( sig != nil ) {
 			int i;
 			invocation=[NSInvocation invocationWithMethodSignature:sig];
-			[invocation setSelector:selector];
+			[invocation setSelector:selector];//
 //			NSLog(@"args count: %d, sig numberOfArguments-2:%d",[args count],[sig numberOfArguments]-2 );
 			if ( argCount == [sig numberOfArguments]-2 ) {
 				for (i=0;i<argCount;i++) {
@@ -101,6 +102,7 @@ idAccessor( _signature, setSignature )
 					id arg=args[i];
 					void *argp=&arg;
 					const char *type=[sig getArgumentTypeAtIndex:invocationIndex];
+//					NSLog(@"argtype[%d]=%p",i,type);
 //					NSLog(@"argtype[%d]=%s",i,type);
 					switch (*type) {
 						case ':':

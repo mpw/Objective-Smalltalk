@@ -30,6 +30,9 @@ scalarAccessor( const char *, typestring, setTypestring )
 	return self;
 }
 
-
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p %@ %s>",[self class],self,NSStringFromSelector([self selector]),[self typestring]];
+}
 
 @end
