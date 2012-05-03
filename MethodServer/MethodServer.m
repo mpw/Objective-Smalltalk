@@ -179,11 +179,15 @@ objectAccessor(NSString, uniqueID, setUniqueID)
 
 -(void)setupWebServer
 {
+    NSLog(@"setupWebServer");
     [super setupWebServer];
     [[self server] setPort:51000];
     [[self server] setBonjourName:@"Methods"];
     [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];
-    [self start:nil];
+    NSLog(@"did set up port etc, start it");
+    NSError *error=nil;
+    [self start:&error];
+    NSLog(@"did start, error: %@",error);
 }
 
 -(void)stop

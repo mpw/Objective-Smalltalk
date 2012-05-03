@@ -155,16 +155,12 @@ idAccessor( _signature, setSignature )
 									argp=&arg;
 								}
 								break;
-							} else if (   !strcmp( type, "^{_NSRange=II}" ) ) {
+							} else if (   !strcmp( type, "^{_NSRange=II}" ) || !strcmp( type, "^{_NSRange=QQ}") ) {
 								argp=[arg rangePointer];
 								break;
 							}
 						case '{':
-							if ( !strcmp(type,"{?=II}") ||  !strcmp( type, "{_NSRange=II}" )) {
-								rangeArg = [arg asNSRange];
-								argp=&rangeArg;
-								break;
-							}  else if ( !strcmp( type, "{_NSRange=QQ}" )) {
+							if ( !strcmp(type,"{?=II}") ||  !strcmp( type, "{_NSRange=II}" )||  !strcmp( type, "{_NSRange=QQ}" )) {
 								rangeArg = [arg asNSRange];
 								argp=&rangeArg;
 								break;
@@ -257,7 +253,7 @@ idAccessor( _signature, setSignature )
 				returnValue=[NSNumber numberWithDouble:doubleVal];
 				break;
 			case '{':
-				if ( !strcmp( returnType, "{?=II}" ) ||  !strcmp( returnType, "{_NSRange=II}" )) {
+				if ( !strcmp( returnType, "{?=II}" ) ||  !strcmp( returnType, "{_NSRange=II}" )  ||  !strcmp( returnType, "{_NSRange=QQ}" )) {
 					NSRange rangeVal = *(NSRange*)returnBuffer;
 					returnValue=[MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
 					break;

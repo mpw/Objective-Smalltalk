@@ -14,7 +14,7 @@
 }
 
 +scheme;
--evaluteIdentifier:anIdentifer withContext:aContext;
+-evaluateIdentifier:anIdentifer withContext:aContext;
 -bindingForName:(NSString*)variableName inContext:aContext;
 
 @end

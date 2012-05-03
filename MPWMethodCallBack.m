@@ -257,7 +257,7 @@ idAccessor( method, _setMethod )
 @end
 
 @interface __MPWMethodCallBackDummyTestClass : NSObject {}
--(int)answerToEverythingWillOverrideInSubclass;
+-(id)answerToEverythingWillOverrideInSubclass;
 
 @end
 

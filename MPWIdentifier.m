@@ -55,7 +55,7 @@ idAccessor( identifierName, setIdentifierName )
 
 -evaluateIn:aContext
 {	
-	return [[self schemeWithContext:aContext] evaluteIdentifier:self withContext:aContext];
+	return [[self schemeWithContext:aContext] evaluateIdentifier:self withContext:aContext];
 }
 
 -(void)dealloc

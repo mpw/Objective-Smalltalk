@@ -36,7 +36,7 @@
     return binding;
 }
 
--evaluteIdentifier:anIdentifer withContext:aContext
+-evaluateIdentifier:anIdentifer withContext:aContext
 {
 	MPWBinding *binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
 	id value=[binding value];
