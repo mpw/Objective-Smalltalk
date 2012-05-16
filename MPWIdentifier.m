@@ -16,6 +16,18 @@ idAccessor( scheme, setScheme )
 idAccessor( schemeName, setSchemeName )
 idAccessor( identifierName, setIdentifierName )
 
+-initWithName:(NSString*)name
+{
+    self=[super init];
+    [self setIdentifierName:name];
+    return self;
+}
+
++identifierWithName:(NSString*)name
+{
+    return [[[self alloc] initWithName:name] autorelease];
+}
+
 -schemeWithContext:aContext
 {
 	id theScheme=[self scheme];

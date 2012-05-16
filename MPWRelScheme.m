@@ -51,9 +51,7 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 {
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
     NSLog(@"combined name: '%@'",combinedPath);
-    MPWIdentifier *newIdentifier=[[[MPWIdentifier alloc] init] autorelease];
-    [newIdentifier setSchemeName:nil];
-    [newIdentifier setIdentifierName:combinedPath];
+    MPWIdentifier *newIdentifier=[MPWIdentifier identifierWithName:combinedPath];
 	return [[self baseScheme] bindingWithIdentifier:newIdentifier withContext:aContext];
 }
 

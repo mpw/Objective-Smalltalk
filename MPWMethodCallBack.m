@@ -416,8 +416,12 @@ idAccessor( method, _setMethod )
     [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:@"answerToEverythingWillOverrideInSubclass"]];
 	[callback setMethod:method];
 	[callback setName:@"answerToEverythingWillOverrideInSubclass"];
+    returnValue = (id)[target answerToEverythingWillOverrideInSubclass];
+	IDEXPECT( returnValue, expectedSuperclassReturn, @"expected return for subclassbefore  we installed the method");
+
 	[callback installInClass:[target class] withSignature:"@@:"];
 	function = [callback function];
+//	returnValue = function( target, @selector(answerToEverythingWillOverrideInSubclass) );
     returnValue = (id)[target answerToEverythingWillOverrideInSubclass];
 
 	IDEXPECT( returnValue, expectedReturn, @"expected return for subclass we installed the method in");

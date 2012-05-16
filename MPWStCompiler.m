@@ -618,7 +618,7 @@ idAccessor( connectorMap, setConnectorMap );
 
 -bindingForString:(NSString*)fullPath
 {
-    MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
+    MPWIdentifier *identifier=nil;
 	NSArray *parts=[fullPath componentsSeparatedByString:@":"];
 	NSString *schemeName = @"default";
 	NSString *path=fullPath;
@@ -626,8 +626,9 @@ idAccessor( connectorMap, setConnectorMap );
 		schemeName = [parts objectAtIndex:0];
         path=[path substringFromIndex:[schemeName length]+1];
 	}
+    identifier=[MPWIdentifier identifierWithName:path];
+
     [identifier setSchemeName:schemeName];
-    [identifier setIdentifierName:path];
 	return [self bindingForIdentifier:identifier];
 }
 
