@@ -3,8 +3,8 @@ context loadFramework:'MPWSideWeb'
 server := MPWHTTPServer new.
 server setPort:8081.
 server start:nil.
-base := MPWRelScheme alloc initWithBaseScheme: scheme:file baseURL: env:HOME
-cache := MPWCopyOnWriteScheme cacheWithBase:base cache: MPWSiteMap scheme.
+base := ref:file:/tmp/ asScheme
+cache := base cachedBy: MPWSiteMap scheme.
 
 server setDelegate: cache .
 #server setDelegate: base.
