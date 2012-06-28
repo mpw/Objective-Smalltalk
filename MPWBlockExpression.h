@@ -6,10 +6,10 @@
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import "MPWExpression.h"
 
 
-@interface MPWBlockExpression : MPWObject {
+@interface MPWBlockExpression : MPWExpression {
 	id	statements;
 	id  arguments;
 }

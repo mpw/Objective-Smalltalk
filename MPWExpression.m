@@ -11,13 +11,34 @@
 
 @implementation MPWExpression
 
+intAccessor(offset , setOffset)
+intAccessor(len, setLen)
+
+
 -(NSObject<MPWEvaluable>*)evaluateIn:aContext
 {
 	return self;
 }
+
 -(NSObject<MPWEvaluable>*)evaluate
 {
 	return self;
+}
+
+
+-(NSException*)handleOffsetsInException:(NSException*)exception
+{
+    id dict=[exception userInfo];
+    if ( ![dict objectForKey:@"offset"]) {
+        if (dict) {
+            dict=[[[exception userInfo] mutableCopy] autorelease];
+        } else {
+            dict=[NSMutableDictionary dictionaryWithCapacity:1];
+        }
+        [dict setObject:[NSNumber numberWithInt:offset] forKey:@"offset"];
+        exception =  [NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:dict];
+    }
+    return exception;
 }
 
 

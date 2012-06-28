@@ -45,7 +45,7 @@
 
 @implementation MPWStCompiler
 
-idAccessor( scanner, setScanner )
+objectAccessor( MPWStScanner, scanner, setScanner )
 idAccessor( methodStore, setMethodStore )
 idAccessor( connectorMap, setConnectorMap );
 
@@ -168,18 +168,22 @@ idAccessor( connectorMap, setConnectorMap );
 	return [self evaluateScript:scriptString onObject:receiver];
 }
 
+-(void)parseError:(NSString*)msg token:(id)token selector:(SEL)sel
+{
+    id e=[NSException exceptionWithName:msg reason:[NSString stringWithFormat:@"%@ in '%@' %@/%@ from %@",msg,NSStringFromSelector(sel),token,[token class],scanner] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:scanner,@"scanner",token,@"token",nil]];
+    @throw e;
+    
+}
+
+#define PARSEERROR( msg, theToken )  [self parseError:msg token:theToken selector:_cmd]
+
 -parseObject
 {
     id object=[self nextToken];
     if ( ![object isLiteral] ) {
-        [NSException raise:@"invalidobject" format:@"invalid object %@/%@ from %@",object,[object class],scanner];
+        PARSEERROR(@"invalidobject",object);
     }
     return object;
-}
-
--(void)reportError:msg
-{
-    [NSException raise:msg format:@"%@: scanner: %@",msg,scanner];
 }
 
 -parseLiteralArray
@@ -199,7 +203,7 @@ idAccessor( connectorMap, setConnectorMap );
 //        NSLog(@"OK Array found: %@",array);
         return array;
     } else {
-        [self reportError:@"array syntax"];
+        PARSEERROR(@"array syntax", object);
         return nil;
     }
 }
@@ -220,6 +224,8 @@ idAccessor( connectorMap, setConnectorMap );
 	MPWIdentifier *identifier=[[[MPWNamedIdentifier alloc] init] autorelease];
 	MPWIdentifier *identifierToAddNameTo=identifier;
 	NSString *scheme=[aToken stringValue];
+    [variable setOffset:[scanner offset]];
+    [variable setLen:1];
 	scheme=[scheme substringToIndex:[scheme length]-1];
 	NSString* name;
 	id nextToken=nil;
@@ -269,6 +275,8 @@ idAccessor( connectorMap, setConnectorMap );
 -makeLocalVar:aToken
 {
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
+    [variable setOffset:[scanner offset]];
+    [variable setLen:1];
 	MPWNamedIdentifier *identifier=[[[MPWNamedIdentifier alloc] init] autorelease];
 	NSString* name = [aToken stringValue];
 	[identifier setIdentifierName:name];
@@ -334,7 +342,10 @@ idAccessor( connectorMap, setConnectorMap );
 	closeBrace=[self nextToken];
 //	NSLog(@"done with block: %@",closeBrace);
 	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
-	return [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
+	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
+    [expr setOffset:[scanner offset]];
+    [expr setLen:1];
+    return expr;
 }
 
 -parseArgument
@@ -349,7 +360,7 @@ idAccessor( connectorMap, setConnectorMap );
     id msg;
     msg=[self nextToken];
     if ( [msg isLiteral] ) {
-        [NSException raise:@"invalidmsg" format:@"in %@ invalid message %@/%@ from %@",NSStringFromSelector(_cmd),msg,[msg class],scanner];
+        PARSEERROR(@"invalid message", msg);
     }
     return msg;
 }
@@ -394,7 +405,7 @@ idAccessor( connectorMap, setConnectorMap );
     }
     sel=NSSelectorFromString( selector );
     if (!sel) {
-        [NSException raise:@"invalidmessage" format:@"message %@ not known",selector];
+        PARSEERROR(@"unknown message", selector);
     }
     return sel;
 }
@@ -405,6 +416,8 @@ idAccessor( connectorMap, setConnectorMap );
     id next=nil;
     while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] && ![next isEqual:@"]"]) {
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
+        [expr setOffset:[scanner offset]];
+        [expr setLen:1];
         [expr setSelector:[self mapSelectorString:next]];
 		expr=[self mapConnector:expr]; 
     }
@@ -442,6 +455,8 @@ idAccessor( connectorMap, setConnectorMap );
 					[self pushBack:keyword];
                     if ( [self isSpecialSelector:keyword] ) {
                         id subExpr = [[MPWMessageExpression alloc] initWithReceiver:arg];
+                        [subExpr setOffset:[scanner offset]];
+                        [subExpr setLen:1];
                         [self parseSelectorAndArgs:subExpr];
 						subExpr=[self mapConnector:subExpr];
                         [args removeLastObject];
@@ -452,13 +467,13 @@ idAccessor( connectorMap, setConnectorMap );
         }
     } else {
 		if ( [selector isEqual:@":="] || [selector isEqual:@"::="]) {
-			[NSException raise:@"unexpected" format:@"not expecting ':=' in parseSelectorAndArgs:"];
+            PARSEERROR(@"unexpected", selector);
 		} else {
             id arg=[self parseUnary];
             if ( arg ) {
                 args=[NSArray arrayWithObject:arg];
             } else {
-                [NSException raise:@"argumentmissing" format:@"argument missing"];
+                PARSEERROR(@"argument missing", selector);
             }
 		}
 //		NSLog(@"parse unary: args=%@",args);
@@ -483,6 +498,8 @@ idAccessor( connectorMap, setConnectorMap );
     while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {
         [self pushBack:next];
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
+        [expr setOffset:[scanner offset]];
+        [expr setLen:1];
 //		NSLog(@"message expression with receiver: %@",expr);
         [self parseSelectorAndArgs:expr];
 		expr = [self mapConnector:expr];
@@ -498,6 +515,8 @@ idAccessor( connectorMap, setConnectorMap );
 {
 	id rhs = [self parseExpression];
     id assignment = [[[assignmentExpressionClass alloc] init] autorelease];
+    [assignment setOffset:[scanner offset]];
+    [assignment setLen:1];
 //	NSLog(@"have assignment of first: %@",first,assignment);
 	[assignment setLhs:lhs];
 	[assignment setRhs:rhs];

@@ -32,9 +32,13 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 	//--- have identifier instead of name+scheme-string
 	//--- pass to identifier...or pass to scheme..or pass to identifier which knows its sceme
 	//---   var-identifier goes back to this
+    id val=nil;
 	//---   
-	
-	id val = [[self identifier] evaluateIn:passedEnvironment];
+	@try {
+        val = [[self identifier] evaluateIn:passedEnvironment];
+    } @catch (id exception) {
+        @throw  [self handleOffsetsInException:exception];
+    }
 //	id val = [passedEnvironment valueOfVariableNamed:name withScheme:[self scheme]];
 	return val;
 }

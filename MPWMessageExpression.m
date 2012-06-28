@@ -50,10 +50,15 @@ idAccessor( args, setArgs )
     return NO;
 }
 
-
 -(NSObject<MPWEvaluable>*)evaluateIn:aContext
 {
-	return [aContext sendMessage:selector to:receiver withArguments:args];
+	id retval = nil;
+    @try {
+        retval = [aContext sendMessage:selector to:receiver withArguments:args];
+    } @catch (id exception) {
+        @throw  [self handleOffsetsInException:exception];
+    }
+    return retval;
 }
 
 -(void)addToVariablesWritten:(NSMutableSet*)variablesWritten

@@ -208,6 +208,11 @@ idAccessor( method, _setMethod )
 	[self setName:[aMethod methodName]];
 }
 
+-methodForTarget:aTarget
+{
+    return [self method];
+}
+
 -(void)installInClass:(Class)aClass
 {
 	[self installInClass:aClass withSignature:[[self header] typeSignature]];
@@ -221,7 +226,7 @@ idAccessor( method, _setMethod )
 {
 	id returnVal=nil;
 	@try {
-        returnVal = [[self method] evaluateOnObject:target parameters:parameters];
+        returnVal = [[self methodForTarget:target] evaluateOnObject:target parameters:parameters];
     } @catch (id exception) {
         NSLog(@"exception %@ executing %@",exception,[self header]);
     }

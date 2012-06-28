@@ -90,18 +90,21 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 
 -(void)autoresolveFromURLS:(NSArray*)urls
 {
-//    NSLog(@"autoresolveFromURLs: %@",urls);
+   NSLog(@"autoresolveFromURLs: %@",urls);
     [self setBaseURL:nil];
     for (NSString *urlstring in urls ) {
         NSString *checkURL=[NSString stringWithFormat:@"%@uniqueID",urlstring];
-//        NSLog(@"base url: '%@' checkURL: '%@'",urlstring,checkURL );
+        NSLog(@"base url: '%@' checkURL: '%@'",urlstring,checkURL );
         NSString *targetID=[NSString stringWithContentsOfURL:[NSURL URLWithString:checkURL]];
-//        NSLog(@"targetID: %@",targetID);
+        NSLog(@"targetID: %@",targetID);
         if ( [[self uniqueID] isEqualToString:targetID] ) {
             NSLog(@"matched unique ID: '%@' setting URL to: %@",targetID,urlstring);
             [self setBaseURL:urlstring];
             break;
+        } else {
+            NSLog(@"did not match");
         }
+        
     }
 }
 

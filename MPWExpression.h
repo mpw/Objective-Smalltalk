@@ -10,12 +10,14 @@
 #import <MPWTalk/MPWEvaluable.h>
 
 @interface MPWExpression : MPWObject <MPWEvaluable> {
-
+    int offset,len;
 }
 
 -variablesRead;
 -variablesWritten;
 
+intAccessor_h(offset , setOffset)
+intAccessor_h(len, setLen)
 
 @end
 

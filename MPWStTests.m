@@ -738,7 +738,10 @@
         EXPECTTRUE(NO, @"should have gotten an exception here");
     }
     @catch (NSException *exception) {
-        IDEXPECT([exception name], @"argumentmissing", @"exception ");
+        NSLog(@"exception: %@",exception);
+        IDEXPECT([exception name], @"argument missing", @"exception ");
+        NSLog(@"token: %@",[[exception userInfo] objectForKey:@"token"]);
+        IDEXPECT([[exception userInfo] objectForKey:@"token"], @"+", @"last token");
     }
 }
 
@@ -819,8 +822,8 @@
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
 			@"testRelScheme",
-			@"testIdentifierInterpolation",
-			@"testIdentifierInterpolationWorksAsAssignmentTarget",
+//			@"testIdentifierInterpolation",
+//			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
         nil];
 }

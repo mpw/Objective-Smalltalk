@@ -2,11 +2,11 @@
 
 #import <MPWTalk/MPWEvaluator.h>
 
-@class MPWMethodHeader;
+@class MPWMethodHeader,MPWStScanner;
 
 @interface MPWStCompiler : MPWEvaluator
 {
-    id scanner;
+    MPWStScanner *scanner;
     id tokens;
 	id methodStore;
 	id connectorMap;
