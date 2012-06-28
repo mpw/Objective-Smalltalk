@@ -67,6 +67,18 @@ objectAccessor(NSError, error, setError)
 	return YES;
 }
 
+-(NSString*)mimeTypeForData:(NSData*)rawData andResponse:(NSURLResponse*)aResponse
+{
+    NSString *mime = [aResponse MIMEType];
+    const char *ptr=[rawData bytes];
+    if ( ptr && [rawData length]) {
+        if ( [mime isEqualToString:@"text/html"] && (*ptr == '{' || *ptr == '[' )) {
+            mime=@"application/json";
+        }
+    }
+    return mime;
+}
+
 -_valueWithURL:(NSURL*)aURL
 {
 	NSMutableURLRequest *request=[[[NSMutableURLRequest alloc] initWithURL:aURL] autorelease];
@@ -79,7 +91,7 @@ objectAccessor(NSError, error, setError)
 	MPWResource *result=[[[MPWResource alloc] init] autorelease];
 	[result setSource:aURL];
 	[result setRawData:rawData];
-	[result setMimetype:[response MIMEType]];
+	[result setMimetype:[self mimeTypeForData:rawData andResponse:response]];
 	return result;
 }
 
