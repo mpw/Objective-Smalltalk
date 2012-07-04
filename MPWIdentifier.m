@@ -62,8 +62,11 @@ idAccessor( identifierName, setIdentifierName )
 
 -evaluatedIdentifierNameInContext:aContext
 {
+#if 0
     return identifierName;
-//	return [[self evaluatedPathComponentsInContext:aContext] componentsJoinedByString:@"/"];
+#else
+	return [[self evaluatedPathComponentsInContext:aContext] componentsJoinedByString:@"/"];
+#endif
 }
 
 -evaluateIn:aContext
