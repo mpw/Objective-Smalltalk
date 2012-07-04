@@ -745,6 +745,12 @@
     }
 }
 
++(void)testNestedLiteralArrays
+{
+    id result = [self evaluate: @"#( 1 2 #( 2 3 ) )"];
+    INTEXPECT([result count], 3, @"top level elements");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -825,6 +831,7 @@
 //			@"testIdentifierInterpolation",
 //			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
+            @"testNestedLiteralArrays",
         nil];
 }
 

@@ -194,6 +194,9 @@ idAccessor( connectorMap, setConnectorMap );
         object=[self nextToken];
 //        NSLog(@"got object: %@",object);
         if ( object && !([object isToken] && [object isEqual:@")"]) ) {
+            if ( [object isEqual:@"#"]) {
+                object=[self parseLiteral];
+            }
             [array addObject:[(MPWExpression*)object evaluate]];
         } else {
             break;
