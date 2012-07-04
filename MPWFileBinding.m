@@ -85,7 +85,10 @@ idAccessor( url , setUrl )
     }
 }
 
-
+-(NSArray*)childNames
+{
+    return [self directoryContents];
+}
 
 -_valueWithDataURL:(NSURL*)aURL
 {

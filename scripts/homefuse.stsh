@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-#-<void>mount:text
+#-<void>mount:<ref>dir
 context loadFramework:'MPWSideWeb' .
 context loadFramework:'SchemeFUSE' .
 server := MPWHTTPServer new.
@@ -7,8 +7,8 @@ server setPort: 8082.
 stdout println: 'memhttpserver listeing in port: ',server port stringValue.
 server start:nil.
 
-scheme:base := MPWSiteMap scheme.
-base:/hi.txt := text asData.
+scheme:base := dir asScheme.
+stdout println: scheme:base .
 server setDelegate: scheme:base .
 
 fs1 := SchemeFUSE alloc initWithScheme: scheme:base .
