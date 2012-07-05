@@ -37,7 +37,7 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 	if ( [self isBound] ) {
 		return [self _value];
 	} else {
-		[NSException raise:@"unboundvariable" format:@"variable not bound to a value"];
+		[NSException raise:@"unboundvariable" format:@"variable '%@/%@' not bound to a value",identifier,[identifier name]];
 		return nil;
 	}
 }
