@@ -43,7 +43,15 @@ objectAccessor( NSBundle, bundle ,setBundle )
 
 -bindingForName:aName inContext:aContext
 {
-	NSString *path = [[self bundle] pathForResource:[aName stringByDeletingPathExtension] ofType:[aName pathExtension]];				  
+
+    NSString *pathExtension=[aName pathExtension];
+    if ( !pathExtension) {
+        pathExtension=@"";
+    }
+	NSString *path = [[self bundle] pathForResource:[aName stringByDeletingPathExtension] ofType:pathExtension];
+    if ( !path ) {
+        path=[[self bundle] resourcePath];
+    }
 	//	id binding = [MPWBinding bindingWithValue:[NSString stringWithContentsOfFile:aName]];
 	return [super bindingForName:path inContext:aContext];
 }
@@ -62,10 +70,18 @@ objectAccessor( NSBundle, bundle ,setBundle )
 }
 
 
++(void)testGettingRoot
+{
+	chdir("/");
+	IDEXPECT( [[[MPWStCompiler evaluate:@"ref:bundle:/"] url] path], [[MPWStCompiler evaluate:@"scheme:bundle bundle resourcePath."] stringValue], @"root");
+}
+
+
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
 			@"testGettingASimpleFile",
+			@"testGettingRoot",
 			nil];
 }
 
