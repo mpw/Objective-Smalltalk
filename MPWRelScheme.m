@@ -17,7 +17,7 @@
 
 objectAccessor( MPWScheme, baseScheme, setBaseScheme )
 objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
-
+idAccessor(storedContext, setStoredContext)
 /*
    FIXME!!
  
@@ -37,11 +37,20 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 
  
    Also:  this problem only started manifesting itself when I added storing the scheme
-       to MPWBinding (and therefore all MPWBindings).  That probably 
+       to MPWBinding (and therefore all MPWBindings).
+ 
+ 
+    Possibly need to go via the original binding (in case we have it, and some relative
+    schemes will only work when done this way):  VAR-Ref has its context, with the context
+    already used to get the base object (so it is this resolved base object that we need).
+    So:  delegate to 
 */
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
+    if ( !aContext ) {
+        aContext=[self storedContext];
+    }
     MPWBinding *binding=[super bindingWithIdentifier:anIdentifier withContext:aContext];
     [binding setScheme:[self baseScheme]];
     return binding;
@@ -49,6 +58,9 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
     
 -bindingForName:anIdentifierName inContext:aContext
 {
+    if ( !aContext ) {
+        aContext=[self storedContext];
+    }
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
 //    NSLog(@"combined name: '%@'",combinedPath);
     MPWIdentifier *newIdentifier=[MPWIdentifier identifierWithName:combinedPath];
@@ -91,13 +103,18 @@ objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 -initWithRef:(MPWBinding*)aBinding
 {
     MPWBinding *resolved=[aBinding bindNames];
-    return [self initWithBaseScheme:[resolved scheme] baseURL:[[resolved identifier] identifierName]];
+//    NSLog(@"initWithRef: %@",aBinding);
+//    NSLog(@"binding value: %@",[aBinding value]);
+    self = [self initWithBaseScheme:[resolved scheme] baseURL:[[resolved identifier] identifierName]];
+    
+    return self;
 }
 
 -(void)dealloc
 {
 	[baseScheme release];
 	[baseIdentifier release];
+    [baseRef release];
 	[super dealloc];
 }
 

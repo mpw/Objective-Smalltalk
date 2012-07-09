@@ -212,6 +212,12 @@
 		1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F7E05CD144B417D008F349D /* MPWSideweb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CC144B417D008F349D /* MPWSideweb.framework */; };
 		1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CE144B4188008F349D /* Foundation.framework */; };
+		1F80973715A72A77004AB773 /* MPWPlistScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F80973515A72A77004AB773 /* MPWPlistScheme.h */; };
+		1F80973815A72A77004AB773 /* MPWPlistScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F80973515A72A77004AB773 /* MPWPlistScheme.h */; };
+		1F80973915A72A77004AB773 /* MPWPlistScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F80973515A72A77004AB773 /* MPWPlistScheme.h */; };
+		1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
+		1F80973B15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
+		1F80973C15A72A78004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -484,6 +490,8 @@
 		1F7E05C4144B3F9E008F349D /* libMPWSideWeb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWSideWeb.a; path = "../../Build/Release-iphoneos/libMPWSideWeb.a"; sourceTree = "<group>"; };
 		1F7E05CC144B417D008F349D /* MPWSideweb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWSideweb.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release/MPWSideweb.framework"; sourceTree = "<group>"; };
 		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		1F80973515A72A77004AB773 /* MPWPlistScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWPlistScheme.h; sourceTree = "<group>"; };
+		1F80973615A72A77004AB773 /* MPWPlistScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWPlistScheme.m; sourceTree = "<group>"; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
 		1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFileSchemeResolver.h; sourceTree = "<group>"; };
@@ -712,6 +720,8 @@
 				1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */,
 				1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */,
 				1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */,
+				1F80973515A72A77004AB773 /* MPWPlistScheme.h */,
+				1F80973615A72A77004AB773 /* MPWPlistScheme.m */,
 			);
 			name = Schemes;
 			sourceTree = "<group>";
@@ -1071,6 +1081,7 @@
 				1FD713D91522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
 				1FD713E51522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 				1FED18C51544684600E0D765 /* JSGCDDispatcher.h in Headers */,
+				1F80973815A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1140,6 +1151,7 @@
 				1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
 				1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 				1FED18C41544684600E0D765 /* JSGCDDispatcher.h in Headers */,
+				1F80973715A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1189,6 +1201,7 @@
 				1FD713DA1522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
 				1FD713E61522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
 				1FED18C61544684600E0D765 /* JSGCDDispatcher.h in Headers */,
+				1F80973915A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1539,6 +1552,7 @@
 				1FD713DE1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713EA1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1FED18C21544684600E0D765 /* JSGCDDispatcher.m in Sources */,
+				1F80973B15A72A77004AB773 /* MPWPlistScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1607,6 +1621,7 @@
 				1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1FED18C11544684600E0D765 /* JSGCDDispatcher.m in Sources */,
+				1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1710,6 +1725,7 @@
 				1FD713DF1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713EB1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1FED18C31544684600E0D765 /* JSGCDDispatcher.m in Sources */,
+				1F80973C15A72A78004AB773 /* MPWPlistScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

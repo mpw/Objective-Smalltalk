@@ -8,10 +8,13 @@
 
 #import "MPWGenericScheme.h"
 
+@class MPWBinding;
 
 @interface MPWRelScheme : MPWGenericScheme {
 	MPWScheme* baseScheme;
 	NSString* baseIdentifier;
+    id storedContext;
+    MPWBinding *baseRef;        // not used yet
 }
 
 @end

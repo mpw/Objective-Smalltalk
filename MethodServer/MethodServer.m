@@ -100,11 +100,6 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     return result;
 }
 
--(NSData*)get:(NSString*)uri
-{
-    return [uri asData];
-}
-
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
     NSLog(@"MethodServer get uri: %@",uri);

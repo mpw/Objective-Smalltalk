@@ -1,13 +1,13 @@
 #!/usr/local/bin/stsh
 context loadFramework:'MPWSideWeb'
-server := MPWHTTPServer new.
-server setPort: 8082.
-stdout println: 'memhttpserver listeing in port: ',server port stringValue.
+server := MPWSchemeHttpServer new.
+server server setPort: 8082.
+stdout println: 'memhttpserver listeing in port: ',server server port stringValue.
 server start:nil.
 
 scheme:base := MPWSiteMap scheme.
 base:/hi := 'Hello World!'.
-server setDelegate: scheme:base .
+server setScheme: scheme:base .
 
 shell runInteractiveLoop
 

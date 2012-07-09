@@ -16,6 +16,8 @@
 	return [aContext localVars];
 }
 
+
+
 -bindingForName:(NSString*)variableName inContext:aContext
 {
 	id localVars = [self localVarsForContext:aContext];

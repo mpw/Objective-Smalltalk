@@ -751,6 +751,24 @@
     INTEXPECT([result count], 3, @"top level elements");
 }
 
++(void)testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd
+{
+    id result=[self evaluate:@"a:=3. b:=4. var:a. "];  
+    INTEXPECT([result intValue], 3, @"value of identifier without terminating period, space follows");
+}
+
++(void)testPeriodAtEndOfIdentifierAndStatementAndEOFTreatedAsStatementEnd
+{
+    id result=[self evaluate:@"a:=3. b:=4. var:a."];  
+    INTEXPECT([result intValue], 3, @"value of identifier without terminating period, space follows");
+}
+
++(void)testBracketsTerminateIdentifier
+{
+    id result=[self evaluate:@"a:=3. b:=4. (var:a)."];  
+    INTEXPECT([result intValue], 3, @"value of identifier without terminating period, space follows");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -832,6 +850,9 @@
 //			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
             @"testNestedLiteralArrays",
+            @"testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd",
+            @"testPeriodAtEndOfIdentifierAndStatementAndEOFTreatedAsStatementEnd",
+            @"testBracketsTerminateIdentifier",
         nil];
 }
 

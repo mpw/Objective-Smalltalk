@@ -21,6 +21,11 @@ objectAccessor( NSString, name, setName )
 	return self;
 }
 
++bindingWithName:(NSString*)envName scheme:newScheme
+{
+    return [[[self alloc] initWithName:envName scheme:newScheme] autorelease];
+}
+
 -path
 {
     return name;

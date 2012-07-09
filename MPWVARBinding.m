@@ -7,7 +7,7 @@
 //
 
 #import "MPWVARBinding.h"
-
+#import "MPWInterval.h"
 
 @implementation MPWVARBinding
 
@@ -24,11 +24,20 @@ idAccessor( baseObject, setBaseObject )
 	
 }
 
+-path
+{
+    return [[self pathComponents] componentsJoinedByString:@"/"];
+}
+
 -initWithBaseObject:newBase path:newPath
 {
 	return [self initWithBaseObject:newBase pathComponents:[newPath componentsSeparatedByString:@"/"]];
 }
 
++bindingWithBaseObject:newBase path:newPath
+{
+    return [[[self alloc] initWithBaseObject:newBase path:newPath] autorelease];
+}
 
 
 -(BOOL)isBound

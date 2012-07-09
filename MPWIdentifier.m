@@ -74,6 +74,12 @@ idAccessor( identifierName, setIdentifierName )
 	return [[self schemeWithContext:aContext] evaluateIdentifier:self withContext:aContext];
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: schemeName: %@ identifierName: %@>",
+            [self class],self,[self schemeName],[self identifierName]];
+    }
+
 -(void)dealloc
 {
 	[scheme release];

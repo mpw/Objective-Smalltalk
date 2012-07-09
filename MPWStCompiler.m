@@ -258,12 +258,23 @@ idAccessor( connectorMap, setConnectorMap );
 		//--- re-initialize name
 		name=[NSMutableString string];
 		[scanner setNoNumbers:YES];
+        id lastToken=nil;
 		do {
+            lastToken=nextToken;
 			nextToken=[self nextToken];
-			if (nextToken  ) {
+			if (nextToken && ![nextToken isEqual:@")"] ) {
 				name=[name stringByAppendingString:[nextToken stringValue]];
 			}
-		} while (nextToken && ![scanner atSpace] );
+		} while (nextToken && ![scanner atSpace] &&  ![nextToken isEqual:@")"] );
+        if ( nextToken ) {
+            lastToken=nextToken;
+        }
+        if (   [lastToken isEqual:@"."] ) {
+            [self pushBack:lastToken];
+            name=[name substringToIndex:[name length]-1];
+        } else if ( [lastToken isEqual:@")"]) {
+            [self pushBack:lastToken];
+        }
 		[scanner setNoNumbers:NO];
 	}
 	[identifierToAddNameTo setIdentifierName:name];

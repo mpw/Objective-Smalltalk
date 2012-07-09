@@ -8,6 +8,8 @@
 
 #import "MPWBinding.h"
 #import "MPWRelScheme.h"
+#import "MPWInterval.h"
+#import "MPWVARBinding.h"
 
 @implementation MPWBinding
 
@@ -37,7 +39,7 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 	if ( [self isBound] ) {
 		return [self _value];
 	} else {
-		[NSException raise:@"unboundvariable" format:@"variable '%@/%@' not bound to a value",identifier,[identifier name]];
+		[NSException raise:@"unboundvariable" format:@"variable '%@' not bound to a value",[identifier description]];
 		return nil;
 	}
 }
@@ -63,15 +65,45 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 	[[self value] setValue:newValue forKey:kvpath];
 }
 
--(NSArray*)children
-{
-    return [NSArray array];
-}
 
 -(NSArray*)childNames
 {
-    return [self children];
+    NSArray *childNames=nil;
+    id value=[self value];
+    if ( [value respondsToSelector:@selector(allKeys)]) {
+        childNames = [value allKeys];
+    } else if ( [value respondsToSelector:@selector(count)]) {
+        childNames = [MPWInterval intervalFromInt:0 toInt:[value count]-1];
+    } else {
+        childNames =  [NSArray array];
+    }
+    return childNames;
 }
+
+
+
+-childWithName:(NSString*)aName
+{
+    id value=[self value];
+    return [MPWVARBinding bindingWithBaseObject:value path:aName];
+ }
+
+-(BOOL)hasChildren
+{
+    return [[self childNames] count] > 0;
+}
+
+-(BOOL)isDirectory
+{
+    return [self hasChildren];
+}
+
+-children
+{
+    return [[self collect] childWithName:[[self childNames] each]];
+}
+
+
 
 -(NSArray*)allLinks
 {
@@ -88,11 +120,6 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 {
 	[self setIsBound:NO];
 	[self _setValue:nil];
-}
-
--(BOOL)hasChildren
-{
-    return NO;
 }
 
 -asScheme

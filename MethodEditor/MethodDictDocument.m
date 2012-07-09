@@ -96,7 +96,8 @@ objectAccessor(NSString , baseURL, _setBaseURL)
         NSString *checkURL=[NSString stringWithFormat:@"%@uniqueID",urlstring];
         NSLog(@"base url: '%@' checkURL: '%@'",urlstring,checkURL );
         NSString *targetID=[NSString stringWithContentsOfURL:[NSURL URLWithString:checkURL]];
-        NSLog(@"targetID: %@",targetID);
+        NSLog(@"remote server's ID: %@",targetID);
+        NSLog(@"my ID: %@",[self uniqueID]);
         if ( [[self uniqueID] isEqualToString:targetID] ) {
             NSLog(@"matched unique ID: '%@' setting URL to: %@",targetID,urlstring);
             [self setBaseURL:urlstring];
