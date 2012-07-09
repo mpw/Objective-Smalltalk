@@ -1,0 +1,19 @@
+#!/usr/local/bin/stsh
+context loadFramework:'MPWSideWeb' .
+context loadFramework:'SchemeFUSE' .
+server := MPWSchemeHttpServer new.
+server server setPort: 8082.
+stdout println: 'memhttpserver listeing in port: ',server server port stringValue.
+
+theScheme := scheme:env .
+theScheme := ref:env:/ asScheme.
+ 
+server setScheme: theScheme.
+
+server start:nil.
+fs1 := SchemeFUSE alloc initWithScheme: theScheme.
+fs := fs1 mountAtPath:'/Volumes/SchemeFS' volname:'SchemeFS'. 
+
+
+shell runInteractiveLoop
+
