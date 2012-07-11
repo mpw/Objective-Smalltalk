@@ -74,8 +74,8 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
         childNames = [value allKeys];
     } else if ( [value respondsToSelector:@selector(count)]) {
         childNames = [MPWInterval intervalFromInt:0 toInt:[value count]-1];
-    } else {
-        childNames =  [NSArray array];
+    } else if ( ![value isKindOfClass:[NSValue class]] && ![value isKindOfClass:[NSString class]] && ![value isKindOfClass:[NSData class]]) {
+        childNames =  [[value class] ivarNames];
     }
     return childNames;
 }
