@@ -158,7 +158,12 @@ boolAccessor( noNumbers, setNoNumbers )
 
 -scanSpecial
 {
-    return [self makeText:1];
+    const char *cur=pos;
+    int len=1;
+    if ( *cur=='<' && SCANINBOUNDS(cur+1) && cur[1]=='-' ) {
+        len++;
+    }
+    return [self makeText:len];
 }
 
 -scanString
@@ -313,12 +318,20 @@ boolAccessor( noNumbers, setNoNumbers )
 	INTEXPECT( [tokens count], 9 , @"number of tokens");
 }
 
++(void)testLeftArrow
+{
+	MPWStScanner *scanner=[self scannerWithData:@"<-"];
+    IDEXPECT([scanner nextToken], @"<-", @"single left arrow");
+
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
         @"testDoubleStringEscape",
         @"testConstraintEqual",
-		@"testURLWithUnderscores",
+            @"testURLWithUnderscores",
+            @"testLeftArrow",
         nil];
 }
 

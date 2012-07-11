@@ -769,6 +769,12 @@
     INTEXPECT([result intValue], 3, @"value of identifier without terminating period, space follows");
 }
 
++(void)testLeftArrowWorksLikeAssignment
+{
+    id result=[self evaluate:@"a <- 3. b <- 4. a"];  
+    INTEXPECT([result intValue], 3, @"left arrow didn't do assignment");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -853,6 +859,7 @@
             @"testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd",
             @"testPeriodAtEndOfIdentifierAndStatementAndEOFTreatedAsStatementEnd",
             @"testBracketsTerminateIdentifier",
+            @"testLeftArrowWorksLikeAssignment",
         nil];
 }
 

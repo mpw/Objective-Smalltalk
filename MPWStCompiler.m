@@ -5,6 +5,7 @@
 #import "MPWMessageExpression.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
+#import "MPWComplexAssignment.h"
 #import "MPWStatementList.h"
 #import "MPWBlockExpression.h"
 #import "MPWInterval.h"
@@ -56,7 +57,8 @@ idAccessor( connectorMap, setConnectorMap );
 
 -(void)defineBuiltInConnectors
 {
-	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="]; 
+	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
+	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"<-"];
 }
 
 -initWithParent:newParent
@@ -393,7 +395,8 @@ idAccessor( connectorMap, setConnectorMap );
                                                           @"isGreaterThan:", @">",
                                                              @"isLessThan:", @"<",
                                                                 @"isEqual:", @"=",
-                                                                @"doAssign:", @":=",
+                              @"doAssign:", @":=",
+                              @"doAssign:", @"<-",
 															  @"pointWith:",@"@",
             nil];
     }
@@ -564,7 +567,7 @@ idAccessor( connectorMap, setConnectorMap );
 
 		if (  [self isAssignmentLikeToken:second]  ) {
 //			NSLog(@"assignmentLikeToken: %@",second);
-			return [self parseAssignmentLikeExpression:first withExpressionClass:[self assignmentClassForToken:second]];
+			return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];
         } else {
 			[self pushBack:second];
 		}

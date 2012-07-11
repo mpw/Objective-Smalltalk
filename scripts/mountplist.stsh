@@ -12,6 +12,10 @@ theScheme := ref:env:/ asScheme.
 plist := file:annotpad.classdict stringValue propertyList.
 stdout println:plist class.
 theScheme := ref:var:plist asScheme.
+
+theScheme := ref:var:context asScheme.
+
+
 stdout println:theScheme.
 theScheme setStoredContext:context.
  

@@ -45,8 +45,6 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     return [super deserializeData:inputData at:aBinding];
 }
 
-
-
 -(void)setupWithInterpreter:anInterpreter
 {
     [self setInterpreter:anInterpreter];
@@ -177,7 +175,7 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     NSLog(@"setupWebServer");
     [super setupWebServer];
     [[self server] setPort:51000];
-    [[self server] setBonjourName:@"Methods"];
+    [[self server] setBonjourName:[self methodDictName]];
     [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];
     NSLog(@"did set up port etc, start it");
     NSError *error=nil;

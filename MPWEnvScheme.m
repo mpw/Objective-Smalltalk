@@ -50,13 +50,13 @@ extern char ***_NSGetEnviron();
 -valueForBinding:aBinding
 {
     NSString *name=[aBinding name];
-    NSLog(@"%@ valueForBinding:%@",[self class],name);
+//    NSLog(@"%@ valueForBinding:%@",[self class],name);
     if ( [name length]==0 || [name isEqual:@"/"]) {
         return [aBinding childNames];
     } else {
         const char *val=[self cstringValueOfBinding:aBinding];
         if ( val ) {
-            NSLog(@"got %s",val);
+//            NSLog(@"got %s",val);
             return [NSString stringWithUTF8String:val];
         } else {
             return nil;
@@ -79,7 +79,7 @@ extern char ***_NSGetEnviron();
 
 -(BOOL)hasChildren:(MPWGenericBinding*)binding
 {
-    NSLog(@"hasChildren: %@",[binding name]);
+//    NSLog(@"hasChildren: %@",[binding name]);
     return [[binding name] length]==0 || [[binding name] isEqual:@"/"];
 }
 

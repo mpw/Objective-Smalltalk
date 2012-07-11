@@ -21,6 +21,8 @@
 -(void)bindValue:value toVariableNamed:(NSString*)variableName;
 -(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:scheme;
 
+-createSchemes;
+
 -valueOfVariableNamed:aName;
 -valueOfVariableNamed:aName withScheme:scheme;
 -(NSString*)defaultScheme;
