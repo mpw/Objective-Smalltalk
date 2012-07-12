@@ -24,11 +24,13 @@ objectAccessor(MPWScheme, source, setSource)
     return self;
 }
 
--(id)bindingForName:(NSString *)variableName inContext:(id)aContext
+-(id)_bindingForName:(NSString *)variableName inContext:(id)aContext
 {
+    NSLog(@"original path: %@",variableName);
     if ( [self identifierFilter]){
         variableName=((FilterBlock)identifierFilter)(variableName);
     }
+    NSLog(@"mapped path: %@",variableName);
     return [super bindingForName:variableName inContext:aContext];
 }
 
@@ -37,10 +39,25 @@ objectAccessor(MPWScheme, source, setSource)
     return [[[self alloc] initWithSource:aSource identifierFilter:idFilter valueFilter:vFilter] autorelease];
 }
 
+-_baseBindingForBinding:aBinding
+{
+    //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
+    if (  [aBinding scheme] != [self source] ) {
+        //        NSLog(@"modifying non var-scheme later");
+        aBinding=[self _bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
+    }
+    //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
+    return aBinding;
+}
+
+
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
+    aBinding = [self _baseBindingForBinding:aBinding];
+//    NSLog(@"path: %@",[aBinding path]);
     id value=[[self source] valueForBinding:aBinding];
     if ( valueFilter){
+//        NSLog(@"will filter: %p/%@",value,[value class]);
         value=((FilterBlock)valueFilter)(value);
     }
     return value;
@@ -52,6 +69,7 @@ objectAccessor(MPWScheme, source, setSource)
 
 @implementation MPWFilterScheme(tests)
 
+
 +(void)testSimpleValueFilter
 {
     id compiler=[[MPWStCompiler new] autorelease];
@@ -61,7 +79,7 @@ objectAccessor(MPWScheme, source, setSource)
     INTEXPECT([result intValue], 11, @"length of hello world");
 }
 
-+(void)testSimpleVIdentifierFilter
++(void)testSimpleIdentifierFilter
 {
     id compiler=[[MPWStCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
@@ -70,11 +88,31 @@ objectAccessor(MPWScheme, source, setSource)
     IDEXPECT(result, @"Hello World", @"hello world");
 }
 
++(void)testIdentifierAndValueFilter
+{
+    id compiler=[[MPWStCompiler new] autorelease];
+    [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
+    [compiler evaluateScriptString:@"scheme:txt := MPWFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]."];
+    id result=[compiler evaluateScriptString:@"txt:hi"];
+    INTEXPECT([result intValue], 11, @"length of hello world");
+}
+
++(void)testFilterWorksWithCache
+{
+    id compiler=[[MPWStCompiler new] autorelease];
+    [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
+    [compiler evaluateScriptString:@"scheme:txt := (MPWFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]) cachedBy:MPWTreeNodeScheme scheme."];
+    id result=[compiler evaluateScriptString:@"txt:hi"];
+    INTEXPECT([result intValue], 11, @"length of hello world");
+}
+
 +testSelectors
 {
     return [NSArray arrayWithObjects:
             @"testSimpleValueFilter",
-            @"testSimpleVIdentifierFilter",
+            @"testSimpleIdentifierFilter",
+            @"testIdentifierAndValueFilter",
+           @"testFilterWorksWithCache",
             nil];
 }
 
