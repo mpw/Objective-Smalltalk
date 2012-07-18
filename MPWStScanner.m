@@ -322,7 +322,20 @@ boolAccessor( noNumbers, setNoNumbers )
 {
 	MPWStScanner *scanner=[self scannerWithData:@"<-"];
     IDEXPECT([scanner nextToken], @"<-", @"single left arrow");
+    
+}
 
++(void)testSimpleLiteralString
+{
+	MPWStScanner *scanner=[self scannerWithData:@"'literal string'"];
+    IDEXPECT([scanner nextToken], @"literal string", @"literal string");
+}
+
++(void)singleMinusString
+{
+	MPWStScanner *scanner=[self scannerWithData:@"'-'"];
+    IDEXPECT([scanner nextToken], @"-", @"single left arrow");
+    
 }
 
 +(NSArray*)testSelectors
@@ -332,6 +345,8 @@ boolAccessor( noNumbers, setNoNumbers )
         @"testConstraintEqual",
             @"testURLWithUnderscores",
             @"testLeftArrow",
+            @"testSimpleLiteralString",
+            @"singleMinusString",
         nil];
 }
 
