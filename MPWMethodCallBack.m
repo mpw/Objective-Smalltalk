@@ -229,6 +229,7 @@ idAccessor( method, _setMethod )
         returnVal = [[self methodForTarget:target] evaluateOnObject:target parameters:parameters];
     } @catch (id exception) {
         NSLog(@"exception %@ executing %@",exception,[self header]);
+        @throw exception;
     }
 	return returnVal;
 }

@@ -56,7 +56,9 @@ idAccessor( args, setArgs )
     @try {
         retval = [aContext sendMessage:selector to:receiver withArguments:args];
     } @catch (id exception) {
-        @throw  [self handleOffsetsInException:exception];
+        exception=[self handleOffsetsInException:exception];
+        NSLog(@"exception sending message: %@",exception);
+        @throw  exception;
     }
     return retval;
 }
