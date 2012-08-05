@@ -278,6 +278,7 @@ idAccessor( localVars, setLocalVars )
 		found = retval != nil;
     }
 	if ( !found ) {
+        NSLog(@"Unknown identifier '%@'",aName);
 		[NSException raise:@"unknownidentifer" format:@"Unknown identifier '%@'",aName];
 	}
     return retval;
