@@ -13,6 +13,7 @@
 @implementation MethodDictDocument
 
 objectAccessor(MPWStCompiler , interpreter, setInterpreter)
+objectAccessor(MPWStCompiler , syntaxCheckCompiler, setSyntaxCheckCompiler)
 objectAccessor(NSString , baseURL, _setBaseURL)
 
 - (id)init
@@ -20,7 +21,8 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 //    NSLog(@"environment: %@",[[NSProcessInfo processInfo] environment]);
     self = [super init];
     if (self) {
-        [self setInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
+        [self setInterpreter:[MPWStCompiler compiler]];
+        [self setSyntaxCheckCompiler:[MPWStCompiler compiler]];
         [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
         [[self interpreter] bindValue:self toVariableNamed:@"document"];
         NSDictionary *methods = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"methods" ofType:@"plist"]];
@@ -28,7 +30,7 @@ objectAccessor(NSString , baseURL, _setBaseURL)
             NSLog(@"setting methods: %@",methods);
             [[self interpreter] defineMethodsInExternalDict:methods];
         }
-        NSLog(@"the answer: %d",(int)[self theAnswer]);
+//        NSLog(@"the answer: %d",(int)[self theAnswer]);
     }
     return self;
 }
@@ -38,24 +40,20 @@ objectAccessor(NSString , baseURL, _setBaseURL)
     return [[address stringValue] length] > 2 ? [NSString stringWithFormat:@"http://%@:51000/",[address stringValue]] : nil;
 }
 
--(void)checkMethodBody
+-(BOOL)checkMethodBody
 {
     NSString *methodBodyText=[self methodBodyString];
-    @try {
-        [interpreter compile:methodBodyText];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"compile failed: %@",exception);
-    }
-    @finally {
-    }
+    return [syntaxCheckCompiler isValidSyntax:methodBodyText];
 }
 
 
 -(void)saveMethodAtPath:(NSString*)path
 {
-    [self checkMethodBody];
-    [super saveMethodAtPath:path];
+    if ( [self checkMethodBody] ) {
+        [super saveMethodAtPath:path];
+    } else {
+        NSLog(@"--- invalid syntax ---- ");
+    }
 }
 
 -(NSString*)url
@@ -107,6 +105,24 @@ objectAccessor(NSString , baseURL, _setBaseURL)
         }
         
     }
+}
+
+-(void)updateSyntaxCheckIndicator
+{
+    [self setSyntaxCheckedOK:[self checkMethodBody]];
+}
+
+- (void)textDidChange:(NSNotification *)aNotification
+{
+    NSLog(@"textDidChange");
+    [self updateSyntaxCheckIndicator];
+}
+
+-(void)setUIForMethodHeader:(NSString*)header body:(NSString*)body
+{
+    NSLog(@"setUIForMethodHeader: %@ body:...",header);
+    [super setUIForMethodHeader:header body:body];
+    [self updateSyntaxCheckIndicator];
 }
 
 @end

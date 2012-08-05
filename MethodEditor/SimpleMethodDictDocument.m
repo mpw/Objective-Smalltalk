@@ -20,6 +20,23 @@ objectAccessor(NSTextField , methodHeader, setMethodHeader)
 objectAccessor(NSTextView, methodBody, setMethodBody)
 objectAccessor(NSString, uniqueID, setUniqueID)
 
+
+-(void)setSyntaxCheckedOK:(BOOL)wasOK
+{
+    unichar flagchar=9873;
+    NSString *flag=[NSString stringWithCharacters:&flagchar length:1];
+    if ( wasOK ) {
+//        unichar thumbsupchars[]={ 0xD83D, 0xDC4D };
+//        NSString *thumbsup=[NSString stringWithCharacters:thumbsupchars length:2];
+
+        [isOK setTextColor:[NSColor greenColor]];
+        [isOK setStringValue:flag];
+    } else {
+        [isOK setTextColor:[NSColor redColor]];
+        [isOK setStringValue:flag];
+    }
+}
+
 - (NSString *)windowNibName
 {
     // Override returning the nib file name of the document
@@ -67,7 +84,7 @@ objectAccessor(NSString, uniqueID, setUniqueID)
 
 -(void)setUIForMethodHeader:(NSString*)header body:(NSString*)body
 {
-//    NSLog(@"will set methodHeader: %@ to %@",[self methodHeader],header);
+    NSLog(@"will set methodHeader: %@",header);
 //    NSLog(@"will set methodBody: %@ to %@",[self methodBody],body);
     [[self methodHeader] setStringValue:header];
     [[self methodBody] setString:body];
@@ -181,13 +198,16 @@ objectAccessor(NSString, uniqueID, setUniqueID)
 
 -(void)loadMethodFromPath:(NSString*)path
 {
+    NSLog(@"loadMethodFromPath: %@",path);
     NSArray *components=[path componentsSeparatedByString:@"/"];
     //    NSLog(@"path: %@, components: %@",path,components);
     if ( [components count]==3 ) {
         NSString *className = [components objectAtIndex:1];
         NSString *shortMethodName = [components lastObject];
         NSString *longMethodName = [[self methodDict] fullNameForMethodName:shortMethodName ofClass:className];
-        [self setUIForMethodHeader:longMethodName body:[[self methodDict] methodForClass:className methodName:shortMethodName]];
+        NSString *methodBodyString=[[self methodDict] methodForClass:className methodName:shortMethodName];
+        NSLog(@"will setUI");
+        [self setUIForMethodHeader:longMethodName body:methodBodyString];
     } else {
         [self clearMethodFromUI];
     }

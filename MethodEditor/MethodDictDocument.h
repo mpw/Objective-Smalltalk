@@ -16,6 +16,7 @@
 @interface MethodDictDocument : SimpleMethodDictDocument
 {
     MPWStCompiler *interpreter;
+    MPWStCompiler *syntaxCheckCompiler;
     NSString *baseURL;
 }
 
