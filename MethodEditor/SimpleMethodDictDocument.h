@@ -17,7 +17,8 @@
     IBOutlet NSBrowser   *methodBrowser;
     IBOutlet NSTextField *address;
     IBOutlet NSTextField *evalText;
-
+    IBOutlet NSTextField *isOK;
+    
     MethodDict *methodDict;
     NSString   *uniqueID;
 }

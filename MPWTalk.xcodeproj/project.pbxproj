@@ -244,17 +244,14 @@
 		1F88E8B4138ADC1600199F03 /* MPWEnvScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */; };
 		1F88E8B5138ADC1600199F03 /* MPWGenericBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A9138ADC1600199F03 /* MPWGenericBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8B6138ADC1600199F03 /* MPWGenericBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8AA138ADC1600199F03 /* MPWGenericBinding.m */; };
-		1F88E8B7138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8B8138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A0138ADC1600199F03 /* MPWFileSchemeResolver.m */; };
 		1F88E8B9138ADC1600199F03 /* MPWFileBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A1138ADC1600199F03 /* MPWFileBinding.h */; };
 		1F88E8BA138ADC1600199F03 /* MPWFileBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A2138ADC1600199F03 /* MPWFileBinding.m */; };
-		1F88E8BB138ADC1600199F03 /* MPWURLSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A3138ADC1600199F03 /* MPWURLSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8BC138ADC1600199F03 /* MPWURLSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A4138ADC1600199F03 /* MPWURLSchemeResolver.m */; };
 		1F88E8BD138ADC1600199F03 /* MPWURLBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A5138ADC1600199F03 /* MPWURLBinding.h */; };
 		1F88E8BE138ADC1600199F03 /* MPWURLBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A6138ADC1600199F03 /* MPWURLBinding.m */; };
 		1F88E8BF138ADC1600199F03 /* MPWEnvScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A7138ADC1600199F03 /* MPWEnvScheme.h */; };
 		1F88E8C0138ADC1600199F03 /* MPWEnvScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */; };
-		1F88E8C1138ADC1600199F03 /* MPWGenericBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A9138ADC1600199F03 /* MPWGenericBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8C2138ADC1600199F03 /* MPWGenericBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8AA138ADC1600199F03 /* MPWGenericBinding.m */; };
 		1F88E8C3138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8C4138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A0138ADC1600199F03 /* MPWFileSchemeResolver.m */; };
@@ -282,7 +279,6 @@
 		1F90B40913A62AC1006A3DEB /* MPWSequentialScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */; };
 		1FA3886513910FA6007B5CC9 /* MPWBundleScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA3886613910FA6007B5CC9 /* MPWBundleScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */; };
-		1FA3886713910FA6007B5CC9 /* MPWBundleScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA3886813910FA6007B5CC9 /* MPWBundleScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */; };
 		1FA3886913910FA6007B5CC9 /* MPWBundleScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA3886A13910FA6007B5CC9 /* MPWBundleScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */; };
@@ -290,13 +286,11 @@
 		1FA3887713911150007B5CC9 /* testfile.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3887513911150007B5CC9 /* testfile.txt */; };
 		1FA421411451F9F000F7A277 /* MPWMethodScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA4213F1451F9F000F7A277 /* MPWMethodScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA421421451F9F000F7A277 /* MPWMethodScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA4213F1451F9F000F7A277 /* MPWMethodScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FA421431451F9F000F7A277 /* MPWMethodScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA4213F1451F9F000F7A277 /* MPWMethodScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA421461451F9F000F7A277 /* MPWMethodScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA421401451F9F000F7A277 /* MPWMethodScheme.m */; };
 		1FA421471451F9F000F7A277 /* MPWMethodScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA421401451F9F000F7A277 /* MPWMethodScheme.m */; };
 		1FA421481451F9F000F7A277 /* MPWMethodScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA421401451F9F000F7A277 /* MPWMethodScheme.m */; };
 		1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5F486147CDF34007EE753 /* MPWTreeNodeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA5F489147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5F486147CDF34007EE753 /* MPWTreeNodeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FA5F48A147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5F486147CDF34007EE753 /* MPWTreeNodeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA5F48B147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */; };
 		1FA5F48C147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */; };
 		1FA5F48D147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */; };
@@ -310,7 +304,6 @@
 		1FBAD81714362D850050D6DE /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
 		1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B4481492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FD1B4491492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD1B44B1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD1B44C1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
@@ -402,7 +395,6 @@
 		1FED18C61544684600E0D765 /* JSGCDDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FED18C01544684600E0D765 /* JSGCDDispatcher.h */; };
 		1FF4A342147AB6C7001FCCCD /* MPWGenericScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4A340147AB6C7001FCCCD /* MPWGenericScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF4A343147AB6C7001FCCCD /* MPWGenericScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4A340147AB6C7001FCCCD /* MPWGenericScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FF4A344147AB6C7001FCCCD /* MPWGenericScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4A340147AB6C7001FCCCD /* MPWGenericScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF4A345147AB6C7001FCCCD /* MPWGenericScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4A341147AB6C7001FCCCD /* MPWGenericScheme.m */; };
 		1FF4A346147AB6C7001FCCCD /* MPWGenericScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4A341147AB6C7001FCCCD /* MPWGenericScheme.m */; };
 		1FF4A347147AB6C7001FCCCD /* MPWGenericScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4A341147AB6C7001FCCCD /* MPWGenericScheme.m */; };
@@ -1213,21 +1205,13 @@
 			files = (
 				1FF6C6101379DF1300CCB7AE /* MPWRelScheme.h in Headers */,
 				1FE8F22A13802F0700B37A71 /* MPWResourceScheme.h in Headers */,
-				1F88E8B7138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */,
 				1F88E8B9138ADC1600199F03 /* MPWFileBinding.h in Headers */,
-				1F88E8BB138ADC1600199F03 /* MPWURLSchemeResolver.h in Headers */,
 				1F88E8BD138ADC1600199F03 /* MPWURLBinding.h in Headers */,
 				1F88E8BF138ADC1600199F03 /* MPWEnvScheme.h in Headers */,
-				1F88E8C1138ADC1600199F03 /* MPWGenericBinding.h in Headers */,
 				1F88E8DD138ADCCA00199F03 /* MPWResource.h in Headers */,
-				1FA3886713910FA6007B5CC9 /* MPWBundleScheme.h in Headers */,
 				1FDCCB3C139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */,
 				1F90B40413A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */,
-				1FA421431451F9F000F7A277 /* MPWMethodScheme.h in Headers */,
-				1FF4A344147AB6C7001FCCCD /* MPWGenericScheme.h in Headers */,
-				1FA5F48A147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1FA5F492147CE04A007EE753 /* MPWTreeNode.h in Headers */,
-				1FD1B4491492657300919385 /* MPWCopyOnWriteScheme.h in Headers */,
 				1FD713CE1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
 				1FD713DA1522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
 				1FD713E61522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,

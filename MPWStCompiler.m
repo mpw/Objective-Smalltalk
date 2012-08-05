@@ -143,9 +143,14 @@ idAccessor( connectorMap, setConnectorMap );
 	[scanner pushBack:aToken];
 }
 
++compiler
+{
+    return [[self new] autorelease];
+}
+
 +evaluate:aString
 {
-    return [[[[self alloc] init] autorelease] evaluateScriptString:aString];
+    return [[self compiler] evaluateScriptString:aString];
 }
 
 -evaluateScriptString:script 
@@ -647,6 +652,16 @@ idAccessor( connectorMap, setConnectorMap );
     return expr;
 }
 
+-(BOOL)isValidSyntax:(NSString*)stString
+{
+    @try {
+        id result =[self compile:stString];
+        return result!=nil;
+    } @catch (id exception) {
+    }
+    return NO;
+}
+
 -bindingForIdentifier:(MPWIdentifier*)anIdentifier
 {
 	return [[self schemeForName:[anIdentifier schemeName]] bindingWithIdentifier:anIdentifier withContext:self];
@@ -675,7 +690,24 @@ idAccessor( connectorMap, setConnectorMap );
     [super dealloc];
 }
 
+
+
 @end
 
 
+@implementation MPWStCompiler(tests)
 
++(void)testCheckValidSyntax
+{
+    MPWStCompiler *compiler=[self compiler];
+    EXPECTTRUE([compiler isValidSyntax:@" 3+4 "], @"'3+4' valid syntax ");
+    EXPECTFALSE([compiler isValidSyntax:@" 3+  "], @"'3+' not valid syntax ");
+}
+
+
++testSelectors
+{
+    return @[ @"testCheckValidSyntax" ];
+}
+
+@end

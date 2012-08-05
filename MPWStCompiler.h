@@ -12,6 +12,7 @@
 	id connectorMap;
 }
 
++compiler;
 +evaluate:aString;
 -evaluateScriptString:aString;
 
