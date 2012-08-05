@@ -64,6 +64,20 @@ idAccessor( script, _setScript )
 	return [self freshExecutionContextForRealLocalVars];
 }
 
+-(NSException*)handleException:exception target:target
+{
+    NSException *newException;
+    NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
+    [newUserInfo addEntriesFromDictionary:[exception userInfo]];
+    newException=[NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:newUserInfo];
+    NSString *frameDescription=[NSString stringWithFormat:@"%@ >> %@",[target class],[self methodHeader]];
+    [newException addScriptFrame: frameDescription];
+    [newException addCombinedFrame:frameDescription previousTrace:[exception callStackSymbols]];
+    NSLog(@"did add frame");
+    NSLog(@"script stack trace: %@",[newException scriptStackTrace]);
+    return newException;
+}
+
 -evaluateOnObject:target parameters:parameters
 {
 	id returnVal=nil;
@@ -74,14 +88,7 @@ idAccessor( script, _setScript )
     @try {
 	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
     } @catch (id exception) {
-        NSException *newException;
-        NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
-        [newUserInfo addEntriesFromDictionary:[exception userInfo]];
-        newException=[NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:newUserInfo];
-        [newException addScriptFrame:[NSString stringWithFormat:@"%@ >> %@",[target class],[self methodHeader]] ];
-        NSLog(@"did add frame");
-        NSLog(@"script stack trace: %@",[newException scriptStackTrace]);
-        @throw newException;
+        @throw [self handleException:exception target:target];
     }
 //	NSLog(@"did evaluate scripted method %x with context %x",self,executionContext);
 	return returnVal;
@@ -140,15 +147,22 @@ idAccessor( script, _setScript )
 	IDEXPECT( result, @"335", @"if nil is working");
 }
 
-+(void)testSimpleBacktrace
++_objectWithNestedMethodsThatThrow
 {
 	MPWStCompiler* compiler = [MPWStCompiler compiler];
 	id a=[[NSObject new] autorelease];
 	[compiler addScript:@"self bozobozozo." forClass:@"NSObject" methodHeaderString:@"xxxSimpleMethodThatRaises"];
+	[compiler addScript:@"self xxxSimpleMethodThatRaises." forClass:@"NSObject" methodHeaderString:@"xxxSimpleMethodThatCallsMethodThatRaises"];
+    return a;
+}
+
+
++(void)testSimpleBacktrace
+{
+    id a = [self _objectWithNestedMethodsThatThrow];
     @try {
         [a xxxSimpleMethodThatRaises];
     } @catch (id exception) {
-        NSLog(@"exception: %@",exception);
         id trace=[exception scriptStackTrace];
         IDEXPECT([trace lastObject], @"NSObject >> xxxSimpleMethodThatRaises", @"stack trace");
         return ;
@@ -159,14 +173,10 @@ idAccessor( script, _setScript )
 
 +(void)testNestedBacktrace
 {
-	MPWStCompiler* compiler = [MPWStCompiler compiler];
-	id a=[[NSObject new] autorelease];
-	[compiler addScript:@"self bozobozozo." forClass:@"NSObject" methodHeaderString:@"xxxSimpleMethodThatRaises"];
-	[compiler addScript:@"self xxxSimpleMethodThatRaises." forClass:@"NSObject" methodHeaderString:@"xxxSimpleMethodThatCallsMethodThatRaises"];
+    id a = [self _objectWithNestedMethodsThatThrow];
     @try {
         [a xxxSimpleMethodThatCallsMethodThatRaises];
     } @catch (id exception) {
-        NSLog(@"exception: %@",exception);
         id trace=[exception scriptStackTrace];
         INTEXPECT([trace count], 2, @"shoud have 2 elements in script trace");
         IDEXPECT([trace lastObject], @"NSObject >> xxxSimpleMethodThatCallsMethodThatRaises", @"stack trace");
@@ -177,12 +187,29 @@ idAccessor( script, _setScript )
     
 }
 
++(void)testCombinedScriptedAndNativeBacktrace
+{
+    id a = [self _objectWithNestedMethodsThatThrow];
+    @try {
+        [a xxxSimpleMethodThatCallsMethodThatRaises];
+    } @catch (id exception) {
+        id trace=[exception combinedStackTrace];
+        
+        IDEXPECT([trace objectAtIndex:4],@"4   Script                              ------------------  NSObject >> xxxSimpleMethodThatRaises", @"method that raises");
+        IDEXPECT([trace objectAtIndex:14],@"14  Script                              ------------------  NSObject >> xxxSimpleMethodThatCallsMethodThatRaises", @"method that calls method that raises");
+        return ;
+    }
+    EXPECTTRUE(NO, @"should have raised");
+}
+
+
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
             @"testLookupOfNilVariableInMethodWorks",
             @"testSimpleBacktrace",
             @"testNestedBacktrace",
+            @"testCombinedScriptedAndNativeBacktrace",
 		nil];
 }
 
@@ -191,7 +218,34 @@ idAccessor( script, _setScript )
 
 @implementation NSException(scriptStackTrace)
 
-dictAccessor(NSArray, scriptStackTrace, setScriptStackTrace, [self userInfo])
+dictAccessor(NSMutableArray, scriptStackTrace, setScriptStackTrace, (NSMutableDictionary*)[self userInfo])
+
+dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutableDictionary*)[self userInfo])
+
+-(void)cullTrace:(NSMutableArray*)trace withFrame:frame
+{
+    for (int i=0;i<[trace count]-3;i++) {
+        int numLeft=[trace count]-i;
+        NSString *cur=[trace objectAtIndex:i];
+        if ( [cur rangeOfString:@"-[MPWScriptedMethod evaluateOnObject:parameters:]"].length>0) {
+            NSString *formattedFrame=[NSString stringWithFormat:@"%-4dScript                              ------------------  %@",i,frame];
+            
+            [trace replaceObjectAtIndex:i withObject:formattedFrame];
+            return ;
+        }
+        
+    }
+}
+
+-(void)addCombinedFrame:(NSString*)frame previousTrace:previousTrace
+{
+    NSMutableArray *trace=[self combinedStackTrace];
+    if (!trace) {
+        trace=[[previousTrace mutableCopy] autorelease];
+        [self setCombinedStackTrace:trace];
+    }
+    [self cullTrace:trace withFrame:frame];
+}
 
 -(void)addScriptFrame:(NSString*)frame
 {
@@ -202,6 +256,8 @@ dictAccessor(NSArray, scriptStackTrace, setScriptStackTrace, [self userInfo])
     }
     [trace addObject:frame];
 }
+
+
 
 @end
 
