@@ -18,7 +18,7 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 objectAccessor(NSString, methodDictName, setMethodDictName)
 objectAccessor(NSString, projectDir, setProjectDir)
 objectAccessor(NSString, uniqueID, setUniqueID)
-
+objectAccessor(NSMutableArray, exceptions, setExceptions)
 
 - (id)initWithMethodDictName:(NSString*)newName
 {
@@ -26,7 +26,9 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     if (self) {
         [self setMethodDictName:newName];
         [self setProjectDir:[[[NSProcessInfo processInfo] environment] objectForKey:@"PROJECT_DIR"]];
-        // Initialization code here.
+        [self setExceptions:[NSMutableArray array]];
+        [self setAsDefault];
+        [self handleExceptions];
     }
     
     return self;
@@ -34,7 +36,55 @@ objectAccessor(NSString, uniqueID, setUniqueID)
 
 -(id)init
 {
-    return [self initWithMethodDictName:@"methods"];
+    self= [self initWithMethodDictName:@"methods"];
+    return self;
+}
+
+
+static id defaultMethodServer=nil;
+
+
+-(void)setAsDefault
+{
+    defaultMethodServer=[self retain];
+}
+
+-(void)addException:(NSException*)exception
+{
+    NSLog(@"top level exception: %@",exception);
+    if ( [exception combinedStackTrace]) {
+        NSLog(@"%@",[exception combinedStackTrace]);
+    }
+    [exceptions addObject:exception];
+    NSLog(@"now have %d exceptions",[[self exceptions] count]);
+}
+
+-(void)clearExceptions
+{
+    [[self exceptions] removeAllObjects];
+}
+
+-(BOOL)hasExceptions
+{
+    return [[self exceptions] count]!=0;
+}
+
++(void)addException:exception
+{
+    NSLog(@"addException");
+    [defaultMethodServer addException:exception];
+}
+
+static void CatchException(NSException *exception)
+{
+    NSLog(@"default exception handler caught: %@",exception);
+    [defaultMethodServer addException:exception];
+}
+
+-(void)handleExceptions
+{
+    NSLog(@"will handle exceptions");
+    NSSetUncaughtExceptionHandler (&CatchException);
 }
 
 -(id)deserializeData:(NSData*)inputData at:(MPWBinding*)aBinding
@@ -134,6 +184,25 @@ objectAccessor(NSString, uniqueID, setUniqueID)
             classes=bundleFilteredClasses;
         }
         return [[[[classes collect] name] description] asData];
+    } else if ( [uri hasPrefix:@"/exception"] ) {
+        NSLog(@"%d exceptions",[[self exceptions] count]);
+        if ( [self hasExceptions]) {
+            NSArray *plist=[NSMutableArray array];
+            for ( NSException *e in [self exceptions] ) {
+                NSArray *stackTrace=[e combinedStackTrace];
+                if ( !stackTrace ) {
+                    stackTrace=[e scriptStackTrace];
+                }
+                [plist addObject:@{ @"name" : [e name],
+                    @"reason": [e reason],
+                 @"userInfo": [e userInfo]} ];
+            }
+
+            
+            return [NSJSONSerialization dataWithJSONObject:plist options:0 error:nil];
+        } else {
+            return [@"NONE" asData];
+        }
     } else{
         return [super get:uri parameters:params];
     }
@@ -152,11 +221,14 @@ objectAccessor(NSString, uniqueID, setUniqueID)
 
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
 {
-    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
+//    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
     NSData *retval =[super put:uri data:putData parameters:params];
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
+//        [[delegate afterDelay:0.001] didDefineMethods:self];
         [delegate didDefineMethods:self];
     }
+    [self clearExceptions];
+
     NSLog(@"will send notification");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"methodsDefined" object:self];
     return retval;

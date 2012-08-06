@@ -25,10 +25,10 @@ objectAccessor(NSString , baseURL, _setBaseURL)
         [self setSyntaxCheckCompiler:[MPWStCompiler compiler]];
         [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
         [[self interpreter] bindValue:self toVariableNamed:@"document"];
-        NSDictionary *methods = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"methods" ofType:@"plist"]];
+        NSDictionary *methods = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"viewbuilder" ofType:@"classdict"]];
         if ( methods ) {
             NSLog(@"setting methods: %@",methods);
-            [[self interpreter] defineMethodsInExternalDict:methods];
+            [[self interpreter] defineMethodsInExternalDict:[methods objectForKey:@"methodDict"]];
         }
 //        NSLog(@"the answer: %d",(int)[self theAnswer]);
     }
@@ -43,7 +43,8 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 -(BOOL)checkMethodBody
 {
     NSString *methodBodyText=[self methodBodyString];
-    return [syntaxCheckCompiler isValidSyntax:methodBodyText];
+    return ( [methodBodyText length]  < 1) ||
+     [syntaxCheckCompiler isValidSyntax:methodBodyText];
 }
 
 
@@ -58,12 +59,12 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 
 -(NSString*)url
 {
-    NSString *address=[self manualAddress];
-    if ( !address ) {
-        address=[self baseURL];
+    NSString *laddress=[self manualAddress];
+    if ( !laddress ) {
+        laddress=[self baseURL];
     }
-    NSLog(@"base address from manual or automatic: '%@'",address);
-    return address;
+    NSLog(@"base address from manual or automatic: '%@'",laddress);
+    return laddress;
 }
 
 
@@ -114,7 +115,6 @@ objectAccessor(NSString , baseURL, _setBaseURL)
 
 - (void)textDidChange:(NSNotification *)aNotification
 {
-    NSLog(@"textDidChange");
     [self updateSyntaxCheckIndicator];
 }
 

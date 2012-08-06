@@ -18,13 +18,19 @@
     IBOutlet NSTextField *address;
     IBOutlet NSTextField *evalText;
     IBOutlet NSTextField *isOK;
+    IBOutlet NSWindow    *errorWindow;
+    IBOutlet NSTableView *exceptionNames;
+    IBOutlet NSTableView *exceptionStackTrace;
     
     MethodDict *methodDict;
     NSString   *uniqueID;
+    NSArray    *exceptions;
 }
 
 -(IBAction)eval:sender;
 -(IBAction)didSelect:(NSBrowser*)sender;
+-(IBAction)getErrors:(id)sender;
+-(IBAction)selectError:(id)sender;
 -(NSString*)uniqueID;
 
 @end

@@ -72,9 +72,10 @@ idAccessor( script, _setScript )
     newException=[NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:newUserInfo];
     NSString *frameDescription=[NSString stringWithFormat:@"%@ >> %@",[target class],[self methodHeader]];
     [newException addScriptFrame: frameDescription];
-    [newException addCombinedFrame:frameDescription previousTrace:[exception callStackSymbols]];
-    NSLog(@"did add frame");
-    NSLog(@"script stack trace: %@",[newException scriptStackTrace]);
+    NSString *myselfInTrace=    @"-[MPWScriptedMethod evaluateOnObject:parameters:]";    
+    
+    [newException addCombinedFrame:frameDescription frameToReplace:myselfInTrace previousTrace:[exception callStackSymbols]];
+//    NSLog(@"exception: %@/%@ in %@ with backtrace: %@",[exception name],[exception reason],frameDescription,[newException combinedStackTrace]);
     return newException;
 }
 
@@ -88,7 +89,15 @@ idAccessor( script, _setScript )
     @try {
 	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
     } @catch (id exception) {
-        @throw [self handleException:exception target:target];
+        id newException = [self handleException:exception target:target];
+#if TARGET_OS_IPHONE
+        NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);
+        Class c=NSClassFromString(@"MethodServer");
+        [c addException:newException];
+        NSLog(@"added exception to %@",c);
+#else
+        @throw newException;
+#endif
     }
 //	NSLog(@"did evaluate scripted method %x with context %x",self,executionContext);
 	return returnVal;
@@ -195,8 +204,8 @@ idAccessor( script, _setScript )
     } @catch (id exception) {
         id trace=[exception combinedStackTrace];
         
-        IDEXPECT([trace objectAtIndex:4],@"4   Script                              ------------------  NSObject >> xxxSimpleMethodThatRaises", @"method that raises");
-        IDEXPECT([trace objectAtIndex:14],@"14  Script                              ------------------  NSObject >> xxxSimpleMethodThatCallsMethodThatRaises", @"method that calls method that raises");
+        EXPECTTRUE([[trace objectAtIndex:4] rangeOfString:@"xxxSimpleMethodThatRaises"].length>0, @"method that raises present");
+        EXPECTTRUE([[trace objectAtIndex:14] rangeOfString:@"xxxSimpleMethodThatCallsMethodThatRaises"].length>0,@"method that calls method that raises present");
         return ;
     }
     EXPECTTRUE(NO, @"should have raised");
@@ -222,13 +231,13 @@ dictAccessor(NSMutableArray, scriptStackTrace, setScriptStackTrace, (NSMutableDi
 
 dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutableDictionary*)[self userInfo])
 
--(void)cullTrace:(NSMutableArray*)trace withFrame:frame
+-(void)cullTrace:(NSMutableArray*)trace replacingOriginal:original withFrame:frame
 {
     for (int i=0;i<[trace count]-3;i++) {
         int numLeft=[trace count]-i;
         NSString *cur=[trace objectAtIndex:i];
-        if ( [cur rangeOfString:@"-[MPWScriptedMethod evaluateOnObject:parameters:]"].length>0) {
-            NSString *formattedFrame=[NSString stringWithFormat:@"%-4dScript                              ------------------  %@",i,frame];
+        if ( [cur rangeOfString:original].length>0) {
+            NSString *formattedFrame=[NSString stringWithFormat:@"%-4dScript                              0x0000000000000000  %@",i,frame];
             
             [trace replaceObjectAtIndex:i withObject:formattedFrame];
             return ;
@@ -237,14 +246,15 @@ dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutab
     }
 }
 
--(void)addCombinedFrame:(NSString*)frame previousTrace:previousTrace
+
+-(void)addCombinedFrame:(NSString*)frame frameToReplace:original previousTrace:previousTrace
 {
     NSMutableArray *trace=[self combinedStackTrace];
     if (!trace) {
         trace=[[previousTrace mutableCopy] autorelease];
         [self setCombinedStackTrace:trace];
     }
-    [self cullTrace:trace withFrame:frame];
+    [self cullTrace:trace replacingOriginal:original withFrame:frame];
 }
 
 -(void)addScriptFrame:(NSString*)frame

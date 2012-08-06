@@ -19,7 +19,8 @@ objectAccessor(MethodDict, methodDict, setMethodDict)
 objectAccessor(NSTextField , methodHeader, setMethodHeader)
 objectAccessor(NSTextView, methodBody, setMethodBody)
 objectAccessor(NSString, uniqueID, setUniqueID)
-
+objectAccessor(NSWindow, errorWindow, setErrorWindow)
+objectAccessor(NSArray, exceptions, setExceptions)
 
 -(void)setSyntaxCheckedOK:(BOOL)wasOK
 {
@@ -256,5 +257,60 @@ objectAccessor(NSString, uniqueID, setUniqueID)
     return item;
 }
 
+-(IBAction)getErrors:(id)sender
+{
+    NSLog(@"getErrors: %@",sender);
+}
+
+-(int)numberOfRowsInTableView:aTableView
+{
+    if ( aTableView==exceptionNames) {
+        return [exceptions count];
+    } else {
+        return [[self currentStackTrace] count];
+    }
+    return 0;
+}
+
+-tableView:aTableView objectValueForTableColumn:(int)aColor row:(int)aRow
+{
+    if ( aTableView==exceptionNames) {
+        return [[exceptions objectAtIndex:aRow] objectForKey:@"reason"];
+    } else {
+        return [[self currentStackTrace] objectAtIndex:aRow];
+    }
+    return @"";
+}
+
+-currentException
+{
+    int selectedIndex=[exceptionNames selectedRow];
+    if ( selectedIndex>=0 && selectedIndex<[exceptions count]) {
+        return [exceptions objectAtIndex:selectedIndex];
+    }
+    return nil;
+}
+
+-currentStackTrace
+{
+    NSDictionary* exception=[self currentException];
+    NSArray *trace=nil;
+    NSDictionary *userInfo=[exception objectForKey:@"userInfo"];
+    trace = [userInfo objectForKey:@"combinedStackTrace"];
+    if (!trace ) {
+        trace=[userInfo objectForKey:@"scriptStackTrace"];
+    }
+    return trace;
+}
+
+-(IBAction)selectError:(id)sender
+{
+    [exceptionStackTrace reloadData];
+}
+
+-(void)tableViewSelectionDidChange:(NSNotification*)note
+{
+    [exceptionStackTrace reloadData];
+}
 
 @end

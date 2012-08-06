@@ -13,7 +13,7 @@
 		1F00AD65144AE52E00EA6AF0 /* SimpleMethodDictDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F00AD63144AE52E00EA6AF0 /* SimpleMethodDictDocument.m */; };
 		1F03A1401218C7A2001EE7AD /* MPWSELScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */; };
 		1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */; };
-		1F0A395614362EFE00626286 /* methods.classdict in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* methods.classdict */; };
+		1F0A395614362EFE00626286 /* viewbuilder.classdict in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* viewbuilder.classdict */; };
 		1F1A5DB114F8D1BB00E767E7 /* MethodEditorAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A5DB014F8D1BB00E767E7 /* MethodEditorAppDelegate.m */; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
@@ -203,7 +203,7 @@
 		1F7A3FA014485DDF00521C07 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F0C142EF26E00B5C827 /* Credits.rtf */; };
 		1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F12142EF26E00B5C827 /* MethodDictDocument.xib */; };
 		1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F15142EF26F00B5C827 /* MainMenu.xib */; };
-		1F7A3FA314485DDF00521C07 /* methods.classdict in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* methods.classdict */; };
+		1F7A3FA314485DDF00521C07 /* viewbuilder.classdict in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* viewbuilder.classdict */; };
 		1F7B75B114629431002F38D1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1F7B75B714629431002F38D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75B514629431002F38D1 /* InfoPlist.strings */; };
 		1F7B75B914629431002F38D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75B814629431002F38D1 /* main.m */; };
@@ -414,7 +414,7 @@
 		1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSELScheme.h; sourceTree = "<group>"; };
 		1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSELScheme.m; sourceTree = "<group>"; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
-		1F0A395314362DF900626286 /* methods.classdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = methods.classdict; sourceTree = "<group>"; };
+		1F0A395314362DF900626286 /* viewbuilder.classdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = viewbuilder.classdict; sourceTree = "<group>"; };
 		1F1A5DAF14F8D1BB00E767E7 /* MethodEditorAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodEditorAppDelegate.h; sourceTree = "<group>"; };
 		1F1A5DB014F8D1BB00E767E7 /* MethodEditorAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodEditorAppDelegate.m; sourceTree = "<group>"; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
@@ -774,7 +774,7 @@
 				1F1A5DAF14F8D1BB00E767E7 /* MethodEditorAppDelegate.h */,
 				1F1A5DB014F8D1BB00E767E7 /* MethodEditorAppDelegate.m */,
 				1F2E6F04142EF26E00B5C827 /* Supporting Files */,
-				1F0A395314362DF900626286 /* methods.classdict */,
+				1F0A395314362DF900626286 /* viewbuilder.classdict */,
 			);
 			name = ViewBuilder;
 			path = MethodEditor;
@@ -1410,7 +1410,7 @@
 				1F2E6F0E142EF26E00B5C827 /* Credits.rtf in Resources */,
 				1F2E6F14142EF26E00B5C827 /* MethodDictDocument.xib in Resources */,
 				1F2E6F17142EF26F00B5C827 /* MainMenu.xib in Resources */,
-				1F0A395614362EFE00626286 /* methods.classdict in Resources */,
+				1F0A395614362EFE00626286 /* viewbuilder.classdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1442,7 +1442,7 @@
 				1F7A3FA014485DDF00521C07 /* Credits.rtf in Resources */,
 				1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */,
 				1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */,
-				1F7A3FA314485DDF00521C07 /* methods.classdict in Resources */,
+				1F7A3FA314485DDF00521C07 /* viewbuilder.classdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

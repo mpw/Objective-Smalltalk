@@ -18,7 +18,7 @@
     id delegate;
     NSString *methodDictName,*projectDir;
     NSString *uniqueID;
-
+    NSMutableArray *exceptions;
 }
 
 -(void)setupWithInterpreter:anInterpreter;
