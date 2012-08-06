@@ -67,20 +67,6 @@ objectAccessor(NSString , baseURL, _setBaseURL)
     return laddress;
 }
 
-
-- (void)upload {
-    NSString *urlstring=[self url];
-    if ( [urlstring length]>2 ) {
-        id baseRef=[[self interpreter] bindingForString:urlstring];
-        [[self interpreter] bindValue:baseRef toVariableNamed:@"baseRef"];
-        [[self interpreter] evaluateScriptString:@"scheme:base := baseRef asScheme. "];
-        NSLog(@"scheme: %@",[[self interpreter] evaluateScriptString:@"scheme:base"]);
-        [[self interpreter] evaluateScriptString:@"base:methods := document methodDict asXml. "];
-    } else {
-        NSLog(@"not uploading because I didn't get a URL: %@",urlstring);
-    }
-}
-
 -(void)setBaseURL:(NSString*)urlstring
 {
     [self _setBaseURL:urlstring];

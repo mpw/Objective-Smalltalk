@@ -6,8 +6,6 @@
 	<dict>
 		<key>MethodDictDocument</key>
 		<dict>
-			<key>&lt;int&gt;newAnswer</key>
-			<string>42+2</string>
 			<key>&lt;int&gt;theAnswer</key>
 			<string>42</string>
 			<key>&lt;void&gt;getErrors:sender</key>
@@ -25,6 +23,16 @@
     ].
     self updateSyntaxCheckIndicator.
 </string>
+			<key>&lt;void&gt;upload</key>
+			<string>  urlString := self url.
+  urlString length &gt; 2 ifTrue: [
+	stdout println:'have a URL: ',urlString.
+	scheme:base := (context bindingForString:urlString) asScheme.
+	base:methods := self methodDict asXml.
+	stdout println:'done uploading'.
+   ] ifFalse: [
+         stdout println:'no URL'.
+    ].</string>
 		</dict>
 	</dict>
 	<key>uniqueID</key>

@@ -167,7 +167,7 @@ objectAccessor(NSArray, exceptions, setExceptions)
 }
 
 
-- (void)upload {
+- (void)upload1 {
     NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"%@methods\"";
     NSLog(@"commandtemplate: '%@'",cmdTemplate);
     NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];
@@ -182,8 +182,8 @@ objectAccessor(NSArray, exceptions, setExceptions)
     [self saveCurrentMethod];
     NSLog(@"saveDocument");
     [super saveDocument:sender];
-    [self performSelector:@selector(upload) withObject:nil afterDelay:0.6];
     [methodBrowser setPath:browserPath];
+    [[self async] upload];
 }
 
 
