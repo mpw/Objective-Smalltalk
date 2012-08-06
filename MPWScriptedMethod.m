@@ -70,7 +70,9 @@ idAccessor( script, _setScript )
     NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];
     newException=[NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:newUserInfo];
-    NSString *frameDescription=[NSString stringWithFormat:@"%@ >> %@",[target class],[self methodHeader]];
+    Class targetClass = [target class];
+    int offset=[[[exception userInfo] objectForKey:@"offset"] intValue];
+    NSString *frameDescription=[NSString stringWithFormat:@"%s[%@ %@] + %d",targetClass==target?"+":"-",targetClass,[self methodHeader],offset];
     [newException addScriptFrame: frameDescription];
     NSString *myselfInTrace=    @"-[MPWScriptedMethod evaluateOnObject:parameters:]";    
     
@@ -173,7 +175,7 @@ idAccessor( script, _setScript )
         [a xxxSimpleMethodThatRaises];
     } @catch (id exception) {
         id trace=[exception scriptStackTrace];
-        IDEXPECT([trace lastObject], @"NSObject >> xxxSimpleMethodThatRaises", @"stack trace");
+        IDEXPECT([trace lastObject], @"-[NSObject xxxSimpleMethodThatRaises] + 15", @"stack trace");
         return ;
     }
     EXPECTTRUE(NO, @"should have raised");
@@ -188,8 +190,8 @@ idAccessor( script, _setScript )
     } @catch (id exception) {
         id trace=[exception scriptStackTrace];
         INTEXPECT([trace count], 2, @"shoud have 2 elements in script trace");
-        IDEXPECT([trace lastObject], @"NSObject >> xxxSimpleMethodThatCallsMethodThatRaises", @"stack trace");
-        IDEXPECT([trace objectAtIndex:0], @"NSObject >> xxxSimpleMethodThatRaises", @"stack trace");
+        IDEXPECT([trace lastObject], @"-[NSObject xxxSimpleMethodThatCallsMethodThatRaises] + 15", @"stack trace");
+        IDEXPECT([trace objectAtIndex:0], @"-[NSObject xxxSimpleMethodThatRaises] + 15", @"stack trace");
         return ;
     }
     EXPECTTRUE(NO, @"should have raised");
@@ -237,7 +239,14 @@ dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutab
         int numLeft=[trace count]-i;
         NSString *cur=[trace objectAtIndex:i];
         if ( [cur rangeOfString:original].length>0) {
-            NSString *formattedFrame=[NSString stringWithFormat:@"%-4dScript                              0x0000000000000000  %@",i,frame];
+            NSString *address=nil;
+#if TARGET_OS_IPHONE
+            address=@"0x00000000";
+#else
+            address=@"0x0000000000000000";
+#endif
+            
+            NSString *formattedFrame=[NSString stringWithFormat:@"%-4dScript                              %@  %@",i,address,frame];
             
             [trace replaceObjectAtIndex:i withObject:formattedFrame];
             return ;

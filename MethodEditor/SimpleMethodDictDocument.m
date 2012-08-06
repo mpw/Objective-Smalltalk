@@ -104,6 +104,7 @@ objectAccessor(NSArray, exceptions, setExceptions)
         NSString *longMethodName = [[self methodDict] fullNameForMethodName:methodName ofClass:className];        [[[self undoManager] prepareWithInvocationTarget:self] setMethod:oldMethod name:longMethodName  forClass:className];
     }
     [[self methodDict] deleteMethodName:methodName forClass:className];
+    [methodBrowser setPath:[NSString stringWithFormat:@"/%@",className]];
     [methodBrowser reloadColumn:0];
     [methodBrowser reloadColumn:1];
     [methodBrowser setPath:[NSString stringWithFormat:@"/%@",className]];
@@ -120,7 +121,7 @@ objectAccessor(NSArray, exceptions, setExceptions)
         [[[self undoManager] prepareWithInvocationTarget:self] deleteMethodName:methodName forClass:className];
     }
     [[self methodDict] setMethod:methodBodyString name:methodName forClass:className];
-    NSString *newPath=[NSString stringWithFormat:@"/%@/%@",className,methodName];
+    NSString *newPath=[NSString stringWithFormat:@"/%@/%@",className,[methodName methodName]];
     [methodBrowser reloadColumn:0];
     [methodBrowser reloadColumn:1];
     [methodBrowser setPath:newPath];
@@ -196,6 +197,19 @@ objectAccessor(NSArray, exceptions, setExceptions)
     NSLog(@"cmd = '%@'",cmd);
     system([cmd UTF8String]);
 }
+
+
+-(void)selectMethod:methodName inClass:className offset:(int)offset
+{
+    NSString *newPath=[NSString stringWithFormat:@"/%@/%@",className,[methodName methodName]];
+    [methodBrowser setPath:newPath];
+    [methodBrowser reloadColumn:0];
+    [methodBrowser reloadColumn:1];
+    [methodBrowser setPath:newPath];
+
+    [self loadMethodFromPath:newPath];
+}
+
 
 -(void)loadMethodFromPath:(NSString*)path
 {
@@ -310,7 +324,36 @@ objectAccessor(NSArray, exceptions, setExceptions)
 
 -(void)tableViewSelectionDidChange:(NSNotification*)note
 {
-    [exceptionStackTrace reloadData];
+    NSTableView *viewThatChanged=[note object];
+    if ( viewThatChanged == exceptionNames )  {
+        [self selectError:nil];
+    } else {
+        int aRow=[viewThatChanged selectedRow];
+        NSString *exceptionString=[[self currentStackTrace] objectAtIndex:aRow];
+        NSString *withoutNumber=[exceptionString substringFromIndex:4];
+        NSLog(@"exceptionString: %@",withoutNumber);
+        if ( [withoutNumber hasPrefix:@"Script"]) {
+            NSString *classAndMethod=[withoutNumber substringFromIndex:36];
+            char *toParse=[classAndMethod UTF8String];
+            int dummyAddress;
+            char classNameStr[200]="";
+            char methodNameStr[2000]="";
+            int offset;
+            
+            int converted = sscanf(toParse, "%x -[%s %s + %d",
+                   &dummyAddress,classNameStr,methodNameStr,&offset);
+            NSLog(@"converted: %d",converted);
+            NSLog(@"offset: %d",offset);
+            NSLog(@"class: %s method: %s",classNameStr,methodNameStr);
+            NSString *className=[NSString stringWithUTF8String:classNameStr];
+            NSString *methodName=[NSString stringWithUTF8String:methodNameStr];
+            if ( [methodName hasSuffix:@"]"]) {
+                methodName=[methodName substringToIndex:[methodName length]-1];
+            }
+            [self selectMethod:[methodName methodName] inClass:className offset:offset];
+        }
+    }
+                           
 }
 
 @end
