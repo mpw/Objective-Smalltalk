@@ -167,7 +167,7 @@ objectAccessor(NSArray, exceptions, setExceptions)
 }
 
 
-- (void)upload1 {
+- (void)upload_old {
     NSString *cmdTemplate=@"cd %@; curl -F 'methods=@methods.plist'  \"%@methods\"";
     NSLog(@"commandtemplate: '%@'",cmdTemplate);
     NSString *dir=[[[self fileURL] path] stringByDeletingLastPathComponent];

@@ -45,7 +45,11 @@ objectAccessor(NSMutableDictionary, dict, setDict)
 
 -(NSArray*)methodsForClass:(NSString*)className
 {
-    return [(NSArray*)[[[[[self dict] objectForKey:className] allKeys] collect] methodName] sortedArrayUsingSelector:@selector(compare:)];
+    NSArray* methodKeys = [[[self dict] objectForKey:className] allKeys];
+    if ( [methodKeys count]) {
+        return [(NSArray*)[[methodKeys collect] methodName] sortedArrayUsingSelector:@selector(compare:)];
+    }
+    return [NSArray array];
 }
 
 -(NSString*)fullNameForMethodName:(NSString*)shortName ofClass:(NSString*)className
