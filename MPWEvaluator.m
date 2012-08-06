@@ -10,6 +10,7 @@
 #import "MPWBinding.h"
 #import "MPWInterval.h"
 #import <MPWFoundation/NSNil.h>
+#import <MPWFoundation/MPWByteStream.h>
 #import "MPWMessage.h"
 #import "MPWClassScheme.h"
 #import <MPWTalk/MPWExpression.h>
@@ -114,6 +115,7 @@ idAccessor( localVars, setLocalVars )
 	[self bindValue:[NSNumber numberWithBool:NO] toVariableNamed:@"false"];
 	[self bindValue:[NSNil nsNil] toVariableNamed:@"nil"];
 	[self bindValue:self toVariableNamed:@"context"];
+	[self bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 	parent = aParent;
     return self;
 }
