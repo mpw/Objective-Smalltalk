@@ -1,12 +1,14 @@
 #!/usr/local/bin/stsh
+#-<void>fileserver:<ref>dir
 context loadFramework:'MPWSideWeb'
-server := MPWHTTPServer new.
-server setPort:8081.
+server := MPWSchemeHttpServer new.
+server server setPort:8081.
 server start:nil.
 
 
-# server setDelegate: scheme:file 
- server setDelegate: (scheme:file cachedBy: MPWSiteMap scheme).
+# server setScheme: scheme:file 
+# server setScheme: dir asScheme.
+ server setScheme: (dir asScheme cachedBy: MPWSiteMap scheme).
 
 shell runInteractiveLoop
 

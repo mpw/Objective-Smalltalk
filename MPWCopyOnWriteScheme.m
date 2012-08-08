@@ -9,6 +9,7 @@
 #import "MPWCopyOnWriteScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWStCompiler.h"
+#import "MPWGenericBinding.h"
 
 @implementation MPWCopyOnWriteScheme
 
@@ -51,6 +52,16 @@ boolAccessor(cacheReads, setCacheReads)
 -(void)setValue:newValue forBinding:aBinding
 {
     [[self readWrite] setValue:newValue forBinding:aBinding];
+}
+
+-(BOOL)hasChildren:(MPWGenericBinding*)binding
+{
+    return [[readOnly bindingForName:[binding name] inContext:nil] hasChildren];
+}
+
+-childrenOf:(MPWGenericBinding*)binding
+{
+    return [[readOnly bindingForName:[binding name] inContext:nil] children];
 }
 
 
