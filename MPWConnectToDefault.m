@@ -22,3 +22,29 @@ idAccessor( lhs, setLhs )
 }
 
 @end
+
+
+@implementation NSObject(connecting)
+
+-defaultInstance
+{
+    return self;
+}
+
++defaultInstance
+{
+    return [[self new] autorelease];
+}
+
+-defaultInputPort
+{
+    return nil;
+}
+
+-defaultOutputPort
+{
+    return nil;
+}
+
+@end
+

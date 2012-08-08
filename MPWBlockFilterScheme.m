@@ -1,15 +1,15 @@
 //
-//  MPWFilterScheme.m
+//  MPWBlockFilterScheme.m
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 7/12/12.
 //
 //
 
-#import "MPWFilterScheme.h"
+#import "MPWBlockFilterScheme.h"
 #import "MPWGenericBinding.h"
 
-@implementation MPWFilterScheme
+@implementation MPWBlockFilterScheme
 
 idAccessor(identifierFilter, setIdentifierFilter)
 idAccessor( valueFilter, setValueFilter)
@@ -67,14 +67,14 @@ objectAccessor(MPWScheme, source, setSource)
 
 #import "MPWStCompiler.h"
 
-@implementation MPWFilterScheme(tests)
+@implementation MPWBlockFilterScheme(tests)
 
 
 +(void)testSimpleValueFilter
 {
     id compiler=[[MPWStCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:len := MPWFilterScheme filterWithSource:scheme:base idFilter:nil valueFilter:[ :value | value length stringValue.]."];
+    [compiler evaluateScriptString:@"scheme:len := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:nil valueFilter:[ :value | value length stringValue.]."];
     id result=[compiler evaluateScriptString:@"len:hi"];
     INTEXPECT([result intValue], 11, @"length of hello world");
 }
@@ -83,7 +83,7 @@ objectAccessor(MPWScheme, source, setSource)
 {
     id compiler=[[MPWStCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:txt := MPWFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:nil."];
+    [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:nil."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
     IDEXPECT(result, @"Hello World", @"hello world");
 }
@@ -92,7 +92,7 @@ objectAccessor(MPWScheme, source, setSource)
 {
     id compiler=[[MPWStCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:txt := MPWFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]."];
+    [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
     INTEXPECT([result intValue], 11, @"length of hello world");
 }
@@ -101,7 +101,7 @@ objectAccessor(MPWScheme, source, setSource)
 {
     id compiler=[[MPWStCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:txt := (MPWFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]) cachedBy:MPWTreeNodeScheme scheme."];
+    [compiler evaluateScriptString:@"scheme:txt := (MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]) cachedBy:MPWTreeNodeScheme scheme."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
     INTEXPECT([result intValue], 11, @"length of hello world");
 }

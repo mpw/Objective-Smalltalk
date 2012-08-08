@@ -1,5 +1,5 @@
 //
-//  MPWFilterScheme.h
+//  MPWBlockFilterScheme.h
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 7/12/12.
@@ -11,7 +11,7 @@
 
 typedef id (^FilterBlock)(id );
 
-@interface MPWFilterScheme : MPWGenericScheme
+@interface MPWBlockFilterScheme : MPWGenericScheme
 {
     MPWScheme *source;
     id identifierFilter,valueFilter;

@@ -132,12 +132,12 @@
 		1F5501B315ADB8E200422A9E /* MPWComplexAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */; };
 		1F5501B415ADB8E200422A9E /* MPWComplexAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */; };
 		1F5501B515ADB8E200422A9E /* MPWComplexAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */; };
-		1F55020D15AECA4D00422A9E /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWFilterScheme.h */; };
-		1F55020E15AECA4D00422A9E /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWFilterScheme.h */; };
-		1F55020F15AECA4D00422A9E /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWFilterScheme.h */; };
-		1F55021015AECA4D00422A9E /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWFilterScheme.m */; };
-		1F55021115AECA4D00422A9E /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWFilterScheme.m */; };
-		1F55021215AECA4D00422A9E /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWFilterScheme.m */; };
+		1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; };
+		1F55020E15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; };
+		1F55020F15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; };
+		1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
+		1F55021115AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
+		1F55021215AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
 		1F5E504D09B4B754000298D9 /* MPWStCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */; settings = {ATTRIBUTES = (Public, Project, ); }; };
 		1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
@@ -200,6 +200,12 @@
 		1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
 		1F68D1DB15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
 		1F68D1DC15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
+		1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; };
+		1F68D1E015D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; };
+		1F68D1E115D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; };
+		1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
+		1F68D1E315D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
+		1F68D1E415D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
 		1F7A3F9814485DDF00521C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F09142EF26E00B5C827 /* main.m */; };
 		1F7A3F9914485DDF00521C07 /* MethodDictDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F10142EF26E00B5C827 /* MethodDictDocument.m */; };
 		1F7A3F9B14485DDF00521C07 /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
@@ -469,12 +475,14 @@
 		1F54D96607573D20007886CD /* MPWInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWInterval.m; sourceTree = SOURCE_ROOT; };
 		1F5501AE15ADB8E200422A9E /* MPWComplexAssignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWComplexAssignment.h; sourceTree = "<group>"; };
 		1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWComplexAssignment.m; sourceTree = "<group>"; };
-		1F55020B15AECA4D00422A9E /* MPWFilterScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFilterScheme.h; sourceTree = "<group>"; };
-		1F55020C15AECA4D00422A9E /* MPWFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFilterScheme.m; sourceTree = "<group>"; };
+		1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockFilterScheme.h; sourceTree = "<group>"; };
+		1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockFilterScheme.m; sourceTree = "<group>"; };
 		1F5E508E09B4B754000298D9 /* Info-MPWTalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-MPWTalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* MPWTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnectToDefault.h; sourceTree = "<group>"; };
 		1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnectToDefault.m; sourceTree = "<group>"; };
+		1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessagePortDescriptor.h; sourceTree = "<group>"; };
+		1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessagePortDescriptor.m; sourceTree = "<group>"; };
 		1F6F636B0987C70A006F3936 /* MPWMethodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodStore.h; sourceTree = "<group>"; };
 		1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodStore.m; sourceTree = "<group>"; };
 		1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectScripting.h; sourceTree = "<group>"; };
@@ -742,8 +750,8 @@
 				1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */,
 				1F80973515A72A77004AB773 /* MPWPlistScheme.h */,
 				1F80973615A72A77004AB773 /* MPWPlistScheme.m */,
-				1F55020B15AECA4D00422A9E /* MPWFilterScheme.h */,
-				1F55020C15AECA4D00422A9E /* MPWFilterScheme.m */,
+				1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */,
+				1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */,
 			);
 			name = Schemes;
 			sourceTree = "<group>";
@@ -951,6 +959,8 @@
 				1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */,
 				1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */,
 				1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */,
+				1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */,
+				1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1111,8 +1121,9 @@
 				1FED18C51544684600E0D765 /* JSGCDDispatcher.h in Headers */,
 				1F80973815A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F5501B115ADB8E200422A9E /* MPWComplexAssignment.h in Headers */,
-				1F55020E15AECA4D00422A9E /* MPWFilterScheme.h in Headers */,
+				1F55020E15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
 				1F68D1D815D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
+				1F68D1E015D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1184,9 +1195,10 @@
 				1FED18C41544684600E0D765 /* JSGCDDispatcher.h in Headers */,
 				1F80973715A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F5501B015ADB8E200422A9E /* MPWComplexAssignment.h in Headers */,
-				1F55020D15AECA4D00422A9E /* MPWFilterScheme.h in Headers */,
+				1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
 				1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */,
 				1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
+				1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1230,8 +1242,9 @@
 				1FED18C61544684600E0D765 /* JSGCDDispatcher.h in Headers */,
 				1F80973915A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F5501B215ADB8E200422A9E /* MPWComplexAssignment.h in Headers */,
-				1F55020F15AECA4D00422A9E /* MPWFilterScheme.h in Headers */,
+				1F55020F15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
 				1F68D1D915D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
+				1F68D1E115D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1584,8 +1597,9 @@
 				1FED18C21544684600E0D765 /* JSGCDDispatcher.m in Sources */,
 				1F80973B15A72A77004AB773 /* MPWPlistScheme.m in Sources */,
 				1F5501B415ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
-				1F55021115AECA4D00422A9E /* MPWFilterScheme.m in Sources */,
+				1F55021115AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1F68D1DB15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
+				1F68D1E315D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1656,9 +1670,10 @@
 				1FED18C11544684600E0D765 /* JSGCDDispatcher.m in Sources */,
 				1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */,
 				1F5501B315ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
-				1F55021015AECA4D00422A9E /* MPWFilterScheme.m in Sources */,
+				1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */,
 				1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
+				1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1764,8 +1779,9 @@
 				1FED18C31544684600E0D765 /* JSGCDDispatcher.m in Sources */,
 				1F80973C15A72A78004AB773 /* MPWPlistScheme.m in Sources */,
 				1F5501B515ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
-				1F55021215AECA4D00422A9E /* MPWFilterScheme.m in Sources */,
+				1F55021215AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1F68D1DC15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
+				1F68D1E415D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
