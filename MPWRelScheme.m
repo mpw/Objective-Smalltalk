@@ -15,7 +15,6 @@
 
 @implementation MPWRelScheme
 
-objectAccessor( MPWScheme, baseScheme, setBaseScheme )
 objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
 idAccessor(storedContext, setStoredContext)
 /*
@@ -52,7 +51,7 @@ idAccessor(storedContext, setStoredContext)
         aContext=[self storedContext];
     }
     MPWBinding *binding=[super bindingWithIdentifier:anIdentifier withContext:aContext];
-    [binding setScheme:[self baseScheme]];
+    [binding setScheme:[self source]];
     return binding;
 }
     
@@ -64,13 +63,13 @@ idAccessor(storedContext, setStoredContext)
     NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
 //    NSLog(@"combined name: '%@'",combinedPath);
     MPWIdentifier *newIdentifier=[MPWIdentifier identifierWithName:combinedPath];
-	return [[self baseScheme] bindingWithIdentifier:newIdentifier withContext:aContext];
+	return [[self source] bindingWithIdentifier:newIdentifier withContext:aContext];
 }
 
 -_baseBindingForBinding:aBinding
 {
     //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
-    if (  [aBinding scheme] != [self baseScheme] ) {
+    if (  [aBinding scheme] != [self source] ) {
         //        NSLog(@"modifying non var-scheme later");
         aBinding=[self bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
@@ -95,7 +94,7 @@ idAccessor(storedContext, setStoredContext)
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
 {
 	self=[super init];
-	[self setBaseScheme:aScheme];
+	[self setSource:aScheme];
 	[self setBaseIdentifier:str];
 	return self;
 }
@@ -112,7 +111,6 @@ idAccessor(storedContext, setStoredContext)
 
 -(void)dealloc
 {
-	[baseScheme release];
 	[baseIdentifier release];
     [baseRef release];
 	[super dealloc];

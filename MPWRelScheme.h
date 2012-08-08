@@ -6,12 +6,11 @@
 //  Copyright 2012 metaobject ltd. All rights reserved.
 //
 
-#import "MPWGenericScheme.h"
+#import "MPWFilterScheme.h"
 
 @class MPWBinding;
 
-@interface MPWRelScheme : MPWGenericScheme {
-	MPWScheme* baseScheme;
+@interface MPWRelScheme : MPWFilterScheme {
 	NSString* baseIdentifier;
     id storedContext;
     MPWBinding *baseRef;        // not used yet

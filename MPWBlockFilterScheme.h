@@ -6,21 +6,18 @@
 //
 //
 
-#import "MPWGenericScheme.h"
-#import <MPWFoundation/MPWFoundation.h>
+#import "MPWFilterScheme.h"
 
 typedef id (^FilterBlock)(id );
 
-@interface MPWBlockFilterScheme : MPWGenericScheme
+@interface MPWBlockFilterScheme : MPWFilterScheme
 {
-    MPWScheme *source;
     id identifierFilter,valueFilter;
     
 }
 
 idAccessor_h( identifierFilter, setIdentifierFilter)
 idAccessor_h( valueFilter, setValueFilter)
-objectAccessor_h(MPWScheme, source, setSource)
 
 
 @end

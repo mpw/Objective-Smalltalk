@@ -13,7 +13,6 @@
 
 idAccessor(identifierFilter, setIdentifierFilter)
 idAccessor( valueFilter, setValueFilter)
-objectAccessor(MPWScheme, source, setSource)
 
 -initWithSource:(MPWScheme*)sourceScheme identifierFilter:idFilter valueFilter:vFilter
 {
