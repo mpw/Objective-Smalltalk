@@ -20,7 +20,7 @@
 //#import "MPWScriptingBridgeScheme.h"
 #import "MPWDefaultsScheme.h"
 #import "MPWSchemeScheme.h"
-
+#import "MPWConnectToDefault.h"
 #import <MPWFoundation/NSNil.h>
 
 @implementation NSString(concat)
@@ -59,6 +59,7 @@ idAccessor( connectorMap, setConnectorMap );
 {
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
 	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"<-"];
+	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"->"];
 }
 
 -initWithParent:newParent
@@ -402,6 +403,7 @@ idAccessor( connectorMap, setConnectorMap );
                                                                 @"isEqual:", @"=",
                               @"doAssign:", @":=",
                               @"doAssign:", @"<-",
+                              @"doConnectDefault:", @"->",
 															  @"pointWith:",@"@",
             nil];
     }

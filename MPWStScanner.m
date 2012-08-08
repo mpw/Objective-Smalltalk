@@ -114,6 +114,7 @@ boolAccessor( noNumbers, setNoNumbers )
     charSwitch['<']=[self methodForSelector:@selector(scanSpecial)];
     charSwitch['+']=[self methodForSelector:@selector(scanSpecial)];
     charSwitch['[']=[self methodForSelector:@selector(scanSpecial)];
+    charSwitch['-']=[self methodForSelector:@selector(scanSpecial)];
     charSwitch[':']=[self methodForSelector:@selector(scanPossibleAssignment)];
     charSwitch['_']=[self methodForSelector:@selector(scanName)];
     charSwitch[0]=[self methodForSelector:@selector(skip)];
@@ -161,6 +162,8 @@ boolAccessor( noNumbers, setNoNumbers )
     const char *cur=pos;
     int len=1;
     if ( *cur=='<' && SCANINBOUNDS(cur+1) && cur[1]=='-' ) {
+        len++;
+    } else if ( *cur=='-' && SCANINBOUNDS(cur+1) && cur[1]=='>') {
         len++;
     }
     return [self makeText:len];
@@ -334,8 +337,14 @@ boolAccessor( noNumbers, setNoNumbers )
 +(void)singleMinusString
 {
 	MPWStScanner *scanner=[self scannerWithData:@"'-'"];
-    IDEXPECT([scanner nextToken], @"-", @"single left arrow");
+    IDEXPECT([scanner nextToken], @"-", @"single minus sign");
     
+}
+
++(void)testRightArrow
+{
+	MPWStScanner *scanner=[self scannerWithData:@"->"];
+    IDEXPECT([scanner nextToken],@"->", @"single right arrow");
 }
 
 +(NSArray*)testSelectors
@@ -345,6 +354,7 @@ boolAccessor( noNumbers, setNoNumbers )
         @"testConstraintEqual",
             @"testURLWithUnderscores",
             @"testLeftArrow",
+            @"testRightArrow",
             @"testSimpleLiteralString",
             @"singleMinusString",
         nil];
