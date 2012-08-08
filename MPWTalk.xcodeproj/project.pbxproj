@@ -200,14 +200,14 @@
 		1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
 		1F68D1DB15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
 		1F68D1DC15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
-		1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; };
-		1F68D1E015D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; };
+		1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F68D1E015D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F68D1E115D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; };
 		1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
 		1F68D1E315D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
 		1F68D1E415D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
-		1F68D1E715D2E945005C7BF5 /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1E515D2E944005C7BF5 /* MPWFilterScheme.h */; };
-		1F68D1E815D2E945005C7BF5 /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1E515D2E944005C7BF5 /* MPWFilterScheme.h */; };
+		1F68D1E715D2E945005C7BF5 /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1E515D2E944005C7BF5 /* MPWFilterScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F68D1E815D2E945005C7BF5 /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1E515D2E944005C7BF5 /* MPWFilterScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F68D1E915D2E945005C7BF5 /* MPWFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1E515D2E944005C7BF5 /* MPWFilterScheme.h */; };
 		1F68D1EA15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
 		1F68D1EB15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };

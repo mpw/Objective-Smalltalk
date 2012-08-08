@@ -18,6 +18,8 @@
     Protocol            *messageProtocol;
 }
 
+-initWithTarget:aTarget key:aKey protocol:aProtocol sends:(BOOL)sends;
+
 boolAccessor_h(sendsMessages, setSendsMessages)
 boolAccessor_h(isSettable, setIsSettable)
 

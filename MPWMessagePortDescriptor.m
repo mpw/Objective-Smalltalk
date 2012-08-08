@@ -37,6 +37,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 -(BOOL)connect:(MPWMessagePortDescriptor*)other
 {
     id connectionTarget,source;
+//    NSLog(@"connect: %@ to %@",self,other);
     if ( [self isSettable] ^ [other isSettable]) {
         if ([self isSettable] && ![other isSettable] ) {
             connectionTarget=self;
@@ -50,6 +51,12 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     }
     return NO;
 
+}
+
+-(NSString *)description{
+    id theTarget=[[self target] target];
+    return [NSString stringWithFormat:@"<%@:%p: %@:%p key:%@>",
+            [self class],self,[theTarget class],theTarget,[[self target] name]];
 }
 
 @end

@@ -403,7 +403,6 @@ idAccessor( connectorMap, setConnectorMap );
                                                                 @"isEqual:", @"=",
                               @"doAssign:", @":=",
                               @"doAssign:", @"<-",
-                              @"doConnectDefault:", @"->",
 															  @"pointWith:",@"@",
             nil];
     }

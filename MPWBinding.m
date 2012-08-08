@@ -10,6 +10,7 @@
 #import "MPWRelScheme.h"
 #import "MPWInterval.h"
 #import "MPWVARBinding.h"
+#import "MPWCopyOnWriteScheme.h"
 
 @implementation MPWBinding
 
@@ -125,6 +126,16 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 -asScheme
 {
     return [[[MPWRelScheme alloc] initWithRef:self] autorelease];
+}
+
+-defaultComponentInstance
+{
+    return [self asScheme];
+}
+
+-asCache
+{
+    return [MPWCopyOnWriteScheme cache:[self asScheme]];
 }
 
 -name

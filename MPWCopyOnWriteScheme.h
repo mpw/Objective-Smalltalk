@@ -6,21 +6,22 @@
 //  Copyright (c) 2012 metaobject ltd. All rights reserved.
 //
 
-#import "MPWTreeNodeScheme.h"
+#import "MPWFilterScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 
-@interface MPWCopyOnWriteScheme : MPWGenericScheme
+@interface MPWCopyOnWriteScheme : MPWFilterScheme
 {
-    MPWScheme *readOnly,*readWrite;
+    MPWScheme *readWrite;
     BOOL cacheReads;
 }
 
 -initWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache;
 +cacheWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache;
++cache:cacheScheme;
++memoryCache;
 
 
 boolAccessor_h(cacheReads, setCacheReads)
-objectAccessor_h(MPWScheme, readOnly, setReadOnly)
 objectAccessor_h(MPWScheme, readWrite, setReadWrite)
 
 @end

@@ -10,18 +10,20 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWStCompiler.h"
 #import "MPWGenericBinding.h"
+#import "MPWTreeNodeScheme.h"
 
 @implementation MPWCopyOnWriteScheme
 
-objectAccessor(MPWScheme, readOnly, setReadOnly)
 objectAccessor(MPWScheme, readWrite, setReadWrite)
 boolAccessor(cacheReads, setCacheReads)
+
+
 
 
 -initWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache
 {
     self=[super init];
-    [self setReadOnly:newBase];
+    [self setSource:newBase];
     [self setReadWrite:newCache];
     return self;
 
@@ -34,14 +36,25 @@ boolAccessor(cacheReads, setCacheReads)
     return newScheme;
 }
 
++cache:cacheScheme
+{
+    return [self cacheWithBase:nil cache:cacheScheme];
+}
+
++memoryCache
+{
+    return [self cache:[MPWTreeNodeScheme scheme]];
+}
+
+
 -valueForBinding:aBinding
 {
     id result=nil;
     result=[[self readWrite] valueForBinding:aBinding];
 //    NSLog(@"COW:  readWrite %@ for %@ returned %@",[self readWrite],[aBinding name],result);
     if ( !result ) {
-//        NSLog(@"COW:  readOnly %@ for %@ returned %@",[self readOnly],[aBinding name],result);
-        result=[[self readOnly] valueForBinding:aBinding];
+//        NSLog(@"COW:  source %@ for %@ returned %@",[self source],[aBinding name],result);
+        result=[[self source] valueForBinding:aBinding];
         if ( [self cacheReads] ) {
             [[self readWrite] setValue:result forBinding:aBinding];
         }
@@ -56,18 +69,17 @@ boolAccessor(cacheReads, setCacheReads)
 
 -(BOOL)hasChildren:(MPWGenericBinding*)binding
 {
-    return [[readOnly bindingForName:[binding name] inContext:nil] hasChildren];
+    return [[[self source] bindingForName:[binding name] inContext:nil] hasChildren];
 }
 
 -childrenOf:(MPWGenericBinding*)binding
 {
-    return [[readOnly bindingForName:[binding name] inContext:nil] children];
+    return [[[self source] bindingForName:[binding name] inContext:nil] children];
 }
 
 
 -(void)dealloc
 {
-    [readOnly release];
     [readWrite release];
     [super dealloc];
 }
@@ -83,7 +95,7 @@ boolAccessor(cacheReads, setCacheReads)
     [interpreter evaluateScriptString:@" scheme:cms := site "];
     [interpreter evaluateScriptString:@" cms:/hi := 'hello world' "];
     [interpreter evaluateScriptString:@" scheme:cow := MPWCopyOnWriteScheme scheme."];
-    [interpreter evaluateScriptString:@" scheme:cow setReadOnly:site."];
+    [interpreter evaluateScriptString:@" scheme:cow setSource:site."];
     [interpreter evaluateScriptString:@" writer :=  MPWTreeNodeScheme scheme."];
     [interpreter evaluateScriptString:@" scheme:write :=  writer."];
     [interpreter evaluateScriptString:@" scheme:cow setReadWrite: writer."];
@@ -127,7 +139,7 @@ boolAccessor(cacheReads, setCacheReads)
 
     IDEXPECT([interpreter evaluateScriptString:@" rel:hi "],@"Hello Relative World",@"read via relative scheme");
     [interpreter evaluateScriptString:@" cms:/writes/baseWrite := 'do not read me'"];
-    [interpreter evaluateScriptString:@" scheme:cow setReadOnly: scheme:rel . "];
+    [interpreter evaluateScriptString:@" scheme:cow setSource: scheme:rel . "];
     IDEXPECT([interpreter evaluateScriptString:@" cow:hi "],@"Hello Relative World",@"read via copy on write via relativexw");
     
     // FIXME: finish
