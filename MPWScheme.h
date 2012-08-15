@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol Scheme <NSObject>
+
+-bindingForName:(NSString*)variableName inContext:aContext;
+
+
+@end
 
 @interface MPWScheme : NSObject {
 

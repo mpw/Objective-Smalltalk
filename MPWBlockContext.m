@@ -9,6 +9,7 @@
 #import "MPWBlockContext.h"
 #import "MPWStatementList.h"
 #import "MPWEvaluator.h"
+#import <MPWFoundation/MPWBlockFilterStream.h>
 
 @implementation MPWBlockContext
 
@@ -76,6 +77,19 @@ idAccessor( context, setContext )
 	[context release];
 	[super dealloc];
 }
+
+
+
+-defaultComponentInstance
+
+{
+    MPWBlockFilterStream *s=[MPWBlockFilterStream stream];
+    [s setBlock:self];
+    return s;
+}
+
+
+
 
 @end
 

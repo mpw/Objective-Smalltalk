@@ -34,20 +34,30 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 }
 
 
+-(BOOL)isCompatible:(MPWMessagePortDescriptor*)other
+{
+    return 
+    ([self isSettable] != [other isSettable]) &&
+        ([self sendsMessages] != [other sendsMessages]) &&
+    [[self messageProtocol] isEqual:[other messageProtocol]];
+}
+
 -(BOOL)connect:(MPWMessagePortDescriptor*)other
 {
-    id connectionTarget,source;
+    id connectionTarget=nil,source=nil;
 //    NSLog(@"connect: %@ to %@",self,other);
-    if ( [self isSettable] ^ [other isSettable]) {
-        if ([self isSettable] && ![other isSettable] ) {
+    if ( [self isCompatible:other] ) {
+        if ( [self isSettable] && ![other isSettable]) {
             connectionTarget=self;
             source=other;
         } else if ( [other isSettable] && ![self isSettable]) {
             connectionTarget=other;
             source=self;
         }
-        [[connectionTarget target] setValue:[[source target] value]];
-        return YES;
+        if ( connectionTarget && source ) {
+            [[connectionTarget target] setValue:[[source target] value]];
+            return YES;
+        }
     }
     return NO;
 
@@ -68,12 +78,17 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 +_createInputPortDescriptorForStream:(MPWStream*)s1
 {
-    return [[[self alloc] initWithTarget:s1 key:nil protocol:nil sends:NO] autorelease];
+    return [[[self alloc] initWithTarget:s1 key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
 }
 
 +_createOutputPortDescriptorForStream:(MPWStream*)s1
 {
-    return [[[self alloc] initWithTarget:s1 key:@"target" protocol:nil sends:YES] autorelease];
+    return [[[self alloc] initWithTarget:s1 key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+}
+
++_createOutputPortDescriptorForStreamWithIncompatibleProtool:(MPWStream*)s1
+{
+    return [[[self alloc] initWithTarget:s1 key:@"target" protocol:@protocol(NSObject) sends:YES] autorelease];
 }
 
 +(void)testConnectMPWStream
@@ -115,10 +130,22 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 }
 
 
++(void)testCannotConnectIncompatibleProtocols
+{
+    MPWStream *s1=[MPWStream stream];
+    MPWStream *s2=[MPWStream stream];
+    
+    MPWMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
+    MPWMessagePortDescriptor *output=[self _createOutputPortDescriptorForStreamWithIncompatibleProtool:s2];
+    EXPECTFALSE([input1 connect:output], @"connect incompatible protocols");
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[ @"testConnectMPWStream"
     , @"testCannotConnectTwoInputs"
+    , @"testCannotConnectIncompatibleProtocols"
     ];
 }
 

@@ -77,8 +77,14 @@ idAccessor( lhs, setLhs )
 
 -defaultOutputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:nil sends:YES] autorelease];
+    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
+
+-defaultInputPort
+{
+    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+}
+
 
 +defaultComponentInstance
 
@@ -90,18 +96,24 @@ idAccessor( lhs, setLhs )
 
 @end
 
+@implementation MPWScheme(connecting)
+
+
+-defaultOutputPort
+{
+    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Scheme) sends:NO] autorelease];
+}
+
+
+
+@end
+
 @implementation MPWFilterScheme(connecting)
 
 -defaultInputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:nil sends:YES] autorelease];
+    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:@protocol(Scheme) sends:YES] autorelease];
 }
-
--defaultOutputPort
-{
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:nil sends:NO] autorelease];
-}
-
 
 
 

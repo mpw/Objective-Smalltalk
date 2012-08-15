@@ -567,7 +567,7 @@ idAccessor( connectorMap, setConnectorMap );
 {
 	id first=[self nextToken];
 	id second;
-	if ( [first isToken] && ![first isEqual:@"-"] && ![first isEqual:@"["] ) {
+	if ( [first isToken] && ![first isEqual:@"-"]  ) {
 		first = [self objectifyScanned:first];
 		second = [self nextToken];
 
@@ -705,10 +705,17 @@ idAccessor( connectorMap, setConnectorMap );
     EXPECTFALSE([compiler isValidSyntax:@" 3+  "], @"'3+' not valid syntax ");
 }
 
++(void)testRightArrowDoesntGenerateMsgExpr
+{
+    MPWStCompiler *compiler=[self compiler];
+    id expr=[compiler compile:@"[ :a | a ] -> stdout"];
+    EXPECTFALSE([expr isKindOfClass:[MPWMessageExpression class]], @"'[ :a | a ] -> stdout' is msg expr");
+}
+
 
 +testSelectors
 {
-    return @[ @"testCheckValidSyntax" ];
+    return @[ @"testCheckValidSyntax" , @"testRightArrowDoesntGenerateMsgExpr" ];
 }
 
 @end
