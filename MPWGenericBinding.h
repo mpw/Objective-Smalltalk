@@ -6,7 +6,7 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWTalk/MPWBinding.h>
+#import <ObjectiveSmalltalk/MPWBinding.h>
 
 
 @interface MPWGenericBinding : MPWBinding {

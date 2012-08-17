@@ -12,7 +12,7 @@
 #import "MPWStCompiler.h"
 #import "MPWInstanceVariable.h"
 #import "MPWSetAccessor.h"
-#import <MPWTalk/MPWGetAccessor.h>
+#import <ObjectiveSmalltalk/MPWGetAccessor.h>
 
 @implementation NSObject(stScripting)
 

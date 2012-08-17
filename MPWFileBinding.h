@@ -6,7 +6,7 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
-#import <MPWTalk/MPWBinding.h>
+#import <ObjectiveSmalltalk/MPWBinding.h>
 
 
 @interface MPWFileBinding : MPWBinding {

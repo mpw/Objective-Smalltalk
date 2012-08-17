@@ -6,7 +6,7 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWTalk/MPWGetAccessor.h>
+#import <ObjectiveSmalltalk/MPWGetAccessor.h>
 
 
 @interface MPWSetAccessor : MPWGetAccessor {

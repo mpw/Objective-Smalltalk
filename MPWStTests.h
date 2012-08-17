@@ -6,7 +6,7 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWTalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/MPWStCompiler.h>
 
 
 @interface MPWStTests : MPWStCompiler {

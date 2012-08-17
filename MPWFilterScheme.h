@@ -6,7 +6,7 @@
 //
 //
 
-#import <MPWTalk/MPWGenericScheme.h>
+#import <ObjectiveSmalltalk/MPWGenericScheme.h>
 #import <MPWFoundation/MPWFoundation.h>
 
 @interface MPWFilterScheme : MPWGenericScheme

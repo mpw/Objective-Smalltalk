@@ -7,8 +7,8 @@
 //
 
 #import "MPWStTests.h"
-#import <MPWTalk/MPWExpression.h>
-#import <MPWTalk/MPWMethod.h>
+#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/MPWMethod.h>
 #import "MPWMethodHeader.h"
 #import "MPWInstanceVariable.h"
 #import "NSObjectScripting.h"

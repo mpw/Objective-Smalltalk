@@ -13,10 +13,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1F7E05B3144B3E7D008F349D"
-               BuildableName = "libiMethodServer.a"
-               BlueprintName = "iMethodServer"
-               ReferencedContainer = "container:MPWTalk.xcodeproj">
+               BlueprintIdentifier = "1F7E059F144B3E22008F349D"
+               BuildableName = "MethodServer.framework"
+               BlueprintName = "MethodServer"
+               ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

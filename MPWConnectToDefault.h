@@ -6,7 +6,7 @@
 //
 //
 
-#import <MPWTalk/MPWConnector.h>
+#import <ObjectiveSmalltalk/MPWConnector.h>
 
 @interface MPWConnectToDefault : MPWConnector
 {

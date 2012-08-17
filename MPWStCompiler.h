@@ -1,6 +1,6 @@
 /* MPWStCompiler.h created by marcel on Mon 03-Jul-2000 */
 
-#import <MPWTalk/MPWEvaluator.h>
+#import <ObjectiveSmalltalk/MPWEvaluator.h>
 
 @class MPWMethodHeader,MPWStScanner;
 

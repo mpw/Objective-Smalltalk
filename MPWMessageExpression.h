@@ -1,6 +1,6 @@
 /* MPWMessageExpression.h created by marcel on Tue 04-Jul-2000 */
 
-#import <MPWTalk/MPWConnector.h>
+#import <ObjectiveSmalltalk/MPWConnector.h>
 
 @interface MPWMessageExpression : MPWConnector
 {

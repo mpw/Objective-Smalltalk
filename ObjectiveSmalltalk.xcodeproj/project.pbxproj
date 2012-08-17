@@ -469,7 +469,7 @@
 		1F45D541075D37A200D924C3 /* MPWEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWEvaluator.h; sourceTree = SOURCE_ROOT; };
 		1F45D542075D37A200D924C3 /* MPWEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWEvaluator.m; sourceTree = SOURCE_ROOT; };
 		1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWLinuxTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F4CB5751253D53D00B30C99 /* Info-MPWTalk__Framework___Upgraded_ copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-MPWTalk__Framework___Upgraded_ copy.plist"; sourceTree = "<group>"; };
+		1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist"; sourceTree = "<group>"; };
 		1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRefScheme.h; sourceTree = "<group>"; };
 		1F4FD0DC10E4FB3600934A17 /* MPWRefScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWRefScheme.m; sourceTree = "<group>"; };
 		1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWVarScheme.h; sourceTree = "<group>"; };
@@ -483,7 +483,7 @@
 		1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWComplexAssignment.m; sourceTree = "<group>"; };
 		1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockFilterScheme.h; sourceTree = "<group>"; };
 		1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockFilterScheme.m; sourceTree = "<group>"; };
-		1F5E508E09B4B754000298D9 /* Info-MPWTalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-MPWTalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
+		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* MPWTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnectToDefault.h; sourceTree = "<group>"; };
 		1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnectToDefault.m; sourceTree = "<group>"; };
@@ -905,8 +905,8 @@
 				1F7B75B214629431002F38D1 /* SchemeFS */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
-				1F5E508E09B4B754000298D9 /* Info-MPWTalk__Framework___Upgraded_.plist */,
-				1F4CB5751253D53D00B30C99 /* Info-MPWTalk__Framework___Upgraded_ copy.plist */,
+				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
+				1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */,
 				1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */,
 			);
 			name = MPWTalk;
@@ -1281,9 +1281,9 @@
 			productReference = 1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1F4CB5191253D53C00B30C99 /* MPWTalk Linux Cocotron */ = {
+		1F4CB5191253D53C00B30C99 /* ObjectiveSmalltalk Linux Cocotron */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "MPWTalk Linux Cocotron" */;
+			buildConfigurationList = 1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk Linux Cocotron" */;
 			buildPhases = (
 				1F4CB51A1253D53C00B30C99 /* Headers */,
 				1F4CB5421253D53C00B30C99 /* Resources */,
@@ -1295,15 +1295,15 @@
 			);
 			dependencies = (
 			);
-			name = "MPWTalk Linux Cocotron";
+			name = "ObjectiveSmalltalk Linux Cocotron";
 			productInstallPath = "@executable_path/../Frameworks/";
 			productName = "MPWTalk (Framework)";
 			productReference = 1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		1F5E504B09B4B754000298D9 /* MPWTalk */ = {
+		1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "MPWTalk" */;
+			buildConfigurationList = 1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk" */;
 			buildPhases = (
 				1F5E504C09B4B754000298D9 /* Headers */,
 				1F5E506809B4B754000298D9 /* Resources */,
@@ -1315,7 +1315,7 @@
 			);
 			dependencies = (
 			);
-			name = MPWTalk;
+			name = ObjectiveSmalltalk;
 			productInstallPath = "@executable_path/../Frameworks/";
 			productName = "MPWTalk (Framework)";
 			productReference = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */;
@@ -1390,9 +1390,9 @@
 			productReference = 1F7E05B4144B3E7D008F349D /* libiMethodServer.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		1FE08F01137808B8003B18B9 /* MPWTalk-iOS */ = {
+		1FE08F01137808B8003B18B9 /* ObjectiveSmalltalk-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1FE08F06137808E4003B18B9 /* Build configuration list for PBXNativeTarget "MPWTalk-iOS" */;
+			buildConfigurationList = 1FE08F06137808E4003B18B9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk-iOS" */;
 			buildPhases = (
 				1FE08EFE137808B8003B18B9 /* Headers */,
 				1FE08EFF137808B8003B18B9 /* Sources */,
@@ -1402,7 +1402,7 @@
 			);
 			dependencies = (
 			);
-			name = "MPWTalk-iOS";
+			name = "ObjectiveSmalltalk-iOS";
 			productName = "MPWTalk-iOS";
 			productReference = 1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */;
 			productType = "com.apple.product-type.library.static";
@@ -1412,7 +1412,7 @@
 /* Begin PBXProject section */
 		F5A74ABA00F0A61B015ADD82 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1FA354010854F75C0056996B /* Build configuration list for PBXProject "MPWTalk" */;
+			buildConfigurationList = 1FA354010854F75C0056996B /* Build configuration list for PBXProject "ObjectiveSmalltalk" */;
 			compatibilityVersion = "Xcode 3.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -1428,9 +1428,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1F5E504B09B4B754000298D9 /* MPWTalk */,
-				1F4CB5191253D53C00B30C99 /* MPWTalk Linux Cocotron */,
-				1FE08F01137808B8003B18B9 /* MPWTalk-iOS */,
+				1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */,
+				1F4CB5191253D53C00B30C99 /* ObjectiveSmalltalk Linux Cocotron */,
+				1FE08F01137808B8003B18B9 /* ObjectiveSmalltalk-iOS */,
 				1F2E6EF9142EF26E00B5C827 /* SimpleMethodEditor */,
 				1F7A3F9614485DDF00521C07 /* ViewBuilder */,
 				1F7E059F144B3E22008F349D /* MethodServer */,
@@ -1900,7 +1900,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
@@ -1908,7 +1908,7 @@
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRINCIPAL_CLASS = "";
-				PRODUCT_NAME = MPWTalk;
+				PRODUCT_NAME = ObjectiveSmalltalk;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -2035,7 +2035,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_ copy.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -2069,7 +2069,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_VERSION = org.cocotron.1.0.linux.i386.gcc.4.3.1;
-				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_ copy.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_CFLAGS = "";
@@ -2101,7 +2101,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_ copy.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CFLAGS = "";
@@ -2139,7 +2139,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
@@ -2147,7 +2147,7 @@
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRINCIPAL_CLASS = "";
-				PRODUCT_NAME = MPWTalk;
+				PRODUCT_NAME = ObjectiveSmalltalk;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -2177,7 +2177,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				INFOPLIST_FILE = "Info-MPWTalk__Framework___Upgraded_.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
@@ -2185,7 +2185,7 @@
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRINCIPAL_CLASS = "";
-				PRODUCT_NAME = MPWTalk;
+				PRODUCT_NAME = ObjectiveSmalltalk;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -2633,7 +2633,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = "MPWTalk-iOS";
+				PRODUCT_NAME = "ObjectiveSmalltalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "/Library/Frameworks ${TARGET_BUILD_DIR}/../Release/";
@@ -2657,7 +2657,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = "MPWTalk-iOS";
+				PRODUCT_NAME = "ObjectiveSmalltalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "/Library/Frameworks ${TARGET_BUILD_DIR}/../Release/";
@@ -2679,7 +2679,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = "MPWTalk-iOS";
+				PRODUCT_NAME = "ObjectiveSmalltalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = /Library/Frameworks;
@@ -2699,7 +2699,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "MPWTalk Linux Cocotron" */ = {
+		1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk Linux Cocotron" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F4CB5711253D53C00B30C99 /* Development */,
@@ -2709,7 +2709,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "MPWTalk" */ = {
+		1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F5E508B09B4B754000298D9 /* Development */,
@@ -2759,7 +2759,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1FA354010854F75C0056996B /* Build configuration list for PBXProject "MPWTalk" */ = {
+		1FA354010854F75C0056996B /* Build configuration list for PBXProject "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1FA354020854F75C0056996B /* Development */,
@@ -2769,7 +2769,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1FE08F06137808E4003B18B9 /* Build configuration list for PBXNativeTarget "MPWTalk-iOS" */ = {
+		1FE08F06137808E4003B18B9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1FE08F03137808B8003B18B9 /* Development */,

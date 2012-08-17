@@ -6,7 +6,7 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWTalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/MPWExpression.h>
 
 
 @interface MPWIdentifierExpression : MPWExpression {

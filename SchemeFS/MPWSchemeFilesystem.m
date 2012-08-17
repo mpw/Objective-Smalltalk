@@ -8,8 +8,8 @@
 
 #import "MPWSchemeFilesystem.h"
 #import <OSXFUSE/OSXFUSE.h>
-#import <MPWTalk/MPWScheme.h>
-#import <MPWTalk/MPWFileSchemeResolver.h>
+#import <ObjectiveSmalltalk/MPWScheme.h>
+#import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 #import <MPWFoundation/MPWFoundation.h>
 
 static NSString *helloStr = @"Hello Brave New World!\n";

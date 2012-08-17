@@ -6,7 +6,7 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
-#import <MPWTalk/MPWScheme.h>
+#import <ObjectiveSmalltalk/MPWScheme.h>
 
 
 @interface MPWFileSchemeResolver : MPWScheme {

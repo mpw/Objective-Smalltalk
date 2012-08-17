@@ -13,10 +13,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1FE08F01137808B8003B18B9"
-               BuildableName = "libMPWTalk-iOS.a"
-               BlueprintName = "MPWTalk-iOS"
-               ReferencedContainer = "container:MPWTalk.xcodeproj">
+               BlueprintIdentifier = "1F5E504B09B4B754000298D9"
+               BuildableName = "ObjectiveSmalltalk.framework"
+               BlueprintName = "ObjectiveSmalltalk"
+               ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,6 +35,7 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
+      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <AdditionalOptions>

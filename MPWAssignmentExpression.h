@@ -6,7 +6,7 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWTalk/MPWConnector.h>
+#import <ObjectiveSmalltalk/MPWConnector.h>
 
 @interface MPWAssignmentExpression : MPWConnector {
 	id lhs;

@@ -7,7 +7,7 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
-#import <MPWTalk/MPWEvaluable.h>
+#import <ObjectiveSmalltalk/MPWEvaluable.h>
 
 @interface MPWExpression : MPWObject <MPWEvaluable> {
     int offset,len;
