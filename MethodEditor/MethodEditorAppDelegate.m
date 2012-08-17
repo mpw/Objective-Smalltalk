@@ -69,18 +69,22 @@
     [self updateDocs];
 }
 
-
+objectAccessor(NSNetServiceBrowser, serviceBrowser, setServiceBrowser)
 
 -(void)startBrowsing
 {
     NSLog(@"start browsing");
-    NSNetServiceBrowser *serviceBrowser;
     [self setServices:[NSMutableSet set]];
-    serviceBrowser = [[NSNetServiceBrowser alloc] init];
-    [serviceBrowser setDelegate:self];
-    [serviceBrowser searchForServicesOfType:@"_methods._tcp" inDomain:@""]; 
+    [self setServiceBrowser:[[[NSNetServiceBrowser alloc] init] autorelease]];
+    [[self serviceBrowser] setDelegate:self];
+    [[self serviceBrowser] searchForServicesOfType:@"_methods._tcp" inDomain:@""];
 
     NSLog(@"did start browsing");
+}
+
+-(IBAction)startBrowsing:sender
+{
+    [self startBrowsing];
 }
 
 

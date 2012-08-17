@@ -9,7 +9,7 @@
 			<key>&lt;int&gt;theAnswer</key>
 			<string>42</string>
 			<key>&lt;void&gt;getErrors:sender</key>
-			<string>   errorRef := context bindingForString:self url , 'exception'.
+			<string>   errorRef := context bindingForString:self url , 'exceptions'.
    stdout println: errorRef url.
    errors := errorRef value.
    (errors respondsToSelector:'count') ifTrue:[ 

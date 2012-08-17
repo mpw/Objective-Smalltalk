@@ -8,7 +8,7 @@
 
 #import "MethodDict.h"
 #import <MPWFoundation/MPWFoundation.h>
-#import <MPWTalk/MPWMethodHeader.h>
+#import <ObjectiveSmalltalk/MPWMethodHeader.h>
 
 @implementation NSString(methodName)
 

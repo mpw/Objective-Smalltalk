@@ -11,6 +11,10 @@
 @interface MethodEditorAppDelegate : NSObject <NSApplicationDelegate>
 {
     NSMutableSet *services;
+    NSNetServiceBrowser *serviceBrowser;
 }
+
+-(IBAction)startBrowsing:sender;
+
 
 @end
