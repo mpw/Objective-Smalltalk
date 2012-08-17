@@ -11,10 +11,16 @@
 			<key>&lt;void&gt;getErrors:sender</key>
 			<string>   errorRef := context bindingForString:self url , 'exceptions'.
    stdout println: errorRef url.
+   NSURLCache sharedURLCache removeAllCachedResponses.
    errors := errorRef value.
+   stdout println:errors.
    (errors respondsToSelector:'count') ifTrue:[ 
 	self setExceptions: errors.
-	self errorWindow makeKeyAndOrderFront:self.
+        self 
+	self showErrors
+   ] ifFalse: [ 
+        stdout println:'no errors'.
+        self setExceptions: #().
    ].</string>
 			<key>&lt;void&gt;setUIForMethodHeader:header body:body</key>
 			<string>    self methodHeader setStringValue: header.

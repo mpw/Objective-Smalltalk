@@ -73,7 +73,7 @@ objectAccessor(NSError, error, setError)
     const char *ptr=[rawData bytes];
     NSLog(@"raw mime: %@",mime);
     if ( ptr && [rawData length]) {
-        if ( ([mime isEqualToString:@"text/html"] ||  [mime isEqualToString:@"text/plain"] )&& (*ptr == '{' || *ptr == '[' )) {
+        if (( !mime ||  [mime isEqualToString:@"text/html"] ||  [mime isEqualToString:@"text/plain"] )&& (*ptr == '{' || *ptr == '[' )) {
             mime=@"application/json";
         }
     }

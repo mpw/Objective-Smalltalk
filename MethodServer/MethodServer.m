@@ -222,12 +222,12 @@ static void CatchException(NSException *exception)
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
 {
 //    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
+    [self clearExceptions];
     NSData *retval =[super put:uri data:putData parameters:params];
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
 //        [[delegate afterDelay:0.001] didDefineMethods:self];
         [delegate didDefineMethods:self];
     }
-    [self clearExceptions];
 
     NSLog(@"will send notification");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"methodsDefined" object:self];

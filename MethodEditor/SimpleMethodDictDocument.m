@@ -356,4 +356,12 @@ objectAccessor(NSArray, exceptions, setExceptions)
                            
 }
 
+-(void)showErrors
+{
+    [exceptionNames reloadData];
+    [exceptionStackTrace reloadData];
+    [[self errorWindow] makeKeyAndOrderFront:nil];
+     
+}
+
 @end
