@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 44;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -214,7 +214,7 @@
 		1F68D1EC15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
 		1F7A3F9814485DDF00521C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F09142EF26E00B5C827 /* main.m */; };
 		1F7A3F9914485DDF00521C07 /* MethodDictDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F10142EF26E00B5C827 /* MethodDictDocument.m */; };
-		1F7A3F9B14485DDF00521C07 /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
+		1F7A3F9B14485DDF00521C07 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7A3F9C14485DDF00521C07 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAD8131436297C0050D6DE /* MPWFoundation.framework */; };
 		1F7A3F9D14485DDF00521C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1F7A3F9F14485DDF00521C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F06142EF26E00B5C827 /* InfoPlist.strings */; };
@@ -230,7 +230,7 @@
 		1F7B75C314629431002F38D1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75C114629431002F38D1 /* MainMenu.xib */; };
 		1F7B75CA14629521002F38D1 /* MPWSchemeFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75C914629521002F38D1 /* MPWSchemeFilesystem.m */; };
 		1F7B75CC146295E5002F38D1 /* OSXFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */; };
-		1F7B75CD146295F0002F38D1 /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
+		1F7B75CD146295F0002F38D1 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7B75D0146296DE002F38D1 /* Fuse.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75CE146296DE002F38D1 /* Fuse.icns */; };
 		1F7B75D1146296DE002F38D1 /* hellodoc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75CF146296DE002F38D1 /* hellodoc.icns */; };
 		1F7E05A7144B3E22008F349D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7E05A5144B3E22008F349D /* InfoPlist.strings */; };
@@ -238,7 +238,7 @@
 		1F7E05B6144B3E7D008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05B5144B3E7D008F349D /* Foundation.framework */; };
 		1F7E05C1144B3F3F008F349D /* MethodServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E05AA144B3E22008F349D /* MethodServer.m */; };
 		1F7E05C9144B414C008F349D /* MethodServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7E05A9144B3E22008F349D /* MethodServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F7E05CA144B417D008F349D /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
+		1F7E05CA144B417D008F349D /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F7E05CD144B417D008F349D /* MPWSideweb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CC144B417D008F349D /* MPWSideweb.framework */; };
 		1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CE144B4188008F349D /* Foundation.framework */; };
@@ -319,7 +319,7 @@
 		1FA5F494147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FBAD8141436297D0050D6DE /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAD8131436297C0050D6DE /* MPWFoundation.framework */; };
-		1FBAD81714362D850050D6DE /* MPWTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */; };
+		1FBAD81714362D850050D6DE /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B4481492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
@@ -327,6 +327,7 @@
 		1FD1B44C1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */; };
 		1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */; };
+		1FD52AC415FDF522005BC568 /* ViewBuilderIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1FD52AC315FDF522005BC568 /* ViewBuilderIcon.icns */; };
 		1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
 		1FD713CD1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
 		1FD713CE1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
@@ -484,7 +485,7 @@
 		1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockFilterScheme.h; sourceTree = "<group>"; };
 		1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockFilterScheme.m; sourceTree = "<group>"; };
 		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
-		1F5E508F09B4B754000298D9 /* MPWTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnectToDefault.h; sourceTree = "<group>"; };
 		1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnectToDefault.m; sourceTree = "<group>"; };
 		1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessagePortDescriptor.h; sourceTree = "<group>"; };
@@ -577,6 +578,8 @@
 		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = SOURCE_ROOT; };
 		1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTaggedFloat.h; sourceTree = "<group>"; };
 		1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTaggedFloat.m; sourceTree = "<group>"; };
+		1FD52AC315FDF522005BC568 /* ViewBuilderIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ViewBuilderIcon.icns; sourceTree = "<group>"; };
+		1FD52AC515FDF61F005BC568 /* ViewBuilder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ViewBuilder.entitlements; sourceTree = SOURCE_ROOT; };
 		1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjCGenerator.h; sourceTree = "<group>"; };
 		1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjCGenerator.m; sourceTree = "<group>"; };
 		1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMirror.h; sourceTree = "<group>"; };
@@ -591,7 +594,7 @@
 		1FDCCB37139A60FC00F5F273 /* MPWDefaultsScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDefaultsScheme.m; sourceTree = "<group>"; };
 		1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodCallBack.h; sourceTree = "<group>"; };
 		1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodCallBack.m; sourceTree = "<group>"; };
-		1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libMPWTalk-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FE08F02137808B8003B18B9 /* libObjectiveSmalltalk-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libObjectiveSmalltalk-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE08FEA137817EB003B18B9 /* libPLBlockIMP-iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPLBlockIMP-iOS.a"; sourceTree = "<group>"; };
 		1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFastMessage.h; sourceTree = "<group>"; };
 		1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFastMessage.m; sourceTree = "<group>"; };
@@ -637,7 +640,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FBAD81714362D850050D6DE /* MPWTalk.framework in Frameworks */,
+				1FBAD81714362D850050D6DE /* ObjectiveSmalltalk.framework in Frameworks */,
 				1FBAD8141436297D0050D6DE /* MPWFoundation.framework in Frameworks */,
 				1F2E6EFE142EF26E00B5C827 /* Cocoa.framework in Frameworks */,
 			);
@@ -665,7 +668,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F7A3F9B14485DDF00521C07 /* MPWTalk.framework in Frameworks */,
+				1F7A3F9B14485DDF00521C07 /* ObjectiveSmalltalk.framework in Frameworks */,
 				1F7A3F9C14485DDF00521C07 /* MPWFoundation.framework in Frameworks */,
 				1F7A3F9D14485DDF00521C07 /* Cocoa.framework in Frameworks */,
 			);
@@ -675,7 +678,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F7B75CD146295F0002F38D1 /* MPWTalk.framework in Frameworks */,
+				1F7B75CD146295F0002F38D1 /* ObjectiveSmalltalk.framework in Frameworks */,
 				1F7B75CC146295E5002F38D1 /* OSXFUSE.framework in Frameworks */,
 				1F7B75B114629431002F38D1 /* Cocoa.framework in Frameworks */,
 			);
@@ -687,7 +690,7 @@
 			files = (
 				1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */,
 				1F7E05CD144B417D008F349D /* MPWSideweb.framework in Frameworks */,
-				1F7E05CA144B417D008F349D /* MPWTalk.framework in Frameworks */,
+				1F7E05CA144B417D008F349D /* ObjectiveSmalltalk.framework in Frameworks */,
 				1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -789,6 +792,8 @@
 		1F2E6F03142EF26E00B5C827 /* ViewBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				1FD52AC515FDF61F005BC568 /* ViewBuilder.entitlements */,
+				1FD52AC315FDF522005BC568 /* ViewBuilderIcon.icns */,
 				1F00AD5E144AE38400EA6AF0 /* MethodDict.h */,
 				1F00AD5F144AE38400EA6AF0 /* MethodDict.m */,
 				1F00AD62144AE52E00EA6AF0 /* SimpleMethodDictDocument.h */,
@@ -1048,9 +1053,9 @@
 		F5A74ACE00F0A61B015ADD82 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1F5E508F09B4B754000298D9 /* MPWTalk.framework */,
+				1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */,
 				1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */,
-				1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */,
+				1FE08F02137808B8003B18B9 /* libObjectiveSmalltalk-iOS.a */,
 				1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */,
 				1F7A3FA814485DDF00521C07 /* ViewBuilder.app */,
 				1F7E05A0144B3E22008F349D /* MethodServer.framework */,
@@ -1318,7 +1323,7 @@
 			name = ObjectiveSmalltalk;
 			productInstallPath = "@executable_path/../Frameworks/";
 			productName = "MPWTalk (Framework)";
-			productReference = 1F5E508F09B4B754000298D9 /* MPWTalk.framework */;
+			productReference = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		1F7A3F9614485DDF00521C07 /* ViewBuilder */ = {
@@ -1404,7 +1409,7 @@
 			);
 			name = "ObjectiveSmalltalk-iOS";
 			productName = "MPWTalk-iOS";
-			productReference = 1FE08F02137808B8003B18B9 /* libMPWTalk-iOS.a */;
+			productReference = 1FE08F02137808B8003B18B9 /* libObjectiveSmalltalk-iOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -1412,8 +1417,11 @@
 /* Begin PBXProject section */
 		F5A74ABA00F0A61B015ADD82 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+			};
 			buildConfigurationList = 1FA354010854F75C0056996B /* Build configuration list for PBXProject "ObjectiveSmalltalk" */;
-			compatibilityVersion = "Xcode 3.0";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -1482,6 +1490,7 @@
 				1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */,
 				1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */,
 				1F7A3FA314485DDF00521C07 /* viewbuilder.classdict in Resources */,
+				1FD52AC415FDF522005BC568 /* ViewBuilderIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1887,8 +1896,8 @@
 		1F20E4EA0F5B5D45002153EE /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1898,7 +1907,6 @@
 					"\"$(SRCROOT)/../../Build/Release\"",
 				);
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
@@ -1926,8 +1934,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1952,7 +1961,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodEditor/MethodEditor-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_ACTUAL)";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -1963,9 +1972,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1994,9 +2003,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2024,15 +2033,14 @@
 		1F4CB5711253D53C00B30C99 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "\"$(LOCAL_LIBRARY_DIR)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist";
@@ -2060,13 +2068,13 @@
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "@executable_path/../Frameworks/";
 				EXECUTABLE_PREFIX = lib;
 				EXECUTABLE_SUFFIX = .so;
 				FRAMEWORK_SEARCH_PATHS = /Developer/Cocotron/1.0/Linux/i386/Frameworks/;
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_VERSION = org.cocotron.1.0.linux.i386.gcc.4.3.1;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist";
@@ -2076,7 +2084,6 @@
 				OTHER_LDFLAGS = "-shared";
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRINCIPAL_CLASS = "";
 				PRODUCT_NAME = MPWLinuxTalk;
@@ -2091,15 +2098,14 @@
 		1F4CB5731253D53C00B30C99 /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "\"$(LOCAL_LIBRARY_DIR)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
@@ -2125,8 +2131,8 @@
 		1F5E508B09B4B754000298D9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2136,7 +2142,6 @@
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
@@ -2164,8 +2169,8 @@
 		1F5E508C09B4B754000298D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2175,7 +2180,6 @@
 					"\"$(SRCROOT)/../../Build/Release\"",
 				);
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
@@ -2203,8 +2207,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_ENTITLEMENTS = ViewBuilder.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2229,7 +2236,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_ACTUAL)";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ViewBuilder;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -2240,9 +2247,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_ENTITLEMENTS = ViewBuilder.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2271,9 +2280,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_ENTITLEMENTS = ViewBuilder.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2302,7 +2313,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2326,7 +2338,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SchemeFS/SchemeFS-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_64)";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -2337,8 +2349,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2366,8 +2378,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2395,7 +2407,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2423,7 +2436,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH_ACTUAL)";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
@@ -2434,8 +2447,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2467,8 +2480,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2520,6 +2533,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2549,6 +2563,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iMethodServer/iMethodServer-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2579,6 +2594,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iMethodServer/iMethodServer-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2608,8 +2624,7 @@
 		1FA354030854F75C0056996B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
@@ -2627,12 +2642,12 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_THUMB_SUPPORT = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "ObjectiveSmalltalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2650,13 +2665,12 @@
 				);
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_THUMB_SUPPORT = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "ObjectiveSmalltalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2673,12 +2687,12 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv6,
 				);
+				GCC_THUMB_SUPPORT = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "ObjectiveSmalltalk-iOS";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
