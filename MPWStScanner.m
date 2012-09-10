@@ -210,9 +210,9 @@ boolAccessor( noNumbers, setNoNumbers )
 	return [[self floatClass] numberWithFloat:aFloat];
 }
 
--createInt:(int)anInt
+-createInt:(long)anInt
 {
-	return [[self intClass] numberWithInt:anInt];
+	return [[self intClass] numberWithLong:anInt];
 }
 
 -createString:(NSString*)aString
@@ -240,7 +240,7 @@ boolAccessor( noNumbers, setNoNumbers )
 		if ( [string rangeOfString:@"."].length==1 ) {
 			return [self createFloat:[string floatValue]];
 		} else {
-			return [self createInt:[string intValue]];
+			return [self createInt:[string longValue]];
 		}
 	} else {
 		return string;
