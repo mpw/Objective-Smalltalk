@@ -1,0 +1,7 @@
+#!/usr/local/bin/stsh
+context loadFramework:'MPWSideWeb'
+
+(ref:file:{env:HOME} -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
+
+shell runInteractiveLoop
+
