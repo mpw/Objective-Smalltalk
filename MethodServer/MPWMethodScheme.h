@@ -12,7 +12,8 @@
 
 @interface MPWMethodScheme : MPWGenericScheme
 {
-    MPWStCompiler *interpreter;
+    MPWStCompiler   *interpreter;
+    NSMutableArray  *exceptions;
 }
 
 @end

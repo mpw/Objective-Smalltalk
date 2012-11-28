@@ -92,10 +92,12 @@ idAccessor( url , setUrl )
 
 -_valueWithDataURL:(NSURL*)aURL
 {
-	NSData *rawData = [NSData dataWithContentsOfURL:aURL];
+    NSError *error=nil;
+	NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMappedAlways error:&error];
 	MPWResource *result=[[[MPWResource alloc] init] autorelease];
 	[result setSource:aURL];
 	[result setRawData:rawData];
+    [result setError:error];
 	return result;
 }
 

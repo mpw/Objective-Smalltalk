@@ -14,8 +14,12 @@
 	NSData		*rawData;
 	NSString	*mimetype;
 	id			_value;
+    NSError     *error;
 }
 
+objectAccessor_h( NSData, rawData, setRawData )
+objectAccessor_h( NSString, mimetype, setMimetype )
+objectAccessor_h( NSError, error, setError)
 
 
 @end

@@ -17,6 +17,11 @@
     NSLog(@"MethodEditor App Delegate");
 }
 
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
+{
+    return NO;
+}
+
 - (void)netServiceDidResolveAddress:(NSNetService *)netService
 {
     [self updateDocs];

@@ -13,6 +13,7 @@
 
 objectAccessor( NSData, rawData, setRawData )
 objectAccessor( NSString, mimetype, setMimetype )
+objectAccessor( NSError, error, setError)
 idAccessor( _value, setValue )
 idAccessor( source, setSource )
 
@@ -134,6 +135,7 @@ idAccessor( source, setSource )
 	[rawData release];
 	[_value release];
 	[mimetype release];
+    [error release];
 	[super dealloc];
 }
 

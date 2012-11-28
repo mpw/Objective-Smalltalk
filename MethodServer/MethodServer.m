@@ -10,7 +10,6 @@
 #import "MPWStCompiler.h"
 #import "MPWMethodScheme.h"
 #import "MPWBinding.h"
-#import "MPWClassMirror.h"
 
 @implementation MethodServer
 
@@ -18,7 +17,6 @@ objectAccessor(MPWStCompiler, interpreter, setInterpreter)
 objectAccessor(NSString, methodDictName, setMethodDictName)
 objectAccessor(NSString, projectDir, setProjectDir)
 objectAccessor(NSString, uniqueID, setUniqueID)
-objectAccessor(NSMutableArray, exceptions, setExceptions)
 
 - (id)initWithMethodDictName:(NSString*)newName
 {
@@ -26,7 +24,6 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     if (self) {
         [self setMethodDictName:newName];
         [self setProjectDir:[[[NSProcessInfo processInfo] environment] objectForKey:@"PROJECT_DIR"]];
-        [self setExceptions:[NSMutableArray array]];
         [self setAsDefault];
         [self handleExceptions];
     }
@@ -51,23 +48,9 @@ static id defaultMethodServer=nil;
 
 -(void)addException:(NSException*)exception
 {
-    NSLog(@"top level exception: %@",exception);
-    if ( [exception combinedStackTrace]) {
-        NSLog(@"%@",[exception combinedStackTrace]);
-    }
-    [exceptions addObject:exception];
-    NSLog(@"now have %d exceptions",[[self exceptions] count]);
+    [[self scheme] addException:exception];
 }
 
--(void)clearExceptions
-{
-    [[self exceptions] removeAllObjects];
-}
-
--(BOOL)hasExceptions
-{
-    return [[self exceptions] count]!=0;
-}
 
 +(void)addException:exception
 {
@@ -157,53 +140,8 @@ static void CatchException(NSException *exception)
         return [[self projectDir] asData];
     } else if ( [uri hasPrefix:@"/uniqueID"] ) {
         return [[self uniqueID] asData];
-    } else if ( [uri hasPrefix:@"/frameworks"] ) {
-        return [[[[[[NSBundle allFrameworks] collect] bundleIdentifier] sortedArrayUsingSelector:@selector(compare:)] description] asData];
-    } else if ( [uri hasPrefix:@"/bundles"] ) {
-        return [[[[[NSBundle allBundles] collect] bundleIdentifier] description] asData];
-    } else if ( [uri hasPrefix:@"/classes"] ) {
-        NSString *whichClasses=[uri lastPathComponent];
-        NSArray *classes=[MPWClassMirror allUsefulClasses];
-        if ([whichClasses isEqualToString:@"all"] ||
-            [whichClasses isEqualToString:@"classes"] ) {
-            ;   // already have all classes
-        } else  {
-            NSBundle *bundleToCheck=nil;
-            if ( [whichClasses isEqualToString:@"main"] ) {
-                bundleToCheck=[NSBundle mainBundle];
-            } else {
-                bundleToCheck=[NSBundle bundleWithIdentifier:whichClasses];
-            }
-            NSMutableArray *bundleFilteredClasses=[NSMutableArray array];
-            for ( MPWClassMirror *mirror in classes ) {
-                if ( [NSBundle bundleForClass:[mirror theClass]] == bundleToCheck ) {
-                    [bundleFilteredClasses addObject:mirror];
-                }
-
-            }
-            classes=bundleFilteredClasses;
-        }
-        return [[[[classes collect] name] description] asData];
-    } else if ( [uri hasPrefix:@"/exception"] ) {
-        NSLog(@"%d exceptions",[[self exceptions] count]);
-        if ( [self hasExceptions]) {
-            NSArray *plist=[NSMutableArray array];
-            for ( NSException *e in [self exceptions] ) {
-                NSArray *stackTrace=[e combinedStackTrace];
-                if ( !stackTrace ) {
-                    stackTrace=[e scriptStackTrace];
-                }
-                [plist addObject:@{ @"name" : [e name],
-                    @"reason": [e reason],
-                 @"userInfo": [e userInfo]} ];
-            }
-
-            
-            return [NSJSONSerialization dataWithJSONObject:plist options:0 error:nil];
-        } else {
-            return [@"NONE" asData];
-        }
     } else{
+        NSLog(@"-[%@ get:%@ parameters:%@] -> super",[self class],uri,params);
         return [super get:uri parameters:params];
     }
 }
@@ -222,7 +160,6 @@ static void CatchException(NSException *exception)
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
 {
 //    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
-    [self clearExceptions];
     NSData *retval =[super put:uri data:putData parameters:params];
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
 //        [[delegate afterDelay:0.001] didDefineMethods:self];

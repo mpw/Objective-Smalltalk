@@ -10,15 +10,21 @@
 #import "MPWGenericBinding.h"
 #import "MPWStCompiler.h"
 #import "MPWMethodStore.h"
+#import "MPWClassMirror.h"
+
+@class NSJSONSerialization;
 
 @implementation MPWMethodScheme
 
+
 objectAccessor( MPWStCompiler , interpreter, setInterpreter )
+objectAccessor(NSMutableArray, exceptions, setExceptions)
 
 -initWithInterpreter:anInterpreter
 {
     self = [super init];
     [self setInterpreter:anInterpreter];
+    [self setExceptions:[NSMutableArray arrayWithCapacity:20]];
     return self;
 }
 
@@ -27,6 +33,7 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
 	if ( [aName hasPrefix:@"/"] ) {
 		aName=[aName substringFromIndex:1];
 	}
+    NSLog(@"bindingForName: %@",aName);
     return [super bindingForName:aName inContext:aContext];
 }
 
@@ -82,10 +89,63 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
             return [self methodsForPath:[components subarrayWithRange:NSMakeRange(1, [components count]-1)]];
         } else if ( [first isEqual:@"theAnswer"] ) {
             return [[NSString stringWithFormat:@"the answer: %d",[self theAnswer]] asData];
-        }    
+        } else if ( [first isEqual:@"bundles"] ) {
+            return [[[[[NSBundle allBundles] collect] bundleIdentifier] description] asData];
+        } else if ( [first isEqual:@"exception"] ) {
+            NSLog(@"%d exceptions",[[self exceptions] count]);
+            if ( [self hasExceptions]) {
+                NSArray *plist=[NSMutableArray array];
+                for ( NSException *e in [self exceptions] ) {
+                    NSArray *stackTrace=[e combinedStackTrace];
+                    if ( !stackTrace ) {
+                        stackTrace=[e scriptStackTrace];
+                    }
+                    [plist addObject:@{ @"name" : [e name],
+                     @"reason": [e reason],
+                     @"userInfo": [e userInfo]} ];
+                }
+                
+                
+                return [NSJSONSerialization dataWithJSONObject:plist options:0 error:nil];
+            } else {
+                return [@"NONE" asData];
+            }
+        } else if ( [first isEqual:@"allClasses"] ) {
+            NSString *whichClasses=[components lastObject];
+            NSArray *classes=[MPWClassMirror allUsefulClasses];
+            if ([whichClasses isEqualToString:@"all"] ||
+                [whichClasses isEqualToString:@"allClasses"] ) {
+                ;   // already have all classes
+            } else  {
+                NSBundle *bundleToCheck=nil;
+                if ( [whichClasses isEqualToString:@"main"] ) {
+                    bundleToCheck=[NSBundle mainBundle];
+                } else {
+                    bundleToCheck=[NSBundle bundleWithIdentifier:whichClasses];
+                }
+                NSMutableArray *bundleFilteredClasses=[NSMutableArray array];
+                for ( MPWClassMirror *mirror in classes ) {
+                    if ( [NSBundle bundleForClass:[mirror theClass]] == bundleToCheck ) {
+                        [bundleFilteredClasses addObject:mirror];
+                    }
+                    
+                }
+                classes=bundleFilteredClasses;
+            }
+            return [[[[classes collect] name] description] asData];
+        } else if ( [first isEqual:@"frameworks"] ) {
+            return [[[[[[NSBundle allFrameworks] collect] bundleIdentifier] sortedArrayUsingSelector:@selector(compare:)] description] asData];
+        }
     }
     return [[components componentsJoinedByString:@"/"] asData];
 }
+
+
+-(id)valueForBinding:(MPWGenericBinding*)aBinding
+{
+    return [self contentForPath:[[aBinding name] componentsSeparatedByString:@"/"]];
+}
+
 
 -(void)setValue:newValue forBinding:(MPWGenericBinding*)aBinding
 {
@@ -102,13 +162,41 @@ objectAccessor( MPWStCompiler , interpreter, setInterpreter )
     }
 }
 
+-(void)addException:(NSException*)exception
+{
+    NSLog(@"top level exception: %@",exception);
+    if ( [exception combinedStackTrace]) {
+        NSLog(@"%@",[exception combinedStackTrace]);
+    }
+    [exceptions addObject:exception];
+    NSLog(@"now have %d exceptions",[[self exceptions] count]);
+}
+
+-(void)clearExceptions
+{
+    [[self exceptions] removeAllObjects];
+}
+
+-(BOOL)hasExceptions
+{
+    return [[self exceptions] count]!=0;
+}
+
+
 -(void)defineMethodsInExternalDict:(NSDictionary*)dict
 {
 //    NSLog(@"scheme -- define methods: %@",dict);
+    [self clearExceptions];
     if ( dict ) {
         [[self interpreter] defineMethodsInExternalDict:dict];
     }
 }
 
+-(void)dealloc
+{
+    [interpreter release];
+    [exceptions release];
+    [super dealloc];
+}
 
 @end
