@@ -27,6 +27,9 @@
 		//		NSLog(@"kvbinding %@ ",variableName);
 	} else {
 		binding = [localVars objectForKey:variableName];
+        if ( !binding && [variableName isEqual:@"context"] ) {
+            return [MPWBinding bindingWithValue:aContext];
+        }
 	}
 	return binding;
 }

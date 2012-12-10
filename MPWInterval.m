@@ -182,7 +182,7 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 
 -description 
 {
-	return [NSString stringWithFormat:@"<%@:%x from %d to %d>",[self class],self,[self from],[self to]];
+	return [NSString stringWithFormat:@"<%@:%p from %d to %d>",[self class],self,[self from],[self to]];
 }
 
 -(NSRange)asNSRange {

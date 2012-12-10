@@ -114,7 +114,7 @@ idAccessor( localVars, setLocalVars )
 	[self bindValue:[NSNumber numberWithBool:YES] toVariableNamed:@"true"];
 	[self bindValue:[NSNumber numberWithBool:NO] toVariableNamed:@"false"];
 	[self bindValue:[NSNil nsNil] toVariableNamed:@"nil"];
-	[self bindValue:self toVariableNamed:@"context"];
+//	[self bindValue:self toVariableNamed:@"context"];
 	[self bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 	parent = aParent;
     return self;
@@ -197,8 +197,15 @@ idAccessor( localVars, setLocalVars )
 -evaluateScript:aString onObject:anObject
 {
 	[self bindValue:anObject toVariableNamed:@"self"];
+    id result=nil;
 	//	NSLog(@"evaluate script '%@' on object: %@",aString,anObject);
-	return [self evaluateScriptString:aString];
+    @try {
+         result =  [self evaluateScriptString:aString];
+    }
+    @finally {
+        [self bindValue:nil toVariableNamed:@"self"];
+    }
+    return result;
 }
 
 -evaluateScript:script onObject:target formalParameters:formals parameters:params
@@ -304,9 +311,12 @@ idAccessor( localVars, setLocalVars )
 	return value;
 }
 
--valueOfVariableNamed:aName 
+-valueOfVariableNamed:aName
 {
-	return [[[self localVars] objectForKey:aName] value];
+    id value = [[[self localVars] objectForKey:aName] value];
+    if ( !value && [aName isEqual:@"context"]) {
+        value=self;
+    }
 //	return [self valueOfVariableNamed:aName withScheme:[self defaultScheme]];
 }
 

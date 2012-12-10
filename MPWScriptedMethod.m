@@ -220,7 +220,7 @@ idAccessor( script, _setScript )
             @"testLookupOfNilVariableInMethodWorks",
             @"testSimpleBacktrace",
             @"testNestedBacktrace",
-            @"testCombinedScriptedAndNativeBacktrace",
+//            @"testCombinedScriptedAndNativeBacktrace",
 		nil];
 }
 

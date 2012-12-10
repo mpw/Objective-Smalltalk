@@ -33,7 +33,7 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
 	if ( [aName hasPrefix:@"/"] ) {
 		aName=[aName substringFromIndex:1];
 	}
-    NSLog(@"bindingForName: %@",aName);
+//    NSLog(@"bindingForName: %@",aName);
     return [super bindingForName:aName inContext:aContext];
 }
 

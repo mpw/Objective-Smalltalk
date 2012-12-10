@@ -245,9 +245,10 @@ idAccessor( connectorMap, setConnectorMap );
 		[identifier setSchemeName:scheme];
 		if ( [scheme isEqual:@"ref"] ) {
 			MPWIdentifier *nextIdentifier=identifier;
-			identifier=[[[MPWRecursiveIdentifier alloc] init] autorelease];
-			[identifier setSchemeName:scheme];
-			[identifier setNextIdentifier:nextIdentifier];
+            MPWRecursiveIdentifier *thisIdentifier=[[[MPWRecursiveIdentifier alloc] init] autorelease];
+            identifier=thisIdentifier;
+			[thisIdentifier setSchemeName:scheme];
+			[thisIdentifier setNextIdentifier:nextIdentifier];
 			[nextIdentifier setSchemeName:nil];
 			identifierToAddNameTo=nextIdentifier;
 //			NSLog(@"ref scheme");

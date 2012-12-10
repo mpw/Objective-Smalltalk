@@ -6,7 +6,7 @@ base := ref:file:{env:HOME} asScheme.
 cache := base cachedBy: MPWSiteMap scheme.
 
 server setScheme: cache .
-#server setDelegate: base.
+#server setScheme: base.
 
 server start:nil.
 shell runInteractiveLoop
