@@ -74,5 +74,11 @@
 }
 
 
+-(MPWScheme*)before:otherScheme
+{
+    return [[[MPWCopyOnWriteScheme alloc] initWithBase:self cache:otherScheme] autorelease];
+}
+
+
 
 @end

@@ -203,7 +203,7 @@ idAccessor( localVars, setLocalVars )
          result =  [self evaluateScriptString:aString];
     }
     @finally {
-        [self bindValue:nil toVariableNamed:@"self"];
+//        [self bindValue:nil toVariableNamed:@"self"];
     }
     return result;
 }

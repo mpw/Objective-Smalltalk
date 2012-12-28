@@ -181,15 +181,16 @@ static void CatchException(NSException *exception)
 
 -(void)setupWebServer
 {
-    NSLog(@"setupWebServer");
+    NSLog(@"MethodServer setupWebServer");
     [super setupWebServer];
     [[self server] setPort:51000];
+    NSLog(@"Method Server bonjour name: %@",[self methodDictName]);
     [[self server] setBonjourName:[self methodDictName]];
     [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];
     NSLog(@"did set up port etc, start it");
     NSError *error=nil;
     [self start:&error];
-    NSLog(@"did start, error: %@",error);
+    NSLog(@"did start, port: %d error: %@ ",[[self server] port],error);
 }
 
 -(void)stop

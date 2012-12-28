@@ -34,16 +34,6 @@
 			<key>orderHint</key>
 			<integer>57</integer>
 		</dict>
-		<key>SimpleMethodEditor.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>12</integer>
-		</dict>
-		<key>ViewBuilder.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>11</integer>
-		</dict>
 		<key>iMethodServer.xcscheme</key>
 		<dict>
 			<key>orderHint</key>

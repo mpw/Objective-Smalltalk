@@ -7,14 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F00AD60144AE38400EA6AF0 /* MethodDict.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F00AD5F144AE38400EA6AF0 /* MethodDict.m */; };
-		1F00AD61144AE38400EA6AF0 /* MethodDict.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F00AD5F144AE38400EA6AF0 /* MethodDict.m */; };
-		1F00AD64144AE52E00EA6AF0 /* SimpleMethodDictDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F00AD63144AE52E00EA6AF0 /* SimpleMethodDictDocument.m */; };
-		1F00AD65144AE52E00EA6AF0 /* SimpleMethodDictDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F00AD63144AE52E00EA6AF0 /* SimpleMethodDictDocument.m */; };
 		1F03A1401218C7A2001EE7AD /* MPWSELScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */; };
 		1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */; };
-		1F0A395614362EFE00626286 /* viewbuilder.classdict in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* viewbuilder.classdict */; };
-		1F1A5DB114F8D1BB00E767E7 /* MethodEditorAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A5DB014F8D1BB00E767E7 /* MethodEditorAppDelegate.m */; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
 		1F222C8E1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
@@ -27,12 +21,6 @@
 		1F22C8CB0BC8DCD2003BC673 /* MPWBridgeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22C8C90BC8DCD2003BC673 /* MPWBridgeReader.m */; };
 		1F22D86513916E0400D99DAB /* varname.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F22D86413916E0400D99DAB /* varname.txt */; };
 		1F22D86613916E0400D99DAB /* varname.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F22D86413916E0400D99DAB /* varname.txt */; };
-		1F2E6EFE142EF26E00B5C827 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
-		1F2E6F08142EF26E00B5C827 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F06142EF26E00B5C827 /* InfoPlist.strings */; };
-		1F2E6F0A142EF26E00B5C827 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F09142EF26E00B5C827 /* main.m */; };
-		1F2E6F0E142EF26E00B5C827 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F0C142EF26E00B5C827 /* Credits.rtf */; };
-		1F2E6F14142EF26E00B5C827 /* MethodDictDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F12142EF26E00B5C827 /* MethodDictDocument.xib */; };
-		1F2E6F17142EF26F00B5C827 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F15142EF26F00B5C827 /* MainMenu.xib */; };
 		1F406E5810F527180054957A /* MPWIdentifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F406E5610F527180054957A /* MPWIdentifier.h */; };
 		1F406E5910F527180054957A /* MPWIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F406E5710F527180054957A /* MPWIdentifier.m */; };
 		1F406E7A10F52CAC0054957A /* MPWScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F406E7810F52CAC0054957A /* MPWScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -212,16 +200,6 @@
 		1F68D1EA15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
 		1F68D1EB15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
 		1F68D1EC15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
-		1F7A3F9814485DDF00521C07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F09142EF26E00B5C827 /* main.m */; };
-		1F7A3F9914485DDF00521C07 /* MethodDictDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6F10142EF26E00B5C827 /* MethodDictDocument.m */; };
-		1F7A3F9B14485DDF00521C07 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F7A3F9C14485DDF00521C07 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAD8131436297C0050D6DE /* MPWFoundation.framework */; };
-		1F7A3F9D14485DDF00521C07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
-		1F7A3F9F14485DDF00521C07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F06142EF26E00B5C827 /* InfoPlist.strings */; };
-		1F7A3FA014485DDF00521C07 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F0C142EF26E00B5C827 /* Credits.rtf */; };
-		1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F12142EF26E00B5C827 /* MethodDictDocument.xib */; };
-		1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E6F15142EF26F00B5C827 /* MainMenu.xib */; };
-		1F7A3FA314485DDF00521C07 /* viewbuilder.classdict in Resources */ = {isa = PBXBuildFile; fileRef = 1F0A395314362DF900626286 /* viewbuilder.classdict */; };
 		1F7B75B114629431002F38D1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1F7B75B714629431002F38D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75B514629431002F38D1 /* InfoPlist.strings */; };
 		1F7B75B914629431002F38D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75B814629431002F38D1 /* main.m */; };
@@ -318,8 +296,6 @@
 		1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F494147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
-		1FBAD8141436297D0050D6DE /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAD8131436297C0050D6DE /* MPWFoundation.framework */; };
-		1FBAD81714362D850050D6DE /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B4481492657300919385 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
@@ -327,7 +303,6 @@
 		1FD1B44C1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */; };
 		1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */; };
-		1FD52AC415FDF522005BC568 /* ViewBuilderIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1FD52AC315FDF522005BC568 /* ViewBuilderIcon.icns */; };
 		1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
 		1FD713CD1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
 		1FD713CE1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
@@ -426,16 +401,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1F00AD5E144AE38400EA6AF0 /* MethodDict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodDict.h; sourceTree = "<group>"; };
-		1F00AD5F144AE38400EA6AF0 /* MethodDict.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodDict.m; sourceTree = "<group>"; };
-		1F00AD62144AE52E00EA6AF0 /* SimpleMethodDictDocument.h */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = SimpleMethodDictDocument.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 1; };
-		1F00AD63144AE52E00EA6AF0 /* SimpleMethodDictDocument.m */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleMethodDictDocument.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 1; };
 		1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSELScheme.h; sourceTree = "<group>"; };
 		1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSELScheme.m; sourceTree = "<group>"; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
-		1F0A395314362DF900626286 /* viewbuilder.classdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = viewbuilder.classdict; sourceTree = "<group>"; };
-		1F1A5DAF14F8D1BB00E767E7 /* MethodEditorAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodEditorAppDelegate.h; sourceTree = "<group>"; };
-		1F1A5DB014F8D1BB00E767E7 /* MethodEditorAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodEditorAppDelegate.m; sourceTree = "<group>"; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
 		1F1F57FB083395A000D3275A /* MPWMethodHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodHeader.m; sourceTree = "<group>"; };
 		1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWScriptingBridgeScheme.h; sourceTree = "<group>"; };
@@ -445,20 +413,10 @@
 		1F22C8C80BC8DCD2003BC673 /* MPWBridgeReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWBridgeReader.h; sourceTree = "<group>"; };
 		1F22C8C90BC8DCD2003BC673 /* MPWBridgeReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWBridgeReader.m; sourceTree = "<group>"; };
 		1F22D86413916E0400D99DAB /* varname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = varname.txt; sourceTree = "<group>"; };
-		1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleMethodEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1F2E6F02142EF26E00B5C827 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1F2E6F05142EF26E00B5C827 /* MethodEditor-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MethodEditor-Info.plist"; sourceTree = "<group>"; };
-		1F2E6F07142EF26E00B5C827 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1F2E6F09142EF26E00B5C827 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		1F2E6F0B142EF26E00B5C827 /* MethodEditor-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MethodEditor-Prefix.pch"; sourceTree = "<group>"; };
-		1F2E6F0D142EF26E00B5C827 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		1F2E6F0F142EF26E00B5C827 /* MethodDictDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodDictDocument.h; sourceTree = "<group>"; };
-		1F2E6F10142EF26E00B5C827 /* MethodDictDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodDictDocument.m; sourceTree = "<group>"; };
-		1F2E6F13142EF26E00B5C827 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MethodDictDocument.xib; sourceTree = "<group>"; };
-		1F2E6F16142EF26F00B5C827 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F406E5610F527180054957A /* MPWIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWIdentifier.h; sourceTree = "<group>"; };
 		1F406E5710F527180054957A /* MPWIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWIdentifier.m; sourceTree = "<group>"; };
 		1F406E7810F52CAC0054957A /* MPWScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWScheme.h; sourceTree = "<group>"; };
@@ -496,7 +454,6 @@
 		1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodStore.m; sourceTree = "<group>"; };
 		1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectScripting.h; sourceTree = "<group>"; };
 		1F6F637F0987C803006F3936 /* NSObjectScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectScripting.m; sourceTree = "<group>"; };
-		1F7A3FA814485DDF00521C07 /* ViewBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SimpleMethodEditor copy-Info.plist"; path = "/Users/marcel/programming/Kits/MPWTalk/SimpleMethodEditor copy-Info.plist"; sourceTree = "<absolute>"; };
 		1F7B75AF14629431002F38D1 /* SchemeFS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchemeFS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7B75B414629431002F38D1 /* SchemeFS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SchemeFS-Info.plist"; sourceTree = "<group>"; };
@@ -578,8 +535,6 @@
 		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = SOURCE_ROOT; };
 		1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTaggedFloat.h; sourceTree = "<group>"; };
 		1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTaggedFloat.m; sourceTree = "<group>"; };
-		1FD52AC315FDF522005BC568 /* ViewBuilderIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ViewBuilderIcon.icns; sourceTree = "<group>"; };
-		1FD52AC515FDF61F005BC568 /* ViewBuilder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ViewBuilder.entitlements; sourceTree = SOURCE_ROOT; };
 		1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjCGenerator.h; sourceTree = "<group>"; };
 		1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjCGenerator.m; sourceTree = "<group>"; };
 		1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMirror.h; sourceTree = "<group>"; };
@@ -636,16 +591,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1F2E6EF7142EF26E00B5C827 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1FBAD81714362D850050D6DE /* ObjectiveSmalltalk.framework in Frameworks */,
-				1FBAD8141436297D0050D6DE /* MPWFoundation.framework in Frameworks */,
-				1F2E6EFE142EF26E00B5C827 /* Cocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F4CB56B1253D53C00B30C99 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -661,16 +606,6 @@
 			files = (
 				1F5E508609B4B754000298D9 /* Foundation.framework in Frameworks */,
 				1F5E508709B4B754000298D9 /* MPWFoundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1F7A3F9A14485DDF00521C07 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F7A3F9B14485DDF00521C07 /* ObjectiveSmalltalk.framework in Frameworks */,
-				1F7A3F9C14485DDF00521C07 /* MPWFoundation.framework in Frameworks */,
-				1F7A3F9D14485DDF00521C07 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,40 +724,6 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		1F2E6F03142EF26E00B5C827 /* ViewBuilder */ = {
-			isa = PBXGroup;
-			children = (
-				1FD52AC515FDF61F005BC568 /* ViewBuilder.entitlements */,
-				1FD52AC315FDF522005BC568 /* ViewBuilderIcon.icns */,
-				1F00AD5E144AE38400EA6AF0 /* MethodDict.h */,
-				1F00AD5F144AE38400EA6AF0 /* MethodDict.m */,
-				1F00AD62144AE52E00EA6AF0 /* SimpleMethodDictDocument.h */,
-				1F00AD63144AE52E00EA6AF0 /* SimpleMethodDictDocument.m */,
-				1F2E6F0F142EF26E00B5C827 /* MethodDictDocument.h */,
-				1F2E6F10142EF26E00B5C827 /* MethodDictDocument.m */,
-				1F2E6F12142EF26E00B5C827 /* MethodDictDocument.xib */,
-				1F2E6F15142EF26F00B5C827 /* MainMenu.xib */,
-				1F1A5DAF14F8D1BB00E767E7 /* MethodEditorAppDelegate.h */,
-				1F1A5DB014F8D1BB00E767E7 /* MethodEditorAppDelegate.m */,
-				1F2E6F04142EF26E00B5C827 /* Supporting Files */,
-				1F0A395314362DF900626286 /* viewbuilder.classdict */,
-			);
-			name = ViewBuilder;
-			path = MethodEditor;
-			sourceTree = "<group>";
-		};
-		1F2E6F04142EF26E00B5C827 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				1F2E6F05142EF26E00B5C827 /* MethodEditor-Info.plist */,
-				1F2E6F06142EF26E00B5C827 /* InfoPlist.strings */,
-				1F2E6F09142EF26E00B5C827 /* main.m */,
-				1F2E6F0B142EF26E00B5C827 /* MethodEditor-Prefix.pch */,
-				1F2E6F0C142EF26E00B5C827 /* Credits.rtf */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		1F7B75B214629431002F38D1 /* SchemeFS */ = {
 			isa = PBXGroup;
 			children = (
@@ -904,7 +805,6 @@
 				F5A74AC000F0A61B015ADD82 /* Headers */,
 				F5A74AC400F0A61B015ADD82 /* Supporting Files */,
 				F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */,
-				1F2E6F03142EF26E00B5C827 /* ViewBuilder */,
 				1F7E05A2144B3E22008F349D /* MethodServer */,
 				1F7E05B7144B3E7D008F349D /* iMethodServer */,
 				1F7B75B214629431002F38D1 /* SchemeFS */,
@@ -1056,8 +956,6 @@
 				1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */,
 				1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */,
 				1FE08F02137808B8003B18B9 /* libObjectiveSmalltalk-iOS.a */,
-				1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */,
-				1F7A3FA814485DDF00521C07 /* ViewBuilder.app */,
 				1F7E05A0144B3E22008F349D /* MethodServer.framework */,
 				1F7E05B4144B3E7D008F349D /* libiMethodServer.a */,
 				1F7B75AF14629431002F38D1 /* SchemeFS.app */,
@@ -1269,23 +1167,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1F2E6EF9142EF26E00B5C827 /* SimpleMethodEditor */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1F2E6F18142EF26F00B5C827 /* Build configuration list for PBXNativeTarget "SimpleMethodEditor" */;
-			buildPhases = (
-				1F2E6EF6142EF26E00B5C827 /* Sources */,
-				1F2E6EF7142EF26E00B5C827 /* Frameworks */,
-				1F2E6EF8142EF26E00B5C827 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SimpleMethodEditor;
-			productName = MethodEditor;
-			productReference = 1F2E6EFA142EF26E00B5C827 /* SimpleMethodEditor.app */;
-			productType = "com.apple.product-type.application";
-		};
 		1F4CB5191253D53C00B30C99 /* ObjectiveSmalltalk Linux Cocotron */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk Linux Cocotron" */;
@@ -1325,23 +1206,6 @@
 			productName = "MPWTalk (Framework)";
 			productReference = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		1F7A3F9614485DDF00521C07 /* ViewBuilder */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1F7A3FA414485DDF00521C07 /* Build configuration list for PBXNativeTarget "ViewBuilder" */;
-			buildPhases = (
-				1F7A3F9714485DDF00521C07 /* Sources */,
-				1F7A3F9A14485DDF00521C07 /* Frameworks */,
-				1F7A3F9E14485DDF00521C07 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ViewBuilder;
-			productName = MethodEditor;
-			productReference = 1F7A3FA814485DDF00521C07 /* ViewBuilder.app */;
-			productType = "com.apple.product-type.application";
 		};
 		1F7B75AE14629431002F38D1 /* SchemeFS */ = {
 			isa = PBXNativeTarget;
@@ -1439,8 +1303,6 @@
 				1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */,
 				1F4CB5191253D53C00B30C99 /* ObjectiveSmalltalk Linux Cocotron */,
 				1FE08F01137808B8003B18B9 /* ObjectiveSmalltalk-iOS */,
-				1F2E6EF9142EF26E00B5C827 /* SimpleMethodEditor */,
-				1F7A3F9614485DDF00521C07 /* ViewBuilder */,
 				1F7E059F144B3E22008F349D /* MethodServer */,
 				1F7E05B3144B3E7D008F349D /* iMethodServer */,
 				1F7B75AE14629431002F38D1 /* SchemeFS */,
@@ -1449,18 +1311,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1F2E6EF8142EF26E00B5C827 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F2E6F08142EF26E00B5C827 /* InfoPlist.strings in Resources */,
-				1F2E6F0E142EF26E00B5C827 /* Credits.rtf in Resources */,
-				1F2E6F14142EF26E00B5C827 /* MethodDictDocument.xib in Resources */,
-				1F2E6F17142EF26F00B5C827 /* MainMenu.xib in Resources */,
-				1F0A395614362EFE00626286 /* viewbuilder.classdict in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F4CB5421253D53C00B30C99 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1478,19 +1328,6 @@
 				1F5E506909B4B754000298D9 /* Notes.rtf in Resources */,
 				1FA3887713911150007B5CC9 /* testfile.txt in Resources */,
 				1F22D86613916E0400D99DAB /* varname.txt in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1F7A3F9E14485DDF00521C07 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F7A3F9F14485DDF00521C07 /* InfoPlist.strings in Resources */,
-				1F7A3FA014485DDF00521C07 /* Credits.rtf in Resources */,
-				1F7A3FA114485DDF00521C07 /* MethodDictDocument.xib in Resources */,
-				1F7A3FA214485DDF00521C07 /* MainMenu.xib in Resources */,
-				1F7A3FA314485DDF00521C07 /* viewbuilder.classdict in Resources */,
-				1FD52AC415FDF522005BC568 /* ViewBuilderIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1543,16 +1380,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1F2E6EF6142EF26E00B5C827 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F2E6F0A142EF26E00B5C827 /* main.m in Sources */,
-				1F00AD60144AE38400EA6AF0 /* MethodDict.m in Sources */,
-				1F00AD64144AE52E00EA6AF0 /* SimpleMethodDictDocument.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F4CB5441253D53C00B30C99 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1701,18 +1528,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1F7A3F9714485DDF00521C07 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F7A3F9814485DDF00521C07 /* main.m in Sources */,
-				1F7A3F9914485DDF00521C07 /* MethodDictDocument.m in Sources */,
-				1F00AD61144AE38400EA6AF0 /* MethodDict.m in Sources */,
-				1F00AD65144AE52E00EA6AF0 /* SimpleMethodDictDocument.m in Sources */,
-				1F1A5DB114F8D1BB00E767E7 /* MethodEditorAppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F7B75AB14629431002F38D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1813,38 +1628,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		1F2E6F06142EF26E00B5C827 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1F2E6F07142EF26E00B5C827 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1F2E6F0C142EF26E00B5C827 /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1F2E6F0D142EF26E00B5C827 /* en */,
-			);
-			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		1F2E6F12142EF26E00B5C827 /* MethodDictDocument.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1F2E6F13142EF26E00B5C827 /* en */,
-			);
-			name = MethodDictDocument.xib;
-			sourceTree = "<group>";
-		};
-		1F2E6F15142EF26F00B5C827 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1F2E6F16142EF26F00B5C827 /* en */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		1F7B75B514629431002F38D1 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1927,106 +1710,6 @@
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
-			};
-			name = "Release Tiger";
-		};
-		1F2E6F19142EF26F00B5C827 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development\"",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MethodEditor/MethodEditor-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "MethodEditor/MethodEditor-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Development;
-		};
-		1F2E6F1A142EF26F00B5C827 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development\"",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MethodEditor/MethodEditor-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "MethodEditor/MethodEditor-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		1F2E6F1B142EF26F00B5C827 /* Release Tiger */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development\"",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MethodEditor/MethodEditor-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "MethodEditor/MethodEditor-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = app;
 			};
 			name = "Release Tiger";
 		};
@@ -2202,112 +1885,6 @@
 				ZERO_LINK = NO;
 			};
 			name = Release;
-		};
-		1F7A3FA514485DDF00521C07 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_ENTITLEMENTS = ViewBuilder.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development\"",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MethodEditor/MethodEditor-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = ViewBuilder;
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Development;
-		};
-		1F7A3FA614485DDF00521C07 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_ENTITLEMENTS = ViewBuilder.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development\"",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MethodEditor/MethodEditor-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = ViewBuilder;
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		1F7A3FA714485DDF00521C07 /* Release Tiger */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_ENTITLEMENTS = ViewBuilder.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development\"",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MethodEditor/MethodEditor-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "SimpleMethodEditor copy-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = ViewBuilder;
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Release Tiger";
 		};
 		1F7B75C514629431002F38D1 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -2703,16 +2280,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1F2E6F18142EF26F00B5C827 /* Build configuration list for PBXNativeTarget "SimpleMethodEditor" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1F2E6F19142EF26F00B5C827 /* Development */,
-				1F2E6F1A142EF26F00B5C827 /* Release */,
-				1F2E6F1B142EF26F00B5C827 /* Release Tiger */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
 		1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk Linux Cocotron" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2729,16 +2296,6 @@
 				1F5E508B09B4B754000298D9 /* Development */,
 				1F5E508C09B4B754000298D9 /* Release */,
 				1F20E4EA0F5B5D45002153EE /* Release Tiger */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		1F7A3FA414485DDF00521C07 /* Build configuration list for PBXNativeTarget "ViewBuilder" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1F7A3FA514485DDF00521C07 /* Development */,
-				1F7A3FA614485DDF00521C07 /* Release */,
-				1F7A3FA714485DDF00521C07 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
