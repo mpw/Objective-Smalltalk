@@ -12,7 +12,6 @@
 #import "MPWMethodStore.h"
 #import "MPWClassMirror.h"
 
-@class NSJSONSerialization;
 
 @implementation MPWMethodScheme
 
@@ -106,7 +105,7 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
                 }
                 
                 
-                return [NSJSONSerialization dataWithJSONObject:plist options:0 error:nil];
+                return [NSClassFromString(@"NSJSONSerialization") dataWithJSONObject:plist options:0 error:nil];
             } else {
                 return [@"NONE" asData];
             }
