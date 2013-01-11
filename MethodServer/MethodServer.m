@@ -87,15 +87,25 @@ static void CatchException(NSException *exception)
     [self defineMethodsInExternalDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
-    [[self async] setupWebServer];
 
 }
 
+-(void)setupWebServerInBackground
+{
+    [[self async] setupWebServer];
+}
 
--(void)setup
+-(void)setupWithoutStarting
 {
     [self setupWithInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
 }
+
+-(void)setup
+{
+    [self setupWithoutStarting];
+    [self setupWebServerInBackground];
+}
+
 
 -(NSDictionary*)dictionaryFromData:(NSData*)dictData
 {
@@ -178,6 +188,7 @@ static void CatchException(NSException *exception)
         [[self interpreter] defineMethodsInExternalDict:dict];
     }
 }
+
 
 -(void)setupWebServer
 {
