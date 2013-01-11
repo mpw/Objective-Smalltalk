@@ -454,7 +454,6 @@
 		1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodStore.m; sourceTree = "<group>"; };
 		1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectScripting.h; sourceTree = "<group>"; };
 		1F6F637F0987C803006F3936 /* NSObjectScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectScripting.m; sourceTree = "<group>"; };
-		1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SimpleMethodEditor copy-Info.plist"; path = "/Users/marcel/programming/Kits/MPWTalk/SimpleMethodEditor copy-Info.plist"; sourceTree = "<absolute>"; };
 		1F7B75AF14629431002F38D1 /* SchemeFS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchemeFS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7B75B414629431002F38D1 /* SchemeFS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SchemeFS-Info.plist"; sourceTree = "<group>"; };
 		1F7B75B614629431002F38D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -812,7 +811,6 @@
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
 				1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */,
-				1F7A3FAA14485DDF00521C07 /* SimpleMethodEditor copy-Info.plist */,
 			);
 			name = MPWTalk;
 			sourceTree = "<group>";
