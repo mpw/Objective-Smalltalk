@@ -426,7 +426,7 @@
 		1F406EBC10F5354C0054957A /* MPWRecursiveIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRecursiveIdentifier.h; sourceTree = "<group>"; };
 		1F406EBD10F5354C0054957A /* MPWRecursiveIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWRecursiveIdentifier.m; sourceTree = "<group>"; };
 		1F45D541075D37A200D924C3 /* MPWEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWEvaluator.h; sourceTree = SOURCE_ROOT; };
-		1F45D542075D37A200D924C3 /* MPWEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWEvaluator.m; sourceTree = SOURCE_ROOT; };
+		1F45D542075D37A200D924C3 /* MPWEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MPWEvaluator.m; path = Classes/MPWEvaluator.m; sourceTree = SOURCE_ROOT; };
 		1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWLinuxTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist"; sourceTree = "<group>"; };
 		1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRefScheme.h; sourceTree = "<group>"; };
@@ -437,7 +437,7 @@
 		1F51A74510DA784A00753C9A /* MPWVARBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWVARBinding.h; sourceTree = "<group>"; };
 		1F51A74610DA784A00753C9A /* MPWVARBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWVARBinding.m; sourceTree = "<group>"; };
 		1F54D96507573D20007886CD /* MPWInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWInterval.h; sourceTree = SOURCE_ROOT; };
-		1F54D96607573D20007886CD /* MPWInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWInterval.m; sourceTree = SOURCE_ROOT; };
+		1F54D96607573D20007886CD /* MPWInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWInterval.m; sourceTree = "<group>"; };
 		1F5501AE15ADB8E200422A9E /* MPWComplexAssignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWComplexAssignment.h; sourceTree = "<group>"; };
 		1F5501AF15ADB8E200422A9E /* MPWComplexAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWComplexAssignment.m; sourceTree = "<group>"; };
 		1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockFilterScheme.h; sourceTree = "<group>"; };
@@ -504,8 +504,8 @@
 		1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBundleScheme.h; sourceTree = "<group>"; };
 		1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBundleScheme.m; sourceTree = "<group>"; };
 		1FA3887513911150007B5CC9 /* testfile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testfile.txt; sourceTree = "<group>"; };
-		1FA4213F1451F9F000F7A277 /* MPWMethodScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWMethodScheme.h; path = MethodServer/MPWMethodScheme.h; sourceTree = "<group>"; };
-		1FA421401451F9F000F7A277 /* MPWMethodScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPWMethodScheme.m; path = MethodServer/MPWMethodScheme.m; sourceTree = "<group>"; };
+		1FA4213F1451F9F000F7A277 /* MPWMethodScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodScheme.h; sourceTree = "<group>"; };
+		1FA421401451F9F000F7A277 /* MPWMethodScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodScheme.m; sourceTree = "<group>"; };
 		1FA5F486147CDF34007EE753 /* MPWTreeNodeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTreeNodeScheme.h; sourceTree = "<group>"; };
 		1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTreeNodeScheme.m; sourceTree = "<group>"; };
 		1FA5F48E147CE049007EE753 /* MPWTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTreeNode.h; sourceTree = "<group>"; };
@@ -531,7 +531,7 @@
 		1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWCopyOnWriteScheme.h; sourceTree = "<group>"; };
 		1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWCopyOnWriteScheme.m; sourceTree = "<group>"; };
 		1FD2F6CF075227AC00547D6F /* MPWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessage.h; sourceTree = SOURCE_ROOT; };
-		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = SOURCE_ROOT; };
+		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = "<group>"; };
 		1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTaggedFloat.h; sourceTree = "<group>"; };
 		1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTaggedFloat.m; sourceTree = "<group>"; };
 		1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjCGenerator.h; sourceTree = "<group>"; };
@@ -560,13 +560,13 @@
 		1FF4A341147AB6C7001FCCCD /* MPWGenericScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWGenericScheme.m; sourceTree = "<group>"; };
 		1FF6708A0748B9A300E99237 /* Notes.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = SOURCE_ROOT; };
 		1FF6AC23075256C500A306C8 /* MPWBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBinding.h; sourceTree = SOURCE_ROOT; };
-		1FF6AC24075256C500A306C8 /* MPWBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBinding.m; sourceTree = SOURCE_ROOT; };
+		1FF6AC24075256C500A306C8 /* MPWBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBinding.m; sourceTree = "<group>"; };
 		1FF6AC690752648B00A306C8 /* MPWStatementList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStatementList.h; sourceTree = SOURCE_ROOT; };
-		1FF6AC6A0752648B00A306C8 /* MPWStatementList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStatementList.m; sourceTree = SOURCE_ROOT; };
+		1FF6AC6A0752648B00A306C8 /* MPWStatementList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStatementList.m; sourceTree = "<group>"; };
 		1FF6ACA40752977F00A306C8 /* MPWBlockExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockExpression.h; sourceTree = SOURCE_ROOT; };
-		1FF6ACA50752977F00A306C8 /* MPWBlockExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockExpression.m; sourceTree = SOURCE_ROOT; };
+		1FF6ACA50752977F00A306C8 /* MPWBlockExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockExpression.m; sourceTree = "<group>"; };
 		1FF6ACB20752982900A306C8 /* MPWBlockContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockContext.h; sourceTree = SOURCE_ROOT; };
-		1FF6ACB30752982900A306C8 /* MPWBlockContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockContext.m; sourceTree = SOURCE_ROOT; };
+		1FF6ACB30752982900A306C8 /* MPWBlockContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockContext.m; sourceTree = "<group>"; };
 		1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRelScheme.h; sourceTree = "<group>"; };
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
 		F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStCompiler.m; sourceTree = "<group>"; };
@@ -700,7 +700,7 @@
 				1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */,
 				1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */,
 			);
-			name = Schemes;
+			path = Schemes;
 			sourceTree = "<group>";
 		};
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
@@ -875,7 +875,7 @@
 				1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */,
 				1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */,
 			);
-			name = Classes;
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		F5A74AC000F0A61B015ADD82 /* Headers */ = {
