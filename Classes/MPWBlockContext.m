@@ -57,6 +57,11 @@ idAccessor( context, setContext )
 	return [self value];
 }
 
+-(void)drawOnContext:aContext
+{
+    [self value:aContext];
+}
+
 -whileTrue:anotherBlock
 {
     id retval=nil;
