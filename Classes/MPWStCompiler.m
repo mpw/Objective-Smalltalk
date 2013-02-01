@@ -121,7 +121,8 @@ idAccessor( connectorMap, setConnectorMap );
 	[schemes setSchemeHandler:httpResolver  forSchemeName:@"http"];
 	[schemes setSchemeHandler:httpResolver  forSchemeName:@"https"];
 	[schemes setSchemeHandler:httpResolver  forSchemeName:@"ftp"];
-	[schemes setSchemeHandler:[MPWEnvScheme scheme]  forSchemeName:@"env"];
+    
+	[schemes setSchemeHandler:[NSClassFromString(@"MPWEnvScheme") scheme]  forSchemeName:@"env"];
 	[schemes setSchemeHandler:[MPWBundleScheme scheme]  forSchemeName:@"bundle"];
 	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
 //	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
