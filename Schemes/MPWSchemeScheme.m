@@ -30,7 +30,9 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 
 -(void)setSchemeHandler:(MPWScheme*)aSchem   forSchemeName:(NSString*)schemeName
 {
-	[[self _schemes] setObject:aSchem forKey:schemeName];
+    if ( aSchem && schemeName) {
+        [[self _schemes] setObject:aSchem forKey:schemeName];
+    }
 }
 
 
