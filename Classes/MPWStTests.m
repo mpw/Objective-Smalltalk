@@ -775,6 +775,12 @@
     INTEXPECT([result intValue], 3, @"left arrow didn't do assignment");
 }
 
++(void)testPipeForTemporaryVariablesAllowed
+{
+    id result=[self evaluate:@"| a b | a := 3+4. a"];
+    INTEXPECT([result intValue], 7, @"3+4");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -860,6 +866,7 @@
             @"testPeriodAtEndOfIdentifierAndStatementAndEOFTreatedAsStatementEnd",
             @"testBracketsTerminateIdentifier",
             @"testLeftArrowWorksLikeAssignment",
+            @"testPipeForTemporaryVariablesAllowed",
         nil];
 }
 

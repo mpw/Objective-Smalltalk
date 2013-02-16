@@ -600,26 +600,41 @@ idAccessor( connectorMap, setConnectorMap );
     return first;
 }
 
+-(id)parseStatement
+{
+    id next=[self nextToken];
+    if ( [next isEqual:@"|"]) {
+        next=[self nextToken];
+        while ( ![next isEqual:@"|"]) {
+            next=[self nextToken];
+        }
+
+    } else {
+        [self pushBack:next];
+    }
+    return [self parseExpression];
+}
+
 -parseStatements
 {
 	id first;
 	id next;
 	id expression;
-	first = [self parseExpression];
+	first = [self parseStatement];
 	expression=first;
 	next = [self nextToken];
 	if ( next && [next isEqual:@"."] ) {
 		id statements=[MPWStatementList statementList];
 		expression=statements;
 		[statements addStatement:first];
-		while ( next && [next isEqual:@"."] ) {
+		while ( next && [next isEqual:@"."] /* || [next isEqual:@";"] */ ) {
 			id nextExpression;
 			next = [self nextToken];
 			if ( next && [next isEqual:@"]"] ) {
 				break;
 			}
 			[self pushBack:next];
-			nextExpression=[self parseExpression];
+			nextExpression=[self parseStatement];
 			next = nil;
 			if ( nextExpression ) {
 				[statements addStatement:nextExpression];
@@ -714,10 +729,20 @@ idAccessor( connectorMap, setConnectorMap );
     EXPECTFALSE([expr isKindOfClass:[MPWMessageExpression class]], @"'[ :a | a ] -> stdout' is msg expr");
 }
 
++(void)testPipeSymbolForTemps
+{
+    MPWStCompiler *compiler=[self compiler];
+    id expr=[compiler compile:@"| a |"];
+
+}
+
 
 +testSelectors
 {
-    return @[ @"testCheckValidSyntax" , @"testRightArrowDoesntGenerateMsgExpr" ];
+    return @[ @"testCheckValidSyntax" ,
+              @"testRightArrowDoesntGenerateMsgExpr",
+              @"testPipeSymbolForTemps",
+              ];
 }
 
 @end
