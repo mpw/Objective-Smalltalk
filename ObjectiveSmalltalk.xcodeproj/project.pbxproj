@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		1F03A1401218C7A2001EE7AD /* MPWSELScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */; };
 		1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */; };
+		1F084A0F16DCE6A200ED2517 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
+		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
+		1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1816DCE6A200ED2517 /* ObjSTNative.m */; };
+		1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A1E16DCE6E600ED2517 /* MPWCodeGenerator.h */; };
+		1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1F16DCE6E600ED2517 /* MPWCodeGenerator.mm */; };
+		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
 		1F222C8E1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
@@ -223,6 +229,7 @@
 		1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1F80973B15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1F80973C15A72A78004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
+		1F81D90916DEBA7E00408D41 /* llvm.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1F81D90816DEBA7E00408D41 /* llvm.xcconfig */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -400,6 +407,16 @@
 /* Begin PBXFileReference section */
 		1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSELScheme.h; sourceTree = "<group>"; };
 		1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSELScheme.m; sourceTree = "<group>"; };
+		1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjSTNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjSTNative-Info.plist"; sourceTree = "<group>"; };
+		1F084A1416DCE6A200ED2517 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1F084A1616DCE6A200ED2517 /* ObjSTNative-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjSTNative-Prefix.pch"; sourceTree = "<group>"; };
+		1F084A1716DCE6A200ED2517 /* ObjSTNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjSTNative.h; sourceTree = "<group>"; };
+		1F084A1816DCE6A200ED2517 /* ObjSTNative.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = ObjSTNative.m; sourceTree = "<group>"; };
+		1F084A1E16DCE6E600ED2517 /* MPWCodeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWCodeGenerator.h; sourceTree = "<group>"; };
+		1F084A1F16DCE6E600ED2517 /* MPWCodeGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPWCodeGenerator.mm; sourceTree = "<group>"; };
+		1F084A2316DCFB3300ED2517 /* llvmincludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llvmincludes.h; sourceTree = "<group>"; };
+		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = "<group>"; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
 		1F1F57FB083395A000D3275A /* MPWMethodHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodHeader.m; sourceTree = "<group>"; };
@@ -479,6 +496,8 @@
 		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		1F80973515A72A77004AB773 /* MPWPlistScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWPlistScheme.h; sourceTree = "<group>"; };
 		1F80973615A72A77004AB773 /* MPWPlistScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWPlistScheme.m; sourceTree = "<group>"; };
+		1F81D90816DEBA7E00408D41 /* llvm.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = llvm.xcconfig; path = "llvm-config/llvm.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1F81D90A16DEBC6300408D41 /* llvm-components.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "llvm-components.txt"; path = "llvm-config/llvm-components.txt"; sourceTree = SOURCE_ROOT; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
 		1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFileSchemeResolver.h; sourceTree = "<group>"; };
@@ -581,6 +600,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1F084A0A16DCE6A200ED2517 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F084A0F16DCE6A200ED2517 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F4CB56B1253D53C00B30C99 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -639,6 +666,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F084A1016DCE6A200ED2517 /* ObjSTNative */ = {
+			isa = PBXGroup;
+			children = (
+				1F81D90A16DEBC6300408D41 /* llvm-components.txt */,
+				1F81D90816DEBA7E00408D41 /* llvm.xcconfig */,
+				1F084A2316DCFB3300ED2517 /* llvmincludes.h */,
+				1F084A1E16DCE6E600ED2517 /* MPWCodeGenerator.h */,
+				1F084A1F16DCE6E600ED2517 /* MPWCodeGenerator.mm */,
+				1F084A1716DCE6A200ED2517 /* ObjSTNative.h */,
+				1F084A1816DCE6A200ED2517 /* ObjSTNative.m */,
+				1F084A1116DCE6A200ED2517 /* Supporting Files */,
+			);
+			path = ObjSTNative;
+			sourceTree = "<group>";
+		};
+		1F084A1116DCE6A200ED2517 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */,
+				1F084A1316DCE6A200ED2517 /* InfoPlist.strings */,
+				1F084A1616DCE6A200ED2517 /* ObjSTNative-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		1F222C881394CB90007AE2FB /* Schemes */ = {
 			isa = PBXGroup;
 			children = (
@@ -800,6 +852,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */,
 				1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */,
 				1F8501D116A4B9B2006CE200 /* NSURLHandler */,
 				1F222C881394CB90007AE2FB /* Schemes */,
@@ -811,6 +864,7 @@
 				1F7E05A2144B3E22008F349D /* MethodServer */,
 				1F7E05B7144B3E7D008F349D /* iMethodServer */,
 				1F7B75B214629431002F38D1 /* SchemeFS */,
+				1F084A1016DCE6A200ED2517 /* ObjSTNative */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -950,6 +1004,7 @@
 				1F7E05A0144B3E22008F349D /* MethodServer.framework */,
 				1F7E05B4144B3E7D008F349D /* libiMethodServer.a */,
 				1F7B75AF14629431002F38D1 /* SchemeFS.app */,
+				1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -957,6 +1012,15 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		1F084A0B16DCE6A200ED2517 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */,
+				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F4CB51A1253D53C00B30C99 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1158,6 +1222,26 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		1F084A0D16DCE6A200ED2517 /* ObjSTNative */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F084A1A16DCE6A200ED2517 /* Build configuration list for PBXNativeTarget "ObjSTNative" */;
+			buildPhases = (
+				1F084A2716DEB8A600ED2517 /* ShellScript */,
+				1F084A0916DCE6A200ED2517 /* Sources */,
+				1F084A0A16DCE6A200ED2517 /* Frameworks */,
+				1F084A0B16DCE6A200ED2517 /* Headers */,
+				1F084A0C16DCE6A200ED2517 /* Resources */,
+				1F084A2216DCE76800ED2517 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObjSTNative;
+			productName = ObjSTNative;
+			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		1F4CB5191253D53C00B30C99 /* ObjectiveSmalltalk Linux Cocotron */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk Linux Cocotron" */;
@@ -1297,11 +1381,21 @@
 				1F7E059F144B3E22008F349D /* MethodServer */,
 				1F7E05B3144B3E7D008F349D /* iMethodServer */,
 				1F7B75AE14629431002F38D1 /* SchemeFS */,
+				1F084A0D16DCE6A200ED2517 /* ObjSTNative */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1F084A0C16DCE6A200ED2517 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
+				1F81D90916DEBA7E00408D41 /* llvm.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F4CB5421253D53C00B30C99 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1353,6 +1447,32 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1F084A2216DCE76800ED2517 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+		};
+		1F084A2716DEB8A600ED2517 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LLVM_XCCONFIG_FILE=\"${PROJECT_DIR}/llvm-config/llvm.xcconfig\"\nLLVM_COMPONENTS_FILE=\"${PROJECT_DIR}/llvm-config/llvm-components.txt\"\n\ndate_params=$((`stat -f \"%m\" $LLVM_COMPONENTS_FILE`))\ndate_config=$((`stat -f \"%m\" $LLVM_XCCONFIG_FILE`))\nif [ $date_params -gt $date_config ]; then\necho \"llvm.xcconfig parameter changes detected\"\n\nLLVM_COMPONENTS=`/bin/cat $LLVM_COMPONENTS_FILE`\nLLVM_CFLAGS=`/usr/local/bin/llvm-config --cflags`\nLLVM_LDFLAGS=`/usr/local/bin/llvm-config --ldflags`\" \"`/usr/local/bin/llvm-config --libs $LLVM_COMPONENTS`\n\necho \"// Configuration file for LLVM settings, generated as a build phase.\" > $LLVM_XCCONFIG_FILE\necho \"// $LLVM_COMPONENTS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_CFLAGS = $LLVM_CFLAGS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_LDFLAGS = $LLVM_LDFLAGS\" >> $LLVM_XCCONFIG_FILE\nfi";
+		};
 		1F5E508909B4B754000298D9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -1369,6 +1489,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1F084A0916DCE6A200ED2517 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
+				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F4CB5441253D53C00B30C99 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1616,6 +1745,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		1F084A1316DCE6A200ED2517 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F084A1416DCE6A200ED2517 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		1F7B75B514629431002F38D1 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1651,6 +1788,150 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1F084A1B16DCE6A200ED2517 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F81D90816DEBA7E00408D41 /* llvm.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "${LLVM_CFLAGS}";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-lstdc++",
+					"${LLVM_LDFLAGS}",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Development;
+		};
+		1F084A1C16DCE6A200ED2517 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F81D90816DEBA7E00408D41 /* llvm.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "${LLVM_CFLAGS}";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-lstdc++",
+					"${LLVM_LDFLAGS}",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1F084A1D16DCE6A200ED2517 /* Release Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "${LLVM_CFLAGS}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release Tiger";
+		};
 		1F20E4E90F5B5D45002153EE /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2271,6 +2552,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1F084A1A16DCE6A200ED2517 /* Build configuration list for PBXNativeTarget "ObjSTNative" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F084A1B16DCE6A200ED2517 /* Development */,
+				1F084A1C16DCE6A200ED2517 /* Release */,
+				1F084A1D16DCE6A200ED2517 /* Release Tiger */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1F4CB5701253D53C00B30C99 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk Linux Cocotron" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2279,7 +2570,7 @@
 				1F4CB5731253D53C00B30C99 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
@@ -2289,7 +2580,7 @@
 				1F20E4EA0F5B5D45002153EE /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1F7B75C414629431002F38D1 /* Build configuration list for PBXNativeTarget "SchemeFS" */ = {
 			isa = XCConfigurationList;
@@ -2299,7 +2590,7 @@
 				1F7B75C714629431002F38D1 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1F7E05AF144B3E23008F349D /* Build configuration list for PBXNativeTarget "MethodServer" */ = {
 			isa = XCConfigurationList;
@@ -2309,7 +2600,7 @@
 				1F7E05AE144B3E22008F349D /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1F7E05BD144B3E7D008F349D /* Build configuration list for PBXNativeTarget "iMethodServer" */ = {
 			isa = XCConfigurationList;
@@ -2319,7 +2610,7 @@
 				1F7E05C0144B3E7D008F349D /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1FA354010854F75C0056996B /* Build configuration list for PBXProject "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
@@ -2329,7 +2620,7 @@
 				1F20E4E90F5B5D45002153EE /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1FE08F06137808E4003B18B9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk-iOS" */ = {
 			isa = XCConfigurationList;
@@ -2339,7 +2630,7 @@
 				1FE08F05137808B8003B18B9 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

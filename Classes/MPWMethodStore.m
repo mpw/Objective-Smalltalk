@@ -200,7 +200,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeaderString:headerString
 {
-	MPWMethodHeader* header = [[MPWMethodHeader methodHeaderWithString:headerString] retain];
+	MPWMethodHeader* header = [MPWMethodHeader methodHeaderWithString:headerString];
 	[self addScript:scriptString forClass:className methodHeader:header];
 }
 

@@ -71,7 +71,7 @@ objectAccessor(NSError, error, setError)
 {
     NSString *mime = [aResponse MIMEType];
     const char *ptr=[rawData bytes];
-    NSLog(@"raw mime: %@",mime);
+//    NSLog(@"raw mime: %@",mime);
     if ( ptr && [rawData length]) {
         if (( !mime ||  [mime isEqualToString:@"text/html"] ||  [mime isEqualToString:@"text/plain"] )&& (*ptr == '{' || *ptr == '[' )) {
             mime=@"application/json";
@@ -89,11 +89,15 @@ objectAccessor(NSError, error, setError)
 	[headers setObject:@"*/*" forKey:@"Accept"];
 	[request setAllHTTPHeaderFields:headers];
 	NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-	MPWResource *result=[[[MPWResource alloc] init] autorelease];
-	[result setSource:aURL];
-	[result setRawData:rawData];
-	[result setMimetype:[self mimeTypeForData:rawData andResponse:response]];
-	return result;
+    if ( [response statusCode] != 404 ) {
+        MPWResource *result=[[[MPWResource alloc] init] autorelease];
+        [result setSource:aURL];
+        [result setRawData:rawData];
+        [result setMimetype:[self mimeTypeForData:rawData andResponse:response]];
+        return result;
+    } else {
+        return nil;
+    }
 }
 
 

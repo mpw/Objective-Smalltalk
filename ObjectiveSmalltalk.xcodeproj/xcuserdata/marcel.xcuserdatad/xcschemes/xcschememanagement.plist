@@ -24,6 +24,11 @@
 			<key>orderHint</key>
 			<integer>49</integer>
 		</dict>
+		<key>ObjSTNative.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>68</integer>
+		</dict>
 		<key>ObjectiveSmalltalk (Framework).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -42,6 +47,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1F084A0D16DCE6A200ED2517</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>1F2E6EF9142EF26E00B5C827</key>
 		<dict>
 			<key>primary</key>
