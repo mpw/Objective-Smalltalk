@@ -27,7 +27,7 @@ objectAccessor( NSString, methodClassName, setMethodClassName )
 	return [[[self alloc] initWithName:name className:className] autorelease];
 }
 
--methodClass
+-(Class)methodClass
 {
 	return NSClassFromString([self methodClassName]);
 }

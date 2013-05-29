@@ -1,8 +1,9 @@
 #!/usr/local/bin/stsh
 #-<void>fileserver:<ref>dir
-context loadFramework:'MPWSideWeb'
+context loadFramework:'ObjectiveHTTPD'
 
 server := dir -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8081)
+#server := dir -> (MPWSchemeHttpServer serverOnPort:8081)
 server start:nil.
 
 shell runInteractiveLoop

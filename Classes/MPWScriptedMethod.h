@@ -23,3 +23,12 @@ idAccessor_h( script, setScript )
 
 
 @end
+
+@interface NSException(scriptStackTrace)
+
+-(NSMutableArray*)scriptStackTrace;
+-(NSMutableArray*)combinedStackTrace;
+
+
+@end
+

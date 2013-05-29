@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'MPWSideWeb'
+context loadFramework:'ObjectiveHTTPD'
 
 scheme:site := MPWSiteMap scheme.
 site:/hi := 'Hello World!'.

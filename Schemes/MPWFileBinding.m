@@ -177,7 +177,7 @@ idAccessor( url , setUrl )
 
 -(void)dealloc
 {
-//	[url release];			// FIXME:  this should be released, but that causes a double-release crash
+	[url release];			// FIXME:  this should be released, but that causes a double-release crash
 	[super dealloc];
 }
 

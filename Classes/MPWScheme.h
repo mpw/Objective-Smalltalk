@@ -22,5 +22,9 @@
 +scheme;
 -evaluateIdentifier:anIdentifer withContext:aContext;
 -bindingForName:(NSString*)variableName inContext:aContext;
+-get:uriString;
+-get:uri parameters:params;
+
+
 
 @end

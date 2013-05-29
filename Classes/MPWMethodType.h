@@ -19,5 +19,6 @@
 //-(NSString*)name;
 //-(NSString*)className;
 -(NSString*)typeName;
+-(Class)methodClass;
 
 @end

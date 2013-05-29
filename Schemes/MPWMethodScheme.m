@@ -91,9 +91,9 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
         } else if ( [first isEqual:@"bundles"] ) {
             return [[[[[NSBundle allBundles] collect] bundleIdentifier] description] asData];
         } else if ( [first isEqual:@"exception"] ) {
-            NSLog(@"%d exceptions",[[self exceptions] count]);
+            NSLog(@"%d exceptions",(int)[[self exceptions] count]);
             if ( [self hasExceptions]) {
-                NSArray *plist=[NSMutableArray array];
+                NSMutableArray *plist=[NSMutableArray array];
                 for ( NSException *e in [self exceptions] ) {
                     NSArray *stackTrace=[e combinedStackTrace];
                     if ( !stackTrace ) {

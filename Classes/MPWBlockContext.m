@@ -53,7 +53,9 @@ idAccessor( context, setContext )
 
 -value:anObject
 {
-	[[self context] bindValue:anObject toVariableNamed:[[[self block] arguments] objectAtIndex:0]];
+    if ( [[[self block] arguments] count]>0) {
+        [[self context] bindValue:anObject toVariableNamed:[[[self block] arguments] objectAtIndex:0]];
+    }
 	return [self value];
 }
 
