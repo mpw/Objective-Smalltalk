@@ -137,7 +137,7 @@ idAccessor( content, setContent )
 
 -fileSystemPath
 {
-	return [[self content] fileSystemPathForBasePath:[self path]];
+	return [[self content] fileSystemPathForBasePath:[self path]];  // external ...
 }
 
 

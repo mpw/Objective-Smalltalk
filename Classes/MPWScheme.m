@@ -11,6 +11,7 @@
 #import "MPWCopyOnWriteScheme.h"
 #import "MPWIdentifier.h"
 #import <MPWFoundation/NSNil.h>
+#import "MPWEvaluator.h"
 
 @implementation MPWScheme
 

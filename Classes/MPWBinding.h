@@ -33,4 +33,11 @@ idAccessor_h(identifier, setIdentifier)
 scalarAccessor_h(MPWEvaluator*, defaultContext, setDefaultContext)
 -valueForPathComponent:(NSString*)kvpath;
 
+-(BOOL)hasChildren;
+-(BOOL)isDirectory;
+-children;
+-(NSArray*)childNames;
+-(NSArray*)allLinks;
+
+
 @end

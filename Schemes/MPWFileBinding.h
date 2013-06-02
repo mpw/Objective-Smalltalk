@@ -14,5 +14,8 @@
 }
 
 -url;
+-initWithURLString:(NSString*)urlString;
+-initWithURL:(NSURL*)newURL;
+-initWithPath:(NSString*)path;
 
 @end

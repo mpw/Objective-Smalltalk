@@ -38,6 +38,7 @@
 
 -sendMessage:(SEL)selector to:receiver withArguments:args;
 -schemeForName:schemeName;
+-localVars;
 
 
 @end
