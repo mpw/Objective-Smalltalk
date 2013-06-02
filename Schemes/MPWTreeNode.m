@@ -173,7 +173,7 @@ idAccessor( content, setContent )
 
 -description
 {
-	return [NSString stringWithFormat:@"<%@:%x name: %@>",[self class],self,[self name]];
+	return [NSString stringWithFormat:@"<%@:%p name: %@>",[self class],self,[self name]];
 }
 
 @end
@@ -230,7 +230,7 @@ idAccessor( content, setContent )
 
 
 	NSAssert( ![secondLevel isRoot], @"secondLevels knows it's not root" );
-	NSLog(@"firstlevel %x secondLevel parent: %x",firstLevel, [secondLevel parent]);
+	NSLog(@"firstlevel %p secondLevel parent: %p",firstLevel, [secondLevel parent]);
 	NSLog(@"[[secondLevel parent] isRoot]=%x",[[secondLevel parent] isRoot]);
 	NSLog(@"[firstLevel isRoot]=%x",[firstLevel isRoot]);
 	NSAssert( ![[secondLevel parent] isRoot], @"first level knows it's not root" );
@@ -242,7 +242,6 @@ idAccessor( content, setContent )
 	id root = [self root];
 	id allSubnodes;
 	id child1,child2;
-	id subchild1,subchild2;
 	allSubnodes=[root allSubnodes];
 	INTEXPECT( [allSubnodes count] ,1 ,@"allSubnodes with only root");
 	child1 = [root mkdir:@"firstChild"];

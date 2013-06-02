@@ -18,8 +18,10 @@
 
 -(BOOL)isRoot;
 -(MPWTreeNode*)parent;
+-nodeForPathEnumerator:(NSEnumerator*)enumerator;
 -fileSystemPath;
 -root;
 -allSubnodes;
+-content;
 
 @end

@@ -734,7 +734,7 @@
     NSString *exprWithSyntaxError=@"a:=4.  a + ";
 	MPWStCompiler *compiler=[[[MPWStCompiler alloc] init] autorelease];
     @try {
-        id compiled=[compiler compile:exprWithSyntaxError];
+        [compiler compile:exprWithSyntaxError];
         EXPECTTRUE(NO, @"should have gotten an exception here");
     }
     @catch (NSException *exception) {

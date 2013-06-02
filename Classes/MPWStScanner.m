@@ -292,16 +292,21 @@ boolAccessor( noNumbers, setNoNumbers )
 
 @implementation MPWStScanner(testing)
 
++scannerWithString:(NSString*)s
+{
+    return [self scannerWithData:(NSData*)s];
+}
+
 +(void)testDoubleStringEscape
 {
-    MPWStScanner *scanner = [self scannerWithData:@"'ab''c'"];
+    MPWStScanner *scanner = [self scannerWithString:@"'ab''c'"];
     id string = [scanner nextToken];
     IDEXPECT( string, @"ab'c", @"should have turned double single quotes into single single quote" );
 }
 
 +(void)testConstraintEqual
 {
-    MPWStScanner *scanner = [self scannerWithData:@"a::=b"];
+    MPWStScanner *scanner = [self scannerWithString:@"a::=b"];
     id a = [scanner nextToken];
     id eq = [scanner nextToken];
     id b = [scanner nextToken];
@@ -312,7 +317,7 @@ boolAccessor( noNumbers, setNoNumbers )
 
 +(void)testURLWithUnderscores
 {
-	MPWStScanner *scanner=[self scannerWithData:@"http://farm1.static.flickr.com/9/86383513_f52e2fbf92.jpg"];
+	MPWStScanner *scanner=[self scannerWithString:@"http://farm1.static.flickr.com/9/86383513_f52e2fbf92.jpg"];
 	NSMutableArray *tokens=[NSMutableArray array];
 	id nextToken;
 	while ( nil != (nextToken=[scanner nextToken] )) {
@@ -323,27 +328,27 @@ boolAccessor( noNumbers, setNoNumbers )
 
 +(void)testLeftArrow
 {
-	MPWStScanner *scanner=[self scannerWithData:@"<-"];
+	MPWStScanner *scanner=[self scannerWithString:@"<-"];
     IDEXPECT([scanner nextToken], @"<-", @"single left arrow");
     
 }
 
 +(void)testSimpleLiteralString
 {
-	MPWStScanner *scanner=[self scannerWithData:@"'literal string'"];
+	MPWStScanner *scanner=[self scannerWithString:@"'literal string'"];
     IDEXPECT([scanner nextToken], @"literal string", @"literal string");
 }
 
 +(void)singleMinusString
 {
-	MPWStScanner *scanner=[self scannerWithData:@"'-'"];
+	MPWStScanner *scanner=[self scannerWithString:@"'-'"];
     IDEXPECT([scanner nextToken], @"-", @"single minus sign");
     
 }
 
 +(void)testRightArrow
 {
-	MPWStScanner *scanner=[self scannerWithData:@"->"];
+	MPWStScanner *scanner=[self scannerWithString:@"->"];
     IDEXPECT([scanner nextToken],@"->", @"single right arrow");
 }
 

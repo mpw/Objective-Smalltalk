@@ -733,7 +733,7 @@ idAccessor( connectorMap, setConnectorMap );
 {
     MPWStCompiler *compiler=[self compiler];
     id expr=[compiler compile:@"| a |"];
-
+    EXPECTNIL(expr, @"expr");
 }
 
 

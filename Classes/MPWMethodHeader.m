@@ -133,7 +133,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	id optionalReturnType;
 	[self init];
 	scanner = [MPWStScanner scannerWithData:[aString asData]];
-	if ( optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner] ) {
+	if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
 		[self setReturnTypeName:optionalReturnType];
 	}
 	while ( [self parseAKeyWordFromScanner:scanner] );

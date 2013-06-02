@@ -9,12 +9,13 @@
 #import "MPWIdentifierExpression.h"
 #import "MPWEvaluator.h"
 #import "MPWObjCGenerator.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWIdentifierExpression
 
 //idAccessor( name, setName )
 //idAccessor( scheme, setScheme )
-idAccessor( identifier, setIdentifier )
+objectAccessor( MPWIdentifier, identifier, setIdentifier )
 idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 
 -scheme
@@ -50,7 +51,7 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 
 -description
 {
-	return [NSString stringWithFormat:@"<%@:%x: scheme: %@ name: %@>",[self class],self,[[self identifier] schemeName],[[self identifier] identifierName]];
+	return [NSString stringWithFormat:@"<%@:%p: scheme: %@ name: %@>",[self class],self,[[self identifier] schemeName],[[self identifier] identifierName]];
 }
 
 -(void)dealloc

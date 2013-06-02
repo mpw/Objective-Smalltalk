@@ -53,7 +53,7 @@ idAccessor( method, _setMethod )
 	}
 }
 
--(Method)getMethodForMessage:(SEL)selname inClass:(Class)aClass
+-(Method)getMethodForMessage:(SEL)messageName inClass:(Class)aClass
 {
     unsigned int methodCount=0;
     Method *methods = class_copyMethodList(aClass, &methodCount);
@@ -61,7 +61,7 @@ idAccessor( method, _setMethod )
     
     if ( methods ) {
         for ( int i=0;i< methodCount; i++ ) {
-            if ( method_getName(methods[i]) == selname ) {
+            if ( method_getName(methods[i]) == messageName ) {
                 result = methods[i];
                 break;
             }
@@ -257,7 +257,7 @@ idAccessor( method, _setMethod )
 
 -description
 {
-    return [NSString stringWithFormat:@"<%@:%x:  ",[self class],self];
+    return [NSString stringWithFormat:@"<%@:%p:  ",[self class],self];
 }
 
 @end
@@ -277,7 +277,7 @@ idAccessor( method, _setMethod )
 -evaluateScript:script onObject:target
 {
 	//	NSLog(@"evaluateScript!");
-	return [NSString stringWithFormat:@"script: %@ target: %x",script, target];
+	return [NSString stringWithFormat:@"script: %@ target: %p",script, target];
 }
 -evaluateScript:script onObject:target formalParameters:formals parameters:params
 {
@@ -381,7 +381,7 @@ idAccessor( method, _setMethod )
 	returnValue = (id)[target answerToEverything];
 	NSLog(@"returnValue: %@ expectedReturnAfterOverride: %@",returnValue,expectedReturnAfterOverride);
 	IDEXPECT( returnValue, expectedReturnAfterOverride, @"expected return after override");
-    NSAssert1( returnValue != initialReturn, @"original return value not same as override: %d",returnValue);
+    NSAssert1( returnValue != initialReturn, @"original return value not same as override: %d",(int)returnValue);
     [callback uninstall];
  	returnValue = (id)[target answerToEverything];
 	INTEXPECT( (NSInteger)returnValue, (NSInteger)initialReturn, @"uninstall of method should yield original result");

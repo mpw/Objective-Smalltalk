@@ -24,7 +24,7 @@
 -createSchemes;
 
 -valueOfVariableNamed:aName;
--valueOfVariableNamed:aName withScheme:scheme;
+//-valueOfVariableNamed:aName withScheme:scheme;
 -(NSString*)defaultScheme;
 
 -valueForUndefinedVariableNamed:aName;

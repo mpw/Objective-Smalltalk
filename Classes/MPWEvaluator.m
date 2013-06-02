@@ -317,7 +317,8 @@ idAccessor( localVars, setLocalVars )
     if ( !value && [aName isEqual:@"context"]) {
         value=self;
     }
-//	return [self valueOfVariableNamed:aName withScheme:[self defaultScheme]];
+//	value = [self valueOfVariableNamed:aName withScheme:[self defaultScheme]];
+    return value;
 }
 
 

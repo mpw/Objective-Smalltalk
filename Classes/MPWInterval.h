@@ -19,6 +19,8 @@ scalarAccessor_h( int, to, setTo )
 scalarAccessor_h( int, step, setStep )
 
 +intervalFromInt:(int)newFrom toInt:(int)newTo;
++intervalFrom:newFrom to:newTo step:newStep;
+
 +intervalFrom:newFrom to:newTo;
 -initFromInt:(int)newFrom toInt:(int)newTo;
 -initFrom:newFrom to:newTo;

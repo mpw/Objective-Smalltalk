@@ -8,6 +8,7 @@
 
 #import "MPWAssignmentExpression.h"
 #import "MPWStCompiler.h"
+#import "MPWIdentifierExpression.h"
 
 
 @implementation MPWAssignmentExpression

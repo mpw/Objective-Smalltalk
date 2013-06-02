@@ -23,10 +23,13 @@
 -initWithValue:aValue;
 
 idAccessor_h( value, _setValue )
+idAccessor_h( scheme, setScheme )
+
 
 -(void)bindValue:value;
 -(void)unbindValue;
 -(BOOL)isBound;
-
+idAccessor_h(identifier, setIdentifier)
+scalarAccessor_h(MPWEvaluator*, defaultContext, setDefaultContext)
 
 @end

@@ -53,9 +53,9 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
 			for (i=0;i < ivarCount; i++ ){
 				Ivar ivar=ivars[i];
 				MPWInstanceVariable *varDescription;
-				varDescription = [[[MPWInstanceVariable alloc] initWithName:[NSString stringWithCString:ivar_getName(ivar)] 
+				varDescription = [[[MPWInstanceVariable alloc] initWithName:[NSString stringWithCString:ivar_getName(ivar) encoding:NSASCIIStringEncoding]
 																	 offset: ivar_getOffset(ivar) 
-																	   type:[NSString stringWithCString:ivar_getTypeEncoding(ivar)]]
+																	   type:[NSString stringWithCString:ivar_getTypeEncoding(ivar) encoding:NSASCIIStringEncoding]]
 								  autorelease];
 				[varNames addObject:varDescription];
 			}

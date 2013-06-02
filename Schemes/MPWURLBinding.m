@@ -118,7 +118,7 @@ objectAccessor(NSError, error, setError)
 	NSMutableString *result=[NSMutableString string];
 	NSString *separator=@"?";
 	NSArray *argKeys=[selectorString componentsSeparatedByString:@":"];
-	NSAssert2( ([argKeys count]-1) == [args count], @"number of args not same: %d %d",argKeys,args);
+	NSAssert2( ([argKeys count]-1) == [args count], @"number of args not same: %p %p",argKeys,args);
 	for (  i=0;i<[args count]; i++) {
 		[result appendFormat:@"%@%@=%@",separator,[argKeys objectAtIndex:i],[[args objectAtIndex:i] stringByAddingPercentEscapesUsingEncoding:
 																			 NSASCIIStringEncoding]];
@@ -160,7 +160,7 @@ objectAccessor(NSError, error, setError)
     
     
     [urlRequest setHTTPBody:data];
-    NSURLConnection *postConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     if ( inPOST ) {
         [NSException raise:@"PUT in progress" format:@"PUT to %@/%@ already in progress",self,[self url]];
     }
@@ -185,7 +185,7 @@ objectAccessor(NSError, error, setError)
     [postData appendData:data];
     [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [urlRequest setHTTPBody:postData];
-    NSURLConnection *postConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     if ( inPOST ) {
         [NSException raise:@"POST in progress" format:@"POST to %@/%@ already in progress",self,[self url]];
     }

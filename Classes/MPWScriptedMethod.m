@@ -71,8 +71,8 @@ idAccessor( script, _setScript )
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];
     newException=[NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:newUserInfo];
     Class targetClass = [target class];
-    int offset=[[[exception userInfo] objectForKey:@"offset"] intValue];
-    NSString *frameDescription=[NSString stringWithFormat:@"%s[%@ %@] + %d",targetClass==target?"+":"-",targetClass,[self methodHeader],offset];
+    int exceptionSourceOffset=[[[exception userInfo] objectForKey:@"offset"] intValue];
+    NSString *frameDescription=[NSString stringWithFormat:@"%s[%@ %@] + %d",targetClass==target?"+":"-",targetClass,[self methodHeader],exceptionSourceOffset];
     [newException addScriptFrame: frameDescription];
     NSString *myselfInTrace=    @"-[MPWScriptedMethod evaluateOnObject:parameters:]";    
     
@@ -236,7 +236,7 @@ dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutab
 -(void)cullTrace:(NSMutableArray*)trace replacingOriginal:original withFrame:frame
 {
     for (int i=0;i<[trace count]-3;i++) {
-        int numLeft=[trace count]-i;
+//        int numLeft=[trace count]-i;
         NSString *cur=[trace objectAtIndex:i];
         if ( [cur rangeOfString:original].length>0) {
             NSString *address=nil;

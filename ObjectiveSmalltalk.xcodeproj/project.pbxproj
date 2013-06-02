@@ -229,7 +229,6 @@
 		1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1F80973B15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1F80973C15A72A78004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
-		1F81D90916DEBA7E00408D41 /* llvm.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1F81D90816DEBA7E00408D41 /* llvm.xcconfig */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1357,7 +1356,7 @@
 		F5A74ABA00F0A61B015ADD82 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 1FA354010854F75C0056996B /* Build configuration list for PBXProject "ObjectiveSmalltalk" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1392,7 +1391,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
-				1F81D90916DEBA7E00408D41 /* llvm.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

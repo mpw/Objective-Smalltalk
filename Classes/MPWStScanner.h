@@ -24,3 +24,7 @@ boolAccessor_h( noNumbers, setNoNumbers )
 -(BOOL)isBinary;
 @end
 
+@interface NSString(tokenizing)
+
+-(BOOL)isScheme;
+@end

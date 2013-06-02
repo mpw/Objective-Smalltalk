@@ -8,6 +8,7 @@
 
 #import <ObjectiveSmalltalk/MPWExpression.h>
 
+@class MPWIdentifier;
 
 @interface MPWIdentifierExpression : MPWExpression {
 //	id	name;
@@ -19,5 +20,6 @@
 //idAccessor_h( name, setName )
 //idAccessor_h( scheme, setScheme )
 idAccessor_h( evaluationEnvironment, setEvaluationEnvironment )
+objectAccessor_h( MPWIdentifier, identifier, setIdentifier )
 
 @end

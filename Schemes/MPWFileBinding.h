@@ -13,4 +13,6 @@
 	id	url;
 }
 
+-url;
+
 @end

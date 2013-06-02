@@ -11,6 +11,7 @@
 #import "MPWInterval.h"
 #import "MPWVARBinding.h"
 #import "MPWCopyOnWriteScheme.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWBinding
 

@@ -169,7 +169,7 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	if ( anIndex >= [self count] ) {
 		@throw [NSException
 				exceptionWithName:@"RangeException"
-				reason:[NSString stringWithFormat:@"-[%@ integerAtIndex:%d] out of bounds(%d)",[self class],anIndex,[self count]]
+				reason:[NSString stringWithFormat:@"-[%@ integerAtIndex:%ld] out of bounds(%ld)",[self class],(long)anIndex,(long)[self count]]
 				userInfo:nil];
 	}
 	return INTATINDEX( anIndex );

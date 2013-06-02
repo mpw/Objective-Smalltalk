@@ -9,12 +9,18 @@
 #import "MPWScheme.h"
 #import "MPWBinding.h"
 #import "MPWCopyOnWriteScheme.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWScheme
 
 +scheme
 {
 	return [[[self alloc] init] autorelease];
+}
+
+-valueForBinding:(MPWBinding*)aBinding
+{
+    return nil;
 }
 
 -value

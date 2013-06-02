@@ -19,5 +19,8 @@ idAccessor_h( schemeName, setSchemeName )
 idAccessor_h( identifierName, setIdentifierName )
 idAccessor_h( scheme, setScheme )
 
++identifierWithName:(NSString*)name;
+-evaluatedIdentifierNameInContext:aContext;
+
 
 @end

@@ -14,5 +14,6 @@
 }
 
 -initWithName:(NSString*)envName scheme:newScheme;
++bindingWithName:(NSString*)envName scheme:newScheme;
 
 @end

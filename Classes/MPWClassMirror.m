@@ -156,7 +156,7 @@
 
 -(MPWClassMirror*)createAnonymousSubclass
 {
-	NSString *madeUpName=[NSString stringWithFormat:@"%@-subclass-%p-%d",[self name],self,random()];
+	NSString *madeUpName=[NSString stringWithFormat:@"%@-subclass-%p-%ld",[self name],self,random()];
 	return [self createSubclassWithName:madeUpName];
 }
 
@@ -180,7 +180,7 @@
 
 -(Class)_createClass:(const char*)name
 {
-	Class *klass = objc_allocateClassPair([self theClass], name,0);
+	Class klass = objc_allocateClassPair([self theClass], name,0);
 	objc_registerClassPair(klass);
 	return klass;
 }

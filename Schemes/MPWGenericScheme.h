@@ -8,6 +8,9 @@
 
 #import "MPWScheme.h"
 
+@class MPWGenericBinding;
+
 @interface MPWGenericScheme : MPWScheme
+
 
 @end

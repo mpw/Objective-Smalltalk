@@ -8,6 +8,7 @@
 
 #import "MPWGenericBinding.h"
 #import <MPWFoundation/MPWFoundation.h>
+#import "MPWGenericScheme.h"
 
 @implementation MPWGenericBinding
 
@@ -31,14 +32,16 @@ objectAccessor( NSString, name, setName )
     return name;
 }
 
+#define GENERICSCHEME  ((MPWGenericScheme*)[self scheme])
+
 -(BOOL)isBound
 {
-	return [[self scheme] isBoundBinding:self];
+	return [GENERICSCHEME isBoundBinding:self];
 }
 
 -_value
 {
-	return [[self scheme] valueForBinding:self];
+	return [GENERICSCHEME valueForBinding:self];
 }
 
 -(void)_setValue:newValue
@@ -56,9 +59,9 @@ objectAccessor( NSString, name, setName )
     return [[self scheme] hasChildren:self];
 }
 
--childWithName:(NSString*)name
+-childWithName:(NSString*)aName
 {
-    return [[self scheme] childWithName:name of:self];
+    return [[self scheme] childWithName:aName of:self];
 }
 
 -(NSArray*)children

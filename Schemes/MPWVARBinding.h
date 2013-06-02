@@ -16,5 +16,6 @@
 
 -initWithBaseObject:newBase pathComponents:(NSArray*)newPathComponents;
 -initWithBaseObject:newBase path:newPath;
++bindingWithBaseObject:newBase path:newPath;
 
 @end

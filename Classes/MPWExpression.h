@@ -18,6 +18,7 @@
 
 intAccessor_h(offset , setOffset)
 intAccessor_h(len, setLen)
+-(NSException*)handleOffsetsInException:(NSException*)exception;
 
 @end
 
