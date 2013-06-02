@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MPWTaggedFloat
+@interface MPWTaggedFloat : NSProxy
 
 @end

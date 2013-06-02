@@ -16,6 +16,7 @@
 	id  content;
 }
 
++(instancetype)root;
 -(BOOL)isRoot;
 -(MPWTreeNode*)parent;
 -nodeForPathEnumerator:(NSEnumerator*)enumerator;
@@ -23,5 +24,6 @@
 -root;
 -allSubnodes;
 -content;
+-mkdirs:(NSEnumerator*)pathEnumerator;
 
 @end

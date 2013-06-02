@@ -7,10 +7,11 @@
 //
 
 #import "MPWComplexAssignment.h"
+#import "MPWEvaluator.h"
 
 @implementation MPWComplexAssignment
 
--(NSObject<MPWEvaluable>*)evaluateIn:aContext
+-(NSObject<MPWEvaluable>*)evaluateIn:(MPWEvaluator*)aContext
 {
 	id value = [aContext evaluate:[self rhs]];
     //	NSLog(@"rhs: %@ value: %@, varName: %@",[self rhs],value,varName);

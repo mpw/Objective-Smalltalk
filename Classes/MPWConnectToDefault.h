@@ -14,3 +14,12 @@
 }
 
 @end
+
+
+@interface NSObject(connecting)
+
+-defaultComponentInstance;
++defaultComponentInstance;
+-defaultInputPort;
+-defaultOutputPort;
+@end

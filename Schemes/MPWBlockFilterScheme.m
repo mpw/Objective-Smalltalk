@@ -38,7 +38,7 @@ idAccessor( valueFilter, setValueFilter)
     return [[[self alloc] initWithSource:aSource identifierFilter:idFilter valueFilter:vFilter] autorelease];
 }
 
--_baseBindingForBinding:aBinding
+-_baseBindingForBinding:(MPWGenericBinding*)aBinding
 {
     //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if (  [aBinding scheme] != [self source] ) {

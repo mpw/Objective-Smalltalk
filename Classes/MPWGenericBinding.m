@@ -46,7 +46,7 @@ objectAccessor( NSString, name, setName )
 
 -(void)_setValue:newValue
 {
-	[[self scheme] setValue:newValue forBinding:self];
+	[GENERICSCHEME setValue:newValue forBinding:self];
 }
 
 -(BOOL)isRoot
@@ -56,22 +56,22 @@ objectAccessor( NSString, name, setName )
 
 -(BOOL)hasChildren
 {
-    return [[self scheme] hasChildren:self];
+    return [GENERICSCHEME hasChildren:self];
 }
 
 -childWithName:(NSString*)aName
 {
-    return [[self scheme] childWithName:aName of:self];
+    return [GENERICSCHEME childWithName:aName of:self];
 }
 
 -(NSArray*)children
 {
-    return [[self scheme] childrenOf:self];
+    return [GENERICSCHEME childrenOf:self];
 }
 
 -(NSArray*)childNames
 {
-    return [[[[[self children] collect] path] collect] lastPathComponent];
+    return (NSArray*)[[[[[self children] collect] path] collect] lastPathComponent];
 }
 
 

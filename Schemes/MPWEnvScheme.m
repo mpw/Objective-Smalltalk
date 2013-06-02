@@ -154,7 +154,7 @@ extern char ***_NSGetEnviron();
 
 +(void)testEnvironmentList
 {
-	NSArray *allEnvVars=[self linesFromCommand:@"env"];
+//	NSArray *allEnvVars=[self linesFromCommand:@"env"];
 	MPWBinding *rootEnv=[MPWStCompiler evaluate:@"ref:env:/"];
     EXPECTTRUE([rootEnv hasChildren],@"root should have children");
 

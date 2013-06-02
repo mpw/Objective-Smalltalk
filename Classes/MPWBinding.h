@@ -23,7 +23,7 @@
 -initWithValue:aValue;
 -_value;
 idAccessor_h( value, _setValue )
-idAccessor_h( scheme, setScheme )
+objectAccessor_h( MPWScheme, scheme, setScheme )
 
 
 -(void)bindValue:value;
@@ -31,5 +31,6 @@ idAccessor_h( scheme, setScheme )
 -(BOOL)isBound;
 idAccessor_h(identifier, setIdentifier)
 scalarAccessor_h(MPWEvaluator*, defaultContext, setDefaultContext)
+-valueForPathComponent:(NSString*)kvpath;
 
 @end

@@ -40,6 +40,11 @@
     return nil;
 }
 
+-(void)setValue:newValue forBinding:aBinding
+{
+    
+}
+
 -(BOOL)hasChildren:(MPWGenericBinding*)binding
 {
     return NO;

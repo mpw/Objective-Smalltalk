@@ -33,7 +33,7 @@ idAccessor( content, setContent )
 	return [self initWithName:@""];
 }
 
-+root
++(instancetype)root
 {
 	return [self nodeWithName:@""];
 }

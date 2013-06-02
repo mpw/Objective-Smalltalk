@@ -16,4 +16,7 @@
 -initWithName:(NSString*)envName scheme:newScheme;
 +bindingWithName:(NSString*)envName scheme:newScheme;
 -(NSString*)name;
+-(BOOL)hasChildren;
+-path;
+
 @end

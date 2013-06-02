@@ -11,7 +11,7 @@
 
 @implementation MPWRecursiveIdentifier
 
-idAccessor( nextIdentifer, setNextIdentifier )
+objectAccessor( MPWIdentifier, nextIdentifer, setNextIdentifier )
 
 -(void)dealloc
 {

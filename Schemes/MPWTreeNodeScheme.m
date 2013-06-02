@@ -98,7 +98,6 @@ idAccessor( root, setRoot )
 +_testInterpreterWithCMSScheme
 {
     MPWStCompiler *interpreter=[[MPWStCompiler new] autorelease];
-    NSString *result=@"";
     [interpreter evaluateScriptString:@" site := MPWTreeNodeScheme scheme."];
     [interpreter evaluateScriptString:@" scheme:cms := site "];
     return interpreter;
@@ -130,7 +129,6 @@ idAccessor( root, setRoot )
 +(void)testStripLeadingSlashesFromPathsInReadAndWrite
 {
     MPWStCompiler *interpreter=[self _testInterpreterWithCMSScheme];
-    NSString *result=@"";
     [interpreter evaluateScriptString:@"cms:/hi := 'Hi there!'"];
     IDEXPECT([interpreter evaluateScriptString:@"cms:/hi"], @"Hi there!", @"result of evaluating /hi");
     IDEXPECT([interpreter evaluateScriptString:@"cms:hi"], @"Hi there!", @"result of evaluating hi");

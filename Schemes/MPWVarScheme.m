@@ -8,10 +8,11 @@
 
 #import "MPWVarScheme.h"
 #import "MPWVARBinding.h"
+#import "MPWEvaluator.h"
 
 @implementation MPWVarScheme
 
--localVarsForContext:aContext
+-localVarsForContext:(MPWEvaluator*)aContext
 {
 	return [aContext localVars];
 }

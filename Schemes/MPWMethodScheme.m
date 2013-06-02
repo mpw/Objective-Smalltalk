@@ -11,7 +11,7 @@
 #import "MPWStCompiler.h"
 #import "MPWMethodStore.h"
 #import "MPWClassMirror.h"
-
+#import "MPWScriptedMethod.h"
 
 @implementation MPWMethodScheme
 
@@ -86,8 +86,8 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
             return [self methodList];
         } else if ( [first isEqual:@"methods"] ) {
             return [self methodsForPath:[components subarrayWithRange:NSMakeRange(1, [components count]-1)]];
-        } else if ( [first isEqual:@"theAnswer"] ) {
-            return [[NSString stringWithFormat:@"the answer: %d",[self theAnswer]] asData];
+//        } else if ( [first isEqual:@"theAnswer"] ) {
+//            return [[NSString stringWithFormat:@"the answer: %d",[self theAnswer]] asData];
         } else if ( [first isEqual:@"bundles"] ) {
             return [[[[[NSBundle allBundles] collect] bundleIdentifier] description] asData];
         } else if ( [first isEqual:@"exception"] ) {
@@ -133,7 +133,7 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
             }
             return [[[[classes collect] name] description] asData];
         } else if ( [first isEqual:@"frameworks"] ) {
-            return [[[[[[NSBundle allFrameworks] collect] bundleIdentifier] sortedArrayUsingSelector:@selector(compare:)] description] asData];
+            return [[[(NSArray*)[[[NSBundle allFrameworks] collect] bundleIdentifier] sortedArrayUsingSelector:@selector(compare:)] description] asData];
         }
     }
     return [[components componentsJoinedByString:@"/"] asData];
@@ -168,7 +168,7 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
         NSLog(@"%@",[exception combinedStackTrace]);
     }
     [exceptions addObject:exception];
-    NSLog(@"now have %d exceptions",[[self exceptions] count]);
+    NSLog(@"now have %ld exceptions",(long)[[self exceptions] count]);
 }
 
 -(void)clearExceptions

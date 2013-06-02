@@ -15,7 +15,7 @@
 
 @implementation MPWBinding
 
-idAccessor( scheme, setScheme )
+objectAccessor( MPWScheme, scheme, setScheme )
 idAccessor( _value, _setValue )
 boolAccessor( isBound ,setIsBound )
 idAccessor(identifier, setIdentifier)
@@ -66,6 +66,7 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 {
 	[[self value] setValue:newValue forKey:kvpath];
 }
+
 
 
 -(NSArray*)childNames
@@ -152,7 +153,7 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
     NSString *name=[[self identifier] evaluatedIdentifierNameInContext:[self defaultContext]];
     id newIdentifier=[[[[[self identifier] class] alloc] init] autorelease];
     [newIdentifier setIdentifierName:name];
-    [newIdentifier setScheme:[[self identifier] scheme]];
+    [newIdentifier setScheme:[(MPWIdentifier*)[self identifier] scheme]];
     [newIdentifier setSchemeName:[[self identifier] schemeName]]; 
     [evaluated setIdentifier:newIdentifier];
     return evaluated;

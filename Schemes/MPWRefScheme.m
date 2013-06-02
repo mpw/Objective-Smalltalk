@@ -8,19 +8,21 @@
 
 #import "MPWRefScheme.h"
 #import "MPWBinding.h"
+#import "MPWEvaluator.h"
+#import "MPWRecursiveIdentifier.h"
 
 @implementation MPWRefScheme
 
--bindingForName:(NSString*)variableName inContext:aContext
+-bindingForName:(NSString*)variableName inContext:(MPWEvaluator*)aContext
 {
-	id originalBinding = [[aContext schemeForName:@"var"]  bindingForName:variableName inContext:aContext];
+	MPWBinding* originalBinding = [[aContext schemeForName:@"var"]  bindingForName:variableName inContext:aContext];
 	id binding = [[[MPWBinding alloc] initWithValue:originalBinding] autorelease];
 	return binding;
 }
 
--bindingWithIdentifier:anIdentifier withContext:aContext
+-bindingWithIdentifier:(MPWRecursiveIdentifier*)anIdentifier withContext:(MPWEvaluator*)aContext
 {
-	id nextIdentifer = [anIdentifier nextIdentifer];
+	MPWIdentifier* nextIdentifer = [anIdentifier nextIdentifer];
 	NSAssert1( [nextIdentifer scheme], @"nextIdentifer", nil );
 	id originalBinding = [[nextIdentifer scheme] bindingWithIdentifier:nextIdentifer withContext:aContext];
 //	NSLog(@"eval ref, original binding: %@",originalBinding);

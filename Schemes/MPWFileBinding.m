@@ -171,7 +171,7 @@ idAccessor( url , setUrl )
 {
 	if ( ![self isBound] ) {
         [[self parent] mkdir];
-		[[NSFileManager defaultManager] createDirectoryAtPath:[self fileSystemPath] attributes:nil];
+		[[NSFileManager defaultManager] createDirectoryAtPath:[self fileSystemPath] withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 }
 
