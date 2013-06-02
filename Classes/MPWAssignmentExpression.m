@@ -9,6 +9,7 @@
 #import "MPWAssignmentExpression.h"
 #import "MPWStCompiler.h"
 #import "MPWIdentifierExpression.h"
+#import "MPWIdentifier.h"
 
 
 @implementation MPWAssignmentExpression

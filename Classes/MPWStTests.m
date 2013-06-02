@@ -16,6 +16,7 @@
 #import <objc/runtime.h>
 #import "MPWObjCGenerator.h"
 #import <MPWFoundation/NSNil.h>
+#import "MPWIdentifier.h"
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 

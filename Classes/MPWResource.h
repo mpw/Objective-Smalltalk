@@ -20,6 +20,7 @@
 objectAccessor_h( NSData, rawData, setRawData )
 objectAccessor_h( NSString, mimetype, setMimetype )
 objectAccessor_h( NSError, error, setError)
+idAccessor_h( source, setSource )
 
 
 @end

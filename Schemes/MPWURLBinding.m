@@ -37,7 +37,7 @@ idAccessor( target, setTarget )
 		"@@:@@@@@@", 
 			
 	};
-	char *selname=sel_getName(aSelector);
+	const char *selname=sel_getName(aSelector);
 	int numargs=0;
 	do {
 		if ( *selname == ':' ) {
@@ -84,7 +84,7 @@ objectAccessor(NSError, error, setError)
 {
 	NSMutableURLRequest *request=[[[NSMutableURLRequest alloc] initWithURL:aURL] autorelease];
 	NSMutableDictionary *headers=[NSMutableDictionary dictionaryWithObject:@"locale=en-us" forKey:@"Cookies"];
-	NSURLResponse *response=nil;
+	NSHTTPURLResponse *response=nil;
 	[headers setObject:@"stsh" forKey:@"User-Agent"];
 	[headers setObject:@"*/*" forKey:@"Accept"];
 	[request setAllHTTPHeaderFields:headers];
@@ -200,10 +200,10 @@ objectAccessor(NSError, error, setError)
     inPOST=NO;
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)localError
 {
     inPOST=NO;
-    [self setError:error];
+    [self setError:localError];
 }
 
 

@@ -9,6 +9,7 @@
 #import "MPWBundleScheme.h"
 #import "MPWStCompiler.h"
 #import <MPWFoundation/AccessorMacros.h>
+#import "MPWFileBinding.h"
 
 @implementation MPWBundleScheme
 

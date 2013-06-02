@@ -10,6 +10,7 @@
 #import "MPWBinding.h"
 #import "MPWCopyOnWriteScheme.h"
 #import "MPWIdentifier.h"
+#import <MPWFoundation/NSNil.h>
 
 @implementation MPWScheme
 

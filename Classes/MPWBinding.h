@@ -21,7 +21,7 @@
 
 +bindingWithValue:aValue;
 -initWithValue:aValue;
-
+-_value;
 idAccessor_h( value, _setValue )
 idAccessor_h( scheme, setScheme )
 
