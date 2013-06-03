@@ -9,7 +9,7 @@
 #import "MPWScriptedMethod.h"
 #import "MPWEvaluator.h"
 #import "MPWStCompiler.h"
-
+#import "MPWMethodHeader.h"
 @implementation MPWScriptedMethod
 
 
@@ -142,6 +142,8 @@ idAccessor( script, _setScript )
 @interface MPWScriptedMethod(fakeTestingInterfaces)
 
 -xxxSimpleNilTestMethod;
+-xxxSimpleMethodThatRaises;
+-xxxSimpleMethodThatCallsMethodThatRaises;
 
 @end
 

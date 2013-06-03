@@ -56,7 +56,7 @@ boolAccessor(cacheReads, setCacheReads)
 //        NSLog(@"COW:  source %@ for %@ returned %@",[self source],[aBinding name],result);
         result=[[self source] valueForBinding:aBinding];
         if ( [self cacheReads] ) {
-            [[self readWrite] setValue:result forBinding:aBinding];
+            [(MPWGenericScheme*)[self readWrite] setValue:result forBinding:aBinding];
         }
     }
     return result;
@@ -64,7 +64,7 @@ boolAccessor(cacheReads, setCacheReads)
 
 -(void)setValue:newValue forBinding:aBinding
 {
-    [[self readWrite] setValue:newValue forBinding:aBinding];
+    [(MPWGenericScheme*)[self readWrite] setValue:newValue forBinding:aBinding];
 }
 
 -(BOOL)hasChildren:(MPWGenericBinding*)binding

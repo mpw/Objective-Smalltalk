@@ -107,7 +107,7 @@ static inline id taggedAdd( id x1, id x2 )
     return [self stringValue];
 }
 
--(void)release {}
+-(oneway void)release {}
 -autorelease{ return self; }
 
 +float:(float)x

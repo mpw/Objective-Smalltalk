@@ -28,6 +28,8 @@ idAccessor_h( script, setScript )
 
 -(NSMutableArray*)scriptStackTrace;
 -(NSMutableArray*)combinedStackTrace;
+-(void)addCombinedFrame:(NSString*)frame frameToReplace:original previousTrace:previousTrace;
+-(void)addScriptFrame:(NSString*)frame;
 
 
 @end

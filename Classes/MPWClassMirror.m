@@ -253,6 +253,12 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 #import <objc/message.h>
 #import "MPWObjectMirror.h"
 
+@interface NSObject(fakeTestingMessages)
+-__testMessage;
+-(id)__testMessageHi;
+
+@end
+
 
 extern id _objc_msgForward(id receiver, SEL sel, ...);
 @implementation MPWClassMirror(testing)

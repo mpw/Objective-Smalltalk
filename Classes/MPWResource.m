@@ -8,6 +8,12 @@
 
 #import "MPWResource.h"
 
+@interface NSObject(imageRepWithData)
+
++imageRepWithData:(NSData*)data;
+
+@end
+
 
 @implementation MPWResource
 

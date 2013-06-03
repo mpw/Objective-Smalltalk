@@ -66,7 +66,7 @@ idAccessor(storedContext, setStoredContext)
 	return [[self source] bindingWithIdentifier:newIdentifier withContext:aContext];
 }
 
--_baseBindingForBinding:aBinding
+-_baseBindingForBinding:(MPWBinding*)aBinding
 {
     //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if (  [aBinding scheme] != [self source] ) {

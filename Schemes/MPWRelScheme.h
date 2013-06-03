@@ -16,4 +16,6 @@
     MPWBinding *baseRef;        // not used yet
 }
 
+-initWithRef:(MPWBinding*)aBinding;
+
 @end

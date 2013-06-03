@@ -25,5 +25,6 @@
 -allSubnodes;
 -content;
 -mkdirs:(NSEnumerator*)pathEnumerator;
+-childWithName:childName;
 
 @end
