@@ -213,7 +213,7 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	return self;
 }
 
--(void)writeOnStream:(id<Streaming>)aStream
+-(void)writeOnStream:aStream
 {
     [aStream writeEnumerator:self];
 }
