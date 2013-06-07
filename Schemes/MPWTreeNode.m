@@ -8,6 +8,11 @@
 
 #import "MPWTreeNode.h"
 
+@interface NSObject(contentProtocolForExternalPaths)
+
+-(NSString*)fileSystemPathForBasePath:(NSString*)basePath;
+
+@end
 
 @implementation MPWTreeNode
 

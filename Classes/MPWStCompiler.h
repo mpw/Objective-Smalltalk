@@ -2,13 +2,13 @@
 
 #import <ObjectiveSmalltalk/MPWEvaluator.h>
 
-@class MPWMethodHeader,MPWStScanner;
+@class MPWMethodHeader,MPWStScanner,MPWMethodStore;
 
 @interface MPWStCompiler : MPWEvaluator
 {
     MPWStScanner *scanner;
     id tokens;
-	id methodStore;
+	MPWMethodStore* methodStore;
 	id connectorMap;
 }
 
@@ -32,6 +32,7 @@
 
 //---- method store 
 
+-(MPWMethodStore*)methodStore;
 -(void)addScript:scriptString forClass:className methodHeaderString:methodHeaderString;
 -(NSArray*)classesWithScripts;
 -(NSArray*)methodNamesForClassName:(NSString*)className;

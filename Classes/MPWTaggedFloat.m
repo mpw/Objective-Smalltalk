@@ -10,6 +10,7 @@
 #include <dlfcn.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#import "MPWFastMessage.h"
 
 @implementation MPWTaggedFloat
 

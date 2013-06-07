@@ -9,6 +9,13 @@
 #import "MPWScriptingBridgeScheme.h"
 #import "MPWScriptingBridgeBinding.h"
 
+@interface NSObject(scriptingBridge)
+
++applicationWithBundleIdentifier:(NSString*)bundleId;
+
+@end
+
+
 @implementation MPWScriptingBridgeScheme
 
 objectAccessor( NSMutableDictionary, bridges, setBridges )

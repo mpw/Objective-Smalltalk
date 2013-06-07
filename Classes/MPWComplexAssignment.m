@@ -9,6 +9,8 @@
 #import "MPWComplexAssignment.h"
 #import "MPWEvaluator.h"
 #import "MPWIdentifierExpression.h"
+#import "MPWIdentifier.h"
+
 
 @implementation MPWComplexAssignment
 

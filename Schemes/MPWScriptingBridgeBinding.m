@@ -8,6 +8,11 @@
 
 #import "MPWScriptingBridgeBinding.h"
 
+@interface NSObject(SBObject)
+
+-get;
+
+@end
 
 @implementation MPWScriptingBridgeBinding
 

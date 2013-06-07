@@ -42,7 +42,7 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     return [[self interpreter] methodStore];
 }
 
--(NSData*)methodList
+-(NSArray*)methodList
 {
     return [[self  methodStore] classesWithScripts];
 }

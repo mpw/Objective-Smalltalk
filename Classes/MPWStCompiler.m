@@ -47,7 +47,7 @@
 @implementation MPWStCompiler
 
 objectAccessor( MPWStScanner, scanner, setScanner )
-idAccessor( methodStore, setMethodStore )
+objectAccessor( MPWMethodStore, methodStore, setMethodStore )
 idAccessor( connectorMap, setConnectorMap );
 
 -(void)defineConnectorClass:(Class)aClass forConnectorSymbol:(NSString*)symbol
@@ -659,12 +659,7 @@ idAccessor( connectorMap, setConnectorMap );
 	}
 	NSLog(@"tokens: %@",tokenArray);
 */ 
-	if ( ![self scanner] ) {
-		[self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
-	} else {
-		[scanner _setData:nil];
-		[scanner addData:[aString asData]];
-	}
+    [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
     expr = [self parseStatements];
 //    NSLog(@"expr = %@",expr);
     return expr;

@@ -9,6 +9,7 @@
 #import "MPWInterval.h"
 #import "MPWBlockContext.h"
 #import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundation/MPWStream.h>
 
 @interface MPWIntervalEnumerator : MPWInterval
 {

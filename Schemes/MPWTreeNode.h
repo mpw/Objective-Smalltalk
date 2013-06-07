@@ -12,7 +12,7 @@
 @interface MPWTreeNode : MPWObject {
 	id	name;
 	id	parent;
-	id	_children;
+	NSMutableArray*	_children;
 	id  content;
 }
 
@@ -23,7 +23,7 @@
 -fileSystemPath;
 -root;
 -allSubnodes;
--content;
+idAccessor_h( content, setContent )
 -mkdirs:(NSEnumerator*)pathEnumerator;
 -childWithName:childName;
 

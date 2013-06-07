@@ -24,4 +24,6 @@ boolAccessor_h(sendsMessages, setSendsMessages)
 boolAccessor_h(isSettable, setIsSettable)
 
 -(BOOL)receivesMessages;
+-(BOOL)connect:(MPWMessagePortDescriptor*)other;
+
 @end

@@ -66,12 +66,12 @@ idAccessor(storedContext, setStoredContext)
 	return [[self source] bindingWithIdentifier:newIdentifier withContext:aContext];
 }
 
--_baseBindingForBinding:(MPWBinding*)aBinding
+-_baseBindingForBinding:(MPWGenericBinding*)aBinding
 {
     //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if (  [aBinding scheme] != [self source] ) {
         //        NSLog(@"modifying non var-scheme later");
-        aBinding=[self bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
+        aBinding=(MPWGenericBinding*)[self bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
     //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
     return aBinding;

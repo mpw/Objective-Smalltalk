@@ -27,7 +27,7 @@ objectAccessor( NSString, name, setName )
     return [[[self alloc] initWithName:envName scheme:newScheme] autorelease];
 }
 
--path
+-(NSString*)path
 {
     return name;
 }

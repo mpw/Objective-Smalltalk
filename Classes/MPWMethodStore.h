@@ -23,5 +23,9 @@
 -(NSArray*)classesWithScripts;
 -(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeader:(MPWMethodHeader*)header;
 	//  private
+-(NSDictionary*)externalScriptDict;
+-(void)addScript:scriptString forClass:className methodHeaderString:methodHeaderString;
+-(NSArray*)methodNamesForClassName:(NSString*)aClassName;
+-methodForClass:aClassName name:aMethodName;
 
 @end
