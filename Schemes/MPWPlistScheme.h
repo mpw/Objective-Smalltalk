@@ -6,11 +6,14 @@
 //
 //
 
-#import "MPWVarScheme.h"
+#import <ObjectiveSmalltalk/MPWVarScheme.h>
 
 @interface MPWPlistScheme : MPWVarScheme
 {
     id  plist;
 }
+
+
+-(void)setPlist:aPlist;
 
 @end

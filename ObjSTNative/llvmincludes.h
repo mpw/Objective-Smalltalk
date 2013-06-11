@@ -3,7 +3,7 @@
  *  MPWCodeGen
  *
  *  Created by Marcel Weiher on 01/12/2005.
- *  Copyright 2005 __MyCompanyName__. All rights reserved.
+ *  Copyright 2005 Marcel Weiher. All rights reserved.
  *
  */
 

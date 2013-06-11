@@ -18,7 +18,7 @@
 objectAccessor( MPWScheme, scheme, setScheme )
 idAccessor( _value, _setValue )
 boolAccessor( isBound ,setIsBound )
-idAccessor(identifier, setIdentifier)
+objectAccessor(MPWIdentifier,identifier, setIdentifier)
 scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 
 -initWithValue:aValue

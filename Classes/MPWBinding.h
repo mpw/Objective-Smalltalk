@@ -14,7 +14,7 @@
 	BOOL	isBound;
 	id		_value;
     id		scheme;
-    id      identifier;
+    MPWIdentifier*      identifier;
     MPWEvaluator    *defaultContext;
 
 }
@@ -29,7 +29,7 @@ objectAccessor_h( MPWScheme, scheme, setScheme )
 -(void)bindValue:value;
 -(void)unbindValue;
 -(BOOL)isBound;
-idAccessor_h(identifier, setIdentifier)
+objectAccessor_h(MPWIdentifier,identifier, setIdentifier)
 scalarAccessor_h(MPWEvaluator*, defaultContext, setDefaultContext)
 -valueForPathComponent:(NSString*)kvpath;
 

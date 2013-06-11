@@ -8,8 +8,10 @@
 
 #import <ObjectiveSmalltalk/MPWConnector.h>
 
+@class MPWIdentifierExpression;
+
 @interface MPWAssignmentExpression : MPWConnector {
-	id lhs;
+	MPWIdentifierExpression* lhs;
 	id context;
 	MPWExpression* rhs;
 }

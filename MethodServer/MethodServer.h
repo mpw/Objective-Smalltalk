@@ -23,5 +23,8 @@
 
 -(void)setupWithInterpreter:anInterpreter;
 - (id)initWithMethodDictName:(NSString*)newName;
+-(void)setup;
+-(void)setDelegate:aDelegate;
+-delegate;
 
 @end

@@ -21,5 +21,7 @@
 //idAccessor_h( scheme, setScheme )
 idAccessor_h( evaluationEnvironment, setEvaluationEnvironment )
 objectAccessor_h( MPWIdentifier, identifier, setIdentifier )
+-scheme;
+-name;
 
 @end

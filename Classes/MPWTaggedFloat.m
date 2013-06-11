@@ -31,7 +31,8 @@ static inline id float2ptr( float fx ) {
 
 static inline float floatValue( id ptr )
 {
-    if ( ((long long)ptr & 0xff) == myTag ) {
+    long long tagged=(long long)ptr;
+    if ( (tagged & 0xff) == myTag ) {
         return ptr2float(ptr);
     } else {
         return [ptr floatValue];

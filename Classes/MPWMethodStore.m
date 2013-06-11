@@ -3,7 +3,7 @@
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 25/01/2006.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 Marcel Weiher. All rights reserved.
 //
 
 #import "MPWMethodStore.h"
