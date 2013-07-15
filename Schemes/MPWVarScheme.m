@@ -12,15 +12,24 @@
 
 @implementation MPWVarScheme
 
--localVarsForContext:(MPWEvaluator*)aContext
-{
-	return [aContext localVars];
-}
-
-
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {
+    NSString *firstName=variableName;
+    MPWBinding *theBinding=nil;
+    NSString *remainder=nil;
+    NSRange firstPathSeparator=[variableName rangeOfString:@"/"];
+    BOOL isCompound = firstPathSeparator.location !=  NSNotFound;
+    if ( isCompound ) {
+        firstName=[variableName substringToIndex:firstPathSeparator.location];
+        remainder=[variableName substringFromIndex:firstPathSeparator.location+1];
+    }
+    theBinding=[aContext bindingForLocalVariableNamed:firstName];
+    if ( isCompound) {
+		theBinding= [[[MPWVARBinding alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
+    }
+    return theBinding;
+#if 0
 	id localVars = [self localVarsForContext:aContext];
 	id binding=nil;
 	if ( [variableName rangeOfString:@"/"].location != NSNotFound ) {
@@ -33,6 +42,7 @@
         }
 	}
 	return binding;
+#endif
 }
 
 -(id)valueForBinding:aBinding

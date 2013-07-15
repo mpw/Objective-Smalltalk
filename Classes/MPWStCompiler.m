@@ -605,7 +605,7 @@ idAccessor( connectorMap, setConnectorMap );
     id next=[self nextToken];
     if ( [next isEqual:@"|"]) {
         next=[self nextToken];
-        while ( ![next isEqual:@"|"]) {
+        while ( next && ![next isEqual:@"|"]) {
             next=[self nextToken];
         }
 

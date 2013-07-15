@@ -8,13 +8,16 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
+@class MPWBinding;
 
 @interface MPWEvaluator : MPWObject {
 	id localVars;
 	id parent;
 	id messageCache;
 	id _schemes;
+    id homeContext;
 }
+
 
 -initWithParent:aParent;
 
@@ -24,7 +27,9 @@
 -createSchemes;
 
 -valueOfVariableNamed:aName;
+-(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;
 //-valueOfVariableNamed:aName withScheme:scheme;
+-(MPWBinding*)createLocalBindingForName:(NSString*)variableName;
 -(NSString*)defaultScheme;
 
 -valueForUndefinedVariableNamed:aName;

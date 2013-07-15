@@ -137,6 +137,19 @@ idAccessor( localVars, setLocalVars )
 }
 
 
+-(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName
+{
+    MPWBinding *binding=nil;
+    if ( [localVarName isEqualToString:@"context"]) {
+        binding=[MPWBinding bindingWithValue:self];
+    } else {
+        binding = [localVars objectForKey:localVarName];
+    }
+    if (! binding) {
+        binding = [parent bindingForLocalVariableNamed:localVarName];
+    }
+    return binding;
+}
 
 -schemeForName:schemeName
 {
@@ -153,12 +166,18 @@ idAccessor( localVars, setLocalVars )
     return [[[self bindingClass] new] autorelease];
 }
 
+-(MPWBinding*)createLocalBindingForName:(NSString*)variableName
+{
+    MPWBinding *binding = [self makeLocalBindingNamed:variableName];
+    [localVars setObject:binding forKey:variableName];
+    return binding;
+}
+
 -(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:scheme
 {
 	id binding=[[self schemeForName:scheme] bindingForName:variableName inContext:self];
 	if ( !binding ) {
-		binding = [self makeLocalBindingNamed:variableName];
-		[localVars setObject:binding forKey:variableName];
+        binding = [self createLocalBindingForName:variableName];
 	}
 	[binding bindValue:value];
 }

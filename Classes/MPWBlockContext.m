@@ -10,6 +10,7 @@
 #import "MPWStatementList.h"
 #import "MPWEvaluator.h"
 #import <MPWFoundation/MPWBlockFilterStream.h>
+#import "MPWBinding.h"
 
 @implementation MPWBlockContext
 
@@ -29,8 +30,46 @@ idAccessor( context, setContext )
 	return [[[self alloc] initWithBlock:aBlock context:aContext] autorelease];
 }
 
--evaluateIn:aContext
+
+-contextClass
 {
+	id localContextClass=[[self context] class];
+	if ( !localContextClass) {
+		localContextClass=[MPWEvaluator class];
+	}
+	return localContextClass;
+}
+
+
+-freshExecutionContextForRealLocalVars
+{
+    //	NSLog(@"creating new context from context: %@",[self context]);
+	MPWEvaluator *evalContext= [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
+    
+    
+    return evalContext;
+}
+
+-evaluationContext
+{
+#if 0
+    return [self context];
+#else
+    MPWEvaluator *evalContext=[self freshExecutionContextForRealLocalVars];
+    return evalContext;
+#endif
+}
+
+
+-evaluateIn_block:aContext arguments:(NSArray*)args {
+    int numArgs=[args count];
+    NSArray *formals=[[self block] arguments];
+    numArgs=MIN(numArgs,[formals count]);
+    for (int i=0;i<numArgs;i++) {
+        MPWBinding *b=[aContext createLocalBindingForName:[formals objectAtIndex:i]];
+        [b bindValue:[args objectAtIndex:i]];
+//        [aContext bindValue:[args objectAtIndex:i] toVariableNamed:[formals objectAtIndex:i]];
+    }
 	if ( aContext ) {
 		return [aContext evaluate:[[self block] statements]];
 	} else {
@@ -40,24 +79,24 @@ idAccessor( context, setContext )
 
 -invokeWithArgs:(va_list)args
 {
+    NSMutableArray *argArray=[NSMutableArray arrayWithCapacity:[[[self block] arguments] count]];
     for ( NSString *paramName in [[self block] arguments] ) {
-        [[self context] bindValue:va_arg(args, id) toVariableNamed:paramName];
+        [argArray addObject:va_arg(args, id)];
     }
-    return [self value];
+    return [self evaluateIn_block:[self evaluationContext] arguments:argArray];
 }
 
 -value
 {
-	return [self evaluateIn:[self context]];
+	return [self evaluateIn_block:[self evaluationContext] arguments:nil];
 }
 
 -value:anObject
 {
-    if ( [[[self block] arguments] count]>0) {
-        [[self context] bindValue:anObject toVariableNamed:[[[self block] arguments] objectAtIndex:0]];
-    }
-	return [self value];
+	return [self evaluateIn_block:[self evaluationContext] arguments:@[ anObject]];
 }
+
+
 
 -(void)drawOnContext:aContext
 {
@@ -114,11 +153,18 @@ idAccessor( context, setContext )
     IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1 2 3 4 ) enumerateObjectsUsingBlock:[ :obj |  a := a+obj. ]. a."], [NSNumber numberWithInt:10], @"added the elements in an array using block enumeration");
 }
 
+
++(void)testBlockArgsDontMessWithEnclosingScope
+{
+    IDEXPECT([MPWStCompiler evaluate:@"a:=3. block:=[:a| a+10]. block value:42. a."], [NSNumber numberWithInt:3], @"local var");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
             @"testObjcBlocksWithNoArgsAreMapped",
             @"testObjcBlocksWithObjectArgsAreMapped",
+            @"testBlockArgsDontMessWithEnclosingScope",
             nil];
 }
 

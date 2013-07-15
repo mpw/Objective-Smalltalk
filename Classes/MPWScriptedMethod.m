@@ -51,7 +51,7 @@ idAccessor( script, _setScript )
 -freshExecutionContextForRealLocalVars
 {
 //	NSLog(@"creating new context from context: %@",[self context]);
-	return [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
+	return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
 }
 
 -compiledInExecutionContext
