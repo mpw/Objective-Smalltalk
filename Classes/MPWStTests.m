@@ -130,7 +130,7 @@
 
 +(void)testFloatArithmetic
 {
-    [self testexpr:@"3.2+4.4" expected:@"7.6"];
+    [self testexpr:@"(3.2+4.4*10) intValue" expected:@"76"];
 }
 
 +(void)testAsFloat
@@ -613,8 +613,8 @@
 
 +(void)testNegativeDecimalFractions
 {
-	[self testexpr:@"-1.2 stringValue" expected:@"-1.2"];
-	[self testexpr:@"1.2 negated stringValue" expected:@"-1.2"];
+	[self testexpr:@"(-1.2  * 10) intValue stringValue" expected:@"-12"];
+	[self testexpr:@"(1.2 negated * 10) intValue stringValue" expected:@"-12"];
 }
 
 +(void)testCommaSelector

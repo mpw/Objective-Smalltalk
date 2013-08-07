@@ -15,11 +15,23 @@
 
 @end
 
+#import <MPWFoundation/MPWFoundation.h>
+
+@interface MPWCodeGeneratorTestClass : NSObject {}  @end
+
+@implementation MPWCodeGeneratorTestClass
+
+
+
+
+@end
+
+
 @implementation MPWCodeGenerator(testing)
 
 +(void)testMessageSend
 {
-    
+//    EXPECTTRUE(false, @"");
 }
 
 

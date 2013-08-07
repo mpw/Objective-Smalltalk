@@ -11,6 +11,7 @@
 #import "MPWEvaluator.h"
 #import <MPWFoundation/MPWBlockFilterStream.h>
 #import "MPWBinding.h"
+#include <Block.h>
 
 @implementation MPWBlockContext
 
@@ -117,6 +118,11 @@ idAccessor( context, setContext )
     return [self retain];
 }
 
+-copy
+{
+    return [self retain];
+}
+
 -(void)dealloc
 {
 	[block release];
@@ -158,6 +164,72 @@ idAccessor( context, setContext )
 {
     IDEXPECT([MPWStCompiler evaluate:@"a:=3. block:=[:a| a+10]. block value:42. a."], [NSNumber numberWithInt:3], @"local var");
 }
+typedef id  (^idBlock)(id arg );
+
++(void)testSTBlockAsObjCBlock
+{
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[:a| a+10]"];
+    IDEXPECT([stblock class],self, @"class");
+    idBlock objcBlock=(idBlock)stblock;
+    NSNumber *val=@(12);
+    NSNumber *retval=objcBlock(val);
+    IDEXPECT(retval, @(22), @"retval");
+    
+    
+}
+
++(void)testCopiedSTBlockAsObjCBlock
+{
+    idBlock copiedBlock=nil;
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[:a| a+10]"];
+    IDEXPECT([stblock class],self, @"class");
+    INTEXPECT([stblock retainCount], 1, @"retainCount");
+        idBlock objcBlock=(idBlock)stblock;
+
+        copiedBlock=Block_copy(objcBlock);
+    NSNumber *retval=copiedBlock(@(12));
+    IDEXPECT(retval, @(22), @"retval");
+    Block_release(copiedBlock);
+    
+    
+}
+
+
++(void)testRetainedSTBlockOriginalAutoreleased
+{
+    idBlock copiedBlock=nil;
+    @autoreleasepool {
+        MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[:a| a+10]"];
+        IDEXPECT([stblock class],self, @"class");
+        idBlock objcBlock=(idBlock)stblock;
+        copiedBlock=[objcBlock retain];
+    }
+    NSNumber *retval=copiedBlock(@(12));
+    IDEXPECT(retval, @(22), @"retval");
+    Block_release(copiedBlock);
+    
+    
+}
+
++(void)testBlock_copiedSTBlockOriginalAutoreleased
+{
+    idBlock copiedBlock=nil;
+    @autoreleasepool {
+        MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[:a| a+10]"];
+        IDEXPECT([stblock class],self, @"class");
+        INTEXPECT([stblock retainCount], 1, @"retainCount");
+        idBlock objcBlock=(idBlock)stblock;
+        INTEXPECT([stblock retainCount], 1, @"retainCount");
+        copiedBlock=Block_copy(objcBlock);
+
+    }
+    NSNumber *retval=copiedBlock(@(12));
+    IDEXPECT(retval, @(22), @"retval");
+    Block_release(copiedBlock);
+    INTEXPECT([copiedBlock retainCount], 1, @"retainCount");
+   
+    
+}
 
 +(NSArray*)testSelectors
 {
@@ -165,6 +237,10 @@ idAccessor( context, setContext )
             @"testObjcBlocksWithNoArgsAreMapped",
             @"testObjcBlocksWithObjectArgsAreMapped",
             @"testBlockArgsDontMessWithEnclosingScope",
+            @"testSTBlockAsObjCBlock",
+            @"testCopiedSTBlockAsObjCBlock",
+            @"testRetainedSTBlockOriginalAutoreleased",
+           @"testBlock_copiedSTBlockOriginalAutoreleased",
             nil];
 }
 
