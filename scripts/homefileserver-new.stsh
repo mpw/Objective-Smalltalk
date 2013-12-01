@@ -1,7 +1,7 @@
 #!/usr/local/bin/stsh
-context loadFramework:'MPWSideWeb'
+context loadFramework:'ObjectiveHTTPD'
 
-(ref:file:{env:HOME} -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
+(ref:file:{env:HOME}/Sites -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
 
 shell runInteractiveLoop
 

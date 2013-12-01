@@ -12,7 +12,7 @@
 
 @implementation MPWAppDelegate
 
-@synthesize window = _window;
+// @synthesize window = _window;
 
 - (void)dealloc
 {

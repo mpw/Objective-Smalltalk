@@ -12,11 +12,26 @@
 #import <MPWFoundation/MPWBlockFilterStream.h>
 #import "MPWBinding.h"
 #include <Block.h>
+#import <objc/runtime.h>
 
 @implementation MPWBlockContext
 
 idAccessor( block, setBlock )
 idAccessor( context, setContext )
+
+typedef id (^OneArgBlock)(id randomArgument);
+typedef id (^ZeroArgBlock)(void);
+
++(void)initialize
+{
+    static int initialized=NO;
+    if  ( !initialized) {
+        Class blockClass=NSClassFromString(@"NSBlock");
+        IMP theImp=imp_implementationWithBlock( ^(id blockSelf, id argument){ ((OneArgBlock)blockSelf)(argument); } );
+        class_addMethod(blockClass, @selector(value:), theImp, "@@:@");
+        initialized=YES;
+    }
+}
 
 -initWithBlock:aBlock context:aContext
 {
@@ -144,6 +159,15 @@ idAccessor( context, setContext )
 
 
 @end
+
+@implementation MPWEvaluator(autorelease)
+
+-(void)autoreleased:(ZeroArgBlock)block
+{
+    @autoreleasepool {  block(); }
+}
+
+@end 
 
 #import "MPWStCompiler.h"
 

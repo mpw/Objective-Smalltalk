@@ -104,6 +104,10 @@ idAccessor( _signature, setSignature )
 					const char *type=[sig getArgumentTypeAtIndex:invocationIndex];
 //					NSLog(@"argtype[%d]=%p",i,type);
 //					NSLog(@"argtype[%d]=%s",i,type);
+                    if ( *type == 'r') {        //  CONST prefix
+                        type++;
+                    }
+
 					switch (*type) {
 						case ':':
                             selArg = NSSelectorFromString( [arg stringValue] );
@@ -219,6 +223,9 @@ idAccessor( _signature, setSignature )
 	
 	if ( returnType!=nil &&  *returnType != 'v' ) {
 		[invocation getReturnValue:returnBuffer];
+        if ( *returnType == 'r') {      // CONST prefix
+            returnType++;
+        }
 		switch (*returnType) {
 			case '#':	//	treat classes like objects
 			case '@':

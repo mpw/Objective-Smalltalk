@@ -2,7 +2,7 @@
 context loadFramework:'MPWSideWeb'
 server := MPWSchemeHttpServer new.
 server server setPort:8081.
-base := ref:file:{env:HOME} asScheme.
+base := ref:file:{env:HOME}/Sites asScheme.
 cache := base cachedBy: MPWSiteMap scheme.
 
 server setScheme: cache .

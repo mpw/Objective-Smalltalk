@@ -93,7 +93,7 @@ idAccessor( url , setUrl )
 -_valueWithDataURL:(NSURL*)aURL
 {
     NSError *error=nil;
-	NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMappedAlways error:&error];
+	NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
 	MPWResource *result=[[[MPWResource alloc] init] autorelease];
 	[result setSource:aURL];
 	[result setRawData:rawData];
@@ -174,6 +174,14 @@ idAccessor( url , setUrl )
 		[[NSFileManager defaultManager] createDirectoryAtPath:[self fileSystemPath] withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 }
+
+-(void)open
+{
+    
+    [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[self url]];
+}
+
+
 
 -(void)dealloc
 {

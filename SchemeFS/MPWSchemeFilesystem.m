@@ -19,25 +19,32 @@ static NSString *helloPath = @"/hello.txt";
 
 objectAccessor(MPWScheme, scheme, setScheme)
 
--(id)init
+-(id)initWithScheme:newScheme
 {
     self = [super init];
-    [self setScheme:[[[MPWFileSchemeResolver alloc] init] autorelease]];
+    [self setScheme:newScheme];
     return self;
+}
+
+
+-(id)init
+{
+    return [self initWithScheme:[[[MPWFileSchemeResolver alloc] init] autorelease]];
 }
 
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path error:(NSError **)error {
     NSLog(@"get directory: %@",path);
     //    return [NSArray arrayWithObject:@"hello.txt"];
-    id v = [[[self scheme] bindingForName:path inContext:nil] value];
+    id v = [[[self scheme] bindingForName:path inContext:nil] childNames];
+    NSLog(@"children: %@",v);
     NSLog(@"class %@, value: %@",[v class],v);
     return v;
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
     NSLog(@"get file: %@",path);
-    return [@"hello world!" asData];
-    //    [[[self scheme] bindingForName:path inContext:nil] value];
+//    return [@"hello world!" asData];
+   return  [[[[self scheme] bindingForName:path inContext:nil] value] asData];
 }
 
 #pragma optional Custom Icon
@@ -62,7 +69,9 @@ objectAccessor(MPWScheme, scheme, setScheme)
     if ( [v hasChildren] ) {
         return [NSDictionary dictionaryWithObject:NSFileTypeDirectory forKey:NSFileType];
     } else {
-        return [NSDictionary dictionaryWithObject:NSFileTypeRegular forKey:NSFileType];
+        return  @{NSFileType: NSFileTypeRegular,
+                  NSFilePosixPermissions: @(4*8*8)
+                  } ;
     }
 }
 

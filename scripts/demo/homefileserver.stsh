@@ -1,0 +1,10 @@
+#!/usr/local/bin/stsh
+context loadFramework:'MPWSideWeb'
+server := MPWSchemeHttpServer new.
+server server setPort:8081.
+base := ref:file:{env:HOME}/Sites asScheme.
+server setScheme: base.
+
+server start:nil.
+shell runInteractiveLoop
+
