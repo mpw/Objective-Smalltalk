@@ -50,8 +50,13 @@ idAccessor( script, _setScript )
 
 -freshExecutionContextForRealLocalVars
 {
-//	NSLog(@"creating new context from context: %@",[self context]);
+//  FIXME!!
+//  Linking with parent means we don't have local vars
+//  (they are inherited from parent), not linking means
+//  schemes are not inherited (and can't be modified)
+    
 	return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
+//	return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
 }
 
 -compiledInExecutionContext

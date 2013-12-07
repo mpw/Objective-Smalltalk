@@ -28,19 +28,23 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 	return [self schemes];
 }
 
--(void)setSchemeHandler:(MPWScheme*)aSchem   forSchemeName:(NSString*)schemeName
+-(void)setSchemeHandler:(MPWScheme*)aScheme   forSchemeName:(NSString*)schemeName
 {
-    if ( aSchem && schemeName) {
-        [[self _schemes] setObject:aSchem forKey:schemeName];
+//    NSLog(@"%p scheme handler: '%@' for scheme name: '%@'",self,aScheme,schemeName);
+    if ( aScheme && schemeName) {
+        [[self _schemes] setObject:aScheme forKey:schemeName];
     }
 }
 
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {
+//    NSLog(@"%p bindingForName: %@",self,variableName);
 	id localVars = [self localVarsForContext:aContext];
 	id binding=nil;
+//    NSLog(@"scheme %p: localVars: %@",self,localVars);
 	binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];		
+//    NSLog(@"binding: %@",binding);
 	return binding;
 }
 
@@ -52,7 +56,7 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 
 -description
 {
-	return [NSString stringWithFormat:@"scheme-resolver with the following schemes: %@",[[self schemes] allKeys]];
+	return [NSString stringWithFormat:@"<%@:%p: scheme-resolver with the following schemes: %@>",[self class],self,[[self schemes] allKeys]];
 }
 
 -(void)dealloc
