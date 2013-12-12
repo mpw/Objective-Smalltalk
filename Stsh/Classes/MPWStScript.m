@@ -106,7 +106,7 @@ idAccessor( script, setScript )
     }
 }
 
--(void)executeInContext:executionContext
+-(void)executeInContext_lines:executionContext
 {
 	id  scriptSource=[[self script] objectEnumerator];
 	int line=1;
@@ -134,7 +134,29 @@ idAccessor( script, setScript )
 	NS_ENDHANDLER
 }
 
+-(void)executeInContext:executionContext
+{
+    NSString *exprString=[[self script] componentsJoinedByString:@"\n"];
+    [self processArgsFromExecutionContext:executionContext];
+    @try {
+        @autoreleasepool {
+            id expr = [[executionContext evaluator] compile:exprString];
+            id localResult = [[executionContext evaluator] executeShellExpression:expr];
+            if ( [self hasDeclaredReturn] ) {
+                [executionContext setRetval:localResult];
+            }
+            if ( [self hasDeclaredReturn] ) {
+                [[[MPWByteStream Stdout] do] println:[[executionContext retval] each]];
+                [executionContext setRetval:nil];
+            }
+        }
 
+    }
+    @catch (NSException *exception) {
+		[[MPWByteStream Stderr] println:[NSString stringWithFormat:@"Exception: %@ in : '%@' ",
+                                         exception,exprString]];
+    }
+}
 
 @end
 

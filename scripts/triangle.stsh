@@ -1,14 +1,14 @@
 #!/usr/local/bin/stsh
 context loadFramework:'EGOS_Cocoa'.
-c := MPWCGPDFContext pdfContextWithTarget:(MPWByteStream fileName:'out.pdf') size:595@842.
+c := MPWCGPDFContext pdfContextWithTarget:(MPWByteStream fileName:'triangle.pdf') size:595@842.
 
-c page:[ :c |
+c page:nil content:[ :c |
   c setFillColor:(c colorRed:1.0 green:0 blue:0 alpha:1.0).
-  c translate:10 :10.
+  c translate:10.
   c moveto:0 :0.
   c lineto:100 :0.
   c lineto:50 :50.
-  c closepath
+  c closepath.
   c fill.
 ].
 c close.

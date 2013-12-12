@@ -300,30 +300,30 @@
 		1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F494147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
+		1FAFD9731855B98200EC5221 /* MPWStScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAFD9721855B98200EC5221 /* MPWStScript.h */; };
+		1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC38184BDF6A00086047 /* MPWExternalCommand.m */; };
+		1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC36184BDF6A00086047 /* MPWEchoCommand.m */; };
+		1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC41184BDF6A00086047 /* MPWStScript.m */; };
+		1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC43184BDF6A00086047 /* MPWUpcaseFilter.m */; };
+		1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3C184BDF6A00086047 /* MPWObjectPipeCommand.m */; };
+		1FAFD97B1855BC5500EC5221 /* MPWCommandPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC35184BDF6A00086047 /* MPWCommandPipe.m */; };
+		1FAFD97C1855BC5500EC5221 /* MPWShellCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3F184BDF6A00086047 /* MPWShellCompiler.m */; };
+		1FAFD97D1855BC5500EC5221 /* MPWShellProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC40184BDF6A00086047 /* MPWShellProcess.m */; };
+		1FAFD97E1855BC5500EC5221 /* MPWShellCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3E184BDF6A00086047 /* MPWShellCommand.m */; };
+		1FAFD97F1855BC5500EC5221 /* MPWCommandFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC34184BDF6A00086047 /* MPWCommandFilter.m */; };
+		1FAFD9801855BC5500EC5221 /* MPWStsh.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC42184BDF6A00086047 /* MPWStsh.m */; };
+		1FAFD9821855BC5500EC5221 /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAAC5A184BE03B00086047 /* libncurses.dylib */; };
+		1FAFD9831855BC5500EC5221 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAAC58184BE03500086047 /* libedit.dylib */; };
+		1FAFD9841855BC5500EC5221 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
+		1FAFD9851855BC5500EC5221 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1FAFD9861855BC5500EC5221 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1FAFD9891855BC5500EC5221 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAABC4184BDBBA00086047 /* InfoPlist.strings */; };
 		1FB7F59116AC6E47001BF2EB /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
-		1FBAABC6184BDBBA00086047 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAABC4184BDBBA00086047 /* InfoPlist.strings */; };
 		1FBAAC17184BDC6400086047 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
 		1FBAAC1A184BDC6400086047 /* stsh_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC19184BDC6400086047 /* stsh_main.m */; };
 		1FBAAC1E184BDC6400086047 /* stsh.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FBAAC1D184BDC6400086047 /* stsh.1 */; };
-		1FBAAC23184BDD5E00086047 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1FBAAC24184BDD6800086047 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1FBAAC25184BDD7000086047 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
-		1FBAAC26184BDD7B00086047 /* Stsh.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAABBF184BDBB900086047 /* Stsh.framework */; };
 		1FBAAC27184BDD8200086047 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FBAAC28184BDD8900086047 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1FBAAC46184BDF6A00086047 /* MPWCommandFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC34184BDF6A00086047 /* MPWCommandFilter.m */; };
-		1FBAAC47184BDF6A00086047 /* MPWCommandPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC35184BDF6A00086047 /* MPWCommandPipe.m */; };
-		1FBAAC48184BDF6A00086047 /* MPWEchoCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC36184BDF6A00086047 /* MPWEchoCommand.m */; };
-		1FBAAC4A184BDF6A00086047 /* MPWExternalCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC38184BDF6A00086047 /* MPWExternalCommand.m */; };
-		1FBAAC4E184BDF6A00086047 /* MPWObjectPipeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3C184BDF6A00086047 /* MPWObjectPipeCommand.m */; };
-		1FBAAC50184BDF6A00086047 /* MPWShellCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3E184BDF6A00086047 /* MPWShellCommand.m */; };
-		1FBAAC51184BDF6A00086047 /* MPWShellCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3F184BDF6A00086047 /* MPWShellCompiler.m */; };
-		1FBAAC52184BDF6A00086047 /* MPWShellProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC40184BDF6A00086047 /* MPWShellProcess.m */; };
-		1FBAAC53184BDF6A00086047 /* MPWStScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC41184BDF6A00086047 /* MPWStScript.m */; };
-		1FBAAC54184BDF6A00086047 /* MPWStsh.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC42184BDF6A00086047 /* MPWStsh.m */; };
-		1FBAAC55184BDF6A00086047 /* MPWUpcaseFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC43184BDF6A00086047 /* MPWUpcaseFilter.m */; };
-		1FBAAC59184BE03500086047 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAAC58184BE03500086047 /* libedit.dylib */; };
-		1FBAAC5B184BE03B00086047 /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAAC5A184BE03B00086047 /* libncurses.dylib */; };
 		1FC364E11764E0BD00CD2C43 /* MPWVarScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */; };
 		1FC8F835181BF3A3003980D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1FC8F83B181BF3A3003980D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8F839181BF3A3003980D8 /* InfoPlist.strings */; };
@@ -367,6 +367,7 @@
 		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FD713EA1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FD713EB1522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FDB6CB41855BE1400623042 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
 		1FDCCB38139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */; };
@@ -588,6 +589,9 @@
 		1FA5F48F147CE049007EE753 /* MPWTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTreeNode.m; sourceTree = "<group>"; };
 		1FA741A40886DAFB00121867 /* MPWStTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStTests.h; sourceTree = "<group>"; };
 		1FA741A50886DAFB00121867 /* MPWStTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStTests.m; sourceTree = "<group>"; };
+		1FAFD9721855B98200EC5221 /* MPWStScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStScript.h; sourceTree = "<group>"; };
+		1FAFD98E1855BC5500EC5221 /* StshFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StshFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "StshFramework-Info.plist"; path = "/Users/marcel/programming/Kits/ObjectiveSmalltalk/StshFramework-Info.plist"; sourceTree = "<absolute>"; };
 		1FB39EF5088F0AD2008FC5C6 /* MPWInstanceVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWInstanceVariable.h; sourceTree = "<group>"; };
 		1FB39EF6088F0AD2008FC5C6 /* MPWInstanceVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWInstanceVariable.m; sourceTree = "<group>"; };
 		1FB39F9D088FDAE4008FC5C6 /* MPWSetAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSetAccessor.h; sourceTree = "<group>"; };
@@ -595,7 +599,6 @@
 		1FB39FA7088FDB20008FC5C6 /* MPWGetAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWGetAccessor.h; sourceTree = "<group>"; };
 		1FB39FA8088FDB20008FC5C6 /* MPWGetAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWGetAccessor.m; sourceTree = "<group>"; };
 		1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveHTTPD.framework; path = ../../Build/Release/ObjectiveHTTPD.framework; sourceTree = "<group>"; };
-		1FBAABBF184BDBB900086047 /* Stsh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stsh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FBAABC3184BDBBA00086047 /* Stsh-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Stsh-Info.plist"; sourceTree = "<group>"; };
 		1FBAABC5184BDBBA00086047 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1FBAABC7184BDBBA00086047 /* Stsh-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stsh-Prefix.pch"; sourceTree = "<group>"; };
@@ -751,15 +754,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1FBAABBB184BDBB900086047 /* Frameworks */ = {
+		1FAFD9811855BC5500EC5221 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FBAAC5B184BE03B00086047 /* libncurses.dylib in Frameworks */,
-				1FBAAC59184BE03500086047 /* libedit.dylib in Frameworks */,
-				1FBAAC25184BDD7000086047 /* Foundation.framework in Frameworks */,
-				1FBAAC24184BDD6800086047 /* MPWFoundation.framework in Frameworks */,
-				1FBAAC23184BDD5E00086047 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1FAFD9821855BC5500EC5221 /* libncurses.dylib in Frameworks */,
+				1FAFD9831855BC5500EC5221 /* libedit.dylib in Frameworks */,
+				1FAFD9841855BC5500EC5221 /* Foundation.framework in Frameworks */,
+				1FAFD9851855BC5500EC5221 /* MPWFoundation.framework in Frameworks */,
+				1FAFD9861855BC5500EC5221 /* ObjectiveSmalltalk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -767,9 +770,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FDB6CB41855BE1400623042 /* StshFramework.framework in Frameworks */,
 				1FBAAC28184BDD8900086047 /* MPWFoundation.framework in Frameworks */,
 				1FBAAC27184BDD8200086047 /* ObjectiveSmalltalk.framework in Frameworks */,
-				1FBAAC26184BDD7B00086047 /* Stsh.framework in Frameworks */,
 				1FBAAC17184BDC6400086047 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1009,6 +1012,7 @@
 		1FBAABFB184BDC0D00086047 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1FAFD9721855B98200EC5221 /* MPWStScript.h */,
 				1FBAAC34184BDF6A00086047 /* MPWCommandFilter.m */,
 				1FBAAC35184BDF6A00086047 /* MPWCommandPipe.m */,
 				1FBAAC36184BDF6A00086047 /* MPWEchoCommand.m */,
@@ -1113,6 +1117,7 @@
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
 				1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */,
+				1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */,
 			);
 			name = MPWTalk;
 			sourceTree = "<group>";
@@ -1251,8 +1256,8 @@
 				1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */,
 				1FC8F834181BF3A3003980D8 /* SchemeFUSE.framework */,
 				1FC8F844181BF3A3003980D8 /* SchemeFUSETests.xctest */,
-				1FBAABBF184BDBB900086047 /* Stsh.framework */,
 				1FBAAC16184BDC6400086047 /* stsh */,
+				1FAFD98E1855BC5500EC5221 /* StshFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1367,6 +1372,7 @@
 				1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */,
 				1F5E505E09B4B754000298D9 /* MPWInstanceVariable.h in Headers */,
 				1F5E505F09B4B754000298D9 /* MPWSetAccessor.h in Headers */,
+				1FAFD9731855B98200EC5221 /* MPWStScript.h in Headers */,
 				1F5E506009B4B754000298D9 /* MPWGetAccessor.h in Headers */,
 				1F5E506109B4B754000298D9 /* MPWScriptedMethod.h in Headers */,
 				1F5E506209B4B754000298D9 /* MPWMethod.h in Headers */,
@@ -1441,7 +1447,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1FBAABBC184BDBB900086047 /* Headers */ = {
+		1FAFD9871855BC5500EC5221 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1597,22 +1603,22 @@
 			productReference = 1F7E05B4144B3E7D008F349D /* libiMethodServer.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		1FBAABBE184BDBB900086047 /* Stsh */ = {
+		1FAFD9741855BC5500EC5221 /* StshFramework */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1FBAABE3184BDBBA00086047 /* Build configuration list for PBXNativeTarget "Stsh" */;
+			buildConfigurationList = 1FAFD98A1855BC5500EC5221 /* Build configuration list for PBXNativeTarget "StshFramework" */;
 			buildPhases = (
-				1FBAABBA184BDBB900086047 /* Sources */,
-				1FBAABBB184BDBB900086047 /* Frameworks */,
-				1FBAABBC184BDBB900086047 /* Headers */,
-				1FBAABBD184BDBB900086047 /* Resources */,
+				1FAFD9751855BC5500EC5221 /* Sources */,
+				1FAFD9811855BC5500EC5221 /* Frameworks */,
+				1FAFD9871855BC5500EC5221 /* Headers */,
+				1FAFD9881855BC5500EC5221 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Stsh;
+			name = StshFramework;
 			productName = Stsh;
-			productReference = 1FBAABBF184BDBB900086047 /* Stsh.framework */;
+			productReference = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		1FBAAC15184BDC6400086047 /* stsh */ = {
@@ -1723,8 +1729,8 @@
 				1F084A0D16DCE6A200ED2517 /* ObjSTNative */,
 				1FC8F833181BF3A3003980D8 /* SchemeFUSE */,
 				1FC8F843181BF3A3003980D8 /* SchemeFUSETests */,
-				1FBAABBE184BDBB900086047 /* Stsh */,
 				1FBAAC15184BDC6400086047 /* stsh */,
+				1FAFD9741855BC5500EC5221 /* StshFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -1776,11 +1782,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1FBAABBD184BDBB900086047 /* Resources */ = {
+		1FAFD9881855BC5500EC5221 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FBAABC6184BDBBA00086047 /* InfoPlist.strings in Resources */,
+				1FAFD9891855BC5500EC5221 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2038,21 +2044,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1FBAABBA184BDBB900086047 /* Sources */ = {
+		1FAFD9751855BC5500EC5221 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FBAAC4A184BDF6A00086047 /* MPWExternalCommand.m in Sources */,
-				1FBAAC48184BDF6A00086047 /* MPWEchoCommand.m in Sources */,
-				1FBAAC53184BDF6A00086047 /* MPWStScript.m in Sources */,
-				1FBAAC55184BDF6A00086047 /* MPWUpcaseFilter.m in Sources */,
-				1FBAAC4E184BDF6A00086047 /* MPWObjectPipeCommand.m in Sources */,
-				1FBAAC47184BDF6A00086047 /* MPWCommandPipe.m in Sources */,
-				1FBAAC51184BDF6A00086047 /* MPWShellCompiler.m in Sources */,
-				1FBAAC52184BDF6A00086047 /* MPWShellProcess.m in Sources */,
-				1FBAAC50184BDF6A00086047 /* MPWShellCommand.m in Sources */,
-				1FBAAC46184BDF6A00086047 /* MPWCommandFilter.m in Sources */,
-				1FBAAC54184BDF6A00086047 /* MPWStsh.m in Sources */,
+				1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */,
+				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
+				1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */,
+				1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */,
+				1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */,
+				1FAFD97B1855BC5500EC5221 /* MPWCommandPipe.m in Sources */,
+				1FAFD97C1855BC5500EC5221 /* MPWShellCompiler.m in Sources */,
+				1FAFD97D1855BC5500EC5221 /* MPWShellProcess.m in Sources */,
+				1FAFD97E1855BC5500EC5221 /* MPWShellCommand.m in Sources */,
+				1FAFD97F1855BC5500EC5221 /* MPWCommandFilter.m in Sources */,
+				1FAFD9801855BC5500EC5221 /* MPWStsh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2893,7 +2899,7 @@
 			};
 			name = Release;
 		};
-		1FBAABDD184BDBBA00086047 /* Development */ = {
+		1FAFD98B1855BC5500EC5221 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2933,16 +2939,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "Stsh/Stsh-Info.plist";
+				INFOPLIST_FILE = "StshFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = StshFramework;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Development;
 		};
-		1FBAABDE184BDBBA00086047 /* Release */ = {
+		1FAFD98C1855BC5500EC5221 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2957,7 +2963,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2977,14 +2983,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "Stsh/Stsh-Info.plist";
+				INFOPLIST_FILE = "StshFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = StshFramework;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
 		};
-		1FBAABDF184BDBBA00086047 /* Release Tiger */ = {
+		1FAFD98D1855BC5500EC5221 /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2999,7 +3005,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -3019,9 +3025,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "Stsh/Stsh-Info.plist";
+				INFOPLIST_FILE = "StshFramework-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = StshFramework;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "Release Tiger";
@@ -3537,14 +3543,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1FBAABE3184BDBBA00086047 /* Build configuration list for PBXNativeTarget "Stsh" */ = {
+		1FAFD98A1855BC5500EC5221 /* Build configuration list for PBXNativeTarget "StshFramework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FBAABDD184BDBBA00086047 /* Development */,
-				1FBAABDE184BDBBA00086047 /* Release */,
-				1FBAABDF184BDBBA00086047 /* Release Tiger */,
+				1FAFD98B1855BC5500EC5221 /* Development */,
+				1FAFD98C1855BC5500EC5221 /* Release */,
+				1FAFD98D1855BC5500EC5221 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1FBAAC1F184BDC6400086047 /* Build configuration list for PBXNativeTarget "stsh" */ = {
 			isa = XCConfigurationList;
@@ -3554,6 +3561,7 @@
 				1FBAAC22184BDC6400086047 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1FC8F859181BF3A3003980D8 /* Build configuration list for PBXNativeTarget "SchemeFUSE" */ = {
 			isa = XCConfigurationList;

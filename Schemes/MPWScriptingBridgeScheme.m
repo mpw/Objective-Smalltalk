@@ -31,7 +31,12 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
 -appForIdentifier:(NSString*)identifer
 {
 	id remoteApp = [[self bridges] objectForKey:identifer];
-	if ( !remoteApp ){ 
+	if ( !remoteApp ){
+        Class sbappclass=NSClassFromString(@"SBApplication");
+        if (!sbappclass) {
+            NSLog(@"SBApplication not linked, link it or load it using 'context loadFramework:'ScriptingBridge''");
+            return nil;
+        }
 		remoteApp = [NSClassFromString(@"SBApplication") applicationWithBundleIdentifier:identifer];
 		if ( remoteApp ) {
 			[[self bridges] setObject:remoteApp forKey:identifer];
@@ -49,7 +54,9 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
 		path=[path substringFromIndex:1];
 	}
 	id remoteApp=[self appForIdentifier:appIdentifier];
-	return [[[MPWScriptingBridgeBinding alloc] initWithBaseObject:remoteApp path:path] autorelease];
+	id binding= [[[MPWScriptingBridgeBinding alloc] initWithBaseObject:remoteApp path:path] autorelease];
+    return binding;
+    
 }
 
 

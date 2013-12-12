@@ -21,6 +21,11 @@
     return [s componentsSeparatedByString:delimiter];
 }
 
+-(NSArray*)lines:(NSString*)s
+{
+  return [self components:s splitInto:@"\n"];
+}
+
 -(int)double:(int)input
 {
   return input*2;
