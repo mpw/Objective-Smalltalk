@@ -1,0 +1,7 @@
+#!/usr/local/bin/stsh
+context loadFramework:'ObjectiveHTTPD'.
+
+server := MPWFibServer new.
+server setPort:8081.
+server startHttpd.
+shell runInteractiveLoop

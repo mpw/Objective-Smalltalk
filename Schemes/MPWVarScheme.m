@@ -12,6 +12,10 @@
 
 @implementation MPWVarScheme
 
+-(Class)bindingClass
+{
+    return [MPWVARBinding class];
+}
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {
@@ -26,14 +30,14 @@
     }
     theBinding=[aContext bindingForLocalVariableNamed:firstName];
     if ( isCompound) {
-		theBinding= [[[MPWVARBinding alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
+		theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
     }
     return theBinding;
 #if 0
 	id localVars = [self localVarsForContext:aContext];
 	id binding=nil;
 	if ( [variableName rangeOfString:@"/"].location != NSNotFound ) {
-		binding= [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
+		binding= [[[[self bindingClass] alloc] initWithBaseObject:localVars path:variableName] autorelease];
 		//		NSLog(@"kvbinding %@ ",variableName);
 	} else {
 		binding = [localVars objectForKey:variableName];

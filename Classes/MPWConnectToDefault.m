@@ -23,8 +23,8 @@ idAccessor( lhs, setLhs )
 //    NSLog(@"left: %@",left);
 //    NSLog(@"right: %@",right);
     
-    id input=[right defaultInputPort];
-    id output=[left defaultOutputPort];
+    id input=[right ports][@"IN"];
+    id output=[right ports][@"OUT"];
 //    NSLog(@"input: %@",input);
 //    NSLog(@"output: %@",output);
     if ( [input connect:output]) {
@@ -69,6 +69,12 @@ idAccessor( lhs, setLhs )
     return nil;
 }
 
+-(NSDictionary*)ports
+{
+    return @{ @"IN": [self defaultInputPort],
+              @"OUT": [self defaultOutputPort],
+              };
+}
 
 @end
 
@@ -85,26 +91,19 @@ idAccessor( lhs, setLhs )
     return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
 }
 
-
 +defaultComponentInstance
-
 {
     return [self stream];
 }
-
-
 
 @end
 
 @implementation MPWScheme(connecting)
 
-
 -defaultOutputPort
 {
     return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Scheme) sends:NO] autorelease];
 }
-
-
 
 @end
 
@@ -115,7 +114,4 @@ idAccessor( lhs, setLhs )
     return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:@protocol(Scheme) sends:YES] autorelease];
 }
 
-
-
 @end
-

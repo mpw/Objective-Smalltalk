@@ -277,6 +277,18 @@
 		1F90B40713A62AC1006A3DEB /* MPWSequentialScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */; };
 		1F90B40813A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F90B40213A62AC1006A3DEB /* MPWSequentialScheme.h */; };
 		1F90B40913A62AC1006A3DEB /* MPWSequentialScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */; };
+		1FA2EBCF1861A55F0091E840 /* MPWMessageScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA2EBCD1861A55F0091E840 /* MPWMessageScheme.h */; };
+		1FA2EBD01861A55F0091E840 /* MPWMessageScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA2EBCD1861A55F0091E840 /* MPWMessageScheme.h */; };
+		1FA2EBD11861A55F0091E840 /* MPWMessageScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA2EBCD1861A55F0091E840 /* MPWMessageScheme.h */; };
+		1FA2EBD21861A55F0091E840 /* MPWMessageScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA2EBCE1861A55F0091E840 /* MPWMessageScheme.m */; };
+		1FA2EBD31861A55F0091E840 /* MPWMessageScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA2EBCE1861A55F0091E840 /* MPWMessageScheme.m */; };
+		1FA2EBD41861A55F0091E840 /* MPWMessageScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA2EBCE1861A55F0091E840 /* MPWMessageScheme.m */; };
+		1FA2EBDB18634AD90091E840 /* MPWPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA2EBD918634AD90091E840 /* MPWPortScheme.h */; };
+		1FA2EBDC18634AD90091E840 /* MPWPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA2EBD918634AD90091E840 /* MPWPortScheme.h */; };
+		1FA2EBDD18634AD90091E840 /* MPWPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA2EBD918634AD90091E840 /* MPWPortScheme.h */; };
+		1FA2EBDE18634AD90091E840 /* MPWPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA2EBDA18634AD90091E840 /* MPWPortScheme.m */; };
+		1FA2EBDF18634AD90091E840 /* MPWPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA2EBDA18634AD90091E840 /* MPWPortScheme.m */; };
+		1FA2EBE018634AD90091E840 /* MPWPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA2EBDA18634AD90091E840 /* MPWPortScheme.m */; };
 		1FA3886513910FA6007B5CC9 /* MPWBundleScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA3886613910FA6007B5CC9 /* MPWBundleScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */; };
 		1FA3886813910FA6007B5CC9 /* MPWBundleScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */; };
@@ -578,6 +590,10 @@
 		1F88E8DA138ADCCA00199F03 /* MPWResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWResource.m; sourceTree = "<group>"; };
 		1F90B40213A62AC1006A3DEB /* MPWSequentialScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSequentialScheme.h; sourceTree = "<group>"; };
 		1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSequentialScheme.m; sourceTree = "<group>"; };
+		1FA2EBCD1861A55F0091E840 /* MPWMessageScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessageScheme.h; sourceTree = "<group>"; };
+		1FA2EBCE1861A55F0091E840 /* MPWMessageScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessageScheme.m; sourceTree = "<group>"; };
+		1FA2EBD918634AD90091E840 /* MPWPortScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWPortScheme.h; sourceTree = "<group>"; };
+		1FA2EBDA18634AD90091E840 /* MPWPortScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWPortScheme.m; sourceTree = "<group>"; };
 		1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBundleScheme.h; sourceTree = "<group>"; };
 		1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBundleScheme.m; sourceTree = "<group>"; };
 		1FA3887513911150007B5CC9 /* testfile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testfile.txt; sourceTree = "<group>"; };
@@ -837,6 +853,10 @@
 		1F222C881394CB90007AE2FB /* Schemes */ = {
 			isa = PBXGroup;
 			children = (
+				1FA2EBD918634AD90091E840 /* MPWPortScheme.h */,
+				1FA2EBDA18634AD90091E840 /* MPWPortScheme.m */,
+				1FA2EBCD1861A55F0091E840 /* MPWMessageScheme.h */,
+				1FA2EBCE1861A55F0091E840 /* MPWMessageScheme.m */,
 				1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */,
 				1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */,
 				1F845DFB0F183D4700B085CD /* MPWClassScheme.h */,
@@ -1296,6 +1316,7 @@
 				1F4CB52A1253D53C00B30C99 /* MPWStTests.h in Headers */,
 				1F4CB52B1253D53C00B30C99 /* MPWObjCGenerator.h in Headers */,
 				1F4CB52C1253D53C00B30C99 /* MPWInstanceVariable.h in Headers */,
+				1FA2EBD01861A55F0091E840 /* MPWMessageScheme.h in Headers */,
 				1F4CB52D1253D53C00B30C99 /* MPWSetAccessor.h in Headers */,
 				1F4CB52E1253D53C00B30C99 /* MPWGetAccessor.h in Headers */,
 				1F4CB52F1253D53C00B30C99 /* MPWScriptedMethod.h in Headers */,
@@ -1342,6 +1363,7 @@
 				1FED18C51544684600E0D765 /* JSGCDDispatcher.h in Headers */,
 				1F80973815A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F5501B115ADB8E200422A9E /* MPWComplexAssignment.h in Headers */,
+				1FA2EBDC18634AD90091E840 /* MPWPortScheme.h in Headers */,
 				1F55020E15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
 				1F68D1D815D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
 				1F68D1E015D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
@@ -1388,6 +1410,7 @@
 				1F4FD0DD10E4FB3600934A17 /* MPWRefScheme.h in Headers */,
 				1F4FD0ED10E4FEFA00934A17 /* MPWVarScheme.h in Headers */,
 				1F406E5810F527180054957A /* MPWIdentifier.h in Headers */,
+				1FA2EBCF1861A55F0091E840 /* MPWMessageScheme.h in Headers */,
 				1F406E7A10F52CAC0054957A /* MPWScheme.h in Headers */,
 				1F406EB410F534D90054957A /* MPWNamedIdentifier.h in Headers */,
 				1F406EBE10F5354C0054957A /* MPWRecursiveIdentifier.h in Headers */,
@@ -1419,6 +1442,7 @@
 				1F80973715A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F5501B015ADB8E200422A9E /* MPWComplexAssignment.h in Headers */,
 				1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
+				1FA2EBDB18634AD90091E840 /* MPWPortScheme.h in Headers */,
 				1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */,
 				1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
 				1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
@@ -1470,6 +1494,7 @@
 				1F88E8B9138ADC1600199F03 /* MPWFileBinding.h in Headers */,
 				1F88E8BD138ADC1600199F03 /* MPWURLBinding.h in Headers */,
 				1F88E8BF138ADC1600199F03 /* MPWEnvScheme.h in Headers */,
+				1FA2EBDD18634AD90091E840 /* MPWPortScheme.h in Headers */,
 				1F88E8DD138ADCCA00199F03 /* MPWResource.h in Headers */,
 				1FDCCB3C139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */,
 				1F90B40413A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */,
@@ -1480,6 +1505,7 @@
 				1FED18C61544684600E0D765 /* JSGCDDispatcher.h in Headers */,
 				1F80973915A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F5501B215ADB8E200422A9E /* MPWComplexAssignment.h in Headers */,
+				1FA2EBD11861A55F0091E840 /* MPWMessageScheme.h in Headers */,
 				1F55020F15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
 				1F68D1D915D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
 				1F68D1E115D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
@@ -1914,6 +1940,7 @@
 				1FF6C6151379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
 				1FE8F22D13802F0700B37A71 /* MPWResourceScheme.m in Sources */,
 				1F88E8C4138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */,
+				1FA2EBD31861A55F0091E840 /* MPWMessageScheme.m in Sources */,
 				1F88E8C6138ADC1600199F03 /* MPWFileBinding.m in Sources */,
 				1F88E8C8138ADC1600199F03 /* MPWURLSchemeResolver.m in Sources */,
 				1F88E8CA138ADC1600199F03 /* MPWURLBinding.m in Sources */,
@@ -1937,6 +1964,7 @@
 				1F80973B15A72A77004AB773 /* MPWPlistScheme.m in Sources */,
 				1F5501B415ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
 				1F55021115AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
+				1FA2EBDF18634AD90091E840 /* MPWPortScheme.m in Sources */,
 				1F68D1DB15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
 				1F68D1E315D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
 				1F68D1EB15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */,
@@ -1966,6 +1994,7 @@
 				1F5E507B09B4B754000298D9 /* MPWObjCGenerator.m in Sources */,
 				1F5E507C09B4B754000298D9 /* MPWInstanceVariable.m in Sources */,
 				1F5E507D09B4B754000298D9 /* MPWSetAccessor.m in Sources */,
+				1FA2EBD21861A55F0091E840 /* MPWMessageScheme.m in Sources */,
 				1F5E507E09B4B754000298D9 /* MPWGetAccessor.m in Sources */,
 				1F5E507F09B4B754000298D9 /* MPWScriptedMethod.m in Sources */,
 				1F5E508009B4B754000298D9 /* MPWMethod.m in Sources */,
@@ -1986,6 +2015,7 @@
 				1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */,
 				1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */,
 				1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
+				1FA2EBDE18634AD90091E840 /* MPWPortScheme.m in Sources */,
 				1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */,
 				1F88E8AC138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */,
 				1F88E8AE138ADC1600199F03 /* MPWFileBinding.m in Sources */,
@@ -2090,6 +2120,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA2EBE018634AD90091E840 /* MPWPortScheme.m in Sources */,
 				1FE08F07137808EA003B18B9 /* MPWFastMessage.m in Sources */,
 				1FE08F08137808EA003B18B9 /* MPWMethodType.m in Sources */,
 				1FE08F09137808EA003B18B9 /* MPWEvaluator.m in Sources */,
@@ -2149,6 +2180,7 @@
 				1FED18C31544684600E0D765 /* JSGCDDispatcher.m in Sources */,
 				1F80973C15A72A78004AB773 /* MPWPlistScheme.m in Sources */,
 				1F5501B515ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
+				1FA2EBD41861A55F0091E840 /* MPWMessageScheme.m in Sources */,
 				1F55021215AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1F68D1DC15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
 				1F68D1E415D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
@@ -2391,8 +2423,10 @@
 		1F20E4EA0F5B5D45002153EE /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2404,7 +2438,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -2525,8 +2559,10 @@
 		1F5E508B09B4B754000298D9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2539,7 +2575,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -2562,8 +2598,10 @@
 		1F5E508C09B4B754000298D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2575,7 +2613,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -2690,6 +2728,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2730,6 +2769,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2753,6 +2793,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
@@ -2763,6 +2804,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2786,6 +2828,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
@@ -2894,7 +2937,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
