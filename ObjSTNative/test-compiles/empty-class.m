@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface Hi : NSObject {} @end
-@implementation Hi
+@interface EmptyCodeGenTestClass01 : NSObject {} @end
+@implementation EmptyCodeGenTestClass01
 
 @end

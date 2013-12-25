@@ -336,6 +336,8 @@
 		1FBAAC1E184BDC6400086047 /* stsh.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FBAAC1D184BDC6400086047 /* stsh.1 */; };
 		1FBAAC27184BDD8200086047 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FBAAC28184BDD8900086047 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1FC2EEF2186B653000B3D06F /* empty-class.llvm-templateasm in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
+		1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
 		1FC364E11764E0BD00CD2C43 /* MPWVarScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */; };
 		1FC8F835181BF3A3003980D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1FC8F83B181BF3A3003980D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8F839181BF3A3003980D8 /* InfoPlist.strings */; };
@@ -636,6 +638,7 @@
 		1FBAAC58184BE03500086047 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = usr/lib/libedit.dylib; sourceTree = SDKROOT; };
 		1FBAAC5A184BE03B00086047 /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = usr/lib/libncurses.dylib; sourceTree = SDKROOT; };
 		1FBAD8131436297C0050D6DE /* MPWFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundation.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development/MPWFoundation.framework"; sourceTree = "<group>"; };
+		1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "empty-class.llvm-templateasm"; path = "test-compiles/empty-class.llvm-templateasm"; sourceTree = "<group>"; };
 		1FC8F834181BF3A3003980D8 /* SchemeFUSE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SchemeFUSE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC8F838181BF3A3003980D8 /* SchemeFUSE-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SchemeFUSE-Info.plist"; sourceTree = "<group>"; };
 		1FC8F83A181BF3A3003980D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -843,6 +846,7 @@
 		1F084A1116DCE6A200ED2517 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */,
 				1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */,
 				1F084A1316DCE6A200ED2517 /* InfoPlist.strings */,
 				1F084A1616DCE6A200ED2517 /* ObjSTNative-Prefix.pch */,
@@ -1767,6 +1771,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
+				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1893,6 +1898,7 @@
 			files = (
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.mm in Sources */,
+				1FC2EEF2186B653000B3D06F /* empty-class.llvm-templateasm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

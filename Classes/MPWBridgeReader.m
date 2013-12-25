@@ -106,11 +106,17 @@ idAccessor( context ,setContext )
 	return bundle;
 }
 
--(BOOL)dlopen:(NSString*)name
+-(void*)dlopen:(NSString*)name
 {
     void *ptr=dlopen([name fileSystemRepresentation], RTLD_NOW);
-    return ptr != NULL;
+    return ptr;
 }
+
+-(int)dlclose:(void*)handle
+{
+    return dlclose(handle);
+}
+
 
 @end
 
