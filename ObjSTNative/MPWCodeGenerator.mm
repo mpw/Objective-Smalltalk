@@ -27,17 +27,28 @@
     return name;
 }
 
+-(BOOL)assembleLLVM:(NSData*)llvmAssemblySource toFile:(NSString*)ofile_name
+{
+    NSString *asm_to_o=[NSString stringWithFormat:@"/usr/local/bin/llc -filetype=obj -o %@",ofile_name];
+    FILE *f=popen([asm_to_o fileSystemRepresentation], "w");
+    fwrite([llvmAssemblySource bytes], 1, [llvmAssemblySource length], f);
+    pclose(f);
+    return YES;
+}
+
+-(void)linkOFileName:(NSString*)ofile_name toDylibName:(NSString*)dylib
+{
+    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.8 -dylib -o %@ %@ -framework Foundation",dylib,ofile_name];
+    system([o_to_dylib fileSystemRepresentation]);
+}
+
 -(BOOL)assembleAndLoad:(NSData*)llvmAssemblySource
 {
     NSString *name=[[self  class] createTempDylibName];
     NSString *ofile_name=[name stringByAppendingPathExtension:@"o"];
     NSString *dylib=[name stringByAppendingPathExtension:@"dylib"];
-    NSString *asm_to_o=[NSString stringWithFormat:@"/usr/local/bin/llc -filetype=obj -o %@",ofile_name];
-    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.8 -dylib -o %@ %@ -framework Foundation",dylib,ofile_name];
-    FILE *f=popen([asm_to_o fileSystemRepresentation], "w");
-    fwrite([llvmAssemblySource bytes], 1, [llvmAssemblySource length], f);
-    pclose(f);
-    system([o_to_dylib fileSystemRepresentation]);
+    [self assembleLLVM:llvmAssemblySource toFile:ofile_name];
+    [self linkOFileName:ofile_name toDylibName:dylib];
     unlink([ofile_name fileSystemRepresentation]);
     void *handle = dlopen( [dylib fileSystemRepresentation], RTLD_NOW);
     unlink([dylib fileSystemRepresentation]);
