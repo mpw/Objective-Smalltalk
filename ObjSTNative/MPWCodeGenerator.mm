@@ -32,13 +32,12 @@
     NSString *name=[[self  class] createTempDylibName];
     NSString *ofile_name=[name stringByAppendingPathExtension:@"o"];
     NSString *dylib=[name stringByAppendingPathExtension:@"dylib"];
-    NSString *source_name=[name stringByAppendingPathExtension:@"s"];
-    [llvmAssemblySource writeToFile:source_name atomically:YES];
-    NSString *asm_to_o=[NSString stringWithFormat:@"/usr/local/bin/llc -filetype=obj  %@  -o %@",source_name,ofile_name];
+    NSString *asm_to_o=[NSString stringWithFormat:@"/usr/local/bin/llc -filetype=obj -o %@",ofile_name];
     NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.8 -dylib -o %@ %@ -framework Foundation",dylib,ofile_name];
-    system([asm_to_o fileSystemRepresentation] );
+    FILE *f=popen([asm_to_o fileSystemRepresentation], "w");
+    fwrite([llvmAssemblySource bytes], 1, [llvmAssemblySource length], f);
+    pclose(f);
     system([o_to_dylib fileSystemRepresentation]);
-    unlink([source_name fileSystemRepresentation]);
     unlink([ofile_name fileSystemRepresentation]);
     void *handle = dlopen( [dylib fileSystemRepresentation], RTLD_NOW);
     unlink([dylib fileSystemRepresentation]);
