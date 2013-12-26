@@ -9,6 +9,7 @@
 //#include "llvmincludes.h"
 
 #import "MPWCodeGenerator.h"
+#import "MPWLLVMAssemblyGenerator.h"
 #import <dlfcn.h>
 
 @implementation MPWCodeGenerator
@@ -17,7 +18,7 @@
 
 +(NSString*)createTempDylibName
 {
-    char *templatename="/tmp/testdylibXXXXXXXX";
+    const char *templatename="/tmp/testdylibXXXXXXXX";
     char *theTemplate = strdup(templatename);
     NSString *name=nil;
     if (    mktemp( theTemplate) ) {
@@ -27,9 +28,14 @@
     return name;
 }
 
+-(NSString*)pathToLLC
+{
+    return @"/usr/local/bin/llc";
+}
+
 -(BOOL)assembleLLVM:(NSData*)llvmAssemblySource toFile:(NSString*)ofile_name
 {
-    NSString *asm_to_o=[NSString stringWithFormat:@"/usr/local/bin/llc -filetype=obj -o %@",ofile_name];
+    NSString *asm_to_o=[NSString stringWithFormat:@"%@ -filetype=obj -o %@",[self pathToLLC],ofile_name];
     FILE *f=popen([asm_to_o fileSystemRepresentation], "w");
     fwrite([llvmAssemblySource bytes], 1, [llvmAssemblySource length], f);
     pclose(f);
@@ -47,10 +53,13 @@
     NSString *name=[[self  class] createTempDylibName];
     NSString *ofile_name=[name stringByAppendingPathExtension:@"o"];
     NSString *dylib=[name stringByAppendingPathExtension:@"dylib"];
+
     [self assembleLLVM:llvmAssemblySource toFile:ofile_name];
     [self linkOFileName:ofile_name toDylibName:dylib];
-    unlink([ofile_name fileSystemRepresentation]);
+
     void *handle = dlopen( [dylib fileSystemRepresentation], RTLD_NOW);
+
+    unlink([ofile_name fileSystemRepresentation]);
     unlink([dylib fileSystemRepresentation]);
     return handle!=NULL;
 
@@ -87,11 +96,30 @@
     EXPECTNOTNIL(NSClassFromString(classname), @"test class should  xist after load");
 }
 
++(void)testDefineEmptyClassDynamically
+{
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=@"EmptyCodeGenTestClass02";
+    [gen writeHeaderWithName:@"testModule"];
+    [gen writeClassWithName:@"EmptyCodeGenTestClass02" superclassName:@"NSObject"];
+    [gen writeTrailer];
+     [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/testclass.asm" atomically:YES];
+    EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    EXPECTNOTNIL(NSClassFromString(classname), @"test class should  xist after load");
+}
+
 
 +testSelectors
 {
     return @[
-             @"testStaticEmptyClassDefine"
+             @"testStaticEmptyClassDefine",
+             @"testDefineEmptyClassDynamically"
               ];
 }
 
