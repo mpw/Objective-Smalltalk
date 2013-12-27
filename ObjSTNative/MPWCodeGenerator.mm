@@ -101,9 +101,9 @@
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    NSString *classname=@"EmptyCodeGenTestClass02";
+    NSString *classname=@"EmptyCodeGenTestClass03";
     [gen writeHeaderWithName:@"testModule"];
-    [gen writeClassWithName:@"EmptyCodeGenTestClass02" superclassName:@"NSObject"];
+    [gen writeClassWithName:classname superclassName:@"NSObject"];
     [gen writeTrailer];
      [gen flush];
     NSData *source=[gen target];

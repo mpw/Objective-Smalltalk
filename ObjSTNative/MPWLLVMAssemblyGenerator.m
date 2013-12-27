@@ -42,16 +42,20 @@
 
 -(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName
 {
-    [self printLine:@"@OBJC_METACLASS_$_NSObject = external global %%struct._class_t"];
+    long nameLen=[aName length];
+    long nameLenNull=nameLen+1;
+    
+    [self printLine:@"@OBJC_METACLASS_$_%@ = external global %%struct._class_t",superclassName];
+    [self printLine:@"@OBJC_CLASS_$_%@ = external global %%struct._class_t",superclassName];
 
-    [self printLine:@"@\"\\01L_OBJC_CLASS_NAME_\" = internal global [24 x i8] c\"EmptyCodeGenTestClass02\\00\", section \"__TEXT,__objc_classname,cstring_literals\", align 1"];
-    [self printLine:@"@\"\\01l_OBJC_METACLASS_RO_$_EmptyCodeGenTestClass02\" = internal global %%struct._class_ro_t { i32 1, i32 40, i32 40, i8* null, i8* getelementptr inbounds ([24 x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8"];
-    [self printLine:@"@OBJC_METACLASS_$_EmptyCodeGenTestClass02 = global %%struct._class_t { %%struct._class_t* @\"OBJC_METACLASS_$_NSObject\", %%struct._class_t* @\"OBJC_METACLASS_$_NSObject\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"\\01l_OBJC_METACLASS_RO_$_EmptyCodeGenTestClass02\" }, section \"__DATA, __objc_data\", align 8"];
-    [self printLine:@"@OBJC_CLASS_$_NSObject = external global %%struct._class_t"];
-    [self printLine:@"@\"\\01l_OBJC_CLASS_RO_$_EmptyCodeGenTestClass02\" = internal global %%struct._class_ro_t { i32 0, i32 8, i32 8, i8* null, i8* getelementptr inbounds ([24 x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8"];
-    [self printLine:@"@OBJC_CLASS_$_EmptyCodeGenTestClass02 = global %%struct._class_t { %%struct._class_t* @\"OBJC_METACLASS_$_EmptyCodeGenTestClass02\", %%struct._class_t* @\"OBJC_CLASS_$_NSObject\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"\\01l_OBJC_CLASS_RO_$_EmptyCodeGenTestClass02\" }, section \"__DATA, __objc_data\", align 8"];
-    [self printLine:@"@\"\\01L_OBJC_LABEL_CLASS_$\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"OBJC_CLASS_$_EmptyCodeGenTestClass02\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8"];
-    [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([24 x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"\\01L_OBJC_LABEL_CLASS_$\" to i8*)], section \"llvm.metadata\""];
+    [self printLine:@"@\"\\01L_OBJC_CLASS_NAME_\" = internal global [%d x i8] c\"%@\\00\", section \"__TEXT,__objc_classname,cstring_literals\", align 1",nameLenNull,aName];
+    [self printLine:@"@\"\\01l_OBJC_METACLASS_RO_$_%@\" = internal global %%struct._class_ro_t { i32 1, i32 40, i32 40, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",aName,nameLenNull];
+    [self printLine:@"@OBJC_METACLASS_$_%@ = global %%struct._class_t { %%struct._class_t* @\"OBJC_METACLASS_$_%@\", %%struct._class_t* @\"OBJC_METACLASS_$_%@\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"\\01l_OBJC_METACLASS_RO_$_%@\" }, section \"__DATA, __objc_data\", align 8",aName,superclassName,superclassName,aName
+     ];
+    [self printLine:@"@\"\\01l_OBJC_CLASS_RO_$_%@\" = internal global %%struct._class_ro_t { i32 0, i32 8, i32 8, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",aName,nameLenNull];
+    [self printLine:@"@OBJC_CLASS_$_%@ = global %%struct._class_t { %%struct._class_t* @\"OBJC_METACLASS_$_%@\", %%struct._class_t* @\"OBJC_CLASS_$_%@\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"\\01l_OBJC_CLASS_RO_$_%@\" }, section \"__DATA, __objc_data\", align 8",aName,aName,superclassName,aName];
+    [self printLine:@"@\"\\01L_OBJC_LABEL_CLASS_$\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"OBJC_CLASS_$_%@\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8",aName];
+    [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([%d x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"\\01L_OBJC_LABEL_CLASS_$\" to i8*)], section \"llvm.metadata\"",nameLenNull];
     
 }
 
