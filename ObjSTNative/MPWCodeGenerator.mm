@@ -11,6 +11,7 @@
 #import "MPWCodeGenerator.h"
 #import "MPWLLVMAssemblyGenerator.h"
 #import <dlfcn.h>
+#import <objc/runtime.h>
 
 @implementation MPWCodeGenerator
 
@@ -93,28 +94,56 @@
     EXPECTNOTNIL(source, @"should have source data");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
-    EXPECTNOTNIL(NSClassFromString(classname), @"test class should  xist after load");
+    Class loadedClass =NSClassFromString(classname);
+    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
+    id instance=[[loadedClass new] autorelease];
+    EXPECTNOTNIL(instance, @"test class should be able to create instances");
 }
 
 +(void)testDefineEmptyClassDynamically
 {
     // takes around 24 ms (real) total
-//    NSLog(@"start testDefineEmptyClassDynamically");
+    //    NSLog(@"start testDefineEmptyClassDynamically");
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=@"EmptyCodeGenTestClass03";
     [gen writeHeaderWithName:@"testModule"];
-    [gen writeClassWithName:classname superclassName:@"NSObject"];
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:nil];
     [gen writeTrailer];
-     [gen flush];
+    [gen flush];
     NSData *source=[gen target];
-    [source writeToFile:@"/tmp/testclass.asm" atomically:YES];
+    [source writeToFile:@"/tmp/zeromethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    Class loadedClass =NSClassFromString(classname);
+    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
+    id instance=[[loadedClass new] autorelease];
+    EXPECTNOTNIL(instance, @"test class should be able to create instances");
+    //    NSLog(@"end testDefineEmptyClassDynamically");
+}
+
++(void)testDefineOneMethodClassDynamically
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    EXPECTNOTNIL(NSClassFromString(classname), @"test class should  xist after load");
-//    NSLog(@"end testDefineEmptyClassDynamically");
+    NSString *classname=@"EmptyCodeGenTestClass04";
+    [gen writeHeaderWithName:@"testModule"];
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:nil];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
+    EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    Class loadedClass =objc_getClass("EmptyCodeGenTestClass04");
+    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
+    id instance=[[loadedClass new] autorelease];
+    EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
+    //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
 
@@ -122,7 +151,8 @@
 {
     return @[
              @"testStaticEmptyClassDefine",
-             @"testDefineEmptyClassDynamically"
+             @"testDefineEmptyClassDynamically",
+//             @"testDefineOneMethodClassDynamically",
               ];
 }
 

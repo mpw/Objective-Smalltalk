@@ -12,7 +12,7 @@
 
 -(void)writeHeaderWithName:(NSString*)name;
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type;
--(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName;
+-(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol;
 -(void)writeTrailer;
 
 @end
