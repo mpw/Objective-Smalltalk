@@ -15,6 +15,6 @@
 -(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol;
 -(void)writeTrailer;
 
--(NSString*)writeConstMethodAndMethodList:(NSString*)className;
+-(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName typeString:(NSString*)methodTypeString;
 
 @end

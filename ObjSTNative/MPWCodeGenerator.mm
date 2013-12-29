@@ -132,7 +132,8 @@
     
     NSString *classname=@"EmptyCodeGenTestClass04";
     [gen writeHeaderWithName:@"testModule"];
-    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname ];
+
+    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:@"components:splitInto:" typeString:@"@32@0:8@16@24"];
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef];
     [gen writeTrailer];
     [gen flush];

@@ -102,20 +102,34 @@
     
 }
 
--(NSString*)writeConstMethodAndMethodList:(NSString*)className
+-(NSString*)methodListForClass:(NSString*)className methodNames:(NSArray*)methodNames methodSymbols:(NSArray*)methodSymbols methodTypes:(NSArray*)typeStrings
 {
     NSString *methodListSymbol=[@"\\01l_OBJC_$_INSTANCE_METHODS_" stringByAppendingString:className];
+    NSString *methodTypeString=[typeStrings firstObject];
+    NSString *methodName=[methodNames firstObject];
 
-    [self printLine:@"@\"\\01L_OBJC_METH_VAR_NAME_1\" = internal global [22 x i8] c\"components:splitInto:\\00\", section \"__TEXT,__objc_methname,cstring_literals\", align 1"];
-    [self printLine:@"@\"\\01L_OBJC_METH_VAR_TYPE_\" = internal global [14 x i8] c\"@32@0:8@16@24\\00\", section \"__TEXT,__objc_methtype,cstring_literals\", align 1"];
+    NSString *methodSymbol=[methodSymbols firstObject];
+    long methodTypeStringLenNull=[methodTypeString length]+1;
+    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
+    long methodNameLenWithNull=[methodName length]+1;
+    
+    
+    [self printLine:@"@\"\\01L_OBJC_METH_VAR_NAME_1\" = internal global [%ld x i8] c\"%@\\00\", section \"__TEXT,__objc_methname,cstring_literals\", align 1",methodNameLenWithNull,methodName];
+    [self printLine:@"@\"\\01L_OBJC_METH_VAR_TYPE_\" = internal global [%ld x i8] c\"%@\\00\", section \"__TEXT,__objc_methtype,cstring_literals\", align 1",methodTypeStringLenNull,methodTypeString];
+    
+    [self printLine:@"@\"%@\" = internal global { i32, i32, [1 x %%struct._objc_method] } { i32 24, i32 1, [1 x %%struct._objc_method] [%%struct._objc_method { i8* getelementptr inbounds ([22 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_1\", i32 0, i32 0), i8* getelementptr inbounds ([14 x i8]* @\"\\01L_OBJC_METH_VAR_TYPE_\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01%@\" to i8*) }] }, section \"__DATA, __objc_const\", align 8",methodListSymbol,methodFunctionName];
+    
+    return methodListSymbol;
+}
 
-    
-    [self printLine:@"@\"%@\" = internal global { i32, i32, [1 x %%struct._objc_method] } { i32 24, i32 1, [1 x %%struct._objc_method] [%%struct._objc_method { i8* getelementptr inbounds ([22 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_1\", i32 0, i32 0), i8* getelementptr inbounds ([14 x i8]* @\"\\01L_OBJC_METH_VAR_TYPE_\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01-[Hi components:splitInto:]\" to i8*) }] }, section \"__DATA, __objc_const\", align 8",methodListSymbol];
-    
+
+-(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName
+{
+    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
 
     
     [self printLine:@""];
-    [self printLine:@"define internal %%0* @\"\\01-[Hi components:splitInto:]\"(%%1* %%self, i8* %%_cmd, %%2* %%s, %%2* %%delimiter) uwtable ssp {"];
+    [self printLine:@"define internal %%0* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%2* %%s, %%2* %%delimiter) uwtable ssp {",methodFunctionName];
     [self printLine:@"%%1 = alloca %%1*, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
     [self printLine:@"%%3 = alloca %%2*, align 8"];
@@ -135,9 +149,16 @@
     [self printLine:@"@\"\\01L_OBJC_METH_VAR_NAME_\" = internal global [29 x i8] c\"componentsSeparatedByString:\\00\", section \"__TEXT,__objc_methname,cstring_literals\", align 1"];
     [self printLine:@"@\"\\01L_OBJC_SELECTOR_REFERENCES_\" = internal global i8* getelementptr inbounds ([29 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_\", i32 0, i32 0), section \"__DATA, __objc_selrefs, literal_pointers, no_dead_strip\""];
     
-    return methodListSymbol;
+    return methodFunctionName;
 
 }
+
+-(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName typeString:(NSString *)methodTypeString
+{
+    NSString *methodSymbol=[self writeConstMethodAndMethodList:className methodName:methodName];
+    return [self methodListForClass:className methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodTypeString]];
+}
+
 
 -(void)writeTrailer
 {
