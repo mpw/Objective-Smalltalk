@@ -12,6 +12,11 @@
 
 -(void)writeHeaderWithName:(NSString*)name
 {
+    [self printLine:@"%%0 = type opaque"];
+    [self printLine:@"%%1 = type opaque"];
+    [self printLine:@"%%2 = type opaque"];
+    
+
     [self printLine:@"; ModuleID = '%@'",name];
     [self printLine:@"target datalayout = \"e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128\""];
     [self printLine:@"target triple = \"x86_64-apple-macosx10.9.0\""];
@@ -105,7 +110,7 @@
     [self printLine:@"@\"\\01L_OBJC_METH_VAR_TYPE_\" = internal global [14 x i8] c\"@32@0:8@16@24\\00\", section \"__TEXT,__objc_methtype,cstring_literals\", align 1"];
 
     
-    [self printLine:@"@\"%@\" = internal global { i32, i32, [1 x %struct._objc_method] } { i32 24, i32 1, [1 x %struct._objc_method] [%struct._objc_method { i8* getelementptr inbounds ([22 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_1\", i32 0, i32 0), i8* getelementptr inbounds ([14 x i8]* @\"\\01L_OBJC_METH_VAR_TYPE_\", i32 0, i32 0), i8* bitcast (%0* (%1*, i8*, %2*, %2*)* @\"\\01-[Hi components:splitInto:]\" to i8*) }] }, section \"__DATA, __objc_const\", align 8",methodListSymbol];
+    [self printLine:@"@\"%@\" = internal global { i32, i32, [1 x %%struct._objc_method] } { i32 24, i32 1, [1 x %%struct._objc_method] [%%struct._objc_method { i8* getelementptr inbounds ([22 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_1\", i32 0, i32 0), i8* getelementptr inbounds ([14 x i8]* @\"\\01L_OBJC_METH_VAR_TYPE_\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01-[Hi components:splitInto:]\" to i8*) }] }, section \"__DATA, __objc_const\", align 8",methodListSymbol];
     
 
     
@@ -127,6 +132,8 @@
     [self printLine:@"ret %%0* %%9"];
     [self printLine:@"}"];
     [self printLine:@""];
+    [self printLine:@"@\"\\01L_OBJC_METH_VAR_NAME_\" = internal global [29 x i8] c\"componentsSeparatedByString:\\00\", section \"__TEXT,__objc_methname,cstring_literals\", align 1"];
+    [self printLine:@"@\"\\01L_OBJC_SELECTOR_REFERENCES_\" = internal global i8* getelementptr inbounds ([29 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_\", i32 0, i32 0), section \"__DATA, __objc_selrefs, literal_pointers, no_dead_strip\""];
     
     return methodListSymbol;
 
@@ -141,7 +148,8 @@
     [self printLine:@"!1 = metadata !{i32 1, metadata !\"Objective-C Image Info Version\", i32 0}"];
     [self printLine:@"!2 = metadata !{i32 1, metadata !\"Objective-C Image Info Section\", metadata !\"__DATA, __objc_imageinfo, regular, no_dead_strip\"}"];
     [self printLine:@"!3 = metadata !{i32 4, metadata !\"Objective-C Garbage Collection\", i32 0}"];
- 
+    [self printLine:@"!4 = metadata !{}"];
+
 }
 
 

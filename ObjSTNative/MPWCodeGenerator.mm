@@ -132,7 +132,8 @@
     
     NSString *classname=@"EmptyCodeGenTestClass04";
     [gen writeHeaderWithName:@"testModule"];
-    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:nil];
+    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname ];
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef];
     [gen writeTrailer];
     [gen flush];
     NSData *source=[gen target];
@@ -143,6 +144,8 @@
     EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
     id instance=[[loadedClass new] autorelease];
     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
+    NSArray *splitResult=[instance components:@"Hi there" splitInto:@" "];
+    IDEXPECT(splitResult, (@[@"Hi", @"there"]), @"loaded method");
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
@@ -152,7 +155,7 @@
     return @[
              @"testStaticEmptyClassDefine",
              @"testDefineEmptyClassDynamically",
-//             @"testDefineOneMethodClassDynamically",
+             @"testDefineOneMethodClassDynamically",
               ];
 }
 
