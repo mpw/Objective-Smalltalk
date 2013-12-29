@@ -4,42 +4,42 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>MPWTalk (Framework).xcscheme</key>
+		<key>MPWTalk (Framework).xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
-		<key>MPWTalk Linux Cocotron.xcscheme</key>
+		<key>MPWTalk Linux Cocotron.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>34</integer>
 		</dict>
-		<key>MPWTalk-iOS.xcscheme</key>
+		<key>MPWTalk-iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>35</integer>
 		</dict>
-		<key>MethodServer.xcscheme</key>
+		<key>MethodServer.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>47</integer>
 		</dict>
-		<key>ObjSTNative.xcscheme</key>
+		<key>ObjSTNative.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>64</integer>
 		</dict>
-		<key>ObjectiveSmalltalk (Framework).xcscheme</key>
+		<key>ObjectiveSmalltalk (Framework).xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>
-		<key>SchemeFS.xcscheme</key>
+		<key>SchemeFS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>49</integer>
 		</dict>
-		<key>SchemeFUSE.xcscheme</key>
+		<key>SchemeFUSE.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>68</integer>
@@ -49,17 +49,17 @@
 			<key>orderHint</key>
 			<integer>71</integer>
 		</dict>
-		<key>StshFramework.xcscheme</key>
+		<key>StshFramework.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>70</integer>
 		</dict>
-		<key>iMethodServer.xcscheme</key>
+		<key>iMethodServer.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>48</integer>
 		</dict>
-		<key>stsh.xcscheme</key>
+		<key>stsh.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>69</integer>

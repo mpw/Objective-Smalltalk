@@ -98,6 +98,8 @@
 
 +(void)testDefineEmptyClassDynamically
 {
+    // takes around 24 ms (real) total
+//    NSLog(@"start testDefineEmptyClassDynamically");
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
@@ -107,11 +109,11 @@
     [gen writeTrailer];
      [gen flush];
     NSData *source=[gen target];
-    [source writeToFile:@"/tmp/testclass.asm" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     EXPECTNOTNIL(NSClassFromString(classname), @"test class should  xist after load");
+//    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
 
