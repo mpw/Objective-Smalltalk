@@ -109,6 +109,7 @@
     [gen writeTrailer];
      [gen flush];
     NSData *source=[gen target];
+    [source writeToFile:@"/tmp/testclass.asm" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     

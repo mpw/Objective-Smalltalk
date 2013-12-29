@@ -45,6 +45,23 @@
     return [base stringByAppendingString:className];
 }
 
+-(void)writeClassStructWithLabel:(NSString*)structLabel
+                       className:(NSString*)classNameSymbol
+                         nameLen:(long)nameLenNull
+                          param1:(int)p1
+                          param2:(int)p2
+{
+    [self printLine:@"@\"%@\" = internal global %%struct._class_ro_t { i32 %d, i32 %d, i32 %d, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",structLabel,p1,p2,p2,nameLenNull,classNameSymbol];
+}
+
+-(void)writeClassDefWithLabel:(NSString*)classSymbol
+                  structLabel:(NSString*)classStructSymbol
+              superClassSymbol:(NSString*)superClassSymbol
+              metaClassSymbol:(NSString*)metaClassSymbol
+{
+    [self printLine:@"@%@ = global %%struct._class_t { %%struct._class_t* @\"%@\", %%struct._class_t* @\"%@\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"%@\" }, section \"__DATA, __objc_data\", align 8",classSymbol,metaClassSymbol,superClassSymbol,classStructSymbol];
+}
+
 -(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName
 {
     long nameLen=[aName length];
@@ -55,21 +72,27 @@
     NSString *classSymbol = [self classSymbolForName:aName isMeta:NO];
     NSString *metaClassSymbol =[self classSymbolForName:aName isMeta:YES];
 
-    NSString *classNameSymbol = @"\01L_OBJC_CLASS_NAME_";
+    NSString *classNameSymbol = [@"\01L_OBJC_CLASS_NAME_" stringByAppendingString:aName];
+    NSString *metaClassStructSymbol = [@"\01l_OBJC_METACLASS_RO_$_" stringByAppendingString:aName];
+    NSString *classStructSymbol =[@"\01l_OBJC_CLASS_RO_$_" stringByAppendingString:aName];
+    NSString *classLabelSymbol =[@"\01L_OBJC_LABEL_CLASS_$_" stringByAppendingString:aName];
+   
     
     [self writeExternalReferenceWithName:superClassSymbol type:@"%struct._class_t"];
     [self writeExternalReferenceWithName:superMetaClassSymbol type:@"%struct._class_t"];
     
     
-    
     [self printLine:@"@\"%@\" = internal global [%d x i8] c\"%@\\00\", section \"__TEXT,__objc_classname,cstring_literals\", align 1",classNameSymbol,nameLenNull,aName];
-    [self printLine:@"@\"\\01l_OBJC_METACLASS_RO_$_%@\" = internal global %%struct._class_ro_t { i32 1, i32 40, i32 40, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"\%@\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",aName,nameLenNull,classNameSymbol];
-    [self printLine:@"@%@ = global %%struct._class_t { %%struct._class_t* @\"%@\", %%struct._class_t* @\"%@\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"\\01l_OBJC_METACLASS_RO_$_%@\" }, section \"__DATA, __objc_data\", align 8",metaClassSymbol,superClassSymbol,superClassSymbol,aName
-     ];
-    [self printLine:@"@\"\\01l_OBJC_CLASS_RO_$_%@\" = internal global %%struct._class_ro_t { i32 0, i32 8, i32 8, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",aName,nameLenNull,classNameSymbol];
-    [self printLine:@"@%@ = global %%struct._class_t { %%struct._class_t* @\"%@\", %%struct._class_t* @\"%@\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"\\01l_OBJC_CLASS_RO_$_%@\" }, section \"__DATA, __objc_data\", align 8",classSymbol,metaClassSymbol,superClassSymbol,aName];
-    [self printLine:@"@\"\\01L_OBJC_LABEL_CLASS_$\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"OBJC_CLASS_$_%@\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8",aName];
-    [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([%d x i8]* @\"\\01L_OBJC_CLASS_NAME_\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"\\01L_OBJC_LABEL_CLASS_$\" to i8*)], section \"llvm.metadata\"",nameLenNull];
+    
+    [self writeClassStructWithLabel:metaClassStructSymbol className:classNameSymbol nameLen:nameLenNull param1:1 param2:40];
+    [self writeClassDefWithLabel:metaClassSymbol structLabel:metaClassStructSymbol superClassSymbol:superClassSymbol metaClassSymbol:superClassSymbol];
+    
+    
+    [self writeClassStructWithLabel:classStructSymbol className:classNameSymbol nameLen:nameLenNull param1:0 param2:8];
+    [self writeClassDefWithLabel:classSymbol structLabel:classStructSymbol superClassSymbol:superClassSymbol metaClassSymbol:metaClassSymbol];
+    
+    [self printLine:@"@\"\%@\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"%@\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8",classLabelSymbol, classSymbol];
+    [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"%@\" to i8*)], section \"llvm.metadata\"",nameLenNull,classNameSymbol,classLabelSymbol];
     
 }
 
