@@ -9,6 +9,10 @@
 #import <MPWFoundation/MPWFoundation.h>
 
 @interface MPWLLVMAssemblyGenerator : MPWByteStream
+{
+    NSMutableDictionary *selectorReferences;
+    
+}
 
 -(void)writeHeaderWithName:(NSString*)name;
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type;

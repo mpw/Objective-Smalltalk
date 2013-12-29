@@ -10,6 +10,25 @@
 
 @implementation MPWLLVMAssemblyGenerator
 
+objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
+
+-(id)initWithTarget:(id)aTarget
+{
+    self=[super initWithTarget:aTarget];
+    [self setSelectorReferences:[NSMutableDictionary dictionary]];
+    return self;
+}
+
+-(NSString*)selectorForName:(NSString*)selectorName
+{
+    NSString *ref=selectorReferences[selectorName];
+    if ( !ref ) {
+        ref=[NSString stringWithFormat:@"\\01L_OBJC_SELECTOR_REFERENCES_%d",(int)[selectorReferences count]];
+        selectorReferences[selectorName]=ref;
+    }
+    return ref;
+}
+
 -(void)writeHeaderWithName:(NSString*)name
 {
     [self printLine:@"%%0 = type opaque"];
@@ -43,6 +62,15 @@
 {
     [self printLine:@"@\"%@\" = external global %@",name,type];
 }
+
+
+-(void)generateCString:(NSString*)cstring symbol:(NSString*)symbolName type:(NSString*)type
+{
+    NSString *sectionString=[NSString stringWithFormat:@"section \"__TEXT,%@,cstring_literals\", align 1",type];
+    [self printLine:@"@\"%@\" = internal global [%ld x i8] c\"%@\\00\", %@",symbolName,[cstring length]+1,cstring,sectionString];
+}
+
+
 
 -(NSString*)classSymbolForName:(NSString*)className isMeta:(BOOL)isMeta
 {
@@ -88,7 +116,8 @@
     [self writeExternalReferenceWithName:superMetaClassSymbol type:@"%struct._class_t"];
     
     
-    [self printLine:@"@\"%@\" = internal global [%d x i8] c\"%@\\00\", section \"__TEXT,__objc_classname,cstring_literals\", align 1",classNameSymbol,nameLenNull,aName];
+    [self generateCString:aName symbol:classNameSymbol type:@"__objc_classname"];
+
     
     [self writeClassStructWithLabel:metaClassStructSymbol className:classNameSymbol nameLen:nameLenNull param1:1 param2:40 methodListRef:nil];
     [self writeClassDefWithLabel:metaClassSymbol structLabel:metaClassStructSymbol superClassSymbol:superMetaClassSymbol metaClassSymbol:superClassSymbol];
@@ -105,25 +134,49 @@
 -(NSString*)methodListForClass:(NSString*)className methodNames:(NSArray*)methodNames methodSymbols:(NSArray*)methodSymbols methodTypes:(NSArray*)typeStrings
 {
     NSString *methodListSymbol=[@"\\01l_OBJC_$_INSTANCE_METHODS_" stringByAppendingString:className];
-    NSString *methodTypeString=[typeStrings firstObject];
-    NSString *methodName=[methodNames firstObject];
-
-    NSString *methodSymbol=[methodSymbols firstObject];
-    long methodTypeStringLenNull=[methodTypeString length]+1;
-    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
-    long methodNameLenWithNull=[methodName length]+1;
+    NSMutableArray *nameSymbols=[NSMutableArray array];
+    NSMutableArray *typeSymbols=[NSMutableArray array];
+    int methodCount=(int)[methodSymbols count];
+    
+    for (int i=0;i<[methodNames count];i++) {
+        NSString *methodTypeString=typeStrings[i];
+        NSString *methodName=methodNames[i];
+        NSString *nameSymbol=[NSString stringWithFormat:@"\\01L_OBJC_METH_VAR_NAME_%d",i];
+        NSString *typeSymbol=[NSString stringWithFormat:@"\\01L_OBJC_METH_VAR_TYPE_%d",i];
+        [self generateCString:methodName symbol:nameSymbol type:@"__objc_methname"];
+        [self generateCString:methodTypeString symbol:typeSymbol type:@"__objc_methtype"];
+        [nameSymbols addObject:nameSymbol];
+        [typeSymbols addObject:typeSymbol];
+    }
     
     
-    [self printLine:@"@\"\\01L_OBJC_METH_VAR_NAME_1\" = internal global [%ld x i8] c\"%@\\00\", section \"__TEXT,__objc_methname,cstring_literals\", align 1",methodNameLenWithNull,methodName];
-    [self printLine:@"@\"\\01L_OBJC_METH_VAR_TYPE_\" = internal global [%ld x i8] c\"%@\\00\", section \"__TEXT,__objc_methtype,cstring_literals\", align 1",methodTypeStringLenNull,methodTypeString];
-    
-    [self printLine:@"@\"%@\" = internal global { i32, i32, [1 x %%struct._objc_method] } { i32 24, i32 1, [1 x %%struct._objc_method] [%%struct._objc_method { i8* getelementptr inbounds ([22 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_1\", i32 0, i32 0), i8* getelementptr inbounds ([14 x i8]* @\"\\01L_OBJC_METH_VAR_TYPE_\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01%@\" to i8*) }] }, section \"__DATA, __objc_const\", align 8",methodListSymbol,methodFunctionName];
-    
+    [self printFormat:@"@\"%@\" = internal global { i32, i32, [%d x %%struct._objc_method] } { i32 24, i32 1, [%d x %%struct._objc_method] ",methodListSymbol,methodCount,methodCount];
+    for (int i=0;i<methodCount;i++) {
+        NSString *methodSymbol=methodSymbols[i];
+        NSString *methodTypeString=typeStrings[i];
+        NSString *methodName=methodNames[i];
+        
+        [self printFormat:@"[%%struct._objc_method { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01%@\" to i8*) }]",[methodName length]+1, nameSymbols[i],[methodTypeString length]+1, typeSymbols[i],methodSymbol];
+    }
+    [self printLine:@"}, section \"__DATA, __objc_const\", align 8"];
     return methodListSymbol;
 }
 
 
--(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName
+-(void)flushSelectorReferences
+{
+    __block int num=0;
+    [selectorReferences enumerateKeysAndObjectsUsingBlock:^(id selector, id sel_reference, BOOL *stop) {
+        NSString *symbol=[NSString stringWithFormat:@"\\01L_OBJC_METH_VAR_NAME_REF_%d",num++];
+        [self generateCString:selector  symbol:symbol type:@"__objc_methname"];
+        [self printLine:@"@\"%@\" = internal externally_initialized global i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), section \"__DATA, __objc_selrefs, literal_pointers, no_dead_strip\"",sel_reference,[selector length]+1,symbol];
+    }];
+    
+    
+}
+
+
+-(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
 
@@ -132,22 +185,30 @@
     [self printLine:@"define internal %%0* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%2* %%s, %%2* %%delimiter) uwtable ssp {",methodFunctionName];
     [self printLine:@"%%1 = alloca %%1*, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
-    [self printLine:@"%%3 = alloca %%2*, align 8"];
-    [self printLine:@"%%4 = alloca %%2*, align 8"];
     [self printLine:@"store %%1* %%self, %%1** %%1, align 8"];
     [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
+
+    [self printLine:@"%%3 = alloca %%2*, align 8"];
+    [self printLine:@"%%4 = alloca %%2*, align 8"];
     [self printLine:@"store %%2* %%s, %%2** %%3, align 8"];
     [self printLine:@"store %%2* %%delimiter, %%2** %%4, align 8"];
     [self printLine:@"%%5 = load %%2** %%3, align 8"];
     [self printLine:@"%%6 = load %%2** %%4, align 8"];
-    [self printLine:@"%%7 = load i8** @\"\\01L_OBJC_SELECTOR_REFERENCES_\", !invariant.load !4"];
+    
+    NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
+    
+    [self printLine:@"%%7 = load i8** @\"%@\", !invariant.load !4",selectorRef];
     [self printLine:@"%%8 = bitcast %%2* %%5 to i8*"];
     [self printLine:@"%%9 = call %%0* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%0* (i8*, i8*, %%2*)*)(i8* %%8, i8* %%7, %%2* %%6)"];
     [self printLine:@"ret %%0* %%9"];
     [self printLine:@"}"];
     [self printLine:@""];
-    [self printLine:@"@\"\\01L_OBJC_METH_VAR_NAME_\" = internal global [29 x i8] c\"componentsSeparatedByString:\\00\", section \"__TEXT,__objc_methname,cstring_literals\", align 1"];
-    [self printLine:@"@\"\\01L_OBJC_SELECTOR_REFERENCES_\" = internal global i8* getelementptr inbounds ([29 x i8]* @\"\\01L_OBJC_METH_VAR_NAME_\", i32 0, i32 0), section \"__DATA, __objc_selrefs, literal_pointers, no_dead_strip\""];
+    
+    
+    
+    
+    [self flushSelectorReferences];
+    
     
     return methodFunctionName;
 
@@ -155,7 +216,7 @@
 
 -(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName typeString:(NSString *)methodTypeString
 {
-    NSString *methodSymbol=[self writeConstMethodAndMethodList:className methodName:methodName];
+    NSString *methodSymbol=[self writeConstMethod1:className methodName:methodName];
     return [self methodListForClass:className methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodTypeString]];
 }
 
