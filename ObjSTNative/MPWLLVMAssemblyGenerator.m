@@ -56,7 +56,7 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 
     [self printLine:@"@_objc_empty_cache = external global %%struct._objc_cache"];
     [self printLine:@"@_objc_empty_vtable = external global i8* (i8*, i8*)*"];
-   
+    [self printLine:@"@__CFConstantStringClassReference = external global [0 x i32]"];
 }
 
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type
@@ -249,25 +249,37 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"}"];
     [self printLine:@""];
     
-    
-    
-    
-    
-    
     return methodFunctionName;
-
 }
 
+-(void)writeNSConstantString:(NSString*)value withSymbol:(NSString*)symbol
+{
+    // currently still ignores the value
+    int stringLen=(int)[value length];
+    int withNull=stringLen+1;
+    numStrings++;
+    
+    [self printFormat:@"@.str_%d = linker_private unnamed_addr constant [%d x i8] c\"",numStrings,withNull ];
+    for (int i=0;i<[value length];i++) {
+        unichar ch=[value characterAtIndex:i];
+        if ( ch < 32 ) {
+            [self printFormat:@"\\0%x",ch];
+        } else {
+            [self printFormat:@"%c",ch];
+        }
+    }
+    [self printLine:@"\\00\", align 1"];
+    
+    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,withNull,numStrings,stringLen];
+}
 
 -(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
  
-    [self printLine:@"@__CFConstantStringClassReference = external global [0 x i32]"];
-    [self printLine:@"@.str = linker_private unnamed_addr constant [2 x i8] c\"\\0A\\00\", align 1"];
+    NSString *linefeedConstant=@"@_unnamed_cfstring_";
     
-    [self printLine:@"@_unnamed_cfstring_ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([2 x i8]* @.str, i32 0, i32 0), i64 1 }, section \"__DATA,__cfstring\""];
-
+    [self writeNSConstantString:@"\n" withSymbol:linefeedConstant];
     
     [self printLine:@""];
     [self printLine:@"define internal %%1* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%1* %%s ) uwtable ssp {",methodFunctionName];
@@ -285,9 +297,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"%%6 = load i8** @\"%@\", !invariant.load !4",selectorRef];
     [self printLine:@"%%7 = bitcast %%1* %%4 to i8*"];
 
-    
-
-    [self printLine:@"%%8 = call %%1* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%1* (i8*, i8*, %%1*, %%1*)*)(i8* %%7, i8* %%6, %%1* %%5, %%1*  bitcast (%%struct.NSConstantString* @_unnamed_cfstring_ to %%1*))"];
+    [self printLine:@"%%8 = call %%1* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%1* (i8*, i8*, %%1*, %%1*)*)(i8* %%7, i8* %%6, %%1* %%5, %%1*  bitcast (%%struct.NSConstantString* %@ to %%1*))",linefeedConstant];
     [self printLine:@"ret %%1* %%8"];
     [self printLine:@"}"];
     [self printLine:@""];

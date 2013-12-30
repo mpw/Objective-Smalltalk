@@ -11,7 +11,7 @@
 @interface MPWLLVMAssemblyGenerator : MPWByteStream
 {
     NSMutableDictionary *selectorReferences;
-    
+    int numStrings;
 }
 
 -(void)writeHeaderWithName:(NSString*)name;
