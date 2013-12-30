@@ -84,8 +84,9 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
                           param1:(int)p1
                           param2:(int)p2
                    methodListRef:(NSString*)methodListRefSymbol
+                      numMethods:(int)numMethods
 {
-    NSString *methodListRef= methodListRefSymbol ? [NSString stringWithFormat:@"bitcast ({ i32, i32, [1 x %%struct._objc_method] }* @\"%@\" to %%struct.__method_list_t*)",methodListRefSymbol] : @"null";
+    NSString *methodListRef= methodListRefSymbol ? [NSString stringWithFormat:@"bitcast ({ i32, i32, [%d x %%struct._objc_method] }* @\"%@\" to %%struct.__method_list_t*)",numMethods,methodListRefSymbol] : @"null";
     [self printLine:@"@\"%@\" = internal global %%struct._class_ro_t { i32 %d, i32 %d, i32 %d, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), %%struct.__method_list_t* %@, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",structLabel,p1,p2,p2,nameLenNull,classNameSymbol,methodListRef];
 }
 
@@ -97,7 +98,7 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     [self printLine:@"@%@ = global %%struct._class_t { %%struct._class_t* @\"%@\", %%struct._class_t* @\"%@\", %%struct._objc_cache* @_objc_empty_cache, i8* (i8*, i8*)** @_objc_empty_vtable, %%struct._class_ro_t* @\"%@\" }, section \"__DATA, __objc_data\", align 8",classSymbol,metaClassSymbol,superClassSymbol,classStructSymbol];
 }
 
--(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol
+-(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol numInstanceMethods:(int)numInstanceMethods
 {
     long nameLen=[aName length];
     long nameLenNull=nameLen+1;
@@ -119,11 +120,11 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     [self generateCString:aName symbol:classNameSymbol type:@"__objc_classname"];
 
     
-    [self writeClassStructWithLabel:metaClassStructSymbol className:classNameSymbol nameLen:nameLenNull param1:1 param2:40 methodListRef:nil];
+    [self writeClassStructWithLabel:metaClassStructSymbol className:classNameSymbol nameLen:nameLenNull param1:1 param2:40 methodListRef:nil numMethods:0];
     [self writeClassDefWithLabel:metaClassSymbol structLabel:metaClassStructSymbol superClassSymbol:superMetaClassSymbol metaClassSymbol:superClassSymbol];
     
     
-    [self writeClassStructWithLabel:classStructSymbol className:classNameSymbol nameLen:nameLenNull param1:0 param2:8 methodListRef:instanceMethodListSymbol];
+    [self writeClassStructWithLabel:classStructSymbol className:classNameSymbol nameLen:nameLenNull param1:0 param2:8 methodListRef:instanceMethodListSymbol numMethods:numInstanceMethods];
     [self writeClassDefWithLabel:classSymbol structLabel:classStructSymbol superClassSymbol:superClassSymbol metaClassSymbol:metaClassSymbol];
     
     [self printLine:@"@\"\%@\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"%@\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8",classLabelSymbol, classSymbol];
@@ -150,15 +151,18 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     }
     
     
-    [self printFormat:@"@\"%@\" = internal global { i32, i32, [%d x %%struct._objc_method] } { i32 24, i32 1, [%d x %%struct._objc_method] ",methodListSymbol,methodCount,methodCount];
+    [self printFormat:@"@\"%@\" = internal global { i32, i32, [%d x %%struct._objc_method] } { i32 24, i32 %d, [%d x %%struct._objc_method] [ ",methodListSymbol,methodCount,methodCount,methodCount];
     for (int i=0;i<methodCount;i++) {
         NSString *methodSymbol=methodSymbols[i];
         NSString *methodTypeString=typeStrings[i];
         NSString *methodName=methodNames[i];
-        
-        [self printFormat:@"[%%struct._objc_method { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01%@\" to i8*) }]",[methodName length]+1, nameSymbols[i],[methodTypeString length]+1, typeSymbols[i],methodSymbol];
+        if (i!=0) {
+            [self printFormat:@", "];
+        }
+        [self printFormat:@"%%struct._objc_method { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01%@\" to i8*) } ",[methodName length]+1, nameSymbols[i],[methodTypeString length]+1, typeSymbols[i],methodSymbol];
+
     }
-    [self printLine:@"}, section \"__DATA, __objc_const\", align 8"];
+    [self printLine:@" ] }, section \"__DATA, __objc_const\", align 8"];
     return methodListSymbol;
 }
 
@@ -207,19 +211,58 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     
     
     
-    [self flushSelectorReferences];
     
     
     return methodFunctionName;
 
 }
 
+
+-(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName
+{
+    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
+    
+    
+    [self printLine:@""];
+    [self printLine:@"define internal %%0* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%2* %%s, %%2* %%delimiter) uwtable ssp {",methodFunctionName];
+    [self printLine:@"%%1 = alloca %%1*, align 8"];
+    [self printLine:@"%%2 = alloca i8*, align 8"];
+    [self printLine:@"store %%1* %%self, %%1** %%1, align 8"];
+    [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
+    
+    [self printLine:@"%%3 = alloca %%2*, align 8"];
+    [self printLine:@"%%4 = alloca %%2*, align 8"];
+    [self printLine:@"store %%2* %%s, %%2** %%3, align 8"];
+    [self printLine:@"store %%2* %%delimiter, %%2** %%4, align 8"];
+    [self printLine:@"%%5 = load %%2** %%3, align 8"];
+    [self printLine:@"%%6 = load %%2** %%4, align 8"];
+    
+    NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
+    
+    [self printLine:@"%%7 = load i8** @\"%@\", !invariant.load !4",selectorRef];
+    [self printLine:@"%%8 = bitcast %%2* %%5 to i8*"];
+    [self printLine:@"%%9 = call %%0* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%0* (i8*, i8*, %%2*)*)(i8* %%8, i8* %%7, %%2* %%6)"];
+    [self printLine:@"ret %%0* %%9"];
+    [self printLine:@"}"];
+    [self printLine:@""];
+    
+    
+    
+    
+    
+    
+    return methodFunctionName;
+    
+}
+
+
+/*
 -(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName typeString:(NSString *)methodTypeString
 {
     NSString *methodSymbol=[self writeConstMethod1:className methodName:methodName];
     return [self methodListForClass:className methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodTypeString]];
 }
-
+*/
 
 -(void)writeTrailer
 {
@@ -233,7 +276,5 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     [self printLine:@"!4 = metadata !{}"];
 
 }
-
-
 
 @end

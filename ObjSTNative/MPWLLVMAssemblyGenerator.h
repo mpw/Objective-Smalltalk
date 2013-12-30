@@ -16,9 +16,21 @@
 
 -(void)writeHeaderWithName:(NSString*)name;
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type;
--(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol;
+-(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol numInstanceMethods:(int)numInstanceMethods;
 -(void)writeTrailer;
 
 -(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName typeString:(NSString*)methodTypeString;
+
+-(NSString*)methodListForClass:(NSString*)className methodNames:(NSArray*)methodNames methodSymbols:(NSArray*)methodSymbols methodTypes:(NSArray*)typeStrings;
+
+
+-(void)flushSelectorReferences;
+
+//--- temp
+
+-(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName;
+-(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName;
+
+
 
 @end
