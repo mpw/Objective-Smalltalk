@@ -28,8 +28,8 @@
 
 //--- temp
 
--(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName;
--(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName;
+-(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
+-(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
 
 
 

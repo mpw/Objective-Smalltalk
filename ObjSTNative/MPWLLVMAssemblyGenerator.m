@@ -40,7 +40,8 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     [self printLine:@"target datalayout = \"e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128\""];
     [self printLine:@"target triple = \"x86_64-apple-macosx10.9.0\""];
  
-    
+    [self printLine:@"%%struct.NSConstantString = type { i32*, i32, i8*, i64 }"];
+
     [self printLine:@"%%struct._objc_cache = type opaque"];
     [self printLine:@"%%struct._class_t = type { %%struct._class_t*, %%struct._class_t*, %%struct._objc_cache*, i8* (i8*, i8*)**, %%struct._class_ro_t* }"];
     [self printLine:@"%%struct._class_ro_t = type { i32, i32, i32, i8*, i8*, %%struct.__method_list_t*, %%struct._objc_protocol_list*, %%struct._ivar_list_t*, i8*, %%struct._prop_list_t* }"];
@@ -132,6 +133,46 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     
 }
 
+static NSString *typeCharToLLVMType( char typeChar ) {
+    switch (typeChar) {
+        case '@':
+            return @"%1* ";
+        case ':':
+            return @"i8* ";
+        default:
+            return @"";
+    }
+}
+
+
+-(NSString*)typeStringToLLVMMethodType:(NSString*)typeString
+{
+    NSMutableString *llvmType=[NSMutableString string];
+    char typeBytes[1000];
+    NSUInteger len=0;
+    [typeString getBytes:typeBytes maxLength:900 usedLength:&len encoding:NSASCIIStringEncoding options:0 range:NSMakeRange(0, [typeString length]) remainingRange:NULL];
+    int from,to=0;
+    for (from=0;from<len;from++) {
+        char cur=typeBytes[from];
+        if ( !isdigit(cur)) {
+            typeBytes[to++]=cur;
+        }
+    }
+    typeBytes[to]=0;
+    from=0;
+    [llvmType appendString:typeCharToLLVMType(typeBytes[from++])];
+    [llvmType appendString:@"( "];
+    while ( from < to) {
+        [llvmType appendString:typeCharToLLVMType(typeBytes[from++])];
+        if ( from < to ) {
+            [llvmType appendString:@", "];
+        }
+    }
+    [llvmType appendString:@")"];
+//    return @"%0* (%1*, i8*, %2*, %2*)";
+    return llvmType;
+}
+
 -(NSString*)methodListForClass:(NSString*)className methodNames:(NSArray*)methodNames methodSymbols:(NSArray*)methodSymbols methodTypes:(NSArray*)typeStrings
 {
     NSString *methodListSymbol=[@"\\01l_OBJC_$_INSTANCE_METHODS_" stringByAppendingString:className];
@@ -159,7 +200,7 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
         if (i!=0) {
             [self printFormat:@", "];
         }
-        [self printFormat:@"%%struct._objc_method { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast (%%0* (%%1*, i8*, %%2*, %%2*)* @\"\\01%@\" to i8*) } ",[methodName length]+1, nameSymbols[i],[methodTypeString length]+1, typeSymbols[i],methodSymbol];
+        [self printFormat:@"%%struct._objc_method { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ( %@ * @\"\\01%@\" to i8*) } ",[methodName length]+1, nameSymbols[i],[methodTypeString length]+1, typeSymbols[i],[self typeStringToLLVMMethodType:typeStrings[i]],methodSymbol];
 
     }
     [self printLine:@" ] }, section \"__DATA, __objc_const\", align 8"];
@@ -180,31 +221,31 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 }
 
 
--(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName
+-(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
 
     
     [self printLine:@""];
-    [self printLine:@"define internal %%0* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%2* %%s, %%2* %%delimiter) uwtable ssp {",methodFunctionName];
+    [self printLine:@"define internal %%1* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%1* %%s, %%1* %%delimiter) uwtable ssp {",methodFunctionName];
     [self printLine:@"%%1 = alloca %%1*, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
     [self printLine:@"store %%1* %%self, %%1** %%1, align 8"];
     [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
 
-    [self printLine:@"%%3 = alloca %%2*, align 8"];
-    [self printLine:@"%%4 = alloca %%2*, align 8"];
-    [self printLine:@"store %%2* %%s, %%2** %%3, align 8"];
-    [self printLine:@"store %%2* %%delimiter, %%2** %%4, align 8"];
-    [self printLine:@"%%5 = load %%2** %%3, align 8"];
-    [self printLine:@"%%6 = load %%2** %%4, align 8"];
+    [self printLine:@"%%3 = alloca %%1*, align 8"];
+    [self printLine:@"%%4 = alloca %%1*, align 8"];
+    [self printLine:@"store %%1* %%s, %%1** %%3, align 8"];
+    [self printLine:@"store %%1* %%delimiter, %%1** %%4, align 8"];
+    [self printLine:@"%%5 = load %%1** %%3, align 8"];
+    [self printLine:@"%%6 = load %%1** %%4, align 8"];
     
     NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
     
     [self printLine:@"%%7 = load i8** @\"%@\", !invariant.load !4",selectorRef];
-    [self printLine:@"%%8 = bitcast %%2* %%5 to i8*"];
-    [self printLine:@"%%9 = call %%0* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%0* (i8*, i8*, %%2*)*)(i8* %%8, i8* %%7, %%2* %%6)"];
-    [self printLine:@"ret %%0* %%9"];
+    [self printLine:@"%%8 = bitcast %%1* %%5 to i8*"];
+    [self printLine:@"%%9 = call %%1* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%1* (i8*, i8*, %%1*)*)(i8* %%8, i8* %%7, %%1* %%6)"];
+    [self printLine:@"ret %%1* %%9"];
     [self printLine:@"}"];
     [self printLine:@""];
     
@@ -218,37 +259,38 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 }
 
 
--(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName
+-(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
+ 
+    [self printLine:@"@__CFConstantStringClassReference = external global [0 x i32]"];
+    [self printLine:@"@.str = linker_private unnamed_addr constant [2 x i8] c\"\\0A\\00\", align 1"];
     
+    [self printLine:@"@_unnamed_cfstring_ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([2 x i8]* @.str, i32 0, i32 0), i64 1 }, section \"__DATA,__cfstring\""];
+
     
     [self printLine:@""];
-    [self printLine:@"define internal %%0* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%2* %%s, %%2* %%delimiter) uwtable ssp {",methodFunctionName];
+    [self printLine:@"define internal %%1* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%1* %%s ) uwtable ssp {",methodFunctionName];
+
     [self printLine:@"%%1 = alloca %%1*, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
     [self printLine:@"store %%1* %%self, %%1** %%1, align 8"];
     [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
+    [self printLine:@"%%3 = alloca %%1*, align 8"];
+    [self printLine:@"store %%1* %%s, %%1** %%3, align 8"];
+    [self printLine:@"%%4 = load %%1** %%1, align 8"];
+    [self printLine:@"%%5 = load %%1** %%3, align 8"];
+   
+    NSString *selectorRef=[self selectorForName:@"components:splitInto:"];
+    [self printLine:@"%%6 = load i8** @\"%@\", !invariant.load !4",selectorRef];
+    [self printLine:@"%%7 = bitcast %%1* %%4 to i8*"];
+
     
-    [self printLine:@"%%3 = alloca %%2*, align 8"];
-    [self printLine:@"%%4 = alloca %%2*, align 8"];
-    [self printLine:@"store %%2* %%s, %%2** %%3, align 8"];
-    [self printLine:@"store %%2* %%delimiter, %%2** %%4, align 8"];
-    [self printLine:@"%%5 = load %%2** %%3, align 8"];
-    [self printLine:@"%%6 = load %%2** %%4, align 8"];
-    
-    NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
-    
-    [self printLine:@"%%7 = load i8** @\"%@\", !invariant.load !4",selectorRef];
-    [self printLine:@"%%8 = bitcast %%2* %%5 to i8*"];
-    [self printLine:@"%%9 = call %%0* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%0* (i8*, i8*, %%2*)*)(i8* %%8, i8* %%7, %%2* %%6)"];
-    [self printLine:@"ret %%0* %%9"];
+
+    [self printLine:@"%%8 = call %%1* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%1* (i8*, i8*, %%1*, %%1*)*)(i8* %%7, i8* %%6, %%1* %%5, %%1*  bitcast (%%struct.NSConstantString* @_unnamed_cfstring_ to %%1*))"];
+    [self printLine:@"ret %%1* %%8"];
     [self printLine:@"}"];
     [self printLine:@""];
-    
-    
-    
-    
     
     
     return methodFunctionName;

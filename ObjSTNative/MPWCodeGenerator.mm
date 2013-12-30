@@ -137,7 +137,7 @@
     NSString *methodType=@"@32@0:8@16@24";
     
 //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
-    NSString *methodSymbol=[gen writeConstMethod1:classname methodName:methodName];
+    NSString *methodSymbol=[gen writeConstMethod1:classname methodName:methodName methodType:methodType];
     
     NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodType]];
 
@@ -171,12 +171,12 @@
     [gen writeHeaderWithName:@"testModule"];
     NSString *methodName1=@"components:splitInto:";
     NSString *methodType1=@"@32@0:8@16@24";
-    NSString *methodName2=@"components:splitInto1:";
-    NSString *methodType2=@"@32@0:8@16@24";
+    NSString *methodName2=@"lines:";
+    NSString *methodType2=@"@32@0:8@16";
     
     //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
-    NSString *methodSymbol1=[gen writeConstMethod1:classname methodName:methodName1];
-    NSString *methodSymbol2=[gen writeConstMethod2:classname methodName:methodName2];
+    NSString *methodSymbol1=[gen writeConstMethod1:classname methodName:methodName1 methodType:methodType1];
+    NSString *methodSymbol2=[gen writeConstMethod2:classname methodName:methodName2 methodType:methodType1];
     
     NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1, methodName2]  methodSymbols:@[ methodSymbol1, methodSymbol2 ] methodTypes:@[ methodType1, methodType2]];
     
@@ -194,10 +194,10 @@
     EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
     id instance=[[loadedClass new] autorelease];
     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
-    EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto1:)], @"responds to 'components:splitInto1:");
+    EXPECTTRUE([instance respondsToSelector:@selector(lines:)], @"responds to 'lines:'");
     NSArray *splitResult=[instance components:@"Hi there" splitInto:@" "];
     IDEXPECT(splitResult, (@[@"Hi", @"there"]), @"1st loaded method");
-    NSArray *splitResult1=[instance components:@"Hi there" splitInto1:@" "];
+    NSArray *splitResult1=[instance lines:@"Hi\nthere"];
     IDEXPECT(splitResult1, (@[@"Hi", @"there"]), @"2nd loaded method");
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
