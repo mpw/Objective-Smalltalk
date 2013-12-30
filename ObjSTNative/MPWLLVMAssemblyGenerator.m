@@ -31,9 +31,7 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 
 -(void)writeHeaderWithName:(NSString*)name
 {
-    [self printLine:@"%%0 = type opaque"];
-    [self printLine:@"%%1 = type opaque"];
-    [self printLine:@"%%2 = type opaque"];
+    [self printLine:@"%%id = type opaque"];
     
 
     [self printLine:@"; ModuleID = '%@'",name];
@@ -136,7 +134,7 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 static NSString *typeCharToLLVMType( char typeChar ) {
     switch (typeChar) {
         case '@':
-            return @"%1* ";
+            return @"%id* ";
         case ':':
             return @"i8* ";
         default:
@@ -169,7 +167,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         }
     }
     [llvmType appendString:@")"];
-//    return @"%0* (%1*, i8*, %2*, %2*)";
+
     return llvmType;
 }
 
@@ -227,25 +225,25 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
     
     [self printLine:@""];
-    [self printLine:@"define internal %%1* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%1* %%s, %%1* %%delimiter) uwtable ssp {",methodFunctionName];
-    [self printLine:@"%%1 = alloca %%1*, align 8"];
+    [self printLine:@"define internal %%id* @\"\\01%@\"(%%id* %%self, i8* %%_cmd, %%id* %%s, %%id* %%delimiter) uwtable ssp {",methodFunctionName];
+    [self printLine:@"%%1 = alloca %%id*, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
-    [self printLine:@"store %%1* %%self, %%1** %%1, align 8"];
+    [self printLine:@"store %%id* %%self, %%id** %%1, align 8"];
     [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
 
-    [self printLine:@"%%3 = alloca %%1*, align 8"];
-    [self printLine:@"%%4 = alloca %%1*, align 8"];
-    [self printLine:@"store %%1* %%s, %%1** %%3, align 8"];
-    [self printLine:@"store %%1* %%delimiter, %%1** %%4, align 8"];
-    [self printLine:@"%%5 = load %%1** %%3, align 8"];
-    [self printLine:@"%%6 = load %%1** %%4, align 8"];
+    [self printLine:@"%%3 = alloca %%id*, align 8"];
+    [self printLine:@"%%4 = alloca %%id*, align 8"];
+    [self printLine:@"store %%id* %%s, %%id** %%3, align 8"];
+    [self printLine:@"store %%id* %%delimiter, %%id** %%4, align 8"];
+    [self printLine:@"%%5 = load %%id** %%3, align 8"];
+    [self printLine:@"%%6 = load %%id** %%4, align 8"];
     
     NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
     
     [self printLine:@"%%7 = load i8** @\"%@\", !invariant.load !4",selectorRef];
-    [self printLine:@"%%8 = bitcast %%1* %%5 to i8*"];
-    [self printLine:@"%%9 = call %%1* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%1* (i8*, i8*, %%1*)*)(i8* %%8, i8* %%7, %%1* %%6)"];
-    [self printLine:@"ret %%1* %%9"];
+    [self printLine:@"%%8 = bitcast %%id* %%5 to i8*"];
+    [self printLine:@"%%9 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*)*)(i8* %%8, i8* %%7, %%id* %%6)"];
+    [self printLine:@"ret %%id* %%9"];
     [self printLine:@"}"];
     [self printLine:@""];
     
@@ -282,23 +280,23 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self writeNSConstantString:@"\n" withSymbol:linefeedConstant];
     
     [self printLine:@""];
-    [self printLine:@"define internal %%1* @\"\\01%@\"(%%1* %%self, i8* %%_cmd, %%1* %%s ) uwtable ssp {",methodFunctionName];
+    [self printLine:@"define internal %%id* @\"\\01%@\"(%%id* %%self, i8* %%_cmd, %%id* %%s ) uwtable ssp {",methodFunctionName];
 
-    [self printLine:@"%%1 = alloca %%1*, align 8"];
+    [self printLine:@"%%1 = alloca %%id*, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
-    [self printLine:@"store %%1* %%self, %%1** %%1, align 8"];
+    [self printLine:@"store %%id* %%self, %%id** %%1, align 8"];
     [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
-    [self printLine:@"%%3 = alloca %%1*, align 8"];
-    [self printLine:@"store %%1* %%s, %%1** %%3, align 8"];
-    [self printLine:@"%%4 = load %%1** %%1, align 8"];
-    [self printLine:@"%%5 = load %%1** %%3, align 8"];
+    [self printLine:@"%%3 = alloca %%id*, align 8"];
+    [self printLine:@"store %%id* %%s, %%id** %%3, align 8"];
+    [self printLine:@"%%4 = load %%id** %%1, align 8"];
+    [self printLine:@"%%5 = load %%id** %%3, align 8"];
    
     NSString *selectorRef=[self selectorForName:@"components:splitInto:"];
     [self printLine:@"%%6 = load i8** @\"%@\", !invariant.load !4",selectorRef];
-    [self printLine:@"%%7 = bitcast %%1* %%4 to i8*"];
+    [self printLine:@"%%7 = bitcast %%id* %%4 to i8*"];
 
-    [self printLine:@"%%8 = call %%1* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%1* (i8*, i8*, %%1*, %%1*)*)(i8* %%7, i8* %%6, %%1* %%5, %%1*  bitcast (%%struct.NSConstantString* %@ to %%1*))",linefeedConstant];
-    [self printLine:@"ret %%1* %%8"];
+    [self printLine:@"%%8 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*, %%id*)*)(i8* %%7, i8* %%6, %%id* %%5, %%id*  bitcast (%%struct.NSConstantString* %@ to %%id*))",linefeedConstant];
+    [self printLine:@"ret %%id* %%8"];
     [self printLine:@"}"];
     [self printLine:@""];
     
