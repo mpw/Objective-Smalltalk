@@ -69,6 +69,27 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     [self printLine:@"@\"%@\" = internal global [%ld x i8] c\"%@\\00\", %@",symbolName,[cstring length]+1,cstring,sectionString];
 }
 
+-(void)writeNSConstantString:(NSString*)value withSymbol:(NSString*)symbol
+{
+    // currently still ignores the value
+    int stringLen=(int)[value length];
+    int withNull=stringLen+1;
+    numStrings++;
+    
+    [self printFormat:@"@.str_%d = linker_private unnamed_addr constant [%d x i8] c\"",numStrings,withNull ];
+    for (int i=0;i<[value length];i++) {
+        unichar ch=[value characterAtIndex:i];
+        if ( ch < 32 ) {
+            [self printFormat:@"\\0%x",ch];
+        } else {
+            [self printFormat:@"%c",ch];
+        }
+    }
+    [self printLine:@"\\00\", align 1"];
+    
+    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,withNull,numStrings,stringLen];
+}
+
 
 
 -(NSString*)classSymbolForName:(NSString*)className isMeta:(BOOL)isMeta
@@ -219,17 +240,27 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
+-(void)writeMethodHeaderWithName:(NSString*)methodFunctionName returnType:(NSString*)returnType additionalParametrs:(NSArray*)additionalParams
+{
+    [self printFormat:@"define internal %@ @\"\\01%@\"(%%id* %%self, i8* %%_cmd",returnType, methodFunctionName];
+    for ( NSString *param in additionalParams) {
+        [self printFormat:@", %@",param];
+    }
+    [self printLine:@" ) uwtable ssp {"];
+    [self printLine:@"%%1 = alloca %%id*, align 8"];
+    [self printLine:@"%%2 = alloca i8*, align 8"];
+    [self printLine:@"store %%id* %%self, %%id** %%1, align 8"];
+    [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
+}
+
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
 
     
     [self printLine:@""];
-    [self printLine:@"define internal %%id* @\"\\01%@\"(%%id* %%self, i8* %%_cmd, %%id* %%s, %%id* %%delimiter) uwtable ssp {",methodFunctionName];
-    [self printLine:@"%%1 = alloca %%id*, align 8"];
-    [self printLine:@"%%2 = alloca i8*, align 8"];
-    [self printLine:@"store %%id* %%self, %%id** %%1, align 8"];
-    [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
+    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id*" additionalParametrs:@[@"%id * %s", @"%id* %delimiter"]];
+
 
     [self printLine:@"%%3 = alloca %%id*, align 8"];
     [self printLine:@"%%4 = alloca %%id*, align 8"];
@@ -250,26 +281,6 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     return methodFunctionName;
 }
 
--(void)writeNSConstantString:(NSString*)value withSymbol:(NSString*)symbol
-{
-    // currently still ignores the value
-    int stringLen=(int)[value length];
-    int withNull=stringLen+1;
-    numStrings++;
-    
-    [self printFormat:@"@.str_%d = linker_private unnamed_addr constant [%d x i8] c\"",numStrings,withNull ];
-    for (int i=0;i<[value length];i++) {
-        unichar ch=[value characterAtIndex:i];
-        if ( ch < 32 ) {
-            [self printFormat:@"\\0%x",ch];
-        } else {
-            [self printFormat:@"%c",ch];
-        }
-    }
-    [self printLine:@"\\00\", align 1"];
-    
-    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,withNull,numStrings,stringLen];
-}
 
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString
 {
@@ -280,12 +291,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
     
     [self printLine:@""];
-    [self printLine:@"define internal %%id* @\"\\01%@\"(%%id* %%self, i8* %%_cmd, %%id* %%s ) uwtable ssp {",methodFunctionName];
+    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id*" additionalParametrs:@[@"%id * %s"]];
 
-    [self printLine:@"%%1 = alloca %%id*, align 8"];
-    [self printLine:@"%%2 = alloca i8*, align 8"];
-    [self printLine:@"store %%id* %%self, %%id** %%1, align 8"];
-    [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
     [self printLine:@"%%3 = alloca %%id*, align 8"];
     [self printLine:@"store %%id* %%s, %%id** %%3, align 8"];
     [self printLine:@"%%4 = load %%id** %%1, align 8"];
