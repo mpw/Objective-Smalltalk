@@ -13,6 +13,17 @@
 #import <dlfcn.h>
 #import <objc/runtime.h>
 
+@interface NSObject(dynamicallyGeneratedTestMessages)
+
+-(NSArray*)components:(NSString*)aString splitInto:(NSString*)delimiter;
+-(NSArray*)lines:(NSString*)aString;
+-(NSArray*)words:(NSString*)aString;
+-(NSArray*)splitThis:(NSString*)aString;
+
+@end
+
+
+
 @implementation MPWCodeGenerator
 
 
