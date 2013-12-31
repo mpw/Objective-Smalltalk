@@ -31,7 +31,8 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 
 -(void)writeHeaderWithName:(NSString*)name
 {
-    [self printLine:@"%%id = type opaque"];
+    [self printLine:@"%%id1 = type opaque"];
+    [self printLine:@"%%id = type %%id1*"];
     
 
     [self printLine:@"; ModuleID = '%@'",name];
@@ -155,7 +156,7 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 static NSString *typeCharToLLVMType( char typeChar ) {
     switch (typeChar) {
         case '@':
-            return @"%id* ";
+            return @"%id ";
         case ':':
             return @"i8* ";
         default:
@@ -250,14 +251,14 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(void)writeMethodHeaderWithName:(NSString*)methodFunctionName returnType:(NSString*)returnType additionalParametrs:(NSArray*)additionalParams
 {
-    [self printFormat:@"define internal %@ @\"\\01%@\"(%%id* %%self, i8* %%_cmd",returnType, methodFunctionName];
+    [self printFormat:@"define internal %@ @\"\\01%@\"(%%id %%self, i8* %%_cmd",returnType, methodFunctionName];
     for ( NSString *param in additionalParams) {
         [self printFormat:@", %@",param];
     }
     [self printLine:@" ) uwtable ssp {"];
-    [self printLine:@"%%1 = alloca %%id*, align 8"];
+    [self printLine:@"%%1 = alloca %%id, align 8"];
     [self printLine:@"%%2 = alloca i8*, align 8"];
-    [self printLine:@"store %%id* %%self, %%id** %%1, align 8"];
+    [self printLine:@"store %%id %%self, %%id* %%1, align 8"];
     [self printLine:@"store i8* %%_cmd, i8** %%2, align 8"];
     numLocals=2;
     
@@ -272,11 +273,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     numLocals++;
     int returnIndex=numLocals;
     [self printLine:@"%%%d = load i8** @\"%@\", !invariant.load !4",selectorIndex,selectorRef];
-    [self printFormat:@"%%%d = call %@ bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %@ (%%id*, i8* ",returnIndex,retType,retType];
+    [self printFormat:@"%%%d = call %@ bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %@ (%%id, i8* ",returnIndex,retType,retType];
     for ( NSString *argType in argTypes) {
         [self printFormat:@", %@",argType];
     }
-    [self printFormat:@")*)( %%id* %@, i8* %%%d " ,receiverName,selectorIndex];
+    [self printFormat:@")*)( %%id %@, i8* %%%d " ,receiverName,selectorIndex];
     for ( int i=0;i<[args count];i++) {
         [self printFormat:@", %@ %@ ",argTypes[i],args[i]];
     }
@@ -291,11 +292,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
     
     [self printLine:@""];
-    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id*" additionalParametrs:@[@"%id * %s", @"%id* %delimiter"]];
+    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"]];
 
-    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id*" args:@[ @"%delimiter"] argTypes:@[ @"%id*"]];
+    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ @"%delimiter"] argTypes:@[ @"%id"]];
     
-    [self printLine:@"ret %%id* %@",retval];
+    [self printLine:@"ret %%id %@",retval];
     [self printLine:@"}"];
     [self printLine:@""];
     
@@ -312,12 +313,12 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
     
     [self printLine:@""];
-    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id*" additionalParametrs:@[@"%id * %s"]];
+    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id" additionalParametrs:@[@"%id %s"]];
 
-    NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id*)",splitStringSymbol];
-    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id*" args:@[ stringArg ] argTypes:@[ @"%id*"]];
+    NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id)",splitStringSymbol];
+    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ stringArg ] argTypes:@[ @"%id"]];
 
-    [self printLine:@"ret %%id* %@",retval];
+    [self printLine:@"ret %%id %@",retval];
     [self printLine:@"}"];
     [self printLine:@""];
     
