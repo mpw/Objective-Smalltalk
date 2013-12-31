@@ -271,13 +271,13 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,withNull,numStrings,stringLen];
 }
 
--(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
+-(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
  
-    NSString *linefeedConstant=@"@_unnamed_cfstring_";
+    NSString *splitStringSymbol=[@"@_unnamed_cfstring_" stringByAppendingString:[methodName substringToIndex:[methodName length]-1]];
     
-    [self writeNSConstantString:@"\n" withSymbol:linefeedConstant];
+    [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
     
     [self printLine:@""];
     [self printLine:@"define internal %%id* @\"\\01%@\"(%%id* %%self, i8* %%_cmd, %%id* %%s ) uwtable ssp {",methodFunctionName];
@@ -295,7 +295,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"%%6 = load i8** @\"%@\", !invariant.load !4",selectorRef];
     [self printLine:@"%%7 = bitcast %%id* %%4 to i8*"];
 
-    [self printLine:@"%%8 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*, %%id*)*)(i8* %%7, i8* %%6, %%id* %%5, %%id*  bitcast (%%struct.NSConstantString* %@ to %%id*))",linefeedConstant];
+    [self printLine:@"%%8 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*, %%id*)*)(i8* %%7, i8* %%6, %%id* %%5, %%id*  bitcast (%%struct.NSConstantString* %@ to %%id*))",splitStringSymbol];
     [self printLine:@"ret %%id* %%8"];
     [self printLine:@"}"];
     [self printLine:@""];
@@ -304,15 +304,6 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     return methodFunctionName;
     
 }
-
-
-/*
--(NSString*)writeConstMethodAndMethodList:(NSString*)className methodName:(NSString*)methodName typeString:(NSString *)methodTypeString
-{
-    NSString *methodSymbol=[self writeConstMethod1:className methodName:methodName];
-    return [self methodListForClass:className methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodTypeString]];
-}
-*/
 
 -(void)writeTrailer
 {

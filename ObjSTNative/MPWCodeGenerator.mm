@@ -160,7 +160,7 @@
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
-+(void)testDefineClassWithTwoMethodsDynamically
++(void)testDefineClassWithThreeMethodsDynamically
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
@@ -173,15 +173,18 @@
     NSString *methodType1=@"@32@0:8@16@24";
     NSString *methodName2=@"lines:";
     NSString *methodType2=@"@32@0:8@16";
+    NSString *methodName3=@"words:";
+    NSString *methodType3=@"@32@0:8@16";
     
     //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
     NSString *methodSymbol1=[gen writeConstMethod1:classname methodName:methodName1 methodType:methodType1];
-    NSString *methodSymbol2=[gen writeConstMethod2:classname methodName:methodName2 methodType:methodType1];
+    NSString *methodSymbol2=[gen writeStringSplitter:classname methodName:methodName2 methodType:methodType2 splitString:@"\n"];
+    NSString *methodSymbol3=[gen writeStringSplitter:classname methodName:methodName3 methodType:methodType3 splitString:@" "];
     
-    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1, methodName2]  methodSymbols:@[ methodSymbol1, methodSymbol2 ] methodTypes:@[ methodType1, methodType2]];
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1, methodName2, methodName3]  methodSymbols:@[ methodSymbol1, methodSymbol2, methodSymbol3 ] methodTypes:@[ methodType1, methodType2, methodType3]];
     
     
-    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:3];
     
     [gen flushSelectorReferences];
     [gen writeTrailer];
@@ -199,6 +202,8 @@
     IDEXPECT(splitResult, (@[@"Hi", @"there"]), @"1st loaded method");
     NSArray *splitResult1=[instance lines:@"Hi\nthere"];
     IDEXPECT(splitResult1, (@[@"Hi", @"there"]), @"2nd loaded method");
+    NSArray *splitResult2=[instance words:@"Hello world!"];
+    IDEXPECT(splitResult2, (@[@"Hello", @"world!"]), @"3rd loaded method");
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
@@ -208,7 +213,7 @@
              @"testStaticEmptyClassDefine",
              @"testDefineEmptyClassDynamically",
              @"testDefineOneMethodClassDynamically",
-             @"testDefineClassWithTwoMethodsDynamically",
+             @"testDefineClassWithThreeMethodsDynamically",
               ];
 }
 

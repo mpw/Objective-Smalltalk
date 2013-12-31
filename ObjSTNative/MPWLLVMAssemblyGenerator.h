@@ -29,7 +29,7 @@
 //--- temp
 
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
--(NSString*)writeConstMethod2:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
+-(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString;
 
 
 
