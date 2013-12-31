@@ -264,22 +264,24 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
--(void)emitMsg:(NSString*)msgName receiver:(NSString*)receiverName returning:(NSString*)retval type:(NSString*)retType args:(NSArray*)args argTypes:(NSArray*)argTypes
+-(NSString*)emitMsg:(NSString*)msgName receiver:(NSString*)receiverName  returnType:(NSString*)retType args:(NSArray*)args argTypes:(NSArray*)argTypes
 {
     NSString *selectorRef=[self selectorForName:msgName];
     numLocals++;
-    
-    
-    [self printLine:@"%%%d = load i8** @\"%@\", !invariant.load !4",numLocals,selectorRef];
-    [self printFormat:@"%@ = call %@ bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %@ (%%id*, i8* ",retval,retType,retType];
+    int selectorIndex=numLocals;
+    numLocals++;
+    int returnIndex=numLocals;
+    [self printLine:@"%%%d = load i8** @\"%@\", !invariant.load !4",selectorIndex,selectorRef];
+    [self printFormat:@"%%%d = call %@ bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %@ (%%id*, i8* ",returnIndex,retType,retType];
     for ( NSString *argType in argTypes) {
         [self printFormat:@", %@",argType];
     }
-    [self printFormat:@")*)( %%id* %@, i8* %%%d " ,receiverName,numLocals];
+    [self printFormat:@")*)( %%id* %@, i8* %%%d " ,receiverName,selectorIndex];
     for ( int i=0;i<[args count];i++) {
         [self printFormat:@", %@ %@ ",argTypes[i],args[i]];
     }
     [self printLine:@" )"];
+    return [NSString stringWithFormat:@"%%%d",returnIndex];
 }
 
 
@@ -291,18 +293,9 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@""];
     [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id*" additionalParametrs:@[@"%id * %s", @"%id* %delimiter"]];
 
-    NSString *local1 = [self allocLocal:@"%id*"];
-    NSString *local2 = [self allocLocal:@"%id*"];
-
-    [self printLine:@"store %%id* %%s, %%id** %@, align 8",local1];
-    [self printLine:@"store %%id* %%delimiter, %%id** %@, align 8",local2];
-    [self printLine:@"%%5 = load %%id** %@, align 8",local1];
-    [self printLine:@"%%6 = load %%id** %@, align 8",local2];
-    numLocals=6;
-
-    [self emitMsg:@"componentsSeparatedByString:" receiver:@"%5" returning:@"%8" type:@"%id*" args:@[ @"%6"] argTypes:@[ @"%id*"]];
+    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id*" args:@[ @"%delimiter"] argTypes:@[ @"%id*"]];
     
-    [self printLine:@"ret %%id* %%8"];
+    [self printLine:@"ret %%id* %@",retval];
     [self printLine:@"}"];
     [self printLine:@""];
     
@@ -321,22 +314,10 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@""];
     [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id*" additionalParametrs:@[@"%id * %s"]];
 
-    NSString *local1 = [self allocLocal:@"%id*"];
-    
-    [self printLine:@"store %%id* %%s, %%id** %%3, align 8"];
-    [self printLine:@"%%4 = load %%id** %%1, align 8"];
-    [self printLine:@"%%5 = load %%id** %%3, align 8"];
-    numLocals=5;
-//    NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
-//    [self printLine:@"%%6 = load i8** @\"%@\", !invariant.load !4",selectorRef];
-//    [self printLine:@"%%7 = bitcast %%id* %%s to i8*"];
-
     NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id*)",splitStringSymbol];
-    [self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returning:@"%7" type:@"%id*" args:@[ stringArg ] argTypes:@[ @"%id*"]];
+    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id*" args:@[ stringArg ] argTypes:@[ @"%id*"]];
 
-    
-//    [self printLine:@"%%8 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*)*)(i8* %%7, i8* %%6,  %%id*  bitcast (%%struct.NSConstantString* %@ to %%id*))",splitStringSymbol];
-    [self printLine:@"ret %%id* %%7"];
+    [self printLine:@"ret %%id* %@",retval];
     [self printLine:@"}"];
     [self printLine:@""];
     
