@@ -298,11 +298,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"%%4 = load %%id** %%1, align 8"];
     [self printLine:@"%%5 = load %%id** %%3, align 8"];
    
-    NSString *selectorRef=[self selectorForName:@"components:splitInto:"];
+    NSString *selectorRef=[self selectorForName:@"componentsSeparatedByString:"];
     [self printLine:@"%%6 = load i8** @\"%@\", !invariant.load !4",selectorRef];
-    [self printLine:@"%%7 = bitcast %%id* %%4 to i8*"];
+    [self printLine:@"%%7 = bitcast %%id* %%s to i8*"];
 
-    [self printLine:@"%%8 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*, %%id*)*)(i8* %%7, i8* %%6, %%id* %%5, %%id*  bitcast (%%struct.NSConstantString* %@ to %%id*))",splitStringSymbol];
+    [self printLine:@"%%8 = call %%id* bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %%id* (i8*, i8*, %%id*)*)(i8* %%7, i8* %%6,  %%id*  bitcast (%%struct.NSConstantString* %@ to %%id*))",splitStringSymbol];
     [self printLine:@"ret %%id* %%8"];
     [self printLine:@"}"];
     [self printLine:@""];

@@ -124,7 +124,7 @@
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
-+(void)testDefineOneMethodClassDynamically
++(void)testDefineClassWithOneMethodDynamically
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
@@ -151,7 +151,7 @@
     [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
-    Class loadedClass =objc_getClass("EmptyCodeGenTestClass04");
+    Class loadedClass =NSClassFromString(classname);
     EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
     id instance=[[loadedClass new] autorelease];
     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
@@ -190,12 +190,11 @@
     [gen writeTrailer];
     [gen flush];
     NSData *source=[gen target];
-    [source writeToFile:@"/tmp/twomethodclass.s" atomically:YES];
+    [source writeToFile:@"/tmp/threemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
-    Class loadedClass =objc_getClass("EmptyCodeGenTestClass05");
-    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
-    id instance=[[loadedClass new] autorelease];
+    EXPECTNOTNIL(NSClassFromString(classname), @"test class should exist after load");
+    id instance=[[NSClassFromString(classname) new] autorelease];
     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
     EXPECTTRUE([instance respondsToSelector:@selector(lines:)], @"responds to 'lines:'");
     NSArray *splitResult=[instance components:@"Hi there" splitInto:@" "];
@@ -207,13 +206,51 @@
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
+
+
++(void)testStringsWithDifferentLengths
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=@"EmptyCodeGenTestClass06";
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName=@"splitThis:";
+    NSString *methodType=@"@32@0:8@16";
+    
+    //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
+    NSString *methodSymbol=[gen writeStringSplitter:classname methodName:methodName methodType:methodType splitString:@"this"];
+    
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodType ]];
+    
+    
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+
+
+    id instance=[[NSClassFromString(classname) new] autorelease];
+ 
+    NSArray *splitResult2=[instance splitThis:@"Hello this is cool!"];
+    IDEXPECT(splitResult2, (@[@"Hello ", @" is cool!"]), @"string split by 'this'");
+    //    NSLog(@"end testDefineEmptyClassDynamically");
+}
+
+
 +testSelectors
 {
     return @[
              @"testStaticEmptyClassDefine",
              @"testDefineEmptyClassDynamically",
-             @"testDefineOneMethodClassDynamically",
+             @"testDefineClassWithOneMethodDynamically",
              @"testDefineClassWithThreeMethodsDynamically",
+             @"testStringsWithDifferentLengths",
               ];
 }
 
