@@ -286,45 +286,56 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
--(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
+-(NSString*)writeMethod:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
-
+    
     
     [self printLine:@""];
-    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"]];
-
-    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ @"%delimiter"] argTypes:@[ @"%id"]];
-    
-    [self printLine:@"ret %%id %@",retval];
+    [self writeMethodHeaderWithName:methodFunctionName returnType:methodType additionalParametrs:params];
+    block( self );
     [self printLine:@"}"];
     [self printLine:@""];
     
     return methodFunctionName;
 }
 
+-(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
+{
+    return [self writeMethod:className methodName:methodName methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        
+        NSString *retval=[generator emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ @"%delimiter"] argTypes:@[ @"%id"]];
+        
+        [generator printLine:@"ret %%id %@",retval];
+    }];
+}
+
 
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString
 {
-    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
- 
     NSString *splitStringSymbol=[@"@_unnamed_cfstring_" stringByAppendingString:[methodName substringToIndex:[methodName length]-1]];
     
     [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
     
     [self printLine:@""];
+
+    return [self writeMethod:className methodName:methodName methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id)",splitStringSymbol];
+        NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ stringArg ] argTypes:@[ @"%id"]];
+        [self printLine:@"ret %%id %@",retval];
+    }];
+#if 0
+    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
+ 
     [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id" additionalParametrs:@[@"%id %s"]];
 
-    NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id)",splitStringSymbol];
-    NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ stringArg ] argTypes:@[ @"%id"]];
 
-    [self printLine:@"ret %%id %@",retval];
     [self printLine:@"}"];
     [self printLine:@""];
     
     
     return methodFunctionName;
-    
+#endif
 }
 
 -(void)writeTrailer
