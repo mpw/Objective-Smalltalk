@@ -19,6 +19,7 @@
 -(NSArray*)lines:(NSString*)aString;
 -(NSArray*)words:(NSString*)aString;
 -(NSArray*)splitThis:(NSString*)aString;
+-(NSNumber*)makeNumber:(int)aNumber;
 
 @end
 
@@ -253,6 +254,39 @@
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
++(void)testCreateNSNumber
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=@"EmptyCodeGenTestClass07";
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName=@"makeNumber:";
+    NSString *methodType=@"@32@0:8i16";
+    
+    //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
+    NSString *methodSymbol=[gen writeMakeNumberFromArg:classname methodName:methodName];
+    
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodType ]];
+    
+    
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    NSNumber *num1=[instance makeNumber:42];
+    IDEXPECT(num1, @(42), @"number from int");
+    //    NSLog(@"end testDefineEmptyClassDynamically");
+}
 
 +testSelectors
 {
@@ -262,6 +296,7 @@
              @"testDefineClassWithOneMethodDynamically",
              @"testDefineClassWithThreeMethodsDynamically",
              @"testStringsWithDifferentLengths",
+             @"testCreateNSNumber",
               ];
 }
 

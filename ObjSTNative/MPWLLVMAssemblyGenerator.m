@@ -31,8 +31,8 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 
 -(void)writeHeaderWithName:(NSString*)name
 {
-    [self printLine:@"%%id1 = type opaque"];
-    [self printLine:@"%%id = type %%id1*"];
+    [self printLine:@"%%object = type opaque"];
+    [self printLine:@"%%id = type %%object*"];
     
 
     [self printLine:@"; ModuleID = '%@'",name];
@@ -159,6 +159,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
             return @"%id ";
         case ':':
             return @"i8* ";
+        case 'i':
+            return @"i32 ";
         default:
             [NSException raise:@"invalidtype" format:@"unrecognized type char '%c' when converting to LLVM types",typeChar];
             return @"";
@@ -286,7 +288,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
--(NSString*)writeMethod:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block
+-(NSString*)writeMethodNamed:(NSString*)methodName className:(NSString*)className methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
     
@@ -300,42 +302,58 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     return methodFunctionName;
 }
 
+-(void)emitReturnVal:(NSString*)val type:(NSString*)type
+{
+    [self printLine:@"ret %@ %@",type,val];
+}
+
+
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
 {
-    return [self writeMethod:className methodName:methodName methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
         
         NSString *retval=[generator emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ @"%delimiter"] argTypes:@[ @"%id"]];
         
-        [generator printLine:@"ret %%id %@",retval];
+        [self emitReturnVal:retval type:@"%id"];
     }];
+}
+
+-(NSString*)stringRef:(NSString*)ref
+{
+    NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id)",ref];
+    return stringArg;
 }
 
 
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString
 {
-    NSString *splitStringSymbol=[@"@_unnamed_cfstring_" stringByAppendingString:[methodName substringToIndex:[methodName length]-1]];
+    NSString *splitStringSymbol=[@"@splitString" stringByAppendingString:[methodName substringToIndex:[methodName length]-1]];
     
     [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
     
     [self printLine:@""];
 
-    return [self writeMethod:className methodName:methodName methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id)",splitStringSymbol];
-        NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ stringArg ] argTypes:@[ @"%id"]];
-        [self printLine:@"ret %%id %@",retval];
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ [self stringRef:splitStringSymbol] ] argTypes:@[ @"%id"]];
+        [self emitReturnVal:retval type:@"%id"];
     }];
-#if 0
-    NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
- 
-    [self writeMethodHeaderWithName:methodFunctionName returnType:@"%id" additionalParametrs:@[@"%id %s"]];
+}
 
-
-    [self printLine:@"}"];
-    [self printLine:@""];
+-(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
+{
+    NSString* nsnumberclass=@"NSNumber";
+    NSString* nsnumbersymbol=[self classSymbolForName:nsnumberclass isMeta:NO];
     
+    [self writeExternalReferenceWithName:nsnumbersymbol type:@"%struct._class_t"];
+    [self printLine:@"@\"\\01L_OBJC_CLASSLIST_REFERENCES_$_\" = internal global %%struct._class_t* @\"%@\", section \"__DATA, __objc_classrefs, regular, no_dead_strip\", align 8",nsnumbersymbol];
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        [self printLine:@"%%3 = load %%struct._class_t** @\"\\01L_OBJC_CLASSLIST_REFERENCES_$_\", align 8"];
+        [self printLine:@"%%4 = bitcast %%struct._class_t* %%3 to %%id"];
+        numLocals=4;
+        NSString *retval=[self emitMsg:@"numberWithInt:" receiver:@"%4" returnType:@"%id" args:@[ @"%num" ] argTypes:@[ @"i32"]];
+        [self emitReturnVal:retval type:@"%id"];
+    }];
     
-    return methodFunctionName;
-#endif
 }
 
 -(void)writeTrailer

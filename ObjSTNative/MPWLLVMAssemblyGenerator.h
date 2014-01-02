@@ -23,6 +23,9 @@
 
 -(NSString*)methodListForClass:(NSString*)className methodNames:(NSArray*)methodNames methodSymbols:(NSArray*)methodSymbols methodTypes:(NSArray*)typeStrings;
 
+-(NSString*)writeMethodNamed:(NSString*)methodName className:(NSString*)className methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block;
+-(NSString*)stringRef:(NSString*)ref;
+
 
 -(void)flushSelectorReferences;
 
@@ -30,6 +33,7 @@
 
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString;
+-(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName;
 
 
 

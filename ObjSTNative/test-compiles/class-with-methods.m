@@ -44,4 +44,19 @@
 {
    return [self mulByAddition:input factor:factor];
 }
+
+-(NSNumber*)mulNSNumberBy3:(NSNumber*)num
+{
+  return [num mul:@(3)];
+}
+
+-(NSNumber*)makeNumber:(int)a
+{
+  return @(a);
+}
+
+-(NSNumber*)makeNumber3
+{
+  return @(3);
+}
 @end
