@@ -297,6 +297,18 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
+-(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral
+{
+    numLocals++;
+    int loadedClass=numLocals;
+    numLocals++;
+    int bitcastClass=numLocals;
+    [self printLine:@"%%%d = load %%struct._class_t** @\"%@\", align 8",loadedClass,[self nsnumberclassref ]];
+    [self printLine:@"%%%d = bitcast %%struct._class_t* %%%d to %%id",bitcastClass,loadedClass];
+    NSString *retval=[self emitMsg:@"numberWithInt:" receiver:[NSString stringWithFormat:@"%%%d",bitcastClass] returnType:@"%id" args:@[ theIntSymbolOrLiteral ] argTypes:@[ @"i32"]];
+    return retval;
+}
+
 -(NSString*)writeMethodNamed:(NSString*)methodName className:(NSString*)className methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block
 {
     NSString *methodFunctionName=[NSString stringWithFormat:@"-[%@ %@]",className,methodName];
@@ -348,25 +360,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     }];
 }
 
--(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral
-{
-    numLocals++;
-    int loadedClass=numLocals;
-    numLocals++;
-    int bitcastClass=numLocals;
-    [self printLine:@"%%%d = load %%struct._class_t** @\"%@\", align 8",loadedClass,[self nsnumberclassref ]];
-    [self printLine:@"%%%d = bitcast %%struct._class_t* %%%d to %%id",bitcastClass,loadedClass];
-    NSString *retval=[self emitMsg:@"numberWithInt:" receiver:[NSString stringWithFormat:@"%%%d",bitcastClass] returnType:@"%id" args:@[ theIntSymbolOrLiteral ] argTypes:@[ @"i32"]];
-    return retval;
-}
-
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
 {
     
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        NSString *retval=[self writeNSNumberLiteralForInt:@"%num"];
-        
-        [self emitReturnVal:retval type:@"%id"];
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {        
+        [generator emitReturnVal:[generator writeNSNumberLiteralForInt:@"%num"] type:@"%id"];
     }];
     
 }

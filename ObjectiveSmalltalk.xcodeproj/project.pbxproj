@@ -336,7 +336,6 @@
 		1FBAAC1E184BDC6400086047 /* stsh.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FBAAC1D184BDC6400086047 /* stsh.1 */; };
 		1FBAAC27184BDD8200086047 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FBAAC28184BDD8900086047 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1FC2EEF2186B653000B3D06F /* empty-class.llvm-templateasm in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
 		1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
 		1FC2EEF6186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FC2EEF4186CEAB200B3D06F /* MPWLLVMAssemblyGenerator.h */; };
 		1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF5186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m */; };
@@ -1905,7 +1904,6 @@
 			files = (
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.mm in Sources */,
-				1FC2EEF2186B653000B3D06F /* empty-class.llvm-templateasm in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

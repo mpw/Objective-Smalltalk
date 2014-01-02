@@ -26,6 +26,7 @@
 
 -(NSString*)writeMethodNamed:(NSString*)methodName className:(NSString*)className methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block;
 -(NSString*)stringRef:(NSString*)ref;
+-(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral;
 
 
 -(void)flushSelectorReferences;
