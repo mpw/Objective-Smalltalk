@@ -6,7 +6,6 @@
 //
 //
 
-//#include "llvmincludes.h"
 
 #import "MPWCodeGenerator.h"
 #import "MPWLLVMAssemblyGenerator.h"
@@ -95,21 +94,29 @@
 
 @implementation MPWCodeGenerator(testing)
 
-
++(NSString*)anotherTestClassName
+{
+    static int classNo=0;
+    return [NSString stringWithFormat:@"__MPWCodeGenerator_CodeGenTestClass_%d",++classNo];
+}
 
 +(void)testStaticEmptyClassDefine
 {
-    MPWCodeGenerator *codegen=[[self new] autorelease];
-    NSString *classname=@"EmptyCodeGenTestClass01";
-    NSData *source=[[NSBundle bundleForClass:self] resourceWithName:@"empty-class" type:@"llvm-templateasm"];
-    EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
-    EXPECTNOTNIL(source, @"should have source data");
-    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
-    
-    Class loadedClass =NSClassFromString(classname);
-    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
-    id instance=[[loadedClass new] autorelease];
-    EXPECTNOTNIL(instance, @"test class should be able to create instances");
+    static BOOL wasRunOnce=NO;          // bit of a hack, but I want these tests to be automagically mirrored by subclass
+    if ( !wasRunOnce) {
+        MPWCodeGenerator *codegen=[[self new] autorelease];
+        NSString *classname=@"EmptyCodeGenTestClass01";
+        NSData *source=[[NSBundle bundleForClass:self] resourceWithName:@"empty-class" type:@"llvm-templateasm"];
+        EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
+        EXPECTNOTNIL(source, @"should have source data");
+        EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+        
+        Class loadedClass =NSClassFromString(classname);
+        EXPECTNOTNIL(loadedClass, @"test class should  exist after load");
+        id instance=[[loadedClass new] autorelease];
+        EXPECTNOTNIL(instance, @"test class should be able to create instances");
+        wasRunOnce=YES;
+    }
 }
 
 +(void)testDefineEmptyClassDynamically
@@ -119,7 +126,7 @@
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    NSString *classname=@"EmptyCodeGenTestClass03";
+    NSString *classname=[self anotherTestClassName];
     [gen writeHeaderWithName:@"testModule"];
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:nil numInstanceMethods:0];
     [gen flushSelectorReferences];
@@ -130,7 +137,7 @@
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
-    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
+    EXPECTNOTNIL(loadedClass, @"test class should exist after load");
     id instance=[[loadedClass new] autorelease];
     EXPECTNOTNIL(instance, @"test class should be able to create instances");
     //    NSLog(@"end testDefineEmptyClassDynamically");
@@ -143,12 +150,11 @@
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    NSString *classname=@"EmptyCodeGenTestClass04";
+    NSString *classname=[self anotherTestClassName];
     [gen writeHeaderWithName:@"testModule"];
     NSString *methodName=@"components:splitInto:";
     NSString *methodType=@"@32@0:8@16@24";
     
-//    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
     NSString *methodSymbol=[gen writeConstMethod1:classname methodName:methodName methodType:methodType];
     
     NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodType]];
@@ -164,7 +170,7 @@
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
-    EXPECTNOTNIL(loadedClass, @"test class should  xist after load");
+    EXPECTNOTNIL(loadedClass, @"test class should exist after load");
     id instance=[[loadedClass new] autorelease];
     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
     NSArray *splitResult=[instance components:@"Hi there" splitInto:@" "];
@@ -179,7 +185,7 @@
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    NSString *classname=@"EmptyCodeGenTestClass05";
+    NSString *classname=[self anotherTestClassName];
     [gen writeHeaderWithName:@"testModule"];
     NSString *methodName1=@"components:splitInto:";
     NSString *methodType1=@"@32@0:8@16@24";
@@ -227,7 +233,7 @@
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    NSString *classname=@"EmptyCodeGenTestClass06";
+    NSString *classname=[self anotherTestClassName];
     [gen writeHeaderWithName:@"testModule"];
     NSString *methodName=@"splitThis:";
     NSString *methodType=@"@32@0:8@16";
@@ -261,7 +267,7 @@
     MPWCodeGenerator *codegen=[[self new] autorelease];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
-    NSString *classname=@"EmptyCodeGenTestClass07";
+    NSString *classname=[self anotherTestClassName];
     [gen writeHeaderWithName:@"testModule"];
     NSString *methodName=@"makeNumber:";
     NSString *methodType=@"@32@0:8i16";
