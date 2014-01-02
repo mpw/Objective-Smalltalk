@@ -62,9 +62,9 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     NSString* nsnumberclass=@"NSNumber";
     NSString* nsnumbersymbol=[self classSymbolForName:nsnumberclass isMeta:NO];
     [self writeExternalReferenceWithName:nsnumbersymbol type:@"%struct._class_t"];
-    [self setNSnumberclassref:@"@\01L_OBJC_CLASSLIST_REFERENCES_NSNUMBER"];
+    [self setNSnumberclassref:@"\01L_OBJC_CLASSLIST_REFERENCES_NSNUMBER"];
     
-    [self printLine:@"\"%@\" = internal global %%struct._class_t* @\"%@\", section \"__DATA, __objc_classrefs, regular, no_dead_strip\", align 8",[self nsnumberclassref ],nsnumbersymbol];
+    [self printLine:@"@\"%@\" = internal global %%struct._class_t* @\"%@\", section \"__DATA, __objc_classrefs, regular, no_dead_strip\", align 8",[self nsnumberclassref ],nsnumbersymbol];
 }
 
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type
@@ -348,14 +348,24 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     }];
 }
 
+-(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral
+{
+    numLocals++;
+    int loadedClass=numLocals;
+    numLocals++;
+    int bitcastClass=numLocals;
+    [self printLine:@"%%%d = load %%struct._class_t** @\"%@\", align 8",loadedClass,[self nsnumberclassref ]];
+    [self printLine:@"%%%d = bitcast %%struct._class_t* %%%d to %%id",bitcastClass,loadedClass];
+    NSString *retval=[self emitMsg:@"numberWithInt:" receiver:[NSString stringWithFormat:@"%%%d",bitcastClass] returnType:@"%id" args:@[ theIntSymbolOrLiteral ] argTypes:@[ @"i32"]];
+    return retval;
+}
+
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
 {
     
     return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        [self printLine:@"%%3 = load %%struct._class_t** @\"%@$\", align 8",[self nsnumberclassref ]];
-        [self printLine:@"%%4 = bitcast %%struct._class_t* %%3 to %%id"];
-        numLocals+=2;
-        NSString *retval=[self emitMsg:@"numberWithInt:" receiver:@"%4" returnType:@"%id" args:@[ @"%num" ] argTypes:@[ @"i32"]];
+        NSString *retval=[self writeNSNumberLiteralForInt:@"%num"];
+        
         [self emitReturnVal:retval type:@"%id"];
     }];
     
