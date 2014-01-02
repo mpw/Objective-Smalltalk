@@ -12,6 +12,8 @@
 
 objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
 
+objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
+
 -(id)initWithTarget:(id)aTarget
 {
     self=[super initWithTarget:aTarget];
@@ -56,6 +58,13 @@ objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
     [self printLine:@"@_objc_empty_cache = external global %%struct._objc_cache"];
     [self printLine:@"@_objc_empty_vtable = external global i8* (i8*, i8*)*"];
     [self printLine:@"@__CFConstantStringClassReference = external global [0 x i32]"];
+
+    NSString* nsnumberclass=@"NSNumber";
+    NSString* nsnumbersymbol=[self classSymbolForName:nsnumberclass isMeta:NO];
+    [self writeExternalReferenceWithName:nsnumbersymbol type:@"%struct._class_t"];
+    [self setNSnumberclassref:@"@\01L_OBJC_CLASSLIST_REFERENCES_NSNUMBER"];
+    
+    [self printLine:@"\"%@\" = internal global %%struct._class_t* @\"%@\", section \"__DATA, __objc_classrefs, regular, no_dead_strip\", align 8",[self nsnumberclassref ],nsnumbersymbol];
 }
 
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type
@@ -341,15 +350,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
 {
-    NSString* nsnumberclass=@"NSNumber";
-    NSString* nsnumbersymbol=[self classSymbolForName:nsnumberclass isMeta:NO];
     
-    [self writeExternalReferenceWithName:nsnumbersymbol type:@"%struct._class_t"];
-    [self printLine:@"@\"\\01L_OBJC_CLASSLIST_REFERENCES_$_\" = internal global %%struct._class_t* @\"%@\", section \"__DATA, __objc_classrefs, regular, no_dead_strip\", align 8",nsnumbersymbol];
     return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        [self printLine:@"%%3 = load %%struct._class_t** @\"\\01L_OBJC_CLASSLIST_REFERENCES_$_\", align 8"];
+        [self printLine:@"%%3 = load %%struct._class_t** @\"%@$\", align 8",[self nsnumberclassref ]];
         [self printLine:@"%%4 = bitcast %%struct._class_t* %%3 to %%id"];
-        numLocals=4;
+        numLocals+=2;
         NSString *retval=[self emitMsg:@"numberWithInt:" receiver:@"%4" returnType:@"%id" args:@[ @"%num" ] argTypes:@[ @"i32"]];
         [self emitReturnVal:retval type:@"%id"];
     }];

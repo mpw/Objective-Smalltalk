@@ -13,6 +13,7 @@
     NSMutableDictionary *selectorReferences;
     int numStrings;
     int numLocals;
+    NSString *nsnumberclassref;
 }
 
 -(void)writeHeaderWithName:(NSString*)name;
