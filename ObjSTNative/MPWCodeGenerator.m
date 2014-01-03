@@ -19,6 +19,8 @@
 -(NSArray*)words:(NSString*)aString;
 -(NSArray*)splitThis:(NSString*)aString;
 -(NSNumber*)makeNumber:(int)aNumber;
+-(NSNumber*)three;
+-(NSNumber*)four;
 
 @end
 
@@ -133,7 +135,7 @@
     [gen writeTrailer];
     [gen flush];
     NSData *source=[gen target];
-    [source writeToFile:@"/tmp/zeromethodclass.s" atomically:YES];
+ //   [source writeToFile:@"/tmp/zeromethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
@@ -166,7 +168,7 @@
     [gen writeTrailer];
     [gen flush];
     NSData *source=[gen target];
-    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
+//    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
@@ -208,7 +210,7 @@
     [gen writeTrailer];
     [gen flush];
     NSData *source=[gen target];
-    [source writeToFile:@"/tmp/threemethodclass.s" atomically:YES];
+//    [source writeToFile:@"/tmp/threemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     EXPECTNOTNIL(NSClassFromString(classname), @"test class should exist after load");
@@ -294,6 +296,86 @@
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
+
++(void)testCreateConstantNSNumber
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=[self anotherTestClassName];
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName1=@"three";
+    NSString *methodName2=@"four";
+    NSString *methodType=@"@32@0:";
+    
+    //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
+    NSString *methodSymbol1=[gen writeMakeNumber:3 className:classname methodName:methodName1];
+    NSString *methodSymbol2=[gen writeMakeNumber:4 className:classname methodName:methodName2];
+    
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1,methodName2]  methodSymbols:@[ methodSymbol1, methodSymbol2 ] methodTypes:@[ methodType, methodType ]];
+    
+    
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    NSNumber *three=[instance three];
+    IDEXPECT(three, @(3), @"number from int");
+    NSNumber *four=[instance four];
+    IDEXPECT(four, @(4), @"number from int");
+    //    NSLog(@"end testDefineEmptyClassDynamically");
+}
+
+
++(void)testCreateCategory
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=@"NSObject";
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName1=@"three";
+    NSString *methodType=@"@32@0:";
+    
+    //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
+    NSString *methodSymbol1=[gen writeMakeNumber:3 className:classname methodName:methodName1];
+    
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1]  methodSymbols:@[ methodSymbol1 ] methodTypes:@[ methodType ]];
+    
+    
+    [gen writeCategoryNamed:@"randomTestCategory" ofClass:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/onemethodcategory.s" atomically:YES];
+
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    EXPECTFALSE([instance respondsToSelector:@selector(three)], @"responds tp selector three before loading class");
+    
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    EXPECTTRUE([instance respondsToSelector:@selector(three)], @"responds tp selector three before loading class");
+    
+    NSNumber *three=[instance three];
+    IDEXPECT(three, @(3), @"number from int");
+    //    NSLog(@"end testDefineEmptyClassDynamically");
+}
+
 +testSelectors
 {
     return @[
@@ -303,6 +385,8 @@
              @"testDefineClassWithThreeMethodsDynamically",
              @"testStringsWithDifferentLengths",
              @"testCreateNSNumber",
+             @"testCreateConstantNSNumber",
+             @"testCreateCategory",
               ];
 }
 

@@ -20,6 +20,7 @@
 -(void)writeExternalReferenceWithName:(NSString*)name type:(NSString*)type;
 -(void)writeClassWithName:(NSString*)aName superclassName:(NSString*)superclassName instanceMethodListRef:(NSString*)instanceMethodListSymbol numInstanceMethods:(int)numInstanceMethods;
 -(void)writeTrailer;
+-(void)writeCategoryNamed:(NSString*)categoryName ofClass:(NSString*)aName instanceMethodListRef:(NSString*)instanceMethodListSymbol numInstanceMethods:(int)numInstanceMethods;
 
 
 -(NSString*)methodListForClass:(NSString*)className methodNames:(NSArray*)methodNames methodSymbols:(NSArray*)methodSymbols methodTypes:(NSArray*)typeStrings;
@@ -36,7 +37,7 @@
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString;
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName;
-
+-(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName;
 
 
 @end

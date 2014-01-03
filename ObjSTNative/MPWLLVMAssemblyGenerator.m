@@ -54,7 +54,9 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     [self printLine:@"%%struct._prop_t = type { i8*, i8* }"];
     [self printLine:@"%%struct._ivar_list_t = type { i32, i32, [0 x %%struct._ivar_t] }"];
     [self printLine:@"%%struct._ivar_t = type { i64*, i8*, i8*, i32, i32 }"];
-
+    [self printLine:@"%%struct._category_t = type { i8*, %%struct._class_t*, %%struct.__method_list_t*, %%struct.__method_list_t*, %%struct._objc_protocol_list*, %%struct._prop_list_t* }"];
+    
+    
     [self printLine:@"@_objc_empty_cache = external global %%struct._objc_cache"];
     [self printLine:@"@_objc_empty_vtable = external global i8* (i8*, i8*)*"];
     [self printLine:@"@__CFConstantStringClassReference = external global [0 x i32]"];
@@ -160,6 +162,22 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     [self printLine:@"@\"\%@\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"%@\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8",classLabelSymbol, classSymbol];
     [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"%@\" to i8*)], section \"llvm.metadata\"",nameLenNull,classNameSymbol,classLabelSymbol];
     
+}
+
+-(void)writeCategoryNamed:(NSString*)categoryName ofClass:(NSString*)aName instanceMethodListRef:(NSString*)methodListRefSymbol numInstanceMethods:(int)numMethods
+{
+    NSString *classNameSymbol = [self classSymbolForName:aName isMeta:NO];
+    [self writeExternalReferenceWithName:classNameSymbol type:@"%struct._class_t"];
+    NSString *categoryNameStringSymbol=[NSString stringWithFormat:@"\\01L_OBJC_CATEGORY_NAME_%@",categoryName];
+    
+    [self generateCString:categoryName symbol:categoryNameStringSymbol type:@"__objc_classname"];
+   
+    NSString *methodListRef= methodListRefSymbol ? [NSString stringWithFormat:@"bitcast ({ i32, i32, [%d x %%struct._objc_method] }* @\"%@\" to %%struct.__method_list_t*)",numMethods,methodListRefSymbol] : @"null";
+
+    [self printLine:@"@\"\\01l_OBJC_$_CATEGORY_NSObject_$_empty\" = internal global %%struct._category_t { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), %%struct._class_t* @\"OBJC_CLASS_$_NSObject\", %%struct.__method_list_t* %@, %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",[categoryName length]+1, categoryNameStringSymbol,methodListRef];
+    [self printLine:@"@\"\\01L_OBJC_LABEL_CATEGORY_$\" = internal global [1 x i8*] [i8* bitcast (%%struct._category_t* @\"\\01l_OBJC_$_CATEGORY_NSObject_$_empty\" to i8*)], section \"__DATA, __objc_catlist, regular, no_dead_strip\", align 8"];
+
+
 }
 
 static NSString *typeCharToLLVMType( char typeChar ) {
@@ -363,8 +381,17 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
 {
     
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {        
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
         [generator emitReturnVal:[generator writeNSNumberLiteralForInt:@"%num"] type:@"%id"];
+    }];
+    
+}
+
+-(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName
+{
+    
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[ ] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        [generator emitReturnVal:[generator writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",aNumber]] type:@"%id"];
     }];
     
 }

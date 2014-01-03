@@ -11,4 +11,5 @@
 
 @implementation MPWInternalCodeGenerator
 
++testSelectors { return @[]; }
 @end
