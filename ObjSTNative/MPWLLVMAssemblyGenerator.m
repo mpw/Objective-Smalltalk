@@ -402,18 +402,37 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     
 }
 
+-(NSString*)callBlock:(NSString*)blockName args:(NSArray*)blockArgs types:(NSArray*)blockTypes returnType:(NSString*)returnType
+{
+    int blockLiteralLocal=++numLocals;
+    int blockFnPtrLocal=++numLocals;
+    int blockFnLocal=++numLocals;
+    int blockFunCastToRightType=++numLocals;
+    int retValLocal=++numLocals;
+    
+    [self printLine:@"%%%d = bitcast %%id %@ to %%struct.__block_literal_generic*" ,blockLiteralLocal,blockName] ;
+    [self printLine:@"%%%d = getelementptr inbounds %%struct.__block_literal_generic* %%3, i64 0, i32 3",blockFnPtrLocal];
+    [self printLine:@"%%%d = load i8** %%%d, align 8",blockFnLocal,blockFnPtrLocal];
+    [self printFormat:@"%%%d = bitcast i8* %%%d to %%id (%%id",blockFunCastToRightType,blockFnLocal];
+    for ( NSString *argType in blockTypes) {
+        [self printFormat:@", %@",argType];
+    }
+    [self printLine:@")*",blockFunCastToRightType,blockFnLocal];
+    [self printFormat:@"%%%d = tail call %%id %%%d(%%id %@ ",retValLocal,blockFunCastToRightType,blockName];
+    for ( int i=0;i<[blockTypes count];i++) {
+        [self printFormat:@", %@ %@",blockTypes[i],blockArgs[i]];
+    }
+    [self printLine:@" ) optsize",retValLocal,blockFunCastToRightType,blockName];
+    return [NSString stringWithFormat:@"%%%d",retValLocal];
+}
+
+
 -(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName
 {
     
     return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %block"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        
-        [self printLine:@"%%3 = bitcast %%id %%block to %%struct.__block_literal_generic*" ] ;
-        [self printLine:@"%%4 = getelementptr inbounds %%struct.__block_literal_generic* %%3, i64 0, i32 3"];
-        [self printLine:@"%%5 = bitcast %%id %%block to i8*"];
-        [self printLine:@"%%6 = load i8** %%4, align 8"];
-        [self printLine:@"%%7 = bitcast i8* %%6 to %%id (i8*, %%id)*"];
-        [self printLine:@"%%8 = tail call %%id %%7(i8* %%5, %%id %%s) optsize"];
-        [generator emitReturnVal:@"%8" type:@"%id"];
+        NSString *blockCall=[self callBlock:@"%block" args:@[@"%s"] types:@[@"%id"] returnType:@"%id"];
+        [generator emitReturnVal:blockCall type:@"%id"];
     }];
     
 }
