@@ -7,6 +7,12 @@
 
 @implementation Hi
 
+-(NSString*)onLine:(NSString*)line execute:(NSString* (^)(NSString *line))block
+{
+  return block(line);
+}
+
+
 -(NSArray*)lines:(NSString*)s 
 {
     NSMutableArray *lines=[NSMutableArray array];

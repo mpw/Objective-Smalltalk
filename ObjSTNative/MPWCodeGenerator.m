@@ -21,6 +21,7 @@
 -(NSNumber*)makeNumber:(int)aNumber;
 -(NSNumber*)three;
 -(NSNumber*)four;
+-(NSString*)onString:(NSString*)s execBlock:(NSString* (^)(NSString *line))block;
 
 @end
 
@@ -376,6 +377,46 @@
     //    NSLog(@"end testDefineEmptyClassDynamically");
 }
 
++(void)testGenerateBlockUse
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=[self anotherTestClassName];
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName=@"onString:execBlock:";
+    NSString *methodType=@"@32@0:8@16@24";  //  @"@32@0:8@16@?24"
+    
+    NSString *methodSymbol=[gen writeUseBlockClassName:classname methodName:methodName];
+    
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName]  methodSymbols:@[ methodSymbol ] methodTypes:@[ methodType ]];
+
+    
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/blockuse.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    NSString *res1=[instance onString:@"Hello" execBlock:^NSString *(NSString *line) {
+        return [line stringByAppendingString:@" World!"];
+    }];
+    IDEXPECT(res1, @"Hello World!", @"block execution 1");
+    NSString *res2=[instance onString:@"Hello" execBlock:^NSString *(NSString *line) {
+        return [line uppercaseString];
+    }];
+    IDEXPECT(res2, @"HELLO", @"block execution2 ");
+}
+
+
 +testSelectors
 {
     return @[
@@ -387,6 +428,7 @@
              @"testCreateNSNumber",
              @"testCreateConstantNSNumber",
              @"testCreateCategory",
+             @"testGenerateBlockUse",
               ];
 }
 

@@ -32,12 +32,13 @@
 
 -(void)flushSelectorReferences;
 
-//--- temp
+//--- temp/testing
 
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString;
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName;
+-(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName;
 
 
 @end
