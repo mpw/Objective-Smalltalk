@@ -22,6 +22,7 @@
 -(NSNumber*)three;
 -(NSNumber*)four;
 -(NSString*)onString:(NSString*)s execBlock:(NSString* (^)(NSString *line))block;
+-(NSArray*)linesViaBlock:(NSString*)s;
 
 @end
 
@@ -59,7 +60,7 @@
 
 -(void)linkOFileName:(NSString*)ofile_name toDylibName:(NSString*)dylib
 {
-    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.8 -dylib -o %@ %@ -framework Foundation",dylib,ofile_name];
+    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.8 -dylib -o %@ %@ -framework Foundation -lSystem",dylib,ofile_name];
     system([o_to_dylib fileSystemRepresentation]);
 }
 
@@ -349,7 +350,6 @@
     NSString *methodName1=@"three";
     NSString *methodType=@"@32@0:";
     
-    //    NSString *methodListRef=[gen writeConstMethodAndMethodList:classname methodName:methodName typeString:methodType];
     NSString *methodSymbol1=[gen writeMakeNumber:3 className:classname methodName:methodName1];
     
     NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1]  methodSymbols:@[ methodSymbol1 ] methodTypes:@[ methodType ]];
@@ -359,7 +359,6 @@
     
     [gen flushSelectorReferences];
     [gen writeTrailer];
-    [gen flush];
     NSData *source=[gen target];
     [source writeToFile:@"/tmp/onemethodcategory.s" atomically:YES];
 
@@ -416,6 +415,42 @@
     IDEXPECT(res2, @"HELLO", @"block execution2 ");
 }
 
++(void)testGenerateBlockCreate
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=[self anotherTestClassName];
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName1=@"linesViaBlock:";
+    NSString *methodType1=@"@32@0:8@16";
+    NSString *methodName2=@"onString:execBlock:";
+    NSString *methodType2=@"@32@0:8@16@24";  //  @"@32@0:8@16@?24"
+    
+    NSString *methodSymbol1=[gen writeCreateBlockClassName:classname methodName:methodName1 userMessageName:methodName2];
+    NSString *methodSymbol2=[gen writeUseBlockClassName:classname methodName:methodName2];
+
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1, methodName2]  methodSymbols:@[ methodSymbol1, methodSymbol2 ] methodTypes:@[ methodType1, methodType2 ]];
+    
+    
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/blockcreate.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    NSArray *res1=[instance linesViaBlock:@"Hello"];
+    IDEXPECT(res1, @"HELLO", @"block execution 1");
+}
+
 
 +testSelectors
 {
@@ -429,6 +464,7 @@
              @"testCreateConstantNSNumber",
              @"testCreateCategory",
              @"testGenerateBlockUse",
+             @"testGenerateBlockCreate",
               ];
 }
 

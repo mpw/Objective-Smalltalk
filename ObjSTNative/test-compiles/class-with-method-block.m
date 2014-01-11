@@ -12,6 +12,13 @@
   return block(line);
 }
 
+-(NSString*)noCaptureBlockUse:(NSString*)s
+{
+  return [self onLine:s execute:^( NSString *s ){
+    return [s uppercaseString];
+  }];
+}
+
 
 -(NSArray*)lines:(NSString*)s 
 {

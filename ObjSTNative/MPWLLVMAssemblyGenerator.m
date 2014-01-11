@@ -67,8 +67,8 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     NSString* nsnumberclass=@"NSNumber";
     NSString* nsnumbersymbol=[self classSymbolForName:nsnumberclass isMeta:NO];
     [self writeExternalReferenceWithName:nsnumbersymbol type:@"%struct._class_t"];
-    [self setNSnumberclassref:@"\01L_OBJC_CLASSLIST_REFERENCES_NSNUMBER"];
-    
+    [self setNSnumberclassref:@"\\01L_OBJC_CLASSLIST_REFERENCES_NSNUMBER"];
+    [self printLine:@"@_NSConcreteGlobalBlock = external global i8*"];
     [self printLine:@"@\"%@\" = internal global %%struct._class_t* @\"%@\", section \"__DATA, __objc_classrefs, regular, no_dead_strip\", align 8",[self nsnumberclassref ],nsnumbersymbol];
 }
 
@@ -437,8 +437,90 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     
 }
 
+-(NSString*)writeCreateBlockClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName
+{
+    NSString *retval= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        
+        NSString *returnValue=[self emitMsg:userMessageName receiver:@"%self" returnType:@"%id" args:@[ @"%s", @" bitcast ({ i8**, i32, i32, i8*, %struct.__block_descriptor* }* @__block_literal_global to %id (%id)*)"] argTypes:@[ @"%id", @"%id (%id)*"]];
+        
+        
+        [generator emitReturnVal:returnValue type:@"%id"];
+    }];
+    [self writeBlockSupportNoCapture];
+    return retval;
+}
 
+-(void)writeBlockSupportNoCapture
+{
+    [self printLine:@"@.str = private unnamed_addr constant [29 x i8] c\"@\\22NSString\\2216@?0@\\22NSString\\228\\00\", align 1"];
+    [self printLine:@"@__block_descriptor_tmp = internal constant { i64, i64, i8*, i8* } { i64 0, i64 32, i8* getelementptr inbounds ([29 x i8]* @.str, i32 0, i32 0), i8* null }"];
+    [self printLine:@"@__block_literal_global = internal constant { i8**, i32, i32, i8*, %%struct.__block_descriptor* } { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (%%id (i8*, %%id)* @\"__24-[Hi noCaptureBlockUse:]_block_invoke\" to i8*), %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8* }* @__block_descriptor_tmp to %%struct.__block_descriptor*) }, align 8"];
+    [self printLine:@"define internal %%id @\"__24-[Hi noCaptureBlockUse:]_block_invoke\"(i8* nocapture %%.block_descriptor, %%id %%s ) optsize ssp uwtable {"];
+    numLocals=0;
+    NSString *retval=[self emitMsg:@"uppercaseString" receiver:@"%s" returnType:@"%id" args:@[] argTypes:@[]];
+    [self emitReturnVal:retval type:@"%id"];
+    [self printLine:@"}"];
+    [self printLine:@""];
+    [self printLine:@"define internal void @__copy_helper_block_(i8*, i8* nocapture) nounwind {"];
+    [self printLine:@"%%3 = getelementptr inbounds i8* %%1, i64 32"];
+    [self printLine:@"%%4 = bitcast i8* %%3 to %%id*"];
+    [self printLine:@"%%5 = getelementptr inbounds i8* %%0, i64 32"];
+    [self printLine:@"%%6 = load %%id* %%4, align 8"];
+    [self printLine:@"%%7 = bitcast %%id %%6 to i8*"];
+    [self printLine:@"tail call void @_Block_object_assign(i8* %%5, i8* %%7, i32 3) nounwind"];
+    [self printLine:@"ret void"];
+    [self printLine:@"}"];
+    [self printLine:@""];
+    [self printLine:@"define internal void @__destroy_helper_block_(i8* nocapture) nounwind {"];
+    [self printLine:@"%%2 = getelementptr inbounds i8* %%0, i64 32"];
+    [self printLine:@"%%3 = bitcast i8* %%2 to %%id*"];
+    [self printLine:@"%%4 = load %%id* %%3, align 8"];
+    [self printLine:@"%%5 = bitcast %%id %%4 to i8*"];
+    [self printLine:@"tail call void @_Block_object_dispose(i8* %%5, i32 3) nounwind"];
+    [self printLine:@"ret void"];
+    [self printLine:@"}"];
+    [self printLine:@""];
+    [self printLine:@"declare void @_Block_object_assign(i8*, i8*, i32)"];
+    [self printLine:@"declare void @_Block_object_dispose(i8*, i32)"];
+    
 
+    
+}
+-(void)writeBlockSupportCapture
+{
+    [self printLine:@"define internal void @\"__12-[Hi lines:]_block_invoke\"(i8* nocapture %%.block_descriptor, %%id %%line, i8* nocapture %%stop) optsize ssp uwtable {"];
+    [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
+    [self printLine:@"%%2 = bitcast i8* %%1 to %%3**"];
+    [self printLine:@"%%3 = load %%3** %%2, align 8, !tbaa !5"];
+    [self printLine:@"%%4 = bitcast %%id %%line to i8*"];
+    [self printLine:@"%%5 = load i8** @\"\\01L_OBJC_SELECTOR_REFERENCES_2\", align 8, !invariant.load !4"];
+    [self printLine:@"%%6 = bitcast %%3* %%3 to i8*"];
+    [self printLine:@"tail call void bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to void (i8*, i8*, i8*)*)(i8* %%6, i8* %%5, i8* %%4) optsize"];
+    [self printLine:@"ret void"];
+    [self printLine:@"}"];
+    [self printLine:@""];
+    [self printLine:@"define internal void @__copy_helper_block_(i8*, i8* nocapture) nounwind {"];
+    [self printLine:@"%%3 = getelementptr inbounds i8* %%1, i64 32"];
+    [self printLine:@"%%4 = bitcast i8* %%3 to %%3**"];
+    [self printLine:@"%%5 = getelementptr inbounds i8* %%0, i64 32"];
+    [self printLine:@"%%6 = load %%3** %%4, align 8"];
+    [self printLine:@"%%7 = bitcast %%3* %%6 to i8*"];
+    [self printLine:@"tail call void @_Block_object_assign(i8* %%5, i8* %%7, i32 3) nounwind"];
+    [self printLine:@"ret void"];
+    [self printLine:@"}"];
+    [self printLine:@""];
+    [self printLine:@"declare void @_Block_object_assign(i8*, i8*, i32)"];
+    [self printLine:@""];
+    [self printLine:@"define internal void @__destroy_helper_block_(i8* nocapture) nounwind {"];
+    [self printLine:@"%%2 = getelementptr inbounds i8* %%0, i64 32"];
+    [self printLine:@"%%3 = bitcast i8* %%2 to %%3**"];
+    [self printLine:@"%%4 = load %%3** %%3, align 8"];
+    [self printLine:@"%%5 = bitcast %%3* %%4 to i8*"];
+    [self printLine:@"tail call void @_Block_object_dispose(i8* %%5, i32 3) nounwind"];
+    [self printLine:@"ret void"];
+    [self printLine:@"}"];
+    
+}
 
 -(void)writeTrailer
 {
@@ -450,6 +532,9 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"!2 = metadata !{i32 1, metadata !\"Objective-C Image Info Section\", metadata !\"__DATA, __objc_imageinfo, regular, no_dead_strip\"}"];
     [self printLine:@"!3 = metadata !{i32 4, metadata !\"Objective-C Garbage Collection\", i32 0}"];
     [self printLine:@"!4 = metadata !{}"];
+    [self printLine:@"!5 = metadata !{metadata !\"omnipotent char\", metadata !6}"];
+    [self printLine:@"!6 = metadata !{metadata !\"Simple C/C++ TBAA\"}"];
+
 
 }
 

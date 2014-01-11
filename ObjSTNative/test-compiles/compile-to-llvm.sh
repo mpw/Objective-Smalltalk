@@ -1,2 +1,2 @@
 #!/bin/bash
-cc -Wall -g -Os  -S -emit-llvm -c  $1
+cc -Wall  -Os  -S -emit-llvm -c  $1

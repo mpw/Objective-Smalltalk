@@ -39,6 +39,7 @@
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName;
+-(NSString*)writeCreateBlockClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName;
 
 
 @end
