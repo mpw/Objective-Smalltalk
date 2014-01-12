@@ -473,6 +473,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName
 {
+    NSString *blockName=[NSString stringWithFormat:@"-[%@ %@]_block1",className,methodName];
     NSString *refForNSMutableArray=[self classRefForClassName:@"NSMutableArray"];
    NSString *methodId= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
         [self printLine:@"%%3 = alloca <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>, align 8"];
@@ -488,7 +489,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         [self printLine:@"%%10 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 2"];
         [self printLine:@"store i32 0, i32* %%10, align 4"];
         [self printLine:@"%%11 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 3"];
-        [self printLine:@"store i8* bitcast (void (i8*, %%id, i8*)* @\"__12-[Hi lines:]_block_invoke\" to i8*), i8** %%11, align 8"];
+        [self printLine:@"store i8* bitcast (void (i8*, %%id, i8*)* @\"%@\" to i8*), i8** %%11, align 8",blockName];
         [self printLine:@"%%12 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 4"];
         [self printLine:@"store %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8*, i8*, i64 }* @__block_descriptor_tmp8 to %%struct.__block_descriptor*), %%struct.__block_descriptor** %%12, align 8"];
         [self printLine:@"%%13 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 5"];
@@ -507,7 +508,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
    }];
     
     
-    [self writeBlockWithVariableCapture];
+    [self writeBlockWithVariableCapture:blockName];
     [self writeBlockSupport];
     return methodId;
 }
@@ -574,23 +575,10 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"declare void @_Block_object_dispose(i8*, i32)"];
 }
 
--(NSString*)writeCreateBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName
-{
-    NSString *retval= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        
-        NSString *returnValue=[self emitMsg:@"" receiver:@"%self" returnType:@"%id" args:@[ @"%s", @" bitcast ({ i8**, i32, i32, i8*, %struct.__block_descriptor* }* @__block_literal_global to %id (%id)*)"] argTypes:@[ @"%id", @"%id (%id)*"]];
-        
-        [generator emitReturnVal:returnValue type:@"%id"];
-    }];
-    
-    [self writeBlockWithVariableCapture];
-    return retval;
-}
-
--(void)writeBlockWithVariableCapture
+-(void)writeBlockWithVariableCapture:(NSString*)name
 {
     
-    [self writeBlockName:@"__12-[Hi lines:]_block_invoke" returnType:@"void" args:@[ @"%line", @"%stop" ] argTypes:@[@"%id", @"i8* nocapture"] typeString:@""   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
+    [self writeBlockName:name returnType:@"void" args:@[ @"%line", @"%stop" ] argTypes:@[@"%id", @"i8* nocapture"] typeString:@""   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
         
         [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
         [self printLine:@"%%2 = bitcast i8* %%1 to %%id*"];
@@ -600,7 +588,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         [self printLine:@"ret void"];
     }];
     
-[self printLine:@""];
+    [self printLine:@""];
     
     [self printLine:@"@.str7 = private unnamed_addr constant [23 x i8] c\"v24@?0@\22NSString\228^c16\00\", align 1"];
     [self printLine:@"@__block_descriptor_tmp8 = internal constant { i64, i64, i8*, i8*, i8*, i64 } { i64 0, i64 40, i8* bitcast (void (i8*, i8*)* @__copy_helper_block_ to i8*), i8* bitcast (void (i8*)* @__destroy_helper_block_ to i8*), i8* getelementptr inbounds ([23 x i8]* @.str7, i32 0, i32 0), i64 256 }"];
