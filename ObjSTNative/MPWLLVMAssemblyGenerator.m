@@ -462,10 +462,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     }];
     NSString *blockBodyName=@"__24-[Hi noCaptureBlockUse:]_block_invoke";
     NSString *blockType=@"@16@?0@8";
-    [self writeBlockName:blockBodyName returnType:@"%id" args:@[] argTypes:@[] typeString:blockType   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
+    [self writeBlockName:blockBodyName returnType:@"%id" args:@[@"%s"] argTypes:@[@"%id"] typeString:blockType   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
         NSString *retval=[self emitMsg:@"uppercaseString" receiver:@"%s" returnType:@"%id" args:@[] argTypes:@[]];
         [self emitReturnVal:retval type:@"%id"];
     }];
+    [self writeGlobalBlockDescriptor:blockBodyName type:blockType];
     [self writeBlockSupport];
     return retval;
 }
@@ -513,13 +514,15 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(void)writeBlockName:(NSString*)blockBodyName returnType:(NSString*)returnType args:(NSArray*)args argTypes:(NSArray*)argTypes typeString:blockType blockBody:(void (^)(MPWLLVMAssemblyGenerator*  ))bodyBlock
 {
-//    int oldNumLocals=numLocals;
     
-    [self printLine:@"define internal %%id @\"%@\"(i8* nocapture %%.block_descriptor, %%id %%s ) optsize ssp uwtable {",blockBodyName];
+    [self printFormat:@"define internal %@ @\"%@\"(i8* nocapture %%.block_descriptor ",returnType,blockBodyName];
+    for (int i=0;i<[argTypes count];i++) {
+        [self printFormat:@", %@ %@ ",argTypes[i],args[i]];
+    }
+    [self printLine:@" ) optsize ssp uwtable {"];
     numLocals=0;
     bodyBlock( self);
     [self printLine:@"}"];
-    [self writeGlobalBlockDescriptor:blockBodyName type:blockType];
 }
 
 -(void)writeGlobalBlockDescriptor:(NSString*)blockBodyName type:(NSString*)blockType
@@ -586,17 +589,18 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(void)writeBlockWithVariableCapture
 {
-    [self printLine:@"define internal void @\"__12-[Hi lines:]_block_invoke\"(i8* nocapture %%.block_descriptor, %%id %%line, i8* nocapture %%stop) optsize ssp uwtable {"];
-    numLocals=0;
-
-    [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
-    [self printLine:@"%%2 = bitcast i8* %%1 to %%id*"];
-    [self printLine:@"%%3 = load %%id* %%2, align 8, !tbaa !5"];
-    numLocals=3;
-    [self emitMsg:@"addObject:" receiver:@"%3" returnType:@"void" args:@[ @"%line"] argTypes:@[@"%id"]];
-    [self printLine:@"ret void"];
-    [self printLine:@"}"];
-    [self printLine:@""];
+    
+    [self writeBlockName:@"__12-[Hi lines:]_block_invoke" returnType:@"void" args:@[ @"%line", @"%stop" ] argTypes:@[@"%id", @"i8* nocapture"] typeString:@""   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
+        
+        [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
+        [self printLine:@"%%2 = bitcast i8* %%1 to %%id*"];
+        [self printLine:@"%%3 = load %%id* %%2, align 8, !tbaa !5"];
+        numLocals=3;
+        [self emitMsg:@"addObject:" receiver:@"%3" returnType:@"void" args:@[ @"%line"] argTypes:@[@"%id"]];
+        [self printLine:@"ret void"];
+    }];
+    
+[self printLine:@""];
     
     [self printLine:@"@.str7 = private unnamed_addr constant [23 x i8] c\"v24@?0@\22NSString\228^c16\00\", align 1"];
     [self printLine:@"@__block_descriptor_tmp8 = internal constant { i64, i64, i8*, i8*, i8*, i64 } { i64 0, i64 40, i8* bitcast (void (i8*, i8*)* @__copy_helper_block_ to i8*), i8* bitcast (void (i8*)* @__destroy_helper_block_ to i8*), i8* getelementptr inbounds ([23 x i8]* @.str7, i32 0, i32 0), i64 256 }"];
