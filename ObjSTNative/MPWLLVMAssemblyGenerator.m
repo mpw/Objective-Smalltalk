@@ -368,54 +368,12 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
--(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
-{
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        
-        NSString *retval=[generator emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ @"%delimiter"] argTypes:@[ @"%id"]];
-        
-        [self emitReturnVal:retval type:@"%id"];
-    }];
-}
-
 -(NSString*)stringRef:(NSString*)ref
 {
     NSString *stringArg=[NSString stringWithFormat:@"bitcast (%%struct.NSConstantString* %@ to %%id)",ref];
     return stringArg;
 }
 
-
--(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString
-{
-    NSString *splitStringSymbol=[@"@splitString" stringByAppendingString:[methodName substringToIndex:[methodName length]-1]];
-    
-    [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
-    
-    [self printLine:@""];
-
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ [self stringRef:splitStringSymbol] ] argTypes:@[ @"%id"]];
-        [self emitReturnVal:retval type:@"%id"];
-    }];
-}
-
--(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
-{
-    
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        [generator emitReturnVal:[generator writeNSNumberLiteralForInt:@"%num"] type:@"%id"];
-    }];
-    
-}
-
--(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName
-{
-    
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[ ] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        [generator emitReturnVal:[generator writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",aNumber]] type:@"%id"];
-    }];
-    
-}
 
 -(NSString*)callBlock:(NSString*)blockName args:(NSArray*)blockArgs types:(NSArray*)blockTypes returnType:(NSString*)returnType
 {
@@ -441,77 +399,23 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     return [NSString stringWithFormat:@"%%%d",retValLocal];
 }
 
-
--(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName
+-(NSString*)writeBlockDescriptorWithType:(NSString*)blockType isLocal:(BOOL)isLocal
 {
-    
-    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %block"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        NSString *blockCall=[self callBlock:@"%block" args:@[@"%s"] types:@[@"%id"] returnType:@"%id"];
-        [generator emitReturnVal:blockCall type:@"%id"];
-    }];
-    
+    NSString *str_symbol=[NSString stringWithFormat:@"@.block.str_%d",numStrings++];
+    NSString *block_symbol=[NSString stringWithFormat:@"@__block_descriptor_%d",numBlocks++];
+    int blockTypeLenInclNull=(int)[blockType length]+1;
+    [self printLine:@"%@ = private unnamed_addr constant [%d x i8] c\"%@\\00\", align 1",
+     str_symbol,blockTypeLenInclNull,blockType];
+    [self printLine:@"%@ = internal constant { i64, i64, %@ i8*, i64 } { i64 0, i64 %d, %@ i8* getelementptr inbounds ([%d x i8]* %@, i32 0, i32 0), i64 %d }",
+     block_symbol,
+     isLocal ? @" i8*, i8*," : @"",
+     isLocal ? 40 : 32,
+     isLocal ? @" i8* bitcast (void (i8*, i8*)* @__copy_helper_block_ to i8*), i8* bitcast (void (i8*)* @__destroy_helper_block_ to i8*)," : @"",
+     blockTypeLenInclNull,str_symbol,
+     isLocal ? 0 : 256];
+    return block_symbol;
 }
 
--(NSString*)writeCreateBlockClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName
-{
-    NSString *retval= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        
-        NSString *returnValue=[self emitMsg:userMessageName receiver:@"%self" returnType:@"%id" args:@[ @"%s", @" bitcast ({ i8**, i32, i32, i8*, %struct.__block_descriptor* }* @__block_literal_global to %id (%id)*)"] argTypes:@[ @"%id", @"%id (%id)*"]];
-        
-        [generator emitReturnVal:returnValue type:@"%id"];
-    }];
-    NSString *blockBodyName=@"__24-[Hi noCaptureBlockUse:]_block_invoke";
-    NSString *blockType=@"@16@?0@8";
-    [self writeBlockName:blockBodyName returnType:@"%id" args:@[@"%s"] argTypes:@[@"%id"] typeString:blockType   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
-        NSString *retval=[self emitMsg:@"uppercaseString" receiver:@"%s" returnType:@"%id" args:@[] argTypes:@[]];
-        [self emitReturnVal:retval type:@"%id"];
-    }];
-    [self writeGlobalBlockDescriptor:blockBodyName type:blockType];
-    [self writeBlockSupport];
-    return retval;
-}
-
--(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName
-{
-    NSString *blockName=[NSString stringWithFormat:@"-[%@ %@]_block1",className,methodName];
-    NSString *refForNSMutableArray=[self classRefForClassName:@"NSMutableArray"];
-   NSString *methodId= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-        [self printLine:@"%%3 = alloca <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>, align 8"];
-       [self printLine:@"%%4 = load %%struct._class_t** @\"%@\", align 8",refForNSMutableArray];
-       [self printLine:@"%%5 = bitcast %%struct._class_t* %%4 to %%id"];
-        numLocals=5;
-        NSString *arrayRef=[self emitMsg:@"array" receiver:@"%5" returnType:@"%id" args:@[] argTypes:@[]];
-//       NSLog(@"arrayRef=%@",arrayRef);
-        [self printLine:@"%%8 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 0"];
-        [self printLine:@"store i8* bitcast (i8** @_NSConcreteStackBlock to i8*), i8** %%8, align 8"];
-        [self printLine:@"%%9 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 1"];
-        [self printLine:@"store i32 -1040187392, i32* %%9, align 8"];
-        [self printLine:@"%%10 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 2"];
-        [self printLine:@"store i32 0, i32* %%10, align 4"];
-        [self printLine:@"%%11 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 3"];
-        [self printLine:@"store i8* bitcast (void (i8*, %%id, i8*)* @\"%@\" to i8*), i8** %%11, align 8",blockName];
-        [self printLine:@"%%12 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 4"];
-        [self printLine:@"store %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8*, i8*, i64 }* @__block_descriptor_tmp8 to %%struct.__block_descriptor*), %%struct.__block_descriptor** %%12, align 8"];
-        [self printLine:@"%%13 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 5"];
-
-       
-       
-       [self printLine:@"store %%id %@, %%id* %%13, align 8, !tbaa !5",arrayRef];
-       
-       
-       
-        [self printLine:@"%%14 = bitcast <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3 to void (%%id, i8*)*"];
-       numLocals=14;
-       [self emitMsg:@"enumerateLinesUsingBlock:" receiver:@"%s" returnType:@"void" args:@[ @"%14"] argTypes:@[@"void (%id, i8*)*" ]];
-       
-        [self printLine:@"ret %%id %@",arrayRef];
-   }];
-    
-    
-    [self writeBlockWithVariableCapture:blockName];
-    [self writeBlockSupport];
-    return methodId;
-}
 
 -(void)writeBlockName:(NSString*)blockBodyName returnType:(NSString*)returnType args:(NSArray*)args argTypes:(NSArray*)argTypes typeString:blockType blockBody:(void (^)(MPWLLVMAssemblyGenerator*  ))bodyBlock
 {
@@ -524,16 +428,6 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     numLocals=0;
     bodyBlock( self);
     [self printLine:@"}"];
-}
-
--(void)writeGlobalBlockDescriptor:(NSString*)blockBodyName type:(NSString*)blockType
-{
-    int blockTypeLenInclNull=(int)[blockType length]+1;
-    [self printLine:@"@.str = private unnamed_addr constant [%d x i8] c\"%@\\00\", align 1",blockTypeLenInclNull,blockType];
-    [self printLine:@"@__block_descriptor_tmp = internal constant { i64, i64, i8*, i8* } { i64 0, i64 32, i8* getelementptr inbounds ([%d x i8]* @.str, i32 0, i32 0), i8* null }",blockTypeLenInclNull];
-    [self printLine:@"@__block_literal_global = internal constant { i8**, i32, i32, i8*, %%struct.__block_descriptor* } { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (%%id (i8*, %%id)* @\"%@\" to i8*), %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8* }* @__block_descriptor_tmp to %%struct.__block_descriptor*) }, align 8",blockBodyName];
-    [self printLine:@""];
-
 }
 
 
@@ -575,26 +469,6 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"declare void @_Block_object_dispose(i8*, i32)"];
 }
 
--(void)writeBlockWithVariableCapture:(NSString*)name
-{
-    
-    [self writeBlockName:name returnType:@"void" args:@[ @"%line", @"%stop" ] argTypes:@[@"%id", @"i8* nocapture"] typeString:@""   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
-        
-        [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
-        [self printLine:@"%%2 = bitcast i8* %%1 to %%id*"];
-        [self printLine:@"%%3 = load %%id* %%2, align 8, !tbaa !5"];
-        numLocals=3;
-        [self emitMsg:@"addObject:" receiver:@"%3" returnType:@"void" args:@[ @"%line"] argTypes:@[@"%id"]];
-        [self printLine:@"ret void"];
-    }];
-    
-    [self printLine:@""];
-    
-    [self printLine:@"@.str7 = private unnamed_addr constant [23 x i8] c\"v24@?0@\22NSString\228^c16\00\", align 1"];
-    [self printLine:@"@__block_descriptor_tmp8 = internal constant { i64, i64, i8*, i8*, i8*, i64 } { i64 0, i64 40, i8* bitcast (void (i8*, i8*)* @__copy_helper_block_ to i8*), i8* bitcast (void (i8*)* @__destroy_helper_block_ to i8*), i8* getelementptr inbounds ([23 x i8]* @.str7, i32 0, i32 0), i64 256 }"];
-    
-}
-
 
 -(void)writeTrailer
 {
@@ -611,5 +485,167 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 
 }
+
+@end
+
+@implementation MPWLLVMAssemblyGenerator(testSupport)
+
+
+-(void)writeGlobalBlockDescriptor:(NSString*)blockBodyName type:(NSString*)blockType
+{
+    NSString *descriptor=[self writeBlockDescriptorWithType:blockType isLocal:NO];
+    
+    [self printLine:@"@__block_literal_global = internal constant { i8**, i32, i32, i8*, %%struct.__block_descriptor* } { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (%%id (i8*, %%id)* @\"%@\" to i8*), %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i64 }* %@ to %%struct.__block_descriptor*) }, align 8",
+     blockBodyName,descriptor];
+    [self printLine:@""];
+}
+
+
+-(NSString*)writeDescriptorForLocalBlock
+{
+    NSString *descriptor=[self writeBlockDescriptorWithType:@"v24@?0@\22NSString\228^c16" isLocal:YES];
+    return descriptor;
+}
+
+
+
+-(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString
+{
+    NSString *splitStringSymbol=[@"@splitString" stringByAppendingString:[methodName substringToIndex:[methodName length]-1]];
+    
+    [self writeNSConstantString:splitString withSymbol:splitStringSymbol];
+    
+    [self printLine:@""];
+    
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        NSString *retval=[self emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ [self stringRef:splitStringSymbol] ] argTypes:@[ @"%id"]];
+        [self emitReturnVal:retval type:@"%id"];
+    }];
+}
+
+-(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString
+{
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %delimiter"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        
+        NSString *retval=[generator emitMsg:@"componentsSeparatedByString:" receiver:@"%s" returnType:@"%id" args:@[ @"%delimiter"] argTypes:@[ @"%id"]];
+        
+        [self emitReturnVal:retval type:@"%id"];
+    }];
+}
+
+-(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName
+{
+    
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"i32 %num"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        [generator emitReturnVal:[generator writeNSNumberLiteralForInt:@"%num"] type:@"%id"];
+    }];
+    
+}
+
+
+
+-(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName
+{
+    
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[ ] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        [generator emitReturnVal:[generator writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",aNumber]] type:@"%id"];
+    }];
+    
+}
+
+
+-(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName
+{
+    
+    return [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s", @"%id %block"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        NSString *blockCall=[self callBlock:@"%block" args:@[@"%s"] types:@[@"%id"] returnType:@"%id"];
+        [generator emitReturnVal:blockCall type:@"%id"];
+    }];
+    
+}
+
+
+
+-(NSString*)writeCreateBlockClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName
+{
+    NSString *retval= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        
+        NSString *returnValue=[self emitMsg:userMessageName receiver:@"%self" returnType:@"%id" args:@[ @"%s", @" bitcast ({ i8**, i32, i32, i8*, %struct.__block_descriptor* }* @__block_literal_global to %id (%id)*)"] argTypes:@[ @"%id", @"%id (%id)*"]];
+        
+        [generator emitReturnVal:returnValue type:@"%id"];
+    }];
+    NSString *blockBodyName=@"__24-[Hi noCaptureBlockUse:]_block_invoke";
+    NSString *blockType=@"@16@?0@8";
+    [self writeBlockName:blockBodyName returnType:@"%id" args:@[@"%s"] argTypes:@[@"%id"] typeString:blockType   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
+        NSString *retval=[self emitMsg:@"uppercaseString" receiver:@"%s" returnType:@"%id" args:@[] argTypes:@[]];
+        [self emitReturnVal:retval type:@"%id"];
+    }];
+    [self writeGlobalBlockDescriptor:blockBodyName type:blockType];
+    [self writeBlockSupport];
+    return retval;
+}
+
+-(NSString*)writeBlockWithVariableCapture:(NSString*)name
+{
+    
+    [self writeBlockName:name returnType:@"void" args:@[ @"%line", @"%stop" ] argTypes:@[@"%id", @"i8* nocapture"] typeString:@""   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
+        
+        [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
+        [self printLine:@"%%2 = bitcast i8* %%1 to %%id*"];
+        [self printLine:@"%%3 = load %%id* %%2, align 8, !tbaa !5"];
+        numLocals=3;
+        [self emitMsg:@"addObject:" receiver:@"%3" returnType:@"void" args:@[ @"%line"] argTypes:@[@"%id"]];
+        [self printLine:@"ret void"];
+    }];
+    
+    [self printLine:@""];
+    NSString *descriptor=[self writeDescriptorForLocalBlock];
+    return descriptor;
+}
+
+
+
+-(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName
+{
+
+    NSString *blockName=[NSString stringWithFormat:@"-[%@ %@]_block1",className,methodName];
+    NSString *descriptorSymbol=[self writeBlockWithVariableCapture:blockName];
+    NSString *refForNSMutableArray=[self classRefForClassName:@"NSMutableArray"];
+    NSString *methodId= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+        [self printLine:@"%%3 = alloca <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>, align 8"];
+        [self printLine:@"%%4 = load %%struct._class_t** @\"%@\", align 8",refForNSMutableArray];
+        [self printLine:@"%%5 = bitcast %%struct._class_t* %%4 to %%id"];
+        numLocals=5;
+        NSString *arrayRef=[self emitMsg:@"array" receiver:@"%5" returnType:@"%id" args:@[] argTypes:@[]];
+
+        
+        [self printLine:@"%%8 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 0"];
+        [self printLine:@"store i8* bitcast (i8** @_NSConcreteStackBlock to i8*), i8** %%8, align 8"];
+        [self printLine:@"%%9 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 1"];
+        [self printLine:@"store i32 -1040187392, i32* %%9, align 8"];
+        [self printLine:@"%%10 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 2"];
+        [self printLine:@"store i32 0, i32* %%10, align 4"];
+        [self printLine:@"%%11 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 3"];
+        [self printLine:@"store i8* bitcast (void (i8*, %%id, i8*)* @\"%@\" to i8*), i8** %%11, align 8",blockName];
+        [self printLine:@"%%12 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 4"];
+        [self printLine:@"store %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8*, i8*, i64 }* %@ to %%struct.__block_descriptor*), %%struct.__block_descriptor** %%12, align 8",descriptorSymbol];
+        [self printLine:@"%%13 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 5"];
+        
+        [self printLine:@"store %%id %@, %%id* %%13, align 8, !tbaa !5",arrayRef];
+        
+        
+        
+        [self printLine:@"%%14 = bitcast <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3 to void (%%id, i8*)*"];
+        numLocals=14;
+        [self emitMsg:@"enumerateLinesUsingBlock:" receiver:@"%s" returnType:@"void" args:@[ @"%14"] argTypes:@[@"void (%id, i8*)*" ]];
+        
+        [self printLine:@"ret %%id %@",arrayRef];
+    }];
+    
+    
+    [self writeBlockSupport];
+    return methodId;
+}
+
 
 @end

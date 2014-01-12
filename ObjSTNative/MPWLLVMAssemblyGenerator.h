@@ -12,6 +12,7 @@
 {
     NSMutableDictionary *selectorReferences;
     int numStrings;
+    int numBlocks;
     int numLocals;
     NSString *nsnumberclassref;
 }
@@ -34,15 +35,20 @@
 
 //--- temp/testing
 
+@end
+
+@interface MPWLLVMAssemblyGenerator(testSupport)
+
+
+
 -(NSString*)writeConstMethod1:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString;
 -(NSString*)writeStringSplitter:(NSString*)className methodName:(NSString*)methodName methodType:(NSString*)typeString splitString:(NSString*)splitString;
 -(NSString*)writeMakeNumberFromArg:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeCreateBlockClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName;
--(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName;
 
--(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName;
+-(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName;
 
 
 @end
