@@ -40,6 +40,9 @@
 -(NSString*)writeMakeNumber:(int)aNumber className:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeUseBlockClassName:(NSString*)className methodName:(NSString*)methodName;
 -(NSString*)writeCreateBlockClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName;
+-(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName;
+
+-(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName userMessageName:(NSString*)userMessageName;
 
 
 @end

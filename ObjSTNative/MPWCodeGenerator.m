@@ -415,7 +415,7 @@
     IDEXPECT(res2, @"HELLO", @"block execution2 ");
 }
 
-+(void)testGenerateBlockCreate
++(void)testGenerateGlobalBlockCreate
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
@@ -451,6 +451,42 @@
     IDEXPECT(res1, @"HELLO", @"block execution 1");
 }
 
++(void)testGenerateStackBlockWithVariableCapture
+{
+    // takes around 24 ms (real) total
+    //    NSLog(@"start testDefineEmptyClassDynamically");
+    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    
+    NSString *classname=[self anotherTestClassName];
+    [gen writeHeaderWithName:@"testModule"];
+    NSString *methodName1=@"onString:execBlock:";
+    NSString *methodType1=@"@32@0:8@16@24";  //  @"@32@0:8@16@?24"
+    NSString *methodName2=@"linesViaBlock:";
+    NSString *methodType2=@"@32@0:8@16";
+    
+    NSString *methodSymbol1=[gen writeUseBlockClassName:classname methodName:methodName1];
+    NSString *methodSymbol2=[gen writeCreateStackBlockWithVariableCaptureClassName:classname methodName:methodName2];
+    
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ methodName1, methodName2]  methodSymbols:@[ methodSymbol1, methodSymbol2 ] methodTypes:@[ methodType1, methodType2 ]];
+    
+    
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/blockcreatecapture.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    NSLog(@"after codegen and load");
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    NSArray *res1=[instance linesViaBlock:@"Hello"];
+    IDEXPECT(res1, @"HELLO", @"block execution 1");
+}
+
 
 +testSelectors
 {
@@ -464,7 +500,8 @@
              @"testCreateConstantNSNumber",
              @"testCreateCategory",
              @"testGenerateBlockUse",
-             @"testGenerateBlockCreate",
+             @"testGenerateGlobalBlockCreate",
+//             @"testGenerateStackBlockWithVariableCapture",
               ];
 }
 
