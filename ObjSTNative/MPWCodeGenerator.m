@@ -483,8 +483,8 @@
     
     id instance=[[NSClassFromString(classname) new] autorelease];
     
-    NSArray *res1=[instance linesViaBlock:@"Hello"];
-    IDEXPECT(res1, @"HELLO", @"block execution 1");
+    NSArray *res1=[instance linesViaBlock:@"Hello\nthese\nare\nsome\nlines"];
+    IDEXPECT(res1, (@[ @"Hello", @"these", @"are", @"some", @"lines"]), @"block execution 1");
 }
 
 
@@ -501,7 +501,7 @@
              @"testCreateCategory",
              @"testGenerateBlockUse",
              @"testGenerateGlobalBlockCreate",
-//             @"testGenerateStackBlockWithVariableCapture",
+             @"testGenerateStackBlockWithVariableCapture",
               ];
 }
 
