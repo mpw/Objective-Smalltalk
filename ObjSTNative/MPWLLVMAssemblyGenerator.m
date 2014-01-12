@@ -443,24 +443,41 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         
         NSString *returnValue=[self emitMsg:userMessageName receiver:@"%self" returnType:@"%id" args:@[ @"%s", @" bitcast ({ i8**, i32, i32, i8*, %struct.__block_descriptor* }* @__block_literal_global to %id (%id)*)"] argTypes:@[ @"%id", @"%id (%id)*"]];
         
-        
         [generator emitReturnVal:returnValue type:@"%id"];
     }];
+    NSString *blockBodyName=@"__24-[Hi noCaptureBlockUse:]_block_invoke";
+    NSString *blockType=@"@16@?0@8";
+    [self writeBlockName:blockBodyName returnType:@"%id" args:@[] argTypes:@[]   blockBody:^(MPWLLVMAssemblyGenerator *generator) {
+        NSString *retval=[self emitMsg:@"uppercaseString" receiver:@"%s" returnType:@"%id" args:@[] argTypes:@[]];
+        [self emitReturnVal:retval type:@"%id"];
+    }];
+    [self writeGlobalBlockDescriptor:blockBodyName type:blockType];
     [self writeBlockSupportNoCapture];
     return retval;
 }
 
--(void)writeBlockSupportNoCapture
+-(void)writeBlockName:(NSString*)blockBodyName returnType:(NSString*)returnType args:(NSArray*)args argTypes:(NSArray*)argType  blockBody:(void (^)(MPWLLVMAssemblyGenerator*  ))bodyBlock
 {
-    [self printLine:@"@.str = private unnamed_addr constant [29 x i8] c\"@\\22NSString\\2216@?0@\\22NSString\\228\\00\", align 1"];
-    [self printLine:@"@__block_descriptor_tmp = internal constant { i64, i64, i8*, i8* } { i64 0, i64 32, i8* getelementptr inbounds ([29 x i8]* @.str, i32 0, i32 0), i8* null }"];
-    [self printLine:@"@__block_literal_global = internal constant { i8**, i32, i32, i8*, %%struct.__block_descriptor* } { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (%%id (i8*, %%id)* @\"__24-[Hi noCaptureBlockUse:]_block_invoke\" to i8*), %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8* }* @__block_descriptor_tmp to %%struct.__block_descriptor*) }, align 8"];
-    [self printLine:@"define internal %%id @\"__24-[Hi noCaptureBlockUse:]_block_invoke\"(i8* nocapture %%.block_descriptor, %%id %%s ) optsize ssp uwtable {"];
+//    int oldNumLocals=numLocals;
+    
+    [self printLine:@"define internal %%id @\"%@\"(i8* nocapture %%.block_descriptor, %%id %%s ) optsize ssp uwtable {",blockBodyName];
     numLocals=0;
-    NSString *retval=[self emitMsg:@"uppercaseString" receiver:@"%s" returnType:@"%id" args:@[] argTypes:@[]];
-    [self emitReturnVal:retval type:@"%id"];
+    bodyBlock( self);
     [self printLine:@"}"];
+}
+
+-(void)writeGlobalBlockDescriptor:(NSString*)blockBodyName type:(NSString*)blockType
+{
+    int blockTypeLenInclNull=(int)[blockType length]+1;
+    [self printLine:@"@.str = private unnamed_addr constant [%d x i8] c\"%@\\00\", align 1",blockTypeLenInclNull,blockType];
+    [self printLine:@"@__block_descriptor_tmp = internal constant { i64, i64, i8*, i8* } { i64 0, i64 32, i8* getelementptr inbounds ([%d x i8]* @.str, i32 0, i32 0), i8* null }",blockTypeLenInclNull];
+    [self printLine:@"@__block_literal_global = internal constant { i8**, i32, i32, i8*, %%struct.__block_descriptor* } { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (%%id (i8*, %%id)* @\"%@\" to i8*), %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8* }* @__block_descriptor_tmp to %%struct.__block_descriptor*) }, align 8",blockBodyName];
     [self printLine:@""];
+
+}
+
+-(void)writeBlockCopyHelper
+{
     [self printLine:@"define internal void @__copy_helper_block_(i8*, i8* nocapture) nounwind {"];
     [self printLine:@"%%3 = getelementptr inbounds i8* %%1, i64 32"];
     [self printLine:@"%%4 = bitcast i8* %%3 to %%id*"];
@@ -470,6 +487,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"tail call void @_Block_object_assign(i8* %%5, i8* %%7, i32 3) nounwind"];
     [self printLine:@"ret void"];
     [self printLine:@"}"];
+}
+
+-(void)writeBlockSupportNoCapture
+{
+    [self writeBlockCopyHelper];
     [self printLine:@""];
     [self printLine:@"define internal void @__destroy_helper_block_(i8* nocapture) nounwind {"];
     [self printLine:@"%%2 = getelementptr inbounds i8* %%0, i64 32"];
@@ -499,15 +521,9 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"ret void"];
     [self printLine:@"}"];
     [self printLine:@""];
-    [self printLine:@"define internal void @__copy_helper_block_(i8*, i8* nocapture) nounwind {"];
-    [self printLine:@"%%3 = getelementptr inbounds i8* %%1, i64 32"];
-    [self printLine:@"%%4 = bitcast i8* %%3 to %%3**"];
-    [self printLine:@"%%5 = getelementptr inbounds i8* %%0, i64 32"];
-    [self printLine:@"%%6 = load %%3** %%4, align 8"];
-    [self printLine:@"%%7 = bitcast %%3* %%6 to i8*"];
-    [self printLine:@"tail call void @_Block_object_assign(i8* %%5, i8* %%7, i32 3) nounwind"];
-    [self printLine:@"ret void"];
-    [self printLine:@"}"];
+    
+    [self writeBlockCopyHelper];
+    
     [self printLine:@""];
     [self printLine:@"declare void @_Block_object_assign(i8*, i8*, i32)"];
     [self printLine:@""];
