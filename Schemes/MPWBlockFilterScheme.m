@@ -25,11 +25,11 @@ idAccessor( valueFilter, setValueFilter)
 
 -(id)_bindingForName:(NSString *)variableName inContext:(id)aContext
 {
-    NSLog(@"original path: %@",variableName);
+//    NSLog(@"original path: %@",variableName);
     if ( [self identifierFilter]){
         variableName=((FilterBlock)identifierFilter)(variableName);
     }
-    NSLog(@"mapped path: %@",variableName);
+//    NSLog(@"mapped path: %@",variableName);
     return [super bindingForName:variableName inContext:aContext];
 }
 
