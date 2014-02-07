@@ -15,6 +15,7 @@
 #import "MPWFileSchemeResolver.h"
 #import "MPWURLSchemeResolver.h"
 #import "MPWEnvScheme.h"
+#import <MPWFoundation/MPWPropertyListStream.h>
 
 @implementation MPWShellCompiler
 
@@ -68,7 +69,7 @@
 -init
 {
 	self=[super init];
-   id Stdout=[MPWByteStream Stdout];
+   id Stdout=[MPWPropertyListStream streamWithTarget:[MPWByteStream Stdout] ];
    id Stderr=[MPWByteStream Stderr];
    [self bindValue:Stdout toVariableNamed:@"stdout"];
    [self bindValue:Stderr toVariableNamed:@"stderr"];

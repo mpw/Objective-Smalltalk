@@ -249,7 +249,7 @@ idAccessor( retval, setRetval )
                         fflush(stdout);
 //						[[[MPWByteStream Stderr] do] println:[result each]];
 //                        NSLog(@"result: %@/%@",[result class],result);
-						[[MPWByteStream Stdout] println:[result description]];
+						[[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:[result stringValue]];
 
                         
                         //                       fprintf(stderr,"%s\n",str_result);
