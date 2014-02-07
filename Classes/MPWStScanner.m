@@ -205,9 +205,9 @@ boolAccessor( noNumbers, setNoNumbers )
     }
 }
 
--createFloat:(float)aFloat
+-createDouble:(double)aFloat
 {
-	return [[self floatClass] numberWithFloat:aFloat];
+	return [[self floatClass] numberWithDouble:aFloat];
 }
 
 -createInt:(long)anInt
@@ -238,7 +238,7 @@ boolAccessor( noNumbers, setNoNumbers )
     string=[self makeText:cur-pos];
 	if ( !noNumbers ) {
 		if ( [string rangeOfString:@"."].length==1 ) {
-			return [self createFloat:[string floatValue]];
+			return [self createDouble:[string doubleValue]];
 		} else {
 			return [self createInt:[string longValue]];
 		}
