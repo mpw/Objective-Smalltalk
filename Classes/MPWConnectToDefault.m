@@ -10,6 +10,10 @@
 #import "MPWMessagePortDescriptor.h"
 #import "MPWFilterScheme.h"
 
+// FIXME:   need some tests for this!
+//          (just had a hard-to-find bug where I was getting the IN/OUT
+//          ports both from the right-hand-side...)
+
 @implementation MPWConnectToDefault
 
 idAccessor( rhs, setRhs )
@@ -24,14 +28,14 @@ idAccessor( lhs, setLhs )
 //    NSLog(@"right: %@",right);
     
     id input=[right ports][@"IN"];
-    id output=[right ports][@"OUT"];
+    id output=[left ports][@"OUT"];
 //    NSLog(@"input: %@",input);
 //    NSLog(@"output: %@",output);
     if ( [input connect:output]) {
-//        NSLog(@"did connect");
+        NSLog(@"did connect");
         return [input sendsMessages] ? right : left;
     } else {
-//        NSLog(@"did not connect");
+        NSLog(@"did not connect");
         return nil;
     }
 }
@@ -71,9 +75,15 @@ idAccessor( lhs, setLhs )
 
 -(NSDictionary*)ports
 {
-    return @{ @"IN": [self defaultInputPort],
-              @"OUT": [self defaultOutputPort],
-              };
+    NSMutableDictionary *ports=[NSMutableDictionary dictionary];
+    if ( [self defaultInputPort]) {
+        ports[@"IN"]=[self defaultInputPort];
+    }
+    if ( [self defaultOutputPort]) {
+        ports[@"OUT"]=[self defaultOutputPort];
+    }
+//    NSLog(@"ports for %@: %@",self,ports);
+    return ports;
 }
 
 @end

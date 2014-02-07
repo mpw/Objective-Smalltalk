@@ -74,7 +74,7 @@ idAccessor( method, _setMethod )
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature
 {
 	//--- setup the method structure
-    NSLog(@"install %@ in %@",NSStringFromSelector(selname),aClass);
+//    NSLog(@"install %@ in %@",NSStringFromSelector(selname),aClass);
 	if ( aClass != nil ) {
 		methodDescriptor=[self getMethodForMessage:selname inClass:aClass];
 		
