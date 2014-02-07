@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+	<current_observation>
+		<credit>Weather Underground Personal Weather Station</credit>
+		<credit_URL>http://wunderground.com/weatherstation/</credit_URL>
+		<image>
+		<url>http://icons.wunderground.com/graphics/bh-wui_logo.gif</url>
+		<title>Weather Underground</title>
+		<link>http://wunderground.com/weatherstation/</link>
+		</image>
+		<location>
+		<full>Mussel Rock, Daly City, CA</full>
+		<neighborhood>Mussel Rock</neighborhood>
+		<city>Daly City</city>
+		<state>CA</state>
+		<zip></zip>
+		<latitude>37.667549</latitude>
+		<longitude>-122.489334</longitude>
+		<elevation>453 ft</elevation>
+		</location>
+		<station_id>KCADALYC1</station_id>
+		<station_type>Davis Vantage Pro 2 Plus</station_type>
+		<observation_time>Last Updated on January 31, 5:02 PM PST</observation_time>
+		<observation_time_rfc822>Sat, 01 Feb 2014 01:02:10 GMT</observation_time_rfc822>
+		<weather></weather>
+		<temperature_string>50.2 F (10.1 C)</temperature_string>
+		<temp_f>50.2</temp_f>
+		<temp_c>10.1</temp_c>
+		<relative_humidity>79</relative_humidity>
+		<wind_string>From the North at 16.1 MPH Gusting to 33.1 MPH</wind_string>
+		<wind_dir>North</wind_dir>
+		<wind_degrees>350</wind_degrees>
+		<wind_mph>16.1</wind_mph>
+		<wind_gust_mph>33.1</wind_gust_mph>
+		<pressure_string>30.06" (1017.8 mb)</pressure_string>
+		<pressure_mb>1017.8</pressure_mb>
+		<pressure_in>30.06</pressure_in>
+		<dewpoint_string>43.9 F (6.6 C)</dewpoint_string>
+		<dewpoint_f>43.9</dewpoint_f>
+		<dewpoint_c>6.6</dewpoint_c>
+		
+		<heat_index_string></heat_index_string>
+		<heat_index_f></heat_index_f>
+		<heat_index_c></heat_index_c>
+		
+		
+		<windchill_string></windchill_string>
+		<windchill_f></windchill_f>
+		<windchill_c></windchill_c>
+		
+		<solar_radiation>67</solar_radiation>
+		<UV>0.0</UV>
+		<precip_1hr_string>0.00 in (0.0 mm)</precip_1hr_string>
+		<precip_1hr_in>0.00</precip_1hr_in>
+		<precip_1hr_metric>0.0</precip_1hr_metric>
+		<precip_today_string>0.00 in (0.0 cm)</precip_today_string>
+		<precip_today_in>0.00</precip_today_in>
+		<precip_today_metric>0.0 cm</precip_today_metric>
+		<history_url>http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KCADALYC1</history_url>
+		<ob_url>http://www.wunderground.com/cgi-bin/findweather/getForecast?query=37.667549,-122.489334</ob_url>
+	</current_observation>
+
