@@ -92,7 +92,7 @@ idAccessor( script, setScript )
     } else {
         int missingCount=[methodHeader numArguments] - [args count];
         NSMutableString *missingMsg;
-        missingMsg=[NSMutableString stringWithFormat:@"<script> %d missing parameters (of %d): ",missingCount,[methodHeader numArguments]];
+        missingMsg=[NSMutableString stringWithFormat:@"<script> %d missing parameters (of %d): ", missingCount,[methodHeader numArguments]];
         for (int i=0;i<[methodHeader numArguments];i++) {
             NSString *paramName=[methodHeader argumentNameAtIndex:i];
             if ( i< [args count] ) {
@@ -101,8 +101,9 @@ idAccessor( script, setScript )
                 [missingMsg appendFormat:@"%@ = <missing> ",paramName];
             }
         }
-        
-        [NSException raise:@"missingargument" format:missingMsg];
+        fprintf(stderr,"%s\n",[missingMsg UTF8String]);
+//        [NSException raise:@"missingargument" format:missingMsg];
+        exit(1);
     }
 }
 
