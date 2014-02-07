@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'ObjectiveHTTPD'
+context loadFramework:'ObjectiveHTTPD' .
 scheme:site := MPWSiteMap scheme.
 hello := 'Hello World!' asData mutableCopy.
 stdout println:hello.
@@ -7,4 +7,4 @@ stdout println:hello.
 site:/hi := hello.
 (scheme:site ->  (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
 stdout println:'site:<path> := value'.
-shell runInteractiveLoop
+shell runInteractiveLoop.
