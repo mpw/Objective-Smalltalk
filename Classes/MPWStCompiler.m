@@ -172,7 +172,7 @@ idAccessor( connectorMap, setConnectorMap );
 
 -evaluateScriptNamed:methodName onObject:receiver
 {
-	NSString *className=[receiver className];
+	NSString *className=NSStringFromClass([receiver class]);
 	NSString *scriptString=[self lookupScriptNamed:methodName forClassName:className];
 	return [self evaluateScript:scriptString onObject:receiver];
 }

@@ -76,12 +76,14 @@ objectAccessor(NSString, prompt, _setPrompt)
     [self setEcho:!newReadingFile];
 }
 
+
 -(void)runAppKit
 {
 	id app=[NSClassFromString(@"NSApplication") sharedApplication];
 	[[self async] runInteractiveLoop];
 	[[NSRunLoop currentRunLoop] run];
 }
+
 -initWithArgs:args evaluator:newEvaluator
 {
     if ( self=[super init] ) {

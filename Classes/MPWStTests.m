@@ -472,7 +472,7 @@
     IDEXPECT( aClass, nil, @"class shouldn't exist yet");
     [NSString createSubclassWithName:className];
     aClass = NSClassFromString( className );
-    IDEXPECT( [aClass className], className, @"class should exist and be named as expected");
+    IDEXPECT( NSStringFromClass(aClass), className, @"class should exist and be named as expected");
 }
 
 +(void)testCreateSubclassWithInstanceVariables
@@ -483,7 +483,7 @@
     IDEXPECT( aClass, nil, @"class shouldn't exist yet");
     [NSString createSubclassWithName:className instanceVariables:@"variable1 variable2"];
     aClass = NSClassFromString( className );
-    IDEXPECT( [aClass className], className, @"class should exist and be named as expected");
+    IDEXPECT( NSStringFromClass(aClass), className, @"class should exist and be named as expected");
 //    INTEXPECT(  aClass->instance_size, [NSString class]->instance_size+2 * sizeof(id), @"new class should have space for 2 id variables");
 	variableDescriptions = [aClass instanceVariables];
 	INTEXPECT( [variableDescriptions count], 3, @"number of instance variables" );

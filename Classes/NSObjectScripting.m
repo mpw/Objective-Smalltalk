@@ -188,7 +188,7 @@ static id ivarsByClassAndName=nil;
 +instanceVariables
 {
 #if 1	
-	NSString *className = [self className];
+	NSString *className = NSStringFromClass(self);
 	NSMutableArray *varNames;
 	if ( !ivarNameCache ) {
 		ivarNameCache = [[NSMutableDictionary alloc] init];
@@ -205,7 +205,7 @@ static id ivarsByClassAndName=nil;
 
 +ivarForName:(NSString*)name
 {
-	id className = [self className];
+	id className = NSStringFromClass(self);
 	id instVarDict=nil;
 	if ( !ivarsByClassAndName ) {
 		ivarsByClassAndName=[NSMutableDictionary new];

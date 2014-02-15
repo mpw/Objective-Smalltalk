@@ -3,5 +3,6 @@ context loadFramework:'ObjectiveHTTPD'.
 scheme:site := MPWSiteMap scheme.
 site:/hi := 'Hello World!'.
 (scheme:site -> (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
+stdout println:8081.
 stdout println:'site:<path> := value'.
 shell runInteractiveLoop

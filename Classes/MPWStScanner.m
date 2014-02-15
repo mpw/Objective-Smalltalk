@@ -169,6 +169,11 @@ boolAccessor( noNumbers, setNoNumbers )
     return [self makeText:len];
 }
 
+-(NSStringEncoding)stringEncoding
+{
+    return NSUTF8StringEncoding;
+}
+
 -scanString
 {
     NSMutableArray *partialStrings=nil;

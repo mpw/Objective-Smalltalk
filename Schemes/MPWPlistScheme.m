@@ -52,7 +52,7 @@ idAccessor(plist, setPlist)
     NSDictionary *d=@{ @"theAnswer": @"52" };
     [s setPlist:d];
     MPWBinding *b=[s bindingForName:@"theAnswer" inContext:nil];
-    IDEXPECT([b className], @"MPWBinding",@"class of binding");
+    IDEXPECT([b class], [MPWBinding class],@"class of binding");
     IDEXPECT([b value], @"52", @"theAnswer");
     
 }
