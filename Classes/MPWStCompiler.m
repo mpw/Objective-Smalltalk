@@ -137,7 +137,8 @@ idAccessor( connectorMap, setConnectorMap );
 
 -nextToken
 {
-	return [scanner nextToken];
+    id token=[scanner nextToken];
+    return token;
 }
 
 -(void)pushBack:aToken
@@ -424,11 +425,13 @@ idAccessor( connectorMap, setConnectorMap );
 -(SEL)mapSelectorString:(NSString*)selector
 {
     SEL sel;
-
+//   NSLog(@"map selector string: %@",selector);
     if ( [self isSpecialSelector:selector] ) {
+//        NSLog(@"is special: %@",selector);
         selector = [self specialSelector:selector];
     }
     sel=NSSelectorFromString( selector );
+//    NSLog(@"did map to sel %s",sel);
     if (!sel) {
         PARSEERROR(@"unknown message", selector);
     }
@@ -437,6 +440,7 @@ idAccessor( connectorMap, setConnectorMap );
 
 -parseUnary
 {
+ //   NSLog(@"parseUnary");
     id expr=[self parseArgument];
     id next=nil;
     while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] && ![next isEqual:@"]"]) {
@@ -457,7 +461,7 @@ idAccessor( connectorMap, setConnectorMap );
     id selector;
     id args=nil;
 	selector=[self parseKeywordOrUnary];
-//	NSLog(@"parseSelectorAndArgs, selector: %@",selector);
+//	NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
     if ( selector && isalpha( *(unsigned char*)[selector bytes] )) {
         BOOL isKeyword =[selector isKeyword];
         if ( isKeyword  ) {
@@ -518,6 +522,7 @@ idAccessor( connectorMap, setConnectorMap );
 
 -parseMessageExpression:receiver
 {
+    
     id expr=receiver;
     id next;
     while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {

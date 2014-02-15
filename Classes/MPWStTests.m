@@ -782,6 +782,17 @@
     INTEXPECT([result intValue], 7, @"3+4");
 }
 
+
++(void)testSingleCharUnicodeIdentifiersAllowed
+{
+    unichar pichar=960;
+    NSString *script=[NSString stringWithFormat:@"%C := 314 . %C * 2.",pichar,pichar];
+    id result=[self evaluate:script];
+    INTEXPECT([result intValue], 628, @"2 * pi * 100");
+}
+
+
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -868,6 +879,8 @@
             @"testBracketsTerminateIdentifier",
             @"testLeftArrowWorksLikeAssignment",
             @"testPipeForTemporaryVariablesAllowed",
+            @"testSingleCharUnicodeIdentifiersAllowed",
+
         nil];
 }
 

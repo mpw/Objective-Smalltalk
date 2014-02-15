@@ -2,6 +2,49 @@
 
 #import "MPWStScanner.h"
 
+@interface MPWStName  : NSString
+{
+    NSString *realString;
+}
+
+@end
+
+@implementation MPWStName
+
+objectAccessor(NSString, realString, setRealString)
+
+-initWithString:(NSString*)newString
+{
+    self=[super init];
+    [self setRealString:newString];
+    return self;
+}
+
+-(unichar)characterAtIndex:(NSUInteger)index
+{
+    return [realString characterAtIndex:index];
+}
+
+-(NSUInteger)length
+{
+    return [realString length];
+}
+
+-(void)dealloc
+{
+    [realString release];
+    [super dealloc];
+}
+
+-(BOOL)isLiteral
+{
+    return NO;
+}
+
+@end
+
+
+
 @implementation NSObject(isLiteral)
 
 
@@ -96,18 +139,21 @@ boolAccessor( noNumbers, setNoNumbers )
     unsigned int i;
 
     [super _initCharSwitch];
-    for (i=0;i<256;i++) {
-        if ( isalpha(i) ) {
-            charSwitch[i]=[self methodForSelector:@selector(scanName)];
+    for (i=0;i<128;i++) {
+        if ( isalpha(i)  ) {
+            charSwitch[i]=[self methodForSelector:@selector(scanASCIIName)];
         } else if (isdigit(i) ) {
             charSwitch[i]=[self methodForSelector:@selector(scanNumber)];
         } else if (isspace(i)  ) {
             charSwitch[i]=[self methodForSelector:@selector(skipSpace)];
 //        } else if (  i=='-' ) {
 //          charSwitch[i]=[self methodForSelector:@selector(scanNegativeNumber)];
-        } else {
+        } else  {
             charSwitch[i]=[self methodForSelector:@selector(scanSpecial)];
         }
+    }
+    for (i=128;i<256;i++) {
+        charSwitch[i]=[self methodForSelector:@selector(scanUTF8Name)];
     }
     charSwitch['\'']=[self methodForSelector:@selector(scanString)];
     charSwitch['\"']=[self methodForSelector:@selector(scanComment)];
@@ -116,7 +162,7 @@ boolAccessor( noNumbers, setNoNumbers )
     charSwitch['[']=[self methodForSelector:@selector(scanSpecial)];
     charSwitch['-']=[self methodForSelector:@selector(scanSpecial)];
     charSwitch[':']=[self methodForSelector:@selector(scanPossibleAssignment)];
-    charSwitch['_']=[self methodForSelector:@selector(scanName)];
+    charSwitch['_']=[self methodForSelector:@selector(scanASCIIName)];
     charSwitch[0]=[self methodForSelector:@selector(skip)];
 //    charSwitch[10]=[self methodForSelector:@selector(skip)];
 //    charSwitch[13]=[self methodForSelector:@selector(skip)];
@@ -124,24 +170,84 @@ boolAccessor( noNumbers, setNoNumbers )
 
 
 
--scanName
+static inline int decodeUTF8FirstByte( int ch, int *numChars)
+{
+    int retval=0;
+    int firstByteSoFar=0;
+    if ( ch <= 0x7f) {
+        retval = ch;
+        *numChars=0;
+    } else if ( (ch & 0xE0) == 0xC0 ) {
+        retval = ch & 31;
+        *numChars=1;
+    } else if ( (ch & 0xF0) == 0xE0 ) {
+        retval = ch & 15;
+        *numChars=2;
+    } else if ( (ch & 0xF8) == 0xF0 ) {
+        retval = ch & 7;
+        *numChars=3;
+    } else if ( (ch & 0xFC) == 0xF8 ) {
+        retval = ch & 3;
+        *numChars=4;
+    } else if ( (ch & 0xFE) == 0xFC ) {
+        retval = ch & 1;
+        *numChars=5;
+    } else {
+        
+    }
+    return retval;
+}
+
+
+-(int)scanUTF8Char
+{
+    int theChar=0;
+    const unsigned char *cur=(const unsigned char *)pos;
+    theChar = *cur;
+    int numRemainderBytes=0;
+    theChar=decodeUTF8FirstByte(theChar, &numRemainderBytes);
+    cur++;
+    for (int i=0;i<numRemainderBytes;i++) {
+        theChar=(theChar<< 6) | ((*cur++) & 0x3f);
+    }
+    pos=cur;
+    return theChar;
+}
+
+-(NSString*)scanUTF8Name
+{
+    int theChar=0;
+    NSMutableString *result=[NSMutableString string];
+    do {
+        theChar = [self scanUTF8Char];
+        if ( theChar  ) {
+            [result appendFormat:@"%C",(unsigned short)theChar];
+        }
+    } while ( NO);
+    return [[[MPWStName alloc] initWithString:result] autorelease];
+}
+
+
+-scanASCIIName
 {
     const  char *cur=pos;
 
-    if ( isalpha(*cur) || *cur=='_') {
+    if ( isalpha(*cur) || *cur=='_' ) {
         cur++;
         while ( SCANINBOUNDS(cur) && (isalnum(*cur) || (*cur=='_') || (*cur=='-') ||
 						(*cur=='.' && SCANINBOUNDS(cur+1) && isalnum(cur[1])))) {
             cur++;
         }
-        if ( SCANINBOUNDS(cur) && *cur==':' ) {
+        if ( SCANINBOUNDS(cur) && *cur ==':' ) {
             cur++;
 			if ( SCANINBOUNDS( cur ) && (*cur=='=' || *cur==':' ) ) {
 				cur--;
 			}
         }
     }
-    return [self makeText:cur-pos];     
+//    [[[MPWStName alloc] initWithString:result] autorelease]
+    
+    return [self makeText:cur-pos];
 }
 
 -scanPossibleAssignment
@@ -261,6 +367,7 @@ boolAccessor( noNumbers, setNoNumbers )
 {
     const char *cur=pos;
     while ( SCANINBOUNDS(cur) && isspace(*cur) ) {
+//        NSLog(@"skipSpace: %c %@",*cur,self);
         cur++;
     }
     UPDATEPOSITION(cur);
@@ -357,6 +464,18 @@ boolAccessor( noNumbers, setNoNumbers )
     IDEXPECT([scanner nextToken],@"->", @"single right arrow");
 }
 
++(void)testScanUTF8Name
+{
+    unichar pi=960;
+    NSString *pi_string=[NSString stringWithCharacters:&pi length:1];
+	MPWStScanner *scanner=[self scannerWithString:pi_string];
+    NSString *token=[scanner nextToken];
+    INTEXPECT([token length], 1, @"length of scanned token pi");
+    
+    INTEXPECT([token characterAtIndex:0], pi, @"pi");
+    IDEXPECT(token, pi_string, @"the string");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -367,6 +486,7 @@ boolAccessor( noNumbers, setNoNumbers )
             @"testRightArrow",
             @"testSimpleLiteralString",
             @"singleMinusString",
+            @"testScanUTF8Name",
         nil];
 }
 

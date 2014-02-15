@@ -59,6 +59,8 @@
     [self writeEnumerator:[aList objectEnumerator] spacer:@";\n"];
 }
 
++testSelectors { return @[]; }
+
 @end
 
 @implementation NSObject(generateObjectiveCOn)
@@ -79,3 +81,4 @@
 }
 
 @end
+
