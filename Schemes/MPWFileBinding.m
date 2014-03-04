@@ -177,7 +177,6 @@ idAccessor( url , setUrl )
 
 -(void)open
 {
-    
     [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[self url]];
 }
 

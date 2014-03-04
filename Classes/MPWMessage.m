@@ -99,6 +99,8 @@ idAccessor( _signature, setSignature )
 					NSRect rectArg;
                     SEL selArg;
 					char buffer[128];
+                    double doubleBuffer[32];
+                    float floatBuffer[32];
 					id arg=args[i];
 					void *argp=&arg;
 					const char *type=[sig getArgumentTypeAtIndex:invocationIndex];
@@ -173,6 +175,20 @@ idAccessor( _signature, setSignature )
 								argp=&pointArg;
 								
 								break;
+                            } else if (  !strcmp( type, "{CATransform3D=dddddddddddddddd}")  ) {
+                                MPWRealArray *array=arg;
+                                for (int i=0;i<16;i++) {
+                                    doubleBuffer[i]=[array realAtIndex:i];
+                                }
+                                argp=array;
+                                break;
+                            } else if (  !strcmp( type, "{CATransform3D=ffffffffffffffff}")  ) {
+                                MPWRealArray *array=arg;
+                                for (int i=0;i<16;i++) {
+                                    floatBuffer[i]=[array realAtIndex:i];
+                                }
+                                argp=array;
+                                break;
 							} else if (  !strcmp( type, "{_NSSize=ff}" ) || !strcmp( type, "{CGSize=ff}") ||  !strcmp( type, "{CGSize=dd}" ) ) {
 								sizeArg = [arg asSize];
 								argp=&sizeArg;
@@ -260,7 +276,9 @@ idAccessor( _signature, setSignature )
 				returnValue=[NSNumber numberWithDouble:doubleVal];
 				break;
 			case '{':
-				if ( !strcmp( returnType, "{?=II}" ) ||  !strcmp( returnType, "{_NSRange=II}" )  ||  !strcmp( returnType, "{_NSRange=QQ}" )) {
+                
+                
+				if ( !strcmp( returnType, @encode(NSRange) )) {
 					NSRange rangeVal = *(NSRange*)returnBuffer;
 					returnValue=[MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
 					break;
@@ -280,7 +298,15 @@ idAccessor( _signature, setSignature )
 					NSSize sizeVal = *(NSSize*)returnBuffer;
 					returnValue=[MPWPoint pointWithNSSize:sizeVal];
 					break;
-				}   if ( !strcmp( returnType, "{?={?=ff}{?=ff}}" ) || !strcmp( returnType, "{_NSRect={_NSPoint=ff}{_NSSize=ff}}" ) || 
+				} else if (  !strcmp( returnType, "{CATransform3D=dddddddddddddddd}")  ) {
+                    double *ptr=(double*)returnBuffer;
+                    MPWRealArray *array=[MPWRealArray arrayWithCapacity:16];
+                    for (int i=0;i<16;i++) {
+                        [array addReal:ptr[i]];
+                    }
+                    returnValue=array;
+					break;
+				} else  if ( !strcmp( returnType, "{?={?=ff}{?=ff}}" ) || !strcmp( returnType, "{_NSRect={_NSPoint=ff}{_NSSize=ff}}" ) ||
                         !strcmp( returnType, "{CGRect={CGPoint=ff}{CGSize=ff}}" )  || 
                         !strcmp( returnType, "{CGRect={CGPoint=dd}{CGSize=dd}}" ) ) {
 					NSRect rectVal = *(NSRect*)returnBuffer;
@@ -344,17 +370,61 @@ idAccessor( _signature, setSignature )
     MPWMessage* msg=[MPWMessage messageWithSelector:@selector(add:) ];
     IDEXPECT( [msg sendTo:[NSNumber numberWithInt:3] withArguments:[NSArray arrayWithObject:[NSNumber numberWithInt:4]]],[NSNumber numberWithInt:7], @"3+4 as simple message");
 }
+
++(NSRange)__nsrangeTester
+{
+    return NSMakeRange(3, 42);
+}
+
++(NSPoint)__nspointTester
+{
+    return NSMakePoint(3.12, 23.23);
+}
+
++(NSRect)__nsrectTester
+{
+    return NSMakeRect(12,42.2, 13,9);
+}
+
 +(void)testAppendingString
 {
     MPWMessage* msg=[MPWMessage messageWithSelector:@selector(stringByAppendingString:)];
     IDEXPECT( [msg sendTo:@"prefix" withArguments:[NSArray arrayWithObject:@"suffix"]],@"prefixsuffix", @"stringByAppendingString:");
 }
 
++(void)testNSRangeReturn
+{
+    MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nsrangeTester)];
+    id result = [msg sendTo:self withArguments:nil ];
+    IDEXPECT(result, [MPWInterval intervalFrom:@(3) to:@(44)], @"nsrange to interval");
+}
+
++(void)testPointReturn
+{
+    MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nspointTester)];
+    id result = [msg sendTo:self withArguments:nil ];
+    FLOATEXPECTTOLERANCE([result x], 3.12, 0.000001, @"x");
+    FLOATEXPECTTOLERANCE([result y], 23.23, 0.000001, @"y");
+}
+
++(void)testRectReturn
+{
+    MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nsrectTester)];
+    id result = [msg sendTo:self withArguments:nil ];
+    FLOATEXPECTTOLERANCE([result x], 12, 0.000001, @"x");
+    FLOATEXPECTTOLERANCE([result y], 42.2 ,0.000001, @"y");
+    FLOATEXPECTTOLERANCE([result width], 13, 0.000001, @"w");
+    FLOATEXPECTTOLERANCE([result height], 9 ,0.000001, @"h");
+}
+
 +testSelectors
 {
     return [NSArray arrayWithObjects:
         @"test3plus4",
-        @"testAppendingString",
+            @"testAppendingString",
+            @"testNSRangeReturn",
+            @"testPointReturn",
+            @"testRectReturn",
         nil];
 }
 

@@ -208,6 +208,8 @@
 		1F68D1EA15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
 		1F68D1EB15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
 		1F68D1EC15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */; };
+		1F7A351018B3570F0009E97D /* MPWStNativeCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7A350E18B3570F0009E97D /* MPWStNativeCompiler.h */; };
+		1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7A350F18B3570F0009E97D /* MPWStNativeCompiler.m */; };
 		1F7B75B114629431002F38D1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1F7B75B714629431002F38D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75B514629431002F38D1 /* InfoPlist.strings */; };
 		1F7B75B914629431002F38D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75B814629431002F38D1 /* main.m */; };
@@ -267,11 +269,11 @@
 		1F88E8CC138ADC1600199F03 /* MPWEnvScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */; };
 		1F88E8CD138ADC1600199F03 /* MPWGenericBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A9138ADC1600199F03 /* MPWGenericBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8CE138ADC1600199F03 /* MPWGenericBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8AA138ADC1600199F03 /* MPWGenericBinding.m */; };
-		1F88E8DB138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; };
+		1F88E8DB138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8DC138ADCCA00199F03 /* MPWResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8DA138ADCCA00199F03 /* MPWResource.m */; };
-		1F88E8DD138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; };
+		1F88E8DD138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8DE138ADCCA00199F03 /* MPWResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8DA138ADCCA00199F03 /* MPWResource.m */; };
-		1F88E8DF138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; };
+		1F88E8DF138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8E0138ADCCA00199F03 /* MPWResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8DA138ADCCA00199F03 /* MPWResource.m */; };
 		1F90B40413A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F90B40213A62AC1006A3DEB /* MPWSequentialScheme.h */; };
 		1F90B40513A62AC1006A3DEB /* MPWSequentialScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */; };
@@ -549,6 +551,8 @@
 		1F6F636C0987C70A006F3936 /* MPWMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodStore.m; sourceTree = "<group>"; };
 		1F6F637E0987C803006F3936 /* NSObjectScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectScripting.h; sourceTree = "<group>"; };
 		1F6F637F0987C803006F3936 /* NSObjectScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectScripting.m; sourceTree = "<group>"; };
+		1F7A350E18B3570F0009E97D /* MPWStNativeCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStNativeCompiler.h; sourceTree = "<group>"; };
+		1F7A350F18B3570F0009E97D /* MPWStNativeCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStNativeCompiler.m; sourceTree = "<group>"; };
 		1F7B75AF14629431002F38D1 /* SchemeFS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchemeFS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7B75B414629431002F38D1 /* SchemeFS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SchemeFS-Info.plist"; sourceTree = "<group>"; };
 		1F7B75B614629431002F38D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -850,6 +854,8 @@
 				1F084A1116DCE6A200ED2517 /* Supporting Files */,
 				1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */,
 				1F605134187590E5004B6AED /* MPWInternalCodeGenerator.mm */,
+				1F7A350E18B3570F0009E97D /* MPWStNativeCompiler.h */,
+				1F7A350F18B3570F0009E97D /* MPWStNativeCompiler.m */,
 			);
 			path = ObjSTNative;
 			sourceTree = "<group>";
@@ -1307,6 +1313,7 @@
 				1FC2EEF6186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.h in Headers */,
 				1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
+				1F7A351018B3570F0009E97D /* MPWStNativeCompiler.h in Headers */,
 				1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1912,6 +1919,7 @@
 				1F605136187590E5004B6AED /* MPWInternalCodeGenerator.mm in Sources */,
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */,
+				1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

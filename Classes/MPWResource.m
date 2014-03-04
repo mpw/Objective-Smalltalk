@@ -18,16 +18,16 @@
 @implementation MPWResource
 
 objectAccessor( NSData, rawData, setRawData )
-objectAccessor( NSString, mimetype, setMimetype )
+objectAccessor( NSString, MIMEType, setMIMEType )
 objectAccessor( NSError, error, setError)
 idAccessor( _value, setValue )
 idAccessor( source, setSource )
 
 -convertRawDataToObject
 {
-	if ( [[self mimetype] hasPrefix:@"image/"] ) {
+	if ( [[self MIMEType] hasPrefix:@"image/"] ) {
 		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]] ;
-	} else if ( [[self mimetype] hasPrefix:@"application/json"] && NSClassFromString(@"NSJSONSerialization")) {
+	} else if ( [[self MIMEType] hasPrefix:@"application/json"] && NSClassFromString(@"NSJSONSerialization")) {
 		return [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:[self rawData] options:0 error:nil] ;
 	}  else if ( [[self extension] isEqual:@"newsplist"] ||
                 [[self extension] isEqual:@"plist"] ) {
@@ -132,7 +132,7 @@ idAccessor( source, setSource )
 
 -(NSData *)asData
 {
-    return [self rawData];
+    return self; //[self rawData];
 }
 
 -(void)dealloc
@@ -140,7 +140,7 @@ idAccessor( source, setSource )
 	[source release];
 	[rawData release];
 	[_value release];
-	[mimetype release];
+	[MIMEType release];
     [error release];
 	[super dealloc];
 }

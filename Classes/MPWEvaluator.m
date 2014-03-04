@@ -112,6 +112,7 @@ idAccessor( localVars, setLocalVars )
 	[self setSchemes:[aParent schemes]];
 	[self setLocalVars:[NSMutableDictionary dictionary]];
 	[self bindValue:[NSNumber numberWithBool:YES] toVariableNamed:@"true"];
+	[self bindValue:[NSNumber numberWithDouble:M_PI] toVariableNamed:[NSString stringWithFormat:@"%C",(unsigned short)960]];
 	[self bindValue:[NSNumber numberWithBool:NO] toVariableNamed:@"false"];
 	[self bindValue:[NSNil nsNil] toVariableNamed:@"nil"];
 //	[self bindValue:self toVariableNamed:@"context"];

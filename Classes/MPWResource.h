@@ -12,13 +12,13 @@
 @interface MPWResource : NSObject {
 	id			source;
 	NSData		*rawData;
-	NSString	*mimetype;
+	NSString	*MIMEType;
 	id			_value;
     NSError     *error;
 }
 
 objectAccessor_h( NSData, rawData, setRawData )
-objectAccessor_h( NSString, mimetype, setMimetype )
+objectAccessor_h( NSString, MIMEType, setMIMEType )
 objectAccessor_h( NSError, error, setError)
 idAccessor_h( source, setSource )
 

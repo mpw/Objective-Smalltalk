@@ -91,6 +91,14 @@ idAccessor(storedContext, setStoredContext)
     return [[self _baseBindingForBinding:aBinding] setValue:newValue];
 }
 
+-(void)setBaseRef:(MPWBinding *)aRef
+{
+    MPWBinding *resolved=[aRef bindNames];
+	[self setSource:[resolved scheme]];
+	[self setBaseIdentifier:[[resolved identifier] identifierName]];
+    
+}
+
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
 {
 	self=[super init];

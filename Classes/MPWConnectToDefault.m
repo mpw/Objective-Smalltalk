@@ -32,7 +32,7 @@ idAccessor( lhs, setLhs )
 //    NSLog(@"input: %@",input);
 //    NSLog(@"output: %@",output);
     if ( [input connect:output]) {
-        NSLog(@"did connect");
+//        NSLog(@"did connect");
         return [input sendsMessages] ? right : left;
     } else {
         NSLog(@"did not connect");

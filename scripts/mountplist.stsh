@@ -1,7 +1,7 @@
 #!/usr/local/bin/stsh
 
 context loadFramework:'ObjectiveHTTPD'.
-context loadFramework:'SchemeFUSE' .
+#context loadFramework:'SchemeFUSE' .
 server := MPWSchemeHttpServer new.
 server server setPort: 8082.
 
@@ -14,9 +14,9 @@ server setScheme: theScheme.
 scheme:base := theScheme.
 
 server start:nil.
-fs1 := MPWSchemeFilesystem alloc initWithScheme: theScheme.
-fuse := GMUserFileSystem alloc initWithDelegate:fs1 isThreadSafe:1.
-fs := fuse mountAtPath:'/Volumes/SchemeFS' withOptions:nil.
+#fs1 := MPWSchemeFilesystem alloc initWithScheme: theScheme.
+#fuse := GMUserFileSystem alloc initWithDelegate:fs1 isThreadSafe:1.
+#fs := fuse mountAtPath:'/Volumes/SchemeFS' withOptions:nil.
 
 
 shell runInteractiveLoop.

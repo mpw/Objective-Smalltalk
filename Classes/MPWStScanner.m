@@ -173,7 +173,6 @@ boolAccessor( noNumbers, setNoNumbers )
 static inline int decodeUTF8FirstByte( int ch, int *numChars)
 {
     int retval=0;
-    int firstByteSoFar=0;
     if ( ch <= 0x7f) {
         retval = ch;
         *numChars=0;
@@ -210,7 +209,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     for (int i=0;i<numRemainderBytes;i++) {
         theChar=(theChar<< 6) | ((*cur++) & 0x3f);
     }
-    pos=cur;
+    pos=(const char*)cur;
     return theChar;
 }
 
