@@ -28,6 +28,7 @@ static NSMutableDictionary *conversionDict;
                @(@encode(CGSize)): [MPWBoxerUnboxer nspointBoxer],
                @(@encode(CGRect)): [MPWBoxerUnboxer nsrectBoxer],
                @(@encode(NSRect)): [MPWBoxerUnboxer nsrectBoxer],
+               @(@encode(NSRange)): [MPWBoxerUnboxer nsrangeBoxer],
                  } mutableCopy] autorelease];
 }
 
@@ -196,11 +197,14 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
                             NSLog(@"boxer: %@",boxer);
                             if ( boxer ) {
                                 [boxer unboxObject:arg intoBuffer:buffer maxBytes:128];
+                                argp=buffer;
                                 break;
+#if 0
                             } else if ( !strcmp(type,"{?=II}") ||  !strcmp( type, "{_NSRange=II}" )||  !strcmp( type, "{_NSRange=QQ}" )) {
 								rangeArg = [arg asNSRange];
 								argp=&rangeArg;
 								break;
+#endif
                             } else if (  !strcmp( type, "{CATransform3D=dddddddddddddddd}")  ) {
                                 MPWRealArray *array=arg;
                                 for (int i=0;i<16;i++) {
@@ -310,10 +314,12 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
                 if ( boxer ) {
                     returnValue=[boxer boxedObjectForBuffer:returnBuffer maxBytes:32];
                     break;
+#if 0
                 } else if ( !strcmp( returnType, @encode(NSRange) )) {
 					NSRange rangeVal = *(NSRange*)returnBuffer;
 					returnValue=[MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
 					break;
+#endif
 				} else if (  !strcmp( returnType, "{_NSSize=ff}" )) {
 					NSSize sizeVal = *(NSSize*)returnBuffer;
 					returnValue=[MPWPoint pointWithNSSize:sizeVal];

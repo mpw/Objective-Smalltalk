@@ -8,9 +8,20 @@
 
 #import "MPWBoxerUnboxer.h"
 #import  <MPWFoundation/MPWFoundation.h>
+#import  <MPWFoundation/AccessorMacros.h>
+#import "MPWInterval.h"
 
 @interface MPWNSPointBoxer : MPWBoxerUnboxer  @end
 @interface MPWNSRectBoxer : MPWBoxerUnboxer  @end
+@interface MPWBlockBoxer : MPWBoxerUnboxer
+
+-initWithBoxer:(BoxBlock)newBoxer unboxer:(UnboxBlock)newUnboxer;
+
+@property (strong,nonatomic) UnboxBlock unboxBlock;
+@property (strong,nonatomic) BoxBlock boxBlock;
+
+
+@end
 
 @implementation MPWBoxerUnboxer
 
@@ -27,8 +38,23 @@
 
 +nsrangeBoxer
 {
-    return nil;
+    return [self boxer:^id(void *buffer, int maxBytes) {
+        NSRange rangeVal=*(NSRange*)buffer;
+        return [MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
+    } unboxer:^(id anObject, void *buffer, int maxBytes) {
+        NSLog(@"unbox range: %@",anObject);
+        NSRange *res=(NSRange*)buffer;
+        *res = [(MPWInterval*)anObject asNSRange];
+        NSLog(@"unbox result: %@",NSStringFromRange(*res));
+    }];
 }
+
+
++boxer:(BoxBlock)newBoxer unboxer:(UnboxBlock)newUnboxer
+{
+    return [[[MPWBlockBoxer alloc] initWithBoxer:newBoxer unboxer:newUnboxer] autorelease];
+}
+
 
 -(void)unboxObject:anObject intoBuffer:(void*)buffer maxBytes:(int)maxBytes
 {
@@ -76,3 +102,31 @@
 }
 
 @end
+
+
+
+@implementation MPWBlockBoxer
+
+-initWithBoxer:(BoxBlock)newBoxer unboxer:(UnboxBlock)newUnboxer
+{
+    self=[super init];
+    self.boxBlock = newBoxer;
+    self.unboxBlock = newUnboxer;
+    return self;
+}
+
+
+
+-(void)unboxObject:anObject intoBuffer:(void*)buffer maxBytes:(int)maxBytes
+{
+    self.unboxBlock( anObject, buffer, maxBytes);
+}
+
+-boxedObjectForBuffer:(void*)buffer maxBytes:(int)maxBytes
+{
+    return self.boxBlock( buffer, maxBytes);
+}
+
+@end
+
+
