@@ -8,6 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
+@class MPWBoxerUnboxer;
 
 @interface MPWMessage : MPWObject {
 	SEL	selector;
@@ -18,6 +19,9 @@
 +messageWithSelector:(SEL)aSelector initialReceiver:msgReceiver;
 
 -sendTo:aReceiver withArguments:(id*)args count:(int)argCount;
+
++(void)setBoxer:(MPWBoxerUnboxer*)aBoxer forTypeString:(NSString*)typeString;
+
 
 @end
 

@@ -10,11 +10,35 @@
 #import "MPWInterval.h"
 #import "MPWFastMessage.h"
 #import <MPWFoundation/NSNil.h>
+#import "MPWBoxerUnboxer.h"
 
 @implementation MPWMessage
 
 scalarAccessor( SEL, selector, setSelector )
 idAccessor( _signature, setSignature )
+
+static NSMutableDictionary *conversionDict;
+
+-(NSMutableDictionary*)createConversionDict
+{
+    return [[@{
+               @(@encode(NSPoint)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(CGPoint)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(NSSize)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(CGSize)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(CGRect)): [MPWBoxerUnboxer nsrectBoxer],
+               @(@encode(NSRect)): [MPWBoxerUnboxer nsrectBoxer],
+                 } mutableCopy] autorelease];
+}
+
+
+
+lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConversionDict )
+
++(void)setBoxer:(MPWBoxerUnboxer*)aBoxer forTypeString:(NSString*)typeString
+{
+    return [[[[self new] autorelease] conversionDict] setObject:aBoxer forKey:typeString];
+}
 
 -initWithSelector:(SEL)aSelector 
 {
@@ -166,14 +190,16 @@ idAccessor( _signature, setSignature )
 								break;
 							}
 						case '{':
-							if ( !strcmp(type,"{?=II}") ||  !strcmp( type, "{_NSRange=II}" )||  !strcmp( type, "{_NSRange=QQ}" )) {
+                        {
+                            NSLog(@"type = '%s' conversionDict = %@",type,[self conversionDict]);
+                            MPWBoxerUnboxer *boxer=[[self conversionDict] objectForKey:@(type)];
+                            NSLog(@"boxer: %@",boxer);
+                            if ( boxer ) {
+                                [boxer unboxObject:arg intoBuffer:buffer maxBytes:128];
+                                break;
+                            } else if ( !strcmp(type,"{?=II}") ||  !strcmp( type, "{_NSRange=II}" )||  !strcmp( type, "{_NSRange=QQ}" )) {
 								rangeArg = [arg asNSRange];
 								argp=&rangeArg;
-								break;
-							}  else if ( !strcmp(type,"{?=ff}") || !strcmp( type, "{_NSPoint=ff}" ) || !strcmp( type, "{CGPoint=ff}" )|| !strcmp( type, "{CGPoint=dd}" )) {
-								pointArg = [arg point];
-								argp=&pointArg;
-								
 								break;
                             } else if (  !strcmp( type, "{CATransform3D=dddddddddddddddd}")  ) {
                                 MPWRealArray *array=arg;
@@ -200,7 +226,7 @@ idAccessor( _signature, setSignature )
 								argp=&rectArg;
 								break;
 							}
-							
+                                }
 						default:
 							NSLog(@"default conversion for arg: %@/%@ to %@",arg,[arg class],NSStringFromSelector(selector));
 							if ( [arg respondsToSelector:@selector(objCType)] ) {
@@ -276,19 +302,17 @@ idAccessor( _signature, setSignature )
 				returnValue=[NSNumber numberWithDouble:doubleVal];
 				break;
 			case '{':
+            {
+                NSLog(@"type = '%s' conversionDict = %@",returnType,[self conversionDict]);
+                MPWBoxerUnboxer *boxer=[[self conversionDict] objectForKey:@(returnType)];
+                NSLog(@"boxer: %@",boxer);
                 
-                
-				if ( !strcmp( returnType, @encode(NSRange) )) {
+                if ( boxer ) {
+                    returnValue=[boxer boxedObjectForBuffer:returnBuffer maxBytes:32];
+                    break;
+                } else if ( !strcmp( returnType, @encode(NSRange) )) {
 					NSRange rangeVal = *(NSRange*)returnBuffer;
 					returnValue=[MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
-					break;
-				} else if ( !strcmp( returnType, "{?=ff}" ) || !strcmp( returnType, "{_NSPoint=ff}" )) {
-					NSPoint pointVal = *(NSPoint*)returnBuffer;
-					returnValue=[MPWPoint pointWithNSPoint:pointVal];
-					break;
-				} else if ( !strcmp( returnType, "{?=dd}" ) || !strcmp( returnType, "{CGPoint=dd}") ||  !strcmp( returnType, "{CGPoint=ff}" )) {
-					NSPoint pointVal = *(NSPoint*)returnBuffer;
-					returnValue=[MPWPoint pointWithNSPoint:pointVal];
 					break;
 				} else if (  !strcmp( returnType, "{_NSSize=ff}" )) {
 					NSSize sizeVal = *(NSSize*)returnBuffer;
@@ -314,7 +338,7 @@ idAccessor( _signature, setSignature )
 					break;
 				}  
 				
-				
+                }
 			default:
 				returnValue=[NSValue valueWithBytes:returnBuffer objCType:returnType];
 				NSLog(@"couldn't convert return value of %@: %s, punting with:%@!",NSStringFromSelector(selector), returnType,returnValue);
