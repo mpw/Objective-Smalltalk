@@ -26,6 +26,7 @@ scalarAccessor_h( int, step, setStep )
 -initFrom:newFrom to:newTo;
 -objectEnumerator;
 -(NSRange)asNSRange;
+-(NSRange)rangeValue;
 -(NSRangePointer)rangePointer;
 -do:aBlock;
 

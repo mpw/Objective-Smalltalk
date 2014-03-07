@@ -131,12 +131,13 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 {
 	id scanner;
 	id optionalReturnType;
-	[self init];
+	self = [self init];
 	scanner = [MPWStScanner scannerWithData:[aString asData]];
 	if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
 		[self setReturnTypeName:optionalReturnType];
 	}
-	while ( [self parseAKeyWordFromScanner:scanner] );
+	while ( [self parseAKeyWordFromScanner:scanner] )  {
+    }
 	[self setMethodName:[[self methodKeyWords] componentsJoinedByString:@""]];
 	return self;
 }

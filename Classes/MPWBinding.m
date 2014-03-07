@@ -148,7 +148,7 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 
 -bindNames
 {
-    MPWBinding *evaluated = [[[self class] alloc] init];
+    MPWBinding *evaluated = [[[[self class] alloc] init] autorelease];
     [evaluated setScheme:[self scheme]];
     NSString *name=[[self identifier] evaluatedIdentifierNameInContext:[self defaultContext]];
     id newIdentifier=[[[[[self identifier] class] alloc] init] autorelease];

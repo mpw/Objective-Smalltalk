@@ -483,7 +483,7 @@ idAccessor( connectorMap, setConnectorMap );
 //					NSLog(@"got more of a non-keyword: %@",keyword);
 					[self pushBack:keyword];
                     if ( [self isSpecialSelector:keyword] ) {
-                        id subExpr = [[MPWMessageExpression alloc] initWithReceiver:arg];
+                        id subExpr = [[[MPWMessageExpression alloc] initWithReceiver:arg] autorelease];
                         [subExpr setOffset:[scanner offset]];
                         [subExpr setLen:1];
                         [self parseSelectorAndArgs:subExpr];
@@ -527,7 +527,7 @@ idAccessor( connectorMap, setConnectorMap );
     id next;
     while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {
         [self pushBack:next];
-        expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
+        expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         [expr setOffset:[scanner offset]];
         [expr setLen:1];
 //		NSLog(@"message expression with receiver: %@",expr);

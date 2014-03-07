@@ -101,7 +101,10 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
                     }
                     [plist addObject:@{ @"name" : [e name],
                      @"reason": [e reason],
-                     @"userInfo": [e userInfo]} ];
+                                        @"userInfo": [e userInfo],
+                                        @"stack": stackTrace,
+                                        }
+                     ];
                 }
                 
                 

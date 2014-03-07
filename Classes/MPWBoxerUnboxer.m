@@ -26,6 +26,44 @@
 @implementation MPWBoxerUnboxer
 
 
+
+static NSMutableDictionary *conversionDict;
+
++(NSMutableDictionary*)createConversionDict
+{
+    return [[@{
+               @(@encode(NSPoint)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(CGPoint)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(NSSize)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(CGSize)): [MPWBoxerUnboxer nspointBoxer],
+               @(@encode(CGRect)): [MPWBoxerUnboxer nsrectBoxer],
+               @(@encode(NSRect)): [MPWBoxerUnboxer nsrectBoxer],
+               @(@encode(NSRange)): [MPWBoxerUnboxer nsrangeBoxer],
+               } mutableCopy] autorelease];
+}
+
+static NSMutableDictionary *conversionDict;
+
++(NSMutableDictionary*)conversionDict
+{
+    if ( !conversionDict ) {
+        conversionDict=[[self createConversionDict] retain];
+    }
+    return conversionDict;
+}
+
+
++(void)setBoxer:(MPWBoxerUnboxer*)aBoxer forTypeString:(NSString*)typeString
+{
+    return [[self conversionDict] setObject:aBoxer forKey:typeString];
+}
+
++(MPWBoxerUnboxer*)converterForType:(const char*)typeString
+{
+    return [[self conversionDict] objectForKey: @(typeString)];
+}
+
+
 +nspointBoxer
 {
     return [[MPWNSPointBoxer new] autorelease];
@@ -42,9 +80,8 @@
         NSRange rangeVal=*(NSRange*)buffer;
         return [MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
     } unboxer:^(id anObject, void *buffer, int maxBytes) {
-        NSLog(@"unbox range: %@",anObject);
         NSRange *res=(NSRange*)buffer;
-        *res = [(MPWInterval*)anObject asNSRange];
+        *res=[anObject rangeValue];
         NSLog(@"unbox result: %@",NSStringFromRange(*res));
     }];
 }

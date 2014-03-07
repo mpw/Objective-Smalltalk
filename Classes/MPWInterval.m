@@ -191,6 +191,10 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	return range;
 }
 
+-(NSRange)rangeValue {
+	return range;
+}
+
 -(NSRangePointer)rangePointer {
 	return &range;
 }

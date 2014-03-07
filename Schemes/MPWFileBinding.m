@@ -151,7 +151,7 @@ idAccessor( url , setUrl )
 			} else {
 				newPath=[selfPath stringByAppendingPathComponent:otherPath];
 			}
-			return [[[self class] alloc] initWithPath:newPath];
+			return [[[[self class] alloc] initWithPath:newPath] autorelease];
 		}
 	}
 	return nil;

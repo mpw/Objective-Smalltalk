@@ -20,7 +20,6 @@
 
 -sendTo:aReceiver withArguments:(id*)args count:(int)argCount;
 
-+(void)setBoxer:(MPWBoxerUnboxer*)aBoxer forTypeString:(NSString*)typeString;
 
 
 @end

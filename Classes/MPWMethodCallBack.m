@@ -356,12 +356,12 @@ idAccessor( method, _setMethod )
 	id returnValue;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
-	[method setScript:@"aScript"];
+	[method setScript:@"dummyReturnValueInsteadOfActualMethodBody"];
 	[callback setMethod:method];
 	[callback setName:@"xxxDummyMulti:andMore:"];
 	[callback installInClass:[target class] withSignature:"@@:@@"];
 	returnValue = [target xxxDummyMulti:@"testArg1" andMore:@"testArg2"];
-//	IDEXPECT( returnValue, expectedReturn, @"expected return of install");
+	IDEXPECT( returnValue, @"dummyReturnValueInsteadOfActualMethodBody", @"expected return of install");
 }
 
 +(void)testUndoOverride

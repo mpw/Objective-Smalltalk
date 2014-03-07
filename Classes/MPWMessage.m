@@ -17,29 +17,12 @@
 scalarAccessor( SEL, selector, setSelector )
 idAccessor( _signature, setSignature )
 
-static NSMutableDictionary *conversionDict;
 
--(NSMutableDictionary*)createConversionDict
+-(MPWBoxerUnboxer*)converterForType:(const char*)typeString
 {
-    return [[@{
-               @(@encode(NSPoint)): [MPWBoxerUnboxer nspointBoxer],
-               @(@encode(CGPoint)): [MPWBoxerUnboxer nspointBoxer],
-               @(@encode(NSSize)): [MPWBoxerUnboxer nspointBoxer],
-               @(@encode(CGSize)): [MPWBoxerUnboxer nspointBoxer],
-               @(@encode(CGRect)): [MPWBoxerUnboxer nsrectBoxer],
-               @(@encode(NSRect)): [MPWBoxerUnboxer nsrectBoxer],
-               @(@encode(NSRange)): [MPWBoxerUnboxer nsrangeBoxer],
-                 } mutableCopy] autorelease];
+    return [MPWBoxerUnboxer converterForType:typeString];
 }
 
-
-
-lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConversionDict )
-
-+(void)setBoxer:(MPWBoxerUnboxer*)aBoxer forTypeString:(NSString*)typeString
-{
-    return [[[[self new] autorelease] conversionDict] setObject:aBoxer forKey:typeString];
-}
 
 -initWithSelector:(SEL)aSelector 
 {
@@ -118,10 +101,6 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
 			if ( argCount == [sig numberOfArguments]-2 ) {
 				for (i=0;i<argCount;i++) {
 					int invocationIndex=i+2;
-					NSRange rangeArg;
-					NSPoint pointArg;
-					NSSize sizeArg;
-					NSRect rectArg;
                     SEL selArg;
 					char buffer[128];
                     double doubleBuffer[32];
@@ -192,19 +171,12 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
 							}
 						case '{':
                         {
-                            NSLog(@"type = '%s' conversionDict = %@",type,[self conversionDict]);
-                            MPWBoxerUnboxer *boxer=[[self conversionDict] objectForKey:@(type)];
+                            MPWBoxerUnboxer *boxer=[self converterForType:type];
                             NSLog(@"boxer: %@",boxer);
                             if ( boxer ) {
                                 [boxer unboxObject:arg intoBuffer:buffer maxBytes:128];
                                 argp=buffer;
                                 break;
-#if 0
-                            } else if ( !strcmp(type,"{?=II}") ||  !strcmp( type, "{_NSRange=II}" )||  !strcmp( type, "{_NSRange=QQ}" )) {
-								rangeArg = [arg asNSRange];
-								argp=&rangeArg;
-								break;
-#endif
                             } else if (  !strcmp( type, "{CATransform3D=dddddddddddddddd}")  ) {
                                 MPWRealArray *array=arg;
                                 for (int i=0;i<16;i++) {
@@ -219,16 +191,6 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
                                 }
                                 argp=array;
                                 break;
-							} else if (  !strcmp( type, "{_NSSize=ff}" ) || !strcmp( type, "{CGSize=ff}") ||  !strcmp( type, "{CGSize=dd}" ) ) {
-								sizeArg = [arg asSize];
-								argp=&sizeArg;
-								break;
-							}  if (   !strcmp( type, "{?=ffff}" ) || !strcmp( type, "{_NSRect={_NSPoint=ff}{_NSSize=ff}}" )||
-									  !strcmp( type, "{CGRect={CGPoint=ff}{CGSize=ff}}") ||
-                                              !strcmp( type, "{CGRect={CGPoint=dd}{CGSize=dd}}"  )) {
-								rectArg = [arg rect];
-								argp=&rectArg;
-								break;
 							}
                                 }
 						default:
@@ -264,7 +226,7 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
 	float floatVal;
 	double doubleVal;
 	long long longLongVal;
-	unsigned char returnBuffer[128];
+	unsigned char returnBuffer[256];
 	const char *returnType=[_signature methodReturnType];
 	
 	if ( returnType!=nil &&  *returnType != 'v' ) {
@@ -307,44 +269,14 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
 				break;
 			case '{':
             {
-                NSLog(@"type = '%s' conversionDict = %@",returnType,[self conversionDict]);
-                MPWBoxerUnboxer *boxer=[[self conversionDict] objectForKey:@(returnType)];
-                NSLog(@"boxer: %@",boxer);
+                MPWBoxerUnboxer *boxer=[self converterForType:returnType];
                 
                 if ( boxer ) {
-                    returnValue=[boxer boxedObjectForBuffer:returnBuffer maxBytes:32];
+                    returnValue=[boxer boxedObjectForBuffer:returnBuffer maxBytes:sizeof returnBuffer];
                     break;
-#if 0
-                } else if ( !strcmp( returnType, @encode(NSRange) )) {
-					NSRange rangeVal = *(NSRange*)returnBuffer;
-					returnValue=[MPWInterval intervalFromInt:rangeVal.location toInt:rangeVal.location+rangeVal.length-1];
-					break;
-#endif
-				} else if (  !strcmp( returnType, "{_NSSize=ff}" )) {
-					NSSize sizeVal = *(NSSize*)returnBuffer;
-					returnValue=[MPWPoint pointWithNSSize:sizeVal];
-					break;
-				} else if (  !strcmp( returnType, "{CGSize=dd}") || !strcmp( returnType, "{CGSize=ff}" )  ) {
-					NSSize sizeVal = *(NSSize*)returnBuffer;
-					returnValue=[MPWPoint pointWithNSSize:sizeVal];
-					break;
-				} else if (  !strcmp( returnType, "{CATransform3D=dddddddddddddddd}")  ) {
-                    double *ptr=(double*)returnBuffer;
-                    MPWRealArray *array=[MPWRealArray arrayWithCapacity:16];
-                    for (int i=0;i<16;i++) {
-                        [array addReal:ptr[i]];
-                    }
-                    returnValue=array;
-					break;
-				} else  if ( !strcmp( returnType, "{?={?=ff}{?=ff}}" ) || !strcmp( returnType, "{_NSRect={_NSPoint=ff}{_NSSize=ff}}" ) ||
-                        !strcmp( returnType, "{CGRect={CGPoint=ff}{CGSize=ff}}" )  || 
-                        !strcmp( returnType, "{CGRect={CGPoint=dd}{CGSize=dd}}" ) ) {
-					NSRect rectVal = *(NSRect*)returnBuffer;
-					returnValue=[[[MPWRect alloc] initWithRect:rectVal] autorelease];
-					break;
-				}  
+				}
 				
-                }
+            }
 			default:
 				returnValue=[NSValue valueWithBytes:returnBuffer objCType:returnType];
 				NSLog(@"couldn't convert return value of %@: %s, punting with:%@!",NSStringFromSelector(selector), returnType,returnValue);
@@ -406,6 +338,12 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
     return NSMakeRange(3, 42);
 }
 
+
++(MPWInterval*)__nsrangeArgTester:(NSRange)hi
+{
+    return [MPWInterval intervalFromInt:hi.location toInt:hi.location+hi.length-1];;
+}
+
 +(NSPoint)__nspointTester
 {
     return NSMakePoint(3.12, 23.23);
@@ -429,6 +367,20 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
     IDEXPECT(result, [MPWInterval intervalFrom:@(3) to:@(44)], @"nsrange to interval");
 }
 
++(void)testNSRangeArgument
+{
+    NSString *tester=@"Hello World!";
+    MPWInterval *trivial=[MPWInterval intervalFromInt:1 toInt:10];
+    MPWInterval *result=[[MPWMessage messageWithSelector:@selector(__nsrangeArgTester:)] sendTo:self withArguments:@[ trivial ]];
+    
+    IDEXPECT(result, trivial, @"trival");
+    
+    MPWMessage* msg=[MPWMessage messageWithSelector:@selector(substringWithRange:)];
+    NSString* substringresult = [msg sendTo:tester withArguments:@[ [MPWInterval intervalFromInt:6 toInt:10] ]];
+    
+    IDEXPECT(substringresult, @"World", @"interval to nsrange");
+}
+
 +(void)testPointReturn
 {
     MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nspointTester)];
@@ -436,6 +388,8 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
     FLOATEXPECTTOLERANCE([result x], 3.12, 0.000001, @"x");
     FLOATEXPECTTOLERANCE([result y], 23.23, 0.000001, @"y");
 }
+
+
 
 +(void)testRectReturn
 {
@@ -455,6 +409,7 @@ lazyAccessor(NSMutableDictionary,conversionDict, setConversionDict, createConver
             @"testNSRangeReturn",
             @"testPointReturn",
             @"testRectReturn",
+            @"testNSRangeArgument",
         nil];
 }
 

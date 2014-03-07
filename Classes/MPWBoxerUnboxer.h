@@ -25,4 +25,8 @@ typedef void (^UnboxBlock)(id anObject, void *buffer, int maxBytes);
 
 +boxer:(BoxBlock)newBoxer unboxer:(UnboxBlock)newUnboxer;
 
+
++(void)setBoxer:(MPWBoxerUnboxer*)aBoxer forTypeString:(NSString*)typeString;
++(MPWBoxerUnboxer*)converterForType:(const char*)typeString;
+
 @end

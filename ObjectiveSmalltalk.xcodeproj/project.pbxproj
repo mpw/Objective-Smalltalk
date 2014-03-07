@@ -395,9 +395,9 @@
 		1FDCCB3B139A60FC00F5F273 /* MPWDefaultsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDCCB37139A60FC00F5F273 /* MPWDefaultsScheme.m */; };
 		1FDCCB3C139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */; };
 		1FDCCB3D139A60FC00F5F273 /* MPWDefaultsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDCCB37139A60FC00F5F273 /* MPWDefaultsScheme.m */; };
-		1FDD4E7118C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */; };
-		1FDD4E7218C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */; };
-		1FDD4E7318C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */; };
+		1FDD4E7118C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FDD4E7218C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FDD4E7318C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDD4E7418C8627E00339AEE /* MPWBoxerUnboxer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDD4E7018C8627E00339AEE /* MPWBoxerUnboxer.m */; };
 		1FDD4E7518C8627E00339AEE /* MPWBoxerUnboxer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDD4E7018C8627E00339AEE /* MPWBoxerUnboxer.m */; };
 		1FDD4E7618C8627E00339AEE /* MPWBoxerUnboxer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDD4E7018C8627E00339AEE /* MPWBoxerUnboxer.m */; };
