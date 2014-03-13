@@ -19,10 +19,20 @@
 			<key>orderHint</key>
 			<integer>35</integer>
 		</dict>
+		<key>MethodServer.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 		<key>MethodServer.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>47</integer>
+		</dict>
+		<key>ObjSTNative.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
 		</dict>
 		<key>ObjSTNative.xcscheme_^#shared#^_</key>
 		<dict>
@@ -34,10 +44,34 @@
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>
+		<key>ObjectiveSmalltalk-iOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>ObjectiveSmalltalk.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>SchemeFS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>SchemeFS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>49</integer>
+		</dict>
+		<key>SchemeFUSE.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>7</integer>
 		</dict>
 		<key>SchemeFUSE.xcscheme_^#shared#^_</key>
 		<dict>
@@ -52,12 +86,22 @@
 		<key>StshFramework.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>70</integer>
+			<integer>9</integer>
+		</dict>
+		<key>iMethodServer.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
 		</dict>
 		<key>iMethodServer.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>48</integer>
+		</dict>
+		<key>stsh.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
 		</dict>
 		<key>stsh.xcscheme_^#shared#^_</key>
 		<dict>

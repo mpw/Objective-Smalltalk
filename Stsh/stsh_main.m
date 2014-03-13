@@ -8,7 +8,7 @@
 
 
 #import <MPWFoundation/MPWFoundation.h>
-#import <Stsh/MPWStsh.h>
+#import "MPWStsh.h"
 
 
 int main (int argc, const char *argv[])
