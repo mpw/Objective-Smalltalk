@@ -93,13 +93,12 @@ objectAccessor(NSError, error, setError)
         MPWResource *result=[[[MPWResource alloc] init] autorelease];
         [result setSource:aURL];
         [result setRawData:rawData];
-        [result setMimetype:[self mimeTypeForData:rawData andResponse:response]];
+        [result setMIMEType:[self mimeTypeForData:rawData andResponse:response]];
         return result;
     } else {
         return nil;
     }
 }
-
 
 
 -getWithArgs
