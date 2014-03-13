@@ -6,7 +6,7 @@
 //  Copyright 2007 Marcel Weiher. All rights reserved.
 //
 
-#import <Stsh/MPWShellCommand.h>
+#import "MPWShellCommand.h"
 
 
 @interface MPWObjectPipeCommand : MPWShellCommand {
