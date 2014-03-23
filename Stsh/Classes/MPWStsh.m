@@ -8,9 +8,17 @@
 
 #import "MPWStsh.h"
 #import <histedit.h>
+#include <readline/readline.h>
+
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import "MPWShellCompiler.h"
 #import "MPWStScript.h"
+#import "MPWObjectMirror.h"
+#import "MPWClassMirror.h"
+#import "MPWMethodMirror.h"
+
+
+
 
 @implementation MPWStsh
 
@@ -124,8 +132,60 @@ static const char * promptfn(EditLine *e) {
     return prompt;
 }
 
+char *command_generator(char *word, int state) {
+    char *options[] = {"I_love_math", "he_love_math", "she_loves_math", "they_love_math", NULL};
+    return options[state] ? strdup(options[state]) : NULL;
+}
+
+
 -(BOOL)doCompletionWithLine:(EditLine*)e character:(char)ch
 {
+    
+    const LineInfo *lineInfo = el_line(e);
+    if ( lineInfo) {
+        const char *start=lineInfo->buffer;
+        const char *end=lineInfo->lastchar;
+        NSString *s=[[[NSString alloc] initWithBytes:start length:end-start encoding:NSUTF8StringEncoding] autorelease];
+
+        MPWExpression *expr=nil;
+        NSException *exception=nil;
+        MPWStCompiler *evaluator=[self _evaluator];
+        @try {
+            expr=[evaluator compile:s];
+            if ( [expr isKindOfClass:[MPWIdentifierExpression class]]) {
+                MPWIdentifierExpression *expression=(MPWIdentifierExpression*)expr;
+                MPWBinding* binding=[[evaluator localVars] objectForKey:[expression name]];
+                id value=[binding value];
+                if ( value ) {
+                    if ( [s hasSuffix:@" "]) {
+                        MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value] ;
+                        MPWClassMirror *cm=[om classMirror];
+                        for (MPWMethodMirror *mm in [cm methodMirrors]) {
+                            fprintf(stderr, "%s\n",[[mm name] UTF8String]);
+                        }
+                        
+                    } else {
+                        el_insertstr(e," ");
+                        return YES;
+                    }
+                } else {
+//                    NSMutableArray *prefixMatches=[NSMutableArray array];
+                    fprintf(stderr, "\n");
+                    NSArray *localVarNames=[[evaluator localVars] allKeys];
+                    for (NSString *localName in localVarNames) {
+                        if ([localName hasPrefix:[expression name]] ) {
+//                            [prefixMatches addObject:localName];
+                            fprintf(stderr, "%s\n",[localName UTF8String]);
+                        }
+                    }
+                }
+                
+                
+            }
+        } @catch ( id e){
+            exception=e;
+        }
+    }
 #if 0
     // do real completion here
     if ( numTabs++ & 1 == 1) {
@@ -140,11 +200,11 @@ static const char * promptfn(EditLine *e) {
     return NO;
 }
 
-static const char * completionfun(EditLine *e, char ch) {
+static const char completionfun(EditLine *e, char ch) {
     MPWStsh* self = nil;
     el_get(e, EL_CLIENTDATA,&self);
     [self doCompletionWithLine:e character:ch];
-    return CC_REFRESH;
+    return CC_REDISPLAY;
 }
 
 -(void)cd:(NSString*)newDir
@@ -195,6 +255,13 @@ idAccessor( retval, setRetval )
     int count=1000;
     history_ptr=history_init();
     el=el_init( "stsh", stdin, stdout, stderr);
+
+    rl_readline_name = "rl_example";
+    rl_completion_entry_function = (void*)command_generator;
+    rl_initialize();
+    rl_parse_and_bind("TAB: menu-complete");
+
+    
     el_set(el, EL_CLIENTDATA, self);
     el_set( el, EL_HIST, history, history_ptr );
     el_set(el, EL_EDITOR, "emacs");
@@ -204,7 +271,7 @@ idAccessor( retval, setRetval )
     
     history(history_ptr, &event, H_SETSIZE, 800);
 	[self setEcho:YES];
-    while (  (lineOfInput=el_gets(el,&count) )) {
+    while ( (lineOfInput=el_gets(el,&count) ) /*  (lineOfInput=readline("> ")) */) {
         char *save;
  		if ( (lineOfInput[0]!='#') || (lineOfInput[1]=='(') ) {
 			id pool=[NSAutoreleasePool new];
