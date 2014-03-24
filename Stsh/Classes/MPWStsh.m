@@ -16,7 +16,7 @@
 #import "MPWObjectMirror.h"
 #import "MPWClassMirror.h"
 #import "MPWMethodMirror.h"
-
+#import "MPWMessageExpression.h"
 
 
 
@@ -137,6 +137,62 @@ char *command_generator(char *word, int state) {
     return options[state] ? strdup(options[state]) : NULL;
 }
 
+-(NSArray *)messageNamesForObject:value matchingPrefix:(NSString*)prefix
+{
+    NSMutableArray *messages=[NSMutableArray array];
+    MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value] ;
+    MPWClassMirror *cm=[om classMirror];
+    for (MPWMethodMirror *mm in [cm methodMirrors]) {
+        if ( !prefix || [prefix length]==0 || [[mm name] hasPrefix:prefix]) {
+            [messages addObject:[mm name]];
+        }
+    }
+    return messages;
+}
+
+-(void)printCompletions:(NSArray *)names
+{
+    for ( NSString *name in names) {
+        fprintf(stderr, "%s\n",[name UTF8String]);
+    }
+}
+
+-(NSArray *)variableNamesMatchingPrefix:(NSString*)prefix
+{
+    NSMutableArray *varNames=[NSMutableArray array];
+    NSArray *localVarNames=[[[self _evaluator] localVars] allKeys];
+    for (NSString *localName in localVarNames) {
+        if ([localName hasPrefix:prefix] ) {
+            [varNames addObject:localName];
+        }
+    }
+    return varNames;
+}
+
+-(NSString*)commonPrefixInNames:(NSArray*)names
+{
+    NSString *commonPrefix=[names firstObject];
+    for ( NSString *name in names) {
+        while ( ![name hasPrefix:commonPrefix] && [commonPrefix length]>0 ) {
+            commonPrefix=[commonPrefix substringToIndex:[commonPrefix length]-1];
+        }
+        if ( [commonPrefix length]==0) {
+            break;
+        }
+    }
+    return  commonPrefix;
+}
+
+-(void)completeName:(NSString*)currentName withNames:(NSArray*)names inEditLine:(EditLine*)e
+{
+    NSString *commonPrefix=[self commonPrefixInNames:names];
+    if ( [commonPrefix length] >0 ) {
+        el_insertstr(e, [[commonPrefix substringFromIndex:[currentName length]] UTF8String]);
+    }
+    if ([names count]>1) {
+        [self printCompletions:names];
+    }
+}
 
 -(BOOL)doCompletionWithLine:(EditLine*)e character:(char)ch
 {
@@ -151,6 +207,7 @@ char *command_generator(char *word, int state) {
         NSException *exception=nil;
         MPWStCompiler *evaluator=[self _evaluator];
         @try {
+            fprintf(stderr, "\n");
             expr=[evaluator compile:s];
             if ( [expr isKindOfClass:[MPWIdentifierExpression class]]) {
                 MPWIdentifierExpression *expression=(MPWIdentifierExpression*)expr;
@@ -158,29 +215,33 @@ char *command_generator(char *word, int state) {
                 id value=[binding value];
                 if ( value ) {
                     if ( [s hasSuffix:@" "]) {
-                        MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value] ;
-                        MPWClassMirror *cm=[om classMirror];
-                        for (MPWMethodMirror *mm in [cm methodMirrors]) {
-                            fprintf(stderr, "%s\n",[[mm name] UTF8String]);
-                        }
-                        
+                        [self printCompletions:[self messageNamesForObject:value matchingPrefix:nil]];
                     } else {
                         el_insertstr(e," ");
                         return YES;
                     }
                 } else {
-//                    NSMutableArray *prefixMatches=[NSMutableArray array];
-                    fprintf(stderr, "\n");
-                    NSArray *localVarNames=[[evaluator localVars] allKeys];
-                    for (NSString *localName in localVarNames) {
-                        if ([localName hasPrefix:[expression name]] ) {
-//                            [prefixMatches addObject:localName];
-                            fprintf(stderr, "%s\n",[localName UTF8String]);
-                        }
-                    }
+                    NSString *n=[expression name];
+                    [self completeName:n withNames:[self variableNamesMatchingPrefix:n] inEditLine:e];
+//                    [self printCompletions:[self variableNamesMatchingPrefix:[expression name]]];
                 }
                 
                 
+            } else if ( [expr isKindOfClass:[MPWMessageExpression class]]) {
+                MPWMessageExpression *msg=(MPWMessageExpression*)expr;
+                id receiver = [[msg receiver] evaluateIn:[self _evaluator]];
+                if ( [s hasSuffix:@" "] ) {
+                    id value=[msg evaluateIn:[self _evaluator]];
+                    NSArray *msgNames=[self messageNamesForObject:value matchingPrefix:nil];
+                    [self printCompletions:msgNames];
+                } else if ( [receiver respondsToSelector:[msg selector]]) {
+                    el_insertstr(e," ");
+                    return YES;
+                } else {
+                    NSString *name=NSStringFromSelector([msg selector]);
+                    NSArray *msgNames=[self messageNamesForObject:receiver matchingPrefix:name];
+                    [self completeName:name withNames:msgNames inEditLine:e];
+                }
             }
         } @catch ( id e){
             exception=e;
