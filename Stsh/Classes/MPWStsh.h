@@ -18,6 +18,7 @@
 	id		retval;
     NSString *prompt;
     char  cstrPrompt[200];
+    int   completionLimit;
 }
 +(void)runWithArgs:args;
 -(void)addExternalCommand:(NSString*)externalCommandName;

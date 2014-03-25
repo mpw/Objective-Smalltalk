@@ -26,6 +26,8 @@ boolAccessor( readingFile, _setReadingFile )
 boolAccessor( echo, setEcho )
 idAccessor( _evaluator, _setEvaluator )
 objectAccessor(NSString, prompt, _setPrompt)
+intAccessor(completionLimit, setCompletionLimit)
+
 
 -evaluator
 {
@@ -102,6 +104,7 @@ objectAccessor(NSString, prompt, _setPrompt)
 		[self setEvaluator:newEvaluator];
 		[[self evaluator] bindValue:args toVariableNamed:@"args"];
 		[[self evaluator] bindValue:self toVariableNamed:@"shell"];
+        [self setCompletionLimit:120];
     }
     return self;
 }
@@ -132,28 +135,121 @@ static const char * promptfn(EditLine *e) {
     return prompt;
 }
 
-char *command_generator(char *word, int state) {
-    char *options[] = {"I_love_math", "he_love_math", "she_loves_math", "they_love_math", NULL};
-    return options[state] ? strdup(options[state]) : NULL;
+-(NSSet *)lessInterestingMessageNames
+{
+    static NSSet *lessInteresting=nil;
+    if (!lessInteresting) {
+        lessInteresting=[[NSSet alloc] initWithArray:
+                @[
+                  @"dealloc",
+                  @"finalize",
+                  @"copy",
+                  @"copyWithZone:",
+                  @"hash",
+                  @"isEqual:",
+                  @"release",
+                  @"autorelease",
+                  @"retain",
+                  @"retainCount",
+                  @"isKindOfClass:",
+                  @"initWithCoder:",
+                  @"encodeWithCoder:",
+                  @"classForCoder",
+                  @"valueForKey:",
+                  @"takeValue:forKey:",
+                  @"setValue:forKey",
+                  @"self",
+                  @"zone",
+                  @"
+                ]];
+    }
+    return lessInteresting;
+}
+
+-(NSArray *)sortMessageNamesByImportance:(NSArray *)incomingMessageNames
+{
+    NSMutableArray *firstTier=[NSMutableArray array];
+    NSMutableArray *secondTier=[NSMutableArray array];
+    for ( NSString *messageName in incomingMessageNames) {
+        if ( [messageName hasPrefix:@"_"] ||
+             [[self lessInterestingMessageNames] containsObject:messageName] )
+        {
+            [secondTier addObject:messageName];
+        } else {
+            [firstTier addObject:messageName];
+        }
+    }
+    
+    return [firstTier arrayByAddingObjectsFromArray:secondTier];
 }
 
 -(NSArray *)messageNamesForObject:value matchingPrefix:(NSString*)prefix
 {
+    NSMutableSet *alreadySeen=[NSMutableSet set];
     NSMutableArray *messages=[NSMutableArray array];
     MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value] ;
     MPWClassMirror *cm=[om classMirror];
-    for (MPWMethodMirror *mm in [cm methodMirrors]) {
-        if ( !prefix || [prefix length]==0 || [[mm name] hasPrefix:prefix]) {
-            [messages addObject:[mm name]];
+    while ( cm ){
+        for (MPWMethodMirror *mm in [cm methodMirrors]) {
+            NSString *methodName = [mm name];
+            
+            if ( (!prefix || [prefix length]==0 || [methodName hasPrefix:prefix]) &&
+                ![alreadySeen containsObject:methodName]) {
+                [messages addObject:methodName];
+                [alreadySeen addObject:methodName];
+            }
         }
+        cm=[cm superclassMirror];
     }
-    return messages;
+    return [self sortMessageNamesByImportance:messages];
 }
+
+-(int)terminalWidth
+{
+    struct winsize w;
+    ioctl(0, TIOCGWINSZ, &w);
+        
+    return w.ws_col;
+}
+
 
 -(void)printCompletions:(NSArray *)names
 {
-    for ( NSString *name in names) {
-        fprintf(stderr, "%s\n",[name UTF8String]);
+    int numEntries=MIN([self completionLimit],(int)[names count]);
+    int numColumns=1;
+    int terminalWidth=[self terminalWidth];
+    int minSpacing=2;
+    int maxWidth=0;
+    int columnWidth=0;
+    int numRows=0;
+    for  (int i=0; i<numEntries;i++ ){
+        if ( [names[i] length] > maxWidth ) {
+            maxWidth=(int)[names[i] length];
+        }
+    }
+    numColumns=terminalWidth / (maxWidth+minSpacing);
+    numColumns=MAX(numColumns,1);
+    columnWidth=terminalWidth/(numColumns);
+    numRows=numEntries/numColumns;
+    
+
+    for ( int i=0; i<numRows;i++ ){
+        for (int j=0;j<numColumns;j++) {
+            int theItemIndex=i*numColumns + j;
+            
+            if ( theItemIndex < [names count]) {
+                NSString *theItem=names[theItemIndex];
+                fprintf(stderr, "%.*s",columnWidth,[theItem UTF8String]);
+                if (j<numColumns-1) {
+                    int pad =columnWidth-(int)[theItem length];
+                    pad=MIN(MAX(pad,0),columnWidth);
+                    for (int sp=0;sp<pad;sp++) {
+                        putc(' ', stderr);
+                    }
+                }
+            }
+        }
+        putc('\n', stderr);
     }
 }
 
@@ -168,6 +264,7 @@ char *command_generator(char *word, int state) {
     }
     return varNames;
 }
+
 
 -(NSString*)commonPrefixInNames:(NSArray*)names
 {
@@ -186,17 +283,15 @@ char *command_generator(char *word, int state) {
 -(void)completeName:(NSString*)currentName withNames:(NSArray*)names inEditLine:(EditLine*)e
 {
     NSString *commonPrefix=[self commonPrefixInNames:names];
-    if ( [commonPrefix length] >0 ) {
+    if ( [commonPrefix length] > [currentName length]) {
         el_insertstr(e, [[commonPrefix substringFromIndex:[currentName length]] UTF8String]);
-    }
-    if ([names count]>1) {
+    } else if ([names count]>1) {
         [self printCompletions:names];
     }
 }
 
 -(BOOL)doCompletionWithLine:(EditLine*)e character:(char)ch
 {
-    
     const LineInfo *lineInfo = el_line(e);
     if ( lineInfo) {
         const char *start=lineInfo->buffer;
@@ -317,10 +412,6 @@ idAccessor( retval, setRetval )
     history_ptr=history_init();
     el=el_init( "stsh", stdin, stdout, stderr);
 
-    rl_readline_name = "rl_example";
-    rl_completion_entry_function = (void*)command_generator;
-    rl_initialize();
-    rl_parse_and_bind("TAB: menu-complete");
 
     
     el_set(el, EL_CLIENTDATA, self);

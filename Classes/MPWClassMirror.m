@@ -20,8 +20,12 @@
 
 -initWithClass:(Class)aClass
 {
-	self=[super init];
-	theClass=aClass;
+	if ( (self=[super init]) && aClass ) {
+        theClass=aClass;
+    } else {
+        [self release];
+        self=nil;
+    }
 	return self;
 }
 
