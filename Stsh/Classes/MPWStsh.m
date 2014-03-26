@@ -160,7 +160,6 @@ static const char * promptfn(EditLine *e) {
                   @"setValue:forKey",
                   @"self",
                   @"zone",
-                  @"
                 ]];
     }
     return lessInteresting;
@@ -172,6 +171,7 @@ static const char * promptfn(EditLine *e) {
     NSMutableArray *secondTier=[NSMutableArray array];
     for ( NSString *messageName in incomingMessageNames) {
         if ( [messageName hasPrefix:@"_"] ||
+             [messageName hasPrefix:@"accessibility"] || 
              [[self lessInterestingMessageNames] containsObject:messageName] )
         {
             [secondTier addObject:messageName];
@@ -253,6 +253,19 @@ static const char * promptfn(EditLine *e) {
     }
 }
 
+-(NSArray *)classNamesMatchingPrefix:(NSString*)prefix
+{
+    NSArray *allClasses=[MPWClassMirror allClasses];
+    NSMutableArray *matchingClassNames=[NSMutableArray array];
+    for ( MPWClassMirror *cm in allClasses ) {
+        NSString *name=[cm name];
+        if ( !prefix || [prefix length]==0 || [name hasPrefix:prefix]) {
+            [matchingClassNames addObject:name];
+        }
+    }
+    return matchingClassNames;
+}
+
 -(NSArray *)variableNamesMatchingPrefix:(NSString*)prefix
 {
     NSMutableArray *varNames=[NSMutableArray array];
@@ -265,6 +278,10 @@ static const char * promptfn(EditLine *e) {
     return varNames;
 }
 
+-(NSArray *)identifiersMatchingPrefix:(NSString*)prefix
+{
+    return [[self variableNamesMatchingPrefix:prefix] arrayByAddingObjectsFromArray:[self classNamesMatchingPrefix:prefix]];
+}
 
 -(NSString*)commonPrefixInNames:(NSArray*)names
 {
@@ -317,7 +334,7 @@ static const char * promptfn(EditLine *e) {
                     }
                 } else {
                     NSString *n=[expression name];
-                    [self completeName:n withNames:[self variableNamesMatchingPrefix:n] inEditLine:e];
+                    [self completeName:n withNames:[self identifiersMatchingPrefix:n] inEditLine:e];
 //                    [self printCompletions:[self variableNamesMatchingPrefix:[expression name]]];
                 }
                 
