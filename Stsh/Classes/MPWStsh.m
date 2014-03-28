@@ -230,7 +230,7 @@ static const char * promptfn(EditLine *e) {
     numColumns=terminalWidth / (maxWidth+minSpacing);
     numColumns=MAX(numColumns,1);
     columnWidth=terminalWidth/(numColumns);
-    numRows=numEntries/numColumns;
+    numRows=(numEntries+numColumns-1)/numColumns;
     
 
     for ( int i=0; i<numRows;i++ ){
