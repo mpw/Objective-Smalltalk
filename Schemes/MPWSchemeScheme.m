@@ -9,6 +9,7 @@
 #import "MPWSchemeScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWVARBinding.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWSchemeScheme
 
@@ -43,7 +44,8 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 	id localVars = [self localVarsForContext:aContext];
 	id binding=nil;
 //    NSLog(@"scheme %p: localVars: %@",self,localVars);
-	binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];		
+	binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
+    [binding setIdentifier:[MPWIdentifier identifierWithName:variableName]];
 //    NSLog(@"binding: %@",binding);
 	return binding;
 }
@@ -53,6 +55,22 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 {
 	return [[self schemes] objectForKey:aKey];
 }
+
+-(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
+{
+    NSArray *allNames=[[self schemes] allKeys];
+    NSMutableArray *bindings=[NSMutableArray array];
+    for ( NSString *variableName in allNames) {
+        [bindings addObject:[self bindingForName:variableName inContext:aContext]];
+    }
+    return bindings;
+}
+
+-(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
+{
+    return [[[super completionsForPartialName:partialName inContext:aContext] collect] stringByAppendingString:@":"];
+}
+
 
 -description
 {

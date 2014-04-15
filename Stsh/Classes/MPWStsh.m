@@ -256,7 +256,7 @@ static const char * promptfn(EditLine *e) {
 
 -(NSArray *)schemesToCheck
 {
-    return @[ @"var", @"class",];
+    return @[ @"var", @"class", @"scheme"];
 }
 
 -(NSArray *)identifiersMatchingPrefix:(NSString*)prefix
@@ -318,9 +318,14 @@ static const char * promptfn(EditLine *e) {
                         return YES;
                     }
                 } else {
-                    NSString *n=[expression name];
-                    [self completeName:n withNames:[self identifiersMatchingPrefix:n] inEditLine:e];
+                    if ( [expression scheme] && [_evaluator schemeForName:[expression scheme]]) {
+                        [self completeName:[expression name] withNames:[[_evaluator schemeForName:[expression scheme]] completionsForPartialName:[expression name] inContext:_evaluator] inEditLine:e];
+                    } else {
+
+                        NSString *n=[expression name];
+                        [self completeName:n withNames:[self identifiersMatchingPrefix:n] inEditLine:e];
 //                    [self printCompletions:[self variableNamesMatchingPrefix:[expression name]]];
+                    }
                 }
                 
                 
