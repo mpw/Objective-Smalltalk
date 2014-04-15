@@ -99,9 +99,10 @@
 }
 
 
+
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
-    NSArray *potentialChildren=[self childrenOf:nil inContext:aContext];
+    NSArray *potentialChildren=[self childrenOf:[self bindingForName:@"." inContext:aContext] inContext:aContext];
     NSMutableArray *names=[NSMutableArray array];
     for ( MPWBinding *binding in potentialChildren) {
         NSString *name = [binding name];

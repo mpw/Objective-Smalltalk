@@ -28,6 +28,25 @@
     }
 }
 
+
+-(NSArray*)childrenOf:(MPWBinding*)binding
+{
+    return [binding children];
+}
+
+-(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
+{
+    NSArray *childNames = [[self bindingForName:@"." inContext:aContext] childNames];
+    NSMutableArray *names=[NSMutableArray array];
+    for ( NSString *name in childNames) {
+        if ( !partialName || [partialName length]==0 || [name hasPrefix:partialName]) {
+            [names addObject:name];
+        }
+    }
+    return names;
+}
+
+
 @end
 #import "MPWStCompiler.h"
 
