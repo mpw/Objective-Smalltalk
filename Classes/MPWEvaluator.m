@@ -19,6 +19,7 @@
 #import "MPWSchemeScheme.h"
 #import "MPWVarScheme.h"
 #import "MPWSELScheme.h"
+#import "MPWFrameworkScheme.h"
 
 @implementation NSNumber(controlStructures)
 
@@ -93,6 +94,7 @@ idAccessor( _schemes, setSchemes )
 	[schemes setSchemeHandler:[[MPWSELScheme new] autorelease] forSchemeName:@"sel"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];
+	[schemes setSchemeHandler:[MPWFrameworkScheme scheme] forSchemeName:@"framework"];
 	return schemes;
 }
 
@@ -239,7 +241,9 @@ idAccessor( localVars, setLocalVars )
 {
     int i,max;
     for (i=0,max=[args count]; i<max;i++ ) {
+//        NSLog(@"== will evaluate arg %d of %d: %@",i,max,[args objectAtIndex:i]);
 		id evalResult = [self evaluate:[args objectAtIndex:i]];
+//        NSLog(@"== did evaluate to %p, nil-check",evalResult);
 		if ( ![evalResult isNotNil] ) {
 			evalResult=[NSNil nsNil];
 		}

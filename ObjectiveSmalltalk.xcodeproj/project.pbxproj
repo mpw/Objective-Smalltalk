@@ -341,6 +341,10 @@
 		1FBAAC1E184BDC6400086047 /* stsh.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FBAAC1D184BDC6400086047 /* stsh.1 */; };
 		1FBAAC27184BDD8200086047 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FBAAC28184BDD8900086047 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1FBFEBA218FD3DBB009D42E2 /* MPWFrameworkScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */; };
+		1FBFEBA318FD3DBB009D42E2 /* MPWFrameworkScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */; };
+		1FBFEBA418FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */; };
+		1FBFEBA518FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */; };
 		1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
 		1FC2EEF6186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FC2EEF4186CEAB200B3D06F /* MPWLLVMAssemblyGenerator.h */; };
 		1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF5186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m */; };
@@ -655,6 +659,8 @@
 		1FBAAC58184BE03500086047 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = usr/lib/libedit.dylib; sourceTree = SDKROOT; };
 		1FBAAC5A184BE03B00086047 /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = usr/lib/libncurses.dylib; sourceTree = SDKROOT; };
 		1FBAD8131436297C0050D6DE /* MPWFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundation.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development/MPWFoundation.framework"; sourceTree = "<group>"; };
+		1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFrameworkScheme.h; sourceTree = "<group>"; };
+		1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFrameworkScheme.m; sourceTree = "<group>"; };
 		1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "empty-class.llvm-templateasm"; path = "test-compiles/empty-class.llvm-templateasm"; sourceTree = "<group>"; };
 		1FC2EEF4186CEAB200B3D06F /* MPWLLVMAssemblyGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLLVMAssemblyGenerator.h; sourceTree = "<group>"; };
 		1FC2EEF5186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLLVMAssemblyGenerator.m; sourceTree = "<group>"; };
@@ -940,6 +946,8 @@
 				1F80973615A72A77004AB773 /* MPWPlistScheme.m */,
 				1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */,
 				1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */,
+				1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */,
+				1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */,
 			);
 			path = Schemes;
 			sourceTree = "<group>";
@@ -1460,6 +1468,7 @@
 				1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */,
 				1F88E8AD138ADC1600199F03 /* MPWFileBinding.h in Headers */,
 				1F88E8AF138ADC1600199F03 /* MPWURLSchemeResolver.h in Headers */,
+				1FBFEBA218FD3DBB009D42E2 /* MPWFrameworkScheme.h in Headers */,
 				1F88E8B1138ADC1600199F03 /* MPWURLBinding.h in Headers */,
 				1F88E8B3138ADC1600199F03 /* MPWEnvScheme.h in Headers */,
 				1F88E8B5138ADC1600199F03 /* MPWGenericBinding.h in Headers */,
@@ -1538,6 +1547,7 @@
 				1F88E8DD138ADCCA00199F03 /* MPWResource.h in Headers */,
 				1FDCCB3C139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */,
 				1F90B40413A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */,
+				1FBFEBA318FD3DBB009D42E2 /* MPWFrameworkScheme.h in Headers */,
 				1FDD4E7318C8627E00339AEE /* MPWBoxerUnboxer.h in Headers */,
 				1FA5F492147CE04A007EE753 /* MPWTreeNode.h in Headers */,
 				1FD713CE1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
@@ -2043,6 +2053,7 @@
 				1FA2EBD21861A55F0091E840 /* MPWMessageScheme.m in Sources */,
 				1F5E507E09B4B754000298D9 /* MPWGetAccessor.m in Sources */,
 				1F5E507F09B4B754000298D9 /* MPWScriptedMethod.m in Sources */,
+				1FBFEBA418FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */,
 				1F5E508009B4B754000298D9 /* MPWMethod.m in Sources */,
 				1F5E508109B4B754000298D9 /* MPWMethodType.m in Sources */,
 				1F5E508209B4B754000298D9 /* MPWMethodStore.m in Sources */,
@@ -2171,6 +2182,7 @@
 				1FE08F07137808EA003B18B9 /* MPWFastMessage.m in Sources */,
 				1FE08F08137808EA003B18B9 /* MPWMethodType.m in Sources */,
 				1FE08F09137808EA003B18B9 /* MPWEvaluator.m in Sources */,
+				1FBFEBA518FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */,
 				1FE08F0A137808EA003B18B9 /* MPWInterval.m in Sources */,
 				1FE08F0B137808EA003B18B9 /* MPWStCompiler.m in Sources */,
 				1FE08F0C137808EA003B18B9 /* MPWBlockContext.m in Sources */,

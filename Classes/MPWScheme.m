@@ -35,6 +35,7 @@
 	return nil;
 }
 
+
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
 	MPWBinding *binding = [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
@@ -87,6 +88,29 @@
     return [[[MPWCopyOnWriteScheme alloc] initWithBase:self cache:otherScheme] autorelease];
 }
 
+-(NSArray*)childrenOf:(MPWBinding*)aBinding
+{
+    return @[];
+}
+
+-(NSArray*)childrenOf:(MPWBinding*)aBinding inContext:aContext
+{
+    return [self childrenOf:aBinding];
+}
+
+
+-(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
+{
+    NSArray *potentialChildren=[self childrenOf:nil inContext:aContext];
+    NSMutableArray *names=[NSMutableArray array];
+    for ( MPWBinding *binding in potentialChildren) {
+        NSString *name = [binding name];
+        if ( !partialName || [partialName length]==0 || [name hasPrefix:partialName]) {
+            [names addObject:name];
+        }
+    }
+    return names;
+}
 
 
 @end

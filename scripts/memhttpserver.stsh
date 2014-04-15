@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'ObjectiveHTTPD'.
+framework:ObjectiveHTTPD load.
 scheme:site := MPWSiteMap scheme.
 site:/hi := 'Hello World!'.
 (scheme:site -> (MPWSchemeHttpServer serverOnPort:8081)) start:nil.

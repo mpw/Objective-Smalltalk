@@ -40,10 +40,10 @@ objectAccessor( NSMutableArray, schemes, setSchemes)
 {
 	MPWBinding *binding = nil;
 	for ( MPWScheme *scheme in [self schemes] ) {
-//		NSLog(@"scheme: %@",scheme);
+		NSLog(@"scheme: %@",scheme);
 		binding = [scheme bindingWithIdentifier:anIdentifier withContext:aContext];
-//		NSLog(@"binding: %@",binding);
-		if ( binding /* && [binding isBound] */ ) {
+		NSLog(@"binding: %@",binding);
+		if ( binding  && [binding isBound]  ) {
 //			NSLog(@"found it!");
 			break;
 		}

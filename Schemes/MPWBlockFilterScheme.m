@@ -40,12 +40,12 @@ idAccessor( valueFilter, setValueFilter)
 
 -_baseBindingForBinding:(MPWGenericBinding*)aBinding
 {
-    //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
+    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
     if (  [aBinding scheme] != [self source] ) {
         //        NSLog(@"modifying non var-scheme later");
         aBinding=[self _bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
-    //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
+        MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
     return aBinding;
 }
 
@@ -53,7 +53,7 @@ idAccessor( valueFilter, setValueFilter)
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
     aBinding = [self _baseBindingForBinding:aBinding];
-//    NSLog(@"path: %@",[aBinding path]);
+    NSLog(@"path: %@",[aBinding path]);
     id value=[[self source] valueForBinding:aBinding];
     if ( valueFilter){
 //        NSLog(@"will filter: %p/%@",value,[value class]);

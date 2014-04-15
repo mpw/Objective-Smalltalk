@@ -112,7 +112,7 @@ static NSMutableDictionary *conversionDict;
 
 -(void)unboxObject:anObject intoBuffer:(void*)buffer maxBytes:(int)maxBytes
 {
-    *(NSPoint*)buffer = [anObject pointValue];
+    *(NSPoint*)buffer = [(MPWPoint*)anObject pointValue];
 }
 
 -boxedObjectForBuffer:(void*)buffer maxBytes:(int)maxBytes

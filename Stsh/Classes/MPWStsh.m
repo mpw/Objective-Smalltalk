@@ -253,34 +253,19 @@ static const char * promptfn(EditLine *e) {
     }
 }
 
--(NSArray *)classNamesMatchingPrefix:(NSString*)prefix
-{
-    NSArray *allClasses=[MPWClassMirror allClasses];
-    NSMutableArray *matchingClassNames=[NSMutableArray array];
-    for ( MPWClassMirror *cm in allClasses ) {
-        NSString *name=[cm name];
-        if ( !prefix || [prefix length]==0 || [name hasPrefix:prefix]) {
-            [matchingClassNames addObject:name];
-        }
-    }
-    return matchingClassNames;
-}
 
--(NSArray *)variableNamesMatchingPrefix:(NSString*)prefix
+-(NSArray *)schemesToCheck
 {
-    NSMutableArray *varNames=[NSMutableArray array];
-    NSArray *localVarNames=[[[self _evaluator] localVars] allKeys];
-    for (NSString *localName in localVarNames) {
-        if ([localName hasPrefix:prefix] ) {
-            [varNames addObject:localName];
-        }
-    }
-    return varNames;
+    return @[ @"var", @"class",];
 }
 
 -(NSArray *)identifiersMatchingPrefix:(NSString*)prefix
 {
-    return [[self variableNamesMatchingPrefix:prefix] arrayByAddingObjectsFromArray:[self classNamesMatchingPrefix:prefix]];
+    NSMutableArray *completions=[NSMutableArray array];
+    for ( NSString *schemeName in [self schemesToCheck]) {
+        [completions addObjectsFromArray:[[_evaluator schemeForName:schemeName] completionsForPartialName:prefix inContext:_evaluator]];
+    }
+    return completions;
 }
 
 -(NSString*)commonPrefixInNames:(NSArray*)names

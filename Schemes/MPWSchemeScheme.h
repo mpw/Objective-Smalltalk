@@ -9,7 +9,7 @@
 #import "MPWVarScheme.h"
 
 
-@interface MPWSchemeScheme : MPWVarScheme  {
+@interface MPWSchemeScheme : MPWVarScheme {
 	NSMutableDictionary *_schemes;
 }
 

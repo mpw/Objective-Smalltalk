@@ -9,6 +9,7 @@
 #import "MPWVarScheme.h"
 #import "MPWVARBinding.h"
 #import "MPWEvaluator.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWVarScheme
 
@@ -29,6 +30,7 @@
         remainder=[variableName substringFromIndex:firstPathSeparator.location+1];
     }
     theBinding=[aContext bindingForLocalVariableNamed:firstName];
+    [theBinding setIdentifier:[MPWIdentifier identifierWithName:firstName]];
     if ( isCompound) {
 		theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
     }
@@ -53,6 +55,19 @@
 {
     return [[self bindingForName:[aBinding name] inContext:[aBinding defaultContext]] value ];
 }
+
+
+-(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
+{
+    NSArray *allNames=[[aContext localVars] allKeys];
+    NSMutableArray *bindings=[NSMutableArray array];
+    for ( NSString *variableName in allNames) {
+        [bindings addObject:[self bindingForName:variableName inContext:aContext]];
+    }
+    return bindings;
+}
+
+
 
 @end
 

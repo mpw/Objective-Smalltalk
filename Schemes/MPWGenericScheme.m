@@ -57,9 +57,8 @@
 
 -(NSArray*)childrenOf:(MPWGenericBinding*)binding
 {
-    return [NSArray array];
+    return @[];
 }
-
 
 
 @end

@@ -8,16 +8,37 @@
 
 #import "MPWClassScheme.h"
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWBinding.h"
+#import "MPWGenericBinding.h"
+#import "MPWIdentifier.h"
+#import "MPWClassMirror.h"
 
 @implementation MPWClassScheme
 
 
 -bindingForName:aName inContext:aContext
 {
-     id binding = [MPWBinding bindingWithValue:NSClassFromString(aName)];
+    id binding = [MPWGenericBinding bindingWithName:aName scheme:self];
 	return binding;
 }
+
+
+-valueForBinding:(MPWGenericBinding*)aBinding
+{
+    return NSClassFromString([aBinding name]);
+}
+
+-(NSArray*)childrenOf:(MPWGenericBinding*)binding
+{
+    //  yes, it ignores the binding passed in
+    NSArray *allClasses=[MPWClassMirror allClasses];
+    NSMutableArray *bindings=[NSMutableArray array];
+    for ( MPWClassMirror *cm in allClasses ) {
+        [bindings addObject:[self bindingForName:[cm name] inContext:nil]];
+    }
+    return bindings;
+}
+
+
 
 
 @end

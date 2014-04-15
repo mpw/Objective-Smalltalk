@@ -22,5 +22,7 @@
 -(NSArray*)childrenOf:(MPWGenericBinding*)binding;
 -(NSArray*)pathArrayForPathString:(NSString*)uri;
 
+-(NSArray *)completionsForPartialName:(NSString *)partialName;
+
 
 @end

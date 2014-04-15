@@ -37,10 +37,10 @@ intAccessor_h( current, setCurrent )
 -(void)setFrom:(int)newFrom { range.location=newFrom; }
 -(void)setTo:(int)newTo { range.length = newTo - range.location + 1; }
 
--(int)random
+-(NSNumber*)random
 {
     double weight=drand48();
-    return [self from] * weight + (1-weight) * [self to];
+    return [NSNumber numberWithInt:[self from] * weight + (1-weight) * [self to]];
 }
 
 //scalarAccessor( int, from, setFrom )
