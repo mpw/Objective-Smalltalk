@@ -96,7 +96,7 @@ typedef id (^ZeroArgBlock)(void);
 -invokeWithArgs:(va_list)args
 {
     NSMutableArray *argArray=[NSMutableArray arrayWithCapacity:[[[self block] arguments] count]];
-    for ( NSString *paramName in [[self block] arguments] ) {
+    for (int i=0,max=[[[self block] arguments] count];i<max;i++ ) {
         [argArray addObject:va_arg(args, id)];
     }
     return [self evaluateIn_block:[self evaluationContext] arguments:argArray];
@@ -218,6 +218,8 @@ typedef id  (^idBlock)(id arg );
     
 }
 
+#ifndef __clang_analyzer__
+// This test leaks, but it's supposed to do so
 
 +(void)testRetainedSTBlockOriginalAutoreleased
 {
@@ -231,9 +233,9 @@ typedef id  (^idBlock)(id arg );
     NSNumber *retval=copiedBlock(@(12));
     IDEXPECT(retval, @(22), @"retval");
     Block_release(copiedBlock);
-    
-    
 }
+
+#endif
 
 +(void)testBlock_copiedSTBlockOriginalAutoreleased
 {

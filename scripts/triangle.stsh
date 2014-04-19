@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'EGOS_Cocoa'.
+framework:EGOS_Cocoa load.
 c := MPWCGPDFContext pdfContextWithTarget:(MPWByteStream fileName:'triangle.pdf') size:595@842.
 
 c page:nil content:[ :c |

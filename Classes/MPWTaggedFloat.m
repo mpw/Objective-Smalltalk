@@ -40,16 +40,6 @@ static inline float floatValue( id ptr )
 }
 
 
-static inline id taggedMul( id x1, id x2 )
-{
-    return float2ptr( floatValue(x1) * floatValue(x2));
-}
-
-static inline id taggedAdd( id x1, id x2 )
-{
-    return float2ptr( floatValue(x1) + floatValue(x2));
-}
-
 +(BOOL)isBlock
 {
     return NO;

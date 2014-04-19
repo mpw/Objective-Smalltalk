@@ -415,7 +415,7 @@ idAccessor( method, _setMethod )
 	id returnValue;
 	id expectedReturn = @"47"; // [target evaluateScript:@"45" onObject:target];
 	id expectedSuperclassReturn = @"43"; // [target evaluateScript:@"45" onObject:target];
-	IMP function;
+//	IMP function;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
     //	[method setContext:target];
 	[method setScript:@"47"];
@@ -426,7 +426,7 @@ idAccessor( method, _setMethod )
 	IDEXPECT( returnValue, expectedSuperclassReturn, @"expected return for subclassbefore  we installed the method");
 
 	[callback installInClass:[target class] withSignature:"@@:"];
-	function = [callback function];
+//	function = [callback function];
 //	returnValue = function( target, @selector(answerToEverythingWillOverrideInSubclass) );
     returnValue = (id)[target answerToEverythingWillOverrideInSubclass];
 

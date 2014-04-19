@@ -271,7 +271,7 @@ idAccessor( localVars, setLocalVars )
 -sendMessage:(SEL)selector to:receiver withArguments:args
 {	
 	id nilValue = [NSNil nsNil];
-	id returnValue = nilValue;
+	id returnValue;
 	id evaluatedReceiver = [self evaluate:receiver];
 	id evaluatedArgs[[args count]+5];
 	[self evaluatedArgs:args into:evaluatedArgs];

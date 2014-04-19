@@ -458,15 +458,14 @@ idAccessor( connectorMap, setConnectorMap );
 
 -parseSelectorAndArgs:expr
 {
-    id selector;
+    id selector=[self parseKeywordOrUnary];
     id args=nil;
-	selector=[self parseKeywordOrUnary];
 //	NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
     if ( selector && isalpha( *(unsigned char*)[selector bytes] )) {
         BOOL isKeyword =[selector isKeyword];
         if ( isKeyword  ) {
             args=[NSMutableArray array];
-            selector=[selector mutableCopy];
+            selector=[[selector mutableCopy] autorelease];
             while ( isKeyword ) {
                 //---  issue:  the following should really be a full expression parse...
                 id arg=[self parseUnary];

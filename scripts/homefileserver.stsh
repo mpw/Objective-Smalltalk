@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'ObjectiveHTTPD' .
+framework:ObjectiveHTTPD load.
 server := MPWSchemeHttpServer new.
 server server setPort:8081.
 base := ref:file:{env:HOME}/Sites asScheme.

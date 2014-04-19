@@ -1,10 +1,10 @@
 #!/usr/local/bin/stsh
-context loadFramework:'ReactiveCocoa'.
+framework:ReactiveCocoa load.
 signal := ((RACSignal interval:1) startWith:NSDate date) map:[ :date | val := date stringValue. stdout println:val. val. ].
 a := NSMutableDictionary dictionary.
 var:a/b := 2.
-trampoline := (RACSubscriptingAssignmentTrampoline alloc initWithTarget:a nilValue:nil)
+trampoline := (RACSubscriptingAssignmentTrampoline alloc initWithTarget:a nilValue:nil).
 trampoline setObject:signal forKeyedSubscript:'b'.
 NSRunLoop currentRunLoop runUntilDate:(NSDate dateWithTimeIntervalSinceNow:2).
-stdout println:'after runloop'
+stdout println:'after runloop'.
 2.

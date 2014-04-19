@@ -39,6 +39,7 @@ scalarAccessor_h(MPWEvaluator*, defaultContext, setDefaultContext)
 -(NSArray*)childNames;
 -(NSArray*)allLinks;
 -bindNames;
+-name;
 
 
 @end

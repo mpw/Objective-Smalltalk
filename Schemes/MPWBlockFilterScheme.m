@@ -46,7 +46,7 @@ idAccessor( valueFilter, setValueFilter)
         aBinding=[self _bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
     }
         MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
-    return aBinding;
+    return binding;
 }
 
 

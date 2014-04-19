@@ -24,11 +24,13 @@ idAccessor( lhs, setLhs )
     id left=[[[self lhs] evaluateIn:aContext] defaultComponentInstance];
     id right=[[[self rhs] evaluateIn:aContext]defaultComponentInstance];
     
+    NSDictionary *leftPorts = [left ports];
+    NSDictionary *rightPorts = [right ports];
 //    NSLog(@"left: %@",left);
 //    NSLog(@"right: %@",right);
     
-    id input=[right ports][@"IN"];
-    id output=[left ports][@"OUT"];
+    id input=rightPorts[@"IN"];
+    id output=leftPorts[@"OUT"];
 //    NSLog(@"input: %@",input);
 //    NSLog(@"output: %@",output);
     if ( [input connect:output]) {

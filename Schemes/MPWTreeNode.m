@@ -257,6 +257,7 @@ idAccessor( content, setContent )
 	child2=[root mkdir:@"child2"];
 	allSubnodes=[root allSubnodes];
 	INTEXPECT( [allSubnodes count] ,3 ,@"allSubnodes with root and 2 children");
+    IDEXPECT( [child2 path], @"/child2", @"child2 path");
 }
 
 +(void)testMkdirs

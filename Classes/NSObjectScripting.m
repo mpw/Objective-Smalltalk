@@ -166,6 +166,9 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
 
 #endif
 
+#ifndef __clang_analyzer__
+// This leaks because we are installing into the runtime, can't remove after
+
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariables:(NSString*)varsAsString
 {
 	NSArray *vars=[varsAsString componentsSeparatedByString:@" "];\
@@ -174,6 +177,8 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
     [className getCString:class_name maxLength:len encoding:NSASCIIStringEncoding];
     return CreateClassDefinition( class_name, self , vars );
 }
+
+#endif
 
 +(BOOL)createSubclassWithName:(NSString*)className
 {

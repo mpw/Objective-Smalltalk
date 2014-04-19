@@ -153,6 +153,8 @@ scalarAccessor( id , compiler , setCompiler )
 	return [self methodWithClass:[MPWScriptedMethod class] header:header body:body];
 }
 
+#ifndef __clang_analyzer__
+// This leaks because we are installing into the runtime, can't remove after
 
 -(void)installMethod:(MPWMethod*)method inClass:(NSString*)className
 {
@@ -172,6 +174,8 @@ scalarAccessor( id , compiler , setCompiler )
 		[methodCallback setMethod:method];
 	}
 }
+
+#endif
 
 -(void)addMethodOnly:(MPWMethod*)method forClass:(NSString*)className
 {

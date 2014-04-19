@@ -11,6 +11,13 @@
 #import "MPWURLBinding.h"
 #import "MPWResource.h"
 
+@interface NSObject (workspaceMBethods)
+
++sharedWorkspace;
+-(void)openURL:(NSURL*)url;
+
+@end
+
 @implementation MPWFileBinding
 
 idAccessor( url , setUrl )

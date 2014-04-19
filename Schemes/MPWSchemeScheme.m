@@ -68,7 +68,7 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
-    return [[[super completionsForPartialName:partialName inContext:aContext] collect] stringByAppendingString:@":"];
+    return (NSArray*)[[[super completionsForPartialName:partialName inContext:aContext] collect] stringByAppendingString:@":"];
 }
 
 

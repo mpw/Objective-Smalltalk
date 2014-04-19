@@ -29,6 +29,8 @@
 -get:uriString;
 -get:uri parameters:params;
 
+-(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext;
+
 
 
 @end

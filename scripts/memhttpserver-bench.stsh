@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'ObjectiveHTTPD' .
+framework:ObjectiveHTTPD load.
 scheme:site := MPWSiteMap scheme.
 hello := 'Hello World!' asData mutableCopy.
 stdout println:hello.

@@ -1,6 +1,6 @@
 #!/usr/local/bin/stsh
 #-<void>fileserver:<ref>dir
-context loadFramework:'ObjectiveHTTPD'.
+framework:ObjectiveHTTPD load.
 
 server := dir -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8081).
 server start:nil.

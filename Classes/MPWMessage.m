@@ -33,10 +33,12 @@ idAccessor( _signature, setSignature )
 
 +getFastMessageForSelector:(SEL)aSelector andSignature:(NSMethodSignature*)sig
 {
+#if 0
 	int argCount = [sig numberOfArguments]-2;
 	char typestring[ argCount+2 ];
 	BOOL allIds;
 	int i;
+    MPWFastMessage *message=nil;
 	typestring[0]=*[sig methodReturnType];
 	allIds=(typestring[0]=='@');
 	for (i=0;i<argCount;i++) {
@@ -46,10 +48,13 @@ idAccessor( _signature, setSignature )
 		}
 	}
 	typestring[argCount+1]=0;
-	if ( NO && allIds ) {
-		return [MPWFastMessage messageWithSelector:aSelector typestring:typestring];
+	if (  allIds ) {
+		message = [MPWFastMessage messageWithSelector:aSelector typestring:typestring];
 	}
-	return nil;
+    return message;
+#else
+    return nil;
+#endif
 }
 
 +messageWithSelector:(SEL)aSelector initialReceiver:msgReceiver

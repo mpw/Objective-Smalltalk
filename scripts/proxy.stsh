@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'MPWSideWeb'
+framework:ObjectiveHTTPD load.
 server := MPWSchemeHttpServer new.
 server server setPort: 8082.
 stdout println: 'memhttpserver listeing in port: ',server server port stringValue.

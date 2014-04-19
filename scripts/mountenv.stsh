@@ -1,6 +1,6 @@
 #!/usr/local/bin/stsh
-context loadFramework:'MPWSideWeb' .
-context loadFramework:'SchemeFUSE' .
+framework:MPWSideWeb load.
+framework:SchemeFUSE load.
 server := MPWSchemeHttpServer new.
 server server setPort: 8082.
 stdout println: 'memhttpserver listeing in port: ',server server port stringValue.

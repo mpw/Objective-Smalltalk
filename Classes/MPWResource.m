@@ -132,7 +132,7 @@ idAccessor( source, setSource )
 
 -(NSData *)asData
 {
-    return self; //[self rawData];
+    return [self rawData];
 }
 
 -(void)dealloc

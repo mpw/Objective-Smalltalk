@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'ObjectiveHTTPD'.
+framework:ObjectiveHTTPD load.
 
 (ref:file:{env:HOME}/Sites -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
 

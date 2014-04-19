@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-context loadFramework:'MPWSideWeb'
+framework:ObjectiveHTTPD load.
 server := MPWHTTPServer new.
 server setPort:8081.
 server start:nil.

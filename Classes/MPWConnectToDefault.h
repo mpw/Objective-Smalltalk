@@ -22,4 +22,7 @@
 +defaultComponentInstance;
 -defaultInputPort;
 -defaultOutputPort;
+
+-(NSDictionary*)ports;
+
 @end
