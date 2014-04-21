@@ -154,9 +154,9 @@ idAccessor( localVars, setLocalVars )
     return binding;
 }
 
--schemeForName:schemeName
+-(MPWScheme*)schemeForName:schemeName
 {
-	id scheme;
+	MPWScheme* scheme;
 	if ( !schemeName ) {
 		schemeName=[self defaultScheme];
 	}

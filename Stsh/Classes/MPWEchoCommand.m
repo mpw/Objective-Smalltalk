@@ -54,7 +54,7 @@ idAccessor( toEcho, setToEcho )
 
 @implementation  MPWStream(wrapped)
 
--wrappedAsMPWStream
+-(MPWStream*)wrappedAsMPWStream
 {
 	return self;
 }

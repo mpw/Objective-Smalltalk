@@ -31,14 +31,14 @@ boolAccessor( isText, setIsText )
     }
 }
 
--process
+-(MPWShellProcess*)process
 {
 	id process = [MPWShellProcess processWithName:[self name]];
 	[process setDoLines:[self isText]];
 	return process;
 }
 
--processWithArgs:(NSArray*)args
+-(MPWShellProcess*)processWithArgs:(NSArray*)args
 {
 	id process=[self process];
 //	NSLog(@"%@ processWithArgs: %@",self,args);

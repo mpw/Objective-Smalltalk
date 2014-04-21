@@ -23,5 +23,11 @@
 +processWithName:(NSString*)aName;
 -initWithName:(NSString*)aName arguments:(NSArray*)args;
 
+-(void)addArguments:anArgumentArray;
+-runProcess;
+-(void)configureProcessForRunningWithStdinput:processStdin stdoutput:processStdout;
+
+boolAccessor_h( doLines , setDoLines )
+
 
 @end

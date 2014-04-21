@@ -6,7 +6,7 @@
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import "MPWExpression.h"
 
 
 @interface MPWStatementList : MPWExpression {

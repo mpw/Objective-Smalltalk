@@ -21,8 +21,16 @@
     int   completionLimit;
 }
 +(void)runWithArgs:args;
--(void)addExternalCommand:(NSString*)externalCommandName;
+-evaluator;
+-retval;
+-(void)setRetval:newRetval;
 
 
 @end
 
+
+@interface NSObject(executeInShell)
+
+-executeInShell:aShell;
+
+@end

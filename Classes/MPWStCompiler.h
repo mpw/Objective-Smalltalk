@@ -29,6 +29,7 @@
 -parseExpression;
 -parseBlock;
 -mapConnector:aConnectorExpression;
+-(MPWBinding*)bindingForString:(NSString*)fullPath;
 
 //---- method store 
 

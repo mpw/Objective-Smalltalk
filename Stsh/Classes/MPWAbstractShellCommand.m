@@ -1,15 +1,15 @@
 //
-//  MPWShellCommand.m
+//  MPWAbstractShellCommand
 //  MPWShellScriptKit
 //
 //  Created by Marcel Weiher on 22/12/2005.
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWShellCommand.h"
+#import "MPWAbstractShellCommand.h"
 
 
-@implementation MPWShellCommand
+@implementation MPWAbstractShellCommand
 
 idAccessor(name,setName )
 boolAccessor( returnsLines, setReturnsLines )
@@ -26,6 +26,21 @@ boolAccessor( returnsLines, setReturnsLines )
 	return aCommand;
 }
 
+-process
+{
+    @throw [NSException exceptionWithName:@"subclassResponsibility" reason:@"need to override -processs" userInfo:nil];
+}
+
+-runWithArgs:(NSArray*)args
+{
+    @throw [NSException exceptionWithName:@"subclassResponsibility" reason:@"need to override -runWithArgs:" userInfo:nil];
+}
+
+-processWithArgs:(NSArray*)args
+{
+    @throw [NSException exceptionWithName:@"subclassResponsibility" reason:@"need to override -processWithArgs:" userInfo:nil];
+}
+
 -pipe:otherCommand
 {
 	return [[self process] pipe:otherCommand];
@@ -40,7 +55,7 @@ boolAccessor( returnsLines, setReturnsLines )
 
 -executeInShell:aShell
 {
-//	NSLog(@"run MPWShellCommand");
+//	NSLog(@"run shell command: %@",self);
     return [self runProcess];
 }
 

@@ -679,12 +679,12 @@ idAccessor( connectorMap, setConnectorMap );
     return NO;
 }
 
--bindingForIdentifier:(MPWIdentifier*)anIdentifier
+-(MPWBinding*)bindingForIdentifier:(MPWIdentifier*)anIdentifier
 {
 	return [[self schemeForName:[anIdentifier schemeName]] bindingWithIdentifier:anIdentifier withContext:self];
 }
 
--bindingForString:(NSString*)fullPath
+-(MPWBinding*)bindingForString:(NSString*)fullPath
 {
     MPWIdentifier *identifier=nil;
 	NSArray *parts=[fullPath componentsSeparatedByString:@":"];

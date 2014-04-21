@@ -6,14 +6,15 @@
 //  Copyright 2007 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWShellCommand.h"
+#import "MPWAbstractShellCommand.h"
 
 
-@interface MPWExternalCommand : MPWShellCommand {
+@interface MPWExternalCommand : MPWAbstractShellCommand {
     id  path;
 	BOOL isText;
 }
 
 boolAccessor_h( isText, setIsText )
+-runWithArgs:(NSArray*)args;
 
 @end

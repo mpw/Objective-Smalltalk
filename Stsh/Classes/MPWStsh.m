@@ -17,7 +17,18 @@
 #import "MPWClassMirror.h"
 #import "MPWMethodMirror.h"
 #import "MPWMessageExpression.h"
+#import "MPWStatementList.h"
+#import <MPWFoundation/NSNil.h>
+#import "MPWScheme.h"
+#import <MPWFoundation/MPWByteStream.h>
+#import "MPWAbstractShellCommand.h"
+#import "MPWScriptedMethod.h"
 
+@interface NSObject(AppKitShims)
+
++sharedApplication;
+
+@end
 
 
 @implementation MPWStsh
@@ -57,8 +68,7 @@ intAccessor(completionLimit, setCompletionLimit)
 {
 	NSAutoreleasePool* pool=[NSAutoreleasePool new];
 	MPWStsh* sh;
-	id exprString = [NSString stringWithContentsOfFile:commandName];
-	id expr;
+//	NSString* exprString = [NSString stringWithContentsOfFile:commandName encoding:NSUTF8StringEncoding error:nil];
 	sh=[[[self alloc] initWithArgs:args] autorelease];
 //	[sh bindValue:commandName toVariableNamed:@"commandName"];
 	[sh setReadingFile:YES];
@@ -89,7 +99,7 @@ intAccessor(completionLimit, setCompletionLimit)
 
 -(void)runAppKit
 {
-	id app=[NSClassFromString(@"NSApplication") sharedApplication];
+	[NSClassFromString(@"NSApplication") sharedApplication];
 	[[self async] runInteractiveLoop];
 	[[NSRunLoop currentRunLoop] run];
 }
@@ -372,8 +382,10 @@ static const char completionfun(EditLine *e, char ch) {
 
 -(void)cd:(NSString*)newDir
 {
-    [newDir getCString:cwd maxLength:20000];
-    cwd[ [newDir length] ] = 0;
+    long dirLen=[newDir length];
+    dirLen=MIN(dirLen,10000);
+    [newDir getCString:cwd maxLength:dirLen encoding:NSUTF8StringEncoding];
+    cwd[ dirLen ] = 0;
     chdir(cwd);
 }
 
@@ -403,16 +415,15 @@ idAccessor( retval, setRetval )
 	}
     return [expr isKindOfClass:MPWAssignmentExpression] 
 		|| ([expr isKindOfClass:MPWStatementList] &&
-			[[expr statements] count] == 1 && 
+			[[expr statements] count] == 1 &&
 			[[[expr statements] lastObject] isKindOfClass:MPWAssignmentExpression]);
 }
 
 -(void)runInteractiveLoop
 {
-	const char* str_result=NULL;
     id result;
     EditLine *el;
-    char *lineOfInput;
+    const char *lineOfInput;
     History *history_ptr;
     HistEvent event;
     int count=1000;
@@ -440,7 +451,7 @@ idAccessor( retval, setRetval )
                 if ( [exprString hasPrefix:@"!cd"] ) {
                     NSArray *components = [exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                     NSString *last=nil;
-                    int index=[components count]-1;
+                    long index=[components count]-1;
                     while (index>0 && [last length]==0) {
                         last=[components objectAtIndex:index];
                         index--;
@@ -477,7 +488,7 @@ idAccessor( retval, setRetval )
                         fflush(stdout);
 //						[[[MPWByteStream Stderr] do] println:[result each]];
 //                        NSLog(@"result: %@/%@",[result class],result);
-						[[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:[result stringValue]];
+						[(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:[result stringValue]];
 
                         
                         //                       fprintf(stderr,"%s\n",str_result);
@@ -505,6 +516,7 @@ idAccessor( retval, setRetval )
         fflush(stdout);
         fflush(stderr);
         fprintf(stderr,"\nBye!\n");
+    exit(0);
 }
 
 
@@ -518,7 +530,7 @@ idAccessor( retval, setRetval )
     NSObject* result = [self evaluateIn:aShell];
 //	NSLog(@"result of initial eval: %s, may no run process",object_getClassName(result));
 	if ( [result isKindOfClass:[NSObject class]] && [result respondsToSelector:@selector(runProcess)] ) {
-		result = [result runProcess];
+		result = [(MPWAbstractShellCommand*)result runProcess];
 	}
 	return result;
 }

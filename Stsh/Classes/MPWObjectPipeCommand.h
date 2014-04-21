@@ -6,11 +6,14 @@
 //  Copyright 2007 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWShellCommand.h"
+#import "MPWAbstractShellCommand.h"
 
 
-@interface MPWObjectPipeCommand : MPWShellCommand {
+@interface MPWObjectPipeCommand : MPWAbstractShellCommand
+{
 	id	commandClass;
 }
+
+-initWithCommandClass:newCommandClass name:newName;
 
 @end

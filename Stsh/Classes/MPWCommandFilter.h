@@ -18,7 +18,7 @@
 	BOOL running;
 	BOOL isTarget;
 	BOOL doLines;
-	id scanner;
+	MPWScanner * scanner;
 }
 
 -initWithTarget:aTarget command:aCommand;

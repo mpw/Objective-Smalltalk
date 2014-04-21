@@ -16,6 +16,9 @@
 #import "MPWURLSchemeResolver.h"
 #import "MPWEnvScheme.h"
 #import <MPWFoundation/MPWPropertyListStream.h>
+#import "MPWAbstractShellCommand.h"
+#import "MPWStsh.h"
+
 
 @implementation MPWShellCompiler
 

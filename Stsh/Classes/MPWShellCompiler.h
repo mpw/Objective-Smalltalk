@@ -13,4 +13,6 @@
 
 }
 
+-executeShellExpression:compiledExpression;
+
 @end

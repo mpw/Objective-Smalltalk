@@ -222,7 +222,7 @@ objectAccessor( NSTask, task, setTask )
 {
     id command1,command2;
     id result;
-    int numResults=0,lines,words,characters;
+    int numResults=0,lines=0,words=0,characters=0;
     command1 = [self processWithName:@"echo"];
     command2 = [self processWithName:@"wc"];
     [command1 addArguments:[NSArray arrayWithObjects:@"Hello World!",nil]];
@@ -231,9 +231,7 @@ objectAccessor( NSTask, task, setTask )
 	NSLog(@"initial result= %@",result);
     result = [result runProcess];
 	if ( result ) {
-		numResults=sscanf( [[result stringValue] cString], "%d %d %d",&lines,&words,&characters);
-	} else {
-		NSLog(@"result= %@",result);
+		numResults=sscanf( [[result stringValue] UTF8String], "%d %d %d",&lines,&words,&characters);
 	}
     INTEXPECT( numResults, 3 , @"wc should have this many components");
 	INTEXPECT( lines,1, @"just one line");

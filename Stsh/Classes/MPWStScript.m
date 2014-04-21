@@ -90,9 +90,9 @@ idAccessor( script, setScript )
 		}
 		[[executionContext evaluator] bindValue:[[args copy] autorelease] toVariableNamed:@"args"];
     } else {
-        int missingCount=[methodHeader numArguments] - [args count];
+        long missingCount=[methodHeader numArguments] - [args count];
         NSMutableString *missingMsg;
-        missingMsg=[NSMutableString stringWithFormat:@"<script> %d missing parameters (of %d): ", missingCount,[methodHeader numArguments]];
+        missingMsg=[NSMutableString stringWithFormat:@"<script> %ld missing parameters (of %d): ", missingCount,[methodHeader numArguments]];
         for (int i=0;i<[methodHeader numArguments];i++) {
             NSString *paramName=[methodHeader argumentNameAtIndex:i];
             if ( i< [args count] ) {
@@ -107,14 +107,13 @@ idAccessor( script, setScript )
     }
 }
 
--(void)executeInContext_lines:executionContext
+-(void)executeInContext_lines:(MPWStsh *)executionContext
 {
 	id  scriptSource=[[self script] objectEnumerator];
 	int line=1;
 	NSString *exprString=nil;
 	[self processArgsFromExecutionContext:executionContext];
 	NS_DURING
-    int lineOfExpressionStart=0;
     while ( nil != (exprString=[scriptSource nextObject]) ) {
 		id pool=[NSAutoreleasePool new];
 		id expr = [[executionContext evaluator] compile:exprString];
@@ -135,7 +134,7 @@ idAccessor( script, setScript )
 	NS_ENDHANDLER
 }
 
--(void)executeInContext:executionContext
+-(void)executeInContext_whole:(MPWStsh *)executionContext
 {
     NSString *exprString=[[self script] componentsJoinedByString:@"\n"];
     [self processArgsFromExecutionContext:executionContext];
@@ -157,6 +156,11 @@ idAccessor( script, setScript )
 		[[MPWByteStream Stderr] println:[NSString stringWithFormat:@"Exception: %@ in : '%@' ",
                                          exception,exprString]];
     }
+}
+
+-(void)executeInContext:(MPWStsh *)executionContext
+{
+    [self executeInContext_lines:executionContext];
 }
 
 @end

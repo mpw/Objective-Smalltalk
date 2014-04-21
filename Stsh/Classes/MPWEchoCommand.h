@@ -16,3 +16,12 @@
 -pipe:otherCommand;
 
 @end
+
+@interface  MPWStream(wrapped)
+
+-(MPWStream*)wrappedAsMPWStream;
+-process;
+-adaptCommand:aCommand;
+-pipe:other;
+
+@end

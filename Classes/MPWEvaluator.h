@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWBinding;
+@class MPWBinding,MPWScheme;
 
 @interface MPWEvaluator : MPWObject {
 	id localVars;
@@ -42,7 +42,7 @@
 -evaluateScriptString:(NSString*)scriptString;
 
 -sendMessage:(SEL)selector to:receiver withArguments:args;
--schemeForName:schemeName;
+-(MPWScheme*)schemeForName:schemeName;
 -localVars;
 
 

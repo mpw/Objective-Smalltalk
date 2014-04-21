@@ -52,13 +52,14 @@ idAccessor( scanner ,setScanner )
 
 -initWithTarget:aTarget command:aCommand
 {
-	[super initWithTarget:aTarget];
-	[self setShellProcess:aCommand];
-	configured = NO;
-	if ( [aTarget respondsToSelector:@selector(setIsTarget:)] ) {
-		[aTarget setIsTarget:YES];
-	}
-	[self setIsTarget:YES];
+	if ( self=[super initWithTarget:aTarget] ) {
+        [self setShellProcess:aCommand];
+        configured = NO;
+        if ( [aTarget respondsToSelector:@selector(setIsTarget:)] ) {
+            [aTarget setIsTarget:YES];
+        }
+        [self setIsTarget:YES];
+    }
 	return self;
 }
 
@@ -184,6 +185,7 @@ idAccessor( scanner ,setScanner )
 
 @end
 
+#import <MPWFoundation/DebugMacros.h>
 
 @implementation MPWCommandFilter(testing)
 
