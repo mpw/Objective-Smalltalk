@@ -114,9 +114,18 @@ idAccessor( script, setScript )
 	NSString *exprString=nil;
 	[self processArgsFromExecutionContext:executionContext];
 	NS_DURING
+    NSMutableString *accumulatedExpression=[NSMutableString string];
     while ( nil != (exprString=[scriptSource nextObject]) ) {
 		id pool=[NSAutoreleasePool new];
-		id expr = [[executionContext evaluator] compile:exprString];
+        id expr = nil;
+        [accumulatedExpression appendString:exprString];
+		@try  {
+            expr = [[executionContext evaluator] compile:accumulatedExpression];
+            [accumulatedExpression setString:@""];
+        } @catch (NSException *parseException ){
+            line++;
+            continue;
+        }
 		id localResult = [[executionContext evaluator] executeShellExpression:expr];
 		if ( [self hasDeclaredReturn] ) {
 			[executionContext setRetval:localResult];

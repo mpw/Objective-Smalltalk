@@ -1,0 +1,5 @@
+#!/usr/local/bin/stsh
+#-<void>pdfsh:<ref>file
+context loadFramework:'EGOS_Cocoa'.
+pdf := MPWPDFDocument alloc initWithData: file value.
+shell runInteractiveLoop

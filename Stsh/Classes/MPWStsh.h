@@ -8,19 +8,21 @@
 
 #import <MPWFoundation/MPWObject.h>
 
+@class MPWByteStream,MPWEvaluator;
 
 @interface MPWStsh : MPWObject {
-    id  Stdout,Stdin,Stderr;
+    MPWByteStream  *Stdout,*Stdin,*Stderr;
     BOOL   readingFile;
     BOOL   echo;
-	id		_evaluator;
+	MPWEvaluator*		_evaluator;
     char   cwd[65536];
 	id		retval;
     NSString *prompt;
     char  cstrPrompt[200];
     int   completionLimit;
 }
-+(void)runWithArgs:args;
++(void)runWithArgs:(NSArray*)args;
++(void)runWithArgCount:(int)argc argStrings:(const char**)argv;
 -evaluator;
 -retval;
 -(void)setRetval:newRetval;

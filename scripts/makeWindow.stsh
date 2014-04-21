@@ -1,0 +1,7 @@
+#!/usr/local/bin/stsh
+framework:AppKit load.
+NSApplication sharedApplication.
+window := NSWindow alloc initWithContentRect:( 20@200 extent: 400@100 ) styleMask: 15 backing: NSBackingStoreBuffered  defer:0. 
+window makeKeyAndOrderFront:nil.
+shell runInteractiveLoop.
+

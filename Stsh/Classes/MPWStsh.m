@@ -78,7 +78,7 @@ intAccessor(completionLimit, setCompletionLimit)
  	[pool release];
 }
 
-+(void)runWithArgs:args
++(void)runWithArgs:(NSArray*)args
 {
 	NSAutoreleasePool* pool=[NSAutoreleasePool new];
 	if ( [args count] >= 1 ) {
@@ -89,6 +89,14 @@ intAccessor(completionLimit, setCompletionLimit)
 	[pool release];
 }
 
++(void)runWithArgCount:(int)argc argStrings:(const char**)argv
+{
+	NSMutableArray *args=[NSMutableArray array];
+	for (int i=1;i<argc;i++) {
+		[args addObject:[NSString stringWithUTF8String:argv[i]]];
+	}
+    [self runWithArgs:args];
+}
 
 -(void)setReadingFile:(BOOL)newReadingFile
 {
@@ -419,6 +427,28 @@ idAccessor( retval, setRetval )
 			[[[expr statements] lastObject] isKindOfClass:MPWAssignmentExpression]);
 }
 
+-(void)processShellEscape:(NSString*)exprString
+{
+    if ( [exprString hasPrefix:@"!cd"] ) {
+        NSArray *components = [exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString *last=nil;
+        long index=[components count]-1;
+        while (index>0 && [last length]==0) {
+            last=[components objectAtIndex:index];
+            index--;
+        }
+        const char *newDir = [last fileSystemRepresentation];
+        if ( newDir) {
+            int failure = chdir(newDir);
+            if ( failure ) {
+                perror("failed to chdir");
+            }
+        }
+    } else {
+        system([exprString UTF8String]+1);
+    }
+}
+
 -(void)runInteractiveLoop
 {
     id result;
@@ -441,61 +471,67 @@ idAccessor( retval, setRetval )
     
     history(history_ptr, &event, H_SETSIZE, 800);
 	[self setEcho:YES];
-    while ( (lineOfInput=el_gets(el,&count) ) /*  (lineOfInput=readline("> ")) */) {
+    NSMutableString *currentInput=[NSMutableString string];
+    int level=1;
+    
+    while (  level > 0) {
+        [self setPrompt:[NSString stringWithFormat:@"%@> ",level>1 ? @"*":@""]];
+        lineOfInput=el_gets(el,&count);
+        if ( !lineOfInput) {
+            level--;
+            break;
+        }
         char *save;
  		if ( (lineOfInput[0]!='#') || (lineOfInput[1]=='(') ) {
 			id pool=[NSAutoreleasePool new];
 			NS_DURING
-				id exprString = [NSString stringWithUTF8String:lineOfInput];
-            if ( [exprString hasPrefix:@"!"]) {
-                if ( [exprString hasPrefix:@"!cd"] ) {
-                    NSArray *components = [exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                    NSString *last=nil;
-                    long index=[components count]-1;
-                    while (index>0 && [last length]==0) {
-                        last=[components objectAtIndex:index];
-                        index--;
-                    }
-                    const char *newDir = [last fileSystemRepresentation];
-                   if ( newDir) {
-                       int failure = chdir(newDir);
-                       if ( failure ) {
-                           perror("failed to chdir");
-                       }
-                    }
-                } else {
-                    system(lineOfInput+1);
-                }
-            } else {
-				id expr = [[self evaluator] compile:exprString];
-                //				NSLog(@"expr: %@",expr);
-				BOOL isAssignment = [self isAssignmentExpresson:expr];
-				
-				if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
-					result = [[self evaluator] executeShellExpression:expr];
-				} else {
-					result = [[self evaluator] evaluate:expr];
-				}
-                //				NSLog(@"result: %@/%@",[result class],result);
-				if ( result!=nil && [result isNotNil]) {
-					[[self evaluator] bindValue:result toVariableNamed:@"last" withScheme:@"var"];
-                    if ( [self echo] && !isAssignment ) {
-                        //                       str_result = [[result description] cString];
-                        //                       str_result = str_result ? str_result : "nil";
-						if ( !result ) {
-							result=@"nil";
-						}
-                        fflush(stdout);
-//						[[[MPWByteStream Stderr] do] println:[result each]];
-//                        NSLog(@"result: %@/%@",[result class],result);
-						[(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:[result stringValue]];
-
-                        
-                        //                       fprintf(stderr,"%s\n",str_result);
-                        fflush(stderr);
-                    }
-				}
+            NSString* newString = [NSString stringWithUTF8String:lineOfInput];
+            [currentInput appendString:newString];
+            NSString *exprString=currentInput;
+            if ( level <=1 &&  [exprString hasPrefix:@"!"]) {
+                [self processShellEscape:exprString];
             }
+            else {
+                    id expr = nil;
+                    @try {
+                        expr = [[self evaluator] compile:exprString];
+                        level=1;
+                    } @catch ( NSException *exception) {
+                        if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
+                            level=2;
+                            continue;
+                        }
+                    }
+
+                    [currentInput setString:@""];
+                    BOOL isAssignment = [self isAssignmentExpresson:expr];
+                    
+                    if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
+                        result = [[self evaluator] executeShellExpression:expr];
+                    } else {
+                        result = [[self evaluator] evaluate:expr];
+                    }
+                    //				NSLog(@"result: %@/%@",[result class],result);
+                    if ( result!=nil && [result isNotNil]) {
+                        [[self evaluator] bindValue:result toVariableNamed:@"last" withScheme:@"var"];
+                        if ( [self echo] && !isAssignment ) {
+                            //                       str_result = [[result description] cString];
+                            //                       str_result = str_result ? str_result : "nil";
+                            if ( !result ) {
+                                result=@"nil";
+                            }
+                            fflush(stdout);
+                            //						[[[MPWByteStream Stderr] do] println:[result each]];
+                            //                        NSLog(@"result: %@/%@",[result class],result);
+                            [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:[result stringValue]];
+                            
+                            
+                            //                       fprintf(stderr,"%s\n",str_result);
+                            fflush(stderr);
+                        }
+                    }
+                }
+            
             NS_HANDLER
 
             NSLog(@"top level exception: %@",localException);

@@ -180,7 +180,14 @@ idAccessor( connectorMap, setConnectorMap );
 
 -(void)parseError:(NSString*)msg token:(id)token selector:(SEL)sel
 {
-    id e=[NSException exceptionWithName:msg reason:[NSString stringWithFormat:@"%@ in '%@' %@/%@ from %@",msg,NSStringFromSelector(sel),token,[token class],scanner] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:scanner,@"scanner",token,@"token",nil]];
+    NSString *errstr = [NSString stringWithFormat:@"%@ in '%@' %@/%@ from %@",msg,NSStringFromSelector(sel),token,[token class],scanner];
+    NSDictionary *errdict =@{
+        @"scanner": scanner,
+        @"token":  token ?: @"",
+        @"mightNeedMoreInput": @(YES),
+    };
+    
+    id e=[NSException exceptionWithName:msg reason:errstr userInfo:errdict];
     @throw e;
     
 }
@@ -366,8 +373,11 @@ idAccessor( connectorMap, setConnectorMap );
 	statements = [self parseStatements];
 	closeBrace=[self nextToken];
 //	NSLog(@"done with block: %@",closeBrace);
-	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
+//	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
 	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
+    if ( ![closeBrace isEqual:@"]"] ) {
+        PARSEERROR(@"block not closed by ]", expr);
+    }
     [expr setOffset:[scanner offset]];
     [expr setLen:1];
     return expr;

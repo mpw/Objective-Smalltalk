@@ -13,14 +13,8 @@
 
 int main (int argc, const char *argv[])
 {
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	int i;
-	NSMutableArray *args=[NSMutableArray array];
-	for (i=1;i<argc;i++) {
-		[args addObject:[NSString stringWithCString:argv[i]]];
-	}
-	[MPWStsh runWithArgs:args];
-    [pool release];
+    [[NSAutoreleasePool alloc] init];
+	[MPWStsh runWithArgCount:argc argStrings:argv];
     exit(0);       // insure the process exit status is 0
     return 0;      // ...and make main fit the ANSI spec.
 }
