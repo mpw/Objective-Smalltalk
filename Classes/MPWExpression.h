@@ -10,14 +10,16 @@
 #import <ObjectiveSmalltalk/MPWEvaluable.h>
 
 @interface MPWExpression : MPWObject <MPWEvaluable> {
-    int offset,len;
+    long offset,len;
 }
 
 -variablesRead;
 -variablesWritten;
 
-intAccessor_h(offset , setOffset)
-intAccessor_h(len, setLen)
+longAccessor_h(offset , setOffset)
+longAccessor_h(len, setLen)
+
+
 -(NSException*)handleOffsetsInException:(NSException*)exception;
 
 @end

@@ -13,7 +13,7 @@
 
 objectAccessor( NSString, name, setName )
 objectAccessor( NSString, type, setType )
-intAccessor( offset, setOffset )
+longAccessor( offset, setOffset )
 
 -initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType
 {

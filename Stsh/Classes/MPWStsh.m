@@ -534,12 +534,11 @@ idAccessor( retval, setRetval )
             
             NS_HANDLER
 
-            NSLog(@"top level exception: %@",localException);
+            [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:localException];
+
             id combinedStack=[localException combinedStackTrace];
             if ( combinedStack) {
-                NSLog(@"%@",combinedStack);
-            } else {
-                NSLog(@"no stack");
+                [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:combinedStack];
             }
             NS_ENDHANDLER
 			[pool release];

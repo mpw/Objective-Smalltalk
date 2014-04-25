@@ -12,11 +12,11 @@
 @interface MPWInstanceVariable : MPWObject {
 	NSString	*name;
 	NSString	*type;
-	int			offset;
+	long			offset;
 }
 
 -initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType;
--(int)offset;
+-(long)offset;
 -(NSString*)name;
 -(NSString*)type;
 -valueInContext:anObject;

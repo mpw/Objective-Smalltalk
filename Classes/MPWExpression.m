@@ -11,8 +11,8 @@
 
 @implementation MPWExpression
 
-intAccessor(offset , setOffset)
-intAccessor(len, setLen)
+longAccessor(offset , setOffset)
+longAccessor(len, setLen)
 
 
 -(NSObject<MPWEvaluable>*)evaluateIn:aContext
