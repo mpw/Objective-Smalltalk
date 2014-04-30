@@ -71,15 +71,15 @@ idAccessor( method, _setMethod )
    return result;
 }
 
--(void)installInClass:(Class)aClass withSignature:(const char*)signature
+-(void)installInClass:(Class)aClass withSignature:(const char*)signature selector:(SEL)aSelector
 {
 	//--- setup the method structure
 //    NSLog(@"install %@ in %@",NSStringFromSelector(selname),aClass);
 	if ( aClass != nil ) {
-		methodDescriptor=[self getMethodForMessage:selname inClass:aClass];
+		methodDescriptor=[self getMethodForMessage:aSelector inClass:aClass];
 		
 		if ( methodDescriptor ) {
-			oldIMP= class_getMethodImplementation(aClass, selname);
+			oldIMP= class_getMethodImplementation(aClass, aSelector);
 		}
 		//---   setup undo 
    
@@ -92,8 +92,8 @@ idAccessor( method, _setMethod )
 			method_setImplementation(methodDescriptor, (IMP)stub);
 			installed = YES;
 		} else {
-			installed =  class_addMethod(aClass, selname, (IMP)stub, signature);
-			methodDescriptor=class_getInstanceMethod( aClass, selname);
+			installed =  class_addMethod(aClass, aSelector, (IMP)stub, signature);
+			methodDescriptor=class_getInstanceMethod( aClass, aSelector);
 
 		}
 		//		NSLog(@"did install: %d",installed);
@@ -107,10 +107,15 @@ idAccessor( method, _setMethod )
 	
 }
 
+-(void)installInClass:(Class)aClass withSignature:(const char*)signature
+{
+    [self installInClass:aClass withSignature:signature selector:selname];
+}
+
 -(const char*)typeSignature
 {
 	const char *types = method_getTypeEncoding(methodDescriptor);
-//	NSLog(@"%@ : %s",NSStringFromSelector(selname),types);
+//	NSLog(@"%@ : %s",NSStringFromSelector(aSelector),types);
 	return types;
 }
 
