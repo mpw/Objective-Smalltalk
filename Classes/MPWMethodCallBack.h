@@ -12,15 +12,9 @@
 @class MPWMethodHeader;
 
 @interface MPWMethodCallBack : MPWBlockInvocable {
-#if __OBJC2__ || ( MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5 )
-	Method	methodDescriptor;
+	Method	savedMethodDescriptor;
 	IMP		oldIMP;
-#else
-	struct objc_method_list undoList;
-	struct objc_method_list list;
-	struct objc_method methodDescriptor;
-    Method oldMethodDescriptor;
-#endif
+
 	Class targetClass;
 	id	method;
 	int installed;

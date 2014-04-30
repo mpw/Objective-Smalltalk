@@ -71,58 +71,63 @@ idAccessor( method, _setMethod )
    return result;
 }
 
--(void)installInClass:(Class)aClass withSignature:(const char*)signature selector:(SEL)aSelector
+-(IMP)stub
 {
-	//--- setup the method structure
-//    NSLog(@"install %@ in %@",NSStringFromSelector(selname),aClass);
+    if ( !stub) {
+        stub=imp_implementationWithBlock( self );
+    }
+    return stub;
+}
+
+-(Method)installInClass:(Class)aClass withSignature:(const char*)signature selector:(SEL)aSelector oldIMP:(IMP*)oldImpPtr
+{
+    Method methodDescriptor=NULL;
 	if ( aClass != nil ) {
 		methodDescriptor=[self getMethodForMessage:aSelector inClass:aClass];
 		
-		if ( methodDescriptor ) {
-			oldIMP= class_getMethodImplementation(aClass, aSelector);
+		if ( methodDescriptor  && oldImpPtr) {
+            IMP old=class_getMethodImplementation(aClass, aSelector);
+			*oldImpPtr = old;
 		}
-		//---   setup undo 
-   
-#if 1 // TARGET_OS_IPHONE        
-		stub=imp_implementationWithBlock( self );
-#else        
-		stub=pl_imp_implementationWithBlock( self );
-#endif	
 		if ( methodDescriptor ) {
-			method_setImplementation(methodDescriptor, (IMP)stub);
-			installed = YES;
+			method_setImplementation(methodDescriptor, [self stub]);
 		} else {
-			installed =  class_addMethod(aClass, aSelector, (IMP)stub, signature);
-			methodDescriptor=class_getInstanceMethod( aClass, aSelector);
+			if ( class_addMethod(aClass, aSelector, [self stub], signature )) {
+                methodDescriptor=class_getInstanceMethod( aClass, aSelector);
+            }
 
 		}
-		//		NSLog(@"did install: %d",installed);
-		
-        targetClass = aClass;
-        
-        
-	} else {
-		installed = NO;
 	}
-	
+	return methodDescriptor;
+}
+
+-(Method)installInClass:(Class)aClass withSignature:(const char*)signature selector:(SEL)aSelector
+{
+    return [self installInClass:aClass withSignature:signature selector:selname oldIMP:NULL];
 }
 
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature
 {
-    [self installInClass:aClass withSignature:signature selector:selname];
+    savedMethodDescriptor=[self installInClass:aClass withSignature:signature selector:selname oldIMP:&oldIMP];
+    if (savedMethodDescriptor) {
+        installed=YES;
+        targetClass = aClass;
+    } else {
+        installed=NO;
+    }
 }
 
 -(const char*)typeSignature
 {
-	const char *types = method_getTypeEncoding(methodDescriptor);
+	const char *types = method_getTypeEncoding(savedMethodDescriptor);
 //	NSLog(@"%@ : %s",NSStringFromSelector(aSelector),types);
 	return types;
 }
 
 -(void)uninstall
 {
-    if ( installed && methodDescriptor && oldIMP ) {
-		method_setImplementation(methodDescriptor, oldIMP);
+    if ( installed && savedMethodDescriptor && oldIMP ) {
+		method_setImplementation(savedMethodDescriptor, oldIMP);
         installed=NO;
     }
 }
