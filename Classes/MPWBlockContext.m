@@ -93,14 +93,29 @@ typedef id (^ZeroArgBlock)(void);
 	}
 }
 
--invokeWithArgs:(va_list)args
+-(NSArray*)formalParameters
 {
-    NSMutableArray *argArray=[NSMutableArray arrayWithCapacity:[[[self block] arguments] count]];
-    for (int i=0,max=[[[self block] arguments] count];i<max;i++ ) {
+    return [[self block] arguments];
+}
+
+-invokeWithTarget:aTarget args:(va_list)args
+{
+    NSArray* formalParameters = [self formalParameters];
+
+    NSMutableArray *argArray=[NSMutableArray arrayWithCapacity:[formalParameters count]];
+    for (int i=0,max=[formalParameters count];i<max;i++ ) {
         [argArray addObject:va_arg(args, id)];
     }
     return [self evaluateIn_block:[self evaluationContext] arguments:argArray];
 }
+
+
+
+-invokeWithArgs:(va_list)args
+{
+	return [self invokeWithTarget:nil args:args];
+}
+
 
 -value
 {
