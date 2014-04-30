@@ -32,7 +32,6 @@
 -(void)installInClass:(Class)classToInstallNewMethodIn;
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature;
 
--invokeWithTarget:target args:(va_list)args;
 -(void)setMethod:method;
 -formalParameters;
 -invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters;

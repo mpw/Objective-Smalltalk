@@ -123,73 +123,6 @@ idAccessor( method, _setMethod )
 }
 
 
--invokeWithTarget:target args:(va_list)args
-{
-	//	return [target evaluateScript:script];
-	id formalParameters = [self formalParameters];
-	id parameters=[NSMutableArray array];
-	int i;
-	const char *sig_in=[self typeSignature];
-    char signature[30];
-    const char *source=sig_in;
-    char *dest=signature;
-    while ( *source ) {
-        if ( !isdigit(*source)  ) {
-            *dest++=*source;
-        }
-        source++;
-    }
-    *dest++=0;
-    
-	id returnVal;
-//	NSLog(@"selector: %s",selname);
-//	NSLog(@"signature: %s",signature);
-//	NSLog(@"target: %@",target);
-	for (i=0;i<[formalParameters count];i++ ) {
-//		NSLog(@"param[%d]: %c",i,signature[i+3]);
-		switch ( signature[i+3] ) {
-				id theArg;
-			case '@':
-			case '#':
-				theArg = va_arg( args, id );
-//				NSLog(@"object arg: %@",theArg);
-				if ( theArg == nil ) {
-					theArg=[NSNil nsNil];
-				}
-				[parameters addObject:theArg];
-				break;
-			case 'c':
-			case 'C':
-			case 's':
-			case 'S':
-			case 'i':
-			case 'I':
-			{
-				int intArg = va_arg( args, int );
-//				NSLog(@"int param: %d",intArg );
-				[parameters addObject:[NSNumber numberWithInt:intArg]];
-				break;
-			}
-			case 'f':
-			case 'F':
-				[parameters addObject:[NSNumber numberWithFloat:va_arg( args, double )]];
-				break;
-			default:
-				va_arg( args, void* );
-				[parameters addObject:[NSString stringWithFormat:@"unhandled parameter at %d '%c'",i,signature[i+3]]];
-		}
-	}
-	returnVal = [self invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters];
-	if ( signature[0] == 'i' ) {
-#ifdef __x86_64__
-		returnVal=(id)[returnVal longLongValue];
-#else
-		returnVal=(id)[returnVal intValue];
-#endif
-	}
-	return returnVal;
-}
-
 -invokeWithArgs:(va_list)args
 {
 	id target=va_arg(args,id);
@@ -217,6 +150,7 @@ idAccessor( method, _setMethod )
 {
 	[self installInClass:aClass withSignature:[[self header] typeSignature]];
 }
+
 -formalParameters
 {
 	return [[self header] parameterNames];
@@ -236,8 +170,6 @@ idAccessor( method, _setMethod )
 
 -invokeOn:target
 {
-//	return [target evaluateScript:script];
-//	NSLog(@"invokeOn:");
 	return [self invokeOn:target withFormalParameters:nil actualParamaters:nil];
 }
 
