@@ -516,15 +516,15 @@
 	IDEXPECT( [instance valueForKey:variableName], testValue, @"after KVC setting instance variable");
 	[variableDescription setValue:testValue2 inContext:instance];
 	IDEXPECT( [instance valueForKey:variableName], testValue2, @"after setting via variable");
-	NSLog(@"did get valueForKey:");
+//	NSLog(@"did get valueForKey:");
 	IDEXPECT( [variableDescription valueInContext:instance], testValue2, @"getting via variable");
-	NSLog(@"did get via valueInContext:");
+//	NSLog(@"did get via valueInContext:");
 	[aClass generateAccessorsFor:variableName];
-	NSLog(@"will get via message send");
+//	NSLog(@"will get via message send");
 	IDEXPECT( [instance variable1], testValue2, @"getting variable via direct accessor");
-	NSLog(@"did get via message send, will set via message send");
+//	NSLog(@"did get via message send, will set via message send");
 	[instance setVariable1:testValue];
-	NSLog(@"did set via message send");
+//	NSLog(@"did set via message send");
 	IDEXPECT( [instance variable1], testValue, @"after setting via direct accessor");
 }	
 	

@@ -2520,6 +2520,7 @@
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -2657,6 +2658,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -2695,6 +2697,7 @@
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;

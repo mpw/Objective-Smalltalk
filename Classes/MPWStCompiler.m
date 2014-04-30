@@ -413,7 +413,7 @@ idAccessor( connectorMap, setConnectorMap );
 																 @"concat:", @",",
                                                           @"isGreaterThan:", @">",
                                                              @"isLessThan:", @"<",
-                                                                @"isEqual:", @"=",
+                              @"isEqual:", @"=",
                               @"doAssign:", @":=",
                               @"doAssign:", @"<-",
 															  @"pointWith:",@"@",

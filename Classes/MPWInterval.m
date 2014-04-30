@@ -13,10 +13,10 @@
 
 @interface MPWIntervalEnumerator : MPWInterval
 {
-    int current;
+    long current;
 }
 
-intAccessor_h( current, setCurrent )
+longAccessor_h( current, setCurrent )
 -initWithInterval:(MPWInterval*)interval;
 +enumeratorWithInterval:(MPWInterval*)interval;
 -nextObject;
@@ -32,10 +32,10 @@ intAccessor_h( current, setCurrent )
 #define TO		((range.location + range.length-1))
 
 
--(int)from {  return FROM; } 
--(int)to   {  return TO; }
--(void)setFrom:(int)newFrom { range.location=newFrom; }
--(void)setTo:(int)newTo { range.length = newTo - range.location + 1; }
+-(long)from {  return FROM; }
+-(long)to   {  return TO; }
+-(void)setFrom:(long)newFrom { range.location=newFrom; }
+-(void)setTo:(long)newTo { range.length = newTo - range.location + 1; }
 
 -(NSNumber*)random
 {
@@ -45,14 +45,14 @@ intAccessor_h( current, setCurrent )
 
 //scalarAccessor( int, from, setFrom )
 //scalarAccessor( int, to, setTo )
-intAccessor( step, _setStep )
+longAccessor( step, _setStep )
 
--(void)setStep:(int)newVar
+-(void)setStep:(long)newVar
 {
 	if ( newVar <= 0 ) {
 		@throw [NSException
 				exceptionWithName:@"InvalidArgument"
-				reason:[NSString stringWithFormat:@"-[%@ setStep:%d] must be >=1",[self class],newVar]
+				reason:[NSString stringWithFormat:@"-[%@ setStep:%ld] must be >=1",[self class],newVar]
 				userInfo:nil];
 		
 	}
@@ -74,17 +74,17 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 
 
 
-+intervalFromInt:(int)newFrom toInt:(int)newTo step:(int)newStep
++intervalFromInt:(long)newFrom toInt:(long)newTo step:(long)newStep
 {
 	return [[[self alloc] initFromInt:newFrom toInt:newTo step:newStep numberClass:[NSNumber class]] autorelease];
 }
 
-+intervalFromInt:(int)newFrom toInt:(int)newTo
++intervalFromInt:(long)newFrom toInt:(long)newTo
 {
 	return [self intervalFromInt:newFrom toInt:newTo step:1];
 }
 
--initFromInt:(int)newFrom toInt:(int)newTo step:(int)newStep numberClass:(Class)newNumberClass
+-initFromInt:(long)newFrom toInt:(long)newTo step:(long)newStep numberClass:(Class)newNumberClass
 {
 	self=[super init];
 	[self setFrom:newFrom];
@@ -94,13 +94,13 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	return self;
 }
 
--initFromInt:(int)newFrom toInt:(int)newTo  numberClass:(Class)newNumberClass
+-initFromInt:(long)newFrom toInt:(long)newTo  numberClass:(Class)newNumberClass
 {
 	return [self initFromInt:newFrom toInt:newTo step:1 numberClass:newNumberClass];
 }
 
 
--initFromInt:(int)newFrom toInt:(int)newTo
+-initFromInt:(long)newFrom toInt:(long)newTo
 {
 	return [self initFromInt:newFrom toInt:newTo numberClass:[NSNumber class]];
 }
@@ -120,11 +120,10 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 
 -do:aBlock with:target
 {
-	int i;
 	id value=nil;
 	id pool=[NSAutoreleasePool new];
-	for (i=FROM;i<=TO;i+=step ) {
-		value = [aBlock value:[NSNumber numberWithInt:i]];
+	for (long i=FROM;i<=TO;i+=step ) {
+		value = [aBlock value:[NSNumber numberWithLong:i]];
 		if ( i % 100 == 0 ) {
 			[pool release];
 			pool=[NSAutoreleasePool new];
@@ -172,7 +171,7 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 }
 
 
--(int)integerAtIndex:(NSUInteger)anIndex
+-(long)integerAtIndex:(NSUInteger)anIndex
 {
 	if ( anIndex >= [self count] ) {
 		@throw [NSException
@@ -185,12 +184,12 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 
 -objectAtIndex:(NSUInteger)anIndex
 {
-	return [NSNumber numberWithInt:[self integerAtIndex:anIndex]];
+	return [NSNumber numberWithLong:[self integerAtIndex:anIndex]];
 }
 
 -description 
 {
-	return [NSString stringWithFormat:@"<%@:%p from %d to %d>",[self class],self,[self from],[self to]];
+	return [NSString stringWithFormat:@"<%@:%p from %ld to %ld>",[self class],self,[self from],[self to]];
 }
 
 -(NSRange)asNSRange {
@@ -207,7 +206,7 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 
 -(void)encodeWithCoder:aCoder
 {
-	int from=FROM,to=TO;
+	long from=FROM,to=TO;
 	encodeVar( aCoder, from );
 	encodeVar( aCoder, to );
 }
@@ -276,9 +275,9 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 
 @implementation MPWIntervalEnumerator
 
-intAccessor( current, setCurrent )
+longAccessor( current, setCurrent )
 
--initFromInt:(int)newFrom toInt:(int)newTo
+-initFromInt:(long)newFrom toInt:(long)newTo
 {
     self=[super initFromInt:newFrom toInt:newTo];
     [self setCurrent:newFrom];
@@ -307,7 +306,7 @@ intAccessor( current, setCurrent )
 {
     id retval=nil;
     if ( ![self isAtEnd] ) {
-        retval=[NSNumber numberWithInt:current];
+        retval=[NSNumber numberWithLong:current];
         current+=step;
     }
     return retval;
@@ -324,9 +323,8 @@ intAccessor( current, setCurrent )
 
 -do:aBlock with:target
 {
-	int i,max;
 	id value=nil;
-	for (i=0,max=[self count];i<max;i++ ) {
+	for (long i=0,max=[self count];i<max;i++ ) {
 		value = [aBlock value:[self objectAtIndex:i]];
 		[target addObject:value];
 	}

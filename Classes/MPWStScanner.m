@@ -465,13 +465,13 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 +(void)testScanUTF8Name
 {
-    unichar pi=960;
-    NSString *pi_string=[NSString stringWithCharacters:&pi length:1];
+    unichar pival=960;
+    NSString *pi_string=[NSString stringWithCharacters:&pival length:1];
 	MPWStScanner *scanner=[self scannerWithString:pi_string];
     NSString *token=[scanner nextToken];
     INTEXPECT([token length], 1, @"length of scanned token pi");
     
-    INTEXPECT([token characterAtIndex:0], pi, @"pi");
+    INTEXPECT([token characterAtIndex:0], pival, @"pi");
     IDEXPECT(token, pi_string, @"the string");
 }
 

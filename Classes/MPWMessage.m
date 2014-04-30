@@ -184,15 +184,15 @@ idAccessor( _signature, setSignature )
                                 break;
                             } else if (  !strcmp( type, "{CATransform3D=dddddddddddddddd}")  ) {
                                 MPWRealArray *array=arg;
-                                for (int i=0;i<16;i++) {
-                                    doubleBuffer[i]=[array realAtIndex:i];
+                                for (int realIndex=0;realIndex<16;realIndex++) {
+                                    doubleBuffer[realIndex]=[array realAtIndex:realIndex];
                                 }
                                 argp=array;
                                 break;
                             } else if (  !strcmp( type, "{CATransform3D=ffffffffffffffff}")  ) {
                                 MPWRealArray *array=arg;
-                                for (int i=0;i<16;i++) {
-                                    floatBuffer[i]=[array realAtIndex:i];
+                                for (int realIndex=0;realIndex<16;realIndex++) {
+                                    floatBuffer[realIndex]=[array realAtIndex:realIndex];
                                 }
                                 argp=array;
                                 break;

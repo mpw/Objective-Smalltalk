@@ -10,19 +10,19 @@
 
 @interface MPWInterval : NSArray {
 	NSRange range;
-	int	step;
+	long	step;
 	Class numberClass;
 }
 
-scalarAccessor_h( int, from, setFrom )
-scalarAccessor_h( int, to, setTo )
-scalarAccessor_h( int, step, setStep )
+scalarAccessor_h( long, from, setFrom )
+scalarAccessor_h( long, to, setTo )
+scalarAccessor_h( long, step, setStep )
 
-+intervalFromInt:(int)newFrom toInt:(int)newTo;
++intervalFromInt:(long)newFrom toInt:(long)newTo;
 +intervalFrom:newFrom to:newTo step:newStep;
 
 +intervalFrom:newFrom to:newTo;
--initFromInt:(int)newFrom toInt:(int)newTo;
+-initFromInt:(long)newFrom toInt:(long)newTo;
 -initFrom:newFrom to:newTo;
 -objectEnumerator;
 -(NSRange)asNSRange;

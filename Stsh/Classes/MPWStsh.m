@@ -479,7 +479,9 @@ idAccessor( retval, setRetval )
         lineOfInput=el_gets(el,&count);
         if ( !lineOfInput) {
             level--;
-            break;
+            [currentInput setString:@""];
+            continue;
+            
         }
         char *save;
  		if ( (lineOfInput[0]!='#') || (lineOfInput[1]=='(') ) {
