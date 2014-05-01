@@ -186,6 +186,14 @@ typedef id (^ZeroArgBlock)(void);
 
 #import "MPWStCompiler.h"
 
+@interface NSNumber(methodsAddedByBlockTest)
+
+-theAnswer;
+-answerPlus;
+-answerPlus:arg;
+
+@end
+
 @implementation MPWBlockContext(tests)
 
 +(void)testObjcBlocksWithNoArgsAreMapped
@@ -272,6 +280,33 @@ typedef id  (^idBlock)(id arg );
     
 }
 
++(void)testBlockInstalledAsMethod
+{
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ 42 ]"];
+    [stblock installInClass:[NSNumber class] withSignature:"@:@" selector:@selector(theAnswer)];
+    id theAnswer=[@(2) theAnswer];
+    IDEXPECT(theAnswer, @(42), @"theAnswer");
+}
+
++(void)testBlockWithSelfAsArg
+{
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self | self + 42. ]"];
+    [stblock installInClass:[NSNumber class] withSignature:"@:@" selector:@selector(answerPlus)];
+    id theAnswer=[@(2) answerPlus];
+    IDEXPECT(theAnswer, @(44), @"theAnswer");
+}
+
+
++(void)testBlockWithArg
+{
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self :arg | arg + 42. ]"];
+    [stblock installInClass:[NSNumber class] withSignature:"@:@" selector:@selector(answerPlus:)];
+    id theAnswer=[@(2) answerPlus:@(10)];
+    IDEXPECT(theAnswer, @(52), @"theAnswer");
+}
+
+
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -281,7 +316,10 @@ typedef id  (^idBlock)(id arg );
             @"testSTBlockAsObjCBlock",
             @"testCopiedSTBlockAsObjCBlock",
             @"testRetainedSTBlockOriginalAutoreleased",
-           @"testBlock_copiedSTBlockOriginalAutoreleased",
+            @"testBlock_copiedSTBlockOriginalAutoreleased",
+            @"testBlockInstalledAsMethod",
+            @"testBlockWithSelfAsArg",
+            @"testBlockWithArg",
             nil];
 }
 

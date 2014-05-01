@@ -19,7 +19,6 @@
 	id	method;
 	int installed;
 	SEL selname;
-	IMP stub;
 }
 
 
