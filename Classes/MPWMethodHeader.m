@@ -27,6 +27,11 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	return self;
 }
 
+-(SEL)selector
+{
+    return NSSelectorFromString([self methodName]);
+}
+
 -(void)addParameterName:(NSString*)name type:(NSString*)type keyWord:(NSString*)keyWord
 {
 	[[self methodKeyWords] addObject:keyWord];

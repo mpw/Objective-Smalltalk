@@ -11,6 +11,8 @@
 #import "MPWEvaluator.h"
 #import <MPWFoundation/MPWBlockFilterStream.h>
 #import "MPWBinding.h"
+#import "MPWMethodHeader.h"
+
 #include <Block.h>
 #import <objc/runtime.h>
 
@@ -179,6 +181,22 @@ typedef id (^ZeroArgBlock)(void);
 
 
 
+-(void)installInClass:(Class)aClass withMethodHeaderString:(NSString*)methodHeaderString
+{
+    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:methodHeaderString];
+    NSString *typeString=[header typeString];
+    NSString *methodName=[header methodName];
+    
+    //--- account for the mapping of arguments from method to block
+    //--- by imp_implementationWithBloc()
+    
+    typeString = [[[typeString substringToIndex:3] stringByAppendingString:@"@"] stringByAppendingString:[typeString substringFromIndex:3]];
+    [self installInClass:aClass withSignatureString:typeString selectorString:methodName];
+    
+}
+
+
+
 
 @end
 
@@ -199,6 +217,7 @@ typedef id (^ZeroArgBlock)(void);
 -theAnswer;
 -answerPlus;
 -answerPlus:arg;
+-(int)addThirtenAndArgToSelf:(int)anArg;
 
 @end
 
@@ -313,13 +332,22 @@ typedef id  (^idBlock)(id arg );
     IDEXPECT(theAnswer, @(52), @"theAnswer");
 }
 
-+(void)testBlockWithIntReturn
++(void)testBlockAsMethodWithIntReturn
 {
     MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ 42 ]"];
     [stblock installInClass:[NSNumber class] withSignature:"i@:" selector:@selector(theIntAnswer)];
     NSLog(@"=== should convert to int");
     int theAnswer=[@(2) theIntAnswer];
     INTEXPECT(theAnswer, 42, @"theAnswer");
+}
+
++(void)testBlockAsMethodWithMethodHeader
+{
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self :arg | self + 13 + arg ]"];
+    [stblock installInClass:[NSNumber class] withMethodHeaderString:@"<int>addThirtenAndArgToSelf:<int>anArg"];
+    NSLog(@"=== should convert to int");
+    int theAnswer=[@(2) addThirtenAndArgToSelf:5];
+    INTEXPECT(theAnswer, 13+2+5, @"theAnswer");
 }
 
 
@@ -338,7 +366,8 @@ typedef id  (^idBlock)(id arg );
             @"testBlockAsMethodWithSelfAsArg",
             @"testBlockAsMethodWithArg",
             @"testBlockAsMethodWithArg",
-            @"testBlockWithIntReturn",
+            @"testBlockAsMethodWithIntReturn",
+            @"testBlockAsMethodWithMethodHeader",
             nil];
 }
 
