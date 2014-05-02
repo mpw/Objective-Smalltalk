@@ -52,6 +52,7 @@ idAccessor( method, _setMethod )
 		selname = sel_registerName( [newName cStringUsingEncoding:NSASCIIStringEncoding] );
 	}
 }
+
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature
 {
     savedMethodDescriptor=[self installInClass:aClass withSignature:signature selector:selname oldIMP:&oldIMP];

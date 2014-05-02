@@ -98,16 +98,23 @@ typedef id (^ZeroArgBlock)(void);
     return [[self block] arguments];
 }
 
--invokeWithTarget:aTarget args:(va_list)args
+-invokeWithTarget1:aTarget args:(va_list)args
 {
     NSArray* formalParameters = [self formalParameters];
-
+    NSLog(@"%d parameters",(int)[formalParameters count]);
     NSMutableArray *argArray=[NSMutableArray arrayWithCapacity:[formalParameters count]];
     for (int i=0,max=[formalParameters count];i<max;i++ ) {
         [argArray addObject:va_arg(args, id)];
     }
     return [self evaluateIn_block:[self evaluationContext] arguments:argArray];
+
 }
+
+-invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters
+{
+    return [self evaluateIn_block:[self evaluationContext] arguments:parameters];
+}
+
 
 
 
@@ -188,6 +195,7 @@ typedef id (^ZeroArgBlock)(void);
 
 @interface NSNumber(methodsAddedByBlockTest)
 
+-(int)theIntAnswer;
 -theAnswer;
 -answerPlus;
 -answerPlus:arg;
@@ -283,26 +291,35 @@ typedef id  (^idBlock)(id arg );
 +(void)testBlockInstalledAsMethod
 {
     MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ 42 ]"];
-    [stblock installInClass:[NSNumber class] withSignature:"@:@" selector:@selector(theAnswer)];
+    [stblock installInClass:[NSNumber class] withSignature:"@@:@" selector:@selector(theAnswer)];
     id theAnswer=[@(2) theAnswer];
     IDEXPECT(theAnswer, @(42), @"theAnswer");
 }
 
-+(void)testBlockWithSelfAsArg
++(void)testBlockAsMethodWithSelfAsArg
 {
     MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self | self + 42. ]"];
-    [stblock installInClass:[NSNumber class] withSignature:"@:@" selector:@selector(answerPlus)];
+    [stblock installInClass:[NSNumber class] withSignature:"@@:@" selector:@selector(answerPlus)];
     id theAnswer=[@(2) answerPlus];
     IDEXPECT(theAnswer, @(44), @"theAnswer");
 }
 
 
-+(void)testBlockWithArg
++(void)testBlockAsMethodWithArg
 {
     MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self :arg | arg + 42. ]"];
-    [stblock installInClass:[NSNumber class] withSignature:"@:@" selector:@selector(answerPlus:)];
+    [stblock installInClass:[NSNumber class] withSignature:"@@:@@" selector:@selector(answerPlus:)];
     id theAnswer=[@(2) answerPlus:@(10)];
     IDEXPECT(theAnswer, @(52), @"theAnswer");
+}
+
++(void)testBlockWithIntReturn
+{
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ 42 ]"];
+    [stblock installInClass:[NSNumber class] withSignature:"i@:" selector:@selector(theIntAnswer)];
+    NSLog(@"=== should convert to int");
+    int theAnswer=[@(2) theIntAnswer];
+    INTEXPECT(theAnswer, 42, @"theAnswer");
 }
 
 
@@ -318,8 +335,10 @@ typedef id  (^idBlock)(id arg );
             @"testRetainedSTBlockOriginalAutoreleased",
             @"testBlock_copiedSTBlockOriginalAutoreleased",
             @"testBlockInstalledAsMethod",
-            @"testBlockWithSelfAsArg",
-            @"testBlockWithArg",
+            @"testBlockAsMethodWithSelfAsArg",
+            @"testBlockAsMethodWithArg",
+            @"testBlockAsMethodWithArg",
+            @"testBlockWithIntReturn",
             nil];
 }
 
