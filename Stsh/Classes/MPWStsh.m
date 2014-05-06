@@ -445,6 +445,7 @@ idAccessor( retval, setRetval )
             }
         }
     } else {
+        exprString=[@" source ~/.bashrc \n " stringByAppendingString:[exprString substringFromIndex:1]];
         system([exprString UTF8String]+1);
     }
 }
@@ -492,6 +493,7 @@ idAccessor( retval, setRetval )
             NSString *exprString=currentInput;
             if ( level <=1 &&  [exprString hasPrefix:@"!"]) {
                 [self processShellEscape:exprString];
+                [currentInput setString:@""];
             }
             else {
                     id expr = nil;
@@ -545,10 +547,12 @@ idAccessor( retval, setRetval )
             NS_ENDHANDLER
 			[pool release];
 		}
+        if ( strlen(lineOfInput) > 1) {
             save=malloc( strlen( lineOfInput) +2 );
             strcpy( save, lineOfInput );
             history( history_ptr, &event, H_ENTER, save );
             count=1000;
+        }
     }
         fflush(stdout);
         fflush(stderr);
