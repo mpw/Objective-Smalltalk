@@ -50,6 +50,16 @@ idAccessor( args, setArgs )
     return NO;
 }
 
+-(NSString*)messageName
+{
+    return NSStringFromSelector([self selector]);
+}
+
+-(NSString*)messageNameForCompletion
+{
+    return [self messageName];
+}
+
 -(NSObject<MPWEvaluable>*)evaluateIn:aContext
 {
 	id retval = nil;

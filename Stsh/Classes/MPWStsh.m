@@ -304,7 +304,9 @@ static const char * promptfn(EditLine *e) {
 {
     NSString *commonPrefix=[self commonPrefixInNames:names];
     if ( [commonPrefix length] > [currentName length]) {
-        el_insertstr(e, [[commonPrefix substringFromIndex:[currentName length]] UTF8String]);
+        NSString *completion=[commonPrefix substringFromIndex:[currentName length]];
+//        NSLog(@"commonPrefix: %@ currentName: %@ completion: %@",commonPrefix,currentName,completion);
+        el_insertstr(e, [completion UTF8String]);
     } else if ([names count]>1) {
         [self printCompletions:names];
     }
@@ -358,7 +360,11 @@ static const char * promptfn(EditLine *e) {
                     el_insertstr(e," ");
                     return YES;
                 } else {
-                    NSString *name=NSStringFromSelector([msg selector]);
+                    NSString *name=[msg messageNameForCompletion];
+                    if ( [name hasSuffix:@":"]) {
+                        NSRange exprRange=[s rangeOfString:name];
+                        name=[name stringByAppendingString:[s substringFromIndex:exprRange.location+exprRange.length]];
+                    }
                     NSArray *msgNames=[self messageNamesForObject:receiver matchingPrefix:name];
                     [self completeName:name withNames:msgNames inEditLine:e];
                 }
@@ -445,8 +451,8 @@ idAccessor( retval, setRetval )
             }
         }
     } else {
-        exprString=[@" source ~/.bashrc \n " stringByAppendingString:[exprString substringFromIndex:1]];
-        system([exprString UTF8String]+1);
+        exprString=[@"source ~/.bashrc \n " stringByAppendingString:[exprString substringFromIndex:1]];
+        system([exprString UTF8String]);
     }
 }
 

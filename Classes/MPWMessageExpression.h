@@ -14,5 +14,7 @@ scalarAccessor_h( SEL, selector, setSelector )
 idAccessor_h( args, setArgs )
 -initWithReceiver:newReceiver;
 
+-(NSString*)messageName;
+-(NSString*)messageNameForCompletion;
 
 @end
