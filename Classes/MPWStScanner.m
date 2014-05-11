@@ -81,7 +81,7 @@ objectAccessor(NSString, realString, setRealString)
 {
     unichar start=[self characterAtIndex:0];
     return start=='@' || start=='+' || start=='-' ||
-        start=='*' || start=='/' || start==',' || start=='>' || start=='<' || start=='=';
+        start=='*' || start=='/' || start==',' || start=='>' || start=='<' || start=='=' || start > 256;
 }
 
 -(BOOL)isScheme

@@ -33,14 +33,16 @@ idAccessor( script, setScript )
 
 -(void)parse
 {
-	id scanner=[[[MPWScanner alloc] initWithData:[self data]] autorelease];
-	BOOL inComments=YES;
+    
+    
+//	id scanner=[[[MPWScanner alloc] initWithData:[self data]] autorelease];
+	__block BOOL inComments=YES;
 	NSString *commentPrefix=@"#";
-	NSString *literalArrayPrefix=@"#(";
-	NSString *exprString;
+	 NSString *literalArrayPrefix=@"#(";
 	NSMutableArray *scriptLines=[NSMutableArray array];
-    while ( nil != (exprString=[scanner nextLine]) ) {
-
+    NSString *scriptString=[[[NSString alloc] initWithData:[self data] encoding:NSUTF8StringEncoding] autorelease];
+    [scriptString  enumerateLinesUsingBlock:^(NSString *exprString, BOOL *stop) {
+        
         if ( [exprString hasPrefix:commentPrefix] && ![exprString hasPrefix:literalArrayPrefix] ) {
  			if ( inComments && [exprString hasPrefix:@"#-"] ) {
 				id methodHeaderString=[exprString substringFromIndex:2];
@@ -50,7 +52,8 @@ idAccessor( script, setScript )
 			[scriptLines addObject:exprString];
 			inComments=NO;
 		}
-    }
+    }];
+    
 	[self setScript:scriptLines];
 }
 

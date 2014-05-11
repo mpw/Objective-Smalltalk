@@ -58,8 +58,12 @@ idAccessor( connectorMap, setConnectorMap );
 -(void)defineBuiltInConnectors
 {
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
+	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u21e6"];
+	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"\u2190"];
 	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"<-"];
 	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"->"];
+	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"\u21e8"];
+	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"\u2192"];
 }
 
 -initWithParent:newParent
@@ -405,8 +409,11 @@ idAccessor( connectorMap, setConnectorMap );
     static id specialSelectorMap=nil;
     if ( !specialSelectorMap ) {
         specialSelectorMap = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                                                    @"add:", @"+",
-                                                                    @"sub:", @"-",
+                              @"isLessThanOrEqualTo:", @"\u2264",
+                              @"isGreaterThanOrEqualTo:", @"\u2265",
+                              @"isNotEqualTo:", @"\u2260",
+                              @"add:", @"+",
+                              @"sub:", @"-",
                                                                     @"pipe:", @"|",
                                                                     @"mul:", @"*",
                                                                     @"div:", @"/",
@@ -416,6 +423,8 @@ idAccessor( connectorMap, setConnectorMap );
                               @"isEqual:", @"=",
                               @"doAssign:", @":=",
                               @"doAssign:", @"<-",
+                              @"doAssign:", @"\u21e6",
+                              @"doAssign:", @"\u2190",
 															  @"pointWith:",@"@",
             nil];
     }
@@ -470,8 +479,9 @@ idAccessor( connectorMap, setConnectorMap );
 {
     id selector=[self parseKeywordOrUnary];
     id args=nil;
-//	NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
-    if ( selector && isalpha( *(unsigned char*)[selector bytes] )) {
+//    NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
+    if ( selector && isalpha( [selector characterAtIndex:0] )) {
+//        NSLog(@"possibly keyword: '%@'",selector);
         BOOL isKeyword =[selector isKeyword];
         if ( isKeyword  ) {
             args=[NSMutableArray array];
@@ -502,12 +512,16 @@ idAccessor( connectorMap, setConnectorMap );
                     }
 				}
             }
+        } else {
+//            NSLog(@"not keyword");
         }
     } else {
 		if ( [selector isEqual:@":="] || [selector isEqual:@"::="]) {
             PARSEERROR(@"unexpected", selector);
 		} else {
+//            NSLog(@"binary: %@",selector);
             id arg=[self parseUnary];
+//            NSLog(@"arg to binary: %@",arg);
             if ( arg ) {
                 args=[NSArray arrayWithObject:arg];
             } else {
