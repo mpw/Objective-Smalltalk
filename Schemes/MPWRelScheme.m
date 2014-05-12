@@ -16,7 +16,9 @@
 @implementation MPWRelScheme
 
 objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
+objectAccessor( MPWBinding, baseRef, _setBaseRef)
 idAccessor(storedContext, setStoredContext)
+
 /*
    FIXME!!
  
@@ -96,8 +98,9 @@ idAccessor(storedContext, setStoredContext)
     MPWBinding *resolved=[aRef bindNames];
 	[self setSource:[resolved scheme]];
 	[self setBaseIdentifier:[[resolved identifier] identifierName]];
-    
+    [self _setBaseRef:resolved];
 }
+
 
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
 {

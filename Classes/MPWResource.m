@@ -34,7 +34,9 @@ idAccessor( source, setSource )
 #if TARGET_OS_IPHONE
         return [NSPropertyListSerialization propertyListFromData:[self rawData] mutabilityOption:0 format:nil errorDescription:nil];
 #else
-        return [[[self rawData] stringValue] propertyList];
+        return [NSPropertyListSerialization propertyListWithData:[self rawData] options:0 format:0 error:nil];
+        
+//        [[[self rawData] stringValue] propertyList];
 #endif
     }
     return nil;
