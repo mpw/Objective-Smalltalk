@@ -317,6 +317,8 @@
 		1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F494147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
+		1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */; };
+		1FA859C01922320F00F52396 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447D19031343009EEE6D /* MPWCommandFilter.h */; };
 		1FAB448819031343009EEE6D /* MPWEchoCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447F19031343009EEE6D /* MPWEchoCommand.h */; };
 		1FAB448919031343009EEE6D /* MPWExternalCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448019031343009EEE6D /* MPWExternalCommand.h */; };
@@ -635,6 +637,8 @@
 		1FA5F48F147CE049007EE753 /* MPWTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTreeNode.m; sourceTree = "<group>"; };
 		1FA741A40886DAFB00121867 /* MPWStTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStTests.h; sourceTree = "<group>"; };
 		1FA741A50886DAFB00121867 /* MPWStTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStTests.m; sourceTree = "<group>"; };
+		1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
+		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
 		1FAB447D19031343009EEE6D /* MPWCommandFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWCommandFilter.h; sourceTree = "<group>"; };
 		1FAB447F19031343009EEE6D /* MPWEchoCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEchoCommand.h; sourceTree = "<group>"; };
 		1FAB448019031343009EEE6D /* MPWExternalCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWExternalCommand.h; sourceTree = "<group>"; };
@@ -1085,6 +1089,8 @@
 		1FBAABFB184BDC0D00086047 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */,
+				1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */,
 				1FAB447D19031343009EEE6D /* MPWCommandFilter.h */,
 				1FAB447F19031343009EEE6D /* MPWEchoCommand.h */,
 				1FAB448019031343009EEE6D /* MPWExternalCommand.h */,
@@ -1549,6 +1555,7 @@
 				1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */,
 				1FAB448B19031343009EEE6D /* MPWAbstractShellCommand.h in Headers */,
 				1FAB448D19031343009EEE6D /* MPWShellProcess.h in Headers */,
+				1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */,
 				1FAB448A19031343009EEE6D /* MPWObjectPipeCommand.h in Headers */,
 				1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */,
 				1FAB448E19031343009EEE6D /* MPWUpcaseFilter.h in Headers */,
@@ -2167,6 +2174,7 @@
 			files = (
 				1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */,
 				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
+				1FA859C01922320F00F52396 /* MPWExpression+autocomplete.m in Sources */,
 				1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */,
 				1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */,
 				1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */,

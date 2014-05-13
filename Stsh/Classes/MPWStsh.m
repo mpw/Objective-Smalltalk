@@ -17,12 +17,16 @@
 #import "MPWClassMirror.h"
 #import "MPWMethodMirror.h"
 #import "MPWMessageExpression.h"
+#import "MPWAssignmentExpression.h"
 #import "MPWStatementList.h"
 #import <MPWFoundation/NSNil.h>
 #import "MPWScheme.h"
 #import <MPWFoundation/MPWByteStream.h>
 #import "MPWAbstractShellCommand.h"
 #import "MPWScriptedMethod.h"
+#import "MPWExpression+autocomplete.h"
+
+
 
 @interface NSObject(AppKitShims)
 
@@ -30,8 +34,17 @@
 
 @end
 
+@interface MPWStsh(autocomplete) <AutocompleteTarget>
+
+
+@end
+
+
 
 @implementation MPWStsh
+{
+    EditLine *currentLine;
+}
 
 boolAccessor( readingFile, _setReadingFile )
 boolAccessor( echo, setEcho )
@@ -300,20 +313,28 @@ static const char * promptfn(EditLine *e) {
     return  commonPrefix;
 }
 
--(void)completeName:(NSString*)currentName withNames:(NSArray*)names inEditLine:(EditLine*)e
+-(void)completeName:(NSString*)currentName withNames:(NSArray*)names
 {
     NSString *commonPrefix=[self commonPrefixInNames:names];
     if ( [commonPrefix length] > [currentName length]) {
         NSString *completion=[commonPrefix substringFromIndex:[currentName length]];
 //        NSLog(@"commonPrefix: %@ currentName: %@ completion: %@",commonPrefix,currentName,completion);
-        el_insertstr(e, [completion UTF8String]);
+        [self insertStringIntoCurrentEditLine:completion];
     } else if ([names count]>1) {
         [self printCompletions:names];
     }
 }
 
+
+-(void)insertStringIntoCurrentEditLine:(NSString*)stringToInsert
+{
+    el_insertstr(currentLine, [stringToInsert UTF8String]);
+}
+
+
 -(BOOL)doCompletionWithLine:(EditLine*)e character:(char)ch
 {
+    currentLine=e;
     const LineInfo *lineInfo = el_line(e);
     if ( lineInfo) {
         const char *start=lineInfo->buffer;
@@ -326,64 +347,11 @@ static const char * promptfn(EditLine *e) {
         @try {
             fprintf(stderr, "\n");
             expr=[evaluator compile:s];
-            if ( [expr isKindOfClass:[MPWIdentifierExpression class]]) {
-                MPWIdentifierExpression *expression=(MPWIdentifierExpression*)expr;
-                MPWBinding* binding=[[evaluator localVars] objectForKey:[expression name]];
-                id value=[binding value];
-                if ( value ) {
-                    if ( [s hasSuffix:@" "]) {
-                        [self printCompletions:[self messageNamesForObject:value matchingPrefix:nil]];
-                    } else {
-                        el_insertstr(e," ");
-                        return YES;
-                    }
-                } else {
-                    if ( [expression scheme] && [_evaluator schemeForName:[expression scheme]]) {
-                        [self completeName:[expression name] withNames:[[_evaluator schemeForName:[expression scheme]] completionsForPartialName:[expression name] inContext:_evaluator] inEditLine:e];
-                    } else {
-
-                        NSString *n=[expression name];
-                        [self completeName:n withNames:[self identifiersMatchingPrefix:n] inEditLine:e];
-//                    [self printCompletions:[self variableNamesMatchingPrefix:[expression name]]];
-                    }
-                }
-                
-                
-            } else if ( [expr isKindOfClass:[MPWMessageExpression class]]) {
-                MPWMessageExpression *msg=(MPWMessageExpression*)expr;
-                id receiver = [[msg receiver] evaluateIn:[self _evaluator]];
-                if ( [s hasSuffix:@" "] ) {
-                    id value=[msg evaluateIn:[self _evaluator]];
-                    NSArray *msgNames=[self messageNamesForObject:value matchingPrefix:nil];
-                    [self printCompletions:msgNames];
-                } else if ( [receiver respondsToSelector:[msg selector]]) {
-                    el_insertstr(e," ");
-                    return YES;
-                } else {
-                    NSString *name=[msg messageNameForCompletion];
-                    if ( [name hasSuffix:@":"]) {
-                        NSRange exprRange=[s rangeOfString:name];
-                        name=[name stringByAppendingString:[s substringFromIndex:exprRange.location+exprRange.length]];
-                    }
-                    NSArray *msgNames=[self messageNamesForObject:receiver matchingPrefix:name];
-                    [self completeName:name withNames:msgNames inEditLine:e];
-                }
-            }
+            return [expr completeString:s inShell:self];
         } @catch ( id e){
             exception=e;
         }
     }
-#if 0
-    // do real completion here
-    if ( numTabs++ & 1 == 1) {
-        system("ls");
-        el_insertstr(e, " ls ");
-        el_set(e, EL_REFRESH);
-    } else {
-        el_insertstr(e, " a word");
-    }
-    
-#endif 
     return NO;
 }
 
