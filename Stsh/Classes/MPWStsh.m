@@ -34,11 +34,6 @@
 
 @end
 
-@interface MPWStsh(autocomplete) <AutocompleteTarget>
-
-
-@end
-
 
 
 @implementation MPWStsh
@@ -79,27 +74,23 @@ intAccessor(completionLimit, setCompletionLimit)
 
 +(void)runCommand:commandName withArgs:args
 {
-	NSAutoreleasePool* pool=[NSAutoreleasePool new];
-	MPWStsh* sh;
-//	NSString* exprString = [NSString stringWithContentsOfFile:commandName encoding:NSUTF8StringEncoding error:nil];
-	sh=[[[self alloc] initWithArgs:args] autorelease];
-//	[sh bindValue:commandName toVariableNamed:@"commandName"];
-	[sh setReadingFile:YES];
-	[sh executeFromFileName:commandName];
-//	expr = [sh compile:exprString];
-//	[sh executeShellExpression:expr];
- 	[pool release];
+    @autoreleasepool {
+        MPWStsh* sh;
+        sh=[[[self alloc] initWithArgs:args] autorelease];
+        [sh setReadingFile:YES];
+        [sh executeFromFileName:commandName];
+    }
 }
 
 +(void)runWithArgs:(NSArray*)args
 {
-	NSAutoreleasePool* pool=[NSAutoreleasePool new];
-	if ( [args count] >= 1 ) {
-		[self runCommand:[args objectAtIndex:0] withArgs:[args subarrayWithRange:NSMakeRange(1,[args count]-1)]];
-	} else {
-		[[[[self alloc] init] autorelease] runInteractiveLoop];
-	}
-	[pool release];
+    @autoreleasepool {
+        if ( [args count] >= 1 ) {
+            [self runCommand:[args objectAtIndex:0] withArgs:[args subarrayWithRange:NSMakeRange(1,[args count]-1)]];
+        } else {
+            [[[[self alloc] init] autorelease] runInteractiveLoop];
+        }
+    }
 }
 
 +(void)runWithArgCount:(int)argc argStrings:(const char**)argv
@@ -166,74 +157,6 @@ static const char * promptfn(EditLine *e) {
     return prompt;
 }
 
--(NSSet *)lessInterestingMessageNames
-{
-    static NSSet *lessInteresting=nil;
-    if (!lessInteresting) {
-        lessInteresting=[[NSSet alloc] initWithArray:
-                @[
-                  @"dealloc",
-                  @"finalize",
-                  @"copy",
-                  @"copyWithZone:",
-                  @"hash",
-                  @"isEqual:",
-                  @"release",
-                  @"autorelease",
-                  @"retain",
-                  @"retainCount",
-                  @"isKindOfClass:",
-                  @"initWithCoder:",
-                  @"encodeWithCoder:",
-                  @"classForCoder",
-                  @"valueForKey:",
-                  @"takeValue:forKey:",
-                  @"setValue:forKey",
-                  @"self",
-                  @"zone",
-                ]];
-    }
-    return lessInteresting;
-}
-
--(NSArray *)sortMessageNamesByImportance:(NSArray *)incomingMessageNames
-{
-    NSMutableArray *firstTier=[NSMutableArray array];
-    NSMutableArray *secondTier=[NSMutableArray array];
-    for ( NSString *messageName in incomingMessageNames) {
-        if ( [messageName hasPrefix:@"_"] ||
-             [messageName hasPrefix:@"accessibility"] || 
-             [[self lessInterestingMessageNames] containsObject:messageName] )
-        {
-            [secondTier addObject:messageName];
-        } else {
-            [firstTier addObject:messageName];
-        }
-    }
-    
-    return [firstTier arrayByAddingObjectsFromArray:secondTier];
-}
-
--(NSArray *)messageNamesForObject:value matchingPrefix:(NSString*)prefix
-{
-    NSMutableSet *alreadySeen=[NSMutableSet set];
-    NSMutableArray *messages=[NSMutableArray array];
-    MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value] ;
-    MPWClassMirror *cm=[om classMirror];
-    while ( cm ){
-        for (MPWMethodMirror *mm in [cm methodMirrors]) {
-            NSString *methodName = [mm name];
-            
-            if ( (!prefix || [prefix length]==0 || [methodName hasPrefix:prefix]) &&
-                ![alreadySeen containsObject:methodName]) {
-                [messages addObject:methodName];
-                [alreadySeen addObject:methodName];
-            }
-        }
-        cm=[cm superclassMirror];
-    }
-    return [self sortMessageNamesByImportance:messages];
-}
 
 -(int)terminalWidth
 {
@@ -284,21 +207,6 @@ static const char * promptfn(EditLine *e) {
     }
 }
 
-
--(NSArray *)schemesToCheck
-{
-    return @[ @"var", @"class", @"scheme"];
-}
-
--(NSArray *)identifiersMatchingPrefix:(NSString*)prefix
-{
-    NSMutableArray *completions=[NSMutableArray array];
-    for ( NSString *schemeName in [self schemesToCheck]) {
-        [completions addObjectsFromArray:[[_evaluator schemeForName:schemeName] completionsForPartialName:prefix inContext:_evaluator]];
-    }
-    return completions;
-}
-
 -(NSString*)commonPrefixInNames:(NSArray*)names
 {
     NSString *commonPrefix=[names firstObject];
@@ -313,6 +221,9 @@ static const char * promptfn(EditLine *e) {
     return  commonPrefix;
 }
 
+
+
+
 -(void)completeName:(NSString*)currentName withNames:(NSArray*)names
 {
     NSString *commonPrefix=[self commonPrefixInNames:names];
@@ -322,6 +233,8 @@ static const char * promptfn(EditLine *e) {
         [self insertStringIntoCurrentEditLine:completion];
     } else if ([names count]>1) {
         [self printCompletions:names];
+    } else if ([names count]==1) {
+        [self insertStringIntoCurrentEditLine:[names firstObject]];
     }
 }
 
@@ -330,6 +243,7 @@ static const char * promptfn(EditLine *e) {
 {
     el_insertstr(currentLine, [stringToInsert UTF8String]);
 }
+
 
 
 -(BOOL)doCompletionWithLine:(EditLine*)e character:(char)ch
@@ -345,9 +259,11 @@ static const char * promptfn(EditLine *e) {
         NSException *exception=nil;
         MPWStCompiler *evaluator=[self _evaluator];
         @try {
+            NSString *resultName=@"";
             fprintf(stderr, "\n");
             expr=[evaluator compile:s];
-            return [expr completeString:s inShell:self];
+            NSArray *completions=[expr completionsForString:s withEvaluator:[self evaluator] resultName:&resultName];
+            [self completeName:resultName withNames:completions];
         } @catch ( id e){
             exception=e;
         }

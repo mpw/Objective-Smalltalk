@@ -6,7 +6,7 @@
 //
 //
 
-#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+#import "MPWEvaluator.h"
 
 @interface MPWStNativeCompiler : MPWEvaluator
 

@@ -198,15 +198,6 @@ idAccessor( connectorMap, setConnectorMap );
 
 #define PARSEERROR( msg, theToken )  [self parseError:msg token:theToken selector:_cmd]
 
--parseObject
-{
-    id object=[self nextToken];
-    if ( ![object isLiteral] ) {
-        PARSEERROR(@"invalidobject",object);
-    }
-    return object;
-}
-
 -parseLiteralArray
 {
     NSMutableArray *array=[NSMutableArray array];
@@ -291,7 +282,7 @@ idAccessor( connectorMap, setConnectorMap );
         if ( nextToken ) {
             lastToken=nextToken;
         }
-        if (   [lastToken isEqual:@"."] ) {
+        if (   [lastToken isEqual:@"."] && [name length]>1) {
             [self pushBack:lastToken];
             name=[name substringToIndex:[name length]-1];
         } else if ( [lastToken isEqual:@")"]) {
@@ -760,11 +751,23 @@ idAccessor( connectorMap, setConnectorMap );
 }
 
 
++(void)testSchemeWithDot
+{
+    MPWStCompiler *compiler=[self compiler];
+    MPWIdentifierExpression *expr=[compiler compile:@"doc:."];
+    EXPECTTRUE([expr isKindOfClass:[MPWIdentifierExpression class]], @"var:. parses to identifer expression");
+    MPWIdentifier *identifier=[expr identifier];
+    IDEXPECT([identifier schemeName], @"doc", @"scheme");
+    IDEXPECT([identifier identifierName], @".", @"path");
+}
+
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
               @"testRightArrowDoesntGenerateMsgExpr",
               @"testPipeSymbolForTemps",
+              @"testSchemeWithDot",
               ];
 }
 

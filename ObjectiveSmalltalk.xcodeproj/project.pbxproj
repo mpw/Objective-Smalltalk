@@ -276,6 +276,9 @@
 		1F88E8DE138ADCCA00199F03 /* MPWResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8DA138ADCCA00199F03 /* MPWResource.m */; };
 		1F88E8DF138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8E0138ADCCA00199F03 /* MPWResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8DA138ADCCA00199F03 /* MPWResource.m */; };
+		1F8E81CC1923AAFD00821570 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */; };
+		1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8E81D01924229B00821570 /* MPWDocumentScheme.m */; };
 		1F90B40413A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F90B40213A62AC1006A3DEB /* MPWSequentialScheme.h */; };
 		1F90B40513A62AC1006A3DEB /* MPWSequentialScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */; };
 		1F90B40613A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F90B40213A62AC1006A3DEB /* MPWSequentialScheme.h */; };
@@ -318,7 +321,23 @@
 		1FA5F494147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA5F495147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */; };
-		1FA859C01922320F00F52396 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
+		1FA859EC1922A13B00F52396 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1FA859F31923731900F52396 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
+		1FA859F91923731900F52396 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FA859F71923731900F52396 /* InfoPlist.strings */; };
+		1FA859FD1923731900F52396 /* ObjectiveSmalltalkUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859FC1923731900F52396 /* ObjectiveSmalltalkUI.m */; };
+		1FA85A031923731900F52396 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC8F845181BF3A3003980D8 /* XCTest.framework */; };
+		1FA85A041923731900F52396 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
+		1FA85A071923731900F52396 /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; };
+		1FA85A0D1923731900F52396 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FA85A0B1923731900F52396 /* InfoPlist.strings */; };
+		1FA85A0F1923731900F52396 /* ObjectiveSmalltalkUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A0E1923731900F52396 /* ObjectiveSmalltalkUITests.m */; };
+		1FA85A1C1923739E00F52396 /* CLIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A181923739E00F52396 /* CLIView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FA85A1D1923739E00F52396 /* CLIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A191923739E00F52396 /* CLIView.m */; };
+		1FA85A1E1923739E00F52396 /* ShellView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A1A1923739E00F52396 /* ShellView.h */; };
+		1FA85A1F1923739E00F52396 /* ShellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A1B1923739E00F52396 /* ShellView.m */; };
+		1FA85A221923744F00F52396 /* FScriptTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A201923744F00F52396 /* FScriptTextView.h */; };
+		1FA85A231923744F00F52396 /* FScriptTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A211923744F00F52396 /* FScriptTextView.m */; };
+		1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A241923746B00F52396 /* FSCommandHistory.h */; };
+		1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A251923746B00F52396 /* FSCommandHistory.m */; };
 		1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447D19031343009EEE6D /* MPWCommandFilter.h */; };
 		1FAB448819031343009EEE6D /* MPWEchoCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447F19031343009EEE6D /* MPWEchoCommand.h */; };
 		1FAB448919031343009EEE6D /* MPWExternalCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448019031343009EEE6D /* MPWExternalCommand.h */; };
@@ -478,9 +497,19 @@
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FF6C6141379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
 		1FF6C6151379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
+		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1FA85A051923731900F52396 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FA859F11923731900F52396;
+			remoteInfo = ObjectiveSmalltalkUI;
+		};
 		1FC8F848181BF3A3003980D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -620,6 +649,8 @@
 		1F88E8AA138ADC1600199F03 /* MPWGenericBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWGenericBinding.m; sourceTree = "<group>"; };
 		1F88E8D9138ADCCA00199F03 /* MPWResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWResource.h; sourceTree = "<group>"; };
 		1F88E8DA138ADCCA00199F03 /* MPWResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWResource.m; sourceTree = "<group>"; };
+		1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDocumentScheme.h; sourceTree = "<group>"; };
+		1F8E81D01924229B00821570 /* MPWDocumentScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDocumentScheme.m; sourceTree = "<group>"; };
 		1F90B40213A62AC1006A3DEB /* MPWSequentialScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSequentialScheme.h; sourceTree = "<group>"; };
 		1F90B40313A62AC1006A3DEB /* MPWSequentialScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSequentialScheme.m; sourceTree = "<group>"; };
 		1FA2EBCD1861A55F0091E840 /* MPWMessageScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessageScheme.h; sourceTree = "<group>"; };
@@ -638,7 +669,25 @@
 		1FA741A40886DAFB00121867 /* MPWStTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStTests.h; sourceTree = "<group>"; };
 		1FA741A50886DAFB00121867 /* MPWStTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStTests.m; sourceTree = "<group>"; };
 		1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
-		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
+		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MPWExpression+autocomplete.m"; path = "../Stsh/Classes/MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
+		1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalkUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA859F61923731900F52396 /* ObjectiveSmalltalkUI-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjectiveSmalltalkUI-Info.plist"; sourceTree = "<group>"; };
+		1FA859F81923731900F52396 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1FA859FA1923731900F52396 /* ObjectiveSmalltalkUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectiveSmalltalkUI-Prefix.pch"; sourceTree = "<group>"; };
+		1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalkUI.h; sourceTree = "<group>"; };
+		1FA859FC1923731900F52396 /* ObjectiveSmalltalkUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveSmalltalkUI.m; sourceTree = "<group>"; };
+		1FA85A021923731900F52396 /* ObjectiveSmalltalkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveSmalltalkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA85A0A1923731900F52396 /* ObjectiveSmalltalkUITests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjectiveSmalltalkUITests-Info.plist"; sourceTree = "<group>"; };
+		1FA85A0C1923731900F52396 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1FA85A0E1923731900F52396 /* ObjectiveSmalltalkUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveSmalltalkUITests.m; sourceTree = "<group>"; };
+		1FA85A181923739E00F52396 /* CLIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLIView.h; sourceTree = "<group>"; };
+		1FA85A191923739E00F52396 /* CLIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLIView.m; sourceTree = "<group>"; };
+		1FA85A1A1923739E00F52396 /* ShellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellView.h; sourceTree = "<group>"; };
+		1FA85A1B1923739E00F52396 /* ShellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShellView.m; sourceTree = "<group>"; };
+		1FA85A201923744F00F52396 /* FScriptTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FScriptTextView.h; sourceTree = "<group>"; };
+		1FA85A211923744F00F52396 /* FScriptTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FScriptTextView.m; sourceTree = "<group>"; };
+		1FA85A241923746B00F52396 /* FSCommandHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCommandHistory.h; sourceTree = "<group>"; };
+		1FA85A251923746B00F52396 /* FSCommandHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCommandHistory.m; sourceTree = "<group>"; };
 		1FAB447D19031343009EEE6D /* MPWCommandFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWCommandFilter.h; sourceTree = "<group>"; };
 		1FAB447F19031343009EEE6D /* MPWEchoCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEchoCommand.h; sourceTree = "<group>"; };
 		1FAB448019031343009EEE6D /* MPWExternalCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWExternalCommand.h; sourceTree = "<group>"; };
@@ -743,6 +792,7 @@
 		1FF6ACB30752982900A306C8 /* MPWBlockContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockContext.m; sourceTree = "<group>"; };
 		1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRelScheme.h; sourceTree = "<group>"; };
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
+		1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStCompiler.m; sourceTree = "<group>"; };
 		F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStScanner.m; sourceTree = "<group>"; };
 		F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWMessageExpression.m; sourceTree = "<group>"; };
@@ -765,6 +815,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA859EC1922A13B00F52396 /* ObjectiveSmalltalk.framework in Frameworks */,
 				1F63561A179EB68900D2DE58 /* Foundation.framework in Frameworks */,
 				1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */,
 				1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */,
@@ -815,6 +866,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05B6144B3E7D008F349D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FA859EE1923731900F52396 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */,
+				1F8E81CC1923AAFD00821570 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1FA859F31923731900F52396 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FA859FF1923731900F52396 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FA85A071923731900F52396 /* ObjectiveSmalltalkUI.framework in Frameworks */,
+				1FA85A041923731900F52396 /* Cocoa.framework in Frameworks */,
+				1FA85A031923731900F52396 /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1066,6 +1137,54 @@
 			name = NSURLHandler;
 			sourceTree = "<group>";
 		};
+		1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */ = {
+			isa = PBXGroup;
+			children = (
+				1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */,
+				1F8E81D01924229B00821570 /* MPWDocumentScheme.m */,
+				1FA85A181923739E00F52396 /* CLIView.h */,
+				1FA85A191923739E00F52396 /* CLIView.m */,
+				1FA85A1A1923739E00F52396 /* ShellView.h */,
+				1FA85A1B1923739E00F52396 /* ShellView.m */,
+				1FA85A241923746B00F52396 /* FSCommandHistory.h */,
+				1FA85A251923746B00F52396 /* FSCommandHistory.m */,
+				1FA85A201923744F00F52396 /* FScriptTextView.h */,
+				1FA85A211923744F00F52396 /* FScriptTextView.m */,
+				1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */,
+				1FA859FC1923731900F52396 /* ObjectiveSmalltalkUI.m */,
+				1FA859F51923731900F52396 /* Supporting Files */,
+			);
+			path = ObjectiveSmalltalkUI;
+			sourceTree = "<group>";
+		};
+		1FA859F51923731900F52396 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1FA859F61923731900F52396 /* ObjectiveSmalltalkUI-Info.plist */,
+				1FA859F71923731900F52396 /* InfoPlist.strings */,
+				1FA859FA1923731900F52396 /* ObjectiveSmalltalkUI-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1FA85A081923731900F52396 /* ObjectiveSmalltalkUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1FA85A0E1923731900F52396 /* ObjectiveSmalltalkUITests.m */,
+				1FA85A091923731900F52396 /* Supporting Files */,
+			);
+			path = ObjectiveSmalltalkUITests;
+			sourceTree = "<group>";
+		};
+		1FA85A091923731900F52396 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1FA85A0A1923731900F52396 /* ObjectiveSmalltalkUITests-Info.plist */,
+				1FA85A0B1923731900F52396 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		1FBAABC1184BDBB900086047 /* StshFramwork */ = {
 			isa = PBXGroup;
 			children = (
@@ -1090,7 +1209,6 @@
 			isa = PBXGroup;
 			children = (
 				1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */,
-				1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */,
 				1FAB447D19031343009EEE6D /* MPWCommandFilter.h */,
 				1FAB447F19031343009EEE6D /* MPWEchoCommand.h */,
 				1FAB448019031343009EEE6D /* MPWExternalCommand.h */,
@@ -1200,6 +1318,8 @@
 				1FC8F84B181BF3A3003980D8 /* SchemeFUSETests */,
 				1FBAABC1184BDBB900086047 /* StshFramwork */,
 				1FBAAC18184BDC6400086047 /* stsh */,
+				1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */,
+				1FA85A081923731900F52396 /* ObjectiveSmalltalkUITests */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -1212,6 +1332,8 @@
 		F5A74ABC00F0A61B015ADD82 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */,
+				1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */,
 				1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */,
 				1FDD4E7018C8627E00339AEE /* MPWBoxerUnboxer.m */,
 				1FED18C01544684600E0D765 /* JSGCDDispatcher.h */,
@@ -1347,6 +1469,8 @@
 				1FC8F844181BF3A3003980D8 /* SchemeFUSETests.xctest */,
 				1FBAAC16184BDC6400086047 /* stsh */,
 				1FAFD98E1855BC5500EC5221 /* StshFramework.framework */,
+				1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */,
+				1FA85A021923731900F52396 /* ObjectiveSmalltalkUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1483,6 +1607,7 @@
 				1F51A74710DA784A00753C9A /* MPWVARBinding.h in Headers */,
 				1F4FD0DD10E4FB3600934A17 /* MPWRefScheme.h in Headers */,
 				1F4FD0ED10E4FEFA00934A17 /* MPWVarScheme.h in Headers */,
+				1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */,
 				1F406E5810F527180054957A /* MPWIdentifier.h in Headers */,
 				1FA2EBCF1861A55F0091E840 /* MPWMessageScheme.h in Headers */,
 				1F406E7A10F52CAC0054957A /* MPWScheme.h in Headers */,
@@ -1543,6 +1668,18 @@
 				1FD713D01522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
 				1FD713DC1522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
 				1FD713E81522DAA6004A5E15 /* MPWObjectMirror.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FA859EF1923731900F52396 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
+				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
+				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
+				1FA85A221923744F00F52396 /* FScriptTextView.h in Headers */,
+				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1716,6 +1853,42 @@
 			productReference = 1F7E05B4144B3E7D008F349D /* libiMethodServer.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FA85A101923731900F52396 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalkUI" */;
+			buildPhases = (
+				1FA859ED1923731900F52396 /* Sources */,
+				1FA859EE1923731900F52396 /* Frameworks */,
+				1FA859EF1923731900F52396 /* Headers */,
+				1FA859F01923731900F52396 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObjectiveSmalltalkUI;
+			productName = ObjectiveSmalltalkUI;
+			productReference = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		1FA85A011923731900F52396 /* ObjectiveSmalltalkUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FA85A141923731900F52396 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalkUITests" */;
+			buildPhases = (
+				1FA859FE1923731900F52396 /* Sources */,
+				1FA859FF1923731900F52396 /* Frameworks */,
+				1FA85A001923731900F52396 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FA85A061923731900F52396 /* PBXTargetDependency */,
+			);
+			name = ObjectiveSmalltalkUITests;
+			productName = ObjectiveSmalltalkUITests;
+			productReference = 1FA85A021923731900F52396 /* ObjectiveSmalltalkUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		1FAFD9741855BC5500EC5221 /* StshFramework */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1FAFD98A1855BC5500EC5221 /* Build configuration list for PBXNativeTarget "StshFramework" */;
@@ -1812,6 +1985,9 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				TargetAttributes = {
+					1FA85A011923731900F52396 = {
+						TestTargetID = 1F5E504B09B4B754000298D9;
+					};
 					1FC8F843181BF3A3003980D8 = {
 						TestTargetID = 1F5E504B09B4B754000298D9;
 					};
@@ -1844,6 +2020,8 @@
 				1FC8F843181BF3A3003980D8 /* SchemeFUSETests */,
 				1FBAAC15184BDC6400086047 /* stsh */,
 				1FAFD9741855BC5500EC5221 /* StshFramework */,
+				1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */,
+				1FA85A011923731900F52396 /* ObjectiveSmalltalkUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1893,6 +2071,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7E05A7144B3E22008F349D /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FA859F01923731900F52396 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FA859F91923731900F52396 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FA85A001923731900F52396 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FA85A0D1923731900F52396 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2073,6 +2267,7 @@
 				1F5E506E09B4B754000298D9 /* MPWAssignmentExpression.m in Sources */,
 				1F5E506F09B4B754000298D9 /* MPWExpression.m in Sources */,
 				1F5E507009B4B754000298D9 /* MPWIdentifierExpression.m in Sources */,
+				1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */,
 				1F5E507109B4B754000298D9 /* MPWMessage.m in Sources */,
 				1F5E507209B4B754000298D9 /* MPWBinding.m in Sources */,
 				1F5E507309B4B754000298D9 /* MPWStatementList.m in Sources */,
@@ -2168,13 +2363,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1FA859ED1923731900F52396 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
+				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
+				1FA859FD1923731900F52396 /* ObjectiveSmalltalkUI.m in Sources */,
+				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
+				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
+				1FA85A231923744F00F52396 /* FScriptTextView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FA859FE1923731900F52396 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FA85A0F1923731900F52396 /* ObjectiveSmalltalkUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FAFD9751855BC5500EC5221 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */,
 				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
-				1FA859C01922320F00F52396 /* MPWExpression+autocomplete.m in Sources */,
 				1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */,
 				1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */,
 				1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */,
@@ -2287,6 +2502,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1FA85A061923731900F52396 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */;
+			targetProxy = 1FA85A051923731900F52396 /* PBXContainerItemProxy */;
+		};
 		1FC8F849181BF3A3003980D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FC8F833181BF3A3003980D8 /* SchemeFUSE */;
@@ -2331,6 +2551,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				1F7E05A6144B3E22008F349D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1FA859F71923731900F52396 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FA859F81923731900F52396 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1FA85A0B1923731900F52396 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FA85A0C1923731900F52396 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -3032,6 +3268,284 @@
 			};
 			name = Release;
 		};
+		1FA85A111923731900F52396 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Development;
+		};
+		1FA85A121923731900F52396 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1FA85A131923731900F52396 /* Release Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release Tiger";
+		};
+		1FA85A151923731900F52396 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ObjectiveSmalltalk.framework/Versions/A/ObjectiveSmalltalk";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "ObjectiveSmalltalkUITests/ObjectiveSmalltalkUITests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Development;
+		};
+		1FA85A161923731900F52396 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ObjectiveSmalltalk.framework/Versions/A/ObjectiveSmalltalk";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "ObjectiveSmalltalkUITests/ObjectiveSmalltalkUITests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		1FA85A171923731900F52396 /* Release Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ObjectiveSmalltalk.framework/Versions/A/ObjectiveSmalltalk";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "ObjectiveSmalltalkUITests/ObjectiveSmalltalkUITests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = "Release Tiger";
+		};
 		1FAFD98B1855BC5500EC5221 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3673,6 +4187,26 @@
 				1FA354020854F75C0056996B /* Development */,
 				1FA354030854F75C0056996B /* Release */,
 				1F20E4E90F5B5D45002153EE /* Release Tiger */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FA85A101923731900F52396 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalkUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FA85A111923731900F52396 /* Development */,
+				1FA85A121923731900F52396 /* Release */,
+				1FA85A131923731900F52396 /* Release Tiger */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FA85A141923731900F52396 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalkUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FA85A151923731900F52396 /* Development */,
+				1FA85A161923731900F52396 /* Release */,
+				1FA85A171923731900F52396 /* Release Tiger */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

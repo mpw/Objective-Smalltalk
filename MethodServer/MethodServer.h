@@ -26,5 +26,6 @@
 -(void)setup;
 -(void)setDelegate:aDelegate;
 -delegate;
+-(MPWStCompiler*)interpreter;
 
 @end
