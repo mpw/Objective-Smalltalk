@@ -16,6 +16,7 @@
 #import "MPWExpression.h"
 #import "MPWMessageExpression.h"
 #import "MPWStatementList.h"
+#import "MPWIdentifierExpression.h"
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
 
@@ -31,6 +32,10 @@
 
 @end
 
+@interface MPWExpression(generation)
+-(NSString*)generateOn:(MPWCodeGenerator*)generator;
+
+@end
 
 
 @implementation MPWCodeGenerator
@@ -108,12 +113,12 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
     NSMutableArray *messageArgumentNames = [NSMutableArray array];
     NSMutableArray *messageArgumentTypes = [NSMutableArray array];
     for ( int i=0;i<[[messageSend args] count];i++) {
-        [messageArgumentNames addObject:[@"%" stringByAppendingString:[[[messageSend args] objectAtIndex:i] name]]];
+        [messageArgumentNames addObject:[[[messageSend args] objectAtIndex:i] generateOn:self]];
         [messageArgumentTypes addObject:@"%id"];
     }
     
     NSString *retval =[assemblyGenerator emitMsg:[messageSend messageName]
-                      receiver:[@"%" stringByAppendingString:[[messageSend receiver] name]]
+                      receiver:[[messageSend receiver] generateOn:self]
                     returnType:@"%id"
                           args:messageArgumentNames
                       argTypes:messageArgumentTypes
@@ -121,9 +126,14 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
     return retval;
 }
 
+-(NSString*)generateIdentifierRead:(MPWIdentifierExpression*)expression
+{
+    return [@"%" stringByAppendingString:[expression name]];
+}
+
 -(NSString*)generateMethodWithHeader:(MPWMethodHeader*)header body:(MPWStatementList*)method forClass:(NSString*)classname
 {
-    MPWMessageExpression *methodBody=[[method statements] lastObject];
+//    MPWMessageExpression *methodBody=[[method statements] lastObject];
     NSString *objcReturnType = [[header typeString] substringToIndex:1];
     
     NSString *llvmReturnType = [assemblyGenerator typeToLLVMType:[objcReturnType characterAtIndex:0]];
@@ -145,7 +155,7 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
                                          methodType:llvmReturnType
                                 additionalParametrs:allMethodArguments
                                          methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-                                             NSString *retval=[self generateMessageSend:methodBody];
+                                             NSString *retval=[method generateOn:self];
                                              
                                              [assemblyGenerator emitReturnVal:retval type:@"%id"];
                                          }];
@@ -153,6 +163,40 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
 }
 
 @end
+
+@implementation MPWMessageExpression(generation)
+
+-(NSString*)generateOn:(MPWCodeGenerator*)generator
+{
+    return [generator generateMessageSend:self];
+}
+
+@end
+
+@implementation MPWStatementList(generation)
+
+-(NSString*)generateOn:(MPWCodeGenerator*)generator
+{
+    NSString *result=nil;
+    for ( MPWExpression *expression in [self statements]) {
+        result = [expression generateOn:generator];
+    }
+    return result;
+}
+
+@end
+
+
+@implementation MPWIdentifierExpression(generation)
+
+-(NSString*)generateOn:(MPWCodeGenerator*)generator
+{
+    return [generator generateIdentifierRead:self];
+}
+
+@end
+
+
 
 #import <MPWFoundation/MPWFoundation.h>
 
