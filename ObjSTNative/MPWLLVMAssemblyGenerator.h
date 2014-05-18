@@ -30,10 +30,15 @@
 -(NSString*)stringRef:(NSString*)ref;
 -(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral;
 
+-(NSString*)emitMsg:(NSString*)msgName receiver:(NSString*)receiverName  returnType:(NSString*)retType args:(NSArray*)args argTypes:(NSArray*)argTypes;
+
 
 -(void)flushSelectorReferences;
 
 //--- temp/testing
+
+-(NSString*)typeToLLVMType:(char)typeChar;
+
 
 @end
 

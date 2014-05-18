@@ -212,6 +212,11 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 }
 
 
+-(NSString*)typeToLLVMType:(char)typeChar
+{
+    return typeCharToLLVMType(typeChar);
+}
+
 -(NSString*)typeStringToLLVMMethodType:(NSString*)typeString
 {
     NSMutableString *llvmType=[NSMutableString string];

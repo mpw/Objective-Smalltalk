@@ -7,7 +7,7 @@
 //
 
 #import "MPWObjCGenerator.h"
-
+#import "MPWLiteralExpression.h"
 
 @implementation MPWObjCGenerator
 
@@ -78,6 +78,15 @@
 -(void)generateObjectiveCOn:aGenerator
 {
     [aGenerator writeNSString:self];
+}
+
+@end
+
+@implementation MPWLiteralExpression(generateObjectiveCOn)
+
+-(void)generateObjectiveCOn:aGenerator
+{
+    [aGenerator writeObject:[self theLiteral]];
 }
 
 @end

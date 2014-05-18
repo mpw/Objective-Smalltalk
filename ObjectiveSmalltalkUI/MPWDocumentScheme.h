@@ -7,6 +7,7 @@
 //
 
 #import <ObjectiveSmalltalk/MPWGenericScheme.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 @interface MPWDocumentScheme : MPWGenericScheme
 {

@@ -11,6 +11,10 @@
 #import "MPWLLVMAssemblyGenerator.h"
 #import <dlfcn.h>
 #import <objc/runtime.h>
+#import "MPWStCompiler.h"
+#import "MPWMethodHeader.h"
+#import "MPWExpression.h"
+#import "MPWMessageExpression.h"
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
 
@@ -30,7 +34,10 @@
 
 @implementation MPWCodeGenerator
 
-
++(instancetype)codegen
+{
+    return [[[self alloc] init] autorelease];
+}
 
 +(NSString*)createTempDylibName
 {
@@ -108,7 +115,7 @@
 {
     static BOOL wasRunOnce=NO;          // bit of a hack, but I want these tests to be automagically mirrored by subclass
     if ( !wasRunOnce) {
-        MPWCodeGenerator *codegen=[[self new] autorelease];
+        MPWCodeGenerator *codegen=[self codegen];
         NSString *classname=@"EmptyCodeGenTestClass01";
         NSData *source=[[NSBundle bundleForClass:self] resourceWithName:@"empty-class" type:@"llvm-templateasm"];
         EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
@@ -127,7 +134,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -151,7 +158,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -170,7 +177,7 @@
     [gen writeTrailer];
     [gen flush];
     NSData *source=[gen target];
-//    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
+    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
@@ -186,7 +193,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -234,7 +241,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -268,7 +275,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -303,7 +310,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -342,7 +349,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=@"NSObject";
@@ -380,7 +387,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -419,7 +426,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -455,7 +462,7 @@
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
-    MPWCodeGenerator *codegen=[[self new] autorelease];
+    MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
     
     NSString *classname=[self anotherTestClassName];
@@ -487,6 +494,77 @@
     IDEXPECT(res1, (@[ @"Hello", @"these", @"are", @"some", @"lines"]), @"block execution 1");
 }
 
++(void)testDefineClassWithOneSimpleSmalltalkMethod
+{
+    NSString *classname=[self anotherTestClassName];
+    MPWCodeGenerator *codegen=[self codegen];
+    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"components:source splitInto:separator"];
+    MPWMessageExpression *methodBody=[[[compiler compile:@"source componentsSeparatedByString:separator."] statements  ]lastObject];
+
+    NSString *objcReturnType = [[header typeString] substringToIndex:1];
+    IDEXPECT(objcReturnType, @"@", @"return type");
+    
+    NSString *llvmReturnType = [gen typeToLLVMType:[objcReturnType characterAtIndex:0]];
+    
+
+    IDEXPECT(llvmReturnType, @"%id ", @"return type");
+//    EXPECTTRUE([methodBody isKindOfClass:[MPWMessageExpression class]], @"should be msg expression");
+    
+    
+    NSLog(@"methodBody: %@/%@",[methodBody class],methodBody);
+    
+    [gen writeHeaderWithName:@"testModule"];
+
+    NSMutableArray *allMethodArguments=[NSMutableArray array];
+    for ( int i=0;i<[header numArguments];i++) {
+        char typeChar =[[header typeStringForTypeName:[header argumentNameAtIndex:i]] characterAtIndex:0];
+        
+        [allMethodArguments addObject:[NSString stringWithFormat:@"%@ %@",[gen typeToLLVMType:typeChar],[@"%" stringByAppendingString:[header argumentNameAtIndex:i]]]];
+    }
+    
+    NSMutableArray *messageArgumentNames = [NSMutableArray array];
+    NSMutableArray *messageArgumentTypes = [NSMutableArray array];
+    for ( int i=0;i<[[methodBody args] count];i++) {
+        [messageArgumentNames addObject:[@"%" stringByAppendingString:[[[methodBody args] objectAtIndex:i] name]]];
+        [messageArgumentTypes addObject:@"%id"];
+    }
+    
+    NSLog(@"messageArgumentNames: %@",messageArgumentNames);
+    NSString *methodSymbol1 = [gen writeMethodNamed:[header methodName]
+                className:classname
+               methodType:llvmReturnType
+      additionalParametrs:allMethodArguments
+               methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+                   NSString *retval =[gen emitMsg:[methodBody messageName]
+                                         receiver:[@"%" stringByAppendingString:[[methodBody receiver] name]]
+                                       returnType:llvmReturnType
+                                             args:messageArgumentNames
+                                         argTypes:messageArgumentTypes
+                                      ];
+                   
+                    [gen emitReturnVal:retval type:@"%id"];
+               }];
+    NSString *typeString1 = [header typeString];
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ [header methodName]]  methodSymbols:@[ methodSymbol1 ] methodTypes:@[ typeString1]];
+    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef  numInstanceMethods:1];
+    
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    NSData *source=[gen target];
+    [source writeToFile:@"/tmp/fromsmalltalk.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
+    NSArray *splitResult=[instance components:@"Hi there" splitInto:@" "];
+    IDEXPECT(splitResult, (@[@"Hi", @"there"]), @"loaded method");
+    
+}
 
 +testSelectors
 {
@@ -502,6 +580,7 @@
              @"testGenerateBlockUse",
              @"testGenerateGlobalBlockCreate",
              @"testGenerateStackBlockWithVariableCapture",
+             @"testDefineClassWithOneSimpleSmalltalkMethod",
               ];
 }
 

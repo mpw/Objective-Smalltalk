@@ -34,4 +34,6 @@ objectAccessor_h( NSString , methodName, setMethodName )
 -(NSMutableArray*)parameterNames;
 -(SEL)selector;
 
+-typeStringForTypeName:aType;
+
 @end

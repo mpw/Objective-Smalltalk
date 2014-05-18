@@ -334,8 +334,6 @@
 		1FA85A1D1923739E00F52396 /* CLIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A191923739E00F52396 /* CLIView.m */; };
 		1FA85A1E1923739E00F52396 /* ShellView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A1A1923739E00F52396 /* ShellView.h */; };
 		1FA85A1F1923739E00F52396 /* ShellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A1B1923739E00F52396 /* ShellView.m */; };
-		1FA85A221923744F00F52396 /* FScriptTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A201923744F00F52396 /* FScriptTextView.h */; };
-		1FA85A231923744F00F52396 /* FScriptTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A211923744F00F52396 /* FScriptTextView.m */; };
 		1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A241923746B00F52396 /* FSCommandHistory.h */; };
 		1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A251923746B00F52396 /* FSCommandHistory.m */; };
 		1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447D19031343009EEE6D /* MPWCommandFilter.h */; };
@@ -500,6 +498,10 @@
 		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
+		1FFD20DE19278611009052B1 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; };
+		1FFD20DF19278611009052B1 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
+		1FFD20E019278616009052B1 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
+		1FFD20E11927861A009052B1 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -684,8 +686,6 @@
 		1FA85A191923739E00F52396 /* CLIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLIView.m; sourceTree = "<group>"; };
 		1FA85A1A1923739E00F52396 /* ShellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellView.h; sourceTree = "<group>"; };
 		1FA85A1B1923739E00F52396 /* ShellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShellView.m; sourceTree = "<group>"; };
-		1FA85A201923744F00F52396 /* FScriptTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FScriptTextView.h; sourceTree = "<group>"; };
-		1FA85A211923744F00F52396 /* FScriptTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FScriptTextView.m; sourceTree = "<group>"; };
 		1FA85A241923746B00F52396 /* FSCommandHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCommandHistory.h; sourceTree = "<group>"; };
 		1FA85A251923746B00F52396 /* FSCommandHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCommandHistory.m; sourceTree = "<group>"; };
 		1FAB447D19031343009EEE6D /* MPWCommandFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWCommandFilter.h; sourceTree = "<group>"; };
@@ -793,6 +793,8 @@
 		1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRelScheme.h; sourceTree = "<group>"; };
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
 		1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
+		1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralExpression.h; sourceTree = "<group>"; };
+		1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralExpression.m; sourceTree = "<group>"; };
 		F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStCompiler.m; sourceTree = "<group>"; };
 		F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStScanner.m; sourceTree = "<group>"; };
 		F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWMessageExpression.m; sourceTree = "<group>"; };
@@ -1148,8 +1150,6 @@
 				1FA85A1B1923739E00F52396 /* ShellView.m */,
 				1FA85A241923746B00F52396 /* FSCommandHistory.h */,
 				1FA85A251923746B00F52396 /* FSCommandHistory.m */,
-				1FA85A201923744F00F52396 /* FScriptTextView.h */,
-				1FA85A211923744F00F52396 /* FScriptTextView.m */,
 				1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */,
 				1FA859FC1923731900F52396 /* ObjectiveSmalltalkUI.m */,
 				1FA859F51923731900F52396 /* Supporting Files */,
@@ -1334,6 +1334,8 @@
 			children = (
 				1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */,
 				1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */,
+				1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */,
+				1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */,
 				1FDD4E6F18C8627E00339AEE /* MPWBoxerUnboxer.h */,
 				1FDD4E7018C8627E00339AEE /* MPWBoxerUnboxer.m */,
 				1FED18C01544684600E0D765 /* JSGCDDispatcher.h */,
@@ -1605,6 +1607,7 @@
 				1F22C8CA0BC8DCD2003BC673 /* MPWBridgeReader.h in Headers */,
 				1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */,
 				1F51A74710DA784A00753C9A /* MPWVARBinding.h in Headers */,
+				1FFD20DE19278611009052B1 /* MPWLiteralExpression.h in Headers */,
 				1F4FD0DD10E4FB3600934A17 /* MPWRefScheme.h in Headers */,
 				1F4FD0ED10E4FEFA00934A17 /* MPWVarScheme.h in Headers */,
 				1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */,
@@ -1678,7 +1681,6 @@
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
-				1FA85A221923744F00F52396 /* FScriptTextView.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2213,6 +2215,7 @@
 				1F4CB55D1253D53C00B30C99 /* NSObjectScripting.m in Sources */,
 				1F4CB55E1253D53C00B30C99 /* MPWConnector.m in Sources */,
 				1F4CB55F1253D53C00B30C99 /* MPWFastMessage.m in Sources */,
+				1FFD20E11927861A009052B1 /* MPWLiteralExpression.m in Sources */,
 				1F4CB5611253D53C00B30C99 /* MPWClassScheme.m in Sources */,
 				1F4CB5621253D53C00B30C99 /* MPWVARBinding.m in Sources */,
 				1F4CB5631253D53C00B30C99 /* MPWRefScheme.m in Sources */,
@@ -2297,6 +2300,7 @@
 				1F4FD0DE10E4FB3600934A17 /* MPWRefScheme.m in Sources */,
 				1F4FD0EE10E4FEFA00934A17 /* MPWVarScheme.m in Sources */,
 				1F406E5910F527180054957A /* MPWIdentifier.m in Sources */,
+				1FFD20DF19278611009052B1 /* MPWLiteralExpression.m in Sources */,
 				1F406E7B10F52CAC0054957A /* MPWScheme.m in Sources */,
 				1F406EB510F534D90054957A /* MPWNamedIdentifier.m in Sources */,
 				1F406EBF10F5354C0054957A /* MPWRecursiveIdentifier.m in Sources */,
@@ -2372,7 +2376,6 @@
 				1FA859FD1923731900F52396 /* ObjectiveSmalltalkUI.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
-				1FA85A231923744F00F52396 /* FScriptTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2455,6 +2458,7 @@
 				1FE08F1C137808EA003B18B9 /* MPWGetAccessor.m in Sources */,
 				1FE08F1D137808EA003B18B9 /* MPWScriptedMethod.m in Sources */,
 				1FE08F1E137808EA003B18B9 /* MPWMethod.m in Sources */,
+				1FFD20E019278616009052B1 /* MPWLiteralExpression.m in Sources */,
 				1FE08F1F137808EA003B18B9 /* MPWMethodStore.m in Sources */,
 				1FE08F20137808EA003B18B9 /* NSObjectScripting.m in Sources */,
 				1FE08F21137808EA003B18B9 /* MPWConnector.m in Sources */,
@@ -2665,7 +2669,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2711,7 +2715,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2742,7 +2746,7 @@
 		1F20E4E90F5B5D45002153EE /* Release Tiger */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				SDKROOT = macosx;
 			};
@@ -3253,7 +3257,7 @@
 		1FA354020854F75C0056996B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				SDKROOT = macosx;
 			};
@@ -3262,7 +3266,7 @@
 		1FA354030854F75C0056996B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				SDKROOT = macosx;
 			};

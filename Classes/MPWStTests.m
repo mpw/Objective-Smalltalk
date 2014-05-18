@@ -558,8 +558,8 @@
 {
     id compiler = [[[self alloc] init] autorelease];
     id parsedNumber = [@"1" compileIn:compiler];
-    id objcNumber = [MPWObjCGenerator process:parsedNumber];
-    IDEXPECT( objcNumber, @"1", @"generating Objective-C for constant didn't work");
+    id objcNumber = [parsedNumber evaluateIn:compiler] ;
+    IDEXPECT( objcNumber, @(1), @"generating Objective-C for constant didn't work");
     id parsedString = [@"'hello'" compileIn:compiler];
     id objcString = [MPWObjCGenerator process:parsedString];
     IDEXPECT( objcString, @"@\"hello\"", @"generating Objective-C for constant string didn't work");

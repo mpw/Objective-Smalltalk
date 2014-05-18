@@ -2,7 +2,6 @@
 /*   This software is open source. See the license.  */  
 
 #import <AppKit/AppKit.h>
-#import "FScriptTextView.h"
 
 @class FSCommandHistory;
 
@@ -14,7 +13,7 @@ typedef enum {DECOMPOSE,NO_DECOMPOSE} T_parser_mode;
 
 @class MPWByteStream;
 
-@interface ShellView : FScriptTextView <NSTextViewDelegate>
+@interface ShellView : NSTextView <NSTextViewDelegate>
 {
   NSString *prompt;
     MPWByteStream *stdout;

@@ -195,6 +195,7 @@ static void CatchException(NSException *exception)
     NSLog(@"MethodServer setupWebServer");
     [super setupWebServer];
     [[self server] setPort:51000];
+    [[self server] setThreadPoolSize:2];
     NSLog(@"Method Server bonjour name: %@",[self methodDictName]);
     [[self server] setBonjourName:[self methodDictName]];
     [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];

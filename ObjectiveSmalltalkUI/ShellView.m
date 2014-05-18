@@ -56,25 +56,44 @@ static BOOL useMaxSize;
 
 - (NSArray *)completionsForPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index
 {
-  NSString *stringToComplete;
   NSMutableArray *result;
   NSArray *superResult;
-  NSUInteger i, count;
  
     
     
+    NSString *completionFor=[[self string] substringWithRange:charRange];
     
-    
-    NSLog(@"completionsForPartialWordRange: %@/'%@'",NSStringFromRange(charRange),[[self string] substringWithRange:charRange]);
-  superResult = [super completionsForPartialWordRange:charRange indexOfSelectedItem:index];
+    NSLog(@"completionsForPartialWordRange: %@/'%@'",NSStringFromRange(charRange),completionFor);
+//  superResult = [super completionsForPartialWordRange:charRange indexOfSelectedItem:index];
   
-  result = [NSMutableArray arrayWithCapacity:[superResult count]];
+//  result = [NSMutableArray arrayWithCapacity:[superResult count]];
 
     
     NSString *currentCommand = [self currentCommandLine];
     MPWExpression *expr = [commandHandler compile:currentCommand];
     NSString *str=@"";
     NSArray *completions = [expr completionsForString:currentCommand withEvaluator:commandHandler resultName:&str];
+
+    
+    if ( [completions count]==1 && [[completions firstObject] isEqualToString:completionFor]) {
+        [self insertText:@" "];
+        completions=nil;
+    }
+    
+    if ( [completions count]==1 && [[completions firstObject] isEqualToString:@" "]) {
+        [self insertText:@" "];
+        completions=nil;
+    }
+    
+    NSString *common=[completions firstObject];
+    for ( NSString *s in completions) {
+        common=[common commonPrefixWithString:s options:NSLiteralSearch];
+    }
+    if ( [common length] > charRange.length) {
+        [self insertText:[common substringFromIndex:charRange.length]];
+        return nil;
+    }
+    
     return completions;
     
 
@@ -144,6 +163,29 @@ static BOOL useMaxSize;
   [self setSelectedRange:NSMakeRange(selectedRange.location+delta, selectedRange.length)]; 
 } 
 
+-(void)jumpToNextPlaceHolder
+{
+    const unichar placeHolderCharacter = 8226;
+    NSString *placeHolderString = [NSString stringWithCharacters:&placeHolderCharacter length:1];
+    NSString *text = [self string];
+    NSRange selectedRange = [self selectedRange];
+    NSRange nextPlaceHolderRange;
+    
+    if ([[text substringWithRange:selectedRange] isEqualToString:placeHolderString])
+        nextPlaceHolderRange = [text rangeOfString:placeHolderString options:NSLiteralSearch range:NSMakeRange(selectedRange.location + 1, [text length] - (selectedRange.location + 1))];
+    else
+        nextPlaceHolderRange = [text rangeOfString:placeHolderString options:NSLiteralSearch range:NSMakeRange(selectedRange.location, [text length] - selectedRange.location)];
+    
+    if (nextPlaceHolderRange.location == NSNotFound) nextPlaceHolderRange = [text rangeOfString:placeHolderString options:NSLiteralSearch range:NSMakeRange(0, selectedRange.location)];
+    if (nextPlaceHolderRange.location == NSNotFound)
+    {
+        if (![[text substringWithRange:selectedRange] isEqualToString:placeHolderString]) NSBeep();
+    }
+    else                                             [self setSelectedRange:nextPlaceHolderRange];
+}
+
+
+
 - (void)keyDown:(NSEvent *)theEvent  // Called by the AppKit when the user press a key.
 {
   //NSLog(@"key = %@",[theEvent characters]);
@@ -190,6 +232,9 @@ static BOOL useMaxSize;
   {
     switch (theCharacter)
     {
+        case '/':
+            [self jumpToNextPlaceHolder];
+            break;
       case RETURN_CHAR:
         [self insertNewlineIgnoringFieldEditor:self];
         break;
@@ -212,9 +257,12 @@ static BOOL useMaxSize;
   {
     switch (theCharacter)
     {
-      case RETURN_CHAR:
-        [self executeCurrentCommand:self];
-        break;
+        case 9:
+            [self complete:self];
+            break;
+        case RETURN_CHAR:
+            [self executeCurrentCommand:self];
+            break;
       case NSF7FunctionKey:
         [self switchParserMode:self];
         break;
@@ -529,5 +577,29 @@ static BOOL useMaxSize;
     return YES;
   }
 }
+
+
+
+- (void)insertCompletion:(NSString *)word forPartialWordRange:(NSRange)charRange movement:(NSInteger)movement isFinal:(BOOL)flag
+{
+    // NSLog(@"word = %@, movement = %@, isFlinal = %@", word, [NSNumber numberWithInteger:movement], flag ? @"YES" : @"NO");
+    
+    const unichar placeHolderCharacter = 8226;
+    NSString *placeHolderString = [NSString stringWithCharacters:&placeHolderCharacter length:1];
+    NSMutableString *stringToDisplay = [[word mutableCopy] autorelease];
+    NSUInteger replacedCount = [stringToDisplay replaceOccurrencesOfString:@":" withString:[NSString stringWithFormat:@":%@ ", placeHolderString] options:NSLiteralSearch range:NSMakeRange(0, [stringToDisplay length])];
+    
+    if (flag && movement != NSCancelTextMovement && replacedCount > 1)
+    {
+        [super insertCompletion:stringToDisplay forPartialWordRange:charRange movement:movement isFinal:flag];
+        NSString *text = [self string];
+        [self setSelectedRange:[text rangeOfString:placeHolderString options:NSLiteralSearch range:NSMakeRange(charRange.location, [stringToDisplay length])]];
+    }
+    else {
+        [super insertCompletion:word forPartialWordRange:charRange movement:movement isFinal:flag];
+    }
+}
+
+
 
 @end

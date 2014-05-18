@@ -12,4 +12,6 @@
 {
 }
 
++(instancetype)codegen;
+
 @end

@@ -22,6 +22,7 @@
 #import "MPWSchemeScheme.h"
 #import "MPWConnectToDefault.h"
 #import <MPWFoundation/NSNil.h>
+#import "MPWLiteralExpression.h"
 
 @implementation NSString(concat)
 
@@ -227,10 +228,12 @@ idAccessor( connectorMap, setConnectorMap );
 {
     id object = [self nextToken];
     if ( [object isEqual:@"("] ) {
-        return [self parseLiteralArray];
-    } else {
-        return object;
+        object = [self parseLiteralArray];
     }
+    
+    MPWLiteralExpression *e=[[MPWLiteralExpression new] autorelease];
+    [e setTheLiteral:object];
+    return e;
 }
 
 -makeComplexIdentifier:aToken
@@ -332,7 +335,11 @@ idAccessor( connectorMap, setConnectorMap );
 		object = [self makeLocalVar:object];
     } else if ( [object isToken] && [[object stringValue] isScheme] ) {
 		object = [self makeComplexIdentifier:object];
-	}
+	} else if ( [object isKindOfClass:[NSNumber class]] ||  [object isKindOfClass:[NSString class]]){
+        MPWLiteralExpression *e=[[MPWLiteralExpression new] autorelease];
+        [e setTheLiteral:object];
+        object = e;
+    }
     return object;
 }
 

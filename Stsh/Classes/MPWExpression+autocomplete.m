@@ -17,6 +17,7 @@
 #import "MPWMethodMirror.h"
 #import "MPWObjectMirror.h"
 #import "MPWClassMirror.h"
+#import "MPWLiteralExpression.h"
 
 @implementation MPWExpression(completion)
 
@@ -157,8 +158,9 @@
     if ( [s hasSuffix:@" "] ) {
         id value=[self evaluateIn:evaluator];
         completions=[self messageNamesForObject:value matchingPrefix:nil];
-    } else if ( [evaluatedReceiver respondsToSelector:[self selector]]) {
-        completions=@[ @""];
+//    } else if ( [evaluatedReceiver respondsToSelector:[self selector]]) {
+//        completions = [self messageNamesForObject:evaluatedReceiver matchingPrefix:name];
+//        *resultName=name;
     } else {
         NSString *name=[self messageNameForCompletion];
         if ( [name hasSuffix:@":"]) {
@@ -167,6 +169,9 @@
         }
         *resultName=name;
         completions=[self messageNamesForObject:evaluatedReceiver matchingPrefix:name];
+        if ( [completions count] == 0 && [evaluatedReceiver respondsToSelector:[self selector]]) {
+            completions=@[@" "];
+        }
     }
     return completions;
 }
@@ -192,4 +197,11 @@
 
 @end
 
+@implementation MPWLiteralExpression(completion)
 
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+{
+    return [self messageNamesForObject:[self theLiteral] matchingPrefix:nil];
+}
+
+@end
