@@ -15,6 +15,7 @@
 #import "MPWMethodHeader.h"
 #import "MPWExpression.h"
 #import "MPWMessageExpression.h"
+#import "MPWStatementList.h"
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
 
@@ -34,9 +35,23 @@
 
 @implementation MPWCodeGenerator
 
+objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator )
+
 +(instancetype)codegen
 {
     return [[[self alloc] init] autorelease];
+}
+
+-(instancetype)initWithAssemblyGenerator:(MPWLLVMAssemblyGenerator*)newGenerator
+{
+    self=[super init];
+    [self setAssemblyGenerator:newGenerator];
+    return self;
+}
+
+-(instancetype)init
+{
+    return [self initWithAssemblyGenerator:[MPWLLVMAssemblyGenerator stream]];
 }
 
 +(NSString*)createTempDylibName
@@ -88,6 +103,54 @@
 
 }
 
+-(NSString*)generateMessageSend:(MPWMessageExpression*)messageSend
+{
+    NSMutableArray *messageArgumentNames = [NSMutableArray array];
+    NSMutableArray *messageArgumentTypes = [NSMutableArray array];
+    for ( int i=0;i<[[messageSend args] count];i++) {
+        [messageArgumentNames addObject:[@"%" stringByAppendingString:[[[messageSend args] objectAtIndex:i] name]]];
+        [messageArgumentTypes addObject:@"%id"];
+    }
+    
+    NSString *retval =[assemblyGenerator emitMsg:[messageSend messageName]
+                      receiver:[@"%" stringByAppendingString:[[messageSend receiver] name]]
+                    returnType:@"%id"
+                          args:messageArgumentNames
+                      argTypes:messageArgumentTypes
+    ];
+    return retval;
+}
+
+-(NSString*)generateMethodWithHeader:(MPWMethodHeader*)header body:(MPWStatementList*)method forClass:(NSString*)classname
+{
+    MPWMessageExpression *methodBody=[[method statements] lastObject];
+    NSString *objcReturnType = [[header typeString] substringToIndex:1];
+    
+    NSString *llvmReturnType = [assemblyGenerator typeToLLVMType:[objcReturnType characterAtIndex:0]];
+    
+    
+    
+    
+    NSMutableArray *allMethodArguments=[NSMutableArray array];
+    for ( int i=0;i<[header numArguments];i++) {
+        char typeChar =[[header typeStringForTypeName:[header argumentNameAtIndex:i]] characterAtIndex:0];
+        
+        [allMethodArguments addObject:[NSString stringWithFormat:@"%@ %@",[assemblyGenerator typeToLLVMType:typeChar],[@"%" stringByAppendingString:[header argumentNameAtIndex:i]]]];
+    }
+
+    
+    
+    NSString *methodSymbol1 = [assemblyGenerator writeMethodNamed:[header methodName]
+                                          className:classname
+                                         methodType:llvmReturnType
+                                additionalParametrs:allMethodArguments
+                                         methodBody:^(MPWLLVMAssemblyGenerator *generator) {
+                                             NSString *retval=[self generateMessageSend:methodBody];
+                                             
+                                             [assemblyGenerator emitReturnVal:retval type:@"%id"];
+                                         }];
+    return methodSymbol1;
+}
 
 @end
 
@@ -498,56 +561,14 @@
 {
     NSString *classname=[self anotherTestClassName];
     MPWCodeGenerator *codegen=[self codegen];
-    MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"components:source splitInto:separator"];
-    MPWMessageExpression *methodBody=[[[compiler compile:@"source componentsSeparatedByString:separator."] statements  ]lastObject];
-
-    NSString *objcReturnType = [[header typeString] substringToIndex:1];
-    IDEXPECT(objcReturnType, @"@", @"return type");
-    
-    NSString *llvmReturnType = [gen typeToLLVMType:[objcReturnType characterAtIndex:0]];
-    
-
-    IDEXPECT(llvmReturnType, @"%id ", @"return type");
-//    EXPECTTRUE([methodBody isKindOfClass:[MPWMessageExpression class]], @"should be msg expression");
-    
-    
-    NSLog(@"methodBody: %@/%@",[methodBody class],methodBody);
-    
+    MPWLLVMAssemblyGenerator *gen=[codegen assemblyGenerator];
     [gen writeHeaderWithName:@"testModule"];
 
-    NSMutableArray *allMethodArguments=[NSMutableArray array];
-    for ( int i=0;i<[header numArguments];i++) {
-        char typeChar =[[header typeStringForTypeName:[header argumentNameAtIndex:i]] characterAtIndex:0];
-        
-        [allMethodArguments addObject:[NSString stringWithFormat:@"%@ %@",[gen typeToLLVMType:typeChar],[@"%" stringByAppendingString:[header argumentNameAtIndex:i]]]];
-    }
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"components:source splitInto:separator"];
+    NSString *methodSymbol1 = [codegen generateMethodWithHeader:header body:[compiler compile:@"source componentsSeparatedByString:separator."] forClass:classname];
     
-    NSMutableArray *messageArgumentNames = [NSMutableArray array];
-    NSMutableArray *messageArgumentTypes = [NSMutableArray array];
-    for ( int i=0;i<[[methodBody args] count];i++) {
-        [messageArgumentNames addObject:[@"%" stringByAppendingString:[[[methodBody args] objectAtIndex:i] name]]];
-        [messageArgumentTypes addObject:@"%id"];
-    }
-    
-    NSLog(@"messageArgumentNames: %@",messageArgumentNames);
-    NSString *methodSymbol1 = [gen writeMethodNamed:[header methodName]
-                className:classname
-               methodType:llvmReturnType
-      additionalParametrs:allMethodArguments
-               methodBody:^(MPWLLVMAssemblyGenerator *generator) {
-                   NSString *retval =[gen emitMsg:[methodBody messageName]
-                                         receiver:[@"%" stringByAppendingString:[[methodBody receiver] name]]
-                                       returnType:llvmReturnType
-                                             args:messageArgumentNames
-                                         argTypes:messageArgumentTypes
-                                      ];
-                   
-                    [gen emitReturnVal:retval type:@"%id"];
-               }];
-    NSString *typeString1 = [header typeString];
-    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ [header methodName]]  methodSymbols:@[ methodSymbol1 ] methodTypes:@[ typeString1]];
+    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ [header methodName]]  methodSymbols:@[ methodSymbol1 ] methodTypes:@[ [header typeString]]];
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef  numInstanceMethods:1];
     
     [gen flushSelectorReferences];
