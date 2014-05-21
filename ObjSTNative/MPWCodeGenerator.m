@@ -43,6 +43,7 @@
 @implementation MPWCodeGenerator
 
 objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator )
+objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 +(instancetype)codegen
 {
@@ -53,6 +54,7 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
 {
     self=[super init];
     [self setAssemblyGenerator:newGenerator];
+    [self setStringMap:[NSMutableDictionary dictionary]];
     return self;
 }
 
@@ -137,8 +139,12 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
 {
     id value=[literal theLiteral];
     if ( [value isKindOfClass:[NSString class]] ) {
-        NSString *s= [assemblyGenerator writeNSConstantString:value];
-        return [assemblyGenerator stringRef:s];
+        NSString *symbol= [stringGenerator writeNSConstantString:value];
+        if ( symbol ) {
+            [stringMap setObject:symbol forKey:value];
+        }
+        return [assemblyGenerator stringRef:[stringMap objectForKey:value]];
+        
     } else if ( [value isKindOfClass:[NSNumber class]]) {
         return [assemblyGenerator writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",[value intValue]]];
     } else {
@@ -149,7 +155,6 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
 
 -(NSString*)generateMethodWithHeader:(MPWMethodHeader*)header body:(MPWStatementList*)method forClass:(NSString*)classname
 {
-//    MPWMessageExpression *methodBody=[[method statements] lastObject];
     NSString *objcReturnType = [[header typeString] substringToIndex:1];
     
     NSString *llvmReturnType = [assemblyGenerator typeToLLVMType:[objcReturnType characterAtIndex:0]];
@@ -164,7 +169,11 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
         [allMethodArguments addObject:[NSString stringWithFormat:@"%@ %@",[assemblyGenerator typeToLLVMType:typeChar],[@"%" stringByAppendingString:[header argumentNameAtIndex:i]]]];
     }
 
-    
+    stringGenerator=assemblyGenerator;
+    assemblyGenerator=nil;
+    [method generateOn:self];
+    assemblyGenerator=stringGenerator;
+    stringGenerator=nil;
     
     NSString *methodSymbol1 = [assemblyGenerator writeMethodNamed:[header methodName]
                                           className:classname
@@ -700,13 +709,13 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
     MPWMethodDescriptor *methodDescriptor1 = [codegen compileMethodForClass:classname
                                                                  withHeader:@"answer"
                                                                        body:@"42."];
-//    MPWMethodDescriptor *methodDescriptor2 = [codegen compileMethodForClass:classname
-//                                                                 withHeader:@"answerString"
-//                                                                       body:@"'42'."];
+    MPWMethodDescriptor *methodDescriptor2 = [codegen compileMethodForClass:classname
+                                                                 withHeader:@"answerString"
+                                                                       body:@"'42'."];
     
     [codegen writeClassWithName:classname
                  superclassName:@"NSObject"
-      instanceMethodDescriptors:@[ methodDescriptor1 ]];
+      instanceMethodDescriptors:@[ methodDescriptor1 , methodDescriptor2 ]];
     
     [codegen flush];
     NSData *source=[[codegen assemblyGenerator] target];
@@ -717,7 +726,7 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
     id instance=[[NSClassFromString(classname) new] autorelease];
     
     IDEXPECT([instance answer], @(42), @"nsnumber literal");
-//    IDEXPECT([instance answerString], @"42", @"string literal");
+    IDEXPECT([instance answerString], @"42", @"string literal");
     
 }
 

@@ -14,6 +14,8 @@
 @interface MPWCodeGenerator : NSObject
 {
     MPWLLVMAssemblyGenerator *assemblyGenerator;
+    MPWLLVMAssemblyGenerator *stringGenerator;
+    NSMutableDictionary *stringMap;
 }
 
 +(instancetype)codegen;
