@@ -27,6 +27,8 @@
 		1F22C8CB0BC8DCD2003BC673 /* MPWBridgeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22C8C90BC8DCD2003BC673 /* MPWBridgeReader.m */; };
 		1F22D86513916E0400D99DAB /* varname.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F22D86413916E0400D99DAB /* varname.txt */; };
 		1F22D86613916E0400D99DAB /* varname.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F22D86413916E0400D99DAB /* varname.txt */; };
+		1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */; };
+		1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */; };
 		1F406E5810F527180054957A /* MPWIdentifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F406E5610F527180054957A /* MPWIdentifier.h */; };
 		1F406E5910F527180054957A /* MPWIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F406E5710F527180054957A /* MPWIdentifier.m */; };
 		1F406E7A10F52CAC0054957A /* MPWScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F406E7810F52CAC0054957A /* MPWScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -562,6 +564,8 @@
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1F2E6F02142EF26E00B5C827 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodDescriptor.h; sourceTree = "<group>"; };
+		1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodDescriptor.m; sourceTree = "<group>"; };
 		1F406E5610F527180054957A /* MPWIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWIdentifier.h; sourceTree = "<group>"; };
 		1F406E5710F527180054957A /* MPWIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWIdentifier.m; sourceTree = "<group>"; };
 		1F406E7810F52CAC0054957A /* MPWScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWScheme.h; sourceTree = "<group>"; };
@@ -949,6 +953,8 @@
 		1F084A1016DCE6A200ED2517 /* ObjSTNative */ = {
 			isa = PBXGroup;
 			children = (
+				1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */,
+				1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */,
 				1FC2EEF4186CEAB200B3D06F /* MPWLLVMAssemblyGenerator.h */,
 				1FC2EEF5186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m */,
 				1F81D90A16DEBC6300408D41 /* llvm-components.txt */,
@@ -1489,6 +1495,7 @@
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F7A351018B3570F0009E97D /* MPWStNativeCompiler.h in Headers */,
 				1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */,
+				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2177,6 +2184,7 @@
 			files = (
 				1F605136187590E5004B6AED /* MPWInternalCodeGenerator.mm in Sources */,
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
+				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */,
 				1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,

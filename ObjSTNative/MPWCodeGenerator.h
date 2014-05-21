@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class MPWLLVMAssemblyGenerator;
+@class MPWLLVMAssemblyGenerator,MPWMethodDescriptor;
+
 
 @interface MPWCodeGenerator : NSObject
 {
@@ -16,5 +17,6 @@
 }
 
 +(instancetype)codegen;
+-(void)flush;
 
 @end

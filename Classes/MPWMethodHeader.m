@@ -43,7 +43,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 -(int)numArguments
 {
-	return [[self parameterNames] count];
+	return (int)[[self parameterNames] count];
 }
 
 -argumentNameAtIndex:(int)anIndex
@@ -71,7 +71,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(const char*)typeSignature
 {
 	id sig = [self typeString];
-	int siglen = [sig length];
+	int siglen = (int)[sig length];
 	char *signature=malloc( siglen+1 );
 	[sig getCString:signature maxLength:siglen];
 	signature[siglen]=0;
@@ -157,7 +157,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	if ( [parameterNames count] == 0 ) {
 		[headerString appendString:[self methodName]];
 	} else {
-		int i,max=[[self methodKeyWords] count];
+		int i,max=(int)[[self methodKeyWords] count];
 		for (i=0;i<max;i++ ) {
 			[headerString appendString:[[self methodKeyWords] objectAtIndex:i]];
 			if ( i < [[self parameterNames] count] ) {

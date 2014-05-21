@@ -117,6 +117,13 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
 }
 
 
+-(NSString*)writeNSConstantString:(NSString*)value
+{
+    NSString *stringSymbol=[NSString stringWithFormat:@"@const_string_%d",numStrings++];
+    [self writeNSConstantString:value withSymbol:stringSymbol];
+    return stringSymbol;
+}
+
 
 -(NSString*)classSymbolForName:(NSString*)className isMeta:(BOOL)isMeta
 {

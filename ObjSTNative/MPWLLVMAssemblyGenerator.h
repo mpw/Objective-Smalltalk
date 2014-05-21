@@ -28,6 +28,7 @@
 
 -(NSString*)writeMethodNamed:(NSString*)methodName className:(NSString*)className methodType:(NSString*)methodType additionalParametrs:(NSArray*)params methodBody:(void (^)(MPWLLVMAssemblyGenerator*  ))block;
 -(NSString*)stringRef:(NSString*)ref;
+-(NSString*)writeNSConstantString:(NSString*)value;
 -(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral;
 
 -(NSString*)emitMsg:(NSString*)msgName receiver:(NSString*)receiverName  returnType:(NSString*)retType args:(NSArray*)args argTypes:(NSArray*)argTypes;

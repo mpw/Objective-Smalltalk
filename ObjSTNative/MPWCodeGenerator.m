@@ -17,6 +17,8 @@
 #import "MPWMessageExpression.h"
 #import "MPWStatementList.h"
 #import "MPWIdentifierExpression.h"
+#import "MPWLiteralExpression.h"
+#import "MPWMethodDescriptor.h"
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
 
@@ -131,6 +133,20 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
     return [@"%" stringByAppendingString:[expression name]];
 }
 
+-(NSString*)generateLiteral:(MPWLiteralExpression*)literal
+{
+    id value=[literal theLiteral];
+    if ( [value isKindOfClass:[NSString class]] ) {
+        NSString *s= [assemblyGenerator writeNSConstantString:value];
+        return [assemblyGenerator stringRef:s];
+    } else if ( [value isKindOfClass:[NSNumber class]]) {
+        return [assemblyGenerator writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",[value intValue]]];
+    } else {
+        @throw [NSException exceptionWithName:@"unsuppertedLiteral" reason:[NSString stringWithFormat:@"Unsupported Literal of class: %@",[value class]] userInfo:nil];
+        return nil;
+    }
+}
+
 -(NSString*)generateMethodWithHeader:(MPWMethodHeader*)header body:(MPWStatementList*)method forClass:(NSString*)classname
 {
 //    MPWMessageExpression *methodBody=[[method statements] lastObject];
@@ -160,6 +176,41 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
                                              [assemblyGenerator emitReturnVal:retval type:@"%id"];
                                          }];
     return methodSymbol1;
+}
+
+-(MPWMethodDescriptor*)compileMethodForClass:(NSString*)className withHeader:(NSString*)methodHeaderString body:(NSString*)methodBodyString
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:methodHeaderString];
+    NSString *methodSymbol1 = [self generateMethodWithHeader:header body:[compiler compile:methodBodyString] forClass:className];
+    MPWMethodDescriptor *descriptor=[[MPWMethodDescriptor new] autorelease];
+    [descriptor setName:[header methodName]];
+    [descriptor setObjcType:[header typeString]];
+    [descriptor setSymbol:methodSymbol1];
+    return descriptor;
+
+}
+
+-(NSString*)generateMethodList:(NSArray*)methodDescriptors forClassName:(NSString*)classname
+{
+    NSArray *names=(NSArray*)[[methodDescriptors collect] name];
+    NSArray *symbols=(NSArray*)[[methodDescriptors collect] symbol];
+    NSArray *types=(NSArray*)[[methodDescriptors collect] objcType];
+    
+    return [assemblyGenerator methodListForClass:classname methodNames:names  methodSymbols:symbols methodTypes:types];
+}
+
+-(void)writeClassWithName:(NSString*)classname superclassName:(NSString*)superclassname instanceMethodDescriptors:(NSArray*)descriptors
+{
+    NSString *methodListRef=[self generateMethodList:descriptors forClassName:classname];
+    [assemblyGenerator writeClassWithName:classname superclassName:superclassname instanceMethodListRef:methodListRef  numInstanceMethods:(int)[descriptors count]];
+}
+
+-(void)flush
+{
+    [assemblyGenerator flushSelectorReferences];
+    [assemblyGenerator writeTrailer];
+    [assemblyGenerator flush];
 }
 
 @end
@@ -192,6 +243,17 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
 -(NSString*)generateOn:(MPWCodeGenerator*)generator
 {
     return [generator generateIdentifierRead:self];
+}
+
+@end
+
+
+
+@implementation MPWLiteralExpression(generation)
+
+-(NSString*)generateOn:(MPWCodeGenerator*)generator
+{
+    return [generator generateLiteral:self];
 }
 
 @end
@@ -605,29 +667,57 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
 {
     NSString *classname=[self anotherTestClassName];
     MPWCodeGenerator *codegen=[self codegen];
-    MPWLLVMAssemblyGenerator *gen=[codegen assemblyGenerator];
-    [gen writeHeaderWithName:@"testModule"];
-
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"components:source splitInto:separator"];
-    NSString *methodSymbol1 = [codegen generateMethodWithHeader:header body:[compiler compile:@"source componentsSeparatedByString:separator."] forClass:classname];
+    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
     
-    NSString *methodListRef= [gen methodListForClass:classname methodNames:@[ [header methodName]]  methodSymbols:@[ methodSymbol1 ] methodTypes:@[ [header typeString]]];
-    [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef  numInstanceMethods:1];
+    MPWMethodDescriptor *methodDescriptor1 = [codegen compileMethodForClass:classname
+                                                                 withHeader:@"components:source splitInto:separator"
+                                                                       body:@"source componentsSeparatedByString:separator."];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
+    [codegen writeClassWithName:classname
+                 superclassName:@"NSObject"
+      instanceMethodDescriptors:@[ methodDescriptor1 ]];
+    
+    [codegen flush];
+    NSData *source=[[codegen assemblyGenerator] target];
     [source writeToFile:@"/tmp/fromsmalltalk.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
     id instance=[[NSClassFromString(classname) new] autorelease];
     
-     EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
+    EXPECTTRUE([instance respondsToSelector:@selector(components:splitInto:)], @"responds to 'components:splitInto:");
     NSArray *splitResult=[instance components:@"Hi there" splitInto:@" "];
     IDEXPECT(splitResult, (@[@"Hi", @"there"]), @"loaded method");
+    
+}
+
++(void)testSmalltalkLiterals
+{
+    NSString *classname=[self anotherTestClassName];
+    MPWCodeGenerator *codegen=[self codegen];
+    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
+    
+    MPWMethodDescriptor *methodDescriptor1 = [codegen compileMethodForClass:classname
+                                                                 withHeader:@"answer"
+                                                                       body:@"42."];
+//    MPWMethodDescriptor *methodDescriptor2 = [codegen compileMethodForClass:classname
+//                                                                 withHeader:@"answerString"
+//                                                                       body:@"'42'."];
+    
+    [codegen writeClassWithName:classname
+                 superclassName:@"NSObject"
+      instanceMethodDescriptors:@[ methodDescriptor1 ]];
+    
+    [codegen flush];
+    NSData *source=[[codegen assemblyGenerator] target];
+    [source writeToFile:@"/tmp/smalltalkliterals.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    
+    
+    id instance=[[NSClassFromString(classname) new] autorelease];
+    
+    IDEXPECT([instance answer], @(42), @"nsnumber literal");
+//    IDEXPECT([instance answerString], @"42", @"string literal");
     
 }
 
@@ -646,6 +736,7 @@ objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator
              @"testGenerateGlobalBlockCreate",
              @"testGenerateStackBlockWithVariableCapture",
              @"testDefineClassWithOneSimpleSmalltalkMethod",
+             @"testSmalltalkLiterals",
               ];
 }
 
