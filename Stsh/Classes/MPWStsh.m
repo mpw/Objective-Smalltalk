@@ -25,7 +25,7 @@
 #import "MPWAbstractShellCommand.h"
 #import "MPWScriptedMethod.h"
 #import "MPWExpression+autocomplete.h"
-
+#import "MPWShellPrinter.h"
 
 
 @interface NSObject(AppKitShims)
@@ -157,54 +157,9 @@ static const char * promptfn(EditLine *e) {
     return prompt;
 }
 
-
--(int)terminalWidth
-{
-    struct winsize w;
-    ioctl(0, TIOCGWINSZ, &w);
-        
-    return w.ws_col;
-}
-
-
 -(void)printCompletions:(NSArray *)names
 {
-    int numEntries=MIN([self completionLimit],(int)[names count]);
-    int numColumns=1;
-    int terminalWidth=[self terminalWidth];
-    int minSpacing=2;
-    int maxWidth=0;
-    int columnWidth=0;
-    int numRows=0;
-    for  (int i=0; i<numEntries;i++ ){
-        if ( [names[i] length] > maxWidth ) {
-            maxWidth=(int)[names[i] length];
-        }
-    }
-    numColumns=terminalWidth / (maxWidth+minSpacing);
-    numColumns=MAX(numColumns,1);
-    columnWidth=terminalWidth/(numColumns);
-    numRows=(numEntries+numColumns-1)/numColumns;
-    
-
-    for ( int i=0; i<numRows;i++ ){
-        for (int j=0;j<numColumns;j++) {
-            int theItemIndex=i*numColumns + j;
-            
-            if ( theItemIndex < [names count]) {
-                NSString *theItem=names[theItemIndex];
-                fprintf(stderr, "%.*s",columnWidth,[theItem UTF8String]);
-                if (j<numColumns-1) {
-                    int pad =columnWidth-(int)[theItem length];
-                    pad=MIN(MAX(pad,0),columnWidth);
-                    for (int sp=0;sp<pad;sp++) {
-                        putc(' ', stderr);
-                    }
-                }
-            }
-        }
-        putc('\n', stderr);
-    }
+    [(MPWShellPrinter*)[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] printNames:names limit:[self completionLimit]];
 }
 
 -(NSString*)commonPrefixInNames:(NSArray*)names
@@ -417,7 +372,7 @@ idAccessor( retval, setRetval )
                             fflush(stdout);
                             //						[[[MPWByteStream Stderr] do] println:[result each]];
                             //                        NSLog(@"result: %@/%@",[result class],result);
-                            [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:[result stringValue]];
+                            [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value] println:result];
                             
                             
                             //                       fprintf(stderr,"%s\n",str_result);

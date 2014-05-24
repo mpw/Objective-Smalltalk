@@ -18,6 +18,7 @@
 #import <MPWFoundation/MPWPropertyListStream.h>
 #import "MPWAbstractShellCommand.h"
 #import "MPWStsh.h"
+#import "MPWShellPrinter.h"
 
 
 @implementation MPWShellCompiler
@@ -72,7 +73,7 @@
 -init
 {
 	self=[super init];
-   id Stdout=[MPWPropertyListStream streamWithTarget:[MPWByteStream Stdout] ];
+   id Stdout=[MPWShellPrinter streamWithTarget:[MPWByteStream Stdout] ];
    id Stderr=[MPWByteStream Stderr];
    [self bindValue:Stdout toVariableNamed:@"stdout"];
    [self bindValue:Stderr toVariableNamed:@"stderr"];

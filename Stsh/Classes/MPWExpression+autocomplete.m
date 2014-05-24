@@ -154,7 +154,7 @@
 -(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
 {
     id evaluatedReceiver = [[self receiver] evaluateIn:evaluator];
-    NSArray *completions=@[];
+    NSArray *completions=nil;
     if ( [s hasSuffix:@" "] ) {
         id value=[self evaluateIn:evaluator];
         completions=[self messageNamesForObject:value matchingPrefix:nil];

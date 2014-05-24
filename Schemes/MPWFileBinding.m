@@ -10,6 +10,7 @@
 #import <MPWFoundation/AccessorMacros.h>
 #import "MPWURLBinding.h"
 #import "MPWResource.h"
+#import "MPWDirectoryBinding.h"
 
 @interface NSObject (workspaceMBethods)
 
@@ -84,12 +85,14 @@ idAccessor( url , setUrl )
 
 -(NSArray*)children
 {
+    NSArray *childEntries=nil;
     if ( [self hasChildren] ) {
         NSArray *childNames = [self directoryContents];
-        return [[self collect] childWithName:[childNames each]];
+        childEntries = [[self collect] childWithName:[childNames each]];
     } else {
-        return [NSArray array];
+        childEntries = [NSArray array];
     }
+    return childEntries;
 }
 
 -(NSArray*)childNames
@@ -112,7 +115,9 @@ idAccessor( url , setUrl )
 -_valueWithURL:(NSURL*)aURL
 {
     if ( [self hasChildren] ) {
-        return [self directoryContents];
+        MPWDirectoryBinding * result = [[[MPWDirectoryBinding alloc] initWithContents:[self children]] autorelease];
+        [result setIdentifier:[self identifier]];
+        return result;
     } else {
         return [self _valueWithDataURL:aURL];
     }

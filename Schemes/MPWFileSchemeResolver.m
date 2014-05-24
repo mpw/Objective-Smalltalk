@@ -8,6 +8,7 @@
 
 #import "MPWFileSchemeResolver.h"
 #import "MPWFileBinding.h"
+#import "MPWDirectoryBinding.h"
 
 @implementation MPWFileSchemeResolver
 
