@@ -260,6 +260,14 @@ idAccessor( _signature, setSignature )
 				returnValue=[NSNumber numberWithLongLong:longLongVal];
 				break;
 			case 'c':
+				intVal=*(char*)returnBuffer;
+                returnValue =[NSNumber numberWithBool:intVal];
+                break;
+			case 'B':
+				intVal=*(_Bool*)returnBuffer;
+                returnValue =[NSNumber numberWithBool:intVal];
+                break;
+            
 			case 'C':
 				intVal=*(char*)returnBuffer;
 				returnValue=[NSNumber numberWithInt:intVal];

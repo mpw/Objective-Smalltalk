@@ -113,9 +113,9 @@ idAccessor( localVars, setLocalVars )
     self=[super init];
 	[self setSchemes:[aParent schemes]];
 	[self setLocalVars:[NSMutableDictionary dictionary]];
-	[self bindValue:[NSNumber numberWithBool:YES] toVariableNamed:@"true"];
+	[self bindValue:@YES toVariableNamed:@"true"];
+	[self bindValue:@NO toVariableNamed:@"false"];
 	[self bindValue:[NSNumber numberWithDouble:M_PI] toVariableNamed:[NSString stringWithFormat:@"%C",(unsigned short)960]];
-	[self bindValue:[NSNumber numberWithBool:NO] toVariableNamed:@"false"];
 	[self bindValue:[NSNil nsNil] toVariableNamed:@"nil"];
 //	[self bindValue:self toVariableNamed:@"context"];
 	[self bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
@@ -239,8 +239,7 @@ idAccessor( localVars, setLocalVars )
 
 -(void)evaluatedArgs:args into:(id*)evaluated
 {
-    int i,max;
-    for (i=0,max=[args count]; i<max;i++ ) {
+    for (int i=0,max=(int)[args count]; i<max;i++ ) {
 //        NSLog(@"== will evaluate arg %d of %d: %@",i,max,[args objectAtIndex:i]);
 		id evalResult = [self evaluate:[args objectAtIndex:i]];
 //        NSLog(@"== did evaluate to %p, nil-check",evalResult);
