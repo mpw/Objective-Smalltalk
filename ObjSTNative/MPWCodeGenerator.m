@@ -31,6 +31,8 @@
 -(NSNumber*)four;
 -(NSString*)onString:(NSString*)s execBlock:(NSString* (^)(NSString *line))block;
 -(NSArray*)linesViaBlock:(NSString*)s;
+-(NSNumber*)answer;
+-(NSString*)answerString;
 
 @end
 
@@ -68,9 +70,11 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     const char *templatename="/tmp/testdylibXXXXXXXX";
     char *theTemplate = strdup(templatename);
     NSString *name=nil;
+#ifndef __clang_analyzer__                  // the race is OK for unit tests
     if (    mktemp( theTemplate) ) {
         name=[NSString stringWithUTF8String:theTemplate];
     }
+#endif
     free( theTemplate);
     return name;
 }
@@ -711,7 +715,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
                                                                        body:@"42."];
     MPWMethodDescriptor *methodDescriptor2 = [codegen compileMethodForClass:classname
                                                                  withHeader:@"answerString"
-                                                                       body:@"'42'."];
+                                                                       body:@"'The answer'."];
     
     [codegen writeClassWithName:classname
                  superclassName:@"NSObject"
@@ -719,14 +723,14 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [codegen flush];
     NSData *source=[[codegen assemblyGenerator] target];
-    [source writeToFile:@"/tmp/smalltalkliterals.s" atomically:YES];
+//    [source writeToFile:@"/tmp/smalltalkliterals.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
     id instance=[[NSClassFromString(classname) new] autorelease];
     
     IDEXPECT([instance answer], @(42), @"nsnumber literal");
-    IDEXPECT([instance answerString], @"42", @"string literal");
+    IDEXPECT([instance answerString], @"The answer", @"string literal");
     
 }
 

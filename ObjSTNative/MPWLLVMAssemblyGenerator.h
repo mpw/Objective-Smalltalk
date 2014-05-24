@@ -33,6 +33,8 @@
 
 -(NSString*)emitMsg:(NSString*)msgName receiver:(NSString*)receiverName  returnType:(NSString*)retType args:(NSArray*)args argTypes:(NSArray*)argTypes;
 
+-(void)emitReturnVal:(NSString*)val type:(NSString*)type;
+
 
 -(void)flushSelectorReferences;
 

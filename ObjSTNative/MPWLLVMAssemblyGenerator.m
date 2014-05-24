@@ -299,7 +299,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     
 }
 
--(NSString*)allocLocal:(NSString*)type
+-(NSString*)stackAllocLocal:(NSString*)type
 {
     numLocals++;
     NSString *localName=[NSString stringWithFormat:@"%%%d",numLocals];
