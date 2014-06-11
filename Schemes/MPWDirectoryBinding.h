@@ -11,6 +11,7 @@
 @interface MPWDirectoryBinding : MPWFileBinding
 {
     NSArray *contents;
+    BOOL    fancy;
 }
 
 -(instancetype)initWithContents:(NSArray*)newContents;

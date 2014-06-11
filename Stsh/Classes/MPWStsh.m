@@ -255,7 +255,9 @@ idAccessor( retval, setRetval )
 -(void)executeFromFileName:(NSString*)filename
 {
 	id script = [MPWStScript scriptWithContentsOfFile:filename];
+    [[self evaluator] bindValue:filename toVariableNamed:@"argv0" withScheme:@"var"];
 	[script executeInContext:self];
+
 }
 
 -(BOOL)isAssignmentExpresson:expr

@@ -63,17 +63,35 @@
             
             if ( theItemIndex < [names count]) {
                 NSString *theItem=names[theItemIndex];
-                fprintf(stderr, "%.*s",columnWidth,[theItem UTF8String]);
+                [self printFormat:@"%.*s",columnWidth,[theItem UTF8String]];
                 if (j<numColumns-1) {
                     int columnPad =columnWidth-(int)[theItem length];
                     columnPad=MIN(MAX(columnPad,0),columnWidth);
                     for (int sp=0;sp<columnPad;sp++) {
-                        putc(' ', stderr);
+                        [self appendBytes:" " length:1];
                     }
                 }
             }
         }
-        putc('\n', stderr);
+        if ( i<numRows-1) {
+            [self println:@""];
+        }
+    }
+}
+
+-(void)writeFancyFileEntry:(MPWFileBinding*)binding
+{
+    NSFileManager *fm=[NSFileManager defaultManager];
+    NSString *path=(NSString*)[binding path];
+    NSString *name=[path lastPathComponent];
+    if ( ![name hasPrefix:@"."]) {
+        NSDictionary *attributes=[fm attributesOfItemAtPath:path error:nil];
+        NSNumber *size=[attributes objectForKey:NSFileSize];
+        NSString *formattedSize=[NSByteCountFormatter stringFromByteCount:[size intValue] countStyle:NSByteCountFormatterCountStyleBinary /* NSByteCountFormatterCountStyleFile */];
+        int numSpaces=10-(int)[formattedSize length];
+        numSpaces=MAX(0,numSpaces);
+        NSString *spaces=[@"               " substringToIndex:numSpaces];
+        [self printFormat:@"%@%@  %@%c\n",spaces,formattedSize,name,[binding isDirectory] ? '/':' '];
     }
 }
 
@@ -83,10 +101,20 @@
     for ( MPWFileBinding *binding in [aBinding contents]) {
         NSString *name=[(NSString*)[binding path] lastPathComponent];
         if ( ![name hasPrefix:@"."]) {
+            if ( [binding isDirectory]) {
+                name=[name stringByAppendingString:@"/"];
+            }
             [names addObject:name];
         }
     }
     [self printNames:names limit:1000];
+}
+
+-(void)writeFancyDirectory:(MPWDirectoryBinding*)aBinding
+{
+    for ( MPWFileBinding *binding in [aBinding contents]) {
+        [self writeFancyFileEntry:binding];
+    }
 }
 
 @end

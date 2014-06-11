@@ -16,10 +16,13 @@
 idAccessor( data, setData )
 idAccessor( methodHeader , setMethodHeader )
 idAccessor( script, setScript )
+objectAccessor( NSString, filename, setFilename )
 
 +scriptWithContentsOfFile:(NSString*)filename
 {
-	return [[[self alloc] initWithData:[NSData dataWithContentsOfFile:filename]] autorelease];
+	MPWStScript *script = [[[self alloc] initWithData:[NSData dataWithContentsOfFile:filename]] autorelease];
+  [script setFilename:filename];
+  return script;
 }
 
 -initWithData:(NSData*)newData

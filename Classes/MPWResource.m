@@ -27,7 +27,7 @@ idAccessor( source, setSource )
 {
 	if ( [[self MIMEType] hasPrefix:@"image/"] ) {
 		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]] ;
-	} else if ( [[self MIMEType] hasPrefix:@"application/json"] && NSClassFromString(@"NSJSONSerialization")) {
+	} else if ( ([[self MIMEType] hasPrefix:@"application/json"] || [[self MIMEType] hasPrefix:@"text/javascript"]) && NSClassFromString(@"NSJSONSerialization")) {
 		return [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:[self rawData] options:0 error:nil] ;
 	}  else if ( [[self extension] isEqual:@"newsplist"] ||
                 [[self extension] isEqual:@"plist"] ) {

@@ -11,6 +11,7 @@
 @implementation MPWDirectoryBinding
 
 objectAccessor(NSArray, contents, setContents)
+boolAccessor(fancy, setFancy)
 
 -(instancetype)initWithContents:(NSArray *)newContents
 {
@@ -28,7 +29,18 @@ objectAccessor(NSArray, contents, setContents)
 
 -(void)writeOnShellPrinter:aPrinter
 {
-    [aPrinter writeDirectory:self];
+    if ( [self fancy] ) {
+        [aPrinter writeFancyDirectory:self];
+    } else {
+        [aPrinter writeDirectory:self];
+    }
+}
+
+-(id)l
+{
+    MPWDirectoryBinding *d=[[[[self class] alloc] initWithContents:[self contents]] autorelease];
+    [d setFancy:YES];
+    return d;
 }
 
 @end

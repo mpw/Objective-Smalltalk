@@ -131,9 +131,20 @@ typedef id (^ZeroArgBlock)(void);
 	return [self evaluateIn_block:[self evaluationContext] arguments:nil];
 }
 
+-valueWithObjects:(NSArray*)args
+{
+    return [self evaluateIn_block:[self evaluationContext] arguments:args];
+}
+
 -value:anObject
 {
-	return [self evaluateIn_block:[self evaluationContext] arguments:@[ anObject]];
+    return [self valueWithObjects:@[ anObject]];
+}
+
+
+-value:anObject with:otherObject
+{
+    return [self valueWithObjects:@[ anObject , otherObject]];
 }
 
 
@@ -343,11 +354,11 @@ typedef id  (^idBlock)(id arg );
 
 +(void)testBlockAsMethodWithMethodHeader
 {
-    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self :arg | self + 13 + arg ]"];
+    MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self :arg | self + 13 + (arg * 2)]"];
     [stblock installInClass:[NSNumber class] withMethodHeaderString:@"<int>addThirtenAndArgToSelf:<int>anArg"];
     NSLog(@"=== should convert to int");
-    int theAnswer=[@(2) addThirtenAndArgToSelf:5];
-    INTEXPECT(theAnswer, 13+2+5, @"theAnswer");
+    int theAnswer=[@(2) addThirtenAndArgToSelf:7];
+    INTEXPECT(theAnswer, 13+2+(7*2), @"theAnswer");
 }
 
 

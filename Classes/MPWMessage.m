@@ -97,13 +97,15 @@ idAccessor( _signature, setSignature )
 		long long longLongVal;
 		NSMethodSignature* sig=[self signatureForTarget:msgReceiver];
 //      NSLog(@"invoking: %@",NSStringFromSelector(selector));
-//		NSLog(@"sig: %@",sig);
 		if ( sig != nil ) {
 			int i;
 			invocation=[NSInvocation invocationWithMethodSignature:sig];
 			[invocation setSelector:selector];//
-//			NSLog(@"args count: %d, sig numberOfArguments-2:%d",[args count],[sig numberOfArguments]-2 );
-			if ( argCount == [sig numberOfArguments]-2 ) {
+//			NSLog(@" ## args count: %d, sig numberOfArguments-2:%d",argCount,[sig numberOfArguments]-2 );
+            
+            // FIXME:   when I add a block as a method to a class, this become the inequality now used
+            //          should be equal (and used to check that) -> also: should raise if test fails
+			if ( argCount <= [sig numberOfArguments]-2 ) {
 				for (i=0;i<argCount;i++) {
 					int invocationIndex=i+2;
                     SEL selArg;
@@ -113,8 +115,9 @@ idAccessor( _signature, setSignature )
 					id arg=args[i];
 					void *argp=&arg;
 					const char *type=[sig getArgumentTypeAtIndex:invocationIndex];
-//					NSLog(@"argtype[%d]=%p",i,type);
-//					NSLog(@"argtype[%d]=%s",i,type);
+//					NSLog(@"## argtype[%d]=%p",i,type);
+//					NSLog(@"## argtype[%d]=%s",i,type);
+  //                  NSLog(@"## arg: %@",arg);
                     if ( *type == 'r') {        //  CONST prefix
                         type++;
                     }
