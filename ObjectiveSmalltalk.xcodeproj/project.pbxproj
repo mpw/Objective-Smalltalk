@@ -249,6 +249,7 @@
 		1F81C08319699B560066DF43 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
 		1F81C08419699B6C0066DF43 /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
 		1F81C08719699BF20066DF43 /* MethodServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7E05A9144B3E22008F349D /* MethodServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F81C0891969BAF60066DF43 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F8448AD19695B7F00CB8DD1 /* libMPWFoundationTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8448AC19695B7F00CB8DD1 /* libMPWFoundationTouch.a */; };
 		1F8448B019695BBB00CB8DD1 /* libMPWFoundationTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8448AC19695B7F00CB8DD1 /* libMPWFoundationTouch.a */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
@@ -641,7 +642,6 @@
 		1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
 		1FE37BFF1969612800C9A378 /* MPWFrameworkScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37C001969612800C9A378 /* MPWFrameworkScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */; };
-		1FE37C021969744C00C9A378 /* MPWFoundationTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37C011969744C00C9A378 /* MPWFoundationTouch.framework */; };
 		1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */; };
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
 		1FE8F22813802F0700B37A71 /* MPWResourceScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */; };
@@ -1174,7 +1174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FE37C021969744C00C9A378 /* MPWFoundationTouch.framework in Frameworks */,
+				1F81C0891969BAF60066DF43 /* MPWFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3896,7 +3896,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MethodServer;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -4921,7 +4921,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

@@ -180,7 +180,7 @@ idAccessor( _signature, setSignature )
 						case '{':
                         {
                             MPWBoxerUnboxer *boxer=[self converterForType:type];
-                            NSLog(@"boxer: %@",boxer);
+//                            NSLog(@"boxer: %@",boxer);
                             if ( boxer ) {
                                 [boxer unboxObject:arg intoBuffer:buffer maxBytes:128];
                                 argp=buffer;
