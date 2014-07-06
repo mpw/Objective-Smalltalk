@@ -264,7 +264,7 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 @end
 
 
-extern id _objc_msgForward(id receiver, SEL sel, ...);
+//extern id _objc_msgForward(id receiver, SEL sel, ...);
 @implementation MPWClassMirror(testing)
 
 -(NSString*)__testMessageHi

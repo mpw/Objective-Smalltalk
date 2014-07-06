@@ -9,7 +9,7 @@
 #import "MPWMessage.h"
 #import "MPWInterval.h"
 #import "MPWFastMessage.h"
-#import <MPWFoundation/NSNil.h>
+#import <MPWFoundation/AccessorMacros.h>
 #import "MPWBoxerUnboxer.h"
 
 @implementation MPWMessage
@@ -89,7 +89,7 @@ idAccessor( _signature, setSignature )
 {
 	NSInvocation* invocation=nil;
 	if ( selector != (SEL)nil ) {
-		char charVal;
+//		char charVal;
 		int intVal;
 		short shortVal;
 		float floatVal;
@@ -152,8 +152,8 @@ idAccessor( _signature, setSignature )
 							break;
 						case 'c':
 						case 'C':
-							charVal=[arg intValue];
-							argp=&charVal;
+							longLongVal=[arg longLongValue];
+							argp=&longLongVal;
 							break;
 						case 'f':
 							floatVal=[arg floatValue];

@@ -93,7 +93,7 @@
 
 -(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
 {
-    return NO;
+    return @[];
 }
 
 

@@ -47,7 +47,7 @@ idAccessor( baseObject, setBaseObject )
 
 -(id)_objecToIndex:(int)anIndex
 {
-	anIndex=MIN(anIndex, [pathComponents count]);
+	anIndex=MIN(anIndex, (int)[pathComponents count]);
 	id result=baseObject;
 	int i;
 	for (i=0;i<anIndex;i++) {
@@ -59,12 +59,12 @@ idAccessor( baseObject, setBaseObject )
 
 -_value
 {
-	return [self _objecToIndex:[pathComponents count]];
+	return [self _objecToIndex:(int)[pathComponents count]];
 }
 
 -(void)_setValue:newValue
 {
-	id target=[self _objecToIndex:[pathComponents count]-1];
+	id target=[self _objecToIndex:(int)[pathComponents count]-1];
 	[target setValue:newValue forKey:[pathComponents lastObject]];
 }
 

@@ -12,4 +12,8 @@
 
 -(void)printNames:(NSArray*)names limit:(int)completionLimit;
 
+
+-(void)writeDirectory:(MPWDirectoryBinding*)aBinding;
+-(void)writeFancyDirectory:(MPWDirectoryBinding*)aBinding;
+
 @end

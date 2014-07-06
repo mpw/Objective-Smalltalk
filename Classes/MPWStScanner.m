@@ -141,29 +141,29 @@ boolAccessor( noNumbers, setNoNumbers )
     [super _initCharSwitch];
     for (i=0;i<128;i++) {
         if ( isalpha(i)  ) {
-            charSwitch[i]=[self methodForSelector:@selector(scanASCIIName)];
+            charSwitch[i]=(IMP0)[self methodForSelector:@selector(scanASCIIName)];
         } else if (isdigit(i) ) {
-            charSwitch[i]=[self methodForSelector:@selector(scanNumber)];
+            charSwitch[i]=(IMP0)[self methodForSelector:@selector(scanNumber)];
         } else if (isspace(i)  ) {
-            charSwitch[i]=[self methodForSelector:@selector(skipSpace)];
+            charSwitch[i]=(IMP0)[self methodForSelector:@selector(skipSpace)];
 //        } else if (  i=='-' ) {
 //          charSwitch[i]=[self methodForSelector:@selector(scanNegativeNumber)];
         } else  {
-            charSwitch[i]=[self methodForSelector:@selector(scanSpecial)];
+            charSwitch[i]=(IMP0)[self methodForSelector:@selector(scanSpecial)];
         }
     }
     for (i=128;i<256;i++) {
-        charSwitch[i]=[self methodForSelector:@selector(scanUTF8Name)];
+        charSwitch[i]=(IMP0)[self methodForSelector:@selector(scanUTF8Name)];
     }
-    charSwitch['\'']=[self methodForSelector:@selector(scanString)];
-    charSwitch['\"']=[self methodForSelector:@selector(scanComment)];
-    charSwitch['<']=[self methodForSelector:@selector(scanSpecial)];
-    charSwitch['+']=[self methodForSelector:@selector(scanSpecial)];
-    charSwitch['[']=[self methodForSelector:@selector(scanSpecial)];
-    charSwitch['-']=[self methodForSelector:@selector(scanSpecial)];
-    charSwitch[':']=[self methodForSelector:@selector(scanPossibleAssignment)];
-    charSwitch['_']=[self methodForSelector:@selector(scanASCIIName)];
-    charSwitch[0]=[self methodForSelector:@selector(skip)];
+    charSwitch['\'']=(IMP0)[self methodForSelector:@selector(scanString)];
+    charSwitch['\"']=(IMP0)[self methodForSelector:@selector(scanComment)];
+    charSwitch['<']=(IMP0)[self methodForSelector:@selector(scanSpecial)];
+    charSwitch['+']=(IMP0)[self methodForSelector:@selector(scanSpecial)];
+    charSwitch['[']=(IMP0)[self methodForSelector:@selector(scanSpecial)];
+    charSwitch['-']=(IMP0)[self methodForSelector:@selector(scanSpecial)];
+    charSwitch[':']=(IMP0)[self methodForSelector:@selector(scanPossibleAssignment)];
+    charSwitch['_']=(IMP0)[self methodForSelector:@selector(scanASCIIName)];
+    charSwitch[0]=(IMP0)[self methodForSelector:@selector(skip)];
 //    charSwitch[10]=[self methodForSelector:@selector(skip)];
 //    charSwitch[13]=[self methodForSelector:@selector(skip)];
 }

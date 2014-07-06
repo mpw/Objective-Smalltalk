@@ -26,7 +26,7 @@
 }
 -sendTo:receiver withArguments:(id*)argbuf count:(int)argCount
 {
-	IMP imp = [receiver methodForSelector:selector];
+	IMP0 imp = (IMP0)[receiver methodForSelector:selector];
 	if ( imp ) {
 		return imp( receiver, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3],argbuf[4] );
 	}

@@ -7,6 +7,8 @@
 //
 
 #import "MPWDirectoryBinding.h"
+#import "MPWShellPrinter.h"
+
 
 @implementation MPWDirectoryBinding
 

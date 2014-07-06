@@ -692,7 +692,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [codegen flush];
     NSData *source=[[codegen assemblyGenerator] target];
-    [source writeToFile:@"/tmp/fromsmalltalk.s" atomically:YES];
+//    [source writeToFile:@"/tmp/fromsmalltalk.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     

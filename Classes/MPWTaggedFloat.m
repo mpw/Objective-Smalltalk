@@ -141,8 +141,8 @@ BINARYOP(div, /)
         (sel==@selector(class));
 }
 
-+isNotNil { return YES; }
--isNotNil { return YES; }
++(BOOL)isNotNil { return YES; }
+-(BOOL)isNotNil { return YES; }
 
 -(BOOL)isKindOfClass:(Class)aClass
 {
@@ -151,7 +151,7 @@ BINARYOP(div, /)
 
 -performSelector:(SEL)selector withObject:anObject
 {
-    return objc_msgSend( self, selector, anObject);
+    return ((IMP0)objc_msgSend)( self, selector, anObject);
 }
 
 -description

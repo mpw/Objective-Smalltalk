@@ -283,7 +283,7 @@ idAccessor( method, _setMethod )
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	id returnValue;
 	id expectedReturn = @"45"; // [target evaluateScript:@"45" onObject:target];
-	IMP function;
+	IMP0 function;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
 	[method setScript:@"45"];
@@ -291,7 +291,7 @@ idAccessor( method, _setMethod )
 	[callback setMethod:method];
 	[callback setName:@"xxxDummy3"];
 	[callback installInClass:[target class] withSignature:"@@:"];
-	function = [callback function];
+	function = (IMP0)[callback function];
 	returnValue = function( target, @selector(dummy3) );
 	IDEXPECT( returnValue, expectedReturn, @"expected return of install");
 }

@@ -35,7 +35,7 @@ longAccessor(len, setLen)
         } else {
             dict=[NSMutableDictionary dictionaryWithCapacity:1];
         }
-        [dict setObject:[NSNumber numberWithInt:offset] forKey:@"offset"];
+        [dict setObject:[NSNumber numberWithLong:offset] forKey:@"offset"];
         exception =  [NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:dict];
     }
     return exception;
@@ -46,14 +46,15 @@ longAccessor(len, setLen)
 {
 	return self;
 }
--variablesRead
+
+-(NSSet*)variablesRead
 {
 	id result = [NSMutableSet set];
 	[self addToVariablesRead:result];
 	return result;
 }
 
--variablesWritten
+-(NSSet*)variablesWritten
 {
 	id result = [NSMutableSet set];
 	[self addToVariablesWritten:result];

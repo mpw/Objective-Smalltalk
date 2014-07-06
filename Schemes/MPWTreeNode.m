@@ -78,7 +78,7 @@ idAccessor( content, setContent )
 {
 	int i,max;
 	id children=[self _children];
-	for (i=0,max=[children count]; i<max; i++) {
+	for (i=0,max=(int)[children count]; i<max; i++) {
 		id thisChild = [children objectAtIndex:i];
 		if ( [[thisChild name] isEqual:childName] ) {
 			return thisChild;
