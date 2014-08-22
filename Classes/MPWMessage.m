@@ -202,17 +202,17 @@ idAccessor( _signature, setSignature )
 							}
                                 }
 						default:
-							NSLog(@"default conversion for arg: %@/%@ to %@",arg,[arg class],NSStringFromSelector(selector));
+//							NSLog(@"default conversion for arg: %@/%@ to %@",arg,[arg class],NSStringFromSelector(selector));
 							if ( [arg respondsToSelector:@selector(objCType)] ) {
 								if ( !strcmp( type, [arg objCType] )) {
 									[arg getValue:buffer];
 									argp=buffer;
 								} else {
-									NSLog(@"couldn't convert NSValue with %s to %s",[arg objCType],type);
+//									NSLog(@"couldn't convert NSValue with %s to %s",[arg objCType],type);
 								}
 								break;
 							}
-							NSLog(@"couldn't convert argument type: '%s'",type);
+//							NSLog(@"couldn't convert argument type: '%s'",type);
 							break;
 					}
 					[invocation setArgument:argp atIndex:invocationIndex];
@@ -295,7 +295,7 @@ idAccessor( _signature, setSignature )
             }
 			default:
 				returnValue=[NSValue valueWithBytes:returnBuffer objCType:returnType];
-				NSLog(@"couldn't convert return value of %@: %s, punting with:%@!",NSStringFromSelector(selector), returnType,returnValue);
+//				NSLog(@"couldn't convert return value of %@: %s, punting with:%@!",NSStringFromSelector(selector), returnType,returnValue);
 				break;
 		}
 	}

@@ -85,7 +85,7 @@ the commands entered by the user and the results of those commands etc.
 - (CGFloat)fontSize
 { return [[[self shellView] font] pointSize]; }
 
-- (id) _init  // construction and configuration of the view hierarchy
+- (id) _privateSetup  // construction and configuration of the view hierarchy
 {
     NSScrollView *scrollview =[[[NSScrollView alloc] initWithFrame:[self bounds]] autorelease];
     NSSize contentSize = [scrollview contentSize];
@@ -117,7 +117,7 @@ the commands entered by the user and the results of those commands etc.
   BOOL shouldRetainCommandHandler;
 
   self = [super initWithCoder:coder];
-  [self _init];
+  [self _privateSetup];
   
   if ( [coder allowsKeyedCoding] ) 
   {
@@ -140,7 +140,7 @@ the commands entered by the user and the results of those commands etc.
 {
   if (self = [super initWithFrame:frameRect])
   {
-    [self _init];
+    [self _privateSetup];
     [self setAutoresizesSubviews:YES];    
     return self;
   }

@@ -65,8 +65,8 @@ idAccessor( context ,setContext )
 
 	} 
 	
-	id parser = [[[parserClass alloc] initWithData:xmlData] autorelease];
-	[parser setDelegate:self];
+	NSXMLParser* parser = [[[parserClass alloc] initWithData:xmlData] autorelease];
+	[parser setDelegate:(id <NSXMLParserDelegate>)self];
 	[parser parse];
 	return nil;
 }

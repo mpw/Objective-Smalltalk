@@ -40,6 +40,15 @@
       debugDocumentVersioning = "YES"
       debugXPCServices = "NO"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1FE08F01137808B8003B18B9"
+            BuildableName = "libObjectiveSmalltalk-iOS.a"
+            BlueprintName = "ObjectiveSmalltalk-iOS"
+            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

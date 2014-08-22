@@ -39,6 +39,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1FAFD9741855BC5500EC5221"
+            BuildableName = "StshFramework.framework"
+            BlueprintName = "StshFramework"
+            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

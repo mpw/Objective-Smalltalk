@@ -194,7 +194,11 @@ static void CatchException(NSException *exception)
 {
     NSLog(@"MethodServer setupWebServer");
     [super setupWebServer];
-    [[self server] setPort:51000];
+    int port = 51000;
+    if ( [[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"]) {
+        port=[[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"];
+    }
+    [[self server] setPort:port];
     [[self server] setThreadPoolSize:2];
     NSLog(@"Method Server bonjour name: %@",[self methodDictName]);
     [[self server] setBonjourName:[self methodDictName]];

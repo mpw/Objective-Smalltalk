@@ -39,6 +39,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1F084A0D16DCE6A200ED2517"
+            BuildableName = "ObjSTNative.framework"
+            BlueprintName = "ObjSTNative"
+            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

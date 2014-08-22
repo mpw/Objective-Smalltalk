@@ -20,6 +20,7 @@ idAccessor( _value, _setValue )
 boolAccessor( isBound ,setIsBound )
 objectAccessor(MPWIdentifier,identifier, setIdentifier)
 scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
+scalarAccessor( id, delegate, setDelegate)
 
 -initWithValue:aValue
 {
@@ -117,12 +118,18 @@ scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
 {
 	[self _setValue:newValue];
 	[self setIsBound:YES];
+    if (delegate) {
+        [delegate changed:self];
+    }
 }
 
 -(void)unbindValue
 {
 	[self setIsBound:NO];
 	[self _setValue:nil];
+    if (delegate) {
+        [delegate changed:self];
+    }
 }
 
 -asScheme

@@ -16,6 +16,7 @@
     id		scheme;
     MPWIdentifier*      identifier;
     MPWEvaluator    *defaultContext;
+    id      delegate;
 
 }
 
@@ -23,6 +24,7 @@
 -initWithValue:aValue;
 -_value;
 idAccessor_h( value, _setValue )
+idAccessor_h( delegate, setDelegate)
 objectAccessor_h( MPWScheme, scheme, setScheme )
 
 

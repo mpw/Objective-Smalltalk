@@ -39,6 +39,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1F7E05B3144B3E7D008F349D"
+            BuildableName = "libiMethodServer.a"
+            BlueprintName = "iMethodServer"
+            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
