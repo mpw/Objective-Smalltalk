@@ -121,6 +121,11 @@ scalarAccessor( id, delegate, setDelegate)
     }
 }
 
+-(void)observeValueForKeyPath:(NSString*)keyPath ofObject:anObject change:change context:(void*)kvoContext
+{
+    [self didChange];
+}
+
 -(void)bindValue:newValue
 {
 	[self _setValue:newValue];

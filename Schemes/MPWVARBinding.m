@@ -62,6 +62,23 @@ idAccessor( baseObject, setBaseObject )
 	return [self _objecToIndex:(int)[pathComponents count]];
 }
 
+-(void)startKVO
+{
+    id base = [self _objecToIndex:(int)[pathComponents count]-1];
+    NSString *property=[pathComponents lastObject];
+    [base addObserver:self forKeyPath:property options:0 context:NULL];
+}
+
+-(void)stopKVO
+{
+    id base = [self _objecToIndex:(int)[pathComponents count]-1];
+    NSString *property=[pathComponents lastObject];
+    [base removeObserver:base forKeyPath:property];
+}
+
+
+
+
 -(void)_setValue:newValue
 {
 	id target=[self _objecToIndex:(int)[pathComponents count]-1];
