@@ -114,22 +114,25 @@ scalarAccessor( id, delegate, setDelegate)
     return [self children];
 }
 
+-(void)didChange
+{
+    if (delegate) {
+        [delegate changed:self];
+    }
+}
+
 -(void)bindValue:newValue
 {
 	[self _setValue:newValue];
 	[self setIsBound:YES];
-    if (delegate) {
-        [delegate changed:self];
-    }
+    [self didChange];
 }
 
 -(void)unbindValue
 {
 	[self setIsBound:NO];
 	[self _setValue:nil];
-    if (delegate) {
-        [delegate changed:self];
-    }
+    [self didChange];
 }
 
 -asScheme

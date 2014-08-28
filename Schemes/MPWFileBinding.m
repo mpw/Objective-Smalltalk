@@ -30,6 +30,27 @@ idAccessor( url , setUrl )
 	return self;
 }
 
+-(void)startWatching
+{
+    [[self scheme] startWatching:self];
+}
+
+-(void)stopWatching
+{
+    
+}
+
+-(void)setDelegate:aDelegate
+{
+    [super setDelegate:aDelegate];
+    if ( aDelegate ) {
+        [self startWatching];
+    } else {
+        [self stopWatching];
+    }
+}
+
+
 -initWithPath:(NSString*)path
 {
 	return [self initWithURL:[NSURL fileURLWithPath:path]];
@@ -78,9 +99,9 @@ idAccessor( url , setUrl )
     
 }
 
--childWithName:(NSString*)name
+-childWithName:(NSString*)newName
 {
-    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByAppendingPathComponent:name]] autorelease];
+    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByAppendingPathComponent:newName]] autorelease];
 }
 
 -(NSArray*)children

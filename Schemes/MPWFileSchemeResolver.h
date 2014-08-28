@@ -8,9 +8,13 @@
 
 #import <ObjectiveSmalltalk/MPWScheme.h>
 
+@class MPWFileBinding;
 
 @interface MPWFileSchemeResolver : MPWScheme {
 
 }
+
+
+-(void)startWatching:(MPWFileBinding*)binding;
 
 @end

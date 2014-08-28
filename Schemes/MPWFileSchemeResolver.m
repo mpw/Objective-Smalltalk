@@ -9,8 +9,22 @@
 #import "MPWFileSchemeResolver.h"
 #import "MPWFileBinding.h"
 #import "MPWDirectoryBinding.h"
+#import "MPWFileWatcher.h"
 
 @implementation MPWFileSchemeResolver
+
+
+-(void)startWatching:(MPWFileBinding*)binding
+{
+    NSString *path=[binding path];
+    NSString *dir=[path stringByDeletingLastPathComponent];
+    
+    [[MPWFileWatcher watcher] watchFile:path withDelegate:binding];
+    [[MPWFileWatcher watcher] watchFile:dir withDelegate:binding];
+    
+}
+
+
 
 -bindingForName:aName inContext:aContext
 {

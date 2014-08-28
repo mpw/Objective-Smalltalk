@@ -6,10 +6,10 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWBinding.h>
+#import <ObjectiveSmalltalk/MPWGenericBinding.h>
 
 
-@interface MPWFileBinding : MPWBinding {
+@interface MPWFileBinding : MPWGenericBinding {
 	id	url;
 }
 
