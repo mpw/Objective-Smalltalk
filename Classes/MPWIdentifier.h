@@ -8,6 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
+@class MPWBinding;
 
 @interface MPWIdentifier : MPWObject {
 	id	scheme;
@@ -21,6 +22,8 @@ idAccessor_h( scheme, setScheme )
 
 +identifierWithName:(NSString*)name;
 -evaluatedIdentifierNameInContext:aContext;
+
+-(MPWBinding*)bindingWithContext:aContext;
 
 
 @end

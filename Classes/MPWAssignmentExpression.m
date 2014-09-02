@@ -19,7 +19,7 @@ idAccessor( lhs, setLhs )
 
 -(void)addToVariablesWritten:(NSMutableSet*)variablesWritten
 {
-	[variablesWritten addObject:[lhs name]];
+	[variablesWritten addObject:[lhs identifier]];
 }
 
 -(void)addToVariablesRead:(NSMutableSet*)variablesRead

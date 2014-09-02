@@ -434,8 +434,8 @@
 	id expr1 = [self compile:expr];
 	id readMsg=[NSString stringWithFormat:@"variables read in '%@'",expr];
 	id writeMsg=[NSString stringWithFormat:@"variables written in '%@'",expr];
-	IDEXPECT( [expr1 variablesRead], [NSSet setWithArray:readVars],readMsg);
-	IDEXPECT( [expr1 variablesWritten], [NSSet setWithArray:writtenVars] ,writeMsg);
+	IDEXPECT( [expr1 variableNamesRead], [NSSet setWithArray:readVars],readMsg);
+	IDEXPECT( [expr1 variableNamesWritten] , [NSSet setWithArray:writtenVars]  ,writeMsg);
 }
 
 +(void)testVariableDataFlowAnalysis

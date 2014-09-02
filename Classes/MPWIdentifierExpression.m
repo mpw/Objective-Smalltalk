@@ -13,8 +13,6 @@
 
 @implementation MPWIdentifierExpression
 
-//idAccessor( name, setName )
-//idAccessor( scheme, setScheme )
 objectAccessor( MPWIdentifier, identifier, setIdentifier )
 idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 
@@ -26,6 +24,16 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 -name
 {
 	return [[self identifier] identifierName];
+}
+
+-bindingWithContext:aContext
+{
+    return [[self identifier] bindingWithContext:aContext];
+}
+
+-binding
+{
+    return [self bindingWithContext:[self evaluationEnvironment]];
 }
 
 -evaluateIn:passedEnvironment
@@ -46,7 +54,7 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 
 -(void)addToVariablesRead:(NSMutableSet*)variablesRead
 {
-	[variablesRead addObject:[[self identifier] identifierName]];
+	[variablesRead addObject:[self identifier]];
 }
 
 -description

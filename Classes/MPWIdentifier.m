@@ -60,6 +60,11 @@ idAccessor( identifierName, setIdentifierName )
 	
 }
 
+-(MPWBinding*)bindingWithContext:aContext
+{
+    return [[self scheme] bindingWithIdentifier:self withContext:aContext];
+}
+
 -evaluatedIdentifierNameInContext:aContext
 {
 #if 0

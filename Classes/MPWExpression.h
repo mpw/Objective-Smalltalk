@@ -15,6 +15,8 @@
 
 -(NSSet*)variablesRead;
 -(NSSet*)variablesWritten;
+-(NSSet*)variableNamesRead;
+-(NSSet*)variableNamesWritten;
 
 longAccessor_h(offset , setOffset)
 longAccessor_h(len, setLen)

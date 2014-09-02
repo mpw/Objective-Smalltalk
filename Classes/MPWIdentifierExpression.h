@@ -11,8 +11,6 @@
 @class MPWIdentifier;
 
 @interface MPWIdentifierExpression : MPWExpression {
-//	id	name;
-//	id	scheme;
 	id	evaluationEnvironment;
 	id  identifier;
 }

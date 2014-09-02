@@ -45,6 +45,7 @@
     return binding;
 }
 
+
 -evaluateIdentifier:anIdentifer withContext:aContext
 {
 	MPWBinding *binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];

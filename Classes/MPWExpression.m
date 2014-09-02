@@ -8,6 +8,7 @@
 
 #import <ObjectiveSmalltalk/MPWExpression.h>
 #import "MPWStCompiler.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWExpression
 
@@ -49,16 +50,42 @@ longAccessor(len, setLen)
 
 -(NSSet*)variablesRead
 {
-	id result = [NSMutableSet set];
-	[self addToVariablesRead:result];
-	return result;
+    id result = [NSMutableSet set];
+    [self addToVariablesRead:result];
+    return result;
 }
 
 -(NSSet*)variablesWritten
 {
-	id result = [NSMutableSet set];
-	[self addToVariablesWritten:result];
-	return result;
+    id result = [NSMutableSet set];
+    [self addToVariablesWritten:result];
+    return result;
+}
+
+-(NSSet*)variableNamesRead
+{
+    NSSet *written = [self variablesRead];
+    NSMutableSet *names = [NSMutableSet set];
+    NSLog(@"read identifiers: %@",written);
+    for ( MPWIdentifier *identifier in written) {
+        [names addObject:[identifier identifierName]];
+    }
+    //    NSArray *names=[[written collect] identifierName];
+    NSLog(@"names: %@",names);
+    return names;
+}
+
+-(NSSet*)variableNamesWritten
+{
+    NSSet *written = [self variablesWritten];
+    NSMutableSet *names = [NSMutableSet set];
+    NSLog(@"written identifiers: %@",written);
+    for ( MPWIdentifier *identifier in written) {
+        [names addObject:[identifier identifierName]];
+    }
+//    NSArray *names=[[written collect] identifierName];
+    NSLog(@"names: %@",names);
+    return names;
 }
 
 @end
