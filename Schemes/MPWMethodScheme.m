@@ -78,12 +78,22 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     }
 }
 
+-(NSArray*)allClasses
+{
+    NSArray *allClassNames = (NSArray*)[[[MPWClassMirror allClasses] collect] name];
+//    allClassNames=[[[NSBundle mainBundle] select:2] classNamed:[allClassNames each]];
+    
+    return [allClassNames sortedArrayUsingSelector:@selector(compare:)];
+}
+
 -contentForPath:(NSArray*)components
 {
     if ( [components count] > 0 ) {
         NSString *first=[components objectAtIndex:0];
         if ( [first isEqual:@"classes"] ) {
             return [self methodList];
+        } else if ( [first isEqual:@"allclasses"] ) {
+                return [self allClasses];
         } else if ( [first isEqual:@"methods"] ) {
             return [self methodsForPath:[components subarrayWithRange:NSMakeRange(1, [components count]-1)]];
 //        } else if ( [first isEqual:@"theAnswer"] ) {

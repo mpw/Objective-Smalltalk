@@ -356,7 +356,7 @@ typedef id  (^idBlock)(id arg );
 {
     MPWBlockContext *stblock = [MPWStCompiler evaluate:@"[ :self :arg | self + 13 + (arg * 2)]"];
     [stblock installInClass:[NSNumber class] withMethodHeaderString:@"<int>addThirtenAndArgToSelf:<int>anArg"];
-    NSLog(@"=== should convert to int");
+//    NSLog(@"=== should convert to int");
     int theAnswer=[@(2) addThirtenAndArgToSelf:7];
     INTEXPECT(theAnswer, 13+2+(7*2), @"theAnswer");
 }

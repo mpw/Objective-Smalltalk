@@ -49,9 +49,9 @@
 		1F4CB5201253D53C00B30C99 /* MPWIdentifierExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74B0600F0B435015ADD82 /* MPWIdentifierExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F4CB5211253D53C00B30C99 /* MPWMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD2F6CF075227AC00547D6F /* MPWMessage.h */; };
 		1F4CB5221253D53C00B30C99 /* MPWBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC23075256C500A306C8 /* MPWBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F4CB5231253D53C00B30C99 /* MPWStatementList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC690752648B00A306C8 /* MPWStatementList.h */; };
-		1F4CB5241253D53C00B30C99 /* MPWBlockExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACA40752977F00A306C8 /* MPWBlockExpression.h */; };
-		1F4CB5251253D53C00B30C99 /* MPWBlockContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACB20752982900A306C8 /* MPWBlockContext.h */; };
+		1F4CB5231253D53C00B30C99 /* MPWStatementList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC690752648B00A306C8 /* MPWStatementList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F4CB5241253D53C00B30C99 /* MPWBlockExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACA40752977F00A306C8 /* MPWBlockExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F4CB5251253D53C00B30C99 /* MPWBlockContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACB20752982900A306C8 /* MPWBlockContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F4CB5261253D53C00B30C99 /* MPWInterval.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F54D96507573D20007886CD /* MPWInterval.h */; };
 		1F4CB5271253D53C00B30C99 /* MPWEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F45D541075D37A200D924C3 /* MPWEvaluator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F4CB5281253D53C00B30C99 /* MPWMethodCallBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -145,9 +145,9 @@
 		1F5E505209B4B754000298D9 /* MPWIdentifierExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74B0600F0B435015ADD82 /* MPWIdentifierExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD2F6CF075227AC00547D6F /* MPWMessage.h */; };
 		1F5E505409B4B754000298D9 /* MPWBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC23075256C500A306C8 /* MPWBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F5E505509B4B754000298D9 /* MPWStatementList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC690752648B00A306C8 /* MPWStatementList.h */; };
-		1F5E505609B4B754000298D9 /* MPWBlockExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACA40752977F00A306C8 /* MPWBlockExpression.h */; };
-		1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACB20752982900A306C8 /* MPWBlockContext.h */; };
+		1F5E505509B4B754000298D9 /* MPWStatementList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC690752648B00A306C8 /* MPWStatementList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F5E505609B4B754000298D9 /* MPWBlockExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACA40752977F00A306C8 /* MPWBlockExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6ACB20752982900A306C8 /* MPWBlockContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E505809B4B754000298D9 /* MPWInterval.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F54D96507573D20007886CD /* MPWInterval.h */; };
 		1F5E505909B4B754000298D9 /* MPWEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F45D541075D37A200D924C3 /* MPWEvaluator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E505A09B4B754000298D9 /* MPWMethodCallBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
