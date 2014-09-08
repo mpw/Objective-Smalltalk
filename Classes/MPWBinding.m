@@ -117,12 +117,14 @@ scalarAccessor( id, delegate, setDelegate)
 -(void)didChange
 {
     if (delegate) {
+        NSLog(@"sending changed: to delegate:%@",delegate);
         [delegate changed:self];
     }
 }
 
 -(void)observeValueForKeyPath:(NSString*)keyPath ofObject:anObject change:change context:(void*)kvoContext
 {
+    NSLog(@"observeValueForKeyPath: %@",keyPath);
     [self didChange];
 }
 

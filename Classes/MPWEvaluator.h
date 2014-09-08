@@ -16,6 +16,7 @@
 	id messageCache;
 	id _schemes;
     id homeContext;
+    NSMutableDictionary *bindingCache;
 }
 
 

@@ -119,6 +119,7 @@ idAccessor( localVars, setLocalVars )
 	[self bindValue:[NSNil nsNil] toVariableNamed:@"nil"];
 //	[self bindValue:self toVariableNamed:@"context"];
 	[self bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
+    bindingCache=[NSMutableDictionary new];
 	parent = aParent;
     return self;
 }
@@ -139,6 +140,17 @@ idAccessor( localVars, setLocalVars )
     return [expr evaluateIn:self];
 }
 
+-(MPWBinding*)cachedBindingForName:aName
+{
+    return [bindingCache objectForKey:aName];
+}
+
+-(void)cacheBinding:aBinding forName:aName
+{
+    if ( aBinding && aName) {
+        [bindingCache setObject:aBinding forKey:aName];
+    }
+}
 
 -(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName
 {
@@ -348,6 +360,7 @@ idAccessor( localVars, setLocalVars )
 -(void)dealloc
 {
     [localVars release];
+    [bindingCache release];
     [super dealloc];
 }
 

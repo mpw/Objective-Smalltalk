@@ -12,14 +12,26 @@
 #import "MPWIdentifier.h"
 
 @implementation MPWVarScheme
-
 -(Class)bindingClass
 {
     return [MPWVARBinding class];
 }
 
--bindingForName:(NSString*)variableName inContext:aContext
+-(MPWBinding *)bindingForName:(NSString *)variableName inContext:(id)aContext
 {
+    MPWBinding *binding = [aContext cachedBindingForName:variableName];
+    if (!binding)  {
+        binding=[self createBindingForName:variableName inContext:aContext];
+        [aContext cacheBinding:binding forName:variableName];
+    }
+    return binding;
+}
+
+
+-createBindingForName:(NSString*)variableName inContext:aContext
+{
+    
+    
     NSString *firstName=variableName;
     MPWBinding *theBinding=nil;
     NSString *remainder=nil;

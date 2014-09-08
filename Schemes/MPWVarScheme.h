@@ -10,7 +10,6 @@
 
 
 @interface MPWVarScheme : MPWScheme {
-
 }
 
 @end

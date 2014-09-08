@@ -66,7 +66,9 @@ idAccessor( baseObject, setBaseObject )
 {
     id base = [self _objecToIndex:(int)[pathComponents count]-1];
     NSString *property=[pathComponents lastObject];
-    [base addObserver:self forKeyPath:property options:0 context:NULL];
+    NSLog(@"%p start observing '%@' of %@ with %@",self,property,base,[self name]);
+    [base objst_addObserver:self forKey:property];
+    
 }
 
 -(void)stopKVO
@@ -103,6 +105,13 @@ idAccessor( baseObject, setBaseObject )
 	return [self valueForKey:pathComponent];
 }
 
+-(void)objst_addObserver:anObserver forKey:aKey
+{
+    NSLog(@"%@ objst_addObserver: %@",self,anObserver);
+    [self addObserver:anObserver forKeyPath:aKey options:0 context:NULL];
+}
+
+
 @end
 
 @implementation NSArray(valueForPathComponent)
@@ -121,3 +130,5 @@ idAccessor( baseObject, setBaseObject )
 }
 
 @end
+
+
