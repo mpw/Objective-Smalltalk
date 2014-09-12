@@ -409,9 +409,7 @@ static BOOL useMaxSize;
     id expr=nil;
     id result=@"";
     @try {
-        expr = [commandHandler compile:command];
-        result=[commandHandler evaluate:expr];
-
+        result=[commandHandler compileAndEvaluate:command];
     } @catch ( NSException *e ) {
         result=[e description];
     }
@@ -495,7 +493,7 @@ static BOOL useMaxSize;
 
 -(void)setupStdioForCommandHandler
 {
-    stdout=[MPWByteStream streamWithTarget:[[self textStorage] mutableString] ];
+    stdout=[[MPWByteStream streamWithTarget:[[self textStorage] mutableString] ] retain];
     [commandHandler bindValue:stdout toVariableNamed:@"stdout"];
 
 }

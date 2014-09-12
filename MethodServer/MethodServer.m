@@ -130,15 +130,16 @@ static void CatchException(NSException *exception)
 
 -eval:(NSString*)aString
 {
+    NSLog(@"MethodServer eval: %@",aString);
     id result=@"";
     @try {
         result = [[self interpreter] evaluateScriptString:aString];
     } @catch ( id e ) {
         NSLog(@"evaluating '%@' threw '%@'",aString,e);
     }
-    NSLog(@"result: %@",result);
+    NSLog(@"MethodServer result: %@",result);
     
-    return result;
+    return [result asData];
 }
 
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
@@ -158,13 +159,13 @@ static void CatchException(NSException *exception)
 
 -(NSData*)post:(NSString*)uri parameters:postData
 {
-//    NSLog(@"POST to %@",uri);
-//    NSLog(@"values: %@",[postData values]);
+    NSLog(@"POST to %@",uri);
+    NSLog(@"values: %@",[postData values]);
     postData=[[[postData values] objectForKey:@"eval"] stringValue];
     NSLog(@"values: %@",postData);
-    
-    [self eval:postData];
-    return [@"" asData];
+    id result = [self eval:postData];
+    NSLog(@"result of POST: %@",result);
+    return [[result stringValue] asData];
 }
 
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params

@@ -691,6 +691,11 @@ idAccessor( connectorMap, setConnectorMap );
     return expr;
 }
 
+-(id)compileAndEvaluate:(NSString*)aString
+{
+    return [self evaluateScriptString:aString];
+}
+
 -(BOOL)isValidSyntax:(NSString*)stString
 {
     @try {

@@ -50,15 +50,16 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
 
 -eval:(NSString*)aString
 {
+    NSLog(@"MPWMethodScheme will eval: %@",aString);
     id result=@"";
     @try {
         result = [[self interpreter] evaluateScriptString:aString];
     } @catch ( id e ) {
         NSLog(@"evaluating '%@' threw '%@'",aString,e);
     }
-    NSLog(@"result: %@",result);
+    NSLog(@"%@ result: %@",[self class],result);
     
-    return result;
+    return [result asData];
 }
 
 -methodsForPath:(NSArray*)components

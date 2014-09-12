@@ -62,16 +62,16 @@ idAccessor( baseObject, setBaseObject )
 	return [self _objecToIndex:(int)[pathComponents count]];
 }
 
--(void)startKVO
+-(void)startObserving
 {
     id base = [self _objecToIndex:(int)[pathComponents count]-1];
     NSString *property=[pathComponents lastObject];
-    NSLog(@"%p start observing '%@' of %@ with %@",self,property,base,[self name]);
+//    NSLog(@"%p start observing '%@' of %@ with %@",self,property,base,[self name]);
     [base objst_addObserver:self forKey:property];
     
 }
 
--(void)stopKVO
+-(void)stopObserving
 {
     id base = [self _objecToIndex:(int)[pathComponents count]-1];
     NSString *property=[pathComponents lastObject];

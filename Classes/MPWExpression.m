@@ -66,12 +66,12 @@ longAccessor(len, setLen)
 {
     NSSet *written = [self variablesRead];
     NSMutableSet *names = [NSMutableSet set];
-    NSLog(@"read identifiers: %@",written);
+//    NSLog(@"read identifiers: %@",written);
     for ( MPWIdentifier *identifier in written) {
         [names addObject:[identifier identifierName]];
     }
     //    NSArray *names=[[written collect] identifierName];
-    NSLog(@"names: %@",names);
+//    NSLog(@"names: %@",names);
     return names;
 }
 
@@ -79,12 +79,12 @@ longAccessor(len, setLen)
 {
     NSSet *written = [self variablesWritten];
     NSMutableSet *names = [NSMutableSet set];
-    NSLog(@"written identifiers: %@",written);
+//    NSLog(@"written identifiers: %@",written);
     for ( MPWIdentifier *identifier in written) {
         [names addObject:[identifier identifierName]];
     }
 //    NSArray *names=[[written collect] identifierName];
-    NSLog(@"names: %@",names);
+//    NSLog(@"names: %@",names);
     return names;
 }
 

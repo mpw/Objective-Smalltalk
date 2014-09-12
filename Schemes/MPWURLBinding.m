@@ -80,6 +80,24 @@ objectAccessor(NSError, error, setError)
     return mime;
 }
 
+-(MPWResource*)resourceWithRequest:(NSURLRequest*)request
+{
+    NSHTTPURLResponse *response=nil;
+//    NSError *error=nil;
+
+    NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+
+    if ( [response statusCode] != 404 ) {
+        MPWResource *result=[[[MPWResource alloc] init] autorelease];
+        [result setSource:[request URL]];
+        [result setRawData:rawData];
+        [result setMIMEType:[self mimeTypeForData:rawData andResponse:response]];
+        return result;
+    } else {
+        return nil;
+    }
+}
+
 -_valueWithURL:(NSURL*)aURL
 {
 	NSMutableURLRequest *request=[[[NSMutableURLRequest alloc] initWithURL:aURL] autorelease];
@@ -88,16 +106,7 @@ objectAccessor(NSError, error, setError)
 	[headers setObject:@"stsh" forKey:@"User-Agent"];
 	[headers setObject:@"*/*" forKey:@"Accept"];
 	[request setAllHTTPHeaderFields:headers];
-	NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    if ( [response statusCode] != 404 ) {
-        MPWResource *result=[[[MPWResource alloc] init] autorelease];
-        [result setSource:aURL];
-        [result setRawData:rawData];
-        [result setMIMEType:[self mimeTypeForData:rawData andResponse:response]];
-        return result;
-    } else {
-        return nil;
-    }
+    return [self resourceWithRequest:request];
 }
 
 
@@ -170,20 +179,30 @@ objectAccessor(NSError, error, setError)
 }
 
 
--(void)post:data
+-(NSData*)post:data withName:(NSString*)name
 {
     NSString *boundary=@"0xKhTmLbOuNdArY";
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self url]];
+    NSHTTPURLResponse *response=nil;
+    NSError *error=nil;
+
     [urlRequest setHTTPMethod:@"POST"];
     
     [urlRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
     
     NSMutableData *postData = [NSMutableData data];
     [postData appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", @"methods", @"methods"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", name, name] dataUsingEncoding:NSUTF8StringEncoding]];
     [postData appendData:data];
     [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [urlRequest setHTTPBody:postData];
+    return [self resourceWithRequest:urlRequest];
+
+    
+#if 0
+    NSData *rawData = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
+
+    
     [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     if ( inPOST ) {
         [NSException raise:@"POST in progress" format:@"POST to %@/%@ already in progress",self,[self url]];
@@ -192,6 +211,13 @@ objectAccessor(NSError, error, setError)
     while (inPOST) {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
     }
+    return [urlRequest HTTPBody];
+#endif
+}
+
+-(NSData*)post:data
+{
+    return [self post:data withName:@"methods"];       // FIXME:  remove
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection

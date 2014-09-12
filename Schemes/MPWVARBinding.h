@@ -11,7 +11,7 @@
 
 @interface MPWVARBinding : MPWBinding {
 	id			baseObject;
-	NSArray*	pathComponents;
+	NSArray     *pathComponents;
 }
 
 -initWithBaseObject:newBase pathComponents:(NSArray*)newPathComponents;
