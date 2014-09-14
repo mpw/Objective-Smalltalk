@@ -56,8 +56,9 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
         result = [[self interpreter] evaluateScriptString:aString];
     } @catch ( id e ) {
         NSLog(@"evaluating '%@' threw '%@'",aString,e);
+        result=[e description];
     }
-    NSLog(@"%@ result: %@",[self class],result);
+//    NSLog(@"%@ result: %@",[self class],result);
     
     return [result asData];
 }

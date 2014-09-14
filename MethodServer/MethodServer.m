@@ -87,7 +87,7 @@ static void CatchException(NSException *exception)
     [self defineMethodsInExternalDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
-
+    NSLog(@"done setupWithInterpreter");
 }
 
 -(void)setupWebServerInBackground
@@ -100,7 +100,7 @@ static void CatchException(NSException *exception)
     [self setupWithInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
 }
 
--(void)setup
+-(void)setupMethodServer
 {
     [self setupWithoutStarting];
     [self setupWebServerInBackground];
@@ -136,6 +136,8 @@ static void CatchException(NSException *exception)
         result = [[self interpreter] evaluateScriptString:aString];
     } @catch ( id e ) {
         NSLog(@"evaluating '%@' threw '%@'",aString,e);
+        result = [e description];
+        NSLog(@"result = %@",result);
     }
     NSLog(@"MethodServer result: %@",result);
     
@@ -194,13 +196,15 @@ static void CatchException(NSException *exception)
 -(void)setupWebServer
 {
     NSLog(@"MethodServer setupWebServer");
+#if 1
     [super setupWebServer];
     int port = 51000;
     if ( [[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"]) {
         port=[[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"];
     }
     [[self server] setPort:port];
-    [[self server] setThreadPoolSize:2];
+    [[self server] setThreadPoolSize:4];
+    
     NSLog(@"Method Server bonjour name: %@",[self methodDictName]);
     [[self server] setBonjourName:[self methodDictName]];
     [[self server] setTypes:[NSArray arrayWithObjects:@"_http._tcp.",@"_methods._tcp.",nil]];
@@ -208,6 +212,7 @@ static void CatchException(NSException *exception)
     NSError *error=nil;
     [self start:&error];
     NSLog(@"did start, port: %d error: %@ ",[[self server] port],error);
+#endif
 }
 
 -(void)stop
