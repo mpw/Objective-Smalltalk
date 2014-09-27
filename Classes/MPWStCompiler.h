@@ -30,6 +30,7 @@
 -parseBlock;
 -mapConnector:aConnectorExpression;
 -(MPWBinding*)bindingForString:(NSString*)fullPath;
+-(BOOL)isValidSyntax:(NSString*)stString;
 
 //---- method store 
 

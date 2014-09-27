@@ -377,11 +377,12 @@ idAccessor( connectorMap, setConnectorMap );
 //	NSLog(@"done with block: %@",closeBrace);
 //	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
 	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
+//  NSLog(@"closeBrace: %@",closeBrace);
+    [expr setOffset:[scanner offset]];
+    [expr setLen:1];
     if ( ![closeBrace isEqual:@"]"] ) {
         PARSEERROR(@"block not closed by ]", expr);
     }
-    [expr setOffset:[scanner offset]];
-    [expr setLen:1];
     return expr;
 }
 
@@ -621,6 +622,10 @@ idAccessor( connectorMap, setConnectorMap );
         [self pushBack:second];
         if ( ![second isEqual:@"."] && ![second isEqual:@"("] && ![second isEqual:@"["] ) {
             return [self parseMessageExpression:first];
+        } else {
+            if ( ![second isEqual:@"."]) {
+                PARSEERROR(@"message expression expected", second);
+            }
         }
     }
     return first;
@@ -746,6 +751,8 @@ idAccessor( connectorMap, setConnectorMap );
     MPWStCompiler *compiler=[self compiler];
     EXPECTTRUE([compiler isValidSyntax:@" 3+4 "], @"'3+4' valid syntax ");
     EXPECTFALSE([compiler isValidSyntax:@" 3+  "], @"'3+' not valid syntax ");
+    EXPECTFALSE([compiler isValidSyntax:@"42 [  "], @"'42 [ ' not valid syntax ");
+    EXPECTFALSE([compiler isValidSyntax:@"42 (  "], @"'42 ( ' not valid syntax ");
 }
 
 +(void)testRightArrowDoesntGenerateMsgExpr
