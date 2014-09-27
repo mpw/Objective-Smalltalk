@@ -10,6 +10,7 @@
 #import "MPWStCompiler.h"
 #import "MPWMethodScheme.h"
 #import "MPWBinding.h"
+#import <ObjectiveHTTPD/MPWHTTPServer.h>
 
 @implementation MethodServer
 
@@ -196,14 +197,14 @@ static void CatchException(NSException *exception)
 -(void)setupWebServer
 {
     NSLog(@"MethodServer setupWebServer");
-#if 1
     [super setupWebServer];
     int port = 51000;
     if ( [[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"]) {
-        port=[[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"];
+        port=(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"methodServerPort"];
     }
     [[self server] setPort:port];
     [[self server] setThreadPoolSize:4];
+#if 1
     
     NSLog(@"Method Server bonjour name: %@",[self methodDictName]);
     [[self server] setBonjourName:[self methodDictName]];
@@ -222,6 +223,11 @@ static void CatchException(NSException *exception)
 
 scalarAccessor(id, delegate, setDelegate)
 
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: port: %d uniqueID: %@>",[self class],self,[[self server] port],[self uniqueID]];
+}
+
 @end
 
 #import <ObjectiveSmalltalk/MPWScriptedMethod.h>
@@ -230,7 +236,7 @@ scalarAccessor(id, delegate, setDelegate)
 -freshExecutionContextForRealLocalVars
 {
     //  FIXME!!
-    //  Linking with parent means we don't have local vars
+    //  Linking with parent means our local vars aren't local
     //  (they are inherited from parent), not linking means
     //  schemes are not inherited (and can't be modified)
     
