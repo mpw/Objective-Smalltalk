@@ -37,11 +37,20 @@
 
 -max:otherNumber
 {
-	if ( [self doubleValue] < [otherNumber doubleValue] ) {
-		return otherNumber;
-	} else {
-		return self;
-	}
+    if ( [self doubleValue] < [otherNumber doubleValue] ) {
+        return otherNumber;
+    } else {
+        return self;
+    }
+}
+
+-min:otherNumber
+{
+    if ( [self doubleValue] > [otherNumber doubleValue] ) {
+        return otherNumber;
+    } else {
+        return self;
+    }
 }
 
 -to:otherNumber do:aBlock
