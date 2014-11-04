@@ -63,7 +63,7 @@ typedef id (^ZeroArgBlock)(void);
 {
     //	NSLog(@"creating new context from context: %@",[self context]);
 	MPWEvaluator *evalContext= [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
-    
+
     
     return evalContext;
 }

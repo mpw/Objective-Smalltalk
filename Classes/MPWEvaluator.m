@@ -127,7 +127,11 @@ idAccessor( localVars, setLocalVars )
 	[self bindValue:[NSNumber numberWithDouble:M_PI] toVariableNamed:[NSString stringWithFormat:@"%C",(unsigned short)960]];
 	[self bindValue:[NSNil nsNil] toVariableNamed:@"nil"];
 //	[self bindValue:self toVariableNamed:@"context"];
-	[self bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
+    id newStdout=[parent bindingForLocalVariableNamed:@"stdout"];
+    if ( !newStdout) {
+        newStdout=[MPWByteStream Stdout];
+    }
+	[self bindValue:newStdout toVariableNamed:@"stdout"];
     bindingCache=[NSMutableDictionary new];
 	parent = aParent;
     return self;

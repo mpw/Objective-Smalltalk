@@ -56,11 +56,6 @@ static BOOL useMaxSize;
 
 - (NSArray *)completionsForPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index
 {
-  NSMutableArray *result;
-  NSArray *superResult;
- 
-    
-    
     NSString *completionFor=[[self string] substringWithRange:charRange];
     
     NSLog(@"completionsForPartialWordRange: %@/'%@'",NSStringFromRange(charRange),completionFor);
@@ -72,7 +67,7 @@ static BOOL useMaxSize;
     NSString *currentCommand = [self currentCommandLine];
     MPWExpression *expr = [commandHandler compile:currentCommand];
     NSString *str=@"";
-    NSArray *completions = [expr completionsForString:currentCommand withEvaluator:commandHandler resultName:&str];
+    NSArray *completions = [expr completionsForString:currentCommand withEvaluator:(MPWEvaluator*)commandHandler resultName:&str];
 
     
     if ( [completions count]==1 && [[completions firstObject] isEqualToString:completionFor]) {

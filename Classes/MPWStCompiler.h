@@ -17,6 +17,7 @@
 -evaluateScriptString:aString;
 
 -compile:aString;
+-(id)compileAndEvaluate:(NSString*)aString;
 -nextToken;
 -(void)pushBack:aToken;
 

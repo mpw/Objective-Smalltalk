@@ -173,7 +173,7 @@ static void CatchException(NSException *exception)
 
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
 {
-//    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
+    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
     NSData *retval =[super put:uri data:putData parameters:params];
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
 //        [[delegate afterDelay:0.001] didDefineMethods:self];

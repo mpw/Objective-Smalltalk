@@ -83,6 +83,10 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)defineMethodsInExternalMethodDict:(NSDictionary*)dict forClass:(NSString*)className
 {
+    NSLog(@"define methods in dict: %@ for class: %@",dict,className);
+    if ( dict[@"instanceMethods"]) {
+        dict=dict[@"instanceMethods"];
+    }
 	NSArray *methodHeaders = [dict allKeys];
 	NSArray *methodBodies = [[dict collect] objectForKey:[methodHeaders each]];
 	[[self do] addScript:[methodBodies each] forClass:className methodHeaderString:[methodHeaders each]];
