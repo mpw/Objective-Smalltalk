@@ -13,6 +13,7 @@
 @implementation MPWDocumentScheme
 
 objectAccessor(NSMutableSet, _referencedDocuments, setReferencedDocuments)
+idAccessor(currentDocument, setCurrentDocument)
 
 -(void)clearRefs
 {
@@ -24,10 +25,43 @@ objectAccessor(NSMutableSet, _referencedDocuments, setReferencedDocuments)
     return [[[self _referencedDocuments] copy] autorelease];
 }
 
+-externalCurrentDoc
+{
+    return [[NSDocumentController sharedDocumentController] currentDocument];
+}
+
+
+-(void)keyWindowChangedAfterDelay
+{
+    NSLog(@"keyWindowChanged");
+    id newCurrentDoc = [self externalCurrentDoc];
+    NSLog(@"newCurrentDoc: %@",newCurrentDoc);
+    if ( newCurrentDoc) {
+        [self setCurrentDocument:newCurrentDoc];
+    }
+}
+
+-(void)keyWindowChanged
+{
+    [[self afterDelay:0.001] keyWindowChangedAfterDelay];
+}
+
+-currentDoc
+{
+    id doc=[self externalCurrentDoc];
+    NSLog(@"external: %@",doc);
+    if (!doc) {
+        doc=[self currentDocument];
+        NSLog(@"remembered: %@",doc);
+    }
+    return doc;
+}
+
 -(id)init
 {
     self=[super init];
     [self clearRefs];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyWindowChanged) name:NSWindowDidBecomeMainNotification object:nil];
     return self;
 }
 
@@ -49,7 +83,7 @@ objectAccessor(NSMutableSet, _referencedDocuments, setReferencedDocuments)
     NSString *path=[aBinding name];
     NSLog(@"path: %@",path);
     if ( [path isEqualTo:@"."] || [path isEqualTo:@"./"]) {
-        return [[NSDocumentController sharedDocumentController] currentDocument];
+        return [self currentDoc];
     }
     NSArray *lookupPath=[[aBinding name] componentsSeparatedByString:@"/"];
     if ( [lookupPath count] > 1 ) {
@@ -70,6 +104,8 @@ objectAccessor(NSMutableSet, _referencedDocuments, setReferencedDocuments)
 -(void)dealloc
 {
     [_referencedDocuments release];
+    [currentDocument release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 @end

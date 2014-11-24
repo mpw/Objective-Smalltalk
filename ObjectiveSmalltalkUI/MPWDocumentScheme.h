@@ -12,6 +12,7 @@
 @interface MPWDocumentScheme : MPWGenericScheme
 {
     NSMutableSet *_referencedDocuments;
+    id  currentDocument;
 }
 
 -(NSSet*)referencedDocuments;
