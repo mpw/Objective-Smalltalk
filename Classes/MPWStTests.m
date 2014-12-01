@@ -799,6 +799,13 @@
     IDEXPECT([result lastObject], @"there", @"last object");
 }
 
+
++(void)testCompositionViaPipe
+{
+    NSString *result=[self evaluate:@"'a' stringByAppendingString:'b' | stringByAppendingString:'c'."];
+    IDEXPECT(result, @"abc", @"concated");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -888,6 +895,7 @@
             @"testSingleCharUnicodeIdentifiersAllowed",
             
             @"testSmalltalkCascade",
+            @"testCompositionViaPipe",
 
         nil];
 }

@@ -416,7 +416,6 @@ idAccessor( connectorMap, setConnectorMap );
                               @"isNotEqualTo:", @"\u2260",
                               @"add:", @"+",
                               @"sub:", @"-",
-                                                                    @"pipe:", @"|",
                                                                     @"mul:", @"*",
                                                                     @"div:", @"/",
 																 @"concat:", @",",
@@ -464,8 +463,8 @@ idAccessor( connectorMap, setConnectorMap );
 //    NSLog(@"parseUnary");
     id expr=[self parseArgument];
 //    NSLog(@"argument: %@",expr);
-    id next=nil;
-    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] && ![next isEqual:@"]"]) {
+  id next=nil;
+    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]) {
 //        NSLog(@"part of parseUnary, token: %@",next);
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setOffset:[scanner offset]];
@@ -544,6 +543,7 @@ idAccessor( connectorMap, setConnectorMap );
 //	NSLog(@"got selector: %@ args: %@",selector,args);
     [expr setSelector:[self mapSelectorString:selector]];
     [expr setArgs:args];
+//    NSLog(@"return expr from parseSelectorAndArgs: %@",expr);
     return expr;
 }
 
@@ -559,7 +559,7 @@ idAccessor( connectorMap, setConnectorMap );
     
     id expr=receiver;
     id next;
-    while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {
+    while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {
         [self pushBack:next];
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         [expr setOffset:[scanner offset]];
@@ -574,34 +574,63 @@ idAccessor( connectorMap, setConnectorMap );
     return expr;
 }
 
--parseMessageExpressionOrCascade:receiver
+-parsePipeExpression:firstExpression
 {
-    id firstExpression = [self parseMessageExpression:receiver];
-    id cascade=nil;
-    id nextToken=nil;
-//    NSLog(@"after parseMessageExpression, looking for cascades: %@",[scanner tokens]);
-    while ( (nextToken = [self nextToken]) && [nextToken isEqualToString:@";"]) {
-        if ( !cascade ) {
-            cascade=[[MPWCascadeExpression new] autorelease];
-            [cascade addMessageExpression:firstExpression];
-        }
-            id expr=[[[MPWMessageExpression alloc] initWithReceiver:[firstExpression receiver]] autorelease];
+    id nextToken;
+//    NSLog(@"parsePipe: %@",firstExpression);
+    while ( (nextToken = [self nextToken]) && [nextToken isEqualToString:@"|"]) {
+        
+        id expr=[[[MPWMessageExpression alloc] initWithReceiver:firstExpression] autorelease];
 //            NSLog(@"next expr start: %@",expr);
-            [expr setOffset:[scanner offset]];
-            [expr setLen:1];
+        [expr setOffset:[scanner offset]];
+        [expr setLen:1];
 //            NSLog(@"parse cascade");
-            [self parseSelectorAndArgs:expr];
-            expr = [self mapConnector:expr];
-            [cascade addMessageExpression:expr];
-//            NSLog(@"cascade expression after parsing cascade: %@",expr);
-
+        [self parseSelectorAndArgs:expr];
+        expr = [self mapConnector:expr];
+        firstExpression=expr;
+        
     }
-    if ( cascade ) {
-        firstExpression=cascade;
+    return firstExpression;
+}
+
+
+-parseCascadeExpression:firstExpression
+{
+    id nextToken;
+    id cascade=[[MPWCascadeExpression new] autorelease];
+    [cascade addMessageExpression:firstExpression];
+    while ( (nextToken = [self nextToken]) && [nextToken isEqualToString:@";"]) {
+        id expr=[[[MPWMessageExpression alloc] initWithReceiver:[firstExpression receiver]] autorelease];
+        //            NSLog(@"next expr start: %@",expr);
+        [expr setOffset:[scanner offset]];
+        [expr setLen:1];
+        //            NSLog(@"parse cascade");
+        [self parseSelectorAndArgs:expr];
+        expr = [self mapConnector:expr];
+        [cascade addMessageExpression:expr];
+        //            NSLog(@"cascade expression after parsing cascade: %@",expr);
+        
     }
     if ( nextToken) {
         [self pushBack:nextToken];
     }
+    return cascade;
+}
+
+-parseMessageExpressionOrCascade:receiver
+{
+    id firstExpression = [self parseMessageExpression:receiver];
+//    NSLog(@"after parseMessageExpression, looking for cascades: %@",[scanner tokens]);
+    id separator=[self nextToken];
+    [self pushBack:separator];
+    
+    if ( [separator isEqualToString:@"|"] ) {
+//        NSLog(@"parsePipe");
+        firstExpression = [self parsePipeExpression:firstExpression];
+    } else if ([separator isEqualToString:@";"]) {
+        firstExpression = [self parseCascadeExpression:firstExpression];
+    }
+
     return firstExpression;
 }
 
@@ -676,7 +705,9 @@ idAccessor( connectorMap, setConnectorMap );
 -(id)parseStatement
 {
     id next=[self nextToken];
+
     if ( [next isEqual:@"|"]) {
+        NSLog(@"parseStatement encounted pipe '|'");
         next=[self nextToken];
         while ( next && ![next isEqual:@"|"]) {
             next=[self nextToken];
@@ -685,6 +716,7 @@ idAccessor( connectorMap, setConnectorMap );
     } else {
         [self pushBack:next];
     }
+
     return [self parseExpression];
 }
 
@@ -831,5 +863,17 @@ idAccessor( connectorMap, setConnectorMap );
               @"testSchemeWithDot",
               ];
 }
+
+@end
+
+
+@implementation NSObject(pipe)
+
+-pipe:other
+{
+    return self;
+}
+
+
 
 @end
