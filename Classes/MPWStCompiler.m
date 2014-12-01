@@ -23,6 +23,7 @@
 #import "MPWConnectToDefault.h"
 #import <MPWFoundation/NSNil.h>
 #import "MPWLiteralExpression.h"
+#import "MPWCascadeExpression.h"
 
 @implementation NSString(concat)
 
@@ -390,6 +391,7 @@ idAccessor( connectorMap, setConnectorMap );
 {
     id object=[self nextToken];
 	object = [self objectifyScanned:object];
+//    NSLog(@"parseArgument -> %@",object);
 	return object;
 }
 
@@ -400,6 +402,7 @@ idAccessor( connectorMap, setConnectorMap );
     if ( [msg isLiteral] ) {
         PARSEERROR(@"invalid message", msg);
     }
+//    NSLog(@"parseKeywordOrUnary msg -> %@",msg);
     return msg;
 }
 
@@ -458,27 +461,33 @@ idAccessor( connectorMap, setConnectorMap );
 
 -parseUnary
 {
- //   NSLog(@"parseUnary");
+//    NSLog(@"parseUnary");
     id expr=[self parseArgument];
+//    NSLog(@"argument: %@",expr);
     id next=nil;
-    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] && ![next isEqual:@"]"]) {
+    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] && ![next isEqual:@"]"]) {
+//        NSLog(@"part of parseUnary, token: %@",next);
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setOffset:[scanner offset]];
         [expr setLen:1];
         [expr setSelector:[self mapSelectorString:next]];
-		expr=[self mapConnector:expr]; 
+		expr=[self mapConnector:expr];
+//        NSLog(@"part of parseUnary: %@",expr);
     }
     if ( next ) {
         [self pushBack:next];
     }
+//    NSLog(@"parseUnary -> %@",expr);
     return expr;
 }
 
 -parseSelectorAndArgs:expr
 {
+//    NSLog(@"entry parseSelectorAndArgs:");
     id selector=[self parseKeywordOrUnary];
     id args=nil;
 //    NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
+
     if ( selector && isalpha( [selector characterAtIndex:0] )) {
 //        NSLog(@"possibly keyword: '%@'",selector);
         BOOL isKeyword =[selector isKeyword];
@@ -501,6 +510,7 @@ idAccessor( connectorMap, setConnectorMap );
 //					NSLog(@"got more of a non-keyword: %@",keyword);
 					[self pushBack:keyword];
                     if ( [self isSpecialSelector:keyword] ) {
+//                        NSLog(@"special selector '%@' encountered, parsing subexpression",keyword);
                         id subExpr = [[[MPWMessageExpression alloc] initWithReceiver:arg] autorelease];
                         [subExpr setOffset:[scanner offset]];
                         [subExpr setLen:1];
@@ -508,8 +518,10 @@ idAccessor( connectorMap, setConnectorMap );
 						subExpr=[self mapConnector:subExpr];
                         [args removeLastObject];
                         [args addObject:subExpr];
+                    } else {
+//                        NSLog(@"non-keyword that is not a special selector: %@",keyword);
                     }
-				}
+                }
             }
         } else {
 //            NSLog(@"not keyword");
@@ -527,7 +539,7 @@ idAccessor( connectorMap, setConnectorMap );
                 PARSEERROR(@"argument missing", selector);
             }
 		}
-//		NSLog(@"parse unary: args=%@",args);
+//		NSLog(@"parse unary: selector=%@ args=%@",selector, args);
     }
 //	NSLog(@"got selector: %@ args: %@",selector,args);
     [expr setSelector:[self mapSelectorString:selector]];
@@ -547,7 +559,7 @@ idAccessor( connectorMap, setConnectorMap );
     
     id expr=receiver;
     id next;
-    while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {
+    while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]) {
         [self pushBack:next];
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         [expr setOffset:[scanner offset]];
@@ -562,6 +574,36 @@ idAccessor( connectorMap, setConnectorMap );
     return expr;
 }
 
+-parseMessageExpressionOrCascade:receiver
+{
+    id firstExpression = [self parseMessageExpression:receiver];
+    id cascade=nil;
+    id nextToken=nil;
+//    NSLog(@"after parseMessageExpression, looking for cascades: %@",[scanner tokens]);
+    while ( (nextToken = [self nextToken]) && [nextToken isEqualToString:@";"]) {
+        if ( !cascade ) {
+            cascade=[[MPWCascadeExpression new] autorelease];
+            [cascade addMessageExpression:firstExpression];
+        }
+            id expr=[[[MPWMessageExpression alloc] initWithReceiver:[firstExpression receiver]] autorelease];
+//            NSLog(@"next expr start: %@",expr);
+            [expr setOffset:[scanner offset]];
+            [expr setLen:1];
+//            NSLog(@"parse cascade");
+            [self parseSelectorAndArgs:expr];
+            expr = [self mapConnector:expr];
+            [cascade addMessageExpression:expr];
+//            NSLog(@"cascade expression after parsing cascade: %@",expr);
+
+    }
+    if ( cascade ) {
+        firstExpression=cascade;
+    }
+    if ( nextToken) {
+        [self pushBack:nextToken];
+    }
+    return firstExpression;
+}
 
 -parseAssignmentLikeExpression:lhs withExpressionClass:(Class)assignmentExpressionClass
 {
@@ -621,7 +663,7 @@ idAccessor( connectorMap, setConnectorMap );
 //		first = [self objectifyScanned:first];
         [self pushBack:second];
         if ( ![second isEqual:@"."] && ![second isEqual:@"("] && ![second isEqual:@"["] ) {
-            return [self parseMessageExpression:first];
+            return [self parseMessageExpressionOrCascade:first];
         } else {
             if ( ![second isEqual:@"."]) {
                 PARSEERROR(@"message expression expected", second);
@@ -654,7 +696,7 @@ idAccessor( connectorMap, setConnectorMap );
 	first = [self parseStatement];
 	expression=first;
 	next = [self nextToken];
-	if ( next && [next isEqual:@"."] ) {
+	if ( next && [next isEqual:@"."] || [first isKindOfClass:[NSArray class]] ) {
 		id statements=[MPWStatementList statementList];
 		expression=statements;
 		[statements addStatement:first];

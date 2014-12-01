@@ -791,7 +791,13 @@
     INTEXPECT([result intValue], 628, @"2 * pi * 100");
 }
 
-
++(void)testSmalltalkCascade
+{
+    NSArray *result=[self evaluate:@" a:= NSMutableArray array. a addObject:'hi'; addObject:'there'. a."];
+    INTEXPECT([result count], 2, @"after cascade should have 2 elements");
+    IDEXPECT([result firstObject], @"hi", @"first object");
+    IDEXPECT([result lastObject], @"there", @"last object");
+}
 
 +(NSArray*)testSelectors
 {
@@ -870,7 +876,7 @@
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
 			@"testRelScheme",
-//			@"testIdentifierInterpolation",
+			@"testIdentifierInterpolation",
 //			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
             @"testNestedLiteralArrays",
@@ -880,6 +886,8 @@
             @"testLeftArrowWorksLikeAssignment",
             @"testPipeForTemporaryVariablesAllowed",
             @"testSingleCharUnicodeIdentifiersAllowed",
+            
+            @"testSmalltalkCascade",
 
         nil];
 }

@@ -28,6 +28,11 @@ idAccessor( statements, setStatements )
 
 -(void)addStatement:aStatement
 {
+    if ( [aStatement isKindOfClass:[NSArray class]]) {
+        for ( id singleSatement in aStatement) {
+            [self addStatement:singleSatement];
+        }
+    }
 	[statements addObject:aStatement];
 }
 
