@@ -328,8 +328,8 @@ idAccessor( connectorMap, setConnectorMap );
         object = [self parseExpression];
         closeParen=[self nextToken];
 		NSAssert1( [closeParen isEqual:@")"], @"'(' not followed by ')': '%@'",closeParen);
-    } else if ( [object isEqual:@"["] ) {
-        object = [self parseBlock];
+    } else if ( [object isEqual:@"["] || [object isEqual:@"{"] ) {
+        object = [self parseBlockWithStart:object];
     } else if ( [object isEqual:@"-"] ) {
         object = [[self parseLiteral] negated];
     } else if ( [object isToken] && ![[object stringValue] isScheme] ) {
@@ -365,11 +365,12 @@ idAccessor( connectorMap, setConnectorMap );
 	return variableNames;
 }
 
--parseBlock
+-parseBlockWithStart:(NSString*)startOfBlock
 {
 	id statements;
 	id closeBrace;
 	id blockVariables;
+    NSString *endOfBlock=[startOfBlock isEqualToString:@"{"] ? @"}" : @"]";
 //	NSLog(@"parseBlock");
 	blockVariables = [self parseBlockVariables];
 //	NSLog(@"block variables: %@",blockVariables);
@@ -381,8 +382,9 @@ idAccessor( connectorMap, setConnectorMap );
 //  NSLog(@"closeBrace: %@",closeBrace);
     [expr setOffset:[scanner offset]];
     [expr setLen:1];
-    if ( ![closeBrace isEqual:@"]"] ) {
-        PARSEERROR(@"block not closed by ]", expr);
+    if ( ![closeBrace isEqual:endOfBlock] ) {
+        NSString *s=[NSString stringWithFormat:@"block not closed by matching '%@'",endOfBlock];
+        PARSEERROR(s, expr);
     }
     return expr;
 }
@@ -735,7 +737,7 @@ idAccessor( connectorMap, setConnectorMap );
 		while ( next && [next isEqual:@"."] /* || [next isEqual:@";"] */ ) {
 			id nextExpression;
 			next = [self nextToken];
-			if ( next && [next isEqual:@"]"] ) {
+			if ( next && ([next isEqual:@"]"] || [next isEqual:@"}"]) ) {
 				break;
 			}
 			[self pushBack:next];

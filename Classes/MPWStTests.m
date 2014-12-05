@@ -806,6 +806,11 @@
     IDEXPECT(result, @"abc", @"concated");
 }
 
++(void)testCurlyBracesAllowedForBlocks
+{
+    [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a).}. a." expected:[NSNumber numberWithInt:2048]];
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -896,6 +901,7 @@
             
             @"testSmalltalkCascade",
             @"testCompositionViaPipe",
+            @"testCurlyBracesAllowedForBlocks",
 
         nil];
 }
