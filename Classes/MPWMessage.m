@@ -10,7 +10,7 @@
 #import "MPWInterval.h"
 #import "MPWFastMessage.h"
 #import <MPWFoundation/AccessorMacros.h>
-#import "MPWBoxerUnboxer.h"
+#import "MPWBoxerUnboxer+MPWBoxingAdditions.h"
 
 @implementation MPWMessage
 

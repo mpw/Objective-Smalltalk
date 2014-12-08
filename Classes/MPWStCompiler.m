@@ -730,7 +730,7 @@ idAccessor( connectorMap, setConnectorMap );
 	first = [self parseStatement];
 	expression=first;
 	next = [self nextToken];
-	if ( next && [next isEqual:@"."] || [first isKindOfClass:[NSArray class]] ) {
+	if ( next && ([next isEqual:@"."] || [first isKindOfClass:[NSArray class]]) ) {
 		id statements=[MPWStatementList statementList];
 		expression=statements;
 		[statements addStatement:first];
