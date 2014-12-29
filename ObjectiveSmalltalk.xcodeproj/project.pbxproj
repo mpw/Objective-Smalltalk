@@ -49,6 +49,8 @@
 		1F406EB510F534D90054957A /* MPWNamedIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F406EB310F534D90054957A /* MPWNamedIdentifier.m */; };
 		1F406EBE10F5354C0054957A /* MPWRecursiveIdentifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F406EBC10F5354C0054957A /* MPWRecursiveIdentifier.h */; };
 		1F406EBF10F5354C0054957A /* MPWRecursiveIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F406EBD10F5354C0054957A /* MPWRecursiveIdentifier.m */; };
+		1F407E8A1A3B0DAF00DC8081 /* MPWCascadeExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9CD1DF1A2C94AD00578177 /* MPWCascadeExpression.m */; };
+		1F407E8B1A3B0DBB00DC8081 /* MPWFileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */; };
 		1F4CB51B1253D53C00B30C99 /* MPWStCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */; settings = {ATTRIBUTES = (Public, Project, ); }; };
 		1F4CB51C1253D53C00B30C99 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F4CB51D1253D53C00B30C99 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
@@ -2233,7 +2235,7 @@
 				1F5E506809B4B754000298D9 /* Resources */,
 				1F5E506A09B4B754000298D9 /* Sources */,
 				1F5E508509B4B754000298D9 /* Frameworks */,
-				1F5E508909B4B754000298D9 /* ShellScript */,
+				1F5E508909B4B754000298D9 /* Run Tests */,
 			);
 			buildRules = (
 			);
@@ -2658,13 +2660,14 @@
 			shellPath = /bin/sh;
 			shellScript = "LLVM_XCCONFIG_FILE=\"${PROJECT_DIR}/llvm-config/llvm.xcconfig\"\nLLVM_COMPONENTS_FILE=\"${PROJECT_DIR}/llvm-config/llvm-components.txt\"\n\ndate_params=$((`stat -f \"%m\" $LLVM_COMPONENTS_FILE`))\ndate_config=$((`stat -f \"%m\" $LLVM_XCCONFIG_FILE`))\nif [ $date_params -gt $date_config ]; then\necho \"llvm.xcconfig parameter changes detected\"\n\nLLVM_COMPONENTS=`/bin/cat $LLVM_COMPONENTS_FILE`\nLLVM_CFLAGS=`/usr/local/bin/llvm-config --cflags`\nLLVM_LDFLAGS=`/usr/local/bin/llvm-config --ldflags`\" \"`/usr/local/bin/llvm-config --libs $LLVM_COMPONENTS`\n\necho \"// Configuration file for LLVM settings, generated as a build phase.\" > $LLVM_XCCONFIG_FILE\necho \"// $LLVM_COMPONENTS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_CFLAGS = $LLVM_CFLAGS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_LDFLAGS = $LLVM_LDFLAGS\" >> $LLVM_XCCONFIG_FILE\nfi";
 		};
-		1F5E508909B4B754000298D9 /* ShellScript */ = {
+		1F5E508909B4B754000298D9 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Tests";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3030,6 +3033,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F407E8B1A3B0DBB00DC8081 /* MPWFileWatcher.m in Sources */,
+				1F407E8A1A3B0DAF00DC8081 /* MPWCascadeExpression.m in Sources */,
 				1FE37BA81969610700C9A378 /* MPWMethodType.m in Sources */,
 				1FE37B811969610600C9A378 /* MPWConnector.m in Sources */,
 				1FE37BDD1969612500C9A378 /* MPWClassScheme.m in Sources */,

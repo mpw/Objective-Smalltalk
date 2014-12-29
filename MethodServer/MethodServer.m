@@ -52,6 +52,13 @@ static id defaultMethodServer=nil;
     [[self scheme] addException:exception];
 }
 
+-(void)writePortNumber
+{
+    if ( [self uniqueID] && [[self server] port]> 0) {
+        NSString *port=[NSString stringWithFormat:@"%d",[[self server] port]];
+        [port writeToFile:[NSString stringWithFormat:@"/tmp/%@",[self uniqueID]] atomically:YES encoding:NSASCIIStringEncoding error:nil];
+    }
+}
 
 +(void)addException:exception
 {
@@ -110,7 +117,7 @@ static void CatchException(NSException *exception)
 
 -(NSDictionary*)dictionaryFromData:(NSData*)dictData
 {
-    return [NSPropertyListSerialization propertyListFromData: dictData mutabilityOption:NSPropertyListImmutable format:nil errorDescription:nil];
+    return [NSPropertyListSerialization propertyListWithData: dictData options:NSPropertyListImmutable format:nil error:nil];
     
 }
 
@@ -118,7 +125,7 @@ static void CatchException(NSException *exception)
 -(NSDictionary*)externalMethodsDict
 {
     NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"classdict"];
-    NSLog(@"data %p len: %d",dictData,[dictData length]);
+    NSLog(@"data %p len: %d",dictData,(int)[dictData length]);
     NSDictionary *dict = [self dictionaryFromData:dictData];
     NSString *uid=[dict objectForKey:@"uniqueID"];
     if ( uid ) {
@@ -180,7 +187,6 @@ static void CatchException(NSException *exception)
         [delegate didDefineMethods:self];
     }
 
-    NSLog(@"will send notification");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"methodsDefined" object:self];
     return retval;
 }
@@ -212,6 +218,7 @@ static void CatchException(NSException *exception)
     NSLog(@"did set up port etc, start it");
     NSError *error=nil;
     [self start:&error];
+    [self writePortNumber];
     NSLog(@"did start, port: %d error: %@ ",[[self server] port],error);
 #endif
 }
