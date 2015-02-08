@@ -3377,7 +3377,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3388,7 +3387,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks/";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -3525,7 +3524,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks/";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -3552,7 +3551,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DSTROOT = "@executable_path/../Frameworks/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3563,7 +3561,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks/";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -3710,10 +3708,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Development;
@@ -3744,10 +3744,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -3778,10 +3780,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "Release Tiger";
@@ -4106,10 +4110,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Development;
@@ -4152,8 +4158,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -4196,8 +4204,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "Release Tiger";

@@ -33,7 +33,13 @@
 
 -(void)setValue:newValue forBinding:aBinding
 {
-	[[NSUserDefaults standardUserDefaults] setObject:newValue forKey:[aBinding name]];
+    NSString *name = [aBinding name];
+    if ( [name hasPrefix:@"initial/"]){
+        name=[[name componentsSeparatedByString:@"/"] lastObject];
+        [[NSUserDefaults standardUserDefaults] registerDefaults:@{ name : newValue }];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setObject:newValue forKey:name];
+    }
 }
 
 
