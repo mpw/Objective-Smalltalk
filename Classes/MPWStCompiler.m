@@ -78,7 +78,7 @@ idAccessor( connectorMap, setConnectorMap );
 }
 
 
-//----- compatibilty methods for stuff that's moved to MPWMethodStore
+#pragma mark MethodDictionary compatibility
 
 -(void)addScript:scriptString forClass:className methodHeaderString:methodHeaderString
 {
@@ -118,6 +118,8 @@ idAccessor( connectorMap, setConnectorMap );
 }
 
 
+#pragma mark Evaluator
+
 -createSchemes
 {
 	id schemes=[super createSchemes];
@@ -139,7 +141,7 @@ idAccessor( connectorMap, setConnectorMap );
 
 
 
-//--- true compiler methods
+#pragma mark Compiler
 
 -nextToken
 {

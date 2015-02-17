@@ -14,11 +14,13 @@
 	Class theClass;
 }
 
++mirrorWithClassNamed:(NSString*)aClassName;
++mirrorWithMetaClassNamed:(NSString*)aClassName;
 +mirrorWithClass:(Class)aClass;
 -(NSString*)name;
 +(NSArray*)allUsefulClasses;
 -(Class)theClass;
--(Class)superclass;
+-(Class)theSuperclass;
 -(BOOL)isInBundle:(NSBundle*)aBundle;
 -(MPWClassMirror*)createAnonymousSubclass;
 -(MPWClassMirror*)superclassMirror;

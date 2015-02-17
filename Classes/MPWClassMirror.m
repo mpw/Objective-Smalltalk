@@ -18,7 +18,7 @@
 @implementation MPWClassMirror : NSObject
 
 
--initWithClass:(Class)aClass
+-(instancetype)initWithClass:(Class)aClass
 {
 	if ( (self=[super init]) && aClass ) {
         theClass=aClass;
@@ -29,9 +29,19 @@
 	return self;
 }
 
-+mirrorWithClass:(Class)aClass
++(instancetype)mirrorWithClass:(Class)aClass
 {
-	return [[[self alloc] initWithClass:aClass] autorelease];
+    return [[[self alloc] initWithClass:aClass] autorelease];
+}
+
++(instancetype)mirrorWithClassNamed:(NSString*)aClassName
+{
+    return [self mirrorWithClass:NSClassFromString(aClassName)];
+}
+
++(instancetype)mirrorWithMetaClassNamed:(NSString*)aClassName
+{
+    return [[self mirrorWithClassNamed:aClassName] metaClassMirror];
 }
 
 -(BOOL)isInBundle:(NSBundle*)aBundle
@@ -82,7 +92,7 @@
 {
 	//	NSLog(@"checking validity of %@",cName);
 #if WINDOWS	
-	Class superclass= [self superclass];
+	Class superclass= [self theSuperclass];
 	if ( superclass == nil ) {
 		return NO;
 	}
@@ -148,7 +158,7 @@
 	return [self isSublcassOfClass: [potentialSuperclassMirror theClass]];
 }
 
--superclass
+-theSuperclass
 {
 	return [[self class] superclassOfClass:[self theClass]];
 }
@@ -162,6 +172,11 @@
 {
 	NSString *madeUpName=[NSString stringWithFormat:@"%@-subclass-%p-%ld",[self name],self,random()];
 	return [self createSubclassWithName:madeUpName];
+}
+
+-(id)forwardingTargetForSelector:(SEL)aSelector
+{
+    return theClass;
 }
 
 @end

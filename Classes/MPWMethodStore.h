@@ -11,9 +11,12 @@
 @class MPWMethodHeader;
 
 @interface MPWMethodStore : MPWObject {
-	id methodDicts;
-	id callbackDicts;
-    id typeDict;
+    NSMutableDictionary *classes;
+    NSMutableDictionary *metaClasses;
+    
+    
+    
+    id typeDict;        // not used
 	id compiler;
 }
 

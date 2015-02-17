@@ -117,7 +117,7 @@ static void CatchException(NSException *exception)
 
 -(NSDictionary*)dictionaryFromData:(NSData*)dictData
 {
-    return [NSPropertyListSerialization propertyListWithData: dictData options:NSPropertyListImmutable format:nil error:nil];
+    return dictData ? [NSPropertyListSerialization propertyListWithData: dictData options:NSPropertyListImmutable format:nil error:nil] : nil;
     
 }
 
@@ -125,7 +125,8 @@ static void CatchException(NSException *exception)
 -(NSDictionary*)externalMethodsDict
 {
     NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"classdict"];
-    NSLog(@"data %p len: %d",dictData,(int)[dictData length]);
+    NSString *dictPath = [[NSBundle mainBundle] pathForResource:[self methodDictName] ofType:@"classdict"];
+    NSLog(@"data %p len: %d path: %@",dictData,(int)[dictData length],dictPath);
     NSDictionary *dict = [self dictionaryFromData:dictData];
     NSString *uid=[dict objectForKey:@"uniqueID"];
     if ( uid ) {

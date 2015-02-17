@@ -30,6 +30,7 @@
 @implementation MPWMethodCallBack
 
 
+boolAccessor(installed, setInstalled)
 //idAccessor( context, setContext )
 idAccessor( method, _setMethod )
 
@@ -105,7 +106,14 @@ idAccessor( method, _setMethod )
 
 -(void)installInClass:(Class)aClass
 {
-	[self installInClass:aClass withSignature:[[self header] typeSignature]];
+    [self installInClass:aClass withSignature:[[self header] typeSignature]];
+}
+
+-(void)installInClassIfNecessary:(Class)aClass
+{
+    if (![self installed]) {
+        [self installInClass:aClass];
+    }
 }
 
 -formalParameters

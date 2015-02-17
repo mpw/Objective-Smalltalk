@@ -13,13 +13,14 @@
 #import "MPWScriptedMethod.h"
 #import "MPWMethodType.h"
 #import "MPWStCompiler.h"
-
+#import "MPWClassMethodStore.h"
+#import "MPWClassMirror.h"
 
 @implementation MPWMethodStore
 
 
-idAccessor( methodDicts, setMethodDicts )
-idAccessor( callbackDicts, setCallbackDicts )
+objectAccessor(NSMutableDictionary, classes, setClasses)
+objectAccessor(NSMutableDictionary, metaClasses, setMetaClasses)
 idAccessor( typeDict, setTypeDict )
 scalarAccessor( id , compiler , setCompiler )
 
@@ -37,12 +38,38 @@ scalarAccessor( id , compiler , setCompiler )
 -initWithCompiler:aCompiler
 {
     self=[super init];
-	[self setMethodDicts:[NSMutableDictionary dictionary]];
-	[self setCallbackDicts:[NSMutableDictionary dictionary]];
+    
+    [self setClasses:[NSMutableDictionary dictionary]];
+    [self setMetaClasses:[NSMutableDictionary dictionary]];
+
+    
 	[self setTypeDict:[NSMutableDictionary dictionary]];
 	[self initializeMethodTypes];
 	[self setCompiler:aCompiler];
     return self;
+}
+
+
+-(MPWClassMethodStore*)classStoreForName:(NSString*)name
+{
+    MPWClassMethodStore *theClass=[self classes][name];
+    if ( !theClass ) {
+        MPWClassMirror *mirror = [MPWClassMirror mirrorWithClassNamed:name];
+        theClass=[[[MPWClassMethodStore alloc] initWithClassMirror:mirror compiler:[self compiler]] autorelease];
+        [self classes][name]=theClass;
+    }
+    return theClass;
+}
+
+-(MPWClassMethodStore*)metaClassStoreForName:(NSString*)name
+{
+    MPWClassMethodStore *theClass=[self metaClasses][name];
+    if ( !theClass ) {
+        MPWClassMirror *mirror = [MPWClassMirror mirrorWithMetaClassNamed:name];
+        theClass=[[[MPWClassMethodStore alloc] initWithClassMirror:mirror compiler:[self compiler]] autorelease];
+        [self metaClasses][name]=theClass;
+    }
+    return theClass;
 }
 
 -compile:aMethodString
@@ -76,20 +103,25 @@ scalarAccessor( id , compiler , setCompiler )
 {
 	NSMutableDictionary *externalDict=[NSMutableDictionary dictionary];
 	NSArray *allClasses = [self classesWithScripts];
-	NSArray *classDicts = (NSArray*)[[self collect] externalizeScriptsForClass:[allClasses each]];
-	[[externalDict do] setObject:[classDicts each] forKey:[allClasses each]];
+    
+    for ( NSString *className in allClasses) {
+        NSMutableDictionary *perClassDict=[NSMutableDictionary dictionary];
+        perClassDict[@"instanceMethods"] = [[self classStoreForName:className] externalMethodDict];
+        perClassDict[@"classMethods"] = [[self metaClassStoreForName:className] externalMethodDict];
+        externalDict[className]=perClassDict;
+    }
 	return externalDict;
 }
 
 -(void)defineMethodsInExternalMethodDict:(NSDictionary*)dict forClass:(NSString*)className
 {
-    NSLog(@"define methods in dict: %@ for class: %@",dict,className);
+//    NSLog(@"define methods in dict: %@ for class: %@",dict,className);
     if ( dict[@"instanceMethods"]) {
-        dict=dict[@"instanceMethods"];
+        [[self classStoreForName:className] defineMethodsInExternalMethodDict:dict[@"instanceMethods"]];
+        [[self metaClassStoreForName:className] defineMethodsInExternalMethodDict:dict[@"classMethods"]];
+    } else {
+        [[self classStoreForName:className] defineMethodsInExternalMethodDict:dict];
     }
-	NSArray *methodHeaders = [dict allKeys];
-	NSArray *methodBodies = [[dict collect] objectForKey:[methodHeaders each]];
-	[[self do] addScript:[methodBodies each] forClass:className methodHeaderString:[methodHeaders each]];
 }
 
 -(void)defineMethodsInExternalDict:(NSDictionary*)scriptDict
@@ -100,45 +132,21 @@ scalarAccessor( id , compiler , setCompiler )
     NSLog(@"=== after MethdStore defineMethodsInExternalDict");
 }
 
--methodDictionaryForClassNamed:(NSString*)className
-{
-	id dict=[[self methodDicts] objectForKey:className];
-	if ( dict==nil ) {
-		dict=[NSMutableDictionary dictionary];
-		[[self methodDicts] setObject:dict forKey:className];
-	}
-	return dict;
-}
-
--callbackDictionaryForClassNamed:(NSString*)className
-{
-	id dict=[[self callbackDicts] objectForKey:className];
-	if ( dict==nil ) {
-		dict=[NSMutableDictionary dictionary];
-		[[self callbackDicts] setObject:dict forKey:className];
-	}
-	return dict;
-}
 
 -(NSArray*)classesWithScripts
 {
-	return [[self methodDicts] allKeys];
+	return [[self classes] allKeys];
 }
 
 
 -(NSArray*)methodNamesForClassName:(NSString*)className
 {
-	return [[self methodDictionaryForClassNamed:className] allKeys];
+	return [[self classStoreForName:className] allMethodNames];
 }
 
 -methodForClass:(NSString*)className name:(NSString*)methodName
 {
-	return [[self methodDictionaryForClassNamed:className] objectForKey:methodName];
-}
-
--callbackForClass:(NSString*)className name:(NSString*)methodName
-{
-	return [[self callbackDictionaryForClassNamed:className] objectForKey:methodName];
+    return [[self classStoreForName:className] methodForName:methodName];
 }
 
 -methodWithClass:(Class)methodClass header:header body:body
@@ -157,45 +165,26 @@ scalarAccessor( id , compiler , setCompiler )
 	return [self methodWithClass:[MPWScriptedMethod class] header:header body:body];
 }
 
-#ifndef __clang_analyzer__
-// This leaks because we are installing into the runtime, can't remove after
 
 -(void)installMethod:(MPWMethod*)method inClass:(NSString*)className
 {
-	id callbackDict = [self callbackDictionaryForClassNamed:className];
-	id methodCallback;
-	id methodName = [[method methodHeader] methodName];
-	methodCallback = [callbackDict objectForKey:methodName];
-	if (  [self compiler] ) {
-		[method setContext:[self compiler]];
-	}
-	if ( methodCallback == nil ) {
-		methodCallback = [[MPWMethodCallBack alloc] init];
-		[methodCallback setMethod:method];
-		[methodCallback installInClass:NSClassFromString(className)];
-		[callbackDict setObject:methodCallback forKey:methodName];
-	} else {
-		[methodCallback setMethod:method];
-	}
+    [[self classStoreForName:className] installMethod:method];
 }
 
-#endif
+-(void)installMethod:(MPWMethod*)method inMetaClass:(NSString*)className
+{
+    [[self metaClassStoreForName:className] installMethod:method];
+}
+
 
 -(void)addMethodOnly:(MPWMethod*)method forClass:(NSString*)className
 {
-	id methodName = [[method methodHeader] methodName];
-	id methodDict = [self methodDictionaryForClassNamed:className];
-	id callback = [self callbackForClass:className name:methodName];
-	[methodDict setObject:method forKey:methodName];
-	if ( callback ) {
-		[callback setMethod:method];
-	}
-	
+    [[self classStoreForName:className] addMethod:method];
 }
 
 -(void)addMethod:(MPWMethod*)method forClass:(NSString*)className
 {
-	[self addMethodOnly:method forClass:className];
+//	[self addMethodOnly:method forClass:className];
 	[self installMethod:method inClass:className];
 }
 
@@ -208,25 +197,11 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeaderString:headerString
 {
-	MPWMethodHeader* header = [MPWMethodHeader methodHeaderWithString:headerString];
-	[self addScript:scriptString forClass:className methodHeader:header];
+    NSLog(@"addScript: %@ forClass: %@ methodHeaderString: %@",scriptString,className,headerString);
+    MPWMethodHeader* header = [MPWMethodHeader methodHeaderWithString:headerString];
+    [self addScript:scriptString forClass:className methodHeader:header];
 }
 
--(void)encodeWithCoder:aCoder
-{
-	[super encodeWithCoder:aCoder];
-	encodeVar( aCoder, typeDict );
-	encodeVar( aCoder, methodDicts );
-}
-
--initWithCoder:aCoder
-{
-	self = [super initWithCoder:aCoder];
-	decodeVar( aCoder, typeDict );
-	decodeVar( aCoder, methodDicts );
-	[self setCallbackDicts:[NSMutableDictionary dictionary]];
-	return self;
-}
 
 -(void)installMethodsForClass:(NSString*)aClassName
 {
@@ -242,8 +217,8 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)dealloc
 {
- 	[methodDicts release];
-	[callbackDicts release];
+ 	[classes release];
+	[metaClasses release];
     [typeDict release];
     [super dealloc];
 }
@@ -305,8 +280,8 @@ scalarAccessor( id , compiler , setCompiler )
 +testSelectors
 {
     return [NSArray arrayWithObjects:
-		@"testArchivingWithoutInstallingMethods",
-		@"testArchivingAndInstallingMethodsAfterwards",
+//		@"testArchivingWithoutInstallingMethods",
+//		@"testArchivingAndInstallingMethodsAfterwards",
         nil];
 }
 #endif

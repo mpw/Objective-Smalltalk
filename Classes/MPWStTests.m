@@ -381,6 +381,7 @@
 
 +(void)testExternalDictForDefinedMethods
 {
+    NSLog(@"==== testExternalDictForDefinedMethods ===== ");
 	NSString *originalMethodHeader = @"lengthMultipliedByInt:<int>a";
 	NSString *originalScript = @"self length*a.";
 	NSDictionary *externalDict;
@@ -390,7 +391,7 @@
 	[evaluator addScript:originalScript forClass:@"NSString" methodHeaderString:originalMethodHeader];
 	externalDict = [evaluator externalScriptDict];
 	INTEXPECT( [externalDict count] , 1 , @"one class in external script dict" );
-	methodDict = [externalDict objectForKey:@"NSString"];
+	methodDict = [[externalDict objectForKey:@"NSString"] objectForKey:@"instanceMethods"];
 	INTEXPECT( [methodDict count] , 1 , @"one method in external script dict" );
 	externalizedMethodHeader= [[methodDict allKeys] lastObject];
 	IDEXPECT( externalizedMethodHeader , originalMethodHeader , @"externalized method header" );
@@ -811,6 +812,11 @@
     [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a).}. a." expected:[NSNumber numberWithInt:2048]];
 }
 
++(void)testDefineClassMethod
+{
+    EXPECTTRUE(false, @"implemented");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -902,6 +908,7 @@
             @"testSmalltalkCascade",
             @"testCompositionViaPipe",
             @"testCurlyBracesAllowedForBlocks",
+//            @"testDefineClassMethod",
 
         nil];
 }

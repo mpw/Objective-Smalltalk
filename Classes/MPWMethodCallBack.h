@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWBlockInvocable.h>
 #import <objc/runtime.h>
 
-@class MPWMethodHeader;
+@class MPWMethodHeader,MPWMethod;
 
 @interface MPWMethodCallBack : MPWBlockInvocable {
 	Method	savedMethodDescriptor;
@@ -17,17 +17,20 @@
 
 	Class targetClass;
 	id	method;
-	int installed;
+	BOOL installed;
 	SEL selname;
 }
 
 
 -(void)installInClass:(Class)classToInstallNewMethodIn;
+-(void)installInClassIfNecessary:(Class)aClass;
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature;
 
 -(void)setMethod:method;
+-(MPWMethod*)method;
 -formalParameters;
 -invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters;
 
+-(BOOL)installed;
 
 @end
