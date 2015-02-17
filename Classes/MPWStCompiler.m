@@ -82,7 +82,12 @@ idAccessor( connectorMap, setConnectorMap );
 
 -(void)addScript:scriptString forClass:className methodHeaderString:methodHeaderString
 {
-	[[self methodStore] addScript:scriptString forClass:className methodHeaderString:methodHeaderString];
+    [[self methodStore] addScript:scriptString forClass:className methodHeaderString:methodHeaderString];
+}
+
+-(void)addScript:scriptString forMetaClass:className methodHeaderString:methodHeaderString
+{
+    [[self methodStore] addScript:scriptString forMetaClass:className methodHeaderString:methodHeaderString];
 }
 
 -(NSArray*)classesWithScripts

@@ -195,24 +195,14 @@ scalarAccessor( id , compiler , setCompiler )
 }
 
 
--(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeaderString:headerString
+-(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeaderString:(NSString*)headerString
 {
-    NSLog(@"addScript: %@ forClass: %@ methodHeaderString: %@",scriptString,className,headerString);
-    MPWMethodHeader* header = [MPWMethodHeader methodHeaderWithString:headerString];
-    [self addScript:scriptString forClass:className methodHeader:header];
+    [[self classStoreForName:className] installMethodString:scriptString withHeaderString:headerString];
 }
 
-
--(void)installMethodsForClass:(NSString*)aClassName
+-(void)addScript:(NSString*)scriptString forMetaClass:(NSString*)className methodHeaderString:(NSString*)headerString
 {
-	id methodDict=[self methodDictionaryForClassNamed:aClassName];
-	id methods=[methodDict allValues];
-	[[self do] installMethod:[methods each]  inClass:aClassName];
-}
-
--(void)installMethods
-{
-	[[self do] installMethodsForClass:[[[self methodDicts] allKeys] each]];
+    [[self metaClassStoreForName:className] installMethodString:scriptString withHeaderString:headerString];
 }
 
 -(void)dealloc
@@ -241,47 +231,10 @@ scalarAccessor( id , compiler , setCompiler )
 
 #if !TARGET_OS_IPHONE
 
-+(void)testArchivingWithoutInstallingMethods
-{
-	MPWMethodStore* store = [self store];
-	NSData* encoded;
-	MPWMethodStore* decoded;
-	[store addMethodOnly:[store scriptedMethodWithHeader:[MPWMethodHeader methodHeaderWithString:@"myMethodStoreTestMul:a"] body:@"self*a."] forClass:@"NSNumber"];
-	INTEXPECT( [[store methodDictionaryForClassNamed:@"NSNumber"] count], 1 ,@"number of methods before decoding" );
-	encoded = [NSArchiver archivedDataWithRootObject:store];
-	decoded = [NSUnarchiver unarchiveObjectWithData:encoded];
-	INTEXPECT( [[decoded methodDictionaryForClassNamed:@"NSNumber"] count], 1 ,@"number of methods after decoding" );
-}
-
-+(void)testArchivingAndInstallingMethodsAfterwards
-{
-	MPWMethodStore* store = [self store];
-	NSData* encoded;
-	MPWMethodStore* decoded;
-	id testnumber;
-	id resultnumber=nil;
-	[store addMethodOnly:[store scriptedMethodWithHeader:[MPWMethodHeader methodHeaderWithString:@"myMethodStoreTestMul:<int>a"] body:@"self*a."] forClass:@"NSNumber"];
-	testnumber = [NSNumber numberWithInt:2];
-	NS_DURING
-		resultnumber = [testnumber myMethodStoreTestMul:3];
-	NS_HANDLER
-	NS_ENDHANDLER
-	IDEXPECT( resultnumber, nil, @"before install:  shouldn't have done anything " );
-	encoded = [NSArchiver archivedDataWithRootObject:store];
-	decoded = [NSUnarchiver unarchiveObjectWithData:encoded];
-	[decoded installMethods];
-//	NSLog(@"will multiply");
-	resultnumber = [testnumber myMethodStoreTestMul:3];
-//	NSLog(@"did multiply");
-	INTEXPECT( [resultnumber intValue], 6, @"after install, should have multipled");
-}
-
 
 +testSelectors
 {
     return [NSArray arrayWithObjects:
-//		@"testArchivingWithoutInstallingMethods",
-//		@"testArchivingAndInstallingMethodsAfterwards",
         nil];
 }
 #endif

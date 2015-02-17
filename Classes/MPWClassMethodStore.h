@@ -24,5 +24,7 @@
 -(NSArray*)allMethodNames;
 -(void)defineMethodsInExternalMethodDict:(NSDictionary*)dict;
 -(NSDictionary*)externalMethodDict;
+-(MPWMethodCallBack*)addMethodString:(NSString*)methodScript withHeaderString:(NSString*)headerString;
+-(void)installMethodString:(NSString*)methodScript withHeaderString:(NSString*)headerString;
 
 @end

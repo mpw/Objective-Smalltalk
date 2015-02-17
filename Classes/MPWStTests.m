@@ -27,7 +27,7 @@
 -(int)lengthMultipliedByIntExternal:(int)anInt;
 -variable1;
 -setVariable1:newValue;
-
++(int)theAnswer;
 
 @end
 
@@ -381,7 +381,6 @@
 
 +(void)testExternalDictForDefinedMethods
 {
-    NSLog(@"==== testExternalDictForDefinedMethods ===== ");
 	NSString *originalMethodHeader = @"lengthMultipliedByInt:<int>a";
 	NSString *originalScript = @"self length*a.";
 	NSDictionary *externalDict;
@@ -656,7 +655,7 @@
 	IDEXPECT( [[@"http://www.metaobject.com/Blog/" compileIn:compiler] name], @"//www.metaobject.com/Blog/", @"scheme of http identifier");
 }
 
-+(void)testUnknownSchemaDoesntDefaultToVar
++(void)testUnknownSchemeDoesntDefaultToVar
 {
 	id result=nil;
 	NS_DURING
@@ -814,7 +813,11 @@
 
 +(void)testDefineClassMethod
 {
-    EXPECTTRUE(false, @"implemented");
+    id evaluator = [[[self alloc] init] autorelease];
+
+    [evaluator addScript:@"42." forMetaClass:@"NSString" methodHeaderString:@"<int>theAnswer"];
+    INTEXPECT([NSString theAnswer], 42, @"class method");
+//    EXPECTTRUE(false, @"implemented");
 }
 
 +(NSArray*)testSelectors
@@ -881,7 +884,7 @@
 		@"testVariableAssignmentWithURISchemeWorks",
 		@"testVariableKnowsScheme",
 		@"testURIVariableCanHaveURISyntax",
-		@"testUnknownSchemaDoesntDefaultToVar",
+		@"testUnknownSchemeDoesntDefaultToVar",
 		@"testClassScheme",
 		@"testAccessingInstanceVariablesOfCreatedClass",
 		@"testVarSchemeWithKeyValuePath",
@@ -908,7 +911,7 @@
             @"testSmalltalkCascade",
             @"testCompositionViaPipe",
             @"testCurlyBracesAllowedForBlocks",
-//            @"testDefineClassMethod",
+            @"testDefineClassMethod",
 
         nil];
 }

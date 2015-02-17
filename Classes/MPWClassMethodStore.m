@@ -84,9 +84,12 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 
 -(MPWMethodCallBack*)addMethodString:(NSString*)methodScript withHeaderString:(NSString*)headerString
 {
-    NSLog(@"addMethodString: %@ withHeaderString: %@ (class: %@)",methodScript,headerString,[self classMirror]);
-
     return [self addMethod:[self methodWithHeaderString:headerString bodyString:methodScript]];
+}
+
+-(void)installMethodString:(NSString*)methodScript withHeaderString:(NSString*)headerString
+{
+    [[self addMethodString:methodScript withHeaderString:headerString] installInClassIfNecessary:[[self classMirror] theClass]];
 }
 
 -(NSArray*)allMethodNames
