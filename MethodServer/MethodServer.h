@@ -27,5 +27,6 @@
 -(void)setDelegate:aDelegate;
 -delegate;
 -(MPWStCompiler*)interpreter;
+-(void)setMethodDict:(NSDictionary*)dict;
 
 @end

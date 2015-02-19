@@ -115,13 +115,19 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)defineMethodsInExternalMethodDict:(NSDictionary*)dict forClass:(NSString*)className
 {
-//    NSLog(@"define methods in dict: %@ for class: %@",dict,className);
+    NSLog(@"define methods for class: %@ in dict: %@ for class: %@",className,dict,className);
     if ( dict[@"instanceMethods"]) {
         [[self classStoreForName:className] defineMethodsInExternalMethodDict:dict[@"instanceMethods"]];
         [[self metaClassStoreForName:className] defineMethodsInExternalMethodDict:dict[@"classMethods"]];
     } else {
         [[self classStoreForName:className] defineMethodsInExternalMethodDict:dict];
     }
+}
+
+-(void)installMethods
+{
+    [[[[self classes] allValues] do] installMethods];
+    [[[[self metaClasses] allValues] do] installMethods];
 }
 
 -(void)defineMethodsInExternalDict:(NSDictionary*)scriptDict

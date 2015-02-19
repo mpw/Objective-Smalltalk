@@ -19,6 +19,11 @@ objectAccessor( MPWClassMirror, classMirror, setClassMirror )
 objectAccessor( NSMutableDictionary, methodCallbacks, setMethodCallbacks )
 scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 
+-(Class)theClass
+{
+    return [[self classMirror] theClass];
+}
+
 -initWithClassMirror:(MPWClassMirror*)newMirror compiler:aCompiler
 {
     self=[super init];
@@ -63,13 +68,13 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 -(void)installMethodNamed:(NSString*)methodName
 {
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
-    [methodCallback installInClassIfNecessary:[[self classMirror] theClass]];
+    [methodCallback installInClassIfNecessary:[self theClass]];
 }
 
 -(void)installMethod:aMethod
 {
     MPWMethodCallBack *methodCallback = [self addMethod:aMethod];
-    [methodCallback installInClassIfNecessary:[[self classMirror] theClass]];
+    [methodCallback installInClassIfNecessary:[self theClass]];
 }
 
 -methodWithHeaderString:header bodyString:body
@@ -89,7 +94,12 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 
 -(void)installMethodString:(NSString*)methodScript withHeaderString:(NSString*)headerString
 {
-    [[self addMethodString:methodScript withHeaderString:headerString] installInClassIfNecessary:[[self classMirror] theClass]];
+    [[self addMethodString:methodScript withHeaderString:headerString] installInClassIfNecessary:[self theClass]];
+}
+
+-(void)installMethods
+{
+    [[[[self methodCallbacks] allValues] do] installInClassIfNecessary:[self theClass]];
 }
 
 -(NSArray*)allMethodNames

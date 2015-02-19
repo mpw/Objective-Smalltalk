@@ -126,14 +126,18 @@ static void CatchException(NSException *exception)
 {
     NSData *dictData = [[NSBundle mainBundle] resourceWithName:[self methodDictName] type:@"classdict"];
     NSString *dictPath = [[NSBundle mainBundle] pathForResource:[self methodDictName] ofType:@"classdict"];
-    NSLog(@"data %p len: %d path: %@",dictData,(int)[dictData length],dictPath);
     NSDictionary *dict = [self dictionaryFromData:dictData];
+    return  dict;
+}
+
+-(void)setMethodDict:(NSDictionary*)dict
+{
     NSString *uid=[dict objectForKey:@"uniqueID"];
     if ( uid ) {
         [self setUniqueID:uid];
         dict=[dict objectForKey:@"methodDict"];
     }
-    return  dict;
+    [self defineMethodsInExternalDict:dict];
 }
 
 

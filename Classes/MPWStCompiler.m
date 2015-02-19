@@ -108,6 +108,7 @@ idAccessor( connectorMap, setConnectorMap );
 -(void)defineMethodsInExternalDict:(NSDictionary*)aDict
 {
 	[[self methodStore] defineMethodsInExternalDict:aDict];
+    [[self methodStore] installMethods];
 }
 
 

@@ -31,4 +31,6 @@
 -(NSArray*)methodNamesForClassName:(NSString*)aClassName;
 -methodForClass:aClassName name:aMethodName;
 
+-(void)installMethods;
+
 @end
