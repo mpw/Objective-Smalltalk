@@ -20,7 +20,7 @@
 
 -(instancetype)initWithClass:(Class)aClass
 {
-	if ( (self=[super init]) && aClass ) {
+	if ( aClass && (self=[super init]) ) {
         theClass=aClass;
     } else {
         [self release];
@@ -131,7 +131,12 @@
 
 -(MPWClassMirror*)superclassMirror
 {
-	return [[self class] mirrorWithClass:[self superclass]];
+    Class superclass = [self superclass];
+    if ( superclass != theClass) {
+        return [[self class] mirrorWithClass:[self superclass]];
+    } else {
+        return nil;
+    }
 }
 
 -(BOOL)isEqual:(id)otherMirror

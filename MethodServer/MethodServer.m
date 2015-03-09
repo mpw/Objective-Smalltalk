@@ -90,9 +90,9 @@ static void CatchException(NSException *exception)
 {
     [self setInterpreter:anInterpreter];
     [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
-    [[self interpreter] bindValue:self toVariableNamed:@"appDelegate"];
+    [[self interpreter] bindValue:self toVariableNamed:@"methodServer"];
 //    NSLog(@"PATH: %@",[MPWStCompiler evaluate:@"env:PATH"]);
-    [self defineMethodsInExternalDict:[self externalMethodsDict]];
+    [self setMethodDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
     NSLog(@"done setupWithInterpreter");
@@ -143,16 +143,16 @@ static void CatchException(NSException *exception)
 
 -eval:(NSString*)aString
 {
-    NSLog(@"MethodServer eval: %@",aString);
+//    NSLog(@"MethodServer eval: %@",aString);
     id result=@"";
     @try {
         result = [[self interpreter] evaluateScriptString:aString];
     } @catch ( id e ) {
-        NSLog(@"evaluating '%@' threw '%@'",aString,e);
+//        NSLog(@"evaluating '%@' threw '%@'",aString,e);
         result = [e description];
-        NSLog(@"result = %@",result);
+//        NSLog(@"result = %@",result);
     }
-    NSLog(@"MethodServer result: %@",result);
+//    NSLog(@"MethodServer result: %@",result);
     
     return [result asData];
 }
@@ -174,18 +174,18 @@ static void CatchException(NSException *exception)
 
 -(NSData*)post:(NSString*)uri parameters:postData
 {
-    NSLog(@"POST to %@",uri);
-    NSLog(@"values: %@",[postData values]);
+//    NSLog(@"POST to %@",uri);
+//    NSLog(@"values: %@",[postData values]);
     postData=[[[postData values] objectForKey:@"eval"] stringValue];
-    NSLog(@"values: %@",postData);
+//    NSLog(@"values: %@",postData);
     id result = [self eval:postData];
-    NSLog(@"result of POST: %@",result);
+//    NSLog(@"result of POST: %@",result);
     return [[result stringValue] asData];
 }
 
 -(NSData*)put:(NSString *)uri data:putData parameters:(NSDictionary*)params
 {
-    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
+//    NSLog(@"put: %@ -> %@",uri,[putData stringValue]);
     NSData *retval =[super put:uri data:putData parameters:params];
     if ( [delegate respondsToSelector:@selector(didDefineMethods:)] ) {
 //        [[delegate afterDelay:0.001] didDefineMethods:self];

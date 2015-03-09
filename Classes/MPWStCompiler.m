@@ -507,11 +507,15 @@ idAccessor( connectorMap, setConnectorMap );
                 //---  issue:  the following should really be a full expression parse...
                 id arg=[self parseUnary];
                 //--- issue:  the above should have been a full expression parse
-				id keyword;
+				id keyword=nil;
 //				NSLog(@"in keyword, parsed component: %@",arg);
-				[args addObject:arg];
-				keyword=[self parseKeywordOrUnary];
-                isKeyword=[keyword length] && [keyword isKeyword];
+                if (arg) {
+                    [args addObject:arg];
+                    keyword=[self parseKeywordOrUnary];
+                    isKeyword=[keyword length] && [keyword isKeyword];
+                } else {
+                    break;
+                }
                 if ( isKeyword ) {
 //					NSLog(@"got more of a keyword: %@",keyword);
                     [selector appendString:keyword];

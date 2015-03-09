@@ -83,16 +83,30 @@ typedef id (^ZeroArgBlock)(void);
     int numArgs=[args count];
     NSArray *formals=[[self block] arguments];
     numArgs=MIN(numArgs,[formals count]);
+    id returnVal=nil;
     for (int i=0;i<numArgs;i++) {
         MPWBinding *b=[aContext createLocalBindingForName:[formals objectAtIndex:i]];
         [b bindValue:[args objectAtIndex:i]];
 //        [aContext bindValue:[args objectAtIndex:i] toVariableNamed:[formals objectAtIndex:i]];
     }
-	if ( aContext ) {
-		return [aContext evaluate:[[self block] statements]];
-	} else {
-		return [[[self block] statements] evaluateIn:aContext];
-	}
+    
+    @try {
+        if ( aContext ) {
+            returnVal = [aContext evaluate:[[self block] statements]];
+        } else {
+            returnVal = [[[self block] statements] evaluateIn:aContext];
+        }
+    } @catch (id exception) {
+#if 1
+        NSLog(@"exception: %@ at %@",exception,[exception combinedStackTrace]);
+        Class c=NSClassFromString(@"MethodServer");
+        [c addException:exception];
+        NSLog(@"added exception to %@",c);
+#else
+        @throw newException;
+#endif
+    }
+    return returnVal;
 }
 
 -(NSArray*)formalParameters

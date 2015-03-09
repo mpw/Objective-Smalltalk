@@ -115,7 +115,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)defineMethodsInExternalMethodDict:(NSDictionary*)dict forClass:(NSString*)className
 {
-    NSLog(@"define methods for class: %@ in dict: %@ for class: %@",className,dict,className);
+//    NSLog(@"define methods for class: %@ in dict: %@ for class: %@",className,dict,className);
     if ( dict[@"instanceMethods"]) {
         [[self classStoreForName:className] defineMethodsInExternalMethodDict:dict[@"instanceMethods"]];
         [[self metaClassStoreForName:className] defineMethodsInExternalMethodDict:dict[@"classMethods"]];

@@ -74,7 +74,7 @@
 {
     NSMutableSet *alreadySeen=[NSMutableSet set];
     NSMutableArray *messages=[NSMutableArray array];
-    MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value] ;
+    MPWObjectMirror *om=[MPWObjectMirror mirrorWithObject:value];
     MPWClassMirror *cm=[om classMirror];
     while ( cm ){
         for (MPWMethodMirror *mm in [cm methodMirrors]) {
@@ -169,10 +169,14 @@
         }
         *resultName=name;
         completions=[self messageNamesForObject:evaluatedReceiver matchingPrefix:name];
+        if ( [completions count] == 1 && [[completions firstObject] isEqualToString:name]) {
+            completions=@[];
+        }
         if ( [completions count] == 0 && [evaluatedReceiver respondsToSelector:[self selector]]) {
             completions=@[@" "];
         }
     }
+    NSLog(@"completions for '%@'/'%@' -> %@",s,[self messageNameForCompletion],completions);
     return completions;
 }
 
@@ -202,6 +206,41 @@
 -(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
 {
     return [self messageNamesForObject:[self theLiteral] matchingPrefix:nil];
+}
+
+@end
+
+#import "MPWStCompiler.h"
+
+@interface MPWAutocompletionTests : NSObject {}
+
+@end
+
+@implementation MPWAutocompletionTests
+
++completionsForString:(NSString*)s
+{
+    NSString *res=nil;
+    MPWStCompiler *c=[MPWStCompiler compiler];
+    MPWExpression *e=[c compile:s];
+    return [e completionsForString:s withEvaluator:c resultName:&res];
+}
+
++(void)testMessageCompletions
+{
+    IDEXPECT([self completionsForString:@"3 inte"], (@[@"integerValue"]), @"");
+    IDEXPECT([self completionsForString:@"3 int"], (@[@"integerValue", @"intValue"]), @"");
+    IDEXPECT([self completionsForString:@"3 inter"], (@[]), @"");
+    IDEXPECT([self completionsForString:@"3 intValue"], (@[ @" "]), @"");
+    
+    IDEXPECT([self completionsForString:@"3 insertValue:"], (@[ @"insertValue:atIndex:inPropertyWithKey:", @"insertValue:inPropertyWithKey:" ] ), @"");
+}
+
++testSelectors
+{
+    return @[
+             @"testMessageCompletions"
+             ];
 }
 
 @end

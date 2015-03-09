@@ -178,6 +178,7 @@ scalarAccessor( id, delegate, setDelegate)
 
 -(void)dealloc
 {
+    return ;
 	[_value release];
 	[scheme release];
 	[identifier release];
