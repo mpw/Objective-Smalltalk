@@ -65,9 +65,7 @@ static BOOL useMaxSize;
 
     
     NSString *currentCommand = [self currentCommandLine];
-    MPWExpression *expr = [commandHandler compile:currentCommand];
-    NSString *str=@"";
-    NSArray *completions = [expr completionsForString:currentCommand withEvaluator:(MPWEvaluator*)commandHandler resultName:&str];
+    NSArray *completions = [commandHandler completionsForString:currentCommand];
 
     
     if ( [completions count]==1 && [[completions firstObject] isEqualToString:completionFor]) {

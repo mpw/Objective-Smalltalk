@@ -174,12 +174,19 @@ static void CatchException(NSException *exception)
 
 -(NSData*)post:(NSString*)uri parameters:postData
 {
-//    NSLog(@"POST to %@",uri);
-//    NSLog(@"values: %@",[postData values]);
-    postData=[[[postData values] objectForKey:@"eval"] stringValue];
-//    NSLog(@"values: %@",postData);
-    id result = [self eval:postData];
-//    NSLog(@"result of POST: %@",result);
+    NSLog(@"POST to %@",uri);
+    NSLog(@"values: %@",[postData values]);
+    NSString *evalString=[[[postData values] objectForKey:@"eval"] stringValue];
+    NSString *completeString=[[[postData values] objectForKey:@"complete"] stringValue];
+    id result=@"";
+    if ( [evalString length] >0) {
+        result = [self eval:evalString];
+    } else if ( [completeString length] > 0) {
+        NSLog(@"complete: %@",completeString);
+        result = [[self interpreter] completionsForString:completeString];
+    }
+
+    NSLog(@"result of POST: %@",result);
     return [[result stringValue] asData];
 }
 

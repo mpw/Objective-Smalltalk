@@ -18,6 +18,19 @@
 #import "MPWObjectMirror.h"
 #import "MPWClassMirror.h"
 #import "MPWLiteralExpression.h"
+#import "MPWStCompiler.h"
+
+@implementation MPWStCompiler(completion)
+
+-(NSArray*)completionsForString:(NSString*)s
+{
+    NSString *dummy=@"";
+    MPWExpression *e=[self compile:s];
+    return [e completionsForString:s withEvaluator:self resultName:&dummy];
+}
+
+@end
+
 
 @implementation MPWExpression(completion)
 
@@ -210,7 +223,6 @@
 
 @end
 
-#import "MPWStCompiler.h"
 
 @interface MPWAutocompletionTests : NSObject {}
 
