@@ -181,7 +181,9 @@ static const char * promptfn(EditLine *e) {
 
 -(void)completeName:(NSString*)currentName withNames:(NSArray*)names
 {
+//    NSLog(@"completeName name '%@': %@",currentName,names);
     NSString *commonPrefix=[self commonPrefixInNames:names];
+//    NSLog(@"common prefix '%@'",commonPrefix);
     if ( [commonPrefix length] > [currentName length]) {
         NSString *completion=[commonPrefix substringFromIndex:[currentName length]];
 //        NSLog(@"commonPrefix: %@ currentName: %@ completion: %@",commonPrefix,currentName,completion);
@@ -190,6 +192,7 @@ static const char * promptfn(EditLine *e) {
         [self printCompletions:names];
     } else if ([names count]==1) {
         [self insertStringIntoCurrentEditLine:[names firstObject]];
+    } else {
     }
 }
 
@@ -203,6 +206,7 @@ static const char * promptfn(EditLine *e) {
 
 -(BOOL)doCompletionWithLine:(EditLine*)e character:(char)ch
 {
+//    NSLog(@"doCompletionWithLine");
     currentLine=e;
     const LineInfo *lineInfo = el_line(e);
     if ( lineInfo) {
@@ -217,9 +221,12 @@ static const char * promptfn(EditLine *e) {
             NSString *resultName=@"";
             fprintf(stderr, "\n");
             expr=[evaluator compile:s];
+//            NSLog(@"will get completions for '%@'",s);
             NSArray *completions=[expr completionsForString:s withEvaluator:[self evaluator] resultName:&resultName];
+//            NSLog(@"did get completions for '%@' -> %@",s,completions);
             [self completeName:resultName withNames:completions];
         } @catch ( id e){
+//            NSLog(@"exception: %@",e);
             exception=e;
         }
     }

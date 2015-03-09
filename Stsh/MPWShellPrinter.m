@@ -31,8 +31,11 @@
 {
     struct winsize w;
     ioctl(0, TIOCGWINSZ, &w);
-    
-    return w.ws_col;
+    int width = w.ws_col;
+    if ( width == 0 ) {
+        width=80;
+    }
+    return width;
 }
 
 
@@ -63,6 +66,7 @@
             
             if ( theItemIndex < [names count]) {
                 NSString *theItem=names[theItemIndex];
+//                NSLog(@"print: %@",theItem);
                 [self printFormat:@"%.*s",columnWidth,[theItem UTF8String]];
                 if (j<numColumns-1) {
                     int columnPad =columnWidth-(int)[theItem length];
@@ -77,6 +81,7 @@
             [self println:@""];
         }
     }
+    [self println:@""];
 }
 
 -(void)writeFancyFileEntry:(MPWFileBinding*)binding

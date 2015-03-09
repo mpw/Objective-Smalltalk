@@ -176,7 +176,7 @@
             completions=@[@" "];
         }
     }
-    NSLog(@"completions for '%@'/'%@' -> %@",s,[self messageNameForCompletion],completions);
+//    NSLog(@"completions for '%@'/'%@' -> %@",s,[self messageNameForCompletion],completions);
     return completions;
 }
 
