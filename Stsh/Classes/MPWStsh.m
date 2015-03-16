@@ -341,36 +341,37 @@ idAccessor( retval, setRetval )
         char *save;
  		if ( (lineOfInput[0]!='#') || (lineOfInput[1]=='(') ) {
 			id pool=[NSAutoreleasePool new];
+            id expr = nil;
 			NS_DURING
             NSString* newString = [NSString stringWithUTF8String:lineOfInput];
             [currentInput appendString:newString];
             NSString *exprString=currentInput;
+            
+            
             BOOL hasBangPrefix = [exprString hasPrefix:@"!"];
             NSString *first = [[exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] firstObject];
             BOOL startsWithUnknownIdentifier=NO;
             if ( ![first containsString:@":"] && ![[self evaluator] bindingForLocalVariableNamed:first]) {
                 startsWithUnknownIdentifier=YES;
-                exprString=[@"!" stringByAppendingString:exprString];
             }
-            if ( level <=1 &&  (hasBangPrefix || startsWithUnknownIdentifier)) {
-                [self processShellEscape:exprString];
+            @try {
+                expr = [[self evaluator] compile:exprString];
+                level=1;
+            } @catch ( NSException *exception) {
+                NSLog(@"might need more input");
+                if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
+                    level=2;
+                    continue;
+                }
+            }
+            BOOL isAssignment = [self isAssignmentExpresson:expr];
+            if ( level <=1 &&  (hasBangPrefix || startsWithUnknownIdentifier) && !isAssignment) {
+                exprString=[@"!" stringByAppendingString:exprString];
+               [self processShellEscape:exprString];
                 [currentInput setString:@""];
             }
             else {
-                    id expr = nil;
-                    @try {
-                        expr = [[self evaluator] compile:exprString];
-                        level=1;
-                    } @catch ( NSException *exception) {
-                        if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
-                            level=2;
-                            continue;
-                        }
-                    }
-                
                     [currentInput setString:@""];
-                    BOOL isAssignment = [self isAssignmentExpresson:expr];
-                    
                     if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
                         result = [[self evaluator] executeShellExpression:expr];
                     } else {
