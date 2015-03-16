@@ -183,7 +183,11 @@ static void CatchException(NSException *exception)
         result = [self eval:evalString];
     } else if ( [completeString length] > 0) {
         NSLog(@"complete: %@",completeString);
+        @try {
         result = [[self interpreter] completionsForString:completeString];
+        } @catch ( NSException *e) {
+            NSLog(@"exception trying to complete: '%@' -> %@",completeString,e);
+        }
     }
 
     NSLog(@"result of POST: %@",result);
