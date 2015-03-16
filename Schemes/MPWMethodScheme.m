@@ -111,11 +111,12 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
                     if ( !stackTrace ) {
                         stackTrace=[e scriptStackTrace];
                     }
-                    [plist addObject:@{ @"name" : [e name],
-                     @"reason": [e reason],
-                                        @"userInfo": [e userInfo],
-                                        @"stack": stackTrace,
-                                        }
+                    [plist addObject:@{
+                            @"name" : [e name] ?: @"NO Name",
+                            @"reason": [e reason] ?: @"NO reason",
+                            @"userInfo": [e userInfo] ?: @"NO USERINFO",
+                            @"stack": stackTrace ?: @"NO stackTrace",
+                        }
                      ];
                 }
                 
