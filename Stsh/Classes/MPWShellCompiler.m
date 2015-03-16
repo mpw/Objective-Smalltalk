@@ -79,8 +79,8 @@
    [self bindValue:Stderr toVariableNamed:@"stderr"];
    [self bindValue:@"\n" toVariableNamed:@"newline"];
    [self bindValue:@"\t" toVariableNamed:@"tab"];
-   [self addExternalCommands:[[self class] externalCommandNames]];
-   [self addInternalCommands:[[self class] internalCommands]];
+//   [self addExternalCommands:[[self class] externalCommandNames]];
+//   [self addInternalCommands:[[self class] internalCommands]];
 	return self;
 }
 

@@ -345,7 +345,14 @@ idAccessor( retval, setRetval )
             NSString* newString = [NSString stringWithUTF8String:lineOfInput];
             [currentInput appendString:newString];
             NSString *exprString=currentInput;
-            if ( level <=1 &&  [exprString hasPrefix:@"!"]) {
+            BOOL hasBangPrefix = [exprString hasPrefix:@"!"];
+            NSString *first = [[exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] firstObject];
+            BOOL startsWithUnknownIdentifier=NO;
+            if ( ![first containsString:@":"] && ![[self evaluator] bindingForLocalVariableNamed:first]) {
+                startsWithUnknownIdentifier=YES;
+                exprString=[@"!" stringByAppendingString:exprString];
+            }
+            if ( level <=1 &&  (hasBangPrefix || startsWithUnknownIdentifier)) {
                 [self processShellEscape:exprString];
                 [currentInput setString:@""];
             }
@@ -360,7 +367,7 @@ idAccessor( retval, setRetval )
                             continue;
                         }
                     }
-
+                
                     [currentInput setString:@""];
                     BOOL isAssignment = [self isAssignmentExpresson:expr];
                     
