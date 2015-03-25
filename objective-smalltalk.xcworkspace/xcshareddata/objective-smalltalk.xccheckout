@@ -10,29 +10,41 @@
 	<string>objective-smalltalk</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>4833A7A2-8726-4AFC-B209-22A035365B28</key>
+		<key>1A3D4BBA87575C12B73255E766EDF58F847CE23A</key>
+		<string>https://github.com/zmukwa/MPWFoundation</string>
+		<key>5AB4423B51422F2CDCD0BBFC32B44C5FC43D852C</key>
 		<string>https://github.com/mpw/Objective-Smalltalk.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>objective-smalltalk.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>4833A7A2-8726-4AFC-B209-22A035365B28</key>
+		<key>1A3D4BBA87575C12B73255E766EDF58F847CE23A</key>
+		<string>../../MPWFoundation</string>
+		<key>5AB4423B51422F2CDCD0BBFC32B44C5FC43D852C</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/mpw/Objective-Smalltalk.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>4833A7A2-8726-4AFC-B209-22A035365B28</string>
+	<string>5AB4423B51422F2CDCD0BBFC32B44C5FC43D852C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>4833A7A2-8726-4AFC-B209-22A035365B28</string>
+			<string>1A3D4BBA87575C12B73255E766EDF58F847CE23A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MPWFoundation</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5AB4423B51422F2CDCD0BBFC32B44C5FC43D852C</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Objective-Smalltalk</string>
 		</dict>
