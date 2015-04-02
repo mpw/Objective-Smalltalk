@@ -71,6 +71,7 @@ idAccessor( script, _setScript )
 
 -(NSException*)handleException:exception target:target
 {
+    NSLog(@"post-process exception: %@",exception);
     NSException *newException;
     NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];
@@ -80,9 +81,9 @@ idAccessor( script, _setScript )
     NSString *frameDescription=[NSString stringWithFormat:@"%s[%@ %@] + %d",targetClass==target?"+":"-",targetClass,[self methodHeader],exceptionSourceOffset];
     [newException addScriptFrame: frameDescription];
     NSString *myselfInTrace=    @"-[MPWScriptedMethod evaluateOnObject:parameters:]";    
-    
+    NSLog(@"addCombinedFrame: %@",frameDescription);
     [newException addCombinedFrame:frameDescription frameToReplace:myselfInTrace previousTrace:[exception callStackSymbols]];
-//    NSLog(@"exception: %@/%@ in %@ with backtrace: %@",[exception name],[exception reason],frameDescription,[newException combinedStackTrace]);
+    NSLog(@"exception: %@/%@ in %@ with backtrace: %@",[exception name],[exception reason],frameDescription,[newException combinedStackTrace]);
     return newException;
 }
 
@@ -91,11 +92,12 @@ idAccessor( script, _setScript )
 	id returnVal=nil;
 	id executionContext = [self executionContext];
 	id compiledMethod = [self compiledScript];
-//	NSLog(@"will evaluate scripted method %x with context %x",self,executionContext);
+	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
     
     @try {
 	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
     } @catch (id exception) {
+        NSLog(@"exception evaluating scripted method: %@",[self methodHeader]);
         id newException = [self handleException:exception target:target];
 #if 1
         NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);
@@ -106,7 +108,7 @@ idAccessor( script, _setScript )
         @throw newException;
 #endif
     }
-//	NSLog(@"did evaluate scripted method %x with context %x",self,executionContext);
+	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
 	return returnVal;
 }
 
@@ -265,6 +267,7 @@ dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutab
 
 -(void)addCombinedFrame:(NSString*)frame frameToReplace:original previousTrace:previousTrace
 {
+    NSLog(@"addCombinedTrace");
     NSMutableArray *trace=[self combinedStackTrace];
     if (!trace) {
         trace=[[previousTrace mutableCopy] autorelease];

@@ -248,6 +248,9 @@ idAccessor( localVars, setLocalVars )
 	//	NSLog(@"evaluate script '%@' on object: %@",aString,anObject);
     @try {
          result =  [self evaluateScriptString:aString];
+    } @catch ( id exception) {
+        NSLog(@"Exception %@ in evaluateScript",exception);
+        @throw exception;
     }
     @finally {
 //        [self bindValue:nil toVariableNamed:@"self"];

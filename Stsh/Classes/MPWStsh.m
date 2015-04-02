@@ -269,16 +269,21 @@ idAccessor( retval, setRetval )
 
 -(BOOL)isAssignmentExpresson:expr
 {
-	static Class MPWAssignmentExpression=nil;
-	static Class MPWStatementList=nil;
-	if ( !MPWStatementList ) {
-		MPWAssignmentExpression=NSClassFromString(@"MPWAssignmentExpression");
-		MPWStatementList=NSClassFromString(@"MPWStatementList");
-	}
-    return [expr isKindOfClass:MPWAssignmentExpression] 
-		|| ([expr isKindOfClass:MPWStatementList] &&
-			[[expr statements] count] == 1 &&
-			[[[expr statements] lastObject] isKindOfClass:MPWAssignmentExpression]);
+    static Class MPWAssignmentExpression=nil;
+    static Class MPWStatementList=nil;
+    if ( !MPWStatementList ) {
+        MPWAssignmentExpression=NSClassFromString(@"MPWAssignmentExpression");
+        MPWStatementList=NSClassFromString(@"MPWStatementList");
+    }
+    return [expr isKindOfClass:MPWAssignmentExpression]
+    || ([expr isKindOfClass:MPWStatementList] &&
+        [[expr statements] count] == 1 &&
+        [[[expr statements] lastObject] isKindOfClass:MPWAssignmentExpression]);
+}
+
+-(BOOL)isLiteral:expr
+{
+    return [expr isLiteral];
 }
 
 -(void)processShellEscape:(NSString*)exprString
@@ -365,7 +370,8 @@ idAccessor( retval, setRetval )
                 }
             }
             BOOL isAssignment = [self isAssignmentExpresson:expr];
-            if ( level <=1 &&  (hasBangPrefix || startsWithUnknownIdentifier) && !isAssignment) {
+            BOOL isLiteral = [self isLiteral:expr];
+            if ( level <=1 &&  (hasBangPrefix || startsWithUnknownIdentifier) && !isAssignment && !isLiteral) {
                 exprString=[@"!" stringByAppendingString:exprString];
                [self processShellEscape:exprString];
                 [currentInput setString:@""];

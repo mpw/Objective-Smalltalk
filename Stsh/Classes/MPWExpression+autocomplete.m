@@ -235,13 +235,14 @@
     NSString *res=nil;
     MPWStCompiler *c=[MPWStCompiler compiler];
     MPWExpression *e=[c compile:s];
-    return [e completionsForString:s withEvaluator:c resultName:&res];
+    NSArray *completions = [e completionsForString:s withEvaluator:c resultName:&res];
+    return [completions sortedArrayUsingSelector:@selector(compare:)];
 }
 
 +(void)testMessageCompletions
 {
     IDEXPECT([self completionsForString:@"3 inte"], (@[@"integerValue"]), @"");
-    IDEXPECT([self completionsForString:@"3 int"], (@[@"integerValue", @"intValue"]), @"");
+    IDEXPECT([self completionsForString:@"3 int"], (@[ @"intValue", @"integerValue"]), @"");
     IDEXPECT([self completionsForString:@"3 inter"], (@[]), @"");
     IDEXPECT([self completionsForString:@"3 intValue"], (@[ @" "]), @"");
     

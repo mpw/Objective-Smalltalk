@@ -96,8 +96,9 @@ typedef id (^ZeroArgBlock)(void);
         } else {
             returnVal = [[[self block] statements] evaluateIn:aContext];
         }
-    } @catch (id exception) {
+    } @catch (NSException * exception) {
 #if 1
+        [exception setCombinedStackTrace:[exception callStackSymbols]];
         NSLog(@"exception: %@ at %@",exception,[exception combinedStackTrace]);
         Class c=NSClassFromString(@"MethodServer");
         [c addException:exception];
