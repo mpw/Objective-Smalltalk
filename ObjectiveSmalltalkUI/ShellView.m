@@ -104,7 +104,12 @@ static BOOL useMaxSize;
 - (id)initWithFrame:(NSRect)frameRect
 {
   return [self initWithFrame:frameRect prompt:@"> " historySize:20000 commandHandler:nil];
-} 
+}
+
+- (NSUndoManager*)undoManager
+{
+    return  nil;
+}
 
 - (id)initWithFrame:(NSRect)frameRect prompt:(NSString *)thePrompt historySize:(NSInteger)theHistorySize commandHandler:(id)theCommandHandler
 {
@@ -117,7 +122,7 @@ static BOOL useMaxSize;
     lineEdited         = NO;
     last_command_start = 0;
     shouldRetainCommandHandler = YES;
-
+      
     [self setUsesFindPanel:YES];
     [self setFont:[NSFont userFixedPitchFontOfSize:-1]]; // -1 to get the default font size
     [self setSelectedRange:NSMakeRange([[self string] length],0)];

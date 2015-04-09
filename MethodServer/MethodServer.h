@@ -24,6 +24,8 @@
 -(void)setupWithInterpreter:anInterpreter;
 - (id)initWithMethodDictName:(NSString*)newName;
 -(void)setupMethodServer;
+-(void)setupWithoutStarting;
+
 -(void)setDelegate:aDelegate;
 -delegate;
 -(MPWStCompiler*)interpreter;
