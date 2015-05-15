@@ -176,6 +176,21 @@ scalarAccessor( id, delegate, setDelegate)
     return evaluated;
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: identifier: %@ scheme: %@ value: %@>",[self class],self,identifier,scheme,_value];
+}
+
+-(void)startObserving
+{
+    
+}
+
+-(void)stopObserving
+{
+    
+}
+
 -(void)dealloc
 {
     return ;

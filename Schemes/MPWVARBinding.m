@@ -64,10 +64,13 @@ idAccessor( baseObject, setBaseObject )
 
 -(void)startObserving
 {
-    id base = [self _objecToIndex:(int)[pathComponents count]-1];
-    NSString *property=[pathComponents lastObject];
-//    NSLog(@"%p start observing '%@' of %@ with %@",self,property,base,[self name]);
-    [base objst_addObserver:self forKey:property];
+    if (!isObserving) {
+        id base = [self _objecToIndex:(int)[pathComponents count]-1];
+        NSString *property=[pathComponents lastObject];
+        //    NSLog(@"%p start observing '%@' of %@ with %@",self,property,base,[self name]);
+        [base objst_addObserver:self forKey:property];
+        isObserving=YES;
+    }
     
 }
 
@@ -76,6 +79,7 @@ idAccessor( baseObject, setBaseObject )
     id base = [self _objecToIndex:(int)[pathComponents count]-1];
     NSString *property=[pathComponents lastObject];
     [base removeObserver:base forKeyPath:property];
+    isObserving=NO;
 }
 
 
