@@ -24,6 +24,8 @@
 #import <MPWFoundation/NSNil.h>
 #import "MPWLiteralExpression.h"
 #import "MPWCascadeExpression.h"
+#import "MPWDataflowConstraintExpression.h"
+
 
 @implementation NSString(concat)
 
@@ -59,7 +61,8 @@ idAccessor( connectorMap, setConnectorMap );
 
 -(void)defineBuiltInConnectors
 {
-	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
+    [self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
+    [self defineConnectorClass:[MPWDataflowConstraintExpression class] forConnectorSymbol:@"|="];
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u21e6"];
 	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"\u2190"];
 	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"<-"];
@@ -433,6 +436,7 @@ idAccessor( connectorMap, setConnectorMap );
                                                              @"isLessThan:", @"<",
                               @"isEqual:", @"=",
                               @"doAssign:", @":=",
+                              @"doAssign:", @"|=",
                               @"doAssign:", @"<-",
                               @"doAssign:", @"\u21e6",
                               @"doAssign:", @"\u2190",
@@ -540,7 +544,7 @@ idAccessor( connectorMap, setConnectorMap );
 //            NSLog(@"not keyword");
         }
     } else {
-		if ( [selector isEqual:@":="] || [selector isEqual:@"::="]) {
+		if ( [selector isEqual:@":="] || [selector isEqual:@"::="]|| [selector isEqual:@"|="]) {
             PARSEERROR(@"unexpected", selector);
 		} else {
 //            NSLog(@"binary: %@",selector);

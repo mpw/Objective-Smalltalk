@@ -372,8 +372,6 @@
 		1FA85A031923731900F52396 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC8F845181BF3A3003980D8 /* XCTest.framework */; };
 		1FA85A041923731900F52396 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1FA85A071923731900F52396 /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; };
-		1FA85A0D1923731900F52396 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FA85A0B1923731900F52396 /* InfoPlist.strings */; };
-		1FA85A0F1923731900F52396 /* ObjectiveSmalltalkUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A0E1923731900F52396 /* ObjectiveSmalltalkUITests.m */; };
 		1FA85A1C1923739E00F52396 /* CLIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A181923739E00F52396 /* CLIView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA85A1D1923739E00F52396 /* CLIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A191923739E00F52396 /* CLIView.m */; };
 		1FA85A1E1923739E00F52396 /* ShellView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A1A1923739E00F52396 /* ShellView.h */; };
@@ -424,8 +422,6 @@
 		1FC8F846181BF3A3003980D8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC8F845181BF3A3003980D8 /* XCTest.framework */; };
 		1FC8F847181BF3A3003980D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1FC8F84A181BF3A3003980D8 /* SchemeFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC8F834181BF3A3003980D8 /* SchemeFUSE.framework */; };
-		1FC8F850181BF3A3003980D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8F84E181BF3A3003980D8 /* InfoPlist.strings */; };
-		1FC8F852181BF3A3003980D8 /* SchemeFUSETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8F851181BF3A3003980D8 /* SchemeFUSETests.m */; };
 		1FC8F85B181BF3BB003980D8 /* MPWSchemeFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75C914629521002F38D1 /* MPWSchemeFilesystem.m */; };
 		1FC8F85D181BF3D4003980D8 /* OSXFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC8F85C181BF3D4003980D8 /* OSXFUSE.framework */; };
 		1FC8F85E181BF42E003980D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -687,6 +683,8 @@
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FF6C6141379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
 		1FF6C6151379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
+		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; };
+		1FFC563B1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */; };
 		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
@@ -796,7 +794,6 @@
 		1F45D541075D37A200D924C3 /* MPWEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MPWEvaluator.h; path = Classes/MPWEvaluator.h; sourceTree = SOURCE_ROOT; };
 		1F45D542075D37A200D924C3 /* MPWEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MPWEvaluator.m; path = Classes/MPWEvaluator.m; sourceTree = SOURCE_ROOT; };
 		1F4CB5741253D53D00B30C99 /* MPWLinuxTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWLinuxTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist"; sourceTree = "<group>"; };
 		1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRefScheme.h; sourceTree = "<group>"; };
 		1F4FD0DC10E4FB3600934A17 /* MPWRefScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWRefScheme.m; sourceTree = "<group>"; };
 		1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWVarScheme.h; sourceTree = "<group>"; };
@@ -850,7 +847,7 @@
 		1F7E05AA144B3E22008F349D /* MethodServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodServer.m; sourceTree = "<group>"; };
 		1F7E05B4144B3E7D008F349D /* libiMethodServer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiMethodServer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7E05B5144B3E7D008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		1F7E05B9144B3E7D008F349D /* iMethodServer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iMethodServer-Prefix.pch"; sourceTree = "<group>"; };
+		1F7E05B9144B3E7D008F349D /* iMethodServer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iMethodServer-Prefix.pch"; path = "../iMethodServer/iMethodServer-Prefix.pch"; sourceTree = "<group>"; };
 		1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = "../../Build/Development-iphoneos/libMPWFoundationTouch.a"; sourceTree = "<group>"; };
 		1F7E05CC144B417D008F349D /* MPWSideweb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWSideweb.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release/MPWSideweb.framework"; sourceTree = "<group>"; };
 		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -859,8 +856,6 @@
 		1F81C06019699AE00066DF43 /* MethodServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MethodServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F81C06319699AE10066DF43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F81C06419699AE10066DF43 /* MethodServerTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodServerTouch.h; sourceTree = "<group>"; };
-		1F81C07019699AE10066DF43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F81C07119699AE10066DF43 /* MethodServerTouchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodServerTouchTests.m; sourceTree = "<group>"; };
 		1F81D90816DEBA7E00408D41 /* llvm.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = llvm.xcconfig; path = "llvm-config/llvm.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1F81D90A16DEBC6300408D41 /* llvm-components.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "llvm-components.txt"; path = "llvm-config/llvm-components.txt"; sourceTree = SOURCE_ROOT; };
 		1F8448AC19695B7F00CB8DD1 /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = ../../Build/Release/libMPWFoundationTouch.a; sourceTree = "<group>"; };
@@ -914,9 +909,6 @@
 		1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalkUI.h; sourceTree = "<group>"; };
 		1FA859FC1923731900F52396 /* ObjectiveSmalltalkUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveSmalltalkUI.m; sourceTree = "<group>"; };
 		1FA85A021923731900F52396 /* ObjectiveSmalltalkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveSmalltalkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FA85A0A1923731900F52396 /* ObjectiveSmalltalkUITests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjectiveSmalltalkUITests-Info.plist"; sourceTree = "<group>"; };
-		1FA85A0C1923731900F52396 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1FA85A0E1923731900F52396 /* ObjectiveSmalltalkUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveSmalltalkUITests.m; sourceTree = "<group>"; };
 		1FA85A181923739E00F52396 /* CLIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLIView.h; sourceTree = "<group>"; };
 		1FA85A191923739E00F52396 /* CLIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLIView.m; sourceTree = "<group>"; };
 		1FA85A1A1923739E00F52396 /* ShellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellView.h; sourceTree = "<group>"; };
@@ -974,9 +966,6 @@
 		1FC8F83E181BF3A3003980D8 /* SchemeFUSE.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SchemeFUSE.m; sourceTree = "<group>"; };
 		1FC8F844181BF3A3003980D8 /* SchemeFUSETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SchemeFUSETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC8F845181BF3A3003980D8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		1FC8F84D181BF3A3003980D8 /* SchemeFUSETests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SchemeFUSETests-Info.plist"; sourceTree = "<group>"; };
-		1FC8F84F181BF3A3003980D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1FC8F851181BF3A3003980D8 /* SchemeFUSETests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SchemeFUSETests.m; sourceTree = "<group>"; };
 		1FC8F85C181BF3D4003980D8 /* OSXFUSE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSXFUSE.framework; path = ../../../../../Library/Frameworks/OSXFUSE.framework; sourceTree = "<group>"; };
 		1FC9640B0985472C00C193FC /* MPWMethodType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWMethodType.h; sourceTree = "<group>"; };
 		1FC9640C0985472C00C193FC /* MPWMethodType.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWMethodType.m; sourceTree = "<group>"; };
@@ -1012,8 +1001,6 @@
 		1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE37B5019695FA600C9A378 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FE37B5119695FA600C9A378 /* ObjectiveSmalltalkTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalkTouch.h; sourceTree = "<group>"; };
-		1FE37B5D19695FA600C9A378 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1FE37B5E19695FA600C9A378 /* ObjectiveSmalltalkTouchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveSmalltalkTouchTests.m; sourceTree = "<group>"; };
 		1FE37B68196960E400C9A378 /* MPWFoundationTouch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundationTouch.framework; path = "../../Build/Release-iphoneos/MPWFoundationTouch.framework"; sourceTree = "<group>"; };
 		1FE37C011969744C00C9A378 /* MPWFoundationTouch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundationTouch.framework; path = "../../Build/Release-iphoneos/MPWFoundationTouch.framework"; sourceTree = "<group>"; };
 		1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFastMessage.h; sourceTree = "<group>"; };
@@ -1034,6 +1021,8 @@
 		1FF6ACB30752982900A306C8 /* MPWBlockContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockContext.m; sourceTree = "<group>"; };
 		1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRelScheme.h; sourceTree = "<group>"; };
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
+		1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDataflowConstraintExpression.h; sourceTree = "<group>"; };
+		1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDataflowConstraintExpression.m; sourceTree = "<group>"; };
 		1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralExpression.h; sourceTree = "<group>"; };
 		1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralExpression.m; sourceTree = "<group>"; };
@@ -1313,6 +1302,15 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */,
+				1F7E05CE144B4188008F349D /* Foundation.framework */,
+				1F7E05CC144B417D008F349D /* MPWSideweb.framework */,
+				1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */,
+				1FBAD8131436297C0050D6DE /* MPWFoundation.framework */,
+				1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */,
+				F5A74ACB00F0A61B015ADD82 /* Foundation.framework */,
+				1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */,
+				1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */,
 				1FE37C011969744C00C9A378 /* MPWFoundationTouch.framework */,
 				1FE37B68196960E400C9A378 /* MPWFoundationTouch.framework */,
 				1F8448AC19695B7F00CB8DD1 /* libMPWFoundationTouch.a */,
@@ -1372,6 +1370,7 @@
 				1F7E05A9144B3E22008F349D /* MethodServer.h */,
 				1F7E05AA144B3E22008F349D /* MethodServer.m */,
 				1F7E05A3144B3E22008F349D /* Supporting Files */,
+				1F81C06119699AE00066DF43 /* MethodServerTouch */,
 			);
 			path = MethodServer;
 			sourceTree = "<group>";
@@ -1382,21 +1381,6 @@
 				1F7E05A4144B3E22008F349D /* MethodServer-Info.plist */,
 				1F7E05A5144B3E22008F349D /* InfoPlist.strings */,
 				1F7E05A8144B3E22008F349D /* MethodServer-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		1F7E05B7144B3E7D008F349D /* iMethodServer */ = {
-			isa = PBXGroup;
-			children = (
-				1F7E05B8144B3E7D008F349D /* Supporting Files */,
-			);
-			path = iMethodServer;
-			sourceTree = "<group>";
-		};
-		1F7E05B8144B3E7D008F349D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
 				1F7E05B9144B3E7D008F349D /* iMethodServer-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -1409,7 +1393,7 @@
 				1F81C06219699AE10066DF43 /* Supporting Files */,
 			);
 			path = MethodServerTouch;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		1F81C06219699AE10066DF43 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -1417,30 +1401,6 @@
 				1F81C06319699AE10066DF43 /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		1F81C06E19699AE10066DF43 /* MethodServerTouchTests */ = {
-			isa = PBXGroup;
-			children = (
-				1F81C07119699AE10066DF43 /* MethodServerTouchTests.m */,
-				1F81C06F19699AE10066DF43 /* Supporting Files */,
-			);
-			path = MethodServerTouchTests;
-			sourceTree = "<group>";
-		};
-		1F81C06F19699AE10066DF43 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				1F81C07019699AE10066DF43 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		1F8501D116A4B9B2006CE200 /* NSURLHandler */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = NSURLHandler;
 			sourceTree = "<group>";
 		};
 		1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */ = {
@@ -1471,29 +1431,12 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1FA85A081923731900F52396 /* ObjectiveSmalltalkUITests */ = {
-			isa = PBXGroup;
-			children = (
-				1FA85A0E1923731900F52396 /* ObjectiveSmalltalkUITests.m */,
-				1FA85A091923731900F52396 /* Supporting Files */,
-			);
-			path = ObjectiveSmalltalkUITests;
-			sourceTree = "<group>";
-		};
-		1FA85A091923731900F52396 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				1FA85A0A1923731900F52396 /* ObjectiveSmalltalkUITests-Info.plist */,
-				1FA85A0B1923731900F52396 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		1FBAABC1184BDBB900086047 /* StshFramwork */ = {
 			isa = PBXGroup;
 			children = (
 				1FBAABFB184BDC0D00086047 /* Classes */,
 				1FBAABC2184BDBBA00086047 /* Supporting Files */,
+				1FBAAC18184BDC6400086047 /* stsh */,
 			);
 			name = StshFramwork;
 			path = Stsh;
@@ -1546,7 +1489,8 @@
 				1FBAAC1D184BDC6400086047 /* stsh.1 */,
 				1FBAAC1B184BDC6400086047 /* Supporting Files */,
 			);
-			path = stsh;
+			name = stsh;
+			path = ../stsh;
 			sourceTree = "<group>";
 		};
 		1FBAAC1B184BDC6400086047 /* Supporting Files */ = {
@@ -1577,24 +1521,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1FC8F84B181BF3A3003980D8 /* SchemeFUSETests */ = {
-			isa = PBXGroup;
-			children = (
-				1FC8F851181BF3A3003980D8 /* SchemeFUSETests.m */,
-				1FC8F84C181BF3A3003980D8 /* Supporting Files */,
-			);
-			path = SchemeFUSETests;
-			sourceTree = "<group>";
-		};
-		1FC8F84C181BF3A3003980D8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				1FC8F84D181BF3A3003980D8 /* SchemeFUSETests-Info.plist */,
-				1FC8F84E181BF3A3003980D8 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		1FE37B4E19695FA600C9A378 /* ObjectiveSmalltalkTouch */ = {
 			isa = PBXGroup;
 			children = (
@@ -1612,23 +1538,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1FE37B5B19695FA600C9A378 /* ObjectiveSmalltalkTouchTests */ = {
-			isa = PBXGroup;
-			children = (
-				1FE37B5E19695FA600C9A378 /* ObjectiveSmalltalkTouchTests.m */,
-				1FE37B5C19695FA600C9A378 /* Supporting Files */,
-			);
-			path = ObjectiveSmalltalkTouchTests;
-			sourceTree = "<group>";
-		};
-		1FE37B5C19695FA600C9A378 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				1FE37B5D19695FA600C9A378 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		1FE8F22513802EB500B37A71 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1641,33 +1550,20 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
-				1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */,
-				1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */,
-				1F8501D116A4B9B2006CE200 /* NSURLHandler */,
+				F5A74ABC00F0A61B015ADD82 /* Classes */,
 				1F222C881394CB90007AE2FB /* Schemes */,
 				1FE8F22513802EB500B37A71 /* Resources */,
-				F5A74ABC00F0A61B015ADD82 /* Classes */,
-				F5A74AC000F0A61B015ADD82 /* Headers */,
 				F5A74AC400F0A61B015ADD82 /* Supporting Files */,
-				F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */,
 				1F7E05A2144B3E22008F349D /* MethodServer */,
-				1F7E05B7144B3E7D008F349D /* iMethodServer */,
 				1F7B75B214629431002F38D1 /* SchemeFS */,
 				1F084A1016DCE6A200ED2517 /* ObjSTNative */,
 				1FC8F836181BF3A3003980D8 /* SchemeFUSE */,
-				1FC8F84B181BF3A3003980D8 /* SchemeFUSETests */,
 				1FBAABC1184BDBB900086047 /* StshFramwork */,
-				1FBAAC18184BDC6400086047 /* stsh */,
 				1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */,
-				1FA85A081923731900F52396 /* ObjectiveSmalltalkUITests */,
 				1FE37B4E19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
-				1FE37B5B19695FA600C9A378 /* ObjectiveSmalltalkTouchTests */,
-				1F81C06119699AE00066DF43 /* MethodServerTouch */,
-				1F81C06E19699AE10066DF43 /* MethodServerTouchTests */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
-				1F4CB5751253D53D00B30C99 /* Info-ObjectiveSmalltalk__Framework___Upgraded_ copy.plist */,
 				1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */,
 			);
 			name = MPWTalk;
@@ -1771,15 +1667,10 @@
 				1F6F637F0987C803006F3936 /* NSObjectScripting.m */,
 				1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */,
 				1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */,
+				1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */,
+				1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */,
 			);
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		F5A74AC000F0A61B015ADD82 /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Headers;
 			sourceTree = "<group>";
 		};
 		F5A74AC400F0A61B015ADD82 /* Supporting Files */ = {
@@ -1789,20 +1680,6 @@
 				F5A74AC900F0A61B015ADD82 /* h.template */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		F5A74ACA00F0A61B015ADD82 /* External Frameworks and Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */,
-				1F7E05CE144B4188008F349D /* Foundation.framework */,
-				1F7E05CC144B417D008F349D /* MPWSideweb.framework */,
-				1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */,
-				1FBAD8131436297C0050D6DE /* MPWFoundation.framework */,
-				1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */,
-				F5A74ACB00F0A61B015ADD82 /* Foundation.framework */,
-			);
-			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
 		F5A74ACE00F0A61B015ADD82 /* Products */ = {
@@ -1998,6 +1875,7 @@
 				1F222CA81394D817007AE2FB /* MPWScriptingBridgeBinding.h in Headers */,
 				1F8F1A04193070F200CC831A /* MPWDirectoryBinding.h in Headers */,
 				1FDCCB38139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */,
+				1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */,
 				1F90B40613A62AC1006A3DEB /* MPWSequentialScheme.h in Headers */,
 				1FA5F490147CE04A007EE753 /* MPWTreeNode.h in Headers */,
 				1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
@@ -2599,7 +2477,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FA85A0D1923731900F52396 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2623,7 +2500,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FC8F850181BF3A3003980D8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2819,6 +2695,7 @@
 				1F5E508209B4B754000298D9 /* MPWMethodStore.m in Sources */,
 				1F5E508309B4B754000298D9 /* NSObjectScripting.m in Sources */,
 				1F8B855519AC72C700F8A107 /* MPWFileWatcher.m in Sources */,
+				1FFC563B1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m in Sources */,
 				1F5E508409B4B754000298D9 /* MPWConnector.m in Sources */,
 				1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */,
 				1F22C8CB0BC8DCD2003BC673 /* MPWBridgeReader.m in Sources */,
@@ -2920,7 +2797,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FA85A0F1923731900F52396 /* ObjectiveSmalltalkUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2962,7 +2838,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FC8F852181BF3A3003980D8 /* SchemeFUSETests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3203,14 +3078,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1FA85A0B1923731900F52396 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FA85A0C1923731900F52396 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		1FBAABC4184BDBBA00086047 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3223,14 +3090,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				1FC8F83A181BF3A3003980D8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1FC8F84E181BF3A3003980D8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FC8F84F181BF3A3003980D8 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -3952,6 +3811,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MethodServer;
@@ -4004,6 +3864,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = MethodServer;
 				SDKROOT = iphoneos;
@@ -4056,6 +3917,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = MethodServer;
 				SDKROOT = iphoneos;
@@ -4983,6 +4845,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ObjectiveSmalltalk;
@@ -5035,6 +4898,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;
@@ -5087,6 +4951,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;

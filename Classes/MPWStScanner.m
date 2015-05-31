@@ -270,6 +270,8 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
         len++;
     } else if ( *cur=='-' && SCANINBOUNDS(cur+1) && cur[1]=='>') {
         len++;
+    } else if ( *cur=='|' && SCANINBOUNDS(cur+1) && cur[1]=='=') {
+        len++;
     }
     return [self makeText:len];
 }

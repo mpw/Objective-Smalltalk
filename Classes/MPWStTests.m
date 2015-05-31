@@ -820,6 +820,11 @@
 //    EXPECTTRUE(false, @"implemented");
 }
 
++(void)testPipeEqualsCompilesButDoesSameAsAssignment
+{
+    [self testexpr:@"a |= 2.  a." expected:[NSNumber numberWithInt:2]];
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -912,6 +917,7 @@
             @"testCompositionViaPipe",
             @"testCurlyBracesAllowedForBlocks",
             @"testDefineClassMethod",
+            @"testPipeEqualsCompilesButDoesSameAsAssignment",
 
         nil];
 }
