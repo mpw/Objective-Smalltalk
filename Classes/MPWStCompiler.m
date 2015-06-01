@@ -53,6 +53,7 @@
 objectAccessor( MPWStScanner, scanner, setScanner )
 objectAccessor( MPWMethodStore, methodStore, setMethodStore )
 idAccessor( connectorMap, setConnectorMap );
+idAccessor(solver, setSolver)
 
 -(void)defineConnectorClass:(Class)aClass forConnectorSymbol:(NSString*)symbol
 {
@@ -76,6 +77,7 @@ idAccessor( connectorMap, setConnectorMap );
 	self=[super initWithParent:newParent];
 	[self setMethodStore:[[[MPWMethodStore alloc] initWithCompiler:self] autorelease]];
 	[self setConnectorMap:[NSMutableDictionary dictionary]];
+    [self setSolver:[newParent solver]];
 	[self defineBuiltInConnectors];
 	return self;
 }
@@ -828,6 +830,7 @@ idAccessor( connectorMap, setConnectorMap );
 {
     [tokens release];
     [scanner release];
+    [solver release];
     [super dealloc];
 }
 

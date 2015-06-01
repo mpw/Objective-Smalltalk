@@ -683,7 +683,7 @@
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FF6C6141379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
 		1FF6C6151379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
-		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; };
+		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFC563B1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */; };
 		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };

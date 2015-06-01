@@ -10,6 +10,7 @@
     id tokens;
 	MPWMethodStore* methodStore;
 	id connectorMap;
+    id solver;
 }
 
 +compiler;
@@ -44,6 +45,7 @@
 -methodDictionaryForClassNamed:(NSString*)className;
 -methodForClass:aClassName name:aMethodName;
 
+idAccessor_h(solver, setSolver)
 
 @end
 
