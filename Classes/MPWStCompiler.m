@@ -26,6 +26,8 @@
 #import "MPWCascadeExpression.h"
 #import "MPWDataflowConstraintExpression.h"
 
+#import "MPWBidirectionalDataflowConstraintExpression.h"
+
 
 @implementation NSString(concat)
 
@@ -64,6 +66,7 @@ idAccessor(solver, setSolver)
 {
     [self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
     [self defineConnectorClass:[MPWDataflowConstraintExpression class] forConnectorSymbol:@"|="];
+    [self defineConnectorClass:[MPWBidirectionalDataflowConstraintExpression class] forConnectorSymbol:@"=|="];
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u21e6"];
 	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"\u2190"];
 	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"<-"];
@@ -439,6 +442,7 @@ idAccessor(solver, setSolver)
                               @"isEqual:", @"=",
                               @"doAssign:", @":=",
                               @"doAssign:", @"|=",
+                              @"doAssign:", @"=|=",
                               @"doAssign:", @"<-",
                               @"doAssign:", @"\u21e6",
                               @"doAssign:", @"\u2190",
@@ -546,7 +550,10 @@ idAccessor(solver, setSolver)
 //            NSLog(@"not keyword");
         }
     } else {
-		if ( [selector isEqual:@":="] || [selector isEqual:@"::="]|| [selector isEqual:@"|="]) {
+		if ( [selector isEqual:@":="] ||
+            [selector isEqual:@"::="] ||
+            [selector isEqual:@"=|="] ||
+            [selector isEqual:@"|="]) {
             PARSEERROR(@"unexpected", selector);
 		} else {
 //            NSLog(@"binary: %@",selector);

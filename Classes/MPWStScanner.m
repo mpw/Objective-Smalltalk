@@ -162,6 +162,7 @@ boolAccessor( noNumbers, setNoNumbers )
     charSwitch['[']=(IMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['-']=(IMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch[':']=(IMP0)[self methodForSelector:@selector(scanPossibleAssignment)];
+    charSwitch['=']=(IMP0)[self methodForSelector:@selector(scanPossibleEquals)];
     charSwitch['_']=(IMP0)[self methodForSelector:@selector(scanASCIIName)];
     charSwitch[0]=(IMP0)[self methodForSelector:@selector(skip)];
 //    charSwitch[10]=[self methodForSelector:@selector(skip)];
@@ -260,6 +261,17 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 		cur++;
 	}
     return [self makeText:cur-pos];     
+}
+
+-scanPossibleEquals
+{
+    const char *cur=pos;
+    int len=3;
+    if ( SCANINBOUNDS(cur+2) && cur[1] == '|' && cur[2] == '=' ) {
+        return [self makeText:len];
+    } else {
+        return [self scanSpecial];
+    }
 }
 
 -scanSpecial
