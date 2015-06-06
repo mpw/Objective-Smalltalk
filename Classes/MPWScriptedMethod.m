@@ -30,6 +30,7 @@ idAccessor( script, _setScript )
 {
 	if ( ![self methodBody] ) {
 		if ( [self context] ) {
+//            [[self context] resetSymbolTable];
 			[self setMethodBody:[[self script] compileIn:[self context]]];
 		} else {
 			[self setMethodBody:[self script]];

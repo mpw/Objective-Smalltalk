@@ -8,6 +8,8 @@
 
 #import "MPWStTests.h"
 #import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/MPWAssignmentExpression.h>
+#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import <ObjectiveSmalltalk/MPWMethod.h>
 #import "MPWMethodHeader.h"
 #import "MPWInstanceVariable.h"
@@ -825,6 +827,32 @@
     [self testexpr:@"a |= 2.  a." expected:[NSNumber numberWithInt:2]];
 }
 
++(void)testSimpleBindinsAreUniquedInCompile
+{
+    MPWStCompiler *compiler = [MPWStCompiler compiler];
+    MPWAssignmentExpression *e=[compiler compile:@"a:=a"];
+    MPWIdentifierExpression *lhs=[e lhs];
+    MPWIdentifierExpression *rhs=[e rhs];
+    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifer expression")
+    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifer expression")
+    
+    EXPECTTRUE( lhs == rhs, @"lhs should be identical to rhs");
+    
+}
+
++(void)testComplexBindinsAreUniquedInCompile
+{
+    MPWStCompiler *compiler = [MPWStCompiler compiler];
+    MPWAssignmentExpression *e=[compiler compile:@"var:a := var:a"];
+    MPWIdentifierExpression *lhs=[e lhs];
+    MPWIdentifierExpression *rhs=[e rhs];
+    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifer expression")
+    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifer expression")
+    
+    EXPECTTRUE( lhs == rhs, @"lhs should be identical to rhs");
+    
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -918,6 +946,8 @@
             @"testCurlyBracesAllowedForBlocks",
             @"testDefineClassMethod",
             @"testPipeEqualsCompilesButDoesSameAsAssignment",
+            @"testSimpleBindinsAreUniquedInCompile",
+//            @"testComplexBindinsAreUniquedInCompile",
 
         nil];
 }

@@ -9,6 +9,7 @@
     MPWStScanner *scanner;
     id tokens;
 	MPWMethodStore* methodStore;
+    NSMutableDictionary *symbolTable;
 	id connectorMap;
     id solver;
 }

@@ -52,6 +52,8 @@
 
 @implementation MPWStCompiler
 
+
+objectAccessor( NSMutableDictionary, symbolTable, setSymbolTable)
 objectAccessor( MPWStScanner, scanner, setScanner )
 objectAccessor( MPWMethodStore, methodStore, setMethodStore )
 idAccessor( connectorMap, setConnectorMap );
@@ -82,6 +84,7 @@ idAccessor(solver, setSolver)
 	[self setConnectorMap:[NSMutableDictionary dictionary]];
     [self setSolver:[newParent solver]];
 	[self defineBuiltInConnectors];
+    [self resetSmbolTable];
 	return self;
 }
 
@@ -119,6 +122,10 @@ idAccessor(solver, setSolver)
     [[self methodStore] installMethods];
 }
 
+-(void)resetSmbolTable
+{
+    [self setSymbolTable:[NSMutableDictionary dictionary]];
+}
 
 
 -methodDictionaryForClassNamed:(NSString*)aName
@@ -197,6 +204,7 @@ idAccessor(solver, setSolver)
 {
 	NSString *className=NSStringFromClass([receiver class]);
 	NSString *scriptString=[self lookupScriptNamed:methodName forClassName:className];
+    [self resetSmbolTable];
 	return [self evaluateScript:scriptString onObject:receiver];
 }
 
@@ -252,6 +260,8 @@ idAccessor(solver, setSolver)
     [e setTheLiteral:object];
     return e;
 }
+
+
 
 -makeComplexIdentifier:aToken
 {
@@ -319,6 +329,21 @@ idAccessor(solver, setSolver)
 	return variable;
 }
 
+-lookupComplexIdentifier:anIdentifier
+{
+    return [self makeComplexIdentifier:anIdentifier];
+/*
+    MPWIdentifierExpression *parsedExpression = [self makeComplexIdentifier:anIdentifier];
+    NSString *varName = [[parsedExpression identifier] identifierName];
+    id identifierExpression = [[[symbolTable objectForKey:varName] retain] autorelease];
+    if (  !identifierExpression ) {
+        identifierExpression=parsedExpression;
+        [symbolTable setObject:identifierExpression forKey:anIdentifier];
+    }
+    return identifierExpression;
+ */
+}
+
 -makeLocalVar:aToken
 {
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
@@ -333,6 +358,17 @@ idAccessor(solver, setSolver)
 	return variable;
 }
 
+-lookupLocalVar:anIdentifier
+{
+    anIdentifier=[anIdentifier stringValue];
+    NSLog(@"lookup local var: '%@'",anIdentifier);
+    id identifierExpression = [symbolTable objectForKey:anIdentifier];
+    if (  !identifierExpression ) {
+        identifierExpression=[self makeLocalVar:anIdentifier];
+        [symbolTable setObject:identifierExpression forKey:anIdentifier];
+    }
+    return identifierExpression;
+}
 
 -objectifyScanned:object
 {
@@ -349,9 +385,9 @@ idAccessor(solver, setSolver)
     } else if ( [object isEqual:@"-"] ) {
         object = [[self parseLiteral] negated];
     } else if ( [object isToken] && ![[object stringValue] isScheme] ) {
-		object = [self makeLocalVar:object];
+		object = [self lookupLocalVar:object];
     } else if ( [object isToken] && [[object stringValue] isScheme] ) {
-		object = [self makeComplexIdentifier:object];
+		object = [self lookupComplexIdentifier:object];
 	} else if ( [object isKindOfClass:[NSNumber class]] ||  [object isKindOfClass:[NSString class]]){
         MPWLiteralExpression *e=[[MPWLiteralExpression new] autorelease];
         [e setTheLiteral:object];
@@ -790,7 +826,8 @@ idAccessor(solver, setSolver)
 		[tokenArray addObject:token];
 	}
 	NSLog(@"tokens: %@",tokenArray);
-*/ 
+*/
+    [self resetSmbolTable];
     [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
     expr = [self parseStatements];
 //    NSLog(@"expr = %@",expr);
@@ -838,6 +875,7 @@ idAccessor(solver, setSolver)
     [tokens release];
     [scanner release];
     [solver release];
+    [symbolTable release];
     [super dealloc];
 }
 
