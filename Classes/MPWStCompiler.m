@@ -329,19 +329,18 @@ idAccessor(solver, setSolver)
 	return variable;
 }
 
--lookupComplexIdentifier:anIdentifier
+-lookupComplexIdentifier:aToken
 {
-    return [self makeComplexIdentifier:anIdentifier];
-/*
-    MPWIdentifierExpression *parsedExpression = [self makeComplexIdentifier:anIdentifier];
-    NSString *varName = [[parsedExpression identifier] identifierName];
-    id identifierExpression = [[[symbolTable objectForKey:varName] retain] autorelease];
-    if (  !identifierExpression ) {
+    MPWIdentifierExpression *parsedExpression = [self makeComplexIdentifier:aToken];
+    MPWIdentifier *identifier=[parsedExpression identifier];
+    NSString *varName = [NSString stringWithFormat:@"%@:%@",[identifier schemeName],[identifier identifierName]];
+    NSLog(@"parsedExpression name: '%@' (expr: %@)",varName,parsedExpression);
+    id identifierExpression = [symbolTable objectForKey:varName];
+    if (  !identifierExpression && parsedExpression && varName ) {
         identifierExpression=parsedExpression;
-        [symbolTable setObject:identifierExpression forKey:anIdentifier];
+        [symbolTable setObject:identifierExpression forKey:varName];
     }
     return identifierExpression;
- */
 }
 
 -makeLocalVar:aToken
@@ -361,11 +360,12 @@ idAccessor(solver, setSolver)
 -lookupLocalVar:anIdentifier
 {
     anIdentifier=[anIdentifier stringValue];
-    NSLog(@"lookup local var: '%@'",anIdentifier);
     id identifierExpression = [symbolTable objectForKey:anIdentifier];
     if (  !identifierExpression ) {
         identifierExpression=[self makeLocalVar:anIdentifier];
-        [symbolTable setObject:identifierExpression forKey:anIdentifier];
+        if ( identifierExpression) {
+            [symbolTable setObject:identifierExpression forKey:anIdentifier];
+        }
     }
     return identifierExpression;
 }

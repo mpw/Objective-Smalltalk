@@ -827,7 +827,7 @@
     [self testexpr:@"a |= 2.  a." expected:[NSNumber numberWithInt:2]];
 }
 
-+(void)testSimpleBindinsAreUniquedInCompile
++(void)testSimpleBindingsAreUniquedInCompile
 {
     MPWStCompiler *compiler = [MPWStCompiler compiler];
     MPWAssignmentExpression *e=[compiler compile:@"a:=a"];
@@ -840,7 +840,7 @@
     
 }
 
-+(void)testComplexBindinsAreUniquedInCompile
++(void)testComplexBindingsAreUniquedInCompile
 {
     MPWStCompiler *compiler = [MPWStCompiler compiler];
     MPWAssignmentExpression *e=[compiler compile:@"var:a := var:a"];
@@ -946,8 +946,8 @@
             @"testCurlyBracesAllowedForBlocks",
             @"testDefineClassMethod",
             @"testPipeEqualsCompilesButDoesSameAsAssignment",
-            @"testSimpleBindinsAreUniquedInCompile",
-//            @"testComplexBindinsAreUniquedInCompile",
+            @"testSimpleBindingsAreUniquedInCompile",
+            @"testComplexBindingsAreUniquedInCompile",
 
         nil];
 }
