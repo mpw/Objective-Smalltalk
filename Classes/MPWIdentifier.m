@@ -79,6 +79,24 @@ idAccessor( identifierName, setIdentifierName )
 	return [[self schemeWithContext:aContext] evaluateIdentifier:self withContext:aContext];
 }
 
+-(NSUInteger)hash
+{
+    return ([[self schemeName] hash] << 1) ^ [[self identifierName] hash];
+}
+
+-(BOOL)isEqual:(id)object
+{
+    id myScheme=[self schemeName];
+    id otherScheme=[object schemeName];
+    id myName=[self identifierName];
+    id otherName=[object identifierName];
+    return
+    ((myScheme == otherScheme) || [myScheme isEqual:otherScheme]) &&
+    ((myName == otherName) || [myName isEqual:otherName]);
+}
+
+
+
 -(NSString *)description
 {
     return [NSString stringWithFormat:@"<%@:%p: schemeName: %@ identifierName: %@>",

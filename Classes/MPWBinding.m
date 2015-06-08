@@ -191,6 +191,17 @@ scalarAccessor( id, delegate, setDelegate)
     
 }
 
+-(NSUInteger)hash
+{
+    return ([[self identifier] hash] << 2) ^ (NSUInteger)[self defaultContext];
+}
+
+-(BOOL)isEqual:(id)object
+{
+    return [[self identifier] isEqual:[object identifier]] &&
+            [self defaultContext] == [object defaultContext];
+}
+
 -(void)dealloc
 {
     return ;

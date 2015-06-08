@@ -334,7 +334,7 @@ idAccessor(solver, setSolver)
     MPWIdentifierExpression *parsedExpression = [self makeComplexIdentifier:aToken];
     MPWIdentifier *identifier=[parsedExpression identifier];
     NSString *varName = [NSString stringWithFormat:@"%@:%@",[identifier schemeName],[identifier identifierName]];
-    NSLog(@"parsedExpression name: '%@' (expr: %@)",varName,parsedExpression);
+//    NSLog(@"parsedExpression name: '%@' (expr: %@)",varName,parsedExpression);
     id identifierExpression = [symbolTable objectForKey:varName];
     if (  !identifierExpression && parsedExpression && varName ) {
         identifierExpression=parsedExpression;

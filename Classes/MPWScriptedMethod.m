@@ -93,7 +93,7 @@ idAccessor( script, _setScript )
 	id returnVal=nil;
 	id executionContext = [self executionContext];
 	id compiledMethod = [self compiledScript];
-	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
+//	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
     
     @try {
 	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
@@ -109,7 +109,7 @@ idAccessor( script, _setScript )
         @throw newException;
 #endif
     }
-	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
+//	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
 	return returnVal;
 }
 
