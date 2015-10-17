@@ -221,7 +221,10 @@ typedef id (^ZeroArgBlock)(void);
     
 }
 
-
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: block: %@>",[self class],self,block];
+}
 
 
 @end

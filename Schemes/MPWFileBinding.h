@@ -11,6 +11,7 @@
 
 @interface MPWFileBinding : MPWGenericBinding {
 	id	url;
+    BOOL ignoreChanges;
 }
 
 -url;

@@ -20,7 +20,7 @@ idAccessor( _value, _setValue )
 boolAccessor( isBound ,setIsBound )
 objectAccessor(MPWIdentifier,identifier, setIdentifier)
 scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
-scalarAccessor( id, delegate, setDelegate)
+objectAccessor( id, delegate, setDelegate)
 
 -initWithValue:aValue
 {
@@ -117,8 +117,9 @@ scalarAccessor( id, delegate, setDelegate)
 -(void)didChange
 {
     if (delegate) {
-//        NSLog(@"sending changed: to delegate:%@",delegate);
+        NSLog(@"%@ sending changed: to delegate:%p/%@/%@",[self class],delegate,[delegate class],delegate);
         [delegate changed:self];
+       NSLog(@"did send changed to delegate: %@",delegate);
     }
 }
 

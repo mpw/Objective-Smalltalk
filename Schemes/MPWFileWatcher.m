@@ -38,8 +38,8 @@
         [delegate didChange];
     } ];
     [self watchFD:fd type:DISPATCH_VNODE_WRITE queue:queue block:^{
-        [delegate didChange];
         NSLog(@"%@ write",filename);
+        [delegate didChange];
     } ];
 //    [self watchFD:fd type:DISPATCH_VNODE_LINK queue:queue block:^{
 //        NSLog(@"%@ link",filename);

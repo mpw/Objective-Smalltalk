@@ -214,6 +214,19 @@ idAccessor( url , setUrl )
 }
 
 
+-(void)didChange
+{
+    if ( !ignoreChanges) {
+        ignoreChanges=YES;
+        if (delegate) {
+            NSLog(@"%@ sending changed: to delegate:%p/%@/%@",[self class],delegate,[delegate class],delegate);
+            [delegate changed:self];
+            NSLog(@"did send changed to delegate: %@",delegate);
+        }
+        ignoreChanges=NO;
+    }
+}
+
 
 -(void)dealloc
 {

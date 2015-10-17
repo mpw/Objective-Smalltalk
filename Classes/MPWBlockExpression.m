@@ -43,6 +43,11 @@ idAccessor( arguments, setArguments )
 	[statements addToVariablesRead:variablesRead];
 }
 
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: statements: %@ arguments: %@>",[self class],self,statements,arguments];
+}
+
 
 -(void)dealloc
 {

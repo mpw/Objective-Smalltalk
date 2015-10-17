@@ -66,6 +66,11 @@ idAccessor( statements, setStatements )
 	return self;
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: %@>",[self class],self,statements];
+}
+
 -(void)dealloc
 {
 	[statements release];
