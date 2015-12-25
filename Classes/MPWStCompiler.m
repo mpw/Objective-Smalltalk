@@ -653,6 +653,9 @@ idAccessor(solver, setSolver)
         firstExpression=expr;
         
     }
+    if ( nextToken) {
+        [self pushBack:nextToken];
+    }
     return firstExpression;
 }
 

@@ -8,6 +8,7 @@
 
 #import "MPWMessagePortDescriptor.h"
 #import <MPWFoundation/MPWValueAccessor.h>
+#import <objc/Protocol.h>
 
 @implementation MPWMessagePortDescriptor
 

@@ -808,6 +808,15 @@
     IDEXPECT(result, @"abc", @"concated");
 }
 
+
++(void)testCompositionViaPipeDoesntBlockFurtherEval
+{
+    NSString *result=[self evaluate:@"'a' stringByAppendingString:'b' | stringByAppendingString:'c'. 'hello'"];
+    IDEXPECT(result, @"hello", @"after");
+}
+
+
+
 +(void)testCurlyBracesAllowedForBlocks
 {
     [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a).}. a." expected:[NSNumber numberWithInt:2048]];
@@ -943,6 +952,7 @@
             
             @"testSmalltalkCascade",
             @"testCompositionViaPipe",
+            @"testCompositionViaPipeDoesntBlockFurtherEval",
             @"testCurlyBracesAllowedForBlocks",
             @"testDefineClassMethod",
             @"testPipeEqualsCompilesButDoesSameAsAssignment",
