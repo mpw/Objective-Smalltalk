@@ -131,9 +131,9 @@
 
 -(MPWClassMirror*)superclassMirror
 {
-    Class superclass = [self superclass];
+    Class superclass = [self theSuperclass];
     if ( superclass != theClass) {
-        return [[self class] mirrorWithClass:[self superclass]];
+        return [[self class] mirrorWithClass:superclass];
     } else {
         return nil;
     }
@@ -283,6 +283,12 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 
 @end
 
+@interface MPWClassMirrorSubclassForTesting : MPWClassMirror
+@end
+@implementation MPWClassMirrorSubclassForTesting
++testSelectors { return @[]; }
+@end
+
 
 //extern id _objc_msgForward(id receiver, SEL sel, ...);
 @implementation MPWClassMirror(testing)
@@ -343,13 +349,24 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 	
 }
 
++(void)testSuperclassMirror
+{
+    Class theClass=[MPWClassMirrorSubclassForTesting class];
+    
+
+    MPWClassMirror *classMirror=[self mirrorWithClass:theClass];
+    MPWClassMirror *superclassMirror=[classMirror superclassMirror];
+    IDEXPECT([superclassMirror theClass], [MPWClassMirror class], @"superclass matches");
+    
+}
 
 
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
 			@"testCreatePerObjectSubclassWithMethodAndForwarding",
-			@"testCreatePerClassSubclassWithMethodAndForwarding",
+            @"testCreatePerClassSubclassWithMethodAndForwarding",
+            @"testSuperclassMirror",
 			nil];
 }
 
