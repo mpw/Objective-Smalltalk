@@ -120,7 +120,12 @@ intAccessor(completionLimit, setCompletionLimit)
 {
     if ( self=[super init] ) {
 //		NSLog(@"initWithArgs: %@",args);
-        [self setPrompt:@"> "];
+        BOOL istty=isatty(0);
+//        NSLog(@"istty: %d",istty);
+        if ( istty) {
+            [self setPrompt:@"> "];
+        }
+        [self setReadingFile:!istty];
         Stdout=[MPWByteStream Stdout];
         Stderr=[MPWByteStream Stderr];
 		[self setEvaluator:newEvaluator];
@@ -422,9 +427,11 @@ idAccessor( retval, setRetval )
             count=1000;
         }
     }
-        fflush(stdout);
-        fflush(stderr);
+    fflush(stdout);
+    fflush(stderr);
+    if ( ![self readingFile]) {
         fprintf(stderr,"\nBye!\n");
+    }
     exit(0);
 }
 

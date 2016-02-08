@@ -37,13 +37,13 @@ static BOOL useMaxSize;
 
 + (void)initialize  
 {
-  static BOOL tooLate = NO;
-  if (!tooLate) 
-  {
-    tooLate = YES;
-    errorAttributes = [[NSDictionary alloc] initWithObjectsAndKeys: [NSColor whiteColor],NSForegroundColorAttributeName, [NSColor blackColor], NSBackgroundColorAttributeName, nil];    
-    useMaxSize = YES;
-  }
+    static BOOL tooLate = NO;
+    if (!tooLate)
+    {
+        tooLate = YES;
+        errorAttributes = [[NSDictionary alloc] initWithObjectsAndKeys: [NSColor whiteColor],NSForegroundColorAttributeName, [NSColor blackColor], NSBackgroundColorAttributeName, nil];
+        useMaxSize = YES;
+    }
 }
 
 //- (BOOL)acceptsFirstResponder {/*NSLog(@"ShellView acceptsFirstResponder");*/ return YES;}
@@ -58,10 +58,6 @@ static BOOL useMaxSize;
 {
     NSString *completionFor=[[self string] substringWithRange:charRange];
     
-    NSLog(@"completionsForPartialWordRange: %@/'%@'",NSStringFromRange(charRange),completionFor);
-//  superResult = [super completionsForPartialWordRange:charRange indexOfSelectedItem:index];
-  
-//  result = [NSMutableArray arrayWithCapacity:[superResult count]];
 
     
     NSString *currentCommand = [self currentCommandLine];
@@ -94,16 +90,17 @@ static BOOL useMaxSize;
 
 - (void) dealloc
 {
-  //NSLog(@"ShellView dealloc");
-  [prompt release];
-  [history release];
-  if (shouldRetainCommandHandler) [commandHandler release];
-  [super dealloc];
+    [prompt release];
+    [history release];
+    if (shouldRetainCommandHandler) {
+        [commandHandler release];
+    }
+    [super dealloc];
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-  return [self initWithFrame:frameRect prompt:@"> " historySize:20000 commandHandler:nil];
+    return [self initWithFrame:frameRect prompt:@"> " historySize:20000 commandHandler:nil];
 }
 
 - (NSUndoManager*)undoManager
@@ -414,7 +411,7 @@ static BOOL useMaxSize;
     
 //  [commandHandler command:command from:self]; // The command handler is notified
     if ( result && ![result isNil] ) {
-        NSLog(@"result class: %@ result: '%@'",[result class],result);
+//        NSLog(@"result class: %@ result: '%@'",[result class],result);
         [stdout writeObject:result];
         [stdout writeString:@"\n"];
     }

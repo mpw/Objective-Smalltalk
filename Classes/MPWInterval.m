@@ -3,7 +3,7 @@
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 26/11/2004.
-//  Copyright 2004 BBC. All rights reserved.
+//  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
 #import "MPWInterval.h"
