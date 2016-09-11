@@ -746,7 +746,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testCreateConstantNSNumber",
              @"testCreateCategory",
              @"testGenerateBlockUse",
-//             @"testGenerateGlobalBlockCreate",
+             @"testGenerateGlobalBlockCreate",
 //             @"testGenerateStackBlockWithVariableCapture",
 //             @"testDefineClassWithOneSimpleSmalltalkMethod",
 //             @"testSmalltalkLiterals",

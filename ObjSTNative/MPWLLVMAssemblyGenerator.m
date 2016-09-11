@@ -418,12 +418,14 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     int blockTypeLenInclNull=(int)[blockType length]+1;
     [self printLine:@"%@ = private unnamed_addr constant [%d x i8] c\"%@\\00\", align 1",
      str_symbol,blockTypeLenInclNull,blockType];
-    [self printLine:@"%@ = internal constant { i64, i64, %@ i8*, i64 } { i64 0, i64 %d, %@ i8* getelementptr inbounds ([%d x i8]* %@, i32 0, i32 0), i64 %d }",
+    [self printLine:@"%@ = internal constant { i64, i64, %@ i8*, i64 } { i64 0, i64 %d, %@ i8* getelementptr inbounds ([%d x i8],[%d x i8]* %@, i32 0, i32 0), i64 %d }",
      block_symbol,
      isLocal ? @" i8*, i8*," : @"",
      isLocal ? 40 : 32,
      isLocal ? @" i8* bitcast (void (i8*, i8*)* @__copy_helper_block_ to i8*), i8* bitcast (void (i8*)* @__destroy_helper_block_ to i8*)," : @"",
-     blockTypeLenInclNull,str_symbol,
+     blockTypeLenInclNull,
+     blockTypeLenInclNull,
+     str_symbol,
      isLocal ? 0 : 256];
     return block_symbol;
 }
@@ -447,9 +449,9 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 -(void)writeBlockCopyHelper
 {
     [self printLine:@"define internal void @__copy_helper_block_(i8*, i8* nocapture) nounwind {"];
-    [self printLine:@"%%3 = getelementptr inbounds i8* %%1, i64 32"];
+    [self printLine:@"%%3 = getelementptr inbounds i8,i8* %%1, i64 32"];
     [self printLine:@"%%4 = bitcast i8* %%3 to %%id*"];
-    [self printLine:@"%%5 = getelementptr inbounds i8* %%0, i64 32"];
+    [self printLine:@"%%5 = getelementptr inbounds i8,i8* %%0, i64 32"];
     [self printLine:@"%%6 = load %%id,%%id* %%4, align 8"];
     [self printLine:@"%%7 = bitcast %%id %%6 to i8*"];
     [self printLine:@"tail call void @_Block_object_assign(i8* %%5, i8* %%7, i32 3) nounwind"];
@@ -461,7 +463,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 -(void)writeBlockDestroyHelper
 {
     [self printLine:@"define internal void @__destroy_helper_block_(i8* nocapture) nounwind {"];
-    [self printLine:@"%%2 = getelementptr inbounds i8* %%0, i64 32"];
+    [self printLine:@"%%2 = getelementptr inbounds i8,i8* %%0, i64 32"];
     [self printLine:@"%%3 = bitcast i8* %%2 to %%id*"];
     [self printLine:@"%%4 = load %%id,%%id* %%3, align 8"];
     [self printLine:@"%%5 = bitcast %%id %%4 to i8*"];
