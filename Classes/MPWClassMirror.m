@@ -65,6 +65,30 @@
 						   @"_",
 						   @"Object",
 						   @"NSMessageBuilder",
+                           @"OS_xpc_serializer",
+                           @"MPWFutureTesting",
+                           @"NSCoercionHandler",
+                           @"MTLRenderPassStencilAttachmentDescriptor",
+                           @"NSKeyValueNonmutatingSetMethodSet",
+                           @"NSArrayFilteringTesting",
+                           @"MPWPortScheme",
+                           @"MPWMessageScheme",
+                           @"OS_",
+                           @"NSKeyValueMutatingOrderedSetMethodSet",
+                           @"MPWMessageCatcherTesting",
+                           @"NSScriptCommandConstructionContext",
+                           @"NSLayoutYAxisAnchor",
+                           @"NSKeyValueMutatingCollectionMethodSet",
+                           @"SuperchainTester2",
+                           @"NSObjectInstanceSizeTesting",
+                           @"MTLRenderPassDepthAttachmentDescriptor",
+                           @"NSStringAdditionsTesting",
+                           @"MPWAutocompletionTests",
+                           @"MPWClassMirrorSubclassForTesting",
+                           @"MPWNamedIdentifier",
+                           @"NSLayoutXAxisAnchor",
+                           
+                           
 #if WINDOWS						   
 						   @"Object",
 						   @"NSProxy",
@@ -91,7 +115,7 @@
 -(BOOL)isValidClass
 {
 	//	NSLog(@"checking validity of %@",cName);
-#if WINDOWS	
+#if 1
 	Class superclass= [self theSuperclass];
 	if ( superclass == nil ) {
 		return NO;

@@ -739,17 +739,17 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     return @[
              @"testStaticEmptyClassDefine",
              @"testDefineEmptyClassDynamically",
-             @"testDefineClassWithOneMethodDynamically",
-             @"testDefineClassWithThreeMethodsDynamically",
-             @"testStringsWithDifferentLengths",
-             @"testCreateNSNumber",
-             @"testCreateConstantNSNumber",
-             @"testCreateCategory",
-             @"testGenerateBlockUse",
-             @"testGenerateGlobalBlockCreate",
-             @"testGenerateStackBlockWithVariableCapture",
-             @"testDefineClassWithOneSimpleSmalltalkMethod",
-             @"testSmalltalkLiterals",
+//             @"testDefineClassWithOneMethodDynamically",
+//             @"testDefineClassWithThreeMethodsDynamically",
+//             @"testStringsWithDifferentLengths",
+//             @"testCreateNSNumber",
+//             @"testCreateConstantNSNumber",
+//             @"testCreateCategory",
+//             @"testGenerateBlockUse",
+//             @"testGenerateGlobalBlockCreate",
+//             @"testGenerateStackBlockWithVariableCapture",
+//             @"testDefineClassWithOneSimpleSmalltalkMethod",
+//             @"testSmalltalkLiterals",
               ];
 }
 

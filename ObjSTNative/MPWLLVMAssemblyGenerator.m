@@ -102,7 +102,7 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     int withNull=stringLen+1;
     numStrings++;
     
-    [self printFormat:@"@.str_%d = linker_private unnamed_addr constant [%d x i8] c\"",numStrings,withNull ];
+    [self printFormat:@"@.str_%d = private unnamed_addr constant [%d x i8] c\"",numStrings,withNull ];
     for (int i=0;i<[value length];i++) {
         unichar ch=[value characterAtIndex:i];
         if ( ch < 32 ) {
@@ -113,7 +113,7 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     }
     [self printLine:@"\\00\", align 1"];
     
-    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,withNull,numStrings,stringLen];
+    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32],[0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8],[%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,symbol,withNull,numStrings,stringLen];
 }
 
 
@@ -140,7 +140,7 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
                       numMethods:(int)numMethods
 {
     NSString *methodListRef= methodListRefSymbol ? [NSString stringWithFormat:@"bitcast ({ i32, i32, [%d x %%struct._objc_method] }* @\"%@\" to %%struct.__method_list_t*)",numMethods,methodListRefSymbol] : @"null";
-    [self printLine:@"@\"%@\" = internal global %%struct._class_ro_t { i32 %d, i32 %d, i32 %d, i8* null, i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), %%struct.__method_list_t* %@, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",structLabel,p1,p2,p2,nameLenNull,classNameSymbol,methodListRef];
+    [self printLine:@"@\"%@\" = internal global %%struct._class_ro_t { i32 %d, i32 %d, i32 %d, i8* null, i8* getelementptr inbounds ([%d x i8],[%d x i8]* @\"%@\", i32 0, i32 0), %%struct.__method_list_t* %@, %%struct._objc_protocol_list* null, %%struct._ivar_list_t* null, i8* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",structLabel,p1,p2,p2,nameLenNull,nameLenNull,classNameSymbol,methodListRef];
 }
 
 -(void)writeClassDefWithLabel:(NSString*)classSymbol
@@ -181,7 +181,7 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     [self writeClassDefWithLabel:classSymbol structLabel:classStructSymbol superClassSymbol:superClassSymbol metaClassSymbol:metaClassSymbol];
     
     [self printLine:@"@\"\%@\" = internal global [1 x i8*] [i8* bitcast (%%struct._class_t* @\"%@\" to i8*)], section \"__DATA, __objc_classlist, regular, no_dead_strip\", align 8",classLabelSymbol, classSymbol];
-    [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"%@\" to i8*)], section \"llvm.metadata\"",nameLenNull,classNameSymbol,classLabelSymbol];
+    [self printLine:@"@llvm.used = appending global [2 x i8*] [i8* getelementptr inbounds ([%d x i8],[%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ([1 x i8*]* @\"%@\" to i8*)], section \"llvm.metadata\"",nameLenNull,nameLenNull,classNameSymbol,classLabelSymbol];
     
 }
 
@@ -334,7 +334,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         returnCode=[NSString stringWithFormat:@"%%%d = ",returnIndex];
     }
     
-    [self printLine:@"%%%d = load i8** @\"%@\", !invariant.load !4",selectorIndex,selectorRef];
+    [self printLine:@"%%%d = load i8*, i8** @\"%@\", !invariant.load !4",selectorIndex,selectorRef];
     [self printFormat:@"%@call %@ bitcast (i8* (i8*, i8*, ...)* @objc_msgSend to %@ (%%id, i8* ",returnCode,retType,retType];
     for ( NSString *argType in argTypes) {
         [self printFormat:@", %@",argType];
@@ -354,7 +354,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     int loadedClass=numLocals;
     numLocals++;
     int bitcastClass=numLocals;
-    [self printLine:@"%%%d = load %%struct._class_t** @\"%@\", align 8",loadedClass,[self nsnumberclassref ]];
+    [self printLine:@"%%%d = load %%struct._class_t*,%%struct._class_t** @\"%@\", align 8",loadedClass,[self nsnumberclassref ]];
     [self printLine:@"%%%d = bitcast %%struct._class_t* %%%d to %%id",bitcastClass,loadedClass];
     NSString *retval=[self emitMsg:@"numberWithInt:" receiver:[NSString stringWithFormat:@"%%%d",bitcastClass] returnType:@"%id" args:@[ theIntSymbolOrLiteral ] argTypes:@[ @"i32"]];
     return retval;
@@ -397,7 +397,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     
     [self printLine:@"%%%d = bitcast %%id %@ to %%struct.__block_literal_generic*" ,blockLiteralLocal,blockName] ;
     [self printLine:@"%%%d = getelementptr inbounds %%struct.__block_literal_generic* %%3, i64 0, i32 3",blockFnPtrLocal];
-    [self printLine:@"%%%d = load i8** %%%d, align 8",blockFnLocal,blockFnPtrLocal];
+    [self printLine:@"%%%d = load i8*, i8** %%%d, align 8",blockFnLocal,blockFnPtrLocal];
     [self printFormat:@"%%%d = bitcast i8* %%%d to %%id (%%id",blockFunCastToRightType,blockFnLocal];
     for ( NSString *argType in blockTypes) {
         [self printFormat:@", %@",argType];
@@ -450,7 +450,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"%%3 = getelementptr inbounds i8* %%1, i64 32"];
     [self printLine:@"%%4 = bitcast i8* %%3 to %%id*"];
     [self printLine:@"%%5 = getelementptr inbounds i8* %%0, i64 32"];
-    [self printLine:@"%%6 = load %%id* %%4, align 8"];
+    [self printLine:@"%%6 = load %%id,%%id* %%4, align 8"];
     [self printLine:@"%%7 = bitcast %%id %%6 to i8*"];
     [self printLine:@"tail call void @_Block_object_assign(i8* %%5, i8* %%7, i32 3) nounwind"];
     [self printLine:@"ret void"];
@@ -463,7 +463,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@"define internal void @__destroy_helper_block_(i8* nocapture) nounwind {"];
     [self printLine:@"%%2 = getelementptr inbounds i8* %%0, i64 32"];
     [self printLine:@"%%3 = bitcast i8* %%2 to %%id*"];
-    [self printLine:@"%%4 = load %%id* %%3, align 8"];
+    [self printLine:@"%%4 = load %%id,%%id* %%3, align 8"];
     [self printLine:@"%%5 = bitcast %%id %%4 to i8*"];
     [self printLine:@"tail call void @_Block_object_dispose(i8* %%5, i32 3) nounwind"];
     [self printLine:@"ret void"];
@@ -487,13 +487,14 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [self printLine:@" declare i8* @objc_msgSend(i8*, i8*, ...) nonlazybind"];
 
     [self printLine:@" !llvm.module.flags = !{!0, !1, !2, !3}"];
-    [self printLine:@"!0 = metadata !{i32 1, metadata !\"Objective-C Version\", i32 2}"];
-    [self printLine:@"!1 = metadata !{i32 1, metadata !\"Objective-C Image Info Version\", i32 0}"];
-    [self printLine:@"!2 = metadata !{i32 1, metadata !\"Objective-C Image Info Section\", metadata !\"__DATA, __objc_imageinfo, regular, no_dead_strip\"}"];
-    [self printLine:@"!3 = metadata !{i32 4, metadata !\"Objective-C Garbage Collection\", i32 0}"];
-    [self printLine:@"!4 = metadata !{}"];
-    [self printLine:@"!5 = metadata !{metadata !\"omnipotent char\", metadata !6}"];
-    [self printLine:@"!6 = metadata !{metadata !\"Simple C/C++ TBAA\"}"];
+    [self printLine:@"!0 = !{i32 1, !\"Objective-C Version\", i32 2}"];
+    [self printLine:@"!1 = !{i32 1, !\"Objective-C Image Info Version\", i32 0}"];
+    [self printLine:@"!2 = !{i32 1, !\"Objective-C Image Info Section\", !\"__DATA, __objc_imageinfo, regular, no_dead_strip\"}"];
+    [self printLine:@"!3 = !{i32 4, !\"Objective-C Garbage Collection\", i32 0}"];
+    [self printLine:@"!4 = !{i32 1, !\"Objective-C Class Properties\", i32 64}"];
+    [self printLine:@"!5 = !{i32 1, !\"PIC Level\", i32 2}"];
+    [self printLine:@"!6 = !{!\"Apple LLVM version 8.0.0 (clang-800.0.38)\"}"];
+    [self printLine:@"!7 = !{}"];
 
 
 }
@@ -604,7 +605,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         
         [self printLine:@"%%1 = getelementptr inbounds i8* %%.block_descriptor, i64 32"];
         [self printLine:@"%%2 = bitcast i8* %%1 to %%id*"];
-        [self printLine:@"%%3 = load %%id* %%2, align 8, !tbaa !5"];
+        [self printLine:@"%%3 = load %%id,%%id* %%2, align 8, !tbaa !5"];
         numLocals=3;
         [self emitMsg:@"addObject:" receiver:@"%3" returnType:@"void" args:@[ @"%line"] argTypes:@[@"%id"]];
         [self printLine:@"ret void"];
@@ -625,7 +626,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     NSString *refForNSMutableArray=[self classRefForClassName:@"NSMutableArray"];
     NSString *methodId= [self writeMethodNamed:methodName className:className methodType:@"%id" additionalParametrs:@[@"%id %s"] methodBody:^(MPWLLVMAssemblyGenerator *generator) {
         [self printLine:@"%%3 = alloca <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>, align 8"];
-        [self printLine:@"%%4 = load %%struct._class_t** @\"%@\", align 8",refForNSMutableArray];
+        [self printLine:@"%%4 = load %%struct._class_t*,%%struct._class_t** @\"%@\", align 8",refForNSMutableArray];
         [self printLine:@"%%5 = bitcast %%struct._class_t* %%4 to %%id"];
         numLocals=5;
         NSString *arrayRef=[self emitMsg:@"array" receiver:@"%5" returnType:@"%id" args:@[] argTypes:@[]];
