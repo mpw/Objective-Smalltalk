@@ -739,7 +739,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     return @[
              @"testStaticEmptyClassDefine",
              @"testDefineEmptyClassDynamically",
-//             @"testDefineClassWithOneMethodDynamically",
+             @"testDefineClassWithOneMethodDynamically",
 //             @"testDefineClassWithThreeMethodsDynamically",
 //             @"testStringsWithDifferentLengths",
 //             @"testCreateNSNumber",

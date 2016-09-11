@@ -279,7 +279,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         if (i!=0) {
             [self printFormat:@", "];
         }
-        [self printFormat:@"%%struct._objc_method { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ( %@ * @\"\\01%@\" to i8*) } ",[methodName length]+1, nameSymbols[i],[methodTypeString length]+1, typeSymbols[i],[self typeStringToLLVMMethodType:typeStrings[i]],methodSymbol];
+        [self printFormat:@"%%struct._objc_method { i8* getelementptr inbounds ([%d x i8],[%d x i8]* @\"%@\", i32 0, i32 0), i8* getelementptr inbounds ([%d x i8],[%d x i8]* @\"%@\", i32 0, i32 0), i8* bitcast ( %@ * @\"\\01%@\" to i8*) } ",[methodName length]+1,[methodName length]+1, nameSymbols[i],[methodTypeString length]+1,[methodTypeString length]+1, typeSymbols[i],[self typeStringToLLVMMethodType:typeStrings[i]],methodSymbol];
 
     }
     [self printLine:@" ] }, section \"__DATA, __objc_const\", align 8"];
@@ -293,7 +293,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     [selectorReferences enumerateKeysAndObjectsUsingBlock:^(id selector, id sel_reference, BOOL *stop) {
         NSString *symbol=[NSString stringWithFormat:@"\\01L_OBJC_METH_VAR_NAME_REF_%d",num++];
         [self generateCString:selector  symbol:symbol type:@"__objc_methname"];
-        [self printLine:@"@\"%@\" = internal externally_initialized global i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), section \"__DATA, __objc_selrefs, literal_pointers, no_dead_strip\"",sel_reference,[selector length]+1,symbol];
+        [self printLine:@"@\"%@\" = internal externally_initialized global i8* getelementptr inbounds ([%d x i8],[%d x i8]* @\"%@\", i32 0, i32 0), section \"__DATA, __objc_selrefs, literal_pointers, no_dead_strip\"",sel_reference,[selector length]+1,[selector length]+1,symbol];
     }];
     
     
