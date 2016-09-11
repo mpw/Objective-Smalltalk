@@ -396,7 +396,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     int retValLocal=++numLocals;
     
     [self printLine:@"%%%d = bitcast %%id %@ to %%struct.__block_literal_generic*" ,blockLiteralLocal,blockName] ;
-    [self printLine:@"%%%d = getelementptr inbounds %%struct.__block_literal_generic* %%3, i64 0, i32 3",blockFnPtrLocal];
+    [self printLine:@"%%%d = getelementptr inbounds %%struct.__block_literal_generic,%%struct.__block_literal_generic* %%3, i64 0, i32 3",blockFnPtrLocal];
     [self printLine:@"%%%d = load i8*, i8** %%%d, align 8",blockFnLocal,blockFnPtrLocal];
     [self printFormat:@"%%%d = bitcast i8* %%%d to %%id (%%id",blockFunCastToRightType,blockFnLocal];
     for ( NSString *argType in blockTypes) {
