@@ -113,7 +113,7 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
     }
     [self printLine:@"\\00\", align 1"];
     
-    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32],[0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8],[%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,symbol,withNull,numStrings,stringLen];
+    [self printLine:@"%@ = private constant %%struct.NSConstantString { i32* getelementptr inbounds ([0 x i32],[0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([%d x i8],[%d x i8]* @.str_%d, i32 0, i32 0), i64 %d }, section \"__DATA,__cfstring\"",symbol,withNull,withNull,numStrings,stringLen];
 }
 
 
