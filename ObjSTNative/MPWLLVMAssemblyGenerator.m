@@ -197,7 +197,7 @@ objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
    
     NSString *methodListRef= methodListRefSymbol ? [NSString stringWithFormat:@"bitcast ({ i32, i32, [%d x %%struct._objc_method] }* @\"%@\" to %%struct.__method_list_t*)",numMethods,methodListRefSymbol] : @"null";
 
-    [self printLine:@"@\"%@\" = internal global %%struct._category_t { i8* getelementptr inbounds ([%d x i8]* @\"%@\", i32 0, i32 0), %%struct._class_t* @\"%@\", %%struct.__method_list_t* %@, %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",categorySymbol,[categoryName length]+1, categoryNameStringSymbol,classRefSymbol, methodListRef];
+    [self printLine:@"@\"%@\" = internal global %%struct._category_t { i8* getelementptr inbounds ([%d x i8],[%d x i8]* @\"%@\", i32 0, i32 0), %%struct._class_t* @\"%@\", %%struct.__method_list_t* %@, %%struct.__method_list_t* null, %%struct._objc_protocol_list* null, %%struct._prop_list_t* null }, section \"__DATA, __objc_const\", align 8",categorySymbol,[categoryName length]+1,[categoryName length]+1, categoryNameStringSymbol,classRefSymbol, methodListRef];
     [self printLine:@"@\"%@\" = internal global [1 x i8*] [i8* bitcast (%%struct._category_t* @\"%@\" to i8*)], section \"__DATA, __objc_catlist, regular, no_dead_strip\", align 8",categoryLabelSymbol, categorySymbol];
 
 
