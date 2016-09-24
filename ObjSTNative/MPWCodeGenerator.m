@@ -312,22 +312,28 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     }
 }
 
++(NSData*)resultOfFlushing:(MPWLLVMAssemblyGenerator *)gen
+{
+    [gen flushSelectorReferences];
+    [gen writeTrailer];
+    [gen flush];
+    return [gen target];
+}
+
 +(void)testDefineEmptyClassDynamically
 {
     // takes around 24 ms (real) total
     //    NSLog(@"start testDefineEmptyClassDynamically");
     MPWCodeGenerator *codegen=[self codegen];
     MPWLLVMAssemblyGenerator *gen=[MPWLLVMAssemblyGenerator stream];
-    
+   
     NSString *classname=[self anotherTestClassName];
+    EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
+
     [gen writeHeaderWithName:@"testModule"];
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:nil numInstanceMethods:0];
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
- //   [source writeToFile:@"/tmp/zeromethodclass.s" atomically:YES];
-    EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
+    NSData *source=[self resultOfFlushing:gen];
+    
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
     EXPECTNOTNIL(loadedClass, @"test class should exist after load");
@@ -355,10 +361,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef  numInstanceMethods:1
 ];
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
+    NSData *source=[self resultOfFlushing:gen];
+
     [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
@@ -397,10 +401,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:3];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
+    NSData *source=[self resultOfFlushing:gen];
 //    [source writeToFile:@"/tmp/threemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
@@ -439,10 +440,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
+    NSData *source=[self resultOfFlushing:gen];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
 
 
@@ -473,10 +471,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
+    NSData *source=[self resultOfFlushing:gen];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
@@ -510,10 +505,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
+    NSData *source=[self resultOfFlushing:gen];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
@@ -546,10 +538,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeCategoryNamed:@"randomTestCategory" ofClass:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    NSData *source=[gen target];
-    [source writeToFile:@"/tmp/onemethodcategory.s" atomically:YES];
+    NSData *source=[self resultOfFlushing:gen];
+//    [source writeToFile:@"/tmp/onemethodcategory.s" atomically:YES];
 
     id instance=[[NSClassFromString(classname) new] autorelease];
     
@@ -584,11 +574,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:1];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
-    [source writeToFile:@"/tmp/blockuse.s" atomically:YES];
+    NSData *source=[self resultOfFlushing:gen];
+//    [source writeToFile:@"/tmp/blockuse.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
@@ -626,11 +613,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
-    [source writeToFile:@"/tmp/blockcreate.s" atomically:YES];
+    NSData *source=[self resultOfFlushing:gen];
+//    [source writeToFile:@"/tmp/blockcreate.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
@@ -662,11 +646,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:methodListRef numInstanceMethods:2];
     
-    [gen flushSelectorReferences];
-    [gen writeTrailer];
-    [gen flush];
-    NSData *source=[gen target];
-    [source writeToFile:@"/tmp/blockcreatecapture.s" atomically:YES];
+    NSData *source=[self resultOfFlushing:gen];
+//    [source writeToFile:@"/tmp/blockcreatecapture.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     NSLog(@"after codegen and load");
     
@@ -748,8 +729,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testGenerateBlockUse",
              @"testGenerateGlobalBlockCreate",
              @"testGenerateStackBlockWithVariableCapture",
-//             @"testDefineClassWithOneSimpleSmalltalkMethod",
-//             @"testSmalltalkLiterals",
+             @"testDefineClassWithOneSimpleSmalltalkMethod",
+             @"testSmalltalkLiterals",
               ];
 }
 

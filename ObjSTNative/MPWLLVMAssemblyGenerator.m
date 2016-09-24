@@ -618,6 +618,19 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     return descriptor;
 }
 
+-(void)fetchBlockDescriptorPartAtIndex:(int)anIndex into:(NSString *)varIdentifier
+{
+    [self printFormat:@"%@ = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 %d\n",varIdentifier,anIndex];
+}
+
+-(void)storeValue:(NSString *)value type:(NSString *)type into:(NSString *)location alignment:(int)align
+{
+    [self printFormat:@"store %@, %@* %@",value,type,type,location];
+    if (align>0) {
+        [self printFormat:@", align %d",align];
+    }
+    [self printLine:@""];
+}
 
 
 -(NSString*)writeCreateStackBlockWithVariableCaptureClassName:(NSString*)className methodName:(NSString*)methodName
@@ -634,18 +647,18 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         NSString *arrayRef=[self emitMsg:@"array" receiver:@"%5" returnType:@"%id" args:@[] argTypes:@[]];
 
         
-        [self printLine:@"%%8 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 0"];
-        [self printLine:@"store i8* bitcast (i8** @_NSConcreteStackBlock to i8*), i8** %%8, align 8"];
-        [self printLine:@"%%9 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 1"];
-        [self printLine:@"store i32 -1040187392, i32* %%9, align 8"];
-        [self printLine:@"%%10 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 2"];
-        [self printLine:@"store i32 0, i32* %%10, align 4"];
-        [self printLine:@"%%11 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 3"];
-        [self printLine:@"store i8* bitcast (void (i8*, %%id, i8*)* @\"%@\" to i8*), i8** %%11, align 8",blockName];
-        [self printLine:@"%%12 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 4"];
-        [self printLine:@"store %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8*, i8*, i64 }* %@ to %%struct.__block_descriptor*), %%struct.__block_descriptor** %%12, align 8",descriptorSymbol];
-        [self printLine:@"%%13 = getelementptr inbounds <{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>,<{ i8*, i32, i32, i8*, %%struct.__block_descriptor*, %%id }>* %%3, i64 0, i32 5"];
+        [self fetchBlockDescriptorPartAtIndex:0 into:@"%8"];
+//        [self printLine:@"store i8* bitcast (i8** @_NSConcreteStackBlock to i8*), i8** %%8, align 8"];
+        [self fetchBlockDescriptorPartAtIndex:1 into:@"%9"];
         
+//        [self printLine:@"store i32 -1040187392, i32* %%9, align 8"];
+        [self fetchBlockDescriptorPartAtIndex:2 into:@"%10"];
+//        [self printLine:@"store i32 0, i32* %%10, align 4"];
+        [self fetchBlockDescriptorPartAtIndex:3 into:@"%11"];
+        [self printLine:@"store i8* bitcast (void (i8*, %%id, i8*)* @\"%@\" to i8*), i8** %%11, align 8",blockName];
+        [self fetchBlockDescriptorPartAtIndex:4 into:@"%12"];
+        [self printLine:@"store %%struct.__block_descriptor* bitcast ({ i64, i64, i8*, i8*, i8*, i64 }* %@ to %%struct.__block_descriptor*), %%struct.__block_descriptor** %%12, align 8",descriptorSymbol];
+        [self fetchBlockDescriptorPartAtIndex:5 into:@"%13"];
         [self printLine:@"store %%id %@, %%id* %%13, align 8, !tbaa !5",arrayRef];
         
 

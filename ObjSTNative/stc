@@ -1,0 +1,5 @@
+#!/usr/local/bin/stsh
+#-<void>stc:<ref>file
+framework:ObjSTNative load.
+generator := MPWCodeGenerator generator.
+
