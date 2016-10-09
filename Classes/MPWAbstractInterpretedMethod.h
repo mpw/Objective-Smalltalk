@@ -10,7 +10,7 @@
 
 @class MPWMethodHeader;
 
-@interface MPWMethod : MPWExpression {
+@interface MPWAbstractInterpretedMethod : MPWExpression {
 	MPWMethodHeader*	methodHeader;
 	id					context;
 	id					methodType;

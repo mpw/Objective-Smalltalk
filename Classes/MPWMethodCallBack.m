@@ -18,7 +18,7 @@
 #import "MPWMethodHeader.h"
 #import "MPWScriptedMethod.h"
 #import "MPWStCompiler.h"
-#import <ObjectiveSmalltalk/MPWMethod.h>
+#import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 #import <objc/objc.h>
 #import <objc/runtime.h>
 #import <stdarg.h>

@@ -10,7 +10,7 @@
 #import <ObjectiveSmalltalk/MPWExpression.h>
 #import <ObjectiveSmalltalk/MPWAssignmentExpression.h>
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
-#import <ObjectiveSmalltalk/MPWMethod.h>
+#import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 #import "MPWMethodHeader.h"
 #import "MPWInstanceVariable.h"
 #import "NSObjectScripting.h"

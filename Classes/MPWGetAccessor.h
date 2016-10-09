@@ -6,10 +6,10 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWMethod.h>
+#import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 
 
-@interface MPWGetAccessor : MPWMethod {
+@interface MPWGetAccessor : MPWAbstractInterpretedMethod {
 	id ivarDef;
 }
 

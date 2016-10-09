@@ -8,7 +8,7 @@
 
 #import "MPWClassMethodStore.h"
 #import "MPWMethodCallBack.h"
-#import "MPWMethod.h"
+//#import "MPWAbstractInterpretedMethod.h"
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "MPWClassMirror.h"

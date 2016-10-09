@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWBlockInvocable.h>
 #import <objc/runtime.h>
 
-@class MPWMethodHeader,MPWMethod;
+@class MPWMethodHeader,MPWAbstractInterpretedMethod;
 
 @interface MPWMethodCallBack : MPWBlockInvocable {
 	Method	savedMethodDescriptor;
@@ -27,7 +27,7 @@
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature;
 
 -(void)setMethod:method;
--(MPWMethod*)method;
+-(MPWAbstractInterpretedMethod*)method;
 -formalParameters;
 -invokeOn:target withFormalParameters:formalParameters actualParamaters:parameters;
 
