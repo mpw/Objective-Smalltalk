@@ -2,7 +2,7 @@
 framework:ObjectiveHTTPD load.
 scheme:site := MPWSiteMap scheme.
 server ← MPWSchemeHttpServer serverOnPort:8081
-site:/hi := 'Hello World!'.
+site:/hi ← 'Hello World!'.
 (scheme:site → server) start:nil.
 stdout println:8081.
 stdout println:'site:<path> := value'.

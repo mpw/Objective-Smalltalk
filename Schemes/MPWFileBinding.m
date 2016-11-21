@@ -23,6 +23,27 @@
 
 idAccessor( url , setUrl )
 
+
+-(NSTimeInterval)lastWritten
+{
+    return lastWritten;
+}
+
+-(NSTimeInterval)lastRead
+{
+    return lastRead;
+}
+
+-(BOOL)modifiedSinceLastWritten
+{
+    return [self lastModifiedTime] > [self lastWritten];
+}
+
+-(BOOL)modifiedSinceLastRead
+{
+    return [self lastModifiedTime] > [self lastRead];
+}
+
 -initWithURL:(NSURL*)newURL
 {
 	self=[super initWithValue:nil];
@@ -129,12 +150,14 @@ idAccessor( url , setUrl )
 	[result setSource:aURL];
 	[result setRawData:rawData];
     [result setError:error];
+    lastRead=[NSDate timeIntervalSinceReferenceDate];
 	return result;
 }
 
 
 -_valueWithURL:(NSURL*)aURL
 {
+    lastRead=[NSDate timeIntervalSinceReferenceDate];
     if ( [self hasChildren] ) {
         MPWDirectoryBinding * result = [[[MPWDirectoryBinding alloc] initWithContents:[self children]] autorelease];
         [result setIdentifier:[self identifier]];
@@ -156,6 +179,18 @@ idAccessor( url , setUrl )
 	}
     [[self parent] mkdir];
 	[newValue writeToURL:[self url] atomically:YES];
+    lastWritten=[NSDate timeIntervalSinceReferenceDate];
+}
+
+-(NSDate *)lastModifiedDate
+{
+    NSDictionary *attributes=[[NSFileManager defaultManager] attributesOfItemAtPath:[self path] error:nil];
+    return attributes[NSFileModificationDate];
+}
+
+-(NSTimeInterval)lastModifiedTime
+{
+    return [[self lastModifiedDate] timeIntervalSinceReferenceDate];
 }
 
 -(BOOL)writeToURL:(NSURL*)targetURL atomically:(BOOL)atomically
@@ -230,9 +265,10 @@ idAccessor( url , setUrl )
 
 -(void)dealloc
 {
-	[url release];			// FIXME:  this should be released, but that causes a double-release crash
+	[url release];
 	[super dealloc];
 }
 
 
 @end
+

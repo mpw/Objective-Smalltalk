@@ -139,9 +139,9 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	return [self do:aBlock with:[NSMutableArray array]];
 }
 
--do:aBlock
+-(void)do:aBlock
 {
-	return [self do:aBlock with:nil];
+	[self do:aBlock with:nil];
 }
 
 -(BOOL)containsInteger:(int)anInt

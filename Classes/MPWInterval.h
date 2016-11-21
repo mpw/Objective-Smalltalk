@@ -28,7 +28,7 @@ scalarAccessor_h( long, step, setStep )
 -(NSRange)asNSRange;
 -(NSRange)rangeValue;
 -(NSRangePointer)rangePointer;
--do:aBlock;
+-(void)do:aBlock;
 
 
 @end

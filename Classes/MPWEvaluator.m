@@ -10,7 +10,7 @@
 #import "MPWBinding.h"
 #import "MPWInterval.h"
 #import <MPWFoundation/NSNil.h>
-#import <MPWFoundation/MPWByteStream.h>
+#import <MPWFoundation/MPWFoundation.h>
 #import "MPWMessage.h"
 #import "MPWClassScheme.h"
 #import <ObjectiveSmalltalk/MPWExpression.h>
@@ -53,14 +53,14 @@
     }
 }
 
--to:otherNumber do:aBlock
+-(void)to:otherNumber do:aBlock
 {
-    return [[self to:otherNumber] do:aBlock];
+    [[self to:otherNumber] do:aBlock] ;
 }
 
--to:otherNumber by:stepNumber do:aBlock
+-(void)to:otherNumber by:stepNumber do:aBlock
 {
-    return [[self to:otherNumber by:stepNumber] do:aBlock];
+    [[self to:otherNumber by:stepNumber] do:aBlock] ;
 }
 
 

@@ -12,6 +12,7 @@
 @interface MPWFileBinding : MPWGenericBinding {
 	id	url;
     BOOL ignoreChanges;
+    NSTimeInterval lastRead,lastWritten;
 }
 
 -url;

@@ -83,11 +83,11 @@ objectAccessor(NSError, error, setError)
 -(MPWResource*)resourceWithRequest:(NSURLRequest*)request
 {
     NSHTTPURLResponse *response=nil;
-    NSError *error=nil;
+    NSError *localError=nil;
 
-    NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&localError];
 
-    NSLog(@"error: %@",error);
+    NSLog(@"error: %@",localError);
     if ( [response statusCode] != 404 ) {
         MPWResource *result=[[[MPWResource alloc] init] autorelease];
         [result setSource:[request URL]];

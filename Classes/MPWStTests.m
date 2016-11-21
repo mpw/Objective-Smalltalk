@@ -256,7 +256,7 @@
 
 +(void)testMethodWithParameters
 {
-	id evaluator=[[[self alloc] init] autorelease];
+	id evaluator=[self compiler];
 	int result;
 	NSString* methodName=@"lengthMultipliedBy:a";
 	NSString* className=@"NSString";
@@ -273,6 +273,15 @@
 	INTEXPECT( result,30, @"didn't get the string length expected" );
 }
 
+
++(void)testParseMethodSyntax
+{
+    NSString *methodText=@"method lengthMultipliedBy:a { self length * a. }";
+    id compiler=[self compiler];
+    id method=[compiler compile:methodText];
+//    IDEXPECT( method, @"", @"result of compiling a metho definition");
+    NSLog(@"method: %@",method);
+}
 
 +(void)testNegativeLiteralComputation
 {
@@ -577,7 +586,7 @@
 
 +(void)testCreateObjectiveCForMessageSendWithArg
 {
-    id compiler = [[[self alloc] init] autorelease];
+    id compiler = [self compiler];
     id parsed = [@"NSString stringWithString:'hello world!'." compileIn:compiler];
     id objcCode = [MPWObjCGenerator process:parsed];
     IDEXPECT( objcCode, @"[NSString stringWithString:@\"hello world!\"]", @"generating Objective-C didn't work");
@@ -958,7 +967,7 @@
             @"testPipeEqualsCompilesButDoesSameAsAssignment",
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
-
+            @"testParseMethodSyntax",
         nil];
 }
 
