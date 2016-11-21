@@ -255,7 +255,7 @@ idAccessor( url , setUrl )
         ignoreChanges=YES;
         if (delegate && [self modifiedSinceLastWritten]) {
             NSLog(@"%@ sending changed: to delegate:%p/%@/%@",[self class],delegate,[delegate class],delegate);
-            [delegate changed:self];
+            [[delegate onMainThread] changed:self];
             NSLog(@"did send changed to delegate: %@",delegate);
         }
         ignoreChanges=NO;
