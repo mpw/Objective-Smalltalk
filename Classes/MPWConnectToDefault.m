@@ -22,7 +22,7 @@ idAccessor( lhs, setLhs )
 -(id)evaluateIn:(id)aContext
 {
     id left=[[[self lhs] evaluateIn:aContext] defaultComponentInstance];
-    id right=[[[self rhs] evaluateIn:aContext]defaultComponentInstance];
+    id right=[[[self rhs] evaluateIn:aContext] defaultComponentInstance];
     
     NSDictionary *leftPorts = [left ports];
     NSDictionary *rightPorts = [right ports];

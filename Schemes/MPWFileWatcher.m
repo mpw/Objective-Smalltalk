@@ -33,19 +33,19 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
     [self watchFD:fd type:DISPATCH_VNODE_DELETE queue:queue block:^{
-        NSLog(@"%@ delete",filename);
+        NSLog(@"%@ delete event",filename);
         [self watchFile:filename withDelegate:delegate];
         [delegate didChange];
     } ];
     [self watchFD:fd type:DISPATCH_VNODE_WRITE queue:queue block:^{
-        NSLog(@"%@ write",filename);
+        NSLog(@"%@ write event",filename);
         [delegate didChange];
     } ];
 //    [self watchFD:fd type:DISPATCH_VNODE_LINK queue:queue block:^{
 //        NSLog(@"%@ link",filename);
 //    } ];
     [self watchFD:fd type:DISPATCH_VNODE_RENAME queue:queue block:^{
-        NSLog(@"%@ rename",filename);
+        NSLog(@"%@ rename event",filename);
         [delegate didChange];
         [self watchFile:filename withDelegate:delegate];
     } ];
