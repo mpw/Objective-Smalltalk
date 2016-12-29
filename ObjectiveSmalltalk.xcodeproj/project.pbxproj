@@ -112,6 +112,12 @@
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
 		1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F63561A179EB68900D2DE58 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
+		1F68102D1E117A78006CE0D1 /* SqliteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68102B1E117A78006CE0D1 /* SqliteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F6810321E117A9F006CE0D1 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F6810311E117A9F006CE0D1 /* libsqlite3.tbd */; };
+		1F6810331E117AA6006CE0D1 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F6810361E117AC1006CE0D1 /* MPWSqliteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6810341E117AC1006CE0D1 /* MPWSqliteScheme.h */; };
+		1F6810371E117AC1006CE0D1 /* MPWSqliteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6810351E117AC1006CE0D1 /* MPWSqliteScheme.m */; };
+		1F68103C1E11807F006CE0D1 /* chinook.db in Resources */ = {isa = PBXBuildFile; fileRef = 1F68103B1E11807F006CE0D1 /* chinook.db */; };
 		1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */; };
 		1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
 		1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -132,6 +138,7 @@
 		1F7B75CD146295F0002F38D1 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7B75D0146296DE002F38D1 /* Fuse.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75CE146296DE002F38D1 /* Fuse.icns */; };
 		1F7B75D1146296DE002F38D1 /* hellodoc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75CF146296DE002F38D1 /* hellodoc.icns */; };
+		1F7C5E821E157A1D00E73A37 /* FMDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7C5E811E157A1D00E73A37 /* FMDB.framework */; };
 		1F7E05A7144B3E22008F349D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7E05A5144B3E22008F349D /* InfoPlist.strings */; };
 		1F7E05AB144B3E22008F349D /* MethodServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E05AA144B3E22008F349D /* MethodServer.m */; };
 		1F7E05C9144B414C008F349D /* MethodServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7E05A9144B3E22008F349D /* MethodServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -539,6 +546,13 @@
 		1F605134187590E5004B6AED /* MPWInternalCodeGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPWInternalCodeGenerator.mm; sourceTree = "<group>"; };
 		1F635616179EB38500D2DE58 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1F635619179EB68900D2DE58 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1F6810291E117A78006CE0D1 /* SqliteScheme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SqliteScheme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F68102B1E117A78006CE0D1 /* SqliteScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SqliteScheme.h; sourceTree = "<group>"; };
+		1F68102C1E117A78006CE0D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F6810311E117A9F006CE0D1 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		1F6810341E117AC1006CE0D1 /* MPWSqliteScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSqliteScheme.h; sourceTree = "<group>"; };
+		1F6810351E117AC1006CE0D1 /* MPWSqliteScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSqliteScheme.m; sourceTree = "<group>"; };
+		1F68103B1E11807F006CE0D1 /* chinook.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = chinook.db; sourceTree = "<group>"; };
 		1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnectToDefault.h; sourceTree = "<group>"; };
 		1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnectToDefault.m; sourceTree = "<group>"; };
 		1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessagePortDescriptor.h; sourceTree = "<group>"; };
@@ -565,6 +579,7 @@
 		1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSXFUSE.framework; path = SDKs/MacOSX10.7.sdk/Library/Frameworks/OSXFUSE.framework; sourceTree = DEVELOPER_DIR; };
 		1F7B75CE146296DE002F38D1 /* Fuse.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Fuse.icns; sourceTree = "<group>"; };
 		1F7B75CF146296DE002F38D1 /* hellodoc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = hellodoc.icns; sourceTree = "<group>"; };
+		1F7C5E811E157A1D00E73A37 /* FMDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FMDB.framework; path = ../../Build/Debug/FMDB.framework; sourceTree = "<group>"; };
 		1F7E05A0144B3E22008F349D /* MethodServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MethodServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7E05A4144B3E22008F349D /* MethodServer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MethodServer-Info.plist"; sourceTree = "<group>"; };
 		1F7E05A6144B3E22008F349D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -788,6 +803,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F6810251E117A78006CE0D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F7C5E821E157A1D00E73A37 /* FMDB.framework in Frameworks */,
+				1F6810331E117AA6006CE0D1 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1F6810321E117A9F006CE0D1 /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F7B75AC14629431002F38D1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -980,6 +1005,8 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F7C5E811E157A1D00E73A37 /* FMDB.framework */,
+				1F6810311E117A9F006CE0D1 /* libsqlite3.tbd */,
 				1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */,
 				1F7E05CE144B4188008F349D /* Foundation.framework */,
 				1F7E05CC144B417D008F349D /* MPWSideweb.framework */,
@@ -1013,6 +1040,18 @@
 				1F2E6F02142EF26E00B5C827 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1F68102A1E117A78006CE0D1 /* SqliteScheme */ = {
+			isa = PBXGroup;
+			children = (
+				1F68103B1E11807F006CE0D1 /* chinook.db */,
+				1F68102B1E117A78006CE0D1 /* SqliteScheme.h */,
+				1F68102C1E117A78006CE0D1 /* Info.plist */,
+				1F6810341E117AC1006CE0D1 /* MPWSqliteScheme.h */,
+				1F6810351E117AC1006CE0D1 /* MPWSqliteScheme.m */,
+			);
+			path = SqliteScheme;
 			sourceTree = "<group>";
 		};
 		1F7B75B214629431002F38D1 /* SchemeFS */ = {
@@ -1239,6 +1278,7 @@
 				1FBAABC1184BDBB900086047 /* StshFramwork */,
 				1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */,
 				1FE37B4E19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
+				1F68102A1E117A78006CE0D1 /* SqliteScheme */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -1375,6 +1415,7 @@
 				1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */,
 				1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalkTouch.framework */,
 				1F81C06019699AE00066DF43 /* MethodServerTouch.framework */,
+				1F6810291E117A78006CE0D1 /* SqliteScheme.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1481,6 +1522,15 @@
 				1FA2EBDB18634AD90091E840 /* MPWPortScheme.h in Headers */,
 				1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */,
 				1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F6810261E117A78006CE0D1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F6810361E117AC1006CE0D1 /* MPWSqliteScheme.h in Headers */,
+				1F68102D1E117A78006CE0D1 /* SqliteScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1669,6 +1719,25 @@
 			productReference = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		1F6810281E117A78006CE0D1 /* SqliteScheme */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F6810301E117A78006CE0D1 /* Build configuration list for PBXNativeTarget "SqliteScheme" */;
+			buildPhases = (
+				1F6810241E117A78006CE0D1 /* Sources */,
+				1F6810251E117A78006CE0D1 /* Frameworks */,
+				1F6810261E117A78006CE0D1 /* Headers */,
+				1F6810271E117A78006CE0D1 /* Resources */,
+				1F6810381E117B54006CE0D1 /* Run Tests */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SqliteScheme;
+			productName = SqliteScheme;
+			productReference = 1F6810291E117A78006CE0D1 /* SqliteScheme.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		1F7B75AE14629431002F38D1 /* SchemeFS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F7B75C414629431002F38D1 /* Build configuration list for PBXNativeTarget "SchemeFS" */;
@@ -1822,6 +1891,11 @@
 			attributes = {
 				LastUpgradeCheck = 0800;
 				TargetAttributes = {
+					1F6810281E117A78006CE0D1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = PE4436LT5M;
+						ProvisioningStyle = Automatic;
+					};
 					1F81C05F19699AE00066DF43 = {
 						CreatedOnToolsVersion = 6.0;
 					};
@@ -1856,6 +1930,7 @@
 				1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */,
 				1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
 				1F81C05F19699AE00066DF43 /* MethodServerTouch */,
+				1F6810281E117A78006CE0D1 /* SqliteScheme */,
 			);
 		};
 /* End PBXProject section */
@@ -1876,6 +1951,14 @@
 			files = (
 				1FA3887713911150007B5CC9 /* testfile.txt in Resources */,
 				1F22D86613916E0400D99DAB /* varname.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F6810271E117A78006CE0D1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F68103C1E11807F006CE0D1 /* chinook.db in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1970,6 +2053,20 @@
 		1F5E508909B4B754000298D9 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Tests";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+		};
+		1F6810381E117B54006CE0D1 /* Run Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
@@ -2081,6 +2178,14 @@
 				1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
 				1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
 				1F68D1EA15D2E945005C7BF5 /* MPWFilterScheme.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F6810241E117A78006CE0D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F6810371E117AC1006CE0D1 /* MPWSqliteScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2505,6 +2610,109 @@
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		1F68102E1E117A78006CE0D1 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = SqliteScheme/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.SqliteScheme;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Development;
+		};
+		1F68102F1E117A78006CE0D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = SqliteScheme/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.SqliteScheme;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -3330,6 +3538,15 @@
 			buildConfigurations = (
 				1F5E508B09B4B754000298D9 /* Development */,
 				1F5E508C09B4B754000298D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F6810301E117A78006CE0D1 /* Build configuration list for PBXNativeTarget "SqliteScheme" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F68102E1E117A78006CE0D1 /* Development */,
+				1F68102F1E117A78006CE0D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
