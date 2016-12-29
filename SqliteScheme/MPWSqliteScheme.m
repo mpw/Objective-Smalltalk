@@ -54,6 +54,14 @@
     return dicts;
 }
 
+-contentForPath:(NSArray*)array
+{
+    NSString *table=array[0];
+    NSString *column=array[1];
+    NSString *value=array[2];
+    return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ where %@=%@",table,column,value]];
+}
+
 @end
 
 #import <MPWFoundation/DebugMacros.h>
@@ -71,14 +79,14 @@
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     [compiler bindValue:[self _testScheme] toVariableNamed:@"testscheme"];
-    [compiler evaluateScriptString:@"scheme:sqlite ← testscheme"];
+    [compiler evaluateScriptString:@"scheme:sqlite := testscheme"];
     return compiler;
 }
 
 +(void)testBasicDBAccess
 {
     MPWStCompiler *compiler=[self _testInterpreter];
-    NSArray *results =[compiler evaluateScriptString:@"testscheme dictionariesForQuery:'select * from Customers where CustomerID=1;'."];
+    NSArray *results =[compiler evaluateScriptString:@"scheme:sqlite dictionariesForQuery:'select * from Customers where CustomerID=1;'."];
     NSDictionary *d=results[0];
     IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
     IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
@@ -86,17 +94,18 @@
 
 +(void)testBasicSchemeAccess
 {
-    MPWSqliteScheme *scheme=[self _testScheme];
-    EXPECTNOTNIL(scheme, @"db");
-    FMResultSet *results =[scheme executeQuery:@"select * from Customers where CustomerID=1;"];
-    EXPECTTRUE([results next], @"has at least one row ");
-    INTEXPECT([results columnCount],13,@"number of columns");
+    MPWStCompiler *compiler=[self _testInterpreter];
+    NSArray *results =[compiler evaluateScriptString:@"sqlite:Customers/CustomerID/1."];
+    NSDictionary *d=results[0];
+    IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
 }
 
 +testSelectors
 {
     return @[
              @"testBasicDBAccess",
+             @"testBasicSchemeAccess",
              ];
 }
 

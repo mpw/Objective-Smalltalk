@@ -37,7 +37,7 @@
 
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
-    return nil;
+    return [self contentForPath:[self pathArrayForPathString:[aBinding path]]];
 }
 
 -(void)setValue:newValue forBinding:aBinding
