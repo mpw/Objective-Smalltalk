@@ -7,6 +7,7 @@
 //
 
 #import "MPWSqliteScheme.h"
+#import <ObjectiveSmalltalk/MPWStCompiler.h>
 #import "sqlite3.h"
 #import <FMDB/FMDB.h>
 
@@ -43,7 +44,15 @@
     return [self.db executeQuery:query];
 }
 
-
+-(NSArray *)dictionariesForQuery:(NSString *)query
+{
+    FMResultSet *resultSet=[self executeQuery:query];
+    NSMutableArray *dicts=[NSMutableArray array];
+    while ( [resultSet next]) {
+        [dicts addObject:[resultSet resultDictionary]];
+    }
+    return dicts;
+}
 
 @end
 
@@ -58,14 +67,30 @@
     return scheme;
 }
 
++_testInterpreter
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler bindValue:[self _testScheme] toVariableNamed:@"testscheme"];
+    [compiler evaluateScriptString:@"scheme:sqlite ← testscheme"];
+    return compiler;
+}
 
 +(void)testBasicDBAccess
+{
+    MPWStCompiler *compiler=[self _testInterpreter];
+    NSArray *results =[compiler evaluateScriptString:@"testscheme dictionariesForQuery:'select * from Customers where CustomerID=1;'."];
+    NSDictionary *d=results[0];
+    IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
+}
+
++(void)testBasicSchemeAccess
 {
     MPWSqliteScheme *scheme=[self _testScheme];
     EXPECTNOTNIL(scheme, @"db");
     FMResultSet *results =[scheme executeQuery:@"select * from Customers where CustomerID=1;"];
     EXPECTTRUE([results next], @"has at least one row ");
-    
+    INTEXPECT([results columnCount],13,@"number of columns");
 }
 
 +testSelectors
