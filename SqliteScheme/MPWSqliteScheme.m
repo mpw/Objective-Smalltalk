@@ -44,14 +44,20 @@
     return [self.db executeQuery:query];
 }
 
--(NSArray *)dictionariesForQuery:(NSString *)query
+-(NSArray *)dictionariesForResultSet:(FMResultSet *)resultSet
 {
-    FMResultSet *resultSet=[self executeQuery:query];
     NSMutableArray *dicts=[NSMutableArray array];
     while ( [resultSet next]) {
         [dicts addObject:[resultSet resultDictionary]];
     }
     return dicts;
+}
+
+
+
+-(NSArray *)dictionariesForQuery:(NSString *)query
+{
+    return [self dictionariesForResultSet:[self executeQuery:query]];
 }
 
 -contentForPath:(NSArray*)array
@@ -61,12 +67,15 @@
         NSString *column=array[1];
         NSString *value=array[2];
         return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ where %@=%@",table,column,value]];
-    } else if ( [array count]==1) {
+    } else if ( [array count]==1 && ![array[0] isEqualToString:@"."]) {
         return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ ",array[0]]];
+    } else if ( [array count]==0 || ([array count]==1 && [array[0] isEqualToString:@"."])) {
+        return [self.db getSchema];
     } else {
         return  nil;
     }
 }
+
 
 @end
 
@@ -131,7 +140,10 @@
              @"testBasicDBAccess",
              @"testBasicSchemeAccess",
              @"testFullTableQuery",
+//             @"testGetSchema",
              ];
 }
+
+
 
 @end
