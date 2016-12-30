@@ -56,10 +56,16 @@
 
 -contentForPath:(NSArray*)array
 {
-    NSString *table=array[0];
-    NSString *column=array[1];
-    NSString *value=array[2];
-    return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ where %@=%@",table,column,value]];
+    if ( [array count] == 3) {
+        NSString *table=array[0];
+        NSString *column=array[1];
+        NSString *value=array[2];
+        return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ where %@=%@",table,column,value]];
+    } else if ( [array count]==1) {
+        return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ ",array[0]]];
+    } else {
+        return  nil;
+    }
 }
 
 @end
@@ -79,14 +85,20 @@
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     [compiler bindValue:[self _testScheme] toVariableNamed:@"testscheme"];
-    [compiler evaluateScriptString:@"scheme:sqlite := testscheme"];
+    [compiler evaluateScriptString:@"scheme:chinook := testscheme"];
     return compiler;
+}
+
++(NSArray *)_resultsForScript:(NSString *)script
+{
+    MPWStCompiler *compiler=[self _testInterpreter];
+    NSArray *results =[compiler evaluateScriptString:script];
+    return results;
 }
 
 +(void)testBasicDBAccess
 {
-    MPWStCompiler *compiler=[self _testInterpreter];
-    NSArray *results =[compiler evaluateScriptString:@"scheme:sqlite dictionariesForQuery:'select * from Customers where CustomerID=1;'."];
+    NSArray *results =[self _resultsForScript:@"scheme:chinook dictionariesForQuery:'select * from Customers where CustomerID=1;'."];
     NSDictionary *d=results[0];
     IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
     IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
@@ -94,11 +106,23 @@
 
 +(void)testBasicSchemeAccess
 {
-    MPWStCompiler *compiler=[self _testInterpreter];
-    NSArray *results =[compiler evaluateScriptString:@"sqlite:Customers/CustomerID/1."];
+    NSArray *results =[self _resultsForScript:@"chinook:Customers/CustomerID/1."];
+    INTEXPECT([results count], 1, @"number of results");
     NSDictionary *d=results[0];
     IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
     IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
+}
+
++(void)testFullTableQuery
+{
+    NSArray *results =[self _resultsForScript:@"chinook:Customers."];
+    INTEXPECT([results count], 59, @"number of results");
+    NSDictionary *d=results[0];
+    IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
+    d=results.lastObject;
+    IDEXPECT( d[@"CustomerId"], @(59), @"customer id");
+    IDEXPECT( d[@"FirstName"], @"Puja", @"first name");
 }
 
 +testSelectors
@@ -106,6 +130,7 @@
     return @[
              @"testBasicDBAccess",
              @"testBasicSchemeAccess",
+             @"testFullTableQuery",
              ];
 }
 
