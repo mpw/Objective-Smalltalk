@@ -1,0 +1,5 @@
+#!/usr/local/bin/stsh
+#-db:<ref>db
+framework:sqlitescheme load.
+scheme:db ← MPWSqliteScheme schemeWithPath: db path.
+shell runInteractiveLoop.

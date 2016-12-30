@@ -1,0 +1,14 @@
+#!/usr/local/bin/stsh
+#-db:<ref>db
+framework:sqlitescheme load.
+framework:ObjectiveHTTPD load.
+
+scheme:db ← MPWSqliteScheme schemeWithPath: db path.
+server := MPWSchemeHttpServer new.
+server server setPort:8081.
+
+server setScheme: scheme:db .
+
+server start:nil.
+shell runInteractiveLoop.
+

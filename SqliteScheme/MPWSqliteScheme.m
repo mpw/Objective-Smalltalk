@@ -63,6 +63,9 @@
 
 -contentForPath:(NSArray*)array
 {
+    if ( [array.firstObject length] == 0) {
+        array=[array subarrayWithRange:NSMakeRange(1, array.count-1)];
+    }
     if ( [array count] == 3) {
         NSString *table=array[0];
         NSString *column=array[1];
@@ -71,7 +74,7 @@
     } else if ( [array count]==1 && ![array[0] isEqualToString:@"."]) {
         return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ ",array[0]]];
     } else if ( [array count]==0 || ([array count]==1 && [array[0] isEqualToString:@"."])) {
-        return [self dictionariesForQuery:@"select name from sqlite_master where [type] = 'table'"];
+        return [[[self dictionariesForQuery:@"select name from sqlite_master where [type] = 'table'"] collect] objectForKey:@"name"];
     } else {
         return  nil;
     }
@@ -82,9 +85,9 @@
 {
     NSArray *children=[self valueForBinding:aBinding];
     NSMutableArray *childBindings=[NSMutableArray array];
-    for ( NSDictionary *child in children ) {
-        if ( [child respondsToSelector:@selector(objectForKey:)] && child[@"name"]) {
-            [childBindings addObject:[MPWGenericBinding bindingWithName:child[@"name"] scheme:self]];
+    for ( NSString *child in children ) {
+        if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {
+            [childBindings addObject:[MPWGenericBinding bindingWithName:child scheme:self]];
         }
     }
     return childBindings;
@@ -151,9 +154,9 @@
 {
     NSArray *results =[self _resultsForScript:@"chinook:."];
     INTEXPECT([results count], 13, @"number of results");
-    IDEXPECT( results[0][@"name"], @"albums", @"first table");
-    IDEXPECT( results[1][@"name"], @"sqlite_sequence", @"2nd table");
-    IDEXPECT( results[2][@"name"], @"artists", @"2nd table");
+    IDEXPECT( results[0], @"albums", @"first table");
+    IDEXPECT( results[1], @"sqlite_sequence", @"2nd table");
+    IDEXPECT( results[2], @"artists", @"2nd table");
 
 }
 
