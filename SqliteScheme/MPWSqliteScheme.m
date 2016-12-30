@@ -8,6 +8,7 @@
 
 #import "MPWSqliteScheme.h"
 #import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/MPWGenericBinding.h>
 #import "sqlite3.h"
 #import <FMDB/FMDB.h>
 
@@ -70,12 +71,24 @@
     } else if ( [array count]==1 && ![array[0] isEqualToString:@"."]) {
         return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ ",array[0]]];
     } else if ( [array count]==0 || ([array count]==1 && [array[0] isEqualToString:@"."])) {
-        return [self.db getSchema];
+        return [self dictionariesForQuery:@"select name from sqlite_master where [type] = 'table'"];
     } else {
         return  nil;
     }
 }
 
+
+-(NSArray*)childrenOf:(MPWGenericBinding*)aBinding
+{
+    NSArray *children=[self valueForBinding:aBinding];
+    NSMutableArray *childBindings=[NSMutableArray array];
+    for ( NSDictionary *child in children ) {
+        if ( [child respondsToSelector:@selector(objectForKey:)] && child[@"name"]) {
+            [childBindings addObject:[MPWGenericBinding bindingWithName:child[@"name"] scheme:self]];
+        }
+    }
+    return childBindings;
+}
 
 @end
 
@@ -134,13 +147,23 @@
     IDEXPECT( d[@"FirstName"], @"Puja", @"first name");
 }
 
++(void)testGetSchema
+{
+    NSArray *results =[self _resultsForScript:@"chinook:."];
+    INTEXPECT([results count], 13, @"number of results");
+    IDEXPECT( results[0][@"name"], @"albums", @"first table");
+    IDEXPECT( results[1][@"name"], @"sqlite_sequence", @"2nd table");
+    IDEXPECT( results[2][@"name"], @"artists", @"2nd table");
+
+}
+
 +testSelectors
 {
     return @[
              @"testBasicDBAccess",
              @"testBasicSchemeAccess",
              @"testFullTableQuery",
-//             @"testGetSchema",
+             @"testGetSchema",
              ];
 }
 
