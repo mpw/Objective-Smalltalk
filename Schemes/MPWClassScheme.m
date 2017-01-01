@@ -18,24 +18,58 @@
 -bindingForName:aName inContext:aContext
 {
     id binding = [MPWGenericBinding bindingWithName:aName scheme:self];
-	return binding;
+    return binding;
 }
 
+-bindingForMirror:aClassMirror
+{
+    return [self bindingForName:[aClassMirror name] inContext:nil];
+}
+
+-(NSArray *)allClassMirrors
+{
+    return [MPWClassMirror allClasses];
+}
+
+-(NSArray *)rootMirrors
+{
+    NSArray *mirrors=[self allClassMirrors];
+    NSMutableArray *result=[NSMutableArray array];
+    for ( MPWClassMirror *mirror in mirrors ) {
+        if ( ![mirror superclassMirror] ) {
+            [result addObject:mirror];
+        }
+    }
+    return result;
+}
 
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
-    return NSClassFromString([aBinding name]);
+    NSString *className=[aBinding name];
+    if ( [className length] == 0 || [className isEqualToString:@"."] ) {
+        return [[[self allClassMirrors] collect] name];
+    } else if ( [className isEqualToString:@"/"]  )  {
+        return [[[self rootMirrors] collect] name];
+    } else {
+        if ( [className hasPrefix:@"/"]) {
+            className=[className substringFromIndex:1];
+        }
+        return NSClassFromString(className);
+    }
 }
+
 
 -(NSArray*)childrenOf:(MPWGenericBinding*)binding
 {
-    //  yes, it ignores the binding passed in
-    NSArray *allClasses=[MPWClassMirror allClasses];
-    NSMutableArray *bindings=[NSMutableArray array];
-    for ( MPWClassMirror *cm in allClasses ) {
-        [bindings addObject:[self bindingForName:[cm name] inContext:nil]];
-    }
-    return bindings;
+//    NSLog(@"childrenOf with binding '%@'",[binding name]);
+//    if ( [[binding name] isEqualToString:@"/"]  || [[binding name] isEqualToString:@"."]) {
+//        NSArray *rootMirrors=[self rootMirrors];
+//        NSLog(@"root mirrors: %@",rootMirrors);
+//        NSArray *bindings=[[self collect] bindingForMirror:[rootMirrors each]];
+//        NSLog(@"bindings: %@",bindings);
+//        return bindings;
+//    }
+    return [[self collect] bindingForMirror:[[self allClassMirrors] each]];
 }
 
 

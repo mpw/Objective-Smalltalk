@@ -159,11 +159,11 @@
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8AC138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A0138ADC1600199F03 /* MPWFileSchemeResolver.m */; };
-		1F88E8AD138ADC1600199F03 /* MPWFileBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A1138ADC1600199F03 /* MPWFileBinding.h */; };
+		1F88E8AD138ADC1600199F03 /* MPWFileBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A1138ADC1600199F03 /* MPWFileBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8AE138ADC1600199F03 /* MPWFileBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A2138ADC1600199F03 /* MPWFileBinding.m */; };
 		1F88E8AF138ADC1600199F03 /* MPWURLSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A3138ADC1600199F03 /* MPWURLSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8B0138ADC1600199F03 /* MPWURLSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A4138ADC1600199F03 /* MPWURLSchemeResolver.m */; };
-		1F88E8B1138ADC1600199F03 /* MPWURLBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A5138ADC1600199F03 /* MPWURLBinding.h */; };
+		1F88E8B1138ADC1600199F03 /* MPWURLBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A5138ADC1600199F03 /* MPWURLBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8B2138ADC1600199F03 /* MPWURLBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A6138ADC1600199F03 /* MPWURLBinding.m */; };
 		1F88E8B3138ADC1600199F03 /* MPWEnvScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A7138ADC1600199F03 /* MPWEnvScheme.h */; };
 		1F88E8B4138ADC1600199F03 /* MPWEnvScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */; };

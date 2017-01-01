@@ -4,11 +4,5 @@ framework:sqlitescheme load.
 framework:ObjectiveHTTPD load.
 
 scheme:db ← MPWSqliteScheme schemeWithPath: db path.
-server := MPWSchemeHttpServer new.
-server server setPort:8081.
-
-server setScheme: scheme:db .
-
-server start:nil.
+(scheme:db ->  (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
 shell runInteractiveLoop.
-

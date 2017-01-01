@@ -9,6 +9,8 @@
 #import "MPWSqliteScheme.h"
 #import <ObjectiveSmalltalk/MPWStCompiler.h>
 #import <ObjectiveSmalltalk/MPWGenericBinding.h>
+#import <ObjectiveSmalltalk/MPWURLBinding.h>
+#import <ObjectiveSmalltalk/MPWMessagePortDescriptor.h>
 #import "sqlite3.h"
 #import <FMDB/FMDB.h>
 
@@ -27,12 +29,26 @@
     return [[self alloc] initWithPathToDB:dbPath];
 }
 
++(instancetype)schemeWithRef:(MPWURLBinding *)dbPath
+{
+    return [self schemeWithPath:[dbPath path]];
+}
+
+-(void)setPath:(NSString *)dbPath
+{
+    self.db=[FMDatabase databaseWithPath:dbPath];
+    [self.db open];
+}
+
+-(NSString *)path
+{
+    return self.db.databasePath;
+}
 
 -(instancetype)initWithPathToDB:(NSString *)dbPath
 {
     self=[super init];
-    self.db=[FMDatabase databaseWithPath:dbPath];
-    [self.db open];
+    [self setPath:dbPath];
     if ( self.db )  {
         return self;
     } else {
@@ -92,6 +108,13 @@
     }
     return childBindings;
 }
+
+-defaultInputPort
+{
+    return [[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"path" protocol:nil sends:YES];
+}
+
+
 
 @end
 
