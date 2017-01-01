@@ -262,6 +262,11 @@ idAccessor( url , setUrl )
     }
 }
 
+-(void)delete
+{
+    unlink( [[self path] fileSystemRepresentation]);
+}
+
 
 -(void)dealloc
 {
