@@ -71,8 +71,6 @@
                            @"MTLRenderPassStencilAttachmentDescriptor",
                            @"NSKeyValueNonmutatingSetMethodSet",
                            @"NSArrayFilteringTesting",
-                           @"MPWPortScheme",
-                           @"MPWMessageScheme",
                            @"OS_",
                            @"NSKeyValueMutatingOrderedSetMethodSet",
                            @"MPWMessageCatcherTesting",
