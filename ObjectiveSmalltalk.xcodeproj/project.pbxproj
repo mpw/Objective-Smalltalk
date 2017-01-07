@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F03A1401218C7A2001EE7AD /* MPWSELScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */; };
-		1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */; };
 		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
 		1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1816DCE6A200ED2517 /* ObjSTNative.m */; };
 		1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A1E16DCE6E600ED2517 /* MPWCodeGenerator.h */; };
@@ -42,6 +40,12 @@
 		1F406EBF10F5354C0054957A /* MPWRecursiveIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F406EBD10F5354C0054957A /* MPWRecursiveIdentifier.m */; };
 		1F407E8A1A3B0DAF00DC8081 /* MPWCascadeExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9CD1DF1A2C94AD00578177 /* MPWCascadeExpression.m */; };
 		1F407E8B1A3B0DBB00DC8081 /* MPWFileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */; };
+		1F43484D1E21676F002750C3 /* S3Scheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F43484B1E21676F002750C3 /* S3Scheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F4348521E216782002750C3 /* AWSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F4348511E216782002750C3 /* AWSCore.framework */; };
+		1F4348571E2167BF002750C3 /* MPWS3Scheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4348551E2167BF002750C3 /* MPWS3Scheme.h */; };
+		1F4348581E2167BF002750C3 /* MPWS3Scheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4348561E2167BF002750C3 /* MPWS3Scheme.m */; };
+		1F4348591E2168FE002750C3 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F43485B1E216905002750C3 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F43485A1E216905002750C3 /* AWSS3.framework */; };
 		1F4FD0DD10E4FB3600934A17 /* MPWRefScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */; };
 		1F4FD0DE10E4FB3600934A17 /* MPWRefScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FD0DC10E4FB3600934A17 /* MPWRefScheme.m */; };
 		1F4FD0ED10E4FEFA00934A17 /* MPWVarScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -381,8 +385,6 @@
 		1FE37BE01969612500C9A378 /* MPWVarScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FD0EC10E4FEFA00934A17 /* MPWVarScheme.m */; };
 		1FE37BE11969612500C9A378 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BE21969612600C9A378 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
-		1FE37BE31969612600C9A378 /* MPWSELScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37BE41969612600C9A378 /* MPWSELScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */; };
 		1FE37BE51969612600C9A378 /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BE61969612600C9A378 /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FE37BE71969612600C9A378 /* MPWResourceScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -476,8 +478,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSELScheme.h; sourceTree = "<group>"; };
-		1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSELScheme.m; sourceTree = "<group>"; };
 		1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjSTNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjSTNative-Info.plist"; sourceTree = "<group>"; };
 		1F084A1416DCE6A200ED2517 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -517,6 +517,13 @@
 		1F406EB310F534D90054957A /* MPWNamedIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWNamedIdentifier.m; sourceTree = "<group>"; };
 		1F406EBC10F5354C0054957A /* MPWRecursiveIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRecursiveIdentifier.h; sourceTree = "<group>"; };
 		1F406EBD10F5354C0054957A /* MPWRecursiveIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWRecursiveIdentifier.m; sourceTree = "<group>"; };
+		1F4348491E21676F002750C3 /* S3Scheme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = S3Scheme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F43484B1E21676F002750C3 /* S3Scheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3Scheme.h; sourceTree = "<group>"; };
+		1F43484C1E21676F002750C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F4348511E216782002750C3 /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCore.framework; path = "../../Build/Debug-iphoneos/AWSCore.framework"; sourceTree = "<group>"; };
+		1F4348551E2167BF002750C3 /* MPWS3Scheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWS3Scheme.h; sourceTree = "<group>"; };
+		1F4348561E2167BF002750C3 /* MPWS3Scheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWS3Scheme.m; sourceTree = "<group>"; };
+		1F43485A1E216905002750C3 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSS3.framework; path = "../../Build/Debug-iphoneos/AWSS3.framework"; sourceTree = "<group>"; };
 		1F45D541075D37A200D924C3 /* MPWEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MPWEvaluator.h; path = Classes/MPWEvaluator.h; sourceTree = SOURCE_ROOT; };
 		1F45D542075D37A200D924C3 /* MPWEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MPWEvaluator.m; path = Classes/MPWEvaluator.m; sourceTree = SOURCE_ROOT; };
 		1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRefScheme.h; sourceTree = "<group>"; };
@@ -782,6 +789,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F4348451E21676F002750C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F43485B1E216905002750C3 /* AWSS3.framework in Frameworks */,
+				1F4348591E2168FE002750C3 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1F4348521E216782002750C3 /* AWSCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F5E508509B4B754000298D9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -928,9 +945,8 @@
 				1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */,
 				1F8F1A02193070F200CC831A /* MPWDirectoryBinding.h */,
 				1F8F1A03193070F200CC831A /* MPWDirectoryBinding.m */,
-				1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */,
-				1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */,
 				1F845DFB0F183D4700B085CD /* MPWClassScheme.h */,
+				1F845DFC0F183D4700B085CD /* MPWClassScheme.m */,
 				1F68D1E515D2E944005C7BF5 /* MPWFilterScheme.h */,
 				1F68D1E615D2E945005C7BF5 /* MPWFilterScheme.m */,
 				1FA5F48E147CE049007EE753 /* MPWTreeNode.h */,
@@ -945,15 +961,14 @@
 				1F88E8A6138ADC1600199F03 /* MPWURLBinding.m */,
 				1F88E8A7138ADC1600199F03 /* MPWEnvScheme.h */,
 				1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */,
-				1F845DFC0F183D4700B085CD /* MPWClassScheme.m */,
 				1F51A74510DA784A00753C9A /* MPWVARBinding.h */,
 				1F51A74610DA784A00753C9A /* MPWVARBinding.m */,
+				1F4FD0DB10E4FB3600934A17 /* MPWRefScheme.h */,
 				1F4FD0DC10E4FB3600934A17 /* MPWRefScheme.m */,
+				1F4FD0EB10E4FEFA00934A17 /* MPWVarScheme.h */,
 				1F4FD0EC10E4FEFA00934A17 /* MPWVarScheme.m */,
 				1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */,
 				1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */,
-				1F03A13E1218C7A2001EE7AD /* MPWSELScheme.h */,
-				1F03A13F1218C7A2001EE7AD /* MPWSELScheme.m */,
 				1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */,
 				1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */,
 				1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */,
@@ -989,6 +1004,8 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F43485A1E216905002750C3 /* AWSS3.framework */,
+				1F4348511E216782002750C3 /* AWSCore.framework */,
 				1F7C5E811E157A1D00E73A37 /* FMDB.framework */,
 				1F6810311E117A9F006CE0D1 /* libsqlite3.tbd */,
 				1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */,
@@ -1024,6 +1041,17 @@
 				1F2E6F02142EF26E00B5C827 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1F43484A1E21676F002750C3 /* S3Scheme */ = {
+			isa = PBXGroup;
+			children = (
+				1F43484B1E21676F002750C3 /* S3Scheme.h */,
+				1F43484C1E21676F002750C3 /* Info.plist */,
+				1F4348551E2167BF002750C3 /* MPWS3Scheme.h */,
+				1F4348561E2167BF002750C3 /* MPWS3Scheme.m */,
+			);
+			path = S3Scheme;
 			sourceTree = "<group>";
 		};
 		1F68102A1E117A78006CE0D1 /* SqliteScheme */ = {
@@ -1263,6 +1291,7 @@
 				1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */,
 				1FE37B4E19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
 				1F68102A1E117A78006CE0D1 /* SqliteScheme */,
+				1F43484A1E21676F002750C3 /* S3Scheme */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -1400,6 +1429,7 @@
 				1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalkTouch.framework */,
 				1F81C06019699AE00066DF43 /* MethodServerTouch.framework */,
 				1F6810291E117A78006CE0D1 /* SqliteScheme.framework */,
+				1F4348491E21676F002750C3 /* S3Scheme.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1417,6 +1447,15 @@
 				1F7A351018B3570F0009E97D /* MPWStNativeCompiler.h in Headers */,
 				1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F4348461E21676F002750C3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F4348571E2167BF002750C3 /* MPWS3Scheme.h in Headers */,
+				1F43484D1E21676F002750C3 /* S3Scheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1482,7 +1521,6 @@
 				1F406EB410F534D90054957A /* MPWNamedIdentifier.h in Headers */,
 				1F406EBE10F5354C0054957A /* MPWRecursiveIdentifier.h in Headers */,
 				1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */,
-				1F03A1401218C7A2001EE7AD /* MPWSELScheme.h in Headers */,
 				1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */,
 				1FE8F22813802F0700B37A71 /* MPWResourceScheme.h in Headers */,
 				1F88E8AD138ADC1600199F03 /* MPWFileBinding.h in Headers */,
@@ -1606,7 +1644,6 @@
 				1FE37B891969610600C9A378 /* MPWFastMessage.h in Headers */,
 				1FE37BB71969610700C9A378 /* MPWSetAccessor.h in Headers */,
 				1FE37BE11969612500C9A378 /* MPWSchemeScheme.h in Headers */,
-				1FE37BE31969612600C9A378 /* MPWSELScheme.h in Headers */,
 				1FE37BDB1969612500C9A378 /* MPWEnvScheme.h in Headers */,
 				1FE37BC11969610800C9A378 /* MPWTaggedFloat.h in Headers */,
 				1FE37BB91969610700C9A378 /* MPWStatementList.h in Headers */,
@@ -1677,6 +1714,25 @@
 			name = ObjSTNative;
 			productName = ObjSTNative;
 			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		1F4348481E21676F002750C3 /* S3Scheme */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F4348501E21676F002750C3 /* Build configuration list for PBXNativeTarget "S3Scheme" */;
+			buildPhases = (
+				1F4348441E21676F002750C3 /* Sources */,
+				1F4348451E21676F002750C3 /* Frameworks */,
+				1F4348461E21676F002750C3 /* Headers */,
+				1F4348471E21676F002750C3 /* Resources */,
+				1F43485C1E216D2A002750C3 /* Test */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = S3Scheme;
+			productName = S3Scheme;
+			productReference = 1F4348491E21676F002750C3 /* S3Scheme.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */ = {
@@ -1871,6 +1927,11 @@
 			attributes = {
 				LastUpgradeCheck = 0800;
 				TargetAttributes = {
+					1F4348481E21676F002750C3 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = PE4436LT5M;
+						ProvisioningStyle = Automatic;
+					};
 					1F6810281E117A78006CE0D1 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = PE4436LT5M;
@@ -1911,6 +1972,7 @@
 				1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
 				1F81C05F19699AE00066DF43 /* MethodServerTouch */,
 				1F6810281E117A78006CE0D1 /* SqliteScheme */,
+				1F4348481E21676F002750C3 /* S3Scheme */,
 			);
 		};
 /* End PBXProject section */
@@ -1922,6 +1984,13 @@
 			files = (
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F4348471E21676F002750C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2030,6 +2099,20 @@
 			shellPath = /bin/sh;
 			shellScript = "LLVM_XCCONFIG_FILE=\"${PROJECT_DIR}/llvm-config/llvm.xcconfig\"\nLLVM_COMPONENTS_FILE=\"${PROJECT_DIR}/llvm-config/llvm-components.txt\"\n\ndate_params=$((`stat -f \"%m\" $LLVM_COMPONENTS_FILE`))\ndate_config=$((`stat -f \"%m\" $LLVM_XCCONFIG_FILE`))\nif [ $date_params -gt $date_config ]; then\necho \"llvm.xcconfig parameter changes detected\"\n\nLLVM_COMPONENTS=`/bin/cat $LLVM_COMPONENTS_FILE`\nLLVM_CFLAGS=`/usr/local/bin/llvm-config --cflags`\nLLVM_LDFLAGS=`/usr/local/bin/llvm-config --ldflags`\" \"`/usr/local/bin/llvm-config --libs $LLVM_COMPONENTS`\n\necho \"// Configuration file for LLVM settings, generated as a build phase.\" > $LLVM_XCCONFIG_FILE\necho \"// $LLVM_COMPONENTS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_CFLAGS = $LLVM_CFLAGS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_LDFLAGS = $LLVM_LDFLAGS\" >> $LLVM_XCCONFIG_FILE\nfi";
 		};
+		1F43485C1E216D2A002750C3 /* Test */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Test;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n ";
+		};
 		1F5E508909B4B754000298D9 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -2055,7 +2138,7 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
+			shellPath = " ";
 			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2071,6 +2154,14 @@
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */,
 				1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F4348441E21676F002750C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F4348581E2167BF002750C3 /* MPWS3Scheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2123,7 +2214,6 @@
 				1F406EB510F534D90054957A /* MPWNamedIdentifier.m in Sources */,
 				1F406EBF10F5354C0054957A /* MPWRecursiveIdentifier.m in Sources */,
 				1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */,
-				1F03A1411218C7A2001EE7AD /* MPWSELScheme.m in Sources */,
 				1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
 				1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */,
 				1F88E8AC138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */,
@@ -2310,7 +2400,6 @@
 				1FE37BFC1969612700C9A378 /* MPWPlistScheme.m in Sources */,
 				1FE37B941969610600C9A378 /* MPWInstanceVariable.m in Sources */,
 				1FE37B791969610600C9A378 /* MPWBlockExpression.m in Sources */,
-				1FE37BE41969612600C9A378 /* MPWSELScheme.m in Sources */,
 				1FE37BDF1969612500C9A378 /* MPWRefScheme.m in Sources */,
 				1FE37B8C1969610600C9A378 /* MPWGenericBinding.m in Sources */,
 				1FE37BAE1969610700C9A378 /* MPWObjectMirror.m in Sources */,
@@ -2508,6 +2597,109 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1F43484E1E21676F002750C3 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = S3Scheme/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.S3Scheme;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Development;
+		};
+		1F43484F1E21676F002750C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = S3Scheme/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.S3Scheme;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -3508,6 +3700,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		1F4348501E21676F002750C3 /* Build configuration list for PBXNativeTarget "S3Scheme" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F43484E1E21676F002750C3 /* Development */,
+				1F43484F1E21676F002750C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;

@@ -65,9 +65,14 @@ idAccessor(currentDocument, setCurrentDocument)
     return self;
 }
 
+-(NSArray*)allDocs
+{
+    return [[NSDocumentController sharedDocumentController] documents];
+}
+
 -(id)docForName:(NSString*)lookupName
 {
-    for ( NSDocument *doc in [[NSDocumentController sharedDocumentController] documents]){
+    for ( NSDocument *doc in [self allDocs] ){
         NSString *docName=[doc displayName];
         if ( [docName isEqual:lookupName]) {
             return doc;
@@ -84,6 +89,8 @@ idAccessor(currentDocument, setCurrentDocument)
     NSLog(@"path: %@",path);
     if ( [path isEqualTo:@"."] || [path isEqualTo:@"./"]) {
         return [self currentDoc];
+    } else if ( [path isEqualTo:@"/"] || [path isEqualToString:@""]) {
+        return [[[self allDocs] collect] displayName];
     }
     NSArray *lookupPath=[[aBinding name] componentsSeparatedByString:@"/"];
     if ( [lookupPath count] > 1 ) {
@@ -100,6 +107,8 @@ idAccessor(currentDocument, setCurrentDocument)
     }
     return doc;
 }
+
+
 
 -(void)dealloc
 {

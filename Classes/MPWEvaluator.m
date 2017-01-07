@@ -18,7 +18,6 @@
 #import "MPWRefScheme.h"
 #import "MPWSchemeScheme.h"
 #import "MPWVarScheme.h"
-#import "MPWSELScheme.h"
 #import "MPWFrameworkScheme.h"
 
 @implementation NSNumber(controlStructures)
@@ -100,7 +99,6 @@ idAccessor( _schemes, setSchemes )
 	[schemes setSchemeHandler:varScheme forSchemeName:@"var"];
 	[schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];
 	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
-	[schemes setSchemeHandler:[[MPWSELScheme new] autorelease] forSchemeName:@"sel"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];
 	[schemes setSchemeHandler:[MPWFrameworkScheme scheme] forSchemeName:@"framework"];
