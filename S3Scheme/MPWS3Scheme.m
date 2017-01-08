@@ -8,8 +8,74 @@
 
 #import "MPWS3Scheme.h"
 #import <AWSS3/AWSS3.h>
+#import <MPWFoundation/NSThreadWaiting.h>
+#import <MPWFoundation/MPWFoundation.h>
+
+@interface MPWS3Scheme ()
+
+@property (nonatomic,strong) AWSS3 *s3;
+
+@end
+
+
 
 @implementation MPWS3Scheme
+
+-(NSTimeInterval)defaultTimeout
+{
+    return 5;
+}
+
+-(instancetype)init
+{
+    self=[super init];
+    self.s3=[AWSS3 defaultS3];
+    self.timeout=[self defaultTimeout];
+    return self;
+}
+
+-(void)waitForResult:(AWSTask*)task
+{
+    [NSThread sleepForTimeInterval:self.timeout orUntilConditionIsMet:^NSNumber *{
+        return @(task.isCompleted);
+    }];
+}
+
+-(NSArray<AWSS3Object *>*)listObjectsOfBucket:(NSString *)bucketName
+{
+    AWSS3ListObjectsRequest *listRequest = [AWSS3ListObjectsRequest new];
+    listRequest.bucket=bucketName;
+    AWSTask<AWSS3ListObjectsOutput *> *result;
+    result=[self.s3 listObjects:listRequest];
+    [self waitForResult:result];
+    return result.result.contents;
+}
+
+-(NSArray<AWSS3Bucket *> *)listBuckets
+{
+    AWSRequest *listRequest = [AWSRequest new];
+    AWSTask<AWSS3ListBucketsOutput *> *result;
+    result=[self.s3 listBuckets:listRequest];
+    [self waitForResult:result];
+    return result.result.buckets;
+}
+
+-contentForPath:(NSArray*)array
+{
+    if ( [array.firstObject length] == 0) {
+        array=[array subarrayWithRange:NSMakeRange(1, array.count-1)];
+    }
+    if ( array.count == 0 ) {
+        return [(AWSS3Bucket *)[[self listBuckets] collect] name];
+    } else if ( array.count == 1) {
+        return [(AWSS3Object *)[[self listObjectsOfBucket:array[0]] collect] key];
+    } else {
+        return  nil;
+    }
+}
+
+
+
 
 @end
 
@@ -30,47 +96,28 @@
     }
 }
 
-
++(void)testConfiguredWithLocalURL
+{
+    [self setupCredentials];
+    AWSEndpoint *endpoint = [[AWSServiceManager defaultServiceManager] defaultServiceConfiguration].endpoint;
+    IDEXPECT([endpoint.URL absoluteString], @"http://localhost:9000", @"local endpoint");
+}
 
 +(void)testLocalS3ListBuckets
 {
     [self setupCredentials];
-    AWSS3 *s3 = [AWSS3 defaultS3];
-
-    AWSEndpoint *endpoint = [[AWSServiceManager defaultServiceManager] defaultServiceConfiguration].endpoint;
-    
-    
-    IDEXPECT([endpoint.URL absoluteString], @"http://localhost:9000", @"local endpoint");
-    AWSRequest *listRequest = [AWSRequest new];
-    AWSTask<AWSS3ListBucketsOutput *> *result;
-    result=[s3 listBuckets:listRequest];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
-    EXPECTNIL([result error],@"ls error");
-//    IDEXPECT([result error],@"",@"ls error");
-    AWSS3ListBucketsOutput *payload=result.result;
-    NSArray<AWSS3Bucket *> *buckets=payload.buckets;
+    MPWS3Scheme *s=[self new];
+    NSArray<AWSS3Bucket *> *buckets=[s listBuckets];
     INTEXPECT(buckets.count,1,@"number of buckets");
     IDEXPECT(buckets[0].name,@"testbucket1",@"first bucket");
 }
 
+
 +(void)testLocalS3ListContentOfBucket
 {
     [self setupCredentials];
-    AWSS3 *s3 = [AWSS3 defaultS3];
-    
-    AWSEndpoint *endpoint = [[AWSServiceManager defaultServiceManager] defaultServiceConfiguration].endpoint;
-    
-    
-    IDEXPECT([endpoint.URL absoluteString], @"http://localhost:9000", @"local endpoint");
-    AWSS3ListObjectsRequest *listRequest = [AWSS3ListObjectsRequest new];
-    listRequest.bucket=@"testbucket1";
-    AWSTask<AWSS3ListObjectsOutput *> *result;
-    result=[s3 listObjects:listRequest];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
-    EXPECTNIL([result error],@"ls error");
-//    IDEXPECT([result error],@"",@"ls error");
-    AWSS3ListObjectsOutput *payload=result.result;
-    NSArray<AWSS3Object *> *content=payload.contents;
+    MPWS3Scheme *s=[self new];
+    NSArray<AWSS3Object *> *content=[s listObjectsOfBucket:@"testbucket1"];
     INTEXPECT(content.count,1,@"number of files");
     IDEXPECT(content[0].key,@"alias.py",@"first file in bucket");
 }
@@ -79,6 +126,7 @@
 +testSelectors
 {
     return @[
+             @"testConfiguredWithLocalURL",
              @"testLocalS3ListBuckets",
              @"testLocalS3ListContentOfBucket",
              ];

@@ -10,4 +10,6 @@
 
 @interface MPWS3Scheme : MPWGenericScheme
 
+@property NSTimeInterval timeout;
+
 @end
