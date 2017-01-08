@@ -80,8 +80,25 @@
 @end
 
 #import <MPWFoundation/DebugMacros.h>
+#import <ObjectiveSmalltalk/MPWStCompiler.h>
 
 @implementation MPWScheme(testing)
+
++_testScheme
+{
+    MPWS3Scheme *scheme=[self scheme];
+    return scheme;
+}
+
++_testInterpreter
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler bindValue:[self _testScheme] toVariableNamed:@"testscheme"];
+    [compiler evaluateScriptString:@"scheme:s3 := testscheme"];
+    return compiler;
+}
+
+
 
 +(void)setupCredentials
 {
@@ -106,7 +123,7 @@
 +(void)testLocalS3ListBuckets
 {
     [self setupCredentials];
-    MPWS3Scheme *s=[self new];
+    MPWS3Scheme *s=[self _testScheme];
     NSArray<AWSS3Bucket *> *buckets=[s listBuckets];
     INTEXPECT(buckets.count,1,@"number of buckets");
     IDEXPECT(buckets[0].name,@"testbucket1",@"first bucket");
@@ -116,10 +133,29 @@
 +(void)testLocalS3ListContentOfBucket
 {
     [self setupCredentials];
-    MPWS3Scheme *s=[self new];
+    MPWS3Scheme *s=[self _testScheme];
     NSArray<AWSS3Object *> *content=[s listObjectsOfBucket:@"testbucket1"];
     INTEXPECT(content.count,1,@"number of files");
     IDEXPECT(content[0].key,@"alias.py",@"first file in bucket");
+}
+
++(void)testListBucketsViaIdentifer
+{
+    [self setupCredentials];
+    MPWStCompiler *interpreter = [self _testInterpreter];
+    NSArray* content=[interpreter evaluateScriptString:@"s3:/"];
+    INTEXPECT(content.count,1,@"number of files");
+    IDEXPECT(content[0],@"testbucket1",@"first bucket");
+}
+
+
++(void)testListBucketContentsViaIdentifer
+{
+    [self setupCredentials];
+    MPWStCompiler *interpreter = [self _testInterpreter];
+    NSArray* content=[interpreter evaluateScriptString:@"s3:/testbucket1"];
+    INTEXPECT(content.count,1,@"number of files");
+    IDEXPECT(content[0],@"alias.py",@"first file in bucket");
 }
 
 
@@ -129,6 +165,8 @@
              @"testConfiguredWithLocalURL",
              @"testLocalS3ListBuckets",
              @"testLocalS3ListContentOfBucket",
+             @"testListBucketsViaIdentifer",
+             @"testListBucketContentsViaIdentifer",
              ];
 }
 
