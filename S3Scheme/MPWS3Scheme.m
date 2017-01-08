@@ -31,6 +31,7 @@
     self=[super init];
     self.s3=[AWSS3 defaultS3];
     self.timeout=[self defaultTimeout];
+    [[AWSLogger defaultLogger] setLogLevel:0];
     return self;
 }
 
@@ -69,6 +70,47 @@
     result=[self.s3 getObject:objectRequest];
     [self waitForResult:result];
     return result.result;
+}
+
+-(void)putObject:(NSData*)data forKey:(NSString*)objectName inBucket:(NSString *)bucketName
+{
+    AWSS3PutObjectRequest *objectRequest = [AWSS3PutObjectRequest new];
+    objectRequest.bucket=bucketName;
+    objectRequest.key=objectName;
+    objectRequest.body=[data asData];
+    objectRequest.contentType=@"text/plain";
+    AWSTask<AWSS3PutObjectOutput *> *result;
+    result=[self.s3 putObject:objectRequest];
+    [self waitForResult:result];
+    if ( result.error) {
+        NSLog(@"PUT error: %@",result.error);
+    }
+}
+
+-(void)deleteObject:(NSString*)objectName inBucket:(NSString *)bucketName
+{
+    AWSS3DeleteObjectRequest *objectRequest = [AWSS3DeleteObjectRequest new];
+    objectRequest.bucket=bucketName;
+    objectRequest.key=objectName;
+    AWSTask<AWSS3DeleteObjectOutput *> *result;
+    result=[self.s3 deleteObject:objectRequest];
+    [self waitForResult:result];
+}
+
+
+-(void)setValue:newValue forBinding:aBinding
+{
+    NSArray *pathArray=[self pathArrayForPathString:[aBinding path]];
+    if ( [pathArray.firstObject length] == 0) {
+        pathArray=[pathArray subarrayWithRange:NSMakeRange(1, pathArray.count-1)];
+    }
+    if ( pathArray.count == 2) {
+        if ( newValue ) {
+            [self putObject:newValue forKey:pathArray[1] inBucket:pathArray[0]];
+        } else {
+            [self deleteObject:pathArray[1] inBucket:pathArray[0]];
+        }
+    }
 }
 
 
