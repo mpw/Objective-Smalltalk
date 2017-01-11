@@ -49,6 +49,11 @@
     return [binding children];
 }
 
+-(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
+{
+    return [binding children];
+}
+
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
     NSArray *childNames = [[self bindingForName:@"." inContext:aContext] childNames];

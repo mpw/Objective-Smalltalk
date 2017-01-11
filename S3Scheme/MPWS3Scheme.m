@@ -10,6 +10,7 @@
 #import <AWSS3/AWSS3.h>
 #import <MPWFoundation/NSThreadWaiting.h>
 #import <MPWFoundation/MPWFoundation.h>
+#import <ObjectiveSmalltalk/MPWGenericBinding.h>
 
 @interface MPWS3Scheme ()
 
@@ -85,6 +86,7 @@
     if ( result.error) {
         NSLog(@"PUT error: %@",result.error);
     }
+    
 }
 
 -(void)deleteObject:(NSString*)objectName inBucket:(NSString *)bucketName
@@ -116,19 +118,37 @@
 
 -contentForPath:(NSArray*)array
 {
-    if ( [array.firstObject length] == 0) {
+//    NSLog(@"content for path: %@",array);
+    if ( [array.firstObject length] == 0 || [array.firstObject isEqualToString:@"."]) {
         array=[array subarrayWithRange:NSMakeRange(1, array.count-1)];
     }
-    if ( array.count == 0 ) {
+    if ( array.count == 0) {
         return [(AWSS3Bucket *)[[self listBuckets] collect] name];
     } else if ( array.count == 1) {
-        return [(AWSS3Object *)[[self listObjectsOfBucket:array[0]] collect] key];
+        NSArray *names=(NSArray*)[(AWSS3Object *)[[self listObjectsOfBucket:array[0]] collect] key];
+        return names;
     } else if ( array.count == 2) {
         return [self getObject:array[1] inBucket:array[0]].body;
     } else {
         
         return  nil;
     }
+}
+
+-(NSArray*)childrenOf:(MPWGenericBinding*)aBinding
+{
+//    NSLog(@"childrenOf: %@",[aBinding name]);
+    NSArray *children=[self valueForBinding:aBinding];
+//    NSLog(@"children: %@",children);
+    NSMutableArray *childBindings=[NSMutableArray array];
+    for ( NSString *child in children ) {
+        if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {
+//            NSLog(@"create binding for: %@",child);
+            [childBindings addObject:[MPWGenericBinding bindingWithName:child scheme:self]];
+        }
+    }
+//    NSLog(@"bindings: %@",children);
+    return childBindings;
 }
 
 

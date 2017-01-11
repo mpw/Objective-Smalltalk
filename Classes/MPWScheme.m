@@ -103,14 +103,27 @@
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
-    NSArray *potentialChildren=[self childrenOf:[self bindingForName:@"." inContext:aContext] inContext:aContext];
+//    NSLog(@"completionsForPartialName: '%@' %@",partialName,[partialName class]);
+    NSArray *pathComponents=[partialName componentsSeparatedByString:@"/"];
+    NSString *prefix=[[pathComponents subarrayWithRange:NSMakeRange(0, pathComponents.count-1)] componentsJoinedByString:@"/"];
+    NSString *suffix=pathComponents.lastObject;
+    if ( prefix.length == 0 ) {
+        prefix=@".";
+    }
+//    NSLog(@"prefix: '%@' suffix: '%@'",prefix,suffix);
+    NSArray *potentialChildren=[self childrenOf:[self bindingForName:prefix inContext:aContext] inContext:aContext];
     NSMutableArray *names=[NSMutableArray array];
     for ( MPWBinding *binding in potentialChildren) {
         NSString *name = [binding name];
-        if ( !partialName || [partialName length]==0 || [name hasPrefix:partialName]) {
+//        NSLog(@"name: %@",name);
+        if ( !suffix || [suffix length]==0 || [name hasPrefix:suffix] ) {
+            if ( [suffix isEqualToString:name] ) {
+                name=@"/";
+            }
             [names addObject:name];
         }
     }
+//    NSLog(@"potential names: %@",names);
     return names;
 }
 

@@ -130,6 +130,7 @@
         NSArray *nakedNames=[[evaluator schemeForName:schemeName] completionsForPartialName:prefix inContext:evaluator];
         [completions addObjectsFromArray:nakedNames];
     }
+//    NSLog(@"completioms: %@",completions);
     return completions;
 }
 
