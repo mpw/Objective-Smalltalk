@@ -50,6 +50,9 @@
     AWSTask<AWSS3ListObjectsOutput *> *result;
     result=[self.s3 listObjects:listRequest];
     [self waitForResult:result];
+    if ( result.error) {
+        NSLog(@"listObjectsOfBucket error: %@",result.error);
+    }
     return result.result.contents;
 }
 
@@ -59,6 +62,9 @@
     AWSTask<AWSS3ListBucketsOutput *> *result;
     result=[self.s3 listBuckets:listRequest];
     [self waitForResult:result];
+    if ( result.error) {
+        NSLog(@"listBuckets error: %@",result.error);
+    }
     return result.result.buckets;
 }
 
@@ -70,6 +76,9 @@
     AWSTask<AWSS3GetObjectOutput *> *result;
     result=[self.s3 getObject:objectRequest];
     [self waitForResult:result];
+    if ( result.error) {
+        NSLog(@"GET error: %@",result.error);
+    }
     return result.result;
 }
 
@@ -106,11 +115,12 @@
     if ( [pathArray.firstObject length] == 0) {
         pathArray=[pathArray subarrayWithRange:NSMakeRange(1, pathArray.count-1)];
     }
-    if ( pathArray.count == 2) {
+    if ( pathArray.count >= 2) {
+        NSString *key=[[pathArray subarrayWithRange:NSMakeRange(1,pathArray.count-1)] componentsJoinedByString:@"/"];
         if ( newValue ) {
-            [self putObject:newValue forKey:pathArray[1] inBucket:pathArray[0]];
+            [self putObject:newValue forKey:key inBucket:pathArray[0]];
         } else {
-            [self deleteObject:pathArray[1] inBucket:pathArray[0]];
+            [self deleteObject:key inBucket:pathArray[0]];
         }
     }
 }
@@ -127,8 +137,9 @@
     } else if ( array.count == 1) {
         NSArray *names=(NSArray*)[(AWSS3Object *)[[self listObjectsOfBucket:array[0]] collect] key];
         return names;
-    } else if ( array.count == 2) {
-        return [self getObject:array[1] inBucket:array[0]].body;
+    } else if ( array.count >= 2) {
+        NSString *key=[[array subarrayWithRange:NSMakeRange(1,array.count-1)] componentsJoinedByString:@"/"];
+        return [self getObject:key inBucket:array[0]].body;
     } else {
         
         return  nil;
@@ -177,17 +188,22 @@
 
 
 
-+(void)setupCredentials
++(void)setupHost:(NSString *)hostURLString accessKey:(NSString *)accessKey secretKey:(NSString *)secretKey
 {
     if (![AWSServiceManager defaultServiceManager].defaultServiceConfiguration) {
-        AWSStaticCredentialsProvider *credentialsProvider = [[AWSStaticCredentialsProvider alloc] initWithAccessKey:@"9JMQ8HKK92R8W65WA16T"   secretKey:@"mvmW9N6hhiyo15OZf6boV3DRe+TDx0keAkqhJgAu"];
-        AWSEndpoint *endpoint=[[AWSEndpoint alloc] initWithURLString:@"http://localhost:9000"];
-        AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSEast1
+        AWSStaticCredentialsProvider *credentialsProvider = [[AWSStaticCredentialsProvider alloc] initWithAccessKey:accessKey   secretKey:secretKey];
+        AWSEndpoint *endpoint=[[AWSEndpoint alloc] initWithURLString:hostURLString];
+        AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionEUCentral1
                                                                                         endpoint:endpoint
                                                                              credentialsProvider:credentialsProvider];
         [AWSServiceManager defaultServiceManager].defaultServiceConfiguration = configuration;
         
     }
+}
+
++(void)setupCredentials
+{
+    [self setupHost:@"http://localhost:9000" accessKey:@"9JMQ8HKK92R8W65WA16T" secretKey:@"mvmW9N6hhiyo15OZf6boV3DRe+TDx0keAkqhJgAu"];
 }
 
 +(void)testConfiguredWithLocalURL
@@ -212,8 +228,9 @@
     [self setupCredentials];
     MPWS3Scheme *s=[self _testScheme];
     NSArray<AWSS3Object *> *content=[s listObjectsOfBucket:@"testbucket1"];
-    INTEXPECT(content.count,1,@"number of files");
+    INTEXPECT(content.count,2,@"number of files");
     IDEXPECT(content[0].key,@"alias.py",@"first file in bucket");
+    IDEXPECT(content[1].key,@"folder/hello.txt",@"file in subfolder");
 }
 
 +(void)testListBucketsViaIdentifer
@@ -231,17 +248,27 @@
     [self setupCredentials];
     MPWStCompiler *interpreter = [self _testInterpreter];
     NSArray* content=[interpreter evaluateScriptString:@"s3:/testbucket1"];
-    INTEXPECT(content.count,1,@"number of files");
+    INTEXPECT(content.count,2,@"number of files");
     IDEXPECT(content[0],@"alias.py",@"first file in bucket");
+    IDEXPECT(content[1],@"folder/hello.txt",@"file in folder");
 }
 
-+(void)testListBucketContentsViaIdentifer
++(void)testGetBucketContentsViaIdentifer
 {
     [self setupCredentials];
     MPWStCompiler *interpreter = [self _testInterpreter];
     NSData* aliaspy=[interpreter evaluateScriptString:@"s3:/testbucket1/alias.py"];
     INTEXPECT(aliaspy.length, 11138, @"length");
 }
+
++(void)testGetBucketFolderContentsViaIdentifer
+{
+    [self setupCredentials];
+    MPWStCompiler *interpreter = [self _testInterpreter];
+    NSData* aliaspy=[interpreter evaluateScriptString:@"s3:/testbucket1/folder/hello.txt"];
+    INTEXPECT(aliaspy.length, 12, @"length");
+}
+
 
 
 +testSelectors
@@ -252,7 +279,8 @@
              @"testLocalS3ListContentOfBucket",
              @"testListBucketsViaIdentifer",
              @"testListBucketContentListViaIdentifer",
-             @"testListBucketContentsViaIdentifer",
+             @"testGetBucketContentsViaIdentifer",
+             @"testGetBucketFolderContentsViaIdentifer",
              ];
 }
 
