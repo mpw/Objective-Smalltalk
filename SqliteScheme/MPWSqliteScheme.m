@@ -122,24 +122,62 @@
 
 @implementation MPWSqliteScheme(tests)
 
-+_testScheme
++_chinookPath
 {
-    NSString *chinookPath=[[NSBundle bundleForClass:self] pathForResource:@"chinook" ofType:@"db"];
-    MPWSqliteScheme *scheme=[self schemeWithPath:chinookPath];
-    return scheme;
+    return [[NSBundle bundleForClass:self] pathForResource:@"chinook" ofType:@"db"];
 }
+
 
 +_testInterpreter
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler bindValue:[self _testScheme] toVariableNamed:@"testscheme"];
+    [compiler bindValue:[self schemeWithPath:[self _chinookPath]] toVariableNamed:@"testscheme"];
     [compiler evaluateScriptString:@"scheme:chinook := testscheme"];
+    return compiler;
+}
+
+-(void)attachDB:(NSString*)path
+{
+    NSString *attach=[NSString stringWithFormat:@"attach '%@' as filedb;",path];
+    NSLog(@"attach: '%@'",attach);
+    [[self executeQuery:attach] next];
+}
+
+-(void)copyTable:(NSString *)dest fromOrigin:(NSString *)source
+{
+    NSString *copy=[NSString stringWithFormat:@"CREATE TABLE %@ AS SELECT * FROM filedb.%@;",dest,source];
+    NSLog(@"copy: '%@'",copy);
+    [[self executeQuery:copy] next];
+}
+
+-(void)detachdb
+{
+    [[self executeQuery:@"DETACH filedb;"] next];
+}
+
+
++_memoryTestInterpreter
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWSqliteScheme *scheme=[self schemeWithPath:nil];
+    [scheme attachDB:[self _chinookPath]];
+    [scheme copyTable:@"mcustomers" fromOrigin:@"Customers"];
+    [scheme detachdb];
+    [compiler bindValue:scheme toVariableNamed:@"testscheme"];
+    [compiler evaluateScriptString:@"scheme:memdb := testscheme."];
     return compiler;
 }
 
 +(NSArray *)_resultsForScript:(NSString *)script
 {
     MPWStCompiler *compiler=[self _testInterpreter];
+    NSArray *results =[compiler evaluateScriptString:script];
+    return results;
+}
+
++(NSArray *)_memDBResultsForScript:(NSString *)script
+{
+    MPWStCompiler *compiler=[self _memoryTestInterpreter];
     NSArray *results =[compiler evaluateScriptString:script];
     return results;
 }
@@ -183,6 +221,30 @@
 
 }
 
++(void)testBasicMemoryDBSchemeAccess
+{
+    NSArray *results =[self _memDBResultsForScript:@"memdb:mcustomers "];
+    INTEXPECT([results count], 59, @"number of results");
+    NSDictionary *d=results[0];
+    IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
+}
+
++(void)testBasicMemoryDBAccess
+{
+    MPWSqliteScheme *scheme=[self schemeWithPath:nil];
+    [scheme attachDB:[[self class] _chinookPath]];
+    [scheme copyTable:@"bar" fromOrigin:@"Customers"];
+    [scheme detachdb];
+    NSArray *results=[scheme dictionariesForQuery:@"select * from bar;"];
+    INTEXPECT([results count], 59, @"number of results");
+    NSDictionary *d=results[0];
+    IDEXPECT( d[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( d[@"FirstName"], @"Luís", @"first name");
+}
+
+
+
 +testSelectors
 {
     return @[
@@ -190,6 +252,8 @@
              @"testBasicSchemeAccess",
              @"testFullTableQuery",
              @"testGetSchema",
+             @"testBasicMemoryDBSchemeAccess",
+             @"testBasicMemoryDBAccess",
              ];
 }
 
