@@ -96,6 +96,30 @@
     }
 }
 
+-(void)setValue:newValue forBinding:aBinding
+{
+    NSArray *pathArray=[self pathArrayForPathString:[aBinding path]];
+    if ( [pathArray.firstObject length] == 0) {
+        pathArray=[pathArray subarrayWithRange:NSMakeRange(1, pathArray.count-1)];
+    }
+    if ( pathArray.count== 3) {
+        NSString *table=pathArray[0];
+        NSString *column=pathArray[1];
+        NSString *value=pathArray[2];
+        
+        NSDictionary *d=newValue;
+        NSMutableString *queryString=[NSMutableString stringWithFormat:@"update %@ set ",table];
+        BOOL first=YES;
+        for ( NSString *key in d.allKeys) {
+            [queryString appendFormat:@" %c %@ = :%@ ",!first ? ',':' ',key,key];
+            first=NO;
+        }
+        [queryString appendFormat:@" where %@ = %@",column,value];
+        BOOL success=[self.db executeUpdate:queryString withParameterDictionary:d];
+    }
+}
+
+
 
 -(NSArray*)childrenOf:(MPWGenericBinding*)aBinding
 {
@@ -139,14 +163,12 @@
 -(void)attachDB:(NSString*)path
 {
     NSString *attach=[NSString stringWithFormat:@"attach '%@' as filedb;",path];
-    NSLog(@"attach: '%@'",attach);
     [[self executeQuery:attach] next];
 }
 
 -(void)copyTable:(NSString *)dest fromOrigin:(NSString *)source
 {
     NSString *copy=[NSString stringWithFormat:@"CREATE TABLE %@ AS SELECT * FROM filedb.%@;",dest,source];
-    NSLog(@"copy: '%@'",copy);
     [[self executeQuery:copy] next];
 }
 
@@ -244,6 +266,26 @@
 }
 
 
++(void)testSimpleSingleRecordUpdate
+{
+    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+
+    [compiler evaluateScriptString:@"c1 := memdb:mcustomers/CustomerId/1 firstObject mutableCopy autorelease."];
+    NSDictionary *before=[compiler evaluateScriptString:@"c1"];
+     
+    IDEXPECT( before[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
+    [compiler evaluateScriptString:@"var:c1/FirstName := 'Jose'."];
+    [compiler evaluateScriptString:@"var:c1/CustomerId := nil."];
+    [compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1 := c1."];
+    NSDictionary *after=[[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1"] firstObject];
+    IDEXPECT( after[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( after[@"FirstName"], @"Jose", @"first name");
+    NSDictionary *after2=[[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/2"] firstObject];
+    IDEXPECT( after2[@"CustomerId"], @(2), @"customer id");
+    IDEXPECT( after2[@"FirstName"], @"Leonie", @"make sure we don't affect other records");
+}
+
 
 +testSelectors
 {
@@ -254,6 +296,7 @@
              @"testGetSchema",
              @"testBasicMemoryDBSchemeAccess",
              @"testBasicMemoryDBAccess",
+             @"testSimpleSingleRecordUpdate",
              ];
 }
 
