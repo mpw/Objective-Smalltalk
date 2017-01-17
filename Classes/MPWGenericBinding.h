@@ -18,6 +18,6 @@
 -(NSString*)name;
 -(BOOL)hasChildren;
 -path;
-
+-(void)delete;
 
 @end

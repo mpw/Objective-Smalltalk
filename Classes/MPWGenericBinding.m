@@ -69,6 +69,12 @@ objectAccessor( NSString, name, setName )
     return [GENERICSCHEME childrenOf:self];
 }
 
+-(void)delete
+{
+    [GENERICSCHEME delete:self];
+}
+
+
 -(NSArray*)childNames
 {
     return (NSArray*)[[[[[self children] collect] path] collect] lastPathComponent];

@@ -108,18 +108,27 @@
         NSString *value=pathArray[2];
         
         NSDictionary *d=newValue;
-        NSMutableString *queryString=[NSMutableString stringWithFormat:@"update %@ set ",table];
-        BOOL first=YES;
-        for ( NSString *key in d.allKeys) {
-            [queryString appendFormat:@" %c %@ = :%@ ",!first ? ',':' ',key,key];
-            first=NO;
+        NSMutableString *queryString;
+        if ( d ) {
+            queryString=[NSMutableString stringWithFormat:@"update %@ set ",table];
+            BOOL first=YES;
+            for ( NSString *key in d.allKeys) {
+                [queryString appendFormat:@" %c %@ = :%@ ",!first ? ',':' ',key,key];
+                first=NO;
+            }
+        } else {
+            queryString=[NSMutableString stringWithFormat:@"delete from %@ ",table];
         }
         [queryString appendFormat:@" where %@ = %@",column,value];
-        BOOL success=[self.db executeUpdate:queryString withParameterDictionary:d];
+        NSLog(@"update query string: %@",queryString);
+        [self.db executeUpdate:queryString withParameterDictionary:d];
     }
 }
 
-
+-(void)delete:(MPWGenericBinding *)aBinding
+{
+    [self setValue:nil forBinding:aBinding];
+}
 
 -(NSArray*)childrenOf:(MPWGenericBinding*)aBinding
 {
@@ -177,15 +186,19 @@
     [[self executeQuery:@"DETACH filedb;"] next];
 }
 
-
-+_memoryTestInterpreter
++memoryTestScheme
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
     MPWSqliteScheme *scheme=[self schemeWithPath:nil];
     [scheme attachDB:[self _chinookPath]];
     [scheme copyTable:@"mcustomers" fromOrigin:@"Customers"];
     [scheme detachdb];
-    [compiler bindValue:scheme toVariableNamed:@"testscheme"];
+    return scheme;
+}
+
++_memoryTestInterpreter
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler bindValue:[self memoryTestScheme] toVariableNamed:@"testscheme"];
     [compiler evaluateScriptString:@"scheme:memdb := testscheme."];
     return compiler;
 }
@@ -269,10 +282,10 @@
 +(void)testSimpleSingleRecordUpdate
 {
     MPWStCompiler *compiler=[self _memoryTestInterpreter];
-
+    
     [compiler evaluateScriptString:@"c1 := memdb:mcustomers/CustomerId/1 firstObject mutableCopy autorelease."];
     NSDictionary *before=[compiler evaluateScriptString:@"c1"];
-     
+    
     IDEXPECT( before[@"CustomerId"], @(1), @"customer id");
     IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
     [compiler evaluateScriptString:@"var:c1/FirstName := 'Jose'."];
@@ -286,6 +299,27 @@
     IDEXPECT( after2[@"FirstName"], @"Leonie", @"make sure we don't affect other records");
 }
 
++(void)testSimpleDeleteRecord
+{
+    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    
+    NSDictionary *before=[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1 firstObject."];
+    IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
+    [compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1 := nil."];
+    NSDictionary *after=[[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1"] firstObject];
+    EXPECTNIL(after,@"should be gone");
+}
+
++(void)testDeleteViaRef
+{
+    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    NSDictionary *before=[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1 firstObject."];
+    IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
+    [compiler evaluateScriptString:@"ref:memdb:mcustomers/CustomerId/1 delete."];
+    NSDictionary *after=[[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1"] firstObject];
+    EXPECTNIL(after,@"should be gone");
+}
+
 
 +testSelectors
 {
@@ -297,6 +331,8 @@
              @"testBasicMemoryDBSchemeAccess",
              @"testBasicMemoryDBAccess",
              @"testSimpleSingleRecordUpdate",
+             @"testSimpleDeleteRecord",
+             @"testDeleteViaRef",
              ];
 }
 
