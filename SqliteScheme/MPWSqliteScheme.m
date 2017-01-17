@@ -86,7 +86,7 @@
         NSString *table=array[0];
         NSString *column=array[1];
         NSString *value=array[2];
-        return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ where %@=%@",table,column,value]];
+        return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ where %@='%@'",table,column,value]];
     } else if ( [array count]==1 && ![array[0] isEqualToString:@"."]) {
         return [self dictionariesForQuery:[NSString stringWithFormat:@"select * from %@ ",array[0]]];
     } else if ( [array count]==0 || ([array count]==1 && [array[0] isEqualToString:@"."])) {
@@ -101,6 +101,23 @@
     NSArray *pathArray=[self pathArrayForPathString:[aBinding path]];
     if ( [pathArray.firstObject length] == 0) {
         pathArray=[pathArray subarrayWithRange:NSMakeRange(1, pathArray.count-1)];
+    }
+    if ( pathArray.count== 1 ) {
+        NSString *table=pathArray[0];
+        NSMutableString *queryString=[NSMutableString stringWithFormat:@"insert into %@ ",table];
+        NSDictionary *d=newValue;
+        NSMutableString *sqlKeys=[NSMutableString string];
+        NSMutableString *sqlValues=[NSMutableString string];
+        NSString *separator=@" ";
+        for ( NSString *key in d.allKeys) {
+            [sqlKeys appendFormat:@"%@ %@",separator,key];
+            [sqlValues appendFormat:@"%@ \"%@\"",separator,d[key]];
+            
+            separator=@", ";
+        }
+        [queryString appendFormat:@"( %@ ) VALUES ( %@ )",sqlKeys,sqlValues];
+       [self.db executeUpdate:queryString withParameterDictionary:d];
+        
     }
     if ( pathArray.count== 3) {
         NSString *table=pathArray[0];
@@ -119,11 +136,12 @@
         } else {
             queryString=[NSMutableString stringWithFormat:@"delete from %@ ",table];
         }
-        [queryString appendFormat:@" where %@ = %@",column,value];
+        [queryString appendFormat:@" where %@ = '%@'",column,value];
         NSLog(@"update query string: %@",queryString);
         [self.db executeUpdate:queryString withParameterDictionary:d];
     }
 }
+
 
 -(void)delete:(MPWGenericBinding *)aBinding
 {
@@ -320,6 +338,24 @@
     EXPECTNIL(after,@"should be gone");
 }
 
++(void)testInsert
+{
+    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    
+    [compiler evaluateScriptString:@"c1 := memdb:mcustomers/CustomerId/1 firstObject mutableCopy autorelease."];
+    NSDictionary *before=[compiler evaluateScriptString:@"c1"];
+    INTEXPECT( [[compiler evaluateScriptString:@"memdb:mcustomers count."] intValue],59,@"number of records");
+    IDEXPECT( before[@"CustomerId"], @(1), @"customer id");
+    IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
+    EXPECTNIL( [[compiler evaluateScriptString:@"memdb:mcustomers/LastName/Ambrosio ."] firstObject], @"name to be inserter");;
+    [compiler evaluateScriptString:@"var:c1/FirstName := 'Jose'."];
+    [compiler evaluateScriptString:@"var:c1/LastName := 'Ambrosio'."];
+    [compiler evaluateScriptString:@"var:c1/CustomerId := nil."];
+    [compiler evaluateScriptString:@"memdb:mcustomers := c1."];             // should be +=
+    INTEXPECT( [[compiler evaluateScriptString:@"memdb:mcustomers count."] intValue],60,@"number of records after insert");
+//    EXPECTNOTNIL( [[compiler evaluateScriptString:@"memdb:mcustomers/LastName/Ambrosio ."] firstObject], @"name to be inserted");;
+}
+
 
 +testSelectors
 {
@@ -332,7 +368,7 @@
              @"testBasicMemoryDBAccess",
              @"testSimpleSingleRecordUpdate",
              @"testSimpleDeleteRecord",
-             @"testDeleteViaRef",
+             @"testInsert",
              ];
 }
 
