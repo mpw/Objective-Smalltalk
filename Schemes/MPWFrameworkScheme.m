@@ -30,4 +30,19 @@
     return result;
 }
 
+-(NSString *)frameworksIn:(NSString *)basePath
+{
+    return [[[[[NSFileManager defaultManager] contentsOfDirectoryAtPath:basePath error:nil] pathsMatchingExtensions:@[ @"framework"]] collect] stringByDeletingPathExtension];
+}
+
+-(NSString *)allFrameworks
+{
+    return [self frameworksIn:[self basePaths][0]];
+}
+
+-(NSArray *)childrenOf:(MPWGenericBinding *)binding
+{
+    return [[self collect] bindingForName:[[self allFrameworks] each] inContext:self];
+}
+
 @end
