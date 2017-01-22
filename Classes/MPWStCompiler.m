@@ -25,6 +25,7 @@
 #import "MPWLiteralExpression.h"
 #import "MPWCascadeExpression.h"
 #import "MPWDataflowConstraintExpression.h"
+#import "MPWLiteralArrayExpression.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -224,40 +225,81 @@ idAccessor(solver, setSolver)
 
 #define PARSEERROR( msg, theToken )  [self parseError:msg token:theToken selector:_cmd]
 
+-(void)untangleConcatsForArrayLiteral:(MPWMessageExpression *)e into:(NSMutableArray *)result
+{
+    if ( [e isKindOfClass:[MPWMessageExpression class]] && [[e messageName] isEqualToString:@"concat:"]) {
+        [self untangleConcatsForArrayLiteral:[e receiver] into:result];
+        [self untangleConcatsForArrayLiteral:[[e args] firstObject] into:result];
+    } else {
+        [result addObject:e];
+    }
+    
+}
+
+
 -parseLiteralArray
 {
+//    NSLog(@"parseLiteralArray");
     NSMutableArray *array=[NSMutableArray array];
-    id object;
+    id token=nil;
     do {
-        object=[self nextToken];
-//        NSLog(@"got object: %@",object);
-        if ( object && !([object isToken] && [object isEqual:@")"]) ) {
-            if ( [object isEqual:@"#"]) {
+        token=[self nextToken];
+//        NSLog(@"parseLiteralArray, token=%@",token);
+        if ( token && !([token isToken] && [token isEqual:@")"]) ) {
+//           NSLog(@"inside if token etc.");
+            id object=nil;
+            if ( [token isEqual:@"#"]) {
                 object=[self parseLiteral];
+            } else {
+//                NSLog(@"not another literal array, push back and parse expression" );
+                [self pushBack:token];
+                object=[self parseExpression];
+                
+//                object=[self untangleConcatsForArrayLiteral:object];
+                
+//                NSLog(@"result of parseExpression: '%@'",object );
             }
-            [array addObject:[(MPWExpression*)object evaluate]];
+//            NSLog(@"will add parsed object: '%@'",object );
+            [self untangleConcatsForArrayLiteral:object into:array];
+//            NSLog(@"did add parsed object: '%@'",array );
+            token=[self nextToken];
+//            NSLog(@"get token separator: '%@'",token );
+            if ( [token isEqualToString:@","] ) {
+//                NSLog(@"comma, continue with loop");
+                continue;
+            } else if ( [token isEqualToString:@")"] ) {
+//                NSLog(@"closing bracket, exit loop");
+                break;
+            } else {
+                PARSEERROR(@"array syntax expr not follwed by , or )", @"");
+            }
         } else {
             break;
         }
     } while ( YES );
-    if ( [object isEqual:@")"] ) {
+    if ( [token isEqual:@")"] ) {
 //        NSLog(@"OK Array found: %@",array);
-        return array;
+        MPWLiteralArrayExpression *e=[[MPWLiteralArrayExpression new] autorelease];
+        e.objects=array;
+        return e;
     } else {
-        PARSEERROR(@"array syntax", object);
+        PARSEERROR(@"array syntax", token);
         return nil;
     }
+    LEAVE1;
 }
 
 -parseLiteral
 {
     id object = [self nextToken];
+    MPWLiteralExpression *e=nil;
     if ( [object isEqual:@"("] ) {
-        object = [self parseLiteralArray];
+        e = [self parseLiteralArray];
+    } else {
+        e=[[MPWLiteralExpression new] autorelease];
+        [e setTheLiteral:object];
     }
     
-    MPWLiteralExpression *e=[[MPWLiteralExpression new] autorelease];
-    [e setTheLiteral:object];
     return e;
 }
 
@@ -731,7 +773,9 @@ idAccessor(solver, setSolver)
 
 -parseExpression
 {
+//    NSLog(@"parseExpression");
 	id first=[self nextToken];
+//    NSLog(@"first: %@",first);
 	id second;
 	if ( [first isToken] && ![first isEqual:@"-"]  ) {
 		first = [self objectifyScanned:first];
@@ -747,14 +791,14 @@ idAccessor(solver, setSolver)
 		first = [self objectifyScanned:first];
 	}
 //	NSLog(@"in parseExpression, about to objectifyScanned:");
-//	first = [self objectifyScanned:first];
+	first = [self objectifyScanned:first];
 	second=[self nextToken];
     if ( [second isLiteral] && [first isEqual:@"-"]  && [second isKindOfClass:[NSNumber class]] ) {
         first = [first negated];
         second = [self nextToken];
     }
     if (second)  {		//	potential message expression
-//		NSLog(@"got first %@ second %@",first,second);
+//		NSLog(@"potential message expression got first %@ second %@",first,second);
 //		first = [self objectifyScanned:first];
         [self pushBack:second];
         if ( ![second isEqual:@"."] && ![second isEqual:@"("] && ![second isEqual:@"["] ) {
@@ -765,6 +809,7 @@ idAccessor(solver, setSolver)
             }
         }
     }
+//    NSLog(@"return from parseExpression: %@",first);
     return first;
 }
 
@@ -773,7 +818,7 @@ idAccessor(solver, setSolver)
     id next=[self nextToken];
 
     if ( [next isEqual:@"|"]) {
-        NSLog(@"parseStatement encounted pipe '|'");
+//        NSLog(@"parseStatement encounted pipe '|'");
         next=[self nextToken];
         while ( next && ![next isEqual:@"|"]) {
             next=[self nextToken];

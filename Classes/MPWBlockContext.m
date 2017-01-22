@@ -254,12 +254,12 @@ typedef id (^ZeroArgBlock)(void);
 
 +(void)testObjcBlocksWithNoArgsAreMapped
 {
-    IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1 2 3 4 ) enumerateObjectsUsingBlock:[ a := a+1. ]. a."], [NSNumber numberWithInt:4], @"just counted the elements in an array using block enumeration");
+    IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1, 2, 3, 4 ) enumerateObjectsUsingBlock:[ a := a+1. ]. a."], [NSNumber numberWithInt:4], @"just counted the elements in an array using block enumeration");
 }
 
 +(void)testObjcBlocksWithObjectArgsAreMapped
 {
-    IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1 2 3 4 ) enumerateObjectsUsingBlock:[ :obj |  a := a+obj. ]. a."], [NSNumber numberWithInt:10], @"added the elements in an array using block enumeration");
+    IDEXPECT([MPWStCompiler evaluate:@"a:=0. #( 1, 2, 3, 4 ) enumerateObjectsUsingBlock:[ :obj |  a := a+obj. ]. a."], [NSNumber numberWithInt:10], @"added the elements in an array using block enumeration");
 }
 
 

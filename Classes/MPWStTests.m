@@ -38,6 +38,21 @@
 
 @implementation MPWStTests
 
+#define TESTEXPR( expr, expected )\
+{\
+    id result=nil;\
+    id expectedString;\
+    @try { \
+        result = (MPWExpression*)[self evaluate:expr];\
+        result = [result stringValue];\
+        expectedString=[expected stringValue];\
+    } @catch (NSException *e) {\
+        NSAssert3( 0, @"evaluating '%@' and expecting '%@' raised %p",expr,expectedString,e);\
+    }\
+    NSAssert3( result==expectedString || [result isEqual:expectedString], @"%@ doesn't evaluate to '%@' but to actual '%@'",expr,expected,result);\
+}\
+
+
 +(void)testexpr:expr expected:expected
 {
 	id result=nil;
@@ -56,7 +71,8 @@
 
 +(void)testThreePlusFour
 {
-    [self testexpr:@"3+4" expected:@"7"];
+    TESTEXPR(@"3+4",@"7");
+//    [self testexpr:@"3+4" expected:@"7"];
 }
 
 +(void)testSevenMinus4
@@ -96,17 +112,17 @@
 
 +(void)arrayLiteral
 {
-    [self testexpr:@"#(1 2 3)" expected:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",nil]];
+    TESTEXPR(@"#(1, 2, 3)" , (@[@(1),@(2),@(3)]));
 }
 
 +(void)collectArrayLiteral
 {
-    [self testexpr:@"#(1 2 3) collect + 3" expected:[NSMutableArray arrayWithObjects:@"4",@"5",@"6",nil]];
+    TESTEXPR(@"#(1, 2, 3) collect + 3" ,([NSMutableArray arrayWithObjects:@"4",@"5",@"6",nil]));
 }
 
 +(void)collectTwoArrayLiterals
 {
-    [self testexpr:@"#(1 2 3) collect + #(1 2 3) each" expected:[NSMutableArray arrayWithObjects:@"2",@"4",@"6",nil]];
+    [self testexpr:@"#(1, 2, 3) collect + #(1, 2, 3) each" expected:[NSMutableArray arrayWithObjects:@"2",@"4",@"6",nil]];
 }
 
 +(void)testLocalVariables
@@ -293,12 +309,12 @@
 }
 +(void)testSelectHOM
 {
-    [self testexpr:@" #( 'Help' 'Hello World' 'Hello Marcel') select hasPrefix:'Hello' " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
+    [self testexpr:@" #( 'Help', 'Hello World', 'Hello Marcel') select hasPrefix:'Hello' " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
 }
 
 +(void)testNSRangeViaSubarray
 {
-    [self testexpr:@" #( 'Help' 'Hello World' 'Hello Marcel') subarrayWithRange:( 1 to: 2) " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
+    [self testexpr:@" #( 'Help' , 'Hello World', 'Hello Marcel') subarrayWithRange:( 1 to: 2) " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
 }
 
 +(void)testNSPointViaString
@@ -619,7 +635,7 @@
 }
 +(void)testArrayBlockCollect
 {
-	[self testexpr:@"( #( 1 2 7 ) collect:[ :i | i*2]) lastObject" expected:@"14"];
+	TESTEXPR(@"( #( 1, 2, 7 ) collect:[ :i | i*2]) lastObject" ,@"14");
 }
 
 +(void)testNegativeDecimalFractions
@@ -684,7 +700,7 @@
 
 +(void)testVarSchemeWithKeyValuePath
 {
-	[self testexpr:@" objs:= #( obj1 obj2 ). keys := #( key1 key2). dict := NSDictionary dictionaryWithObjects: objs forKeys:keys.  var:dict/key1" expected:@"obj1"];
+	[self testexpr:@" objs:= #( 'obj1', 'obj2' ). keys := #( 'key1' , 'key2' ). dict := NSDictionary dictionaryWithObjects: objs forKeys:keys.  var:dict/key1" expected:@"obj1"];
 }
 
 +(void)testRefSchemeAccessesBinding
@@ -759,7 +775,7 @@
 
 +(void)testNestedLiteralArrays
 {
-    id result = [self evaluate: @"#( 1 2 #( 2 3 ) )"];
+    id result = [self evaluate: @"#( 1, 2, #( 2, 3 ) )"];
     INTEXPECT([result count], 3, @"top level elements");
 }
 
@@ -880,7 +896,8 @@
 		@"nestedArgStringConcat",
         @"nestedReceiverStringConcat",@"simpleLiteral",
         @"stackedMappedConcat",@"mixedStackedMappedConcat",
-        @"arrayLiteral",@"collectArrayLiteral",@"collectTwoArrayLiterals",
+        @"arrayLiteral",
+        @"collectArrayLiteral",@"collectTwoArrayLiterals",
 		@"testAssignment",
 		@"testFloatArithmetic",
 		@"testAsFloat",
@@ -949,7 +966,6 @@
 			@"testBinarySelectorPriorityOverKeyword",
 			@"testRelScheme",
 			@"testIdentifierInterpolation",
-//			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
             @"testNestedLiteralArrays",
             @"testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd",
@@ -970,5 +986,7 @@
             @"testParseMethodSyntax",
         nil];
 }
+
+//			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 
 @end
