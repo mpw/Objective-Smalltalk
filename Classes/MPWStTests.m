@@ -47,7 +47,7 @@
         result = [result stringValue];\
         expectedString=[expected stringValue];\
     } @catch (NSException *e) {\
-        NSAssert3( 0, @"evaluating '%@' and expecting '%@' raised %p",expr,expectedString,e);\
+        NSAssert3( 0, @"evaluating '%@' and expecting '%@' raised %@",expr,expectedString,e);\
     }\
     NSAssert3( result==expectedString || [result isEqual:expectedString], @"%@ doesn't evaluate to '%@' but to actual '%@'",expr,expected,result);\
 }\
@@ -113,6 +113,16 @@
 +(void)arrayLiteral
 {
     TESTEXPR(@"#(1, 2, 3)" , (@[@(1),@(2),@(3)]));
+}
+
++(void)testSimpleLiteralDict
+{
+    TESTEXPR(@"#{ 'key': 'value' }" , (@{ @"key": @"value"}) );
+}
+
++(void)testTwoElementLiteralDict
+{
+    TESTEXPR(@"#{ 'key': 'value', 'hello': 'world' }" , (@{ @"key": @"value", @"hello": @"world"}));
 }
 
 +(void)collectArrayLiteral
@@ -984,6 +994,8 @@
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
             @"testParseMethodSyntax",
+            @"testSimpleLiteralDict",
+            @"testTwoElementLiteralDict",
         nil];
 }
 
