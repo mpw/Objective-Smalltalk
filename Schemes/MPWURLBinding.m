@@ -8,6 +8,7 @@
 
 #import "MPWURLBinding.h"
 #import "MPWResource.h"
+#import <MPWFoundation/MPWSocketStream.h>
 
 @interface SayYES : NSObject
 {
@@ -238,6 +239,11 @@ objectAccessor(NSError, error, setError)
     if (newValue) {
         [self put:newValue];
     }
+}
+
+-stream
+{
+    return [[[MPWSocketStream alloc] initWithURL:[self url]] autorelease];
 }
 
 @end

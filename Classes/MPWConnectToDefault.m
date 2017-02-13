@@ -9,6 +9,8 @@
 #import "MPWConnectToDefault.h"
 #import "MPWMessagePortDescriptor.h"
 #import "MPWFilterScheme.h"
+#import <MPWFoundation/MPWStreamSource.h>
+#import "MPWFileBinding.h"
 
 // FIXME:   need some tests for this!
 //          (just had a hard-to-find bug where I was getting the IN/OUT
@@ -110,6 +112,18 @@ idAccessor( lhs, setLhs )
 
 @end
 
+
+@implementation MPWStreamSource(connecting)
+
+-defaultOutputPort
+{
+    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+}
+
+
+@end
+
+
 @implementation MPWScheme(connecting)
 
 -defaultOutputPort
@@ -125,5 +139,20 @@ idAccessor( lhs, setLhs )
 {
     return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:@protocol(Scheme) sends:YES] autorelease];
 }
+
+@end
+
+@implementation MPWFileBinding(connecting)
+
+-defaultOutputPort
+{
+    return [[self source] defaultOutputPort];
+}
+
+//-defaultInputPort
+//{
+//    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"sink" protocol:@protocol(Streaming) sends:NO] autorelease];
+//}
+//
 
 @end

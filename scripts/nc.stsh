@@ -1,0 +1,10 @@
+#!/usr/local/bin/stsh
+#-<void>nc:<ref>remote
+s := remote stream 
+stdout println:s url.
+s setTarget:MPWByteStream Stdout.
+in := MPWFDStreamSource fd:0.
+in setTarget:(MPWByteStream streamWithTarget:s).
+s open.
+s async run.
+in run.

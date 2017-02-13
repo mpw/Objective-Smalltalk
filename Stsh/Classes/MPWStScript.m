@@ -65,6 +65,16 @@ objectAccessor( NSString, filename, setFilename )
 	return [self methodHeader]!= nil && ![[methodHeader returnTypeName] isEqual:@"void"];
 }
 
+-bindingForString:(NSString*)arg withContext:executionContext
+{
+    NSString *strarg=arg;
+    if ( [strarg rangeOfString:@":"].length<= 0 ) {
+        strarg=[@"file:" stringByAppendingString:strarg];
+    }
+    MPWBinding *binding=[[executionContext evaluator] bindingForString:strarg];
+    return binding;
+}
+
 -(void)processArgsFromExecutionContext:executionContext
 {
 	id args=[[[[executionContext evaluator] valueOfVariableNamed:@"args"] mutableCopy] autorelease];
@@ -84,17 +94,15 @@ objectAccessor( NSString, filename, setFilename )
 				if ( [argType isEqual:@"int"] ) {
 					arg=[NSNumber numberWithInt:[arg intValue]];
 				} else if ([argType isEqual:@"ref"] ) {
-                    NSString *strarg=arg;
-                    if ( [strarg rangeOfString:@":"].length<= 0 ) {
-                        strarg=[@"file:" stringByAppendingString:strarg];
-                    }
-                    arg=[[executionContext evaluator] bindingForString:strarg];
+                    arg=[self bindingForString:arg withContext:executionContext];
                 }
 				[[executionContext evaluator] bindValue:arg toVariableNamed:argName];
 				[args removeObjectAtIndex:0];
 			}
 		}
-		[[executionContext evaluator] bindValue:[[args copy] autorelease] toVariableNamed:@"args"];
+        [[executionContext evaluator] bindValue:[[args copy] autorelease] toVariableNamed:@"args"];
+        NSArray *refs=[[self collect] bindingForString:[args each] withContext:executionContext];
+        [[executionContext evaluator] bindValue:refs toVariableNamed:@"refs"];
     } else {
         long missingCount=[methodHeader numArguments] - [args count];
         NSMutableString *missingMsg;

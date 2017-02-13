@@ -2523,7 +2523,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1F084A1B16DCE6A200ED2517 /* Development */ = {
+		1F084A1B16DCE6A200ED2517 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1F81D90816DEBA7E00408D41 /* llvm.xcconfig */;
 			buildSettings = {
@@ -2576,7 +2576,7 @@
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F084A1C16DCE6A200ED2517 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2626,7 +2626,7 @@
 			};
 			name = Release;
 		};
-		1F43484E1E21676F002750C3 /* Development */ = {
+		1F43484E1E21676F002750C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2687,7 +2687,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F43484F1E21676F002750C3 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2729,7 +2729,7 @@
 			};
 			name = Release;
 		};
-		1F5E508B09B4B754000298D9 /* Development */ = {
+		1F5E508B09B4B754000298D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2767,7 +2767,7 @@
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = YES;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F5E508C09B4B754000298D9 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2807,7 +2807,7 @@
 			};
 			name = Release;
 		};
-		1F68102E1E117A78006CE0D1 /* Development */ = {
+		1F68102E1E117A78006CE0D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2868,7 +2868,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F68102F1E117A78006CE0D1 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2910,7 +2910,7 @@
 			};
 			name = Release;
 		};
-		1F7B75C514629431002F38D1 /* Development */ = {
+		1F7B75C514629431002F38D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2945,7 +2945,7 @@
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F7B75C614629431002F38D1 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2977,7 +2977,7 @@
 			};
 			name = Release;
 		};
-		1F7E05AC144B3E22008F349D /* Development */ = {
+		1F7E05AC144B3E22008F349D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3018,7 +3018,7 @@
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F7E05AD144B3E22008F349D /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3057,7 +3057,7 @@
 			};
 			name = Release;
 		};
-		1F81C07A19699AE10066DF43 /* Development */ = {
+		1F81C07A19699AE10066DF43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3117,7 +3117,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Development;
+			name = Debug;
 		};
 		1F81C07B19699AE10066DF43 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3175,7 +3175,7 @@
 			};
 			name = Release;
 		};
-		1FA354020854F75C0056996B /* Development */ = {
+		1FA354020854F75C0056996B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -3202,7 +3202,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1FA354030854F75C0056996B /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3231,7 +3231,7 @@
 			};
 			name = Release;
 		};
-		1FA85A111923731900F52396 /* Development */ = {
+		1FA85A111923731900F52396 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3283,7 +3283,7 @@
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1FA85A121923731900F52396 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3332,7 +3332,7 @@
 			};
 			name = Release;
 		};
-		1FAFD98B1855BC5500EC5221 /* Development */ = {
+		1FAFD98B1855BC5500EC5221 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3378,7 +3378,7 @@
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1FAFD98C1855BC5500EC5221 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3423,7 +3423,7 @@
 			};
 			name = Release;
 		};
-		1FBAAC20184BDC6400086047 /* Development */ = {
+		1FBAAC20184BDC6400086047 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3462,7 +3462,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1FBAAC21184BDC6400086047 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3498,7 +3498,7 @@
 			};
 			name = Release;
 		};
-		1FC8F853181BF3A3003980D8 /* Development */ = {
+		1FC8F853181BF3A3003980D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3548,7 +3548,7 @@
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1FC8F854181BF3A3003980D8 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3595,7 +3595,7 @@
 			};
 			name = Release;
 		};
-		1FE37B6019695FA600C9A378 /* Development */ = {
+		1FE37B6019695FA600C9A378 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3656,7 +3656,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Development;
+			name = Debug;
 		};
 		1FE37B6119695FA600C9A378 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3721,7 +3721,7 @@
 		1F084A1A16DCE6A200ED2517 /* Build configuration list for PBXNativeTarget "ObjSTNative" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F084A1B16DCE6A200ED2517 /* Development */,
+				1F084A1B16DCE6A200ED2517 /* Debug */,
 				1F084A1C16DCE6A200ED2517 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3730,7 +3730,7 @@
 		1F4348501E21676F002750C3 /* Build configuration list for PBXNativeTarget "S3Scheme" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F43484E1E21676F002750C3 /* Development */,
+				1F43484E1E21676F002750C3 /* Debug */,
 				1F43484F1E21676F002750C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3739,7 +3739,7 @@
 		1F5E508A09B4B754000298D9 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F5E508B09B4B754000298D9 /* Development */,
+				1F5E508B09B4B754000298D9 /* Debug */,
 				1F5E508C09B4B754000298D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3748,7 +3748,7 @@
 		1F6810301E117A78006CE0D1 /* Build configuration list for PBXNativeTarget "SqliteScheme" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F68102E1E117A78006CE0D1 /* Development */,
+				1F68102E1E117A78006CE0D1 /* Debug */,
 				1F68102F1E117A78006CE0D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3757,7 +3757,7 @@
 		1F7B75C414629431002F38D1 /* Build configuration list for PBXNativeTarget "SchemeFS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F7B75C514629431002F38D1 /* Development */,
+				1F7B75C514629431002F38D1 /* Debug */,
 				1F7B75C614629431002F38D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3766,7 +3766,7 @@
 		1F7E05AF144B3E23008F349D /* Build configuration list for PBXNativeTarget "MethodServer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F7E05AC144B3E22008F349D /* Development */,
+				1F7E05AC144B3E22008F349D /* Debug */,
 				1F7E05AD144B3E22008F349D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3775,7 +3775,7 @@
 		1F81C07919699AE10066DF43 /* Build configuration list for PBXNativeTarget "MethodServerTouch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1F81C07A19699AE10066DF43 /* Development */,
+				1F81C07A19699AE10066DF43 /* Debug */,
 				1F81C07B19699AE10066DF43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3784,7 +3784,7 @@
 		1FA354010854F75C0056996B /* Build configuration list for PBXProject "ObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FA354020854F75C0056996B /* Development */,
+				1FA354020854F75C0056996B /* Debug */,
 				1FA354030854F75C0056996B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3793,7 +3793,7 @@
 		1FA85A101923731900F52396 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalkUI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FA85A111923731900F52396 /* Development */,
+				1FA85A111923731900F52396 /* Debug */,
 				1FA85A121923731900F52396 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3802,7 +3802,7 @@
 		1FAFD98A1855BC5500EC5221 /* Build configuration list for PBXNativeTarget "StshFramework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FAFD98B1855BC5500EC5221 /* Development */,
+				1FAFD98B1855BC5500EC5221 /* Debug */,
 				1FAFD98C1855BC5500EC5221 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3811,7 +3811,7 @@
 		1FBAAC1F184BDC6400086047 /* Build configuration list for PBXNativeTarget "stsh" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FBAAC20184BDC6400086047 /* Development */,
+				1FBAAC20184BDC6400086047 /* Debug */,
 				1FBAAC21184BDC6400086047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3820,7 +3820,7 @@
 		1FC8F859181BF3A3003980D8 /* Build configuration list for PBXNativeTarget "SchemeFUSE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FC8F853181BF3A3003980D8 /* Development */,
+				1FC8F853181BF3A3003980D8 /* Debug */,
 				1FC8F854181BF3A3003980D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -3829,7 +3829,7 @@
 		1FE37B6619695FA600C9A378 /* Build configuration list for PBXNativeTarget "ObjectiveSmalltalkTouch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FE37B6019695FA600C9A378 /* Development */,
+				1FE37B6019695FA600C9A378 /* Debug */,
 				1FE37B6119695FA600C9A378 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -11,6 +11,7 @@
 #import "MPWURLBinding.h"
 #import "MPWResource.h"
 #import "MPWDirectoryBinding.h"
+#import <MPWFoundation/MPWFDStreamSource.h>
 
 @interface NSObject (workspaceMBethods)
 
@@ -274,6 +275,15 @@ idAccessor( url , setUrl )
 	[super dealloc];
 }
 
+-(MPWFDStreamSource*)source
+{
+    return [MPWFDStreamSource name:[self path]];
+}
+
+-(MPWByteStream *)sink
+{
+    return [MPWByteStream fileName:[self path]];
+}
 
 @end
 

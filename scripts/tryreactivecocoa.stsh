@@ -1,8 +1,7 @@
 #!/usr/local/bin/stsh
 framework:ReactiveCocoa load.
 signal := ((RACSignal interval:1) startWith:NSDate date) map:[ :date | val := date stringValue. stdout println:val. val. ].
-a := NSMutableDictionary dictionary.
-var:a/b := 2.
+a :=  #{ #a : 2 }.
 trampoline := (RACSubscriptingAssignmentTrampoline alloc initWithTarget:a nilValue:nil).
 trampoline setObject:signal forKeyedSubscript:'b'.
 NSRunLoop currentRunLoop runUntilDate:(NSDate dateWithTimeIntervalSinceNow:2).

@@ -8,7 +8,7 @@
 
 #import "MPWMessagePortDescriptor.h"
 #import <MPWFoundation/MPWValueAccessor.h>
-#import <objc/Protocol.h>
+//#import <objc/Protocol.h>
 
 @implementation MPWMessagePortDescriptor
 
@@ -20,11 +20,14 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 -initWithTarget:aTarget key:aKey protocol:aProtocol sends:(BOOL)sends
 {
     self=[super init];
+//    NSLog(@"for %p target: %@ key: %@",self,aTarget,aKey);
     [self setTarget:[MPWValueAccessor valueForName:aKey ? aKey : @"self"]];
     [self setIsSettable:aKey != nil];
     [[self target] bindToTarget:aTarget];
     [self setMessageProtocol:aProtocol];
     [self setSendsMessages:sends];
+
+//    NSLog(@"sends: %d protocol: %@",sends,aProtocol);
     return self;
 }
 
@@ -37,7 +40,14 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 -(BOOL)isCompatible:(MPWMessagePortDescriptor*)other
 {
-    return 
+//    NSLog(@"self: %@",self);
+//    NSLog(@"other: %@",other);
+//    NSLog(@"self isSettable: %d",[self isSettable]);
+//    NSLog(@"other isSettable: %d",[other isSettable]);
+//    NSLog(@"self sendsMessages: %d",[self sendsMessages]);
+//    NSLog(@"other sendsMessages: %d",[other sendsMessages]);
+//    NSLog(@"messageProtocols equivalent %d",[[self messageProtocol] isEqual:[other messageProtocol]]);
+    return
     ([self isSettable] != [other isSettable]) &&
         ([self sendsMessages] != [other sendsMessages]) &&
     [[self messageProtocol] isEqual:[other messageProtocol]];
@@ -48,6 +58,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     id connectionTarget=nil,source=nil;
 //    NSLog(@"connect: %@ to %@",self,other);
     if ( [self isCompatible:other] ) {
+//        NSLog(@"isCompatible");
         if ( [self isSettable] && ![other isSettable]) {
             connectionTarget=self;
             source=other;
