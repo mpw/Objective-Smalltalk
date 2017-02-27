@@ -88,7 +88,7 @@ objectAccessor(NSError, error, setError)
 
     NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&localError];
 
-    NSLog(@"error: %@",localError);
+//    NSLog(@"error: %@",localError);
     if ( [response statusCode] != 404 ) {
         MPWResource *result=[[[MPWResource alloc] init] autorelease];
         [result setSource:[request URL]];
@@ -244,6 +244,11 @@ objectAccessor(NSError, error, setError)
 -stream
 {
     return [[[MPWSocketStream alloc] initWithURL:[self url]] autorelease];
+}
+
+-(NSString *)description
+{
+    return [[self url] absoluteString];
 }
 
 @end

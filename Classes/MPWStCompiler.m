@@ -146,12 +146,11 @@ idAccessor(solver, setSolver)
 -createSchemes
 {
 	id schemes=[super createSchemes];
-	id  httpResolver=[MPWURLSchemeResolver scheme];
 	[schemes setSchemeHandler:[MPWDefaultsScheme scheme]  forSchemeName:@"defaults"];
 	[schemes setSchemeHandler:[MPWFileSchemeResolver scheme]  forSchemeName:@"file"];
-	[schemes setSchemeHandler:httpResolver  forSchemeName:@"http"];
-	[schemes setSchemeHandler:httpResolver  forSchemeName:@"https"];
-	[schemes setSchemeHandler:httpResolver  forSchemeName:@"ftp"];
+	[schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
+	[schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
+    [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
     
 	[schemes setSchemeHandler:[NSClassFromString(@"MPWEnvScheme") scheme]  forSchemeName:@"env"];
 	[schemes setSchemeHandler:[MPWBundleScheme scheme]  forSchemeName:@"bundle"];

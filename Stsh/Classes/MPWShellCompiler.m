@@ -19,7 +19,7 @@
 #import "MPWAbstractShellCommand.h"
 #import "MPWStsh.h"
 #import "MPWShellPrinter.h"
-
+#import <MPWFoundation/MPWFDStreamSource.h>
 
 @implementation MPWShellCompiler
 
@@ -73,12 +73,16 @@
 -init
 {
 	self=[super init];
-   id Stdout=[MPWShellPrinter streamWithTarget:[MPWByteStream Stdout] ];
-   id Stderr=[MPWByteStream Stderr];
-   [self bindValue:Stdout toVariableNamed:@"stdout"];
-   [self bindValue:Stderr toVariableNamed:@"stderr"];
-   [self bindValue:@"\n" toVariableNamed:@"newline"];
-   [self bindValue:@"\t" toVariableNamed:@"tab"];
+    id Rawstdout=[MPWByteStream Stdout];
+    id Stdout=[MPWShellPrinter streamWithTarget:[MPWByteStream Stdout] ];
+    id Stderr=[MPWByteStream Stderr];
+    id Stdin=[MPWFDStreamSource fd:0];
+    [self bindValue:Rawstdout toVariableNamed:@"rawstdout"];
+    [self bindValue:Stdout toVariableNamed:@"stdout"];
+    [self bindValue:Stderr toVariableNamed:@"stderr"];
+    [self bindValue:Stdin toVariableNamed:@"stdin"];
+    [self bindValue:@"\n" toVariableNamed:@"newline"];
+    [self bindValue:@"\t" toVariableNamed:@"tab"];
 //   [self addExternalCommands:[[self class] externalCommandNames]];
 //   [self addInternalCommands:[[self class] internalCommands]];
 	return self;

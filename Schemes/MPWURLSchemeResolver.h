@@ -8,9 +8,19 @@
 
 #import <ObjectiveSmalltalk/MPWScheme.h>
 
+@class MPWURLBinding;
 
 @interface MPWURLSchemeResolver : MPWScheme {
 
 }
+
+-(instancetype)initWithSchemePrefix:(NSString*)schemeName;
+
++(instancetype)httpScheme;
++(instancetype)httpsScheme;
+
+
+-(NSString*)schemePrefix;
+-(MPWURLBinding*)bindingForName:aName inContext:aContext;
 
 @end
