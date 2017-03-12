@@ -13,11 +13,25 @@
 -evaluateIn:aContext
 {
 //    NSLog(@"will evaluate literarl array: %@",[self objects]);
-    NSMutableArray *result=[NSMutableArray arrayWithCapacity:self.objects.count];
-    for ( MPWExpression *e in self.objects) {
-        [result addObject:[e evaluateIn:aContext]];
+#define STACKMAX 200
+    
+    long max=self.objects.count;
+    id stackEvalResults[ STACKMAX ];
+    id *evalResults=stackEvalResults;
+    id *heapEvalResults=nil;
+    if ( max < STACKMAX ) {
+        evalResults=stackEvalResults;
+    } else {
+        heapEvalResults=calloc( max, sizeof(id));
+        evalResults=heapEvalResults;
+    }
+    
+    for ( int i=0;i<max;i++) {
+        evalResults[i]=[self.objects[i] evaluateIn:aContext];
     }
 //    NSLog(@"evaluated literal array :%@",result);
+    NSArray *result= [NSArray arrayWithObjects:evalResults count:max];
+    free(heapEvalResults);
     return result;
 }
 

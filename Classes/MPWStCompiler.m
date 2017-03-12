@@ -322,6 +322,13 @@ idAccessor(solver, setSolver)
 {
     id object = [self nextToken];
     MPWLiteralExpression *e=nil;
+//    id next=[self nextToken];
+//    if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
+//        NSString *className=object;
+//        object=next;
+//    } else {
+//        [self pushBack:next];
+//    }
     if ( [object isEqual:@"("] ) {
         e = [self parseLiteralArray];
     } else if ( [object isEqual:@"{"] ) {

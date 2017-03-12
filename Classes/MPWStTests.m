@@ -657,14 +657,9 @@
 +(void)testCommaSelector
 {
 	[self testexpr:@"'Hello ','World!'" expected:@"Hello World!"];
-	[self testexpr:@" #() , 'a', '2'" expected:[NSArray arrayWithObjects:@"a",[NSNumber numberWithInt:2],nil]];
+	[self testexpr:@" #() mutableCopy , 'a', '2'" expected:[NSArray arrayWithObjects:@"a",[NSNumber numberWithInt:2],nil]];
 }
 
-+(void)tesLocalSelector
-{
-	[self testexpr:@"'Hello ','World!'" expected:@"Hello World!"];
-	[self testexpr:@" #() , 'a', '2'" expected:[NSArray arrayWithObjects:@"a",[NSNumber numberWithInt:2],nil]];
-}
 
 +(void)testVariableReferenceWithURISchemeWorks
 {
@@ -897,6 +892,18 @@
     
 }
 
++(void)testLiteralArrayWithSpecifiedClass
+{
+    NSMutableArray* result=[self evaluate:@"#NSMutableArray(1, 2, 3)"];
+    @try {
+        [result addObject:@"@(4)"];
+    } @catch (NSException *e) {
+        EXPECTTRUE(false,@"exception thrown");
+    }
+    INTEXPECT(result.count, 4, @"should have added an element");
+}
+
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -996,6 +1003,7 @@
             @"testParseMethodSyntax",
             @"testSimpleLiteralDict",
             @"testTwoElementLiteralDict",
+//            @"testLiteralArrayWithSpecifiedClass",
         nil];
 }
 
