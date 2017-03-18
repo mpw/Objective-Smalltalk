@@ -15,5 +15,6 @@
 
 idAccessor_h(theLiteral, setTheLiteral)
 
+@property (nonatomic, strong) NSString *className;
 
 @end

@@ -6,7 +6,7 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 
 @interface MPWLiteralArrayExpression : MPWExpression
 

@@ -895,6 +895,7 @@
 +(void)testLiteralArrayWithSpecifiedClass
 {
     NSMutableArray* result=[self evaluate:@"#NSMutableArray(1, 2, 3)"];
+    INTEXPECT( result.count, 3, @"elements in array");
     @try {
         [result addObject:@"@(4)"];
     } @catch (NSException *e) {
@@ -1003,7 +1004,7 @@
             @"testParseMethodSyntax",
             @"testSimpleLiteralDict",
             @"testTwoElementLiteralDict",
-//            @"testLiteralArrayWithSpecifiedClass",
+            @"testLiteralArrayWithSpecifiedClass",
         nil];
 }
 

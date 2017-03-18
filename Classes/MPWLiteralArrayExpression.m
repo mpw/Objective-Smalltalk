@@ -8,13 +8,28 @@
 
 #import "MPWLiteralArrayExpression.h"
 
+@interface MPWLiteralArrayExpression()
+
+@property (nonatomic, assign) Class literalClass;
+
+@end
+
 @implementation MPWLiteralArrayExpression
+
+-(void)setClassName:(NSString *)name
+{
+//    [super setClassName:name];
+    if ( name ) {
+        self.literalClass=NSClassFromString(name);
+    }
+}
 
 -evaluateIn:aContext
 {
 //    NSLog(@"will evaluate literarl array: %@",[self objects]);
 #define STACKMAX 200
-    
+    Class baseClass=[NSArray class];
+    Class finalClass=self.literalClass;
     long max=self.objects.count;
     id stackEvalResults[ STACKMAX ];
     id *evalResults=stackEvalResults;
@@ -29,8 +44,13 @@
     for ( int i=0;i<max;i++) {
         evalResults[i]=[self.objects[i] evaluateIn:aContext];
     }
-//    NSLog(@"evaluated literal array :%@",result);
-    NSArray *result= [NSArray arrayWithObjects:evalResults count:max];
+    if ( [finalClass respondsToSelector:@selector(arrayWithObjects:count:)] ) {
+        baseClass=finalClass;
+    }
+    NSArray *result= [baseClass arrayWithObjects:evalResults count:max];
+    if ( finalClass && finalClass != baseClass && [finalClass instancesRespondToSelector:@selector(initWithArray:)] ) {
+        result=[[[finalClass alloc] initWithArray:result] autorelease];
+    }
     free(heapEvalResults);
     return result;
 }

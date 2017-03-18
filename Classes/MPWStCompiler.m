@@ -44,8 +44,18 @@
 
 -concat:other
 {
-	 [self addObject:other];
-	 return self;
+    [self addObject:other];
+    return self;
+}
+
+
+@end
+
+@implementation NSArray(concat)
+
+-concat:other
+{
+    return [self arrayByAddingObjectsFromArray:@[ other ]];
 }
 
 
@@ -322,13 +332,14 @@ idAccessor(solver, setSolver)
 {
     id object = [self nextToken];
     MPWLiteralExpression *e=nil;
-//    id next=[self nextToken];
-//    if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
-//        NSString *className=object;
-//        object=next;
-//    } else {
-//        [self pushBack:next];
-//    }
+    NSString *className=nil;
+    id next=[self nextToken];
+    if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
+        className=object;
+        object=next;
+    } else {
+        [self pushBack:next];
+    }
     if ( [object isEqual:@"("] ) {
         e = [self parseLiteralArray];
     } else if ( [object isEqual:@"{"] ) {
@@ -336,6 +347,9 @@ idAccessor(solver, setSolver)
     } else {
         e=[[MPWLiteralExpression new] autorelease];
         [e setTheLiteral:object];
+    }
+    if ( className ) {
+        [e setClassName:className];
     }
     
     return e;
