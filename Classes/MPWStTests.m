@@ -120,6 +120,11 @@
     TESTEXPR(@"#{ 'key': 'value' }" , (@{ @"key": @"value"}) );
 }
 
++(void)testLiteralDictWithNumberKey
+{
+    TESTEXPR(@"#{ 1 : 'value' }" , (@{ @(1) : @"value"}) );
+}
+
 +(void)testTwoElementLiteralDict
 {
     TESTEXPR(@"#{ 'key': 'value', 'hello': 'world' }" , (@{ @"key": @"value", @"hello": @"world"}));
@@ -904,6 +909,18 @@
     INTEXPECT(result.count, 4, @"should have added an element");
 }
 
++(void)testLiteralDictWithSpecifiedClass
+{
+    NSMutableDictionary* result=[self evaluate:@"#NSMutableDictionary{ 1 : 2, 2 : 4, 3 : 'world' }"];
+    INTEXPECT( result.count, 3, @"elements in count");
+    @try {
+        result[@"hello"]=@"world!";
+    } @catch (NSException *e) {
+        EXPECTTRUE(false,@"exception thrown");
+    }
+    INTEXPECT(result.count, 4, @"should have added an element");
+}
+
 +(void)testLiteralSet
 {
     NSSet* result=[self evaluate:@"#NSSet(1,1, 2, 3,3 )"];
@@ -1011,10 +1028,12 @@
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
             @"testParseMethodSyntax",
-            @"testSimpleLiteralDict",
+        @"testSimpleLiteralDict",
+        @"testLiteralDictWithNumberKey",
             @"testTwoElementLiteralDict",
             @"testLiteralArrayWithSpecifiedClass",
-            @"testLiteralSet",
+        @"testLiteralSet",
+        @"testLiteralDictWithSpecifiedClass",
         ];
 }
 

@@ -306,13 +306,13 @@ idAccessor(solver, setSolver)
 //    NSLog(@"first token: %@",token);
     MPWLiteralDictionaryExpression *dictLit=[[MPWLiteralDictionaryExpression new] autorelease];
     [self pushBack:token];
-    while ( token && ![token isEqualToString:@"}"]) {
+    while ( token && ![token isEqual:@"}"]) {
 //        NSLog(@"parse key");
         id key=[self parseExpressionInLiteral:YES];
 //        NSLog(@"key: %@",key);
         token=[self nextToken];
 //        NSLog(@"separator token: %@",token);
-        if (![token isEqualToString:@":"]) {
+        if (![token isEqual:@":"]) {
             PARSEERROR(@"dictionary syntax: key not folled by ':'  %@", token);
         }
         token=[self nextToken];
