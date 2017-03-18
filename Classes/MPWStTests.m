@@ -657,7 +657,7 @@
 +(void)testCommaSelector
 {
 	[self testexpr:@"'Hello ','World!'" expected:@"Hello World!"];
-	[self testexpr:@" #() mutableCopy , 'a', '2'" expected:[NSArray arrayWithObjects:@"a",[NSNumber numberWithInt:2],nil]];
+	[self testexpr:@" #() , 'a', '2'" expected:[NSArray arrayWithObjects:@"a",[NSNumber numberWithInt:2],nil]];
 }
 
 
@@ -904,10 +904,19 @@
     INTEXPECT(result.count, 4, @"should have added an element");
 }
 
++(void)testLiteralSet
+{
+    NSSet* result=[self evaluate:@"#NSSet(1,1, 2, 3,3 )"];
+    INTEXPECT( result.count, 3, @"elements in set");
+    
+    EXPECTTRUE( [result member:@1], @"result responds to set messages");
+    
+}
+
 
 +(NSArray*)testSelectors
 {
-    return [NSArray arrayWithObjects:
+    return @[
 		@"testLocalVariables",
 		@"testThreePlusFour",
 		@"stringConcat",
@@ -1005,7 +1014,8 @@
             @"testSimpleLiteralDict",
             @"testTwoElementLiteralDict",
             @"testLiteralArrayWithSpecifiedClass",
-        nil];
+            @"testLiteralSet",
+        ];
 }
 
 //			@"testIdentifierInterpolationWorksAsAssignmentTarget",
