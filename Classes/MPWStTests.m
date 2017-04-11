@@ -19,6 +19,8 @@
 #import "MPWObjCGenerator.h"
 #import <MPWFoundation/NSNil.h>
 #import "MPWIdentifier.h"
+#import "MPWScriptedMethod.h"
+#import "MPWMethodHeader.h"
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
@@ -305,13 +307,29 @@
 }
 
 
-+(void)testParseMethodSyntax
++(void)testParseMethodSyntaxOneArg
 {
-    NSString *methodText=@"method lengthMultipliedBy:a { self length * a. }";
+    NSString *methodText=@"-lengthMultipliedBy:a  { self length * a. }";
     id compiler=[self compiler];
-    id method=[compiler compile:methodText];
-//    IDEXPECT( method, @"", @"result of compiling a metho definition");
-    NSLog(@"method: %@",method);
+    MPWScriptedMethod *method=[compiler parseMethodDefinition:methodText];
+    MPWMethodHeader *header=[method header];
+    
+    IDEXPECT( [header methodName], @"lengthMultipliedBy:", @"method name");
+    INTEXPECT( [header numArguments], 1, @"number of args");
+    IDEXPECT( [header argumentNameAtIndex:0], @"a", @"first arg");
+    
+}
+
++(void)testParseMethodSyntaxNoArgs
+{
+    NSString *methodText=@"-lengthMultipliedBy5  { self length * 5. }";
+    id compiler=[self compiler];
+    MPWScriptedMethod *method=[compiler parseMethodDefinition:methodText];
+    MPWMethodHeader *header=[method header];
+    
+    IDEXPECT( [header methodName], @"lengthMultipliedBy5", @"method name");
+    INTEXPECT( [header numArguments], 0, @"number of args");
+    
 }
 
 +(void)testNegativeLiteralComputation
@@ -1027,7 +1045,8 @@
             @"testPipeEqualsCompilesButDoesSameAsAssignment",
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
-            @"testParseMethodSyntax",
+            @"testParseMethodSyntaxOneArg",
+        @"testParseMethodSyntaxNoArgs",
         @"testSimpleLiteralDict",
         @"testLiteralDictWithNumberKey",
             @"testTwoElementLiteralDict",

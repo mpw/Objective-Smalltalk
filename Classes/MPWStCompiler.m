@@ -27,6 +27,8 @@
 #import "MPWDataflowConstraintExpression.h"
 #import "MPWLiteralArrayExpression.h"
 #import "MPWLiteralDictionaryExpression.h"
+#import "MPWScriptedMethod.h"
+#import "MPWMethodHeader.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -953,6 +955,29 @@ idAccessor(solver, setSolver)
 //    NSLog(@"expr = %@",expr);
     return expr;
 }
+
+-(MPWScriptedMethod*)parseMethodDefinition:aString
+{
+    [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
+    return [self parseMethodDefinition];
+}
+
+-(MPWScriptedMethod*)parseMethodDefinition
+{
+    MPWScriptedMethod *method=nil;
+    NSString *s=[self nextToken];
+    if ( [s isEqualToString:@"-"]) {
+        MPWMethodHeader *header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
+        method=[[MPWScriptedMethod new] autorelease];
+        [method setMethodHeader:header];
+    }
+    
+    
+    
+    
+    return method;
+}
+
 
 -(id)compileAndEvaluate:(NSString*)aString
 {

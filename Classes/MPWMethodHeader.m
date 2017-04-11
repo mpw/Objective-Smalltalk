@@ -118,7 +118,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(id)parseAKeyWordFromScanner:scanner
 {
 	id next = [scanner nextToken];
-	if ( next ) {
+	if ( next && ![next isEqualToString:@"{"]) {
 		id type;
 		id keyword = next;
 //		[self addToMethodName:next];
@@ -127,24 +127,35 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 			type=@"id";
 		}
 		next = [scanner nextToken];
-		[self addParameterName:next type:type keyWord:keyword];
-	}
+        if ( [next isEqualToString:@"{"]) {
+            [scanner pushBack:next];
+            next=nil;
+        }
+        [self addParameterName:next type:type keyWord:keyword];
+    } else {
+        [scanner pushBack:next];
+        next=nil;
+    }
 	return next;
 }
 
+-initWithScanner:(MPWStScanner*)scanner
+{
+    id optionalReturnType;
+    self = [self init];
+    if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
+        [self setReturnTypeName:optionalReturnType];
+    }
+    while ( [self parseAKeyWordFromScanner:scanner] )  {
+    }
+    [self setMethodName:[[self methodKeyWords] componentsJoinedByString:@""]];
+    return self;
+}
+
+
 -initWithString:(NSString*)aString
 {
-	id scanner;
-	id optionalReturnType;
-	self = [self init];
-	scanner = [MPWStScanner scannerWithData:[aString asData]];
-	if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
-		[self setReturnTypeName:optionalReturnType];
-	}
-	while ( [self parseAKeyWordFromScanner:scanner] )  {
-    }
-	[self setMethodName:[[self methodKeyWords] componentsJoinedByString:@""]];
-	return self;
+    return [self initWithScanner:[MPWStScanner scannerWithData:[aString asData]]];
 }
 
 
