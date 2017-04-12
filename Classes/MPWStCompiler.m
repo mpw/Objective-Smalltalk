@@ -33,6 +33,7 @@
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
+@class MPWClassMethodStore;
 
 @implementation NSString(concat)
 
@@ -124,6 +125,11 @@ idAccessor(solver, setSolver)
 -(NSArray*)methodNamesForClassName:(NSString*)aClassName
 {
 	return [[self methodStore] methodNamesForClassName:aClassName];
+}
+
+-(MPWClassMethodStore*)classStoreForName:(NSString*)name
+{
+    return [[self methodStore] classStoreForName:name];
 }
 
 -(NSDictionary*)externalScriptDict
@@ -972,7 +978,7 @@ idAccessor(solver, setSolver)
         method=[[MPWScriptedMethod new] autorelease];
         [method setMethodHeader:header];
         NSString *bodyStart=[self nextToken];
-        MPWBlockExpression *body=[self parseBlockWithStart:bodyStart];
+        MPWBlockExpression *body=[[self parseBlockWithStart:bodyStart] statements];
         [method setMethodBody:body];
     }
     

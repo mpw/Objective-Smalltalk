@@ -338,8 +338,8 @@
     INTEXPECT( [header numArguments], 0, @"number of args");
     IDEXPECT( [header typeString], @"@@:", @"type string");
     IDEXPECT( [header returnTypeName], @"id", @"return type");
-    EXPECTTRUE([[method methodBody] isKindOfClass:[MPWBlockExpression class]], @"body is a block expr.");
-    MPWStatementList *statements=[[method methodBody] statements];
+    EXPECTTRUE([[method methodBody] isKindOfClass:[MPWStatementList class]], @"body is a statement list.");
+    MPWStatementList *statements=[method methodBody];
     INTEXPECT([[statements statements] count],1,@"number of statements");
     MPWMessageExpression *first=[[statements statements] firstObject];
     EXPECTTRUE([first isKindOfClass:[MPWMessageExpression class]], @"should be a message expression");
@@ -985,18 +985,20 @@
 +(void)testCreateSubclassUsingSnytax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class ObjStTestsMyNumberSubclass : MPWInteger { -multiplyByNumber:num { self * num. }}"];
 
     Class aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
     Class superClass = NSClassFromString( classDef.superclassName);
     EXPECTNIL(aClass, @"shouldn't exist before I create it");
     EXPECTNOTNIL(superClass, @"superclass should exist");
     
-    [classDef evaluateIn:compiler];
-    
-    aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
+    aClass=(Class)[classDef evaluateIn:compiler];
     EXPECTNOTNIL(aClass, @"superclass should exist");
-
+    IDEXPECT(aClass, NSClassFromString( @"ObjStTestsMyNumberSubclass" ),@"class created and accessible");
+    
+    id mynumber=[aClass numberWithInt:23];
+    id result=[mynumber multiplyByNumber:[MPWInteger integer:10]];
+    INTEXPECT([result intValue], 230, @"result of multiplying");
 }
 
 

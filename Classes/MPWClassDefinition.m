@@ -8,9 +8,17 @@
 
 #import "MPWClassDefinition.h"
 #import "NSObjectScripting.h"
+#import "MPWClassMethodStore.h"
 
 @implementation MPWClassDefinition
 
+
+-(void)addMethodsIn:(MPWClassMethodStore*)store
+{
+    for ( MPWMethod *method in self.methods) {
+        [store installMethod:method];
+    }
+}
 
 -(id)evaluateIn:(id)aContext
 {
@@ -22,7 +30,7 @@
             theClassToDefine=NSClassFromString(self.name);
         }
     }
-//    [self addMethodsIn:theClassToDefine];
+    [self addMethodsIn:[aContext classStoreForName:self.name]];
     return theClassToDefine;
 }
 
