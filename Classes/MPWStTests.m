@@ -21,6 +21,11 @@
 #import "MPWIdentifier.h"
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
+#import "MPWBlockExpression.h"
+#import "MPWStatementList.h"
+#import "MPWMessageExpression.h"
+#import "MPWClassDefinition.h"
+
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
@@ -317,6 +322,8 @@
     IDEXPECT( [header methodName], @"lengthMultipliedBy:", @"method name");
     INTEXPECT( [header numArguments], 1, @"number of args");
     IDEXPECT( [header argumentNameAtIndex:0], @"a", @"first arg");
+    IDEXPECT( [header typeString], @"@@:@", @"type string");
+    IDEXPECT( [header argumentTypeAtIndex:0], @"id", @"arg type");
     
 }
 
@@ -329,7 +336,13 @@
     
     IDEXPECT( [header methodName], @"lengthMultipliedBy5", @"method name");
     INTEXPECT( [header numArguments], 0, @"number of args");
-    
+    IDEXPECT( [header typeString], @"@@:", @"type string");
+    IDEXPECT( [header returnTypeName], @"id", @"return type");
+    EXPECTTRUE([[method methodBody] isKindOfClass:[MPWBlockExpression class]], @"body is a block expr.");
+    MPWStatementList *statements=[[method methodBody] statements];
+    INTEXPECT([[statements statements] count],1,@"number of statements");
+    MPWMessageExpression *first=[[statements statements] firstObject];
+    EXPECTTRUE([first isKindOfClass:[MPWMessageExpression class]], @"should be a message expression");
 }
 
 +(void)testNegativeLiteralComputation
@@ -660,12 +673,14 @@
 
 +(void)testBinarySelectorPrecedenceOverKeyword
 {
-	[self testexpr:@"(1 to:3+8) to." expected:@"11"];
+	[self testexpr:@"(1+3 to:3+8) to." expected:@"11"];
 }
+
 +(void)testIntervalBlockCollect
 {
 	[self testexpr:@"((1 to:3) collect:[ :i | i+2]) lastObject" expected:@"5"];
 }
+
 +(void)testArrayBlockCollect
 {
 	TESTEXPR(@"( #( 1, 2, 7 ) collect:[ :i | i*2]) lastObject" ,@"14");
@@ -949,6 +964,25 @@
 }
 
 
++(void)testClassDefSyntax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
+    EXPECTNOTNIL(classDef,@"should have a class definition object");
+    
+    IDEXPECT(classDef.name,@"ObjStTestsMyNumberSubclass",@"name of class" );
+    IDEXPECT(classDef.superclassName,@"NSNumber",@"name of superclass" );
+    NSArray *methods=classDef.methods;
+    INTEXPECT( methods.count,1 , @"number of methods");
+    MPWScriptedMethod *method=methods.firstObject;
+    MPWMethodHeader *header=method.methodHeader;
+    IDEXPECT( header.methodName, @"multiplyByNumber:", @"method name");
+    IDEXPECT( header.parameterNames, @[@"num"], @"param name");
+    IDEXPECT( [header parameterTypes], @[@"id"], @"param type");
+    IDEXPECT( [header typeString], @"@@:@", @"method typestring");
+    
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1053,6 +1087,7 @@
             @"testLiteralArrayWithSpecifiedClass",
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
+        @"testClassDefSyntax",
         ];
 }
 

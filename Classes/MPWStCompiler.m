@@ -29,6 +29,7 @@
 #import "MPWLiteralDictionaryExpression.h"
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
+#import "MPWClassDefinition.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -970,13 +971,61 @@ idAccessor(solver, setSolver)
         MPWMethodHeader *header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
         method=[[MPWScriptedMethod new] autorelease];
         [method setMethodHeader:header];
+        NSString *bodyStart=[self nextToken];
+        MPWBlockExpression *body=[self parseBlockWithStart:bodyStart];
+        [method setMethodBody:body];
     }
-    
-    
-    
     
     return method;
 }
+
+-(MPWClassDefinition*)parseClassDefinition:aString
+{
+    [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
+    return [self parseClassDefinition];
+}
+
+-(MPWClassDefinition*)parseClassDefinition
+{
+    MPWClassDefinition *classDef=nil;
+    NSString *s=[self nextToken];
+    if ( [s isEqualToString:@"class"]) {
+        classDef=[[MPWClassDefinition new] autorelease];
+        NSString *name=[self nextToken];
+        classDef.name = name;
+        NSString *separator=[self nextToken];
+        if ( [separator isEqualToString:@":"]) {
+            NSString *superclassName=[self nextToken];
+            classDef.superclassName=superclassName;
+            separator=[self nextToken];
+        }
+        NSMutableArray *methods=[NSMutableArray array];
+        if ( [separator isEqualToString:@"{"]) {
+            NSString *next=nil;
+            while (nil != (next=[self nextToken])) {
+                if ( [next isEqualToString:@"-"]) {
+                    [self pushBack:next];
+                    MPWScriptedMethod *method=[self parseMethodDefinition];
+                    [methods addObject:method];
+                } else if ( [next isEqualToString:@"var"]) {
+                    PARSEERROR(@"variable definitions not supported yet", next);
+                } else if ( [next isEqualToString:@"val"]) {
+                    PARSEERROR(@"const definitions not supported yet", next);
+                } else if ( [next isEqualToString:@"}"]) {
+                    break;
+                } else {
+                    PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
+                }
+            }
+            classDef.methods=methods;
+        } else {
+            PARSEERROR(@"expected { in class definition", separator);
+        }
+    }
+    
+    return classDef;
+}
+
 
 
 -(id)compileAndEvaluate:(NSString*)aString

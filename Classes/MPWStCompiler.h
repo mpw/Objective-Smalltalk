@@ -2,7 +2,7 @@
 
 #import <ObjectiveSmalltalk/MPWEvaluator.h>
 
-@class MPWMethodHeader,MPWStScanner,MPWMethodStore;
+@class MPWMethodHeader,MPWStScanner,MPWMethodStore,MPWScriptedMethod;
 
 @interface MPWStCompiler : MPWEvaluator
 {
@@ -17,6 +17,7 @@
 +compiler;
 +evaluate:aString;
 -evaluateScriptString:aString;
+-(MPWScriptedMethod*)parseMethodDefinition:aString;
 
 -compile:aString;
 -(id)compileAndEvaluate:(NSString*)aString;
