@@ -7,8 +7,25 @@
 //
 
 #import "MPWClassDefinition.h"
+#import "NSObjectScripting.h"
 
 @implementation MPWClassDefinition
+
+
+-(id)evaluateIn:(id)aContext
+{
+    Class theClassToDefine=NSClassFromString(self.name);
+    if (!theClassToDefine) {
+        Class superclass=NSClassFromString(self.superclassName);
+        if ( superclass ) {
+            [superclass createSubclassWithName:self.name instanceVariableArray:self.instanceVariableDescriptions];
+            theClassToDefine=NSClassFromString(self.name);
+        }
+    }
+//    [self addMethodsIn:theClassToDefine];
+    return theClassToDefine;
+}
+
 
 -(void)dealloc
 {

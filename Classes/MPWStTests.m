@@ -980,7 +980,6 @@
     IDEXPECT( header.parameterNames, @[@"num"], @"param name");
     IDEXPECT( [header parameterTypes], @[@"id"], @"param type");
     IDEXPECT( [header typeString], @"@@:@", @"method typestring");
-    
 }
 
 +(void)testCreateSubclassUsingSnytax
@@ -993,7 +992,7 @@
     EXPECTNIL(aClass, @"shouldn't exist before I create it");
     EXPECTNOTNIL(superClass, @"superclass should exist");
     
-    [superClass createSubclassWithName:classDef.name instanceVariableArray:classDef.instanceVariableDescriptions];
+    [classDef evaluateIn:compiler];
     
     aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
     EXPECTNOTNIL(aClass, @"superclass should exist");

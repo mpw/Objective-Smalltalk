@@ -6,9 +6,9 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <ObjectiveSmalltalk/MPWExpression.h>
 
-@interface MPWClassDefinition : NSObject
+@interface MPWClassDefinition : MPWExpression
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *superclassName;
