@@ -983,6 +983,24 @@
     
 }
 
++(void)testCreateSubclassUsingSnytax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
+
+    Class aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
+    Class superClass = NSClassFromString( classDef.superclassName);
+    EXPECTNIL(aClass, @"shouldn't exist before I create it");
+    EXPECTNOTNIL(superClass, @"superclass should exist");
+    
+    [superClass createSubclassWithName:classDef.name instanceVariableArray:classDef.instanceVariableDescriptions];
+    
+    aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
+    EXPECTNOTNIL(aClass, @"superclass should exist");
+
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1088,6 +1106,7 @@
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
+        @"testCreateSubclassUsingSnytax",
         ];
 }
 

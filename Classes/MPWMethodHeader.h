@@ -33,7 +33,8 @@ objectAccessor_h( NSString , methodName, setMethodName )
 -argumentNameAtIndex:(int)anIndex;
 -argumentTypeAtIndex:(int)anIndex;
 -(const char*)typeSignature;
--(NSMutableArray*)parameterNames;
+-(NSArray*)parameterNames;
+-(NSArray*)parameterTypes;
 -(SEL)selector;
 
 -typeStringForTypeName:aType;

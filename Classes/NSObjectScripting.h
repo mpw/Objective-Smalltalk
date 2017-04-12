@@ -10,6 +10,7 @@
 
 
 @interface NSObject(stScripting)
++(BOOL)createSubclassWithName:(NSString*)className instanceVariableArray:(NSArray*)vars;
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariables:(NSString*)varsAsString;
 +(BOOL)createSubclassWithName:(NSString*)className;
 +instanceVariables;
