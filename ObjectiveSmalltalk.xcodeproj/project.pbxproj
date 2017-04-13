@@ -1888,6 +1888,7 @@
 				1FAFD9811855BC5500EC5221 /* Frameworks */,
 				1FAFD9871855BC5500EC5221 /* Headers */,
 				1FAFD9881855BC5500EC5221 /* Resources */,
+				1FB7D7F61E9F496F008E5D8E /* Run Tests */,
 			);
 			buildRules = (
 			);
@@ -2171,6 +2172,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = " ";
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+		};
+		1FB7D7F61E9F496F008E5D8E /* Run Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Tests";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */

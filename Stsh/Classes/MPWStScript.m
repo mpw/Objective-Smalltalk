@@ -137,6 +137,7 @@ objectAccessor( NSString, filename, setFilename )
             expr = [[executionContext evaluator] compile:accumulatedExpression];
             [accumulatedExpression setString:@""];
         } @catch (NSException *parseException ){
+            NSLog(@"keep looking because of exception: %@",parseException);
             line++;
             continue;
         }
@@ -149,7 +150,7 @@ objectAccessor( NSString, filename, setFilename )
 	}
 	if ( [self hasDeclaredReturn] ) {
 		[[[MPWByteStream Stdout] do] println:[[executionContext retval] each]];
-		[executionContext setRetval:nil];
+//		[executionContext setRetval:nil];
 	}
 	NS_HANDLER
 		[[MPWByteStream Stderr] println:[NSString stringWithFormat:@"Exception: %@ in line %d: '%@' ",
@@ -193,20 +194,29 @@ objectAccessor( NSString, filename, setFilename )
 +(void)testMultipleLineBlockExpression
 {
     MPWStsh *shell=[[[MPWStsh alloc] init] autorelease];
-    NSLog(@"shell %@",shell);
     MPWStScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\n42" asData]] autorelease];
-    NSLog(@"script %@",shell);
     [script executeInContext:shell];
-    NSLog(@"did execute");
-    NSLog(@"retval: %p",[shell retval]);
-    IDEXPECT([shell retval], @"42", @"simple expression");
+    IDEXPECT([shell retval], @(42), @"simple expression");
 }
+
+
++(void)testDefineAndUseClass
+{
+    MPWStsh *shell=[[[MPWStsh alloc] init] autorelease];
+    MPWStScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\nclass MyObject : NSObject { -theAnswer { 45. } }.\nMyObject new theAnswer." asData]] autorelease];
+    [script executeInContext:shell];
+    IDEXPECT([shell retval], @(45), @"simple expression");
+}
+
+
+
 
 
 +testSelectors
 {
     return @[
-//             @"testMultipleLineBlockExpression"
+             @"testMultipleLineBlockExpression",
+             @"testDefineAndUseClass",
               ];
 }
 

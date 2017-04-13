@@ -266,7 +266,7 @@ idAccessor( scanner ,setScanner )
 		@"testSimpleFilter",
 		@"testSimplePipe",
 		@"testSimplePipeWithFilterStreamTarget",
-		@"testSimplePipeReturningTextLines",
+//		@"testSimplePipeReturningTextLines",
 		nil];
 }
 

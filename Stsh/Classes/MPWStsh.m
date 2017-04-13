@@ -368,7 +368,7 @@ idAccessor( retval, setRetval )
                 expr = [[self evaluator] compile:exprString];
                 level=1;
             } @catch ( NSException *exception) {
-                NSLog(@"might need more input");
+                NSLog(@"might need more input, exception: %@",exception);
                 if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
                     level=2;
                     continue;
@@ -391,6 +391,7 @@ idAccessor( retval, setRetval )
                     //				NSLog(@"result: %@/%@",[result class],result);
                     if ( result!=nil && [result isNotNil]) {
                         [[self evaluator] bindValue:result toVariableNamed:@"last" withScheme:@"var"];
+
                         if ( [self echo] && !isAssignment ) {
                             //                       str_result = [[result description] cString];
                             //                       str_result = str_result ? str_result : "nil";

@@ -905,6 +905,10 @@ idAccessor(solver, setSolver)
             next=[self nextToken];
         }
 
+    } else if ( [next isEqual:@"class"]) {
+        NSLog(@"found a class definition");
+        [self pushBack:next];
+        return [self parseClassDefinition];
     } else {
         [self pushBack:next];
     }
