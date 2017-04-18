@@ -10,11 +10,12 @@
 
 
 @interface MPWBlockExpression : MPWExpression {
-	id	statements;
-	id  arguments;
+	NSArray* statements;
+	NSArray* declaredArguments;
 }
 
 +blockWithStatements:newStatements arguments:newArgs;
 
+-(NSArray*)arguments;
 
 @end

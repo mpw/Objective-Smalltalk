@@ -368,7 +368,7 @@ idAccessor( retval, setRetval )
                 expr = [[self evaluator] compile:exprString];
                 level=1;
             } @catch ( NSException *exception) {
-                NSLog(@"might need more input, exception: %@",exception);
+//                NSLog(@"might need more input, exception: %@",exception);
                 if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
                     level=2;
                     continue;

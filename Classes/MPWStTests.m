@@ -656,7 +656,19 @@
 
 +(void)testBlockArgs
 {
-    [self testexpr:@"[ :i | i ] value: 2." expected:@"2"];
+    [self testexpr:@"{ :i | i } value: 2." expected:@"2"];
+}
+
++(void)testParseBlockArgs
+{
+    MPWBlockExpression *block= [self evaluate:@" { :a | a * 2. } block."];
+    IDEXPECT( [block arguments], @[@"a"], @"single parameter 'a'");
+}
+
++(void)testParseImplicitBlockArgs
+{
+    MPWBlockExpression *block= [self evaluate:@" { $0 * 2. } block."];
+    IDEXPECT( [block arguments], @[ @"$0"],@"single implicit argument");
 }
 
 +(void)testMethodVarsHaveLocalScope
@@ -1055,8 +1067,10 @@
         @"testCreateObjectiveCForUnaryMessageSend",
         @"testCreateObjectiveCForMessageSendWithArg",
 		@"testGetInstanceVarDefByName",
-		@"testBlockArgs",
-		@"testMethodVarsHaveLocalScope",
+        @"testBlockArgs",
+        @"testParseBlockArgs",
+        @"testParseImplicitBlockArgs",
+        @"testMethodVarsHaveLocalScope",
         @"testToDo",
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testIntervalBlockCollect",

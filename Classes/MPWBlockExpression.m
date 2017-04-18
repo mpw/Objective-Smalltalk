@@ -9,17 +9,18 @@
 #import "MPWBlockExpression.h"
 #import "MPWBlockContext.h"
 #import <MPWFoundation/NSNil.h>
+#import "MPWNamedIdentifier.h"
 
 @implementation MPWBlockExpression
 
 idAccessor( statements, setStatements )
-idAccessor( arguments, setArguments )
+idAccessor( declaredArguments, setDeclaredArguments )
 
 -initWithStatements:newStatements arguments:newArgNames
 {
 	self=[super init];
 	[self setStatements:newStatements];
-	[self setArguments:newArgNames];
+	[self setDeclaredArguments:newArgNames];
 	return self;
 }
 
@@ -43,16 +44,37 @@ idAccessor( arguments, setArguments )
 	[statements addToVariablesRead:variablesRead];
 }
 
+-(NSArray*)implicitArguments
+{
+    NSMutableArray *implicits=[NSMutableArray array];
+    for ( MPWNamedIdentifier *identifier in [self variablesRead]) {
+        if ( [[identifier identifierName] hasPrefix:@"$"] ) {
+            [implicits addObject:[identifier identifierName]];
+        }
+    }
+    return implicits;
+}
+
+-(NSArray*)arguments
+{
+    NSArray *arguments=[self declaredArguments];
+    if ( arguments.count == 0) {
+        arguments=[self implicitArguments];
+    }
+    return arguments;
+}
+
+
 -(NSString*)description
 {
-    return [NSString stringWithFormat:@"<%@:%p: statements: %@ arguments: %@>",[self class],self,statements,arguments];
+    return [NSString stringWithFormat:@"<%@:%p: statements: %@ arguments: %@>",[self class],self,statements,[self arguments]];
 }
 
 
 -(void)dealloc
 {
 	[statements release];
-	[arguments release];
+	[declaredArguments release];
 	[super dealloc];
 }
 

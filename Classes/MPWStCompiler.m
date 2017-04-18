@@ -487,8 +487,11 @@ idAccessor(solver, setSolver)
         object = [self parseBlockWithStart:object];
     } else if ( [object isEqual:@"-"] ) {
         object = [[self parseLiteral] negated];
+    } else if ( [object isEqual:@"$"] ) {
+        object = [object stringByAppendingString:[[self nextToken] stringValue]];
+        object = [self lookupLocalVar:object];
     } else if ( [object isToken] && ![[object stringValue] isScheme] ) {
-		object = [self lookupLocalVar:object];
+        object = [self lookupLocalVar:object];
     } else if ( [object isToken] && [[object stringValue] isScheme] ) {
 		object = [self lookupComplexIdentifier:object];
 	} else if ( [object isKindOfClass:[NSNumber class]] ||  [object isKindOfClass:[NSString class]]){
@@ -906,7 +909,7 @@ idAccessor(solver, setSolver)
         }
 
     } else if ( [next isEqual:@"class"]) {
-        NSLog(@"found a class definition");
+//        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
     } else {
@@ -1026,6 +1029,9 @@ idAccessor(solver, setSolver)
                 } else {
                     PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
                 }
+            }
+            if ( ![next isEqual:@"}"]) {
+                PARSEERROR(@"incomplete class definition", @"");
             }
             classDef.methods=methods;
         } else {
