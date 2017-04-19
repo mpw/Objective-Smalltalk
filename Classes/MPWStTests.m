@@ -1015,11 +1015,23 @@
 
 +(void)testClassDefWithoutExplicitSuperclassIsNSObjectSubclass
 {
-    EXPECTNIL( NSClassFromString(@"ObjSTNSObjectSubclass"),@"should not exist yet");
+    Class definedClass=NSClassFromString(@"ObjSTNSObjectSubclass");
+    EXPECTNIL(definedClass ,@"should not exist yet");
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     [compiler evaluateScriptString:@"class ObjSTNSObjectSubclass  { -multiplyBySeven:num { 7 * num. }}"];
-    EXPECTNOTNIL( NSClassFromString(@"ObjSTNSObjectSubclass"),@"should now exist");
-    IDEXPECT( [NSClassFromString(@"ObjSTNSObjectSubclass") superclass], [NSObject class],@"should be an NSObject subclass");
+    definedClass=NSClassFromString(@"ObjSTNSObjectSubclass");
+    EXPECTNOTNIL( definedClass,@"should now exist");
+    IDEXPECT( [definedClass superclass], [NSObject class],@"should be an NSObject subclass");
+    id result=[compiler evaluateScriptString:@"ObjSTNSObjectSubclass new autorelease multiplyBySeven:5."];
+    IDEXPECT(result,@(35),@"method was successfully defined");
+}
+
++(void)testClassDefWithExistingClassIsClassExtension
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class NSObject  { -st_extend_multiplyByEight:num { 8 * num. }}"];
+    id result=[compiler evaluateScriptString:@"NSObject new autorelease st_extend_multiplyByEight:5."];
+    IDEXPECT(result,@(40),@"method was successfully defined");
 }
 
 +(NSArray*)testSelectors
@@ -1131,6 +1143,7 @@
         @"testClassDefSyntax",
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
+        @"testClassDefWithExistingClassIsClassExtension",
         ];
 }
 
