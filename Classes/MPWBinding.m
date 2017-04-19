@@ -117,9 +117,9 @@ objectAccessor( id, delegate, setDelegate)
 -(void)didChange
 {
     if (delegate) {
-//        NSLog(@"%@ sending changed: to delegate:%p/%@/%@",[self class],delegate,[delegate class],delegate);
+        NSLog(@"%@ sending changed: to delegate:%p/%@/%@",[self class],delegate,[delegate class],delegate);
         [delegate changed:self];
-//       NSLog(@"did send changed to delegate: %@",delegate);
+       NSLog(@"did send changed to delegate: %@",delegate);
     }
 }
 

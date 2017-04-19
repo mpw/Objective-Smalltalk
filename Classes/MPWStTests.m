@@ -1013,6 +1013,14 @@
     INTEXPECT([result intValue], 230, @"result of multiplying");
 }
 
++(void)testClassDefWithoutExplicitSuperclassIsNSObjectSubclass
+{
+    EXPECTNIL( NSClassFromString(@"ObjSTNSObjectSubclass"),@"should not exist yet");
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class ObjSTNSObjectSubclass  { -multiplyBySeven:num { 7 * num. }}"];
+    EXPECTNOTNIL( NSClassFromString(@"ObjSTNSObjectSubclass"),@"should now exist");
+    IDEXPECT( [NSClassFromString(@"ObjSTNSObjectSubclass") superclass], [NSObject class],@"should be an NSObject subclass");
+}
 
 +(NSArray*)testSelectors
 {
@@ -1122,6 +1130,7 @@
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
         @"testCreateSubclassUsingSnytax",
+        @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         ];
 }
 

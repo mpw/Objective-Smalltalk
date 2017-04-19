@@ -24,7 +24,12 @@
 {
     Class theClassToDefine=NSClassFromString(self.name);
     if (!theClassToDefine) {
-        Class superclass=NSClassFromString(self.superclassName);
+        Class superclass;
+        if (self.superclassName) {
+            superclass=NSClassFromString(self.superclassName);
+        } else {
+            superclass=[NSObject class];  // FIXME should probably be pluggable
+        }
         if ( superclass ) {
             [superclass createSubclassWithName:self.name instanceVariableArray:self.instanceVariableDescriptions];
             theClassToDefine=NSClassFromString(self.name);
