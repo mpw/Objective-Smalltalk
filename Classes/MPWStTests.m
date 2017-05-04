@@ -604,7 +604,7 @@
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
-
+    
     MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
@@ -613,6 +613,22 @@
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 type], @"id", @"type of ivar" );
+}
+
++(void)testCreateSubclassWithInstanceVariablesUsingSyntax
+{
+    [self evaluate:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+    Class aClass = NSClassFromString( @"__TestClassWithIVarsFromSyntax" );
+    EXPECTNOTNIL(aClass, @"defined the class");
+    NSArray <MPWInstanceVariable*>* variableDescriptions = [aClass instanceVariables];
+    MPWInstanceVariable *variableDescription = variableDescriptions[1];
+    //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
+    IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
+    IDEXPECT( [variableDescription type], @"@", @"type of ivar" );
+    MPWInstanceVariable *ivar2 = [variableDescriptions lastObject];
+    //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
+    IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
+    IDEXPECT( [ivar2 type], @"@", @"type of ivar" );
 }
 
 
@@ -1097,6 +1113,7 @@
         @"testCreateSubclass",
         @"testCreateSubclassWithInstanceVariables",
         @"testParseSubclassWithInstanceVariablesUsingSyntax",
+        @"testCreateSubclassWithInstanceVariablesUsingSyntax",
         @"testGetInstanceVarNames",
         @"testCreateObjectiveCForVariable",
         @"testCreateObjectiveCForConstants",

@@ -20,6 +20,15 @@
     }
 }
 
+-(NSArray *)ivarNames
+{
+    if ( [[self instanceVariableDescriptions] count] >0 ) {
+        return [[[self instanceVariableDescriptions] collect] name];
+    } else {
+        return @[];
+    }
+}
+
 -(id)evaluateIn:(id)aContext
 {
     Class theClassToDefine=NSClassFromString(self.name);
@@ -31,7 +40,7 @@
             superclass=[NSObject class];  // FIXME should probably be pluggable
         }
         if ( superclass ) {
-            [superclass createSubclassWithName:self.name instanceVariableArray:self.instanceVariableDescriptions];
+            [superclass createSubclassWithName:self.name instanceVariableArray:[self ivarNames]];
             theClassToDefine=NSClassFromString(self.name);
         }
     }
