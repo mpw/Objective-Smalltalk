@@ -629,6 +629,12 @@
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 type], @"@", @"type of ivar" );
+    MPWStCompiler *testCompiler=[MPWStCompiler compiler];
+    [testCompiler evaluateScriptString:@"testInstance := __TestClassWithIVarsFromSyntax new. var:testInstance/myIvar := 'hi'. "];
+    IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"hi",@"accessor ");
+    IDEXPECT([testCompiler evaluateScriptString:@"var:testInstance/myIvar "],@"hi",@"accessor via pi syntax");
+    [testCompiler evaluateScriptString:@"testInstance setMyIvar:'2nd value'. "];
+    IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"2nd value",@" set and get viaaccessor ");
 }
 
 

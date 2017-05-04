@@ -42,6 +42,10 @@
         if ( superclass ) {
             [superclass createSubclassWithName:self.name instanceVariableArray:[self ivarNames]];
             theClassToDefine=NSClassFromString(self.name);
+            for ( NSString *ivarName in [self ivarNames]) {
+               	[theClassToDefine generateAccessorsFor:ivarName];
+
+            }
         }
     }
     [self addMethodsIn:[aContext classStoreForName:self.name]];
