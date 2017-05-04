@@ -26,7 +26,6 @@
 #import "MPWMessageExpression.h"
 #import "MPWClassDefinition.h"
 
-
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
 -lengthMultipliedBy:aNumber;
@@ -600,7 +599,23 @@
 //	NSLog(@"did set via message send");
 	IDEXPECT( [instance variable1], testValue, @"after setting via direct accessor");
 }	
-	
+
++(void)testParseSubclassWithInstanceVariablesUsingSyntax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+
+    MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
+    //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
+    IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
+    IDEXPECT( [variableDescription type], @"id", @"type of ivar" );
+    MPWInstanceVariable *ivar2 = [[classDef instanceVariableDescriptions] lastObject];
+    //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
+    IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
+    IDEXPECT( [ivar2 type], @"id", @"type of ivar" );
+}
+
+
 
 +(void)testGetInstanceVarNames
 {
@@ -1081,7 +1096,8 @@
 		@"testVariableDataFlowAnalysis",
         @"testCreateSubclass",
         @"testCreateSubclassWithInstanceVariables",
-		@"testGetInstanceVarNames",
+        @"testParseSubclassWithInstanceVariablesUsingSyntax",
+        @"testGetInstanceVarNames",
         @"testCreateObjectiveCForVariable",
         @"testCreateObjectiveCForConstants",
         @"testCreateObjectiveCForUnaryMessageSend",

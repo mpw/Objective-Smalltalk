@@ -30,6 +30,7 @@
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "MPWClassDefinition.h"
+#import "MPWInstanceVariable.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -998,6 +999,31 @@ idAccessor(solver, setSolver)
     return [self parseClassDefinition];
 }
 
+-(MPWInstanceVariable *)parseInstanceVariableDefinition
+{
+    NSString *next=nil;
+    if ( [(next=[self nextToken]) isEqualToString:@"var"]) {
+        NSString *type=@"id";
+        next = [self nextToken];
+        if ( [next isEqualToString:@"<"]) {
+            type=[self nextToken];
+            next=[self nextToken];
+            if ( ![next isEqualToString:@">"]) {
+                PARSEERROR(@"> expected as close of instance variable definition", next);
+            }
+        } else {
+            [self pushBack:next];
+        }
+        NSString *name=[self nextToken];
+        next=[self nextToken];
+        return [[[MPWInstanceVariable alloc] initWithName:name offset:0 type:type] autorelease];
+    } else {
+        PARSEERROR(@"var expected in instance variable definition", next);
+        return nil;
+    }
+}
+
+
 -(MPWClassDefinition*)parseClassDefinition
 {
     MPWClassDefinition *classDef=nil;
@@ -1013,6 +1039,7 @@ idAccessor(solver, setSolver)
             separator=[self nextToken];
         }
         NSMutableArray *methods=[NSMutableArray array];
+        NSMutableArray *instanceVariables=[NSMutableArray array];
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
             while (nil != (next=[self nextToken])) {
@@ -1021,7 +1048,12 @@ idAccessor(solver, setSolver)
                     MPWScriptedMethod *method=[self parseMethodDefinition];
                     [methods addObject:method];
                 } else if ( [next isEqualToString:@"var"]) {
-                    PARSEERROR(@"variable definitions not supported yet", next);
+                    [self pushBack:next];
+                    [instanceVariables addObject:[self parseInstanceVariableDefinition]];
+                    next=[self nextToken];
+                    if ( ![next isEqualToString:@"."]) {
+                        [self pushBack:next];
+                    }
                 } else if ( [next isEqualToString:@"val"]) {
                     PARSEERROR(@"const definitions not supported yet", next);
                 } else if ( [next isEqualToString:@"}"]) {
@@ -1034,6 +1066,7 @@ idAccessor(solver, setSolver)
                 PARSEERROR(@"incomplete class definition", @"");
             }
             classDef.methods=methods;
+            classDef.instanceVariableDescriptions=instanceVariables;
         } else {
             PARSEERROR(@"expected { in class definition", separator);
         }
