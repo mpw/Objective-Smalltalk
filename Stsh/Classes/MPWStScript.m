@@ -137,7 +137,7 @@ objectAccessor( NSString, filename, setFilename )
             expr = [[executionContext evaluator] compile:accumulatedExpression];
             [accumulatedExpression setString:@""];
         } @catch (NSException *parseException ){
-            NSLog(@"keep looking because of exception: %@",parseException);
+//            NSLog(@"keep looking because of exception: %@",parseException);
             line++;
             continue;
         }

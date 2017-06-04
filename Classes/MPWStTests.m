@@ -1071,6 +1071,15 @@
     IDEXPECT(result,@(40),@"method was successfully defined");
 }
 
++(void)testNestedVarExprWithPath
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"a := #{ 'key1' : 'key2' }."];
+    [compiler evaluateScriptString:@"b := #{ 'key2' : 42 }."];
+    id result=[compiler evaluateScriptString:@"var:b/{var:a/key1}"];
+    IDEXPECT( result, @42, @"nested expr result");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1183,6 +1192,7 @@
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
+        @"testNestedVarExprWithPath",
         ];
 }
 

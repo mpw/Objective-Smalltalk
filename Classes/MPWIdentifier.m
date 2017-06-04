@@ -40,7 +40,30 @@ idAccessor( identifierName, setIdentifierName )
 
 -pathComponents
 {
-	return [[self identifierName] componentsSeparatedByString:@"/"];
+	NSArray *rawComponents = [[self identifierName] componentsSeparatedByString:@"/"];
+    NSMutableArray  *results=[NSMutableArray array];
+    NSMutableString *current=nil;
+    for ( NSString *component in rawComponents) {
+        if ( [component hasPrefix:@"{"]) {
+            current=[[component mutableCopy] autorelease];
+            component=nil;
+        }
+        if ( current && component) {
+            [current appendString:@"/"];
+            [current appendString:component];
+            component=nil;
+        }
+        if ( [current hasSuffix:@"}"]) {
+            component=current;
+            current=nil;
+        }
+        if ( component ){
+            [results addObject:component];
+        }
+    }
+    
+    
+    return results;
 }
 
 -evaluatedPathComponentsInContext:aContext
@@ -112,3 +135,24 @@ idAccessor( identifierName, setIdentifierName )
 }
 
 @end
+
+#import <MPWFoundation/DebugMacros.h>
+
+@implementation MPWIdentifier(testing)
+
++(void)testNestedIdentifierPathComponents
+{
+    IDEXPECT( [[self identifierWithName:@"a/{var:c/d}"] pathComponents], (@[ @"a", @"{var:c/d}"]), @"components");
+    IDEXPECT( [[self identifierWithName:@"{b}"] pathComponents], (@[ @"{b}"]), @"components");
+}
+
+
++testSelectors
+{
+    return @[
+             @"testNestedIdentifierPathComponents",
+             ];
+}
+
+@end
+
