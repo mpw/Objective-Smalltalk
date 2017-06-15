@@ -65,10 +65,16 @@
     NSView *v=[MPWStCompiler evaluate:@" #NSView{ #frame : ( 10@20 extent: 400@200) } "];
     EXPECTNOTNIL(v, @"got a view");
     EXPECTTRUE( [v isKindOfClass:[NSView class]],@"is a view");
-    FLOATEXPECT(v.frame.origin.x, 10, @"zerorect x");
-    FLOATEXPECT(v.frame.origin.y, 20, @"zerorect y");
-    FLOATEXPECT(v.frame.size.width, 400, @"zerorect width");
-    FLOATEXPECT(v.frame.size.height, 200,@"zerorect height");
+    FLOATEXPECT(v.frame.origin.x, 10, @"x");
+    FLOATEXPECT(v.frame.origin.y, 20, @"y");
+    FLOATEXPECT(v.frame.size.width, 400, @"width");
+    FLOATEXPECT(v.frame.size.height, 200,@"height");
+}
+
++(void)testCanSpecifyAdditionalValues
+{
+    NSView *v=[MPWStCompiler evaluate:@" #NSView{ #alphaValue : 0.3 "];
+    FLOATEXPECT(v.alphaValue, 0.3, @"alpha");
 }
 
 
@@ -79,6 +85,7 @@
              @"testCanCreateBasicViewFromDictionary",
              @"testCanCreateBasicViewFromST",
              @"testCanSpecifyFrame",
+             @"testCanSpecifyAdditionalValues",
              ];
     
 }
