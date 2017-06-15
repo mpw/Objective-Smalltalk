@@ -64,9 +64,9 @@ idAccessor( commandClass, setCommandClass )
 
 +testSelectors
 {
-	return [NSArray arrayWithObjects:
+	return @[
 //		@"testRunOfUpcaseFilter",
-		nil];
+		];
 }
 
 

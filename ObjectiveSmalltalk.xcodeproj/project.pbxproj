@@ -13,6 +13,8 @@
 		1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1F16DCE6E600ED2517 /* MPWCodeGenerator.m */; };
 		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
 		1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* MPWStsh.h */; };
+		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
+		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
 		1F222CA81394D817007AE2FB /* MPWScriptingBridgeBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222CA61394D817007AE2FB /* MPWScriptingBridgeBinding.h */; };
@@ -503,6 +505,8 @@
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0F13E518D18C86008B5E80 /* MPWStsh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStsh.h; sourceTree = "<group>"; };
+		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
+		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
 		1F1F57FB083395A000D3275A /* MPWMethodHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodHeader.m; sourceTree = "<group>"; };
 		1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWScriptingBridgeScheme.h; sourceTree = "<group>"; };
@@ -1166,6 +1170,8 @@
 				1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */,
 				1FA859FC1923731900F52396 /* ObjectiveSmalltalkUI.m */,
 				1FA859F51923731900F52396 /* Supporting Files */,
+				1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */,
+				1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -1611,6 +1617,7 @@
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
+				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1870,6 +1877,7 @@
 				1FA859EE1923731900F52396 /* Frameworks */,
 				1FA859EF1923731900F52396 /* Headers */,
 				1FA859F01923731900F52396 /* Resources */,
+				1F19EFB81EF2596A00CB9E01 /* Run Tests */,
 			);
 			buildRules = (
 			);
@@ -2132,6 +2140,20 @@
 			shellPath = /bin/sh;
 			shellScript = "LLVM_XCCONFIG_FILE=\"${PROJECT_DIR}/llvm-config/llvm.xcconfig\"\nLLVM_COMPONENTS_FILE=\"${PROJECT_DIR}/llvm-config/llvm-components.txt\"\n\ndate_params=$((`stat -f \"%m\" $LLVM_COMPONENTS_FILE`))\ndate_config=$((`stat -f \"%m\" $LLVM_XCCONFIG_FILE`))\nif [ $date_params -gt $date_config ]; then\necho \"llvm.xcconfig parameter changes detected\"\n\nLLVM_COMPONENTS=`/bin/cat $LLVM_COMPONENTS_FILE`\nLLVM_CFLAGS=`/usr/local/bin/llvm-config --cflags`\nLLVM_LDFLAGS=`/usr/local/bin/llvm-config --ldflags`\" \"`/usr/local/bin/llvm-config --libs $LLVM_COMPONENTS`\n\necho \"// Configuration file for LLVM settings, generated as a build phase.\" > $LLVM_XCCONFIG_FILE\necho \"// $LLVM_COMPONENTS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_CFLAGS = $LLVM_CFLAGS\" >> $LLVM_XCCONFIG_FILE\necho \"LLVM_LDFLAGS = $LLVM_LDFLAGS\" >> $LLVM_XCCONFIG_FILE\nfi";
 		};
+		1F19EFB81EF2596A00CB9E01 /* Run Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Tests";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+		};
 		1F43485C1E216D2A002750C3 /* Test */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2338,6 +2360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
+				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
 				1F2F8DCB192E28AA00A5D1B5 /* MPWShellPrinter.m in Sources */,
 				1FA859FD1923731900F52396 /* ObjectiveSmalltalkUI.m in Sources */,

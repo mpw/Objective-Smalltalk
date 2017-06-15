@@ -111,7 +111,7 @@ idAccessor( baseObject, setBaseObject )
 
 -(void)objst_addObserver:anObserver forKey:aKey
 {
-    NSLog(@"%@ objst_addObserver: %@",self,anObserver);
+//    NSLog(@"%@ objst_addObserver: %@",self,anObserver);
     [self addObserver:anObserver forKeyPath:aKey options:0 context:NULL];
 }
 
