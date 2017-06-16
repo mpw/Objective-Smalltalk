@@ -77,6 +77,13 @@
     FLOATEXPECT(v.alphaValue, 0.3, @"alpha");
 }
 
++(void)testCanSpecifySubviewAsArray
+{
+    NSView *v=[MPWStCompiler evaluate:@" #NSView{ #subviews :  #(   #NSView{ #alphaValue : 0.3 } ) }"];
+    INTEXPECT( v.subviews.count, 1 ,@"number of subviews");
+    EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
+}
+
 
 
 +testSelectors
@@ -86,6 +93,7 @@
              @"testCanCreateBasicViewFromST",
              @"testCanSpecifyFrame",
              @"testCanSpecifyAdditionalValues",
+             @"testCanSpecifySubviewAsArray",
              ];
     
 }

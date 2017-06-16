@@ -291,7 +291,7 @@ idAccessor(solver, setSolver)
 //                NSLog(@"closing bracket, exit loop");
                 break;
             } else {
-                PARSEERROR(@"array syntax expr not follwed by , or )", @"");
+                PARSEERROR(@"array syntax expr not followed by , or )", @"");
             }
         } else {
             break;
