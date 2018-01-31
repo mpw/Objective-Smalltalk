@@ -159,7 +159,7 @@ static void CatchException(NSException *exception)
 
 -(NSData*)get:(NSString*)uri parameters:(NSDictionary*)params
 {
-//    NSLog(@"MethodServer get uri: %@",uri);
+    NSLog(@"MethodServer get uri: %@",uri);
     if ( [uri hasPrefix:@"/theAnswer"] ) {
         return [[NSString stringWithFormat:@"theAnswer: %d",(int)[self theAnswer]] asData];
     } else if ( [uri hasPrefix:@"/projectDir"] ) {
@@ -167,7 +167,7 @@ static void CatchException(NSException *exception)
     } else if ( [uri hasPrefix:@"/uniqueID"] ) {
         return [[self uniqueID] asData];
     } else{
-//        NSLog(@"-[%@ get:%@ parameters:%@] -> super",[self class],uri,params);
+        NSLog(@"-[%@ get:%@ parameters:%@] -> super",[self class],uri,params);
         return [super get:uri parameters:params];
     }
 }

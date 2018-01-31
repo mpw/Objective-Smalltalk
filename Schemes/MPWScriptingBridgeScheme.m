@@ -8,6 +8,7 @@
 
 #import "MPWScriptingBridgeScheme.h"
 #import "MPWScriptingBridgeBinding.h"
+#import "MPWGenericBinding.h"
 
 @interface NSObject(scriptingBridge)
 
@@ -53,12 +54,30 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
 	if ( [path hasPrefix:@"/"] ) {
 		path=[path substringFromIndex:1];
 	}
-	id remoteApp=[self appForIdentifier:appIdentifier];
-	id binding= [[[MPWScriptingBridgeBinding alloc] initWithBaseObject:remoteApp path:path] autorelease];
-    return binding;
-    
+    if ( appIdentifier) {
+        id remoteApp=[self appForIdentifier:appIdentifier];
+        id binding= [[[MPWScriptingBridgeBinding alloc] initWithBaseObject:remoteApp path:path] autorelease];
+        return binding;
+    } else {
+        return [MPWGenericBinding bindingWithName:@"/" scheme:self];
+    }
 }
 
+-(NSArray*)listOfApps
+{
+    MPWExternalFilter *f=[MPWExternalFilter filterWithCommandString:@"osascript -e 'tell application \"System Events\" to get name of every process whose background only is false'"];
+    [f run];
+    [f close];
+    NSString *appListString=[[f target] target];
+    return [[[appListString componentsSeparatedByString:@","] collect] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
 
-
+-(id)valueForBinding:aBinding
+{
+    if ( [[aBinding name] isEqualToString:@"/"])  {
+        return [self listOfApps];
+    } else {
+        return [super valueForBinding:aBinding];
+    }
+}
 @end

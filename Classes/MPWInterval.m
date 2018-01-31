@@ -10,6 +10,7 @@
 #import "MPWBlockContext.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/MPWStream.h>
+#import <MPWFoundation/NSNumberArithmetic.h>
 
 @interface MPWIntervalEnumerator : MPWInterval
 {
@@ -204,6 +205,22 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	return &range;
 }
 
+#define defineArithOp( opName  ) \
+-(id)opName:other {\
+   NSNumber *from1=[@(FROM) opName: other];\
+   NSNumber *to1=[@(TO) opName: other];\
+   MPWInterval *newInterval=[[self class] intervalFrom:from1 to:to1 step:@([self step])];\
+   return newInterval;\
+}\
+
+
+defineArithOp( add )
+defineArithOp( mul)
+defineArithOp( sub)
+defineArithOp( div )
+
+
+
 -(void)encodeWithCoder:aCoder
 {
 	long from=FROM,to=TO;
@@ -261,13 +278,24 @@ scalarAccessor( Class, numberClass ,setNumberClass )
 	INTEXPECT( [one_to_ten integerAtIndex:4], 10, @"last of [1-10]");
 }
 
++(void)testIntervalArithmetic
+{
+    MPWInterval *five_to_ten=[MPWInterval intervalFromInt:4 toInt:10];
+    INTEXPECT( [[five_to_ten add:@2] from], 6, @"add 2 to interval -> from");
+    INTEXPECT( [[five_to_ten add:@2] to], 12, @"add 2 to interval -> to");
+    INTEXPECT( [[five_to_ten mul:@3] from], 12, @"mul interval by 3 -> from");
+    INTEXPECT( [[five_to_ten mul:@3] to], 30, @"mul interval by 3 -> to");
+    INTEXPECT( [[five_to_ten sub:@3] from], 1, @"sub 3 from interval -> from");
+    INTEXPECT( [[five_to_ten sub:@3] to], 7, @"sub 3 from interval -> to");
+}
 
 +testSelectors
 {
     return [NSArray arrayWithObjects:
 			@"testBasicInterval",
 			@"testIntervalRespectsRange",
-			@"testIntervalWithStep",
+            @"testIntervalWithStep",
+            @"testIntervalArithmetic",
         nil];
 }
 
@@ -317,6 +345,7 @@ longAccessor( current, setCurrent )
     return self;
 }
 
+
 @end
 
 @implementation NSArray(iteration)
@@ -341,6 +370,9 @@ longAccessor( current, setCurrent )
 	return [self do:aBlock with:nil];
 }
 
+-sum {
+    return [[self reduce] add:@(0)];
+}
 
 @end
 
