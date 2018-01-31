@@ -93,6 +93,7 @@
         NSDictionary *attributes=[fm attributesOfItemAtPath:path error:nil];
         NSNumber *size=[attributes objectForKey:NSFileSize];
         NSString *formattedSize=[NSByteCountFormatter stringFromByteCount:[size intValue] countStyle:NSByteCountFormatterCountStyleBinary /* NSByteCountFormatterCountStyleFile */];
+        formattedSize=[formattedSize stringByReplacingOccurrencesOfString:@" bytes" withString:@"  B"];
         int numSpaces=10-(int)[formattedSize length];
         numSpaces=MAX(0,numSpaces);
         NSString *spaces=[@"               " substringToIndex:numSpaces];
