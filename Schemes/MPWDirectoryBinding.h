@@ -8,7 +8,7 @@
 
 #import "MPWFileBinding.h"
 
-@interface MPWDirectoryBinding : MPWFileBinding
+@interface MPWDirectoryBinding : MPWGenericBinding
 {
     NSArray *contents;
     BOOL    fancy;
