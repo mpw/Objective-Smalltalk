@@ -1,47 +1,47 @@
 #pragma once
 #include <unistd.h>
 
-char *root_width_read(int wid);
-char *root_height_read(int wid);
+id root_width_read(int wid);
+id root_height_read(int wid);
 
 void border_color_write(int wid, const char *buf);
 
-char *border_width_read(int wid);
-void border_width_write(int wid, const char *buf);
+id border_width_read(int wid);
+void border_width_write(int wid, id );
 
 
-char *geometry_width_read(int wid);
+id geometry_width_read(int wid);
 void geometry_width_write(int wid, const char *buf);
 
-char *geometry_height_read(int wid);
+id geometry_height_read(int wid);
 void geometry_height_write(int wid, const char *buf);
 
-char *geometry_x_read(int wid);
+id geometry_x_read(int wid);
 void geometry_x_write(int wid, const char *buf);
 
-char *geometry_y_read(int wid);
+id geometry_y_read(int wid);
 void geometry_y_write(int wid, const char *buf);
 
 
-char *mapped_read(int wid);
+id mapped_read(int wid);
 void mapped_write(int wid, const char *buf);
 
 
-char *ignored_read(int wid);
+id ignored_read(int wid);
 void ignored_write(int wid, const char *buf);
 
 
 void stack_write(int wid, const char *buf);
 
 
-char *title_read(int wid);
+id title_read(int wid);
 
 
-char *class_read(int wid);
+id class_read(int wid);
 
 
-char *event_read(int wid);
+id event_read(int wid);
 
 
-char *focused_read(int wid);
+id focused_read(int wid);
 void focused_write(int wid, const char *buf);

@@ -28,7 +28,7 @@ struct x11fs_file{
 	int mode;
 	bool direct_io;
 	bool dir;
-	char *(*read)(int wid);
+	id (*read)(int wid);
 	void (*write)(int wid, const char *buf);
 };
 
@@ -179,9 +179,8 @@ id  x11fs_read(NSString *nspath)
 			if(!x11fs_files[i].read)
 				return nil;
 			//Call the read function and stick the results in the buffer
-			char *result= x11fs_files[i].read(wid);
-      NSString *resultString=[NSString stringWithUTF8String:result];
-      return resultString;
+			id result= x11fs_files[i].read(wid);
+      return result;
 		}
 	}
 	return nil;
