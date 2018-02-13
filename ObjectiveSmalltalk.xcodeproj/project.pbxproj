@@ -181,7 +181,11 @@
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F86CE182031DE84000F0B81 /* MPWWindowsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */; };
-		1F86CE192031DE84000F0B81 /* MPWWindowsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */; };
+		1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */; };
+		1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; };
+		1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; };
+		1F86CE21203338A8000F0B81 /* MPWSpotlightScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */; };
+		1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8AC138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A0138ADC1600199F03 /* MPWFileSchemeResolver.m */; };
 		1F88E8AD138ADC1600199F03 /* MPWFileBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A1138ADC1600199F03 /* MPWFileBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -642,6 +646,8 @@
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
 		1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWWindowsScheme.h; sourceTree = "<group>"; };
 		1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWWindowsScheme.m; sourceTree = "<group>"; };
+		1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSpotlightScheme.h; sourceTree = "<group>"; };
+		1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSpotlightScheme.m; sourceTree = "<group>"; };
 		1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFileSchemeResolver.h; sourceTree = "<group>"; };
 		1F88E8A0138ADC1600199F03 /* MPWFileSchemeResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFileSchemeResolver.m; sourceTree = "<group>"; };
 		1F88E8A1138ADC1600199F03 /* MPWFileBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFileBinding.h; sourceTree = "<group>"; };
@@ -996,6 +1002,8 @@
 			children = (
 				1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */,
 				1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */,
+				1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */,
+				1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */,
 				1F8B855019AC72C700F8A107 /* MPWFileWatcher.h */,
 				1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */,
 				1F8F1A02193070F200CC831A /* MPWDirectoryBinding.h */,
@@ -1623,6 +1631,7 @@
 				1F88E8B3138ADC1600199F03 /* MPWEnvScheme.h in Headers */,
 				1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */,
 				1F222CA81394D817007AE2FB /* MPWScriptingBridgeBinding.h in Headers */,
+				1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */,
 				1F8F1A04193070F200CC831A /* MPWDirectoryBinding.h in Headers */,
 				1FDCCB38139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */,
 				1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */,
@@ -1788,6 +1797,7 @@
 				1FE37B9B1969610600C9A378 /* MPWMessagePortDescriptor.h in Headers */,
 				1FE37B9F1969610600C9A378 /* MPWMethodCallBack.h in Headers */,
 				1FE37BC31969610800C9A378 /* NSObjectScripting.h in Headers */,
+				1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */,
 				1FE37BBB1969610700C9A378 /* MPWStCompiler.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2461,7 +2471,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
-				1F86CE192031DE84000F0B81 /* MPWWindowsScheme.m in Sources */,
+				1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */,
+				1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
 				1F2F8DCB192E28AA00A5D1B5 /* MPWShellPrinter.m in Sources */,
@@ -2574,6 +2585,7 @@
 				1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */,
 				1FE37BC01969610800C9A378 /* MPWStTests.m in Sources */,
 				1FE37BA41969610700C9A378 /* MPWMethodMirror.m in Sources */,
+				1F86CE21203338A8000F0B81 /* MPWSpotlightScheme.m in Sources */,
 				1FE37BFC1969612700C9A378 /* MPWPlistScheme.m in Sources */,
 				1FB7D7F51E9E5ACC008E5D8E /* MPWClassDefinition.m in Sources */,
 				1FE37B941969610600C9A378 /* MPWInstanceVariable.m in Sources */,
