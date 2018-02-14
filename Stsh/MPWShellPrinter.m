@@ -88,7 +88,7 @@
 {
     NSFileManager *fm=[NSFileManager defaultManager];
     NSString *path=(NSString*)[binding path];
-    NSString *name=[path lastPathComponent];
+    NSString *name=[binding fancyPath];
     if ( ![name hasPrefix:@"."]) {
         NSDictionary *attributes=[fm attributesOfItemAtPath:path error:nil];
         NSNumber *size=[attributes objectForKey:NSFileSize];

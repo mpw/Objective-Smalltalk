@@ -26,10 +26,11 @@
 -value
 {
     NSMutableArray *contents=[NSMutableArray array];
-    
+
     for ( NSMetadataItem *item in [[self.query.results copy] autorelease]  ) {
         NSString *path=[item valueForAttribute:(NSString*)kMDItemPath];
         MPWFileBinding *f=[[[MPWFileBinding alloc] initWithPath:path] autorelease];
+        f.parentPath = [self name];
         [contents addObject:f];
     }
     return contents;
@@ -76,10 +77,13 @@
             [predicates addObject:p];
         }
     }
-    [q setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
+    NSPredicate *p=nil;
+    if (predicates.count){
+        [q setPredicate:predicates.count==1 ? predicates.firstObject : [NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
+    }
     [q setSearchScopes:@[ components.path ]];
     [q setOperationQueue:[[NSOperationQueue new] autorelease]];
-    MPWSpotlightSearchBinding *sb=[MPWSpotlightSearchBinding bindingWithName:[aBinding name] scheme:self];
+    MPWSpotlightSearchBinding *sb=[MPWSpotlightSearchBinding bindingWithName:components.path scheme:self];
     sb.originalBinding=aBinding;
     sb.query=q;
     [sb.query startQuery];

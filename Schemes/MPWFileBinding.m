@@ -204,6 +204,19 @@ idAccessor( url , setUrl )
     return YES;
 }
 
+-(NSString*)fancyPath
+{
+    if ( [self parentPath]) {
+        long parentLength=[[self parentPath] length];
+        if ( parentLength > 1 && ![[self parentPath] hasSuffix:@"/"]) {
+            parentLength++;
+        }
+        return [[self path] substringFromIndex:parentLength];
+    } else {
+        return [[self path] lastPathComponent];
+    }
+}
+
 -fileSystemValue
 {
     return self;
