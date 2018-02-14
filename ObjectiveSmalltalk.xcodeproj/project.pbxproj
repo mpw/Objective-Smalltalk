@@ -28,10 +28,6 @@
 		1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
 		1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */; };
 		1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */; };
-		1F2F8DC8192E28AA00A5D1B5 /* MPWShellPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2F8DC6192E28AA00A5D1B5 /* MPWShellPrinter.h */; };
-		1F2F8DC9192E28AA00A5D1B5 /* MPWShellPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2F8DC6192E28AA00A5D1B5 /* MPWShellPrinter.h */; };
-		1F2F8DCA192E28AA00A5D1B5 /* MPWShellPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */; };
-		1F2F8DCB192E28AA00A5D1B5 /* MPWShellPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */; };
 		1F3C6E691E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; };
 		1F3C6E6A1E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; };
 		1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
@@ -186,6 +182,8 @@
 		1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; };
 		1F86CE21203338A8000F0B81 /* MPWSpotlightScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */; };
 		1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */; };
+		1F86CE2520344182000F0B81 /* MPWShellPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */; };
+		1F86CE2620344191000F0B81 /* MPWShellPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2F8DC6192E28AA00A5D1B5 /* MPWShellPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8AC138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A0138ADC1600199F03 /* MPWFileSchemeResolver.m */; };
 		1F88E8AD138ADC1600199F03 /* MPWFileBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8A1138ADC1600199F03 /* MPWFileBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1682,7 +1680,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F86CE182031DE84000F0B81 /* MPWWindowsScheme.h in Headers */,
-				1F2F8DC9192E28AA00A5D1B5 /* MPWShellPrinter.h in Headers */,
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
@@ -1703,7 +1700,7 @@
 				1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */,
 				1FAB448A19031343009EEE6D /* MPWObjectPipeCommand.h in Headers */,
 				1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */,
-				1F2F8DC8192E28AA00A5D1B5 /* MPWShellPrinter.h in Headers */,
+				1F86CE2620344191000F0B81 /* MPWShellPrinter.h in Headers */,
 				1FAB448E19031343009EEE6D /* MPWUpcaseFilter.h in Headers */,
 				1FAB448C19031343009EEE6D /* MPWShellCompiler.h in Headers */,
 			);
@@ -2475,7 +2472,6 @@
 				1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
-				1F2F8DCB192E28AA00A5D1B5 /* MPWShellPrinter.m in Sources */,
 				1FA859FD1923731900F52396 /* ObjectiveSmalltalkUI.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
@@ -2490,7 +2486,7 @@
 				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
 				1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */,
 				1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */,
-				1F2F8DCA192E28AA00A5D1B5 /* MPWShellPrinter.m in Sources */,
+				1F86CE2520344182000F0B81 /* MPWShellPrinter.m in Sources */,
 				1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */,
 				1FAFD97C1855BC5500EC5221 /* MPWShellCompiler.m in Sources */,
 				1FAFD97D1855BC5500EC5221 /* MPWShellProcess.m in Sources */,

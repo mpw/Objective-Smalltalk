@@ -7,10 +7,50 @@
 
 #import "MPWSpotlightScheme.h"
 #import <CoreServices/CoreServices.h>
+#import "MPWFileBinding.h"
+#import "MPWDirectoryBinding.h"
+
+@interface MPWSpotlightSearchBinding : MPWDirectoryBinding
+{
+    
+}
+
+@property (nonatomic,strong) NSMetadataQuery *query;
+@property (nonatomic,strong) MPWGenericBinding *originalBinding;
 
 
 
+@end
+@implementation MPWSpotlightSearchBinding
 
+-value
+{
+    NSMutableArray *contents=[NSMutableArray array];
+    
+    for ( NSMetadataItem *item in [[self.query.results copy] autorelease]  ) {
+        NSString *path=[item valueForAttribute:(NSString*)kMDItemPath];
+        MPWFileBinding *f=[[[MPWFileBinding alloc] initWithPath:path] autorelease];
+        [contents addObject:f];
+    }
+    return contents;
+}
+
+-(NSArray *)contents
+{
+    NSArray *c=[super contents];
+    if (!c) {
+        c=[self value];
+    }
+    return c;
+}
+
+-(BOOL)done
+{
+    return self.query.isStarted && !self.query.isGathering;
+}
+
+
+@end
 
 @implementation MPWSpotlightScheme
 
@@ -30,16 +70,20 @@
     }
     NSMutableArray *predicates = [NSMutableArray array];
     for ( NSURLQueryItem* queryItem in [components queryItems])  {
-        NSString *key=[queryItem name];
-        NSString *value=[queryItem value];
-        NSString *query=queryStrings[key];
-         NSPredicate *p=[NSPredicate predicateWithFormat:query,value];
-        [predicates addObject:p];
+        NSString *query=queryStrings[[queryItem name]];
+        if ( query ) {
+            NSPredicate *p=[NSPredicate predicateWithFormat:query,[queryItem value]];
+            [predicates addObject:p];
+        }
     }
     [q setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
+    [q setSearchScopes:@[ components.path ]];
     [q setOperationQueue:[[NSOperationQueue new] autorelease]];
-    [q startQuery];
-    return q;
+    MPWSpotlightSearchBinding *sb=[MPWSpotlightSearchBinding bindingWithName:[aBinding name] scheme:self];
+    sb.originalBinding=aBinding;
+    sb.query=q;
+    [sb.query startQuery];
+    return sb;
 }
 
 
