@@ -54,9 +54,21 @@
     return [binding children];
 }
 
+-(NSString*)completePartialPathFromAbsoluetPath:(NSString*)partialPath
+{
+    NSRange r=[partialPath rangeOfString:@"/" options:NSBackwardsSearch];
+    return [partialPath substringToIndex:r.location+1];
+
+}
+
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
-    NSArray *childNames = [[self bindingForName:@"." inContext:aContext] childNames];
+    NSString *basePath=@".";
+    if ( [partialName containsString:@"/"]) {
+        basePath=[self completePartialPathFromAbsoluetPath:partialName];
+        partialName=[partialName substringFromIndex:[basePath length]];
+    }
+    NSArray *childNames=[[self bindingForName:basePath inContext:aContext] childNames];
     NSMutableArray *names=[NSMutableArray array];
     for ( NSString *name in childNames) {
         if ( !partialName || [partialName length]==0 || [name hasPrefix:partialName]) {
@@ -75,17 +87,26 @@
 
 +(void)testGettingASimpleFile
 {
-	NSString *tempUrlString = @"file:/tmp/fileSchemeTest.txt";
-	NSString *textString = @"hello world!";
-	[textString writeToURL:[NSURL URLWithString:tempUrlString] atomically:YES encoding:NSUTF8StringEncoding error:nil];
-	IDEXPECT([[MPWStCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
+    NSString *tempUrlString = @"file:/tmp/fileSchemeTest.txt";
+    NSString *textString = @"hello world!";
+    [textString writeToURL:[NSURL URLWithString:tempUrlString] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    IDEXPECT([[MPWStCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
+}
+
++(void)testCompleteSubpath
+{
+    MPWFileSchemeResolver *s=[self scheme];
+    NSString *tempUrlString = @"/tm";
+    NSString *base=[s completePartialPathFromAbsoluetPath:tempUrlString ];
+    IDEXPECT( base, @"/", @"base path");
 }
 
 
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
-			@"testGettingASimpleFile",
+            @"testGettingASimpleFile",
+            @"testCompleteSubpath",
 			nil];
 }
 

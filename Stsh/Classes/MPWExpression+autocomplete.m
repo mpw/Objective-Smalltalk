@@ -240,6 +240,15 @@
     return [completions sortedArrayUsingSelector:@selector(compare:)];
 }
 
++bestCompletionForString:(NSString*)s
+{
+    NSString *res=nil;
+    MPWStCompiler *c=[MPWStCompiler compiler];
+    MPWExpression *e=[c compile:s];
+    NSArray *completions = [e completionsForString:s withEvaluator:c resultName:&res];
+    return res;
+}
+
 +(void)testMessageCompletions
 {
     IDEXPECT([self completionsForString:@"3 inte"], (@[@"integerValue",@"interestPercent:overYears:"]), @"");
@@ -251,10 +260,29 @@
     IDEXPECT([self completionsForString:@"3 insertValue:"], (@[ @"insertValue:atIndex:inPropertyWithKey:", @"insertValue:inPropertyWithKey:" ] ), @"");
 }
 
++(void)testSchemeCompletions
+{
+    IDEXPECT([self completionsForString:@"f"], (@[@"false",@"file:",@"framework:",@"ftp:"]), @"");
+    IDEXPECT([self completionsForString:@"file:/t"], (@[@"tmp"]), @"");
+    IDEXPECT([self completionsForString:@"file:/var/v"], (@[@"vm"]), @"");
+}
+
++(void)testSchemeBestCompletion
+{
+    IDEXPECT([self bestCompletionForString:@"f"], @"f", @"");
+    IDEXPECT([self bestCompletionForString:@"file:/t"], @"/t", @"");
+//    IDEXPECT([self bestCompletionForString:@"file:/tm"], @"/tmp", @"");
+    IDEXPECT([self bestCompletionForString:@"file:/tmp"], @"/tmp", @"");
+//    IDEXPECT([self bestCompletionForString:@"file:/var/v"], @"/var/vm", @"");
+    IDEXPECT([self bestCompletionForString:@"file:/var/vm"], @"/var/vm", @"");
+}
+
 +testSelectors
 {
     return @[
-             @"testMessageCompletions"
+             @"testMessageCompletions",
+             @"testSchemeCompletions",
+             @"testSchemeBestCompletion",
              ];
 }
 

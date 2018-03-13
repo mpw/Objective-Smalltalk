@@ -28,6 +28,23 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
 	return self;
 }	
 
+//-(void)_addObjectCreationMethodToSBApplication
+//{
+//    static BOOL added=NO;
+//    if (!added) {
+//        Class sbappclass=NSClassFromString(@"SBApplication");
+//        id a = ^(id blockself, NSString* name, NSDictionary * props){
+//            id obj = [[[blockself classForScriptingClass:name] alloc] initWithProperties:props];
+//            NSLog(@"Created object: %p",obj);
+//            NSLog(@"Created object: %@",obj);
+//            return obj;
+//
+//        };
+//        IMP methodImp=imp_implementationWithBlock(a);
+//        class_addMethod(sbappclass, @selector(instanceForClass:withProperties:), methodImp, "@@:@@");
+//        added=YES;
+//    }
+//}
 
 -appForIdentifier:(NSString*)identifer
 {
@@ -38,7 +55,9 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
             NSLog(@"SBApplication not linked, link it or load it using 'context loadFramework:'ScriptingBridge''");
             return nil;
         }
+//        [self _addObjectCreationMethodToSBApplication];
 		remoteApp = [NSClassFromString(@"SBApplication") applicationWithBundleIdentifier:identifer];
+        NSLog(@"remote app: %@",remoteApp);
 		if ( remoteApp ) {
 			[[self bridges] setObject:remoteApp forKey:identifer];
 		}
@@ -82,3 +101,6 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
     }
 }
 @end
+
+
+

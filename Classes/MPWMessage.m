@@ -130,7 +130,7 @@ idAccessor( _signature, setSignature )
 						case '#':	//	treat classes like objects
 						case '@':
 //							NSLog(@"arg: %@",arg);
-							if ( ![arg isNotNil] ) {
+							if ( [arg respondsToSelector:@selector(isNotNil)] &&  ![arg isNotNil] ) {
 //								NSLog(@"arg is nil!");
 								arg = nil;
 							}

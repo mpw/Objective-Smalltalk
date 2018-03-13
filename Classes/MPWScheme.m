@@ -54,7 +54,7 @@
 		value=[aContext valueForUndefinedVariableNamed:[anIdentifer identifierName]];
 	}
 
-	if ( ![value isNotNil] ) {
+	if ( [value respondsToSelector:@selector(isNotNil)]  && ![value isNotNil] ) {
 		value=nil;
 	}
 	return value;

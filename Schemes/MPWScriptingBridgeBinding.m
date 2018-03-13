@@ -24,7 +24,9 @@
 		if ( getValue ) {
 			value=getValue;
 		}
-	}
+    } else if (!value) {
+        value =  baseObject;
+    }
 	return value;
 }
 
