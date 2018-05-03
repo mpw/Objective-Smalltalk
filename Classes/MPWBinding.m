@@ -20,7 +20,7 @@ idAccessor( _value, _setValue )
 boolAccessor( isBound ,setIsBound )
 objectAccessor(MPWIdentifier,identifier, setIdentifier)
 scalarAccessor(MPWEvaluator*, defaultContext, setDefaultContext)
-objectAccessor( id, delegate, setDelegate)
+idAccessor( delegate, setDelegate)
 
 -initWithValue:aValue
 {
@@ -205,8 +205,7 @@ objectAccessor( id, delegate, setDelegate)
 
 -(void)dealloc
 {
-    return ;
-	[_value release];
+	[_value release];           // this used to be disabled, probably because of unclear over-release crashers
 	[scheme release];
 	[identifier release];
 	[super dealloc];

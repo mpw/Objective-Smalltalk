@@ -29,6 +29,8 @@
 
 -valueOfVariableNamed:aName;
 -(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;
+-(MPWBinding*)cachedBindingForName:aName;
+
 //-valueOfVariableNamed:aName withScheme:scheme;
 -(MPWBinding*)createLocalBindingForName:(NSString*)variableName;
 -(NSString*)defaultScheme;

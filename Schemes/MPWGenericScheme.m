@@ -60,5 +60,8 @@
     return @[];
 }
 
+-(void)delete:(MPWGenericBinding*)binding
+{
+}
 
 @end

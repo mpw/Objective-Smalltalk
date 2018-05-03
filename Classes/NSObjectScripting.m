@@ -54,7 +54,7 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
 				Ivar ivar=ivars[i];
 				MPWInstanceVariable *varDescription;
 				varDescription = [[[MPWInstanceVariable alloc] initWithName:[NSString stringWithCString:ivar_getName(ivar) encoding:NSASCIIStringEncoding]
-																	 offset: ivar_getOffset(ivar) 
+																	 offset: (int)ivar_getOffset(ivar) 
 																	   type:[NSString stringWithCString:ivar_getTypeEncoding(ivar) encoding:NSASCIIStringEncoding]]
 								  autorelease];
 				[varNames addObject:varDescription];
@@ -171,7 +171,7 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
 
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariableArray:(NSArray*)vars
 {
-    int len= [className length]+1;
+    int len= (int)[className length]+1;
     char *class_name = malloc( len );
     [className getCString:class_name maxLength:len encoding:NSASCIIStringEncoding];
     return CreateClassDefinition( class_name, self , vars );

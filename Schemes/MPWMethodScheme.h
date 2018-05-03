@@ -16,4 +16,6 @@
     NSMutableArray  *exceptions;
 }
 
+-(void)addException:(NSException*)exception;
+
 @end

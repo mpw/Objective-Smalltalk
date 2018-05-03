@@ -36,8 +36,8 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 {
 	[[self methodKeyWords] addObject:keyWord];
 	if ( name && type ) {
-		[[self parameterNames] addObject:name];
-		[[self parameterTypes] addObject:type];
+		[(NSMutableArray*)[self parameterNames] addObject:name];
+		[(NSMutableArray*)[self parameterTypes] addObject:type];
 	}
 }
 
@@ -192,14 +192,12 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(void)encodeWithCoder:aCoder
 {
 	id headerString=[[self headerString] dataUsingEncoding:NSUTF8StringEncoding];
-	[super encodeWithCoder:aCoder];
 	encodeVar( aCoder, headerString );
 }
 
 -initWithCoder:aCoder
 {
 	id headerString=nil;
-	self = [super initWithCoder:aCoder];
 	id class=[self class];
 	decodeVar( aCoder, headerString );
 //	NSLog(@"headerString: %@ %@",headerString,[headerString stringValue]);

@@ -22,7 +22,7 @@
 
 +messageWithSelector:(SEL)aSelector typestring:(char*)newTypestring
 {
-	return [[[self alloc] initWithSelector:aSelector count:strlen(newTypestring)] autorelease];
+	return [[[self alloc] initWithSelector:aSelector count:(int)strlen(newTypestring)] autorelease];
 }
 -sendTo:receiver withArguments:(id*)argbuf count:(int)argCount
 {

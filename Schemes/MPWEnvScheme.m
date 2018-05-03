@@ -22,7 +22,7 @@
 	return getenv([name UTF8String]);
 }
 
-extern char ***_NSGetEnviron();
+extern char ***_NSGetEnviron( void );
 
 +(NSArray*)getAllEnvironemntVariableNames
 {

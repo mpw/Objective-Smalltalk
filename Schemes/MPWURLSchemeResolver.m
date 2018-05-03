@@ -62,8 +62,8 @@
 {
     IDEXPECT( [[self httpScheme] schemePrefix], @"http",@"insecure");
     IDEXPECT( [[self httpsScheme] schemePrefix], @"https",@"secure");
-    IDEXPECT( [[[[self httpsScheme] bindingForName:@"//localhost" inContext:nil] url] absoluteString], @"https://localhost",@"secure");
-    IDEXPECT( [[[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] bindingForName:@"localhost" inContext:nil] url] absoluteString], @"ftp:localhost" ,@"ftp");
+    IDEXPECT( [[(MPWURLBinding*)[[self httpsScheme] bindingForName:@"//localhost" inContext:nil] url] absoluteString], @"https://localhost",@"secure");
+    IDEXPECT( [[(MPWURLBinding*)[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] bindingForName:@"localhost" inContext:nil] url] absoluteString], @"ftp:localhost" ,@"ftp");
     
 }
 

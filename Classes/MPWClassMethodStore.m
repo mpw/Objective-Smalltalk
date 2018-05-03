@@ -45,7 +45,7 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 
 -(MPWMethod*)methodForName:(NSString*)name
 {
-    return [[self callbackForName:name] method];
+    return (MPWMethod*)[[self callbackForName:name] method];
 }
 
 

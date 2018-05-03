@@ -305,7 +305,7 @@ idAccessor( localVars, setLocalVars )
 		evaluatedReceiver = nilValue;
 	}
 //	returnValue = objc_msgSend( evaluatedReceiver, selector, evaluatedArgs[0], evaluatedArgs[1], evaluatedArgs[2] );
-	returnValue =[evaluatedReceiver receiveMessage:message withArguments:evaluatedArgs count:[args count]];
+	returnValue =[evaluatedReceiver receiveMessage:message withArguments:evaluatedArgs count:(int)[args count]];
 	if ( returnValue == nil  ) {
 		returnValue = nilValue;
 	}

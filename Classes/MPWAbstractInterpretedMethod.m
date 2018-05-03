@@ -50,22 +50,22 @@ idAccessor( methodType, setMethodType )
 	return [[self methodHeader] methodName];
 }
 
--(void)encodeWithCoder:aCoder
-{
-	[super encodeWithCoder:aCoder];
-	encodeVar( aCoder, methodHeader );
-	encodeVar( aCoder, methodType );
-	encodeVar( aCoder, context );
-}
-
--initWithCoder:aCoder
-{
-	self = [super initWithCoder:aCoder];
-	decodeVar( aCoder, methodHeader );
-	decodeVar( aCoder, methodType );
-	decodeVar( aCoder, context );
-	return self;
-}
+//-(void)encodeWithCoder:aCoder
+//{
+//    [super encodeWithCoder:aCoder];
+//    encodeVar( aCoder, methodHeader );
+//    encodeVar( aCoder, methodType );
+//    encodeVar( aCoder, context );
+//}
+//
+//-initWithCoder:aCoder
+//{
+//    self = [super initWithCoder:aCoder];
+//    decodeVar( aCoder, methodHeader );
+//    decodeVar( aCoder, methodType );
+//    decodeVar( aCoder, context );
+//    return self;
+//}
 
 
 

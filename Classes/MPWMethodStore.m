@@ -240,8 +240,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 +testSelectors
 {
-    return [NSArray arrayWithObjects:
-        nil];
+    return @[ ];
 }
 #endif
 @end

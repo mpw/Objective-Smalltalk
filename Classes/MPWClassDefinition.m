@@ -23,7 +23,7 @@
 -(NSArray *)ivarNames
 {
     if ( [[self instanceVariableDescriptions] count] >0 ) {
-        return [[[self instanceVariableDescriptions] collect] name];
+        return (NSArray *)[[[self instanceVariableDescriptions] collect] name];
     } else {
         return @[];
     }

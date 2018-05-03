@@ -40,7 +40,11 @@
 @end
 
 
+@protocol MessagesDefinedBySTinMPWStTestss
+-dummy3;
+-multiplyByNumber:aNumber;
 
+@end
 
 @implementation MPWStTests
 
@@ -338,7 +342,7 @@
     IDEXPECT( [header typeString], @"@@:", @"type string");
     IDEXPECT( [header returnTypeName], @"id", @"return type");
     EXPECTTRUE([[method methodBody] isKindOfClass:[MPWStatementList class]], @"body is a statement list.");
-    MPWStatementList *statements=[method methodBody];
+    MPWStatementList *statements=(MPWStatementList*)[method methodBody];
     INTEXPECT([[statements statements] count],1,@"number of statements");
     MPWMessageExpression *first=[[statements statements] firstObject];
     EXPECTTRUE([first isKindOfClass:[MPWMessageExpression class]], @"should be a message expression");
@@ -617,7 +621,8 @@
 
 +(void)testCreateSubclassWithInstanceVariablesUsingSyntax
 {
-    [self evaluate:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+    id a=[self evaluate:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+    NSLog(@"a=%@",a);
     Class aClass = NSClassFromString( @"__TestClassWithIVarsFromSyntax" );
     EXPECTNOTNIL(aClass, @"defined the class");
     NSArray <MPWInstanceVariable*>* variableDescriptions = [aClass instanceVariables];

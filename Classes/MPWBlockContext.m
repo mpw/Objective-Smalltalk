@@ -80,9 +80,10 @@ typedef id (^ZeroArgBlock)(void);
 
 
 -evaluateIn_block:aContext arguments:(NSArray*)args {
-    int numArgs=[args count];
+    int numArgs=(int)[args count];
     NSArray *formals=[[self block] arguments];
-    numArgs=MIN(numArgs,[formals count]);
+    int formalsCount = (int)[formals count];
+    numArgs=MIN(numArgs,formalsCount);
     id returnVal=nil;
     for (int i=0;i<numArgs;i++) {
         MPWBinding *b=[aContext createLocalBindingForName:[formals objectAtIndex:i]];
@@ -120,7 +121,7 @@ typedef id (^ZeroArgBlock)(void);
     NSArray* formalParameters = [self formalParameters];
     NSLog(@"%d parameters",(int)[formalParameters count]);
     NSMutableArray *argArray=[NSMutableArray arrayWithCapacity:[formalParameters count]];
-    for (int i=0,max=[formalParameters count];i<max;i++ ) {
+    for (long i=0,max=[formalParameters count];i<max;i++ ) {
         [argArray addObject:va_arg(args, id)];
     }
     return [self evaluateIn_block:[self evaluationContext] arguments:argArray];

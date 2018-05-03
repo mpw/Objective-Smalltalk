@@ -169,10 +169,10 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     if ( [uri hasPrefix:@"methods"] ) {
         [self defineMethodsInExternalDict:newValue];
         return ;
-    } else  if ( [uri hasPrefix:@"/complete"] ) {
-        NSLog(@"completions for %@",[newValue stringValue]);
-        NSArray *completions=[interpreter completionsForString:[newValue stringValue]];
-        NSLog(@"completions: %@",completions);
+//    } else  if ( [uri hasPrefix:@"/complete"] ) {
+//        NSLog(@"completions for %@",[newValue stringValue]);
+//        NSArray *completions=[interpreter completionsForString:[newValue stringValue]];
+//        NSLog(@"completions: %@",completions);
     } else  if ( [uri hasPrefix:@"/eval"] ) {
         NSString *evalString = [newValue stringValue];
 //        NSLog(@"should eval: %@",evalString);

@@ -138,6 +138,8 @@ idAccessor( method, _setMethod )
 	return [self invokeOn:target withFormalParameters:nil actualParamaters:nil];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 
 -(void)dealloc
 {
@@ -149,8 +151,8 @@ idAccessor( method, _setMethod )
 	//-- can't release, installed in objc_runtime
 	return;
 	//-- make the naggy compiler happy
-	[super dealloc];
 }
+#pragma clang diagnostic pop
 
 -description
 {

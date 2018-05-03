@@ -32,7 +32,6 @@
 
 -parseStatements;
 -parseExpression;
--parseBlock;
 -mapConnector:aConnectorExpression;
 -(MPWBinding*)bindingForString:(NSString*)fullPath;
 -(BOOL)isValidSyntax:(NSString*)stString;
@@ -41,6 +40,7 @@
 
 -(MPWMethodStore*)methodStore;
 -(void)addScript:scriptString forClass:className methodHeaderString:methodHeaderString;
+-(void)addScript:scriptString forMetaClass:className methodHeaderString:methodHeaderString;
 -(NSArray*)classesWithScripts;
 -(NSArray*)methodNamesForClassName:(NSString*)className;
 -(NSDictionary*)externalScriptDict;

@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FileWatching
+-(void)didChange;
+@end
+
 @interface MPWFileWatcher : NSObject
 
--(void)watchFile:(NSString*)filename;
 +(instancetype)watcher;
+-(void)watchFile:(NSString*)filename withDelegate:delegate;
 
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "MPWFrameworkScheme.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 @implementation MPWFrameworkScheme
 
@@ -42,7 +43,7 @@
 
 -(NSArray *)childrenOf:(MPWGenericBinding *)binding
 {
-    return [[self collect] bindingForName:[[self allFrameworks] each] inContext:self];
+    return (NSArray *)[[self collect] bindingForName:[[self allFrameworks] each] inContext:self];
 }
 
 @end

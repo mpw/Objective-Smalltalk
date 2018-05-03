@@ -89,7 +89,7 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
     [f close];
     NSString *appListString=[[f target] target];
     NSString *cleanedNames=[[[appListString componentsSeparatedByString:@","] collect] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    return [[self collect] bindingForName:[cleanedNames each] inContext:nil];
+    return (NSArray*)[[self collect] bindingForName:[cleanedNames each] inContext:nil];
 }
 
 -(id)valueForBinding:aBinding

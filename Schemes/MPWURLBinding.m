@@ -104,7 +104,6 @@ objectAccessor(NSError, error, setError)
 {
 	NSMutableURLRequest *request=[[[NSMutableURLRequest alloc] initWithURL:aURL] autorelease];
 	NSMutableDictionary *headers=[NSMutableDictionary dictionaryWithObject:@"locale=en-us" forKey:@"Cookies"];
-	NSHTTPURLResponse *response=nil;
 	[headers setObject:@"stsh" forKey:@"User-Agent"];
 	[headers setObject:@"*/*" forKey:@"Accept"];
 	[request setAllHTTPHeaderFields:headers];
@@ -141,12 +140,12 @@ objectAccessor(NSError, error, setError)
 {
 	NSString *selname=NSStringFromSelector([inv selector]);
 	NSMutableArray *args=[NSMutableArray array];
-	int i,max=[[inv methodSignature] numberOfArguments];
+	long i,max=[[inv methodSignature] numberOfArguments];
 	for (i=2; i<max; i++) {
 		id arg=nil;
 		[inv getArgument:&arg atIndex:i];
 		if ( !arg ) {
-			NSLog(@"nil arg at %d",i);
+			NSLog(@"nil arg at %ld",i);
 			arg=@"";
 		}
 		[args addObject:arg];
@@ -181,12 +180,10 @@ objectAccessor(NSError, error, setError)
 }
 
 
--(NSData*)post:data withName:(NSString*)name
+-(NSData*)post:data withName:(NSString*)postName
 {
     NSString *boundary=@"0xKhTmLbOuNdArY";
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self url]];
-    NSHTTPURLResponse *response=nil;
-    NSError *error=nil;
 
     [urlRequest setHTTPMethod:@"POST"];
     
@@ -194,7 +191,7 @@ objectAccessor(NSError, error, setError)
     
     NSMutableData *postData = [NSMutableData data];
     [postData appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", name, name] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", postName, postName] dataUsingEncoding:NSUTF8StringEncoding]];
     [postData appendData:data];
     [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [urlRequest setHTTPBody:postData];

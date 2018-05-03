@@ -245,7 +245,7 @@
     NSString *res=nil;
     MPWStCompiler *c=[MPWStCompiler compiler];
     MPWExpression *e=[c compile:s];
-    NSArray *completions = [e completionsForString:s withEvaluator:c resultName:&res];
+    [e completionsForString:s withEvaluator:c resultName:&res];
     return res;
 }
 

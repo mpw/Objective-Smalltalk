@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWMethodHeader;
+@class MPWMethodHeader,MPWClassMethodStore;
 
 @interface MPWMethodStore : MPWObject {
     NSMutableDictionary *classes;
@@ -28,9 +28,14 @@
 	//  private
 -(NSDictionary*)externalScriptDict;
 -(void)addScript:scriptString forClass:className methodHeaderString:methodHeaderString;
+-(void)addScript:scriptString forMetaClass:className methodHeaderString:methodHeaderString;
 -(NSArray*)methodNamesForClassName:(NSString*)aClassName;
 -methodForClass:aClassName name:aMethodName;
 
 -(void)installMethods;
+
+-(MPWClassMethodStore*)classStoreForName:(NSString*)name;
+-(MPWClassMethodStore*)metaClassStoreForName:(NSString*)name;
+
 
 @end

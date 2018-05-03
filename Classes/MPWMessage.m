@@ -326,10 +326,10 @@ idAccessor( _signature, setSignature )
 
 -sendTo:msgReceiver withArguments:args
 {
-	int argCount=[args count];
+	long argCount=[args count];
 	id argbuffer[ MAX(5,argCount)];
 	[args getObjects:argbuffer range:NSMakeRange( 0,argCount)];
-	return [self sendTo:msgReceiver withArguments:argbuffer count:argCount];
+	return [self sendTo:msgReceiver withArguments:argbuffer count:(int)argCount];
 }
 
 
