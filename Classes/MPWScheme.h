@@ -6,7 +6,7 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 @class MPWBinding,MPWIdentifier;
 
@@ -20,7 +20,7 @@
 @end
 
 
-@interface MPWScheme : NSObject <Scheme> {
+@interface MPWScheme : MPWAbstractStore <Scheme> {
 
 }
 

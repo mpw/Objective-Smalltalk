@@ -6,9 +6,11 @@
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundation/MPWBinding.h>
 
 @class MPWScheme,MPWIdentifier,MPWEvaluator;
+
+/*
 
 @interface MPWBinding : MPWObject {
 	BOOL	isBound;
@@ -45,3 +47,5 @@ scalarAccessor_h(MPWEvaluator*, defaultContext, setDefaultContext)
 
 
 @end
+*/
+

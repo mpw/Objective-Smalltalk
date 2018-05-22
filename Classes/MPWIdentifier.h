@@ -7,10 +7,11 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundation/MPWReference.h>
 
 @class MPWBinding;
 
-@interface MPWIdentifier : MPWObject {
+@interface MPWIdentifier : MPWReference {
 	id	scheme;
 	id	schemeName;
 	id	identifierName;

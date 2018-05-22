@@ -55,7 +55,6 @@ idAccessor( target, setTarget )
 }
 @end
 
-
 @implementation MPWURLBinding
 
 objectAccessor(NSError, error, setError)
@@ -72,7 +71,6 @@ objectAccessor(NSError, error, setError)
 {
     NSString *mime = [aResponse MIMEType];
     const char *ptr=[rawData bytes];
-//    NSLog(@"raw mime: %@",mime);
     if ( ptr && [rawData length]) {
         if (( !mime ||  [mime isEqualToString:@"text/html"] ||  [mime isEqualToString:@"text/plain"] )&& (*ptr == '{' || *ptr == '[' )) {
             mime=@"application/json";
@@ -85,10 +83,8 @@ objectAccessor(NSError, error, setError)
 {
     NSHTTPURLResponse *response=nil;
     NSError *localError=nil;
-
     NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&localError];
 
-//    NSLog(@"error: %@",localError);
     if ( [response statusCode] != 404 ) {
         MPWResource *result=[[[MPWResource alloc] init] autorelease];
         [result setSource:[request URL]];
@@ -109,7 +105,6 @@ objectAccessor(NSError, error, setError)
 	[request setAllHTTPHeaderFields:headers];
     return [self resourceWithRequest:request];
 }
-
 
 -getWithArgs
 {
@@ -179,7 +174,6 @@ objectAccessor(NSError, error, setError)
     }
 }
 
-
 -(NSData*)post:data withName:(NSString*)postName
 {
     NSString *boundary=@"0xKhTmLbOuNdArY";
@@ -196,22 +190,6 @@ objectAccessor(NSError, error, setError)
     [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [urlRequest setHTTPBody:postData];
     return [self resourceWithRequest:urlRequest];
-
-    
-#if 0
-    NSData *rawData = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
-
-    
-    [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    if ( inPOST ) {
-        [NSException raise:@"POST in progress" format:@"POST to %@/%@ already in progress",self,[self url]];
-    }
-    inPOST=YES;
-    while (inPOST) {
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
-    }
-    return [urlRequest HTTPBody];
-#endif
 }
 
 -(NSData*)post:data
@@ -229,7 +207,6 @@ objectAccessor(NSError, error, setError)
     inPOST=NO;
     [self setError:localError];
 }
-
 
 -(void)_setValue:newValue
 {

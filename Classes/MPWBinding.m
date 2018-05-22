@@ -5,8 +5,8 @@
 //  Created by Marcel Weiher on 11/22/04.
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
-
 #import "MPWBinding.h"
+#if 0
 #import "MPWRelScheme.h"
 #import "MPWInterval.h"
 #import "MPWVARBinding.h"
@@ -36,7 +36,6 @@ idAccessor( delegate, setDelegate)
 	return [[[self alloc] initWithValue:aValue] autorelease];
 }
 
-
 -value
 {
 	if ( [self isBound] ) {
@@ -57,7 +56,6 @@ idAccessor( delegate, setDelegate)
 	return [[self value] valueForKeyPath:kvpath];
 }
 
-
 -valueForPathComponent:(NSString*)kvpath
 {
 	return [[self value] valueForPathComponent:kvpath];
@@ -67,8 +65,6 @@ idAccessor( delegate, setDelegate)
 {
 	[[self value] setValue:newValue forKey:kvpath];
 }
-
-
 
 -(NSArray*)childNames
 {
@@ -107,8 +103,6 @@ idAccessor( delegate, setDelegate)
     return [[self collect] childWithName:[[self childNames] each]];
 }
 
-
-
 -(NSArray*)allLinks
 {
     return [self children];
@@ -125,7 +119,6 @@ idAccessor( delegate, setDelegate)
 
 -(void)observeValueForKeyPath:(NSString*)keyPath ofObject:anObject change:change context:(void*)kvoContext
 {
-//    NSLog(@"observeValueForKeyPath: %@",keyPath);
     [self didChange];
 }
 
@@ -215,3 +208,42 @@ idAccessor( delegate, setDelegate)
 
 
 @end
+
+#endif
+
+@implementation MPWBinding(legacy)
+
+-(void)bindValue:newValue
+{
+    [self setValue:newValue];
+    //    [self setIsBound:YES];
+    //    [self didChange];
+}
+
+-(void)setIdentifier:newIdentifier
+{
+    [self setReference:newIdentifier];
+}
+
+-(void)setScheme:newScheme
+{
+    [self setStore:newScheme];
+}
+
+-(void)setDefaultContext:newContext
+{
+}
+
+-name
+{
+    return [[self.reference pathComponents] componentsJoinedByString:@"/"];
+}
+
+-initWithValue:aValue
+{
+    NSAssert1( aValue == nil,@"-initWithValue expecting nil, got %@",aValue);
+    return [self init];
+}
+
+@end
+

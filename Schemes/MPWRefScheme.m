@@ -7,7 +7,7 @@
 //
 
 #import "MPWRefScheme.h"
-#import "MPWBinding.h"
+#import "MPWSelfContainedBinding.h"
 #import "MPWEvaluator.h"
 #import "MPWRecursiveIdentifier.h"
 
@@ -16,7 +16,7 @@
 -bindingForName:(NSString*)variableName inContext:(MPWEvaluator*)aContext
 {
 	MPWBinding* originalBinding = [[aContext schemeForName:@"var"]  bindingForName:variableName inContext:aContext];
-	id binding = [[[MPWBinding alloc] initWithValue:originalBinding] autorelease];
+	id binding = [MPWSelfContainedBinding bindingWithValue:originalBinding];
 	return binding;
 }
 
@@ -26,7 +26,7 @@
 	NSAssert1( [nextIdentifer scheme], @"nextIdentifer", nil );
 	id originalBinding = [[nextIdentifer scheme] bindingWithIdentifier:nextIdentifer withContext:aContext];
 //	NSLog(@"eval ref, original binding: %@",originalBinding);
-	id binding = [[[MPWBinding alloc] initWithValue:originalBinding] autorelease];
+	id binding = [MPWSelfContainedBinding bindingWithValue:originalBinding];
 //	NSLog(@"eval ref, ref binding: %@",binding);
 	return binding;
 }

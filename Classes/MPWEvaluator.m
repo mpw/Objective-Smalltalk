@@ -19,6 +19,7 @@
 #import "MPWSchemeScheme.h"
 #import "MPWVarScheme.h"
 #import "MPWFrameworkScheme.h"
+#import "MPWSelfContainedBinding.h"
 
 @implementation NSNumber(controlStructures)
 
@@ -142,7 +143,7 @@ idAccessor( localVars, setLocalVars )
 
 -bindingClass
 {
-	return [MPWBinding class];
+	return [MPWSelfContainedBinding class];
 }
 
 
@@ -167,7 +168,7 @@ idAccessor( localVars, setLocalVars )
 {
     MPWBinding *binding=nil;
     if ( [localVarName isEqualToString:@"context"]) {
-        binding=[MPWBinding bindingWithValue:self];
+        binding=[[self bindingClass] bindingWithValue:self];
     } else {
         binding = [localVars objectForKey:localVarName];
     }

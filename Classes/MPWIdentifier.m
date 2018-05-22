@@ -34,7 +34,6 @@ idAccessor( identifierName, setIdentifierName )
     if ( theScheme == nil ) {
         [NSException raise:@"invalidscheme" format:@"scheme %@ could not be evaluated", [self schemeName]];
     }
-//	NSAssert1( theScheme!=nil , );
 	return theScheme;
 }
 
@@ -61,8 +60,6 @@ idAccessor( identifierName, setIdentifierName )
             [results addObject:component];
         }
     }
-    
-    
     return results;
 }
 
@@ -117,8 +114,6 @@ idAccessor( identifierName, setIdentifierName )
     ((myScheme == otherScheme) || [myScheme isEqual:otherScheme]) &&
     ((myName == otherName) || [myName isEqual:otherName]);
 }
-
-
 
 -(NSString *)description
 {
