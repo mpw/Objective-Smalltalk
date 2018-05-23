@@ -162,8 +162,7 @@ idAccessor( delegate, setDelegate)
     MPWBinding *evaluated = [[[[self class] alloc] init] autorelease];
     [evaluated setScheme:[self scheme]];
     NSString *name=[[self identifier] evaluatedIdentifierNameInContext:[self defaultContext]];
-    id newIdentifier=[[[[[self identifier] class] alloc] init] autorelease];
-    [newIdentifier setIdentifierName:name];
+    id newIdentifier=[[[[[self identifier] class] alloc] initWithName:name] autorelease];
     [newIdentifier setScheme:[(MPWIdentifier*)[self identifier] scheme]];
     [newIdentifier setSchemeName:[[self identifier] schemeName]]; 
     [evaluated setIdentifier:newIdentifier];
@@ -228,6 +227,16 @@ idAccessor( delegate, setDelegate)
 -(void)setScheme:newScheme
 {
     [self setStore:newScheme];
+}
+
+-scheme
+{
+    return self.store;
+}
+
+-identifier
+{
+    return [self reference];
 }
 
 -(void)setDefaultContext:newContext

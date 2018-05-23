@@ -7,18 +7,16 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
-#import <MPWFoundation/MPWReference.h>
+#import <MPWFoundation/MPWGenericReference.h>
 
 @class MPWBinding;
 
-@interface MPWIdentifier : MPWReference {
+@interface MPWIdentifier : MPWGenericReference {
 	id	scheme;
 	id	schemeName;
-	id	identifierName;
 }
 
 idAccessor_h( schemeName, setSchemeName )
-idAccessor_h( identifierName, setIdentifierName )
 idAccessor_h( scheme, setScheme )
 
 +identifierWithName:(NSString*)name;
@@ -26,5 +24,6 @@ idAccessor_h( scheme, setScheme )
 
 -(MPWBinding*)bindingWithContext:aContext;
 
+-identifierName;
 
 @end

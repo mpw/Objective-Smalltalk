@@ -10,6 +10,7 @@
 @interface MPWSelfContainedBinding()
 
 @property (nonatomic, strong) id identifier;
+@property (nonatomic, strong) id scheme;
 
 @end
 
@@ -52,7 +53,6 @@
     self.value = newValue;
 }
 
--(void)setScheme:newScheme {}
 -(void)setDefaultContext:aContext {}
 
 -(NSString*)name

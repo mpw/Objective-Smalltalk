@@ -38,20 +38,32 @@
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
-	MPWBinding *binding = [self bindingForName:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
+    NSLog(@"-[%@ %@]",[self className],NSStringFromSelector(_cmd));
+    NSLog(@"bindingWithIdentifier identifier: %@",anIdentifier);
+    id evaluatedName=[anIdentifier evaluatedIdentifierNameInContext:aContext];
+    NSLog(@"bindingWithIdentifier evaluatedName: %@",evaluatedName);
+	MPWBinding *binding = [self bindingForName:evaluatedName inContext:aContext];
+    NSLog(@"bindingWithIdentifier binding: %@",binding);
     [binding setScheme:self];
     [binding setIdentifier:anIdentifier];
     [binding setDefaultContext:aContext];
+    NSLog(@"bindingWithIdentifier binding scheme: %@",[binding scheme]);
+    NSLog(@"bindingWithIdentifier binding iidentifier: %@",[binding identifier]);
     return binding;
 }
 
 
 -evaluateIdentifier:anIdentifer withContext:aContext
 {
+    NSLog(@"-[%@ %@]",[self className],NSStringFromSelector(_cmd));
 	MPWBinding *binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
+    NSLog(@"binding in evaluateIdentifier: %@",binding);
 	id value=[binding value];
-	if (!binding ) {
+    NSLog(@"value in evaluateIdentifier: %@",value);
+    if (!binding ) {
+        NSLog(@"no binding");
 		value=[aContext valueForUndefinedVariableNamed:[anIdentifer identifierName]];
+        NSLog(@"no binding, valueForUndefined value: %@",value);
 	}
 
 	if ( [value respondsToSelector:@selector(isNotNil)]  && ![value isNotNil] ) {

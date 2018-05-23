@@ -14,13 +14,10 @@
 
 idAccessor( scheme, setScheme )
 idAccessor( schemeName, setSchemeName )
-idAccessor( identifierName, setIdentifierName )
 
 -initWithName:(NSString*)name
 {
-    self=[super init];
-    [self setIdentifierName:name];
-    return self;
+    return [super initWithPath:name];
 }
 
 +identifierWithName:(NSString*)name
@@ -30,38 +27,38 @@ idAccessor( identifierName, setIdentifierName )
 
 -schemeWithContext:aContext
 {
-	id theScheme=[self scheme];
+    id theScheme=[self scheme];
     if ( theScheme == nil ) {
         [NSException raise:@"invalidscheme" format:@"scheme %@ could not be evaluated", [self schemeName]];
     }
-	return theScheme;
+    return theScheme;
 }
-
--pathComponents
-{
-	NSArray *rawComponents = [[self identifierName] componentsSeparatedByString:@"/"];
-    NSMutableArray  *results=[NSMutableArray array];
-    NSMutableString *current=nil;
-    for ( NSString *component in rawComponents) {
-        if ( [component hasPrefix:@"{"]) {
-            current=[[component mutableCopy] autorelease];
-            component=nil;
-        }
-        if ( current && component) {
-            [current appendString:@"/"];
-            [current appendString:component];
-            component=nil;
-        }
-        if ( [current hasSuffix:@"}"]) {
-            component=current;
-            current=nil;
-        }
-        if ( component ){
-            [results addObject:component];
-        }
-    }
-    return results;
-}
+//
+//-pathComponents
+//{
+//    NSArray *rawComponents = [[self identifierName] componentsSeparatedByString:@"/"];
+//    NSMutableArray  *results=[NSMutableArray array];
+//    NSMutableString *current=nil;
+//    for ( NSString *component in rawComponents) {
+//        if ( [component hasPrefix:@"{"]) {
+//            current=[[component mutableCopy] autorelease];
+//            component=nil;
+//        }
+//        if ( current && component) {
+//            [current appendString:@"/"];
+//            [current appendString:component];
+//            component=nil;
+//        }
+//        if ( [current hasSuffix:@"}"]) {
+//            component=current;
+//            current=nil;
+//        }
+//        if ( component ){
+//            [results addObject:component];
+//        }
+//    }
+//    return results;
+//}
 
 -evaluatedPathComponentsInContext:aContext
 {
@@ -95,8 +92,10 @@ idAccessor( identifierName, setIdentifierName )
 }
 
 -evaluateIn:aContext
-{	
-	return [[self schemeWithContext:aContext] evaluateIdentifier:self withContext:aContext];
+{
+    id evaluatedScheme = [self schemeWithContext:aContext];
+    NSLog(@"-[%@ %@] scheme: %@",[self className],NSStringFromSelector(_cmd),evaluatedScheme);
+	return [evaluatedScheme evaluateIdentifier:self withContext:aContext];
 }
 
 -(NSUInteger)hash
@@ -125,7 +124,6 @@ idAccessor( identifierName, setIdentifierName )
 {
 	[scheme release];
 	[schemeName release];
-	[identifierName release];
 	[super dealloc];
 }
 

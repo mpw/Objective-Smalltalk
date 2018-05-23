@@ -40,7 +40,16 @@ extern char ***_NSGetEnviron( void );
     return env;
 }
 
+-(id)objectForReference:(id)aReference
+{
+    return [self valueForBinding:aReference];
+}
 
+-(void)setObject:(id)theObject forReference:(id)aReference
+{
+    NSLog(@"setObject: %@ forReference: %@",theObject,aReference);
+    [self setValue:theObject forBinding:aReference];
+}
 
 -(BOOL)isBoundBinding:aBinding
 {
@@ -50,7 +59,9 @@ extern char ***_NSGetEnviron( void );
 -valueForBinding:aBinding
 {
     NSString *name=[aBinding name];
-//    NSLog(@"%@ valueForBinding:%@",[self class],name);
+    NSLog(@"%@ valueForBinding:%@",[self class],name);
+    NSLog(@"binding: %@",aBinding);
+    NSLog(@"name: %@",name);
     if ( [name length]==0 || [name isEqual:@"/"]) {
         return [aBinding childNames];
     } else {
