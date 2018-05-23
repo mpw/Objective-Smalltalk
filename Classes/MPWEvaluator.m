@@ -206,7 +206,7 @@ idAccessor( localVars, setLocalVars )
 	if ( !binding ) {
         binding = [self createLocalBindingForName:variableName];
 	}
-	[binding bindValue:value];
+	[binding setValue:value];
 }
 
 -(NSString*)defaultScheme
