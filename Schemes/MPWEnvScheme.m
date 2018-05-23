@@ -9,12 +9,12 @@
 #import "MPWEnvScheme.h"
 #import "MPWGenericBinding.h"
 #import <MPWFoundation/DebugMacros.h>
+#import <MPWFoundation/MPWGenericReference.h>
 
 @implementation MPWEnvScheme
 
--(const char*)cstringValueOfBinding:aBinding
+-(const char*)cstringValueForName:(NSString*)name
 {
-    NSString *name=[aBinding name];
     if ( [name hasPrefix:@"/"]) {
         name=[name substringFromIndex:1];
     }
@@ -42,7 +42,23 @@ extern char ***_NSGetEnviron( void );
 
 -(id)objectForReference:(id)aReference
 {
-    return [self valueForBinding:aReference];
+    NSString *name=[aReference name];
+    NSLog(@"-[%@ %@:%@",[self className],NSStringFromSelector(_cmd),name);
+    NSLog(@"reference: %@",aReference);
+    NSLog(@"name: %@",name);
+    if ( [aReference isRoot]) {
+        
+    }
+    if ( [name length]==0 || [name isEqual:@"/"]) {
+        return [[self class] getAllEnvironemntVariableNames];
+    } else {
+        const char *val=[self cstringValueForName:name];
+        if ( val ) {
+            return [NSString stringWithUTF8String:val];
+        } else {
+            return nil;
+        }
+    }
 }
 
 -(void)setObject:(id)theObject forReference:(id)aReference
@@ -56,24 +72,6 @@ extern char ***_NSGetEnviron( void );
 	return [self cstringValueOfBinding:aBinding] != NULL;
 }
 
--valueForBinding:aBinding
-{
-    NSString *name=[aBinding name];
-    NSLog(@"%@ valueForBinding:%@",[self class],name);
-    NSLog(@"binding: %@",aBinding);
-    NSLog(@"name: %@",name);
-    if ( [name length]==0 || [name isEqual:@"/"]) {
-        return [aBinding childNames];
-    } else {
-        const char *val=[self cstringValueOfBinding:aBinding];
-        if ( val ) {
-//            NSLog(@"got %s",val);
-            return [NSString stringWithUTF8String:val];
-        } else {
-            return nil;
-        }
-    }
-}
 
 -(void)setValue:newValue forBinding:aBinding
 {
