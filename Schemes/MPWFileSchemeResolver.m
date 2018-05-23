@@ -10,6 +10,7 @@
 #import "MPWFileBinding.h"
 #import "MPWDirectoryBinding.h"
 #import "MPWFileWatcher.h"
+#import "MPWResource.h"
 
 @implementation MPWFileSchemeResolver
 
@@ -24,7 +25,17 @@
     
 }
 
-
+-(id)objectForReference:(id)aReference
+{
+    NSError *error=nil;
+    NSURL *aURL=[NSURL fileURLWithPath:[aReference path]];
+    NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
+    MPWResource *result=[[[MPWResource alloc] init] autorelease];
+    [result setSource:aURL];
+    [result setRawData:rawData];
+    [result setError:error];
+    return result;
+}
 
 -bindingForName:aName inContext:aContext
 {
