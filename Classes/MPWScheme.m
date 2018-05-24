@@ -60,9 +60,8 @@
     if ( !value ) {
         MPWBinding *binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
         if (!binding) {
-            NSLog(@"no binding");
             value=[aContext valueForUndefinedVariableNamed:[anIdentifer identifierName]];
-            NSLog(@"no binding, valueForUndefined value: %@",value);
+//            NSLog(@"no binding, valueForUndefined value: %@",value);
         } else {
             value=[binding value];
         }

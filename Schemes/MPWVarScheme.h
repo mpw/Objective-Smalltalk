@@ -8,8 +8,11 @@
 
 #import "MPWScheme.h"
 
+@class MPWEvaluator;
 
 @interface MPWVarScheme : MPWScheme {
 }
+
+@property (nonatomic, strong ) MPWEvaluator *context;
 
 @end

@@ -28,10 +28,8 @@
 }
 
 
--createBindingForName:(NSString*)variableName inContext:aContext
+-createBindingForName:(NSString*)variableName inContext:(MPWEvaluator*)aContext
 {
-    
-    
     NSString *firstName=variableName;
     MPWBinding *theBinding=nil;
     NSString *remainder=nil;
@@ -47,26 +45,23 @@
 		theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
     }
     return theBinding;
-#if 0
-	id localVars = [self localVarsForContext:aContext];
-	id binding=nil;
-	if ( [variableName rangeOfString:@"/"].location != NSNotFound ) {
-		binding= [[[[self bindingClass] alloc] initWithBaseObject:localVars path:variableName] autorelease];
-		//		NSLog(@"kvbinding %@ ",variableName);
-	} else {
-		binding = [localVars objectForKey:variableName];
-        if ( !binding && [variableName isEqual:@"context"] ) {
-            return [MPWBinding bindingWithValue:aContext];
-        }
-	}
-	return binding;
-#endif
 }
 
--(id)valueForBinding:aBinding
+-(id)objectForReference:(id)aReference
 {
-    return [[self bindingForName:[aBinding name] inContext:[aBinding defaultContext]] value ];
+    NSArray *pathComponents = [aReference pathComponents];
+    NSArray *tempValue = [[self.context bindingForLocalVariableNamed: [pathComponents firstObject]] value];
+    for (long i=1,max=pathComponents.count; i<max;i++) {
+        tempValue=[tempValue valueForKey:pathComponents[i]];
+    }
+    return tempValue;
+//    return [[self bindingForName:[aReference name] inContext:self.context] value ];
 }
+
+//-(id)valueForBinding:aBinding
+//{
+//    return [[self bindingForName:[aBinding name] inContext:[aBinding defaultContext]] value ];
+//}
 
 
 -(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
