@@ -8,6 +8,7 @@
 
 #import "MPWRelScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundation/MPWGenericReference.h>
 #import "MPWIdentifier.h"
 #import "MPWBinding.h"
 #import "MPWGenericBinding.h"
@@ -56,15 +57,24 @@ idAccessor(storedContext, setStoredContext)
     [binding setScheme:[self source]];
     return binding;
 }
-    
+
+-(NSString*)filteredPath:(NSString*)path
+{
+    return [[self baseIdentifier] stringByAppendingPathComponent:path];
+}
+
+-(MPWGenericReference*)filteredReference:(MPWGenericReference*)ref
+{
+    return [[ref class] referenceWithPath:[self filteredPath:[ref path]] ];
+}
+
 -bindingForName:anIdentifierName inContext:aContext
 {
     if ( !aContext ) {
         aContext=[self storedContext];
     }
-    NSString *combinedPath= [[self baseIdentifier] stringByAppendingPathComponent:anIdentifierName];
 //    NSLog(@"combined name: '%@'",combinedPath);
-    MPWIdentifier *newIdentifier=[MPWIdentifier identifierWithName:combinedPath];
+    MPWIdentifier *newIdentifier=[MPWIdentifier identifierWithName:[self filteredPath:anIdentifierName]];
 	return [[self source] bindingWithIdentifier:newIdentifier withContext:aContext];
 }
 
@@ -79,18 +89,17 @@ idAccessor(storedContext, setStoredContext)
     return aBinding;
 }
 
--valueForBinding:aBinding
+-(id)objectForReference:(id)aReference
 {
-    //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
-    //          aBinding,[aBinding name],aBinding,[aBinding value]);
-    return [[self _baseBindingForBinding:aBinding] value];
+    [[self source] objectForReference:[self filteredReference:aReference]];
+//    return [[self _baseBindingForBinding:aBinding] value];
 }
 
--(void)setValue:newValue forBinding:aBinding
+-(void)setObject:newValue forReference:aReference
 {
+    [[self source] setObject:newValue forReference:[self filteredReference:aReference]];
     //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
     //          aBinding,[aBinding name],aBinding,[aBinding value]);
-    return [[self _baseBindingForBinding:aBinding] setValue:newValue];
 }
 
 -(void)setBaseRef:(MPWBinding *)aRef
