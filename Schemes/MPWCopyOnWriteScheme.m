@@ -47,24 +47,24 @@ boolAccessor(cacheReads, setCacheReads)
 }
 
 
--valueForBinding:aBinding
+-objectForReference:aReference
 {
     id result=nil;
-    result=[[self readWrite] valueForBinding:aBinding];
+    result=[[self readWrite] objectForReference:aReference];
 //    NSLog(@"COW:  readWrite %@ for %@ returned %@",[self readWrite],[aBinding name],result);
     if ( !result ) {
 //        NSLog(@"COW:  source %@ for %@ returned %@",[self source],[aBinding name],result);
-        result=[[self source] valueForBinding:aBinding];
+        result=[[self source] objectForReference:aReference];
         if ( [self cacheReads] ) {
-            [(MPWGenericScheme*)[self readWrite] setValue:result forBinding:aBinding];
+            [[self readWrite] setObject:result forReference:aReference];
         }
     }
     return result;
 }
 
--(void)setValue:newValue forBinding:aBinding
+-(void)setObject:newValue forReference:aReference
 {
-    [(MPWGenericScheme*)[self readWrite] setValue:newValue forBinding:aBinding];
+    [(MPWGenericScheme*)[self readWrite] setObject:newValue forReference:aReference];
 }
 
 -(BOOL)hasChildren:(MPWGenericBinding*)binding
