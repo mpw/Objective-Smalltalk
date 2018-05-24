@@ -20,6 +20,7 @@
 #import "MPWVarScheme.h"
 #import "MPWFrameworkScheme.h"
 #import "MPWSelfContainedBinding.h"
+#import <MPWFoundation/MPWGenericReference.h>
 
 @implementation NSNumber(controlStructures)
 
@@ -202,7 +203,9 @@ idAccessor( localVars, setLocalVars )
 
 -(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:scheme
 {
-	id binding=[[self schemeForName:scheme] bindingForName:variableName inContext:self];
+	MPWBinding* binding=[[self schemeForName:scheme] bindingForName:variableName inContext:self];
+    // FIXME
+    binding.reference = [[[MPWGenericReference alloc] initWithPath:variableName] autorelease];
 	if ( !binding ) {
         binding = [self createLocalBindingForName:variableName];
 	}

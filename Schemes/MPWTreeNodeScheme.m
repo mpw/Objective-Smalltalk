@@ -56,15 +56,9 @@ idAccessor( root, setRoot )
 }
 
 
-
--valueForBinding:(MPWGenericBinding*)aBinding
+-(void)setObject:newValue forReference:aReference
 {
-    return [[self nodeFoBinding:aBinding] content];
-}
-
--(void)setValue:newValue forBinding:(MPWGenericBinding*)aBinding
-{
-    NSArray *pathArray=[self pathArrayForPathString:[aBinding name]];
+    NSArray *pathArray=[self pathArrayForPathString:[aReference name]];
     MPWTreeNode *node=[self nodeForPath:pathArray];
     if ( !node ) {
         node = [[self root] mkdirs:[pathArray objectEnumerator]];

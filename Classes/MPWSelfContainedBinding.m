@@ -11,6 +11,7 @@
 
 @property (nonatomic, strong) id identifier;
 @property (nonatomic, strong) id scheme;
+@property (nonatomic, strong) id reference;         // FIXME
 
 @end
 

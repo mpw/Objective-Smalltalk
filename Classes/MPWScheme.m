@@ -39,14 +39,14 @@
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
     id evaluatedName=[anIdentifier evaluatedIdentifierNameInContext:aContext];
-    NSLog(@"bindingWithIdentifier evaluatedName: %@",evaluatedName);
+//    NSLog(@"bindingWithIdentifier evaluatedName: %@",evaluatedName);
 	MPWBinding *binding = [self bindingForName:evaluatedName inContext:aContext];
-    NSLog(@"bindingWithIdentifier binding: %@",binding);
+//    NSLog(@"bindingWithIdentifier binding: %@",binding);
     [binding setScheme:self];
     [binding setIdentifier:anIdentifier];
     [binding setDefaultContext:aContext];
-    NSLog(@"bindingWithIdentifier binding scheme: %@",[binding scheme]);
-    NSLog(@"bindingWithIdentifier binding iidentifier: %@",[binding identifier]);
+//    NSLog(@"bindingWithIdentifier binding scheme: %@",[binding scheme]);
+//    NSLog(@"bindingWithIdentifier binding iidentifier: %@",[binding identifier]);
     return binding;
 }
 
@@ -54,7 +54,7 @@
 
 -evaluateIdentifier:anIdentifer withContext:aContext
 {
-    NSLog(@"-[%@ %@]",[self className],NSStringFromSelector(_cmd));
+//    NSLog(@"-[%@ %@]",[self className],NSStringFromSelector(_cmd));
     MPWScheme *scheme=[anIdentifer scheme];
     id value = [scheme objectForReference:anIdentifer];
     if ( !value ) {
