@@ -68,36 +68,15 @@ idAccessor(storedContext, setStoredContext)
     return [[ref class] referenceWithPath:[self filteredPath:[ref path]] ];
 }
 
--bindingForName:anIdentifierName inContext:aContext
-{
-    if ( !aContext ) {
-        aContext=[self storedContext];
-    }
-//    NSLog(@"combined name: '%@'",combinedPath);
-    MPWIdentifier *newIdentifier=[MPWIdentifier identifierWithName:[self filteredPath:anIdentifierName]];
-	return [[self source] bindingWithIdentifier:newIdentifier withContext:aContext];
-}
-
--_baseBindingForBinding:(MPWGenericBinding*)aBinding
-{
-    //    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
-    if (  [aBinding scheme] != [self source] ) {
-        //        NSLog(@"modifying non var-scheme later");
-        aBinding=(MPWGenericBinding*)[self bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
-    }
-    //    MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
-    return aBinding;
-}
 
 -(id)objectForReference:(id)aReference
 {
     return [[self source] objectForReference:[self filteredReference:aReference]];
-//    return [[self _baseBindingForBinding:aBinding] value];
 }
 
 -(void)setObject:newValue forReference:aReference
 {
-    NSLog(@"[rel-scheme, setObject:%@ forReference:%@]",newValue,aReference);
+//    NSLog(@"[rel-scheme, setObject:%@ forReference:%@]",newValue,aReference);
     [[self source] setObject:newValue forReference:[self filteredReference:aReference]];
     //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
     //          aBinding,[aBinding name],aBinding,[aBinding value]);

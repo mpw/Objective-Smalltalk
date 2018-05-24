@@ -74,11 +74,9 @@
     return value;
 }
 
-
 -get:uri
 {
-    MPWBinding *binding=[self bindingForName:uri inContext:nil];
-    return [binding value];
+    return [self objectForReference:[MPWGenericReference referenceWithPath:uri]];
 }
 
 -get:uri parameters:params

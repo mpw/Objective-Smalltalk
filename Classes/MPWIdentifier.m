@@ -94,7 +94,7 @@ idAccessor( schemeName, setSchemeName )
 -evaluateIn:aContext
 {
     id evaluatedScheme = [self schemeWithContext:aContext];
-    NSLog(@"-[%@ %@] scheme: %@",[self className],NSStringFromSelector(_cmd),evaluatedScheme);
+//    NSLog(@"-[%@ %@] scheme: %@",[self className],NSStringFromSelector(_cmd),evaluatedScheme);
 	return [evaluatedScheme evaluateIdentifier:self withContext:aContext];
 }
 

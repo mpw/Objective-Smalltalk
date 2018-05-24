@@ -43,9 +43,9 @@ extern char ***_NSGetEnviron( void );
 -(id)objectForReference:(id)aReference
 {
     NSString *name=[aReference name];
-    NSLog(@"-[%@ %@:%@",[self className],NSStringFromSelector(_cmd),name);
-    NSLog(@"reference: %@",aReference);
-    NSLog(@"name: %@",name);
+//    NSLog(@"-[%@ %@:%@",[self className],NSStringFromSelector(_cmd),name);
+//    NSLog(@"reference: %@",aReference);
+//    NSLog(@"name: %@",name);
     if ( [aReference isRoot]) {
         
     }
@@ -63,7 +63,7 @@ extern char ***_NSGetEnviron( void );
 
 -(void)setObject:(id)theObject forReference:(id)aReference
 {
-    NSLog(@"setObject: %@ forReference: %@",theObject,aReference);
+//    NSLog(@"setObject: %@ forReference: %@",theObject,aReference);
     [self setValue:theObject forBinding:aReference];
 }
 
