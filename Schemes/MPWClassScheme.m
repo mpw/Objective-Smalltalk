@@ -43,9 +43,9 @@
     return result;
 }
 
--valueForBinding:(MPWGenericBinding*)aBinding
+-(id)objectForReference:(id)aReference
 {
-    NSString *className=[aBinding name];
+    NSString *className=[aReference name];
     if ( [className length] == 0 || [className isEqualToString:@"."] ) {
         return [[[self allClassMirrors] collect] name];
     } else if ( [className isEqualToString:@"/"]  )  {
