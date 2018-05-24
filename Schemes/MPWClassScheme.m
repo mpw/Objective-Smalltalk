@@ -9,6 +9,7 @@
 #import "MPWClassScheme.h"
 #import <MPWFoundation/DebugMacros.h>
 #import "MPWGenericBinding.h"
+#import "MPWGenericBinding.h"
 #import "MPWIdentifier.h"
 #import "MPWClassMirror.h"
 
@@ -82,7 +83,7 @@
 +(void)testSimpleClassResolve
 {
 	id resolver=[[self new] autorelease];
-	INTEXPECT( [[resolver bindingForName:@"NSString" inContext:nil] value], [NSString class] , @"class resolver for NSString");
+    INTEXPECT( [resolver objectForReference:[MPWGenericReference referenceWithPath:@"NSString"]], [NSString class] , @"class resolver for NSString");
 }
 
 +testSelectors
