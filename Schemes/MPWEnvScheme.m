@@ -69,7 +69,7 @@ extern char ***_NSGetEnviron( void );
 
 -(BOOL)isBoundBinding:aBinding
 {
-	return [self cstringValueOfBinding:aBinding] != NULL;
+	return [self cstringValueForName:[aBinding name]] != NULL;
 }
 
 

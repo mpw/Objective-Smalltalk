@@ -91,12 +91,13 @@ idAccessor(storedContext, setStoredContext)
 
 -(id)objectForReference:(id)aReference
 {
-    [[self source] objectForReference:[self filteredReference:aReference]];
+    return [[self source] objectForReference:[self filteredReference:aReference]];
 //    return [[self _baseBindingForBinding:aBinding] value];
 }
 
 -(void)setObject:newValue forReference:aReference
 {
+    NSLog(@"[rel-scheme, setObject:%@ forReference:%@]",newValue,aReference);
     [[self source] setObject:newValue forReference:[self filteredReference:aReference]];
     //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
     //          aBinding,[aBinding name],aBinding,[aBinding value]);
