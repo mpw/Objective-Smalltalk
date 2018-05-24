@@ -50,6 +50,12 @@ idAccessor( root, setRoot )
 	return [[self nodeForPath:array] content];
 }
 
+-(id)objectForReference:(id)aReference
+{
+    return [[self nodeFoBinding:aReference] content];
+}
+
+
 
 -valueForBinding:(MPWGenericBinding*)aBinding
 {

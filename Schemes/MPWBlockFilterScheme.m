@@ -49,6 +49,14 @@ idAccessor( valueFilter, setValueFilter)
     return binding;
 }
 
+-(id)objectForReference:(id)aReference
+{
+    id value=[[self source] objectForReference:aReference];
+    if ( valueFilter){
+        value=((FilterBlock)valueFilter)(value);
+    }
+    return value;
+}
 
 -valueForBinding:(MPWGenericBinding*)aBinding
 {
