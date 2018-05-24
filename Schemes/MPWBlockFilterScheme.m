@@ -7,7 +7,7 @@
 //
 
 #import "MPWBlockFilterScheme.h"
-#import "MPWGenericBinding.h"
+#import <MPWFoundation/MPWGenericReference.h>
 
 @implementation MPWBlockFilterScheme
 
@@ -23,49 +23,30 @@ idAccessor( valueFilter, setValueFilter)
     return self;
 }
 
--(id)_bindingForName:(NSString *)variableName inContext:(id)aContext
-{
-//    NSLog(@"original path: %@",variableName);
-    if ( [self identifierFilter]){
-        variableName=((FilterBlock)identifierFilter)(variableName);
-    }
-//    NSLog(@"mapped path: %@",variableName);
-    return [super bindingForName:variableName inContext:aContext];
-}
 
 +filterWithSource:aSource idFilter:idFilter valueFilter:vFilter
 {
     return [[[self alloc] initWithSource:aSource identifierFilter:idFilter valueFilter:vFilter] autorelease];
 }
 
--_baseBindingForBinding:(MPWGenericBinding*)aBinding
+-filterReference:aReference
 {
-    NSLog(@"-[%@ valueForBinding: %@]",self,[aBinding path]);
-    if (  [aBinding scheme] != [self source] ) {
-        //        NSLog(@"modifying non var-scheme later");
-        aBinding=[self _bindingForName:[aBinding path] inContext:[aBinding defaultContext]];
+    if ( [self identifierFilter]){
+        NSString *variableName = [aReference path];
+        variableName =((FilterBlock)identifierFilter)(variableName);
+        aReference = [[[MPWGenericReference alloc] initWithPath:variableName] autorelease];
     }
-        MPWBinding *binding = [self bindingForName:[aBinding path] inContext:nil];
-    return binding;
+    return aReference;
 }
 
 -(id)objectForReference:(id)aReference
 {
+    aReference = [self filterReference:aReference];
     id value=[[self source] objectForReference:aReference];
     if ( valueFilter){
+        NSLog(@"before filtering: %@",value);
         value=((FilterBlock)valueFilter)(value);
-    }
-    return value;
-}
-
--valueForBinding:(MPWGenericBinding*)aBinding
-{
-    aBinding = [self _baseBindingForBinding:aBinding];
-    NSLog(@"path: %@",[aBinding path]);
-    id value=[[self source] valueForBinding:aBinding];
-    if ( valueFilter){
-//        NSLog(@"will filter: %p/%@",value,[value class]);
-        value=((FilterBlock)valueFilter)(value);
+        NSLog(@"after filtering: %@",value);
     }
     return value;
 }

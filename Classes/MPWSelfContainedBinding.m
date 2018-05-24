@@ -11,7 +11,7 @@
 
 @property (nonatomic, strong) id identifier;
 @property (nonatomic, strong) id scheme;
-@property (nonatomic, strong) id reference;         // FIXME
+@property (nonatomic, strong) id reference;         // FIXME:  compatibilty with MPWBinding
 
 @end
 
