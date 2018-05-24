@@ -9,6 +9,7 @@
 #import "MPWBundleScheme.h"
 #import "MPWStCompiler.h"
 #import <MPWFoundation/AccessorMacros.h>
+#import <MPWFoundation/MPWGenericReference.h>
 #import "MPWFileBinding.h"
 
 @implementation MPWBundleScheme
@@ -42,21 +43,28 @@ objectAccessor( NSBundle, bundle ,setBundle )
 	return [self initWithBundle:[NSBundle bundleForClass:[self class]]];
 }
 
--bindingForName:aName inContext:aContext
+-(NSString*)resourcePathForPath:(NSString*)aName
 {
-
     NSString *pathExtension=[aName pathExtension];
     if ( !pathExtension) {
         pathExtension=@"";
     }
-	NSString *path = [[self bundle] pathForResource:[aName stringByDeletingPathExtension] ofType:pathExtension];
+    NSString *path = [[self bundle] pathForResource:[aName stringByDeletingPathExtension] ofType:pathExtension];
     if ( !path ) {
         path=[[self bundle] resourcePath];
     }
-	//	id binding = [MPWBinding bindingWithValue:[NSString stringWithContentsOfFile:aName]];
-	return [super bindingForName:path inContext:aContext];
+    return path;
 }
 
+-bindingForName:aName inContext:aContext
+{
+ 	return [super bindingForName:[self resourcePathForPath:aName] inContext:aContext];
+}
+
+-(id)objectForReference:(id)aReference
+{
+    return [super objectForReference:[MPWGenericReference referenceWithPath:[self resourcePathForPath:[aReference path]]]];
+}
 
 
 @end
