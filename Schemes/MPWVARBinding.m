@@ -85,7 +85,7 @@ idAccessor( baseObject, setBaseObject )
 
 
 
--(void)_setValue:newValue
+-(void)setValue:newValue
 {
 	id target=[self _objecToIndex:(int)[pathComponents count]-1];
 	[target setValue:newValue forKey:[pathComponents lastObject]];

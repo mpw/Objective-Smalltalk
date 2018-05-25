@@ -42,7 +42,7 @@
     theBinding=[aContext bindingForLocalVariableNamed:firstName];
     [theBinding setIdentifier:[MPWIdentifier identifierWithName:firstName]];
     if ( isCompound) {
-		theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
+        theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
     }
     return theBinding;
 }
@@ -50,13 +50,27 @@
 -(id)objectForReference:(id)aReference
 {
     NSArray *pathComponents = [aReference pathComponents];
-    NSArray *tempValue = [[self.context bindingForLocalVariableNamed: [pathComponents firstObject]] value];
+    id tempValue = [[self.context bindingForLocalVariableNamed: [pathComponents firstObject]] value];
     for (long i=1,max=pathComponents.count; i<max;i++) {
         tempValue=[tempValue valueForKey:pathComponents[i]];
     }
     return tempValue;
-//    return [[self bindingForName:[aReference name] inContext:self.context] value ];
 }
+
+//-(void)setObject:(id)theObject forReference:(id)aReference
+//{
+//    NSArray *pathComponents = [aReference pathComponents];
+//    MPWBinding *binding = [self.context bindingForLocalVariableNamed: [pathComponents firstObject]];
+//    if ( pathComponents.count <= 1) {
+//        [binding setValue:theObject];
+//    } else {
+//        id target = [binding value];
+//        for (long i=1,max=pathComponents.count-1; i<max;i++) {
+//            target=[target valueForKey:pathComponents[i]];
+//        }
+//        [target setValue:theObject forKey:pathComponents.lastObject];
+//    }
+//}
 
 //-(id)valueForBinding:aBinding
 //{

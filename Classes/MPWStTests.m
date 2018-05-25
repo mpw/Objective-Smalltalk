@@ -635,7 +635,8 @@
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 type], @"@", @"type of ivar" );
     MPWStCompiler *testCompiler=[MPWStCompiler compiler];
-    [testCompiler evaluateScriptString:@"testInstance := __TestClassWithIVarsFromSyntax new. var:testInstance/myIvar := 'hi'. "];
+    [testCompiler evaluateScriptString:@"testInstance := __TestClassWithIVarsFromSyntax new.  "];
+    [testCompiler evaluateScriptString:@"var:testInstance/myIvar := 'hi'. "];
     IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"hi",@"accessor ");
     IDEXPECT([testCompiler evaluateScriptString:@"var:testInstance/myIvar "],@"hi",@"accessor via pi syntax");
     [testCompiler evaluateScriptString:@"testInstance setMyIvar:'2nd value'. "];
