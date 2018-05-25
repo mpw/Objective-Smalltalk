@@ -8,6 +8,7 @@
 
 #import "MPWPlistScheme.h"
 #import "MPWGenericBinding.h"
+#import "MPWSelfContainedBinding.h"
 #import "MPWVARBinding.h"
 
 
@@ -33,7 +34,7 @@ idAccessor(plist, setPlist)
 	} else {
 		id value = [localVars objectForKey:variableName];
         if ( value ) {
-            return [MPWBinding bindingWithValue:value];
+            return [MPWSelfContainedBinding bindingWithValue:value];
         }
 	}
 	return binding;
@@ -52,7 +53,7 @@ idAccessor(plist, setPlist)
     NSDictionary *d=@{ @"theAnswer": @"52" };
     [s setPlist:d];
     MPWBinding *b=[s bindingForName:@"theAnswer" inContext:nil];
-    IDEXPECT([b class], [MPWBinding class],@"class of binding");
+    IDEXPECT([b class], [MPWSelfContainedBinding class],@"class of binding");
     IDEXPECT([b value], @"52", @"theAnswer");
     
 }
