@@ -8,6 +8,7 @@
 
 #import "MPWURLSchemeResolver.h"
 #import "MPWURLBinding.h"
+#import "MPWResource.h"
 
 @interface MPWURLSchemeResolver ()
 
@@ -42,13 +43,23 @@
 }
 
 
-
-
-
 -(MPWURLBinding*)bindingForName:aName inContext:aContext
 {
     id urlbinding = [[[MPWURLBinding alloc] initWithURLString:[[[self schemePrefix] stringByAppendingString:@":" ] stringByAppendingString:aName]] autorelease];
 	return urlbinding;
+}
+
+-(id)objectForReference:(id)aReference
+{
+    NSError *error=nil;
+    NSURL *aURL=[aReference asURL];
+    NSLog(@"url: %@",aURL);
+    NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
+    MPWResource *result=[[[MPWResource alloc] init] autorelease];
+    [result setSource:aURL];
+    [result setRawData:rawData];
+    [result setError:error];
+    return result;
 }
 
 

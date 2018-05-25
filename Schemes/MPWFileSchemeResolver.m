@@ -37,23 +37,29 @@
     return result;
 }
 
+-(void)setObject:(id)theObject forReference:(id)aReference
+{
+    NSLog(@"write a file: %@",aReference);
+    [theObject writeToFile:[aReference path] atomically:YES];
+}
+
 -bindingForName:aName inContext:aContext
 {
-//	id binding = [MPWBinding bindingWithValue:[NSString stringWithContentsOfFile:aName]];
-	id binding = [[[MPWFileBinding alloc] initWithPath:aName] autorelease];
-	return binding;
+//    id binding = [MPWBinding bindingWithValue:[NSString stringWithContentsOfFile:aName]];
+    id binding = [[[MPWFileBinding alloc] initWithPath:aName] autorelease];
+    return binding;
 }
-
--valueForBinding:aBinding
-{
-    if ( [aBinding isKindOfClass:[MPWFileBinding class]] ) {
-        return [aBinding value];
-    } else {
-//        return [[[self bindingForName:[aBinding name] inContext:nil] value] rawData];
-        return [[self bindingForName:[aBinding name] inContext:nil] value];
-    }
-}
-
+//
+//-valueForBinding:aBinding
+//{
+//    if ( [aBinding isKindOfClass:[MPWFileBinding class]] ) {
+//        return [aBinding value];
+//    } else {
+////        return [[[self bindingForName:[aBinding name] inContext:nil] value] rawData];
+//        return [[self bindingForName:[aBinding name] inContext:nil] value];
+//    }
+//}
+//
 
 -(NSArray*)childrenOf:(MPWBinding*)binding
 {

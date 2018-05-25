@@ -173,8 +173,9 @@ idAccessor( url , setUrl )
 	return [self _valueWithURL:[self url]];
 }
 
--(void)_setValue:newValue
+-(void)setValue:newValue
 {
+    NSLog(@"_setValue in file binding %@",self);
  	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
         newValue=[newValue fileSystemValue];
 	}
