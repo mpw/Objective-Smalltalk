@@ -9,7 +9,7 @@
 #import "MPWBlockExpression.h"
 #import "MPWBlockContext.h"
 #import <MPWFoundation/NSNil.h>
-#import "MPWNamedIdentifier.h"
+#import "MPWIdentifier.h"
 
 @implementation MPWBlockExpression
 
@@ -47,7 +47,7 @@ idAccessor( declaredArguments, setDeclaredArguments )
 -(NSArray*)implicitArguments
 {
     NSMutableArray *implicits=[NSMutableArray array];
-    for ( MPWNamedIdentifier *identifier in [self variablesRead]) {
+    for ( MPWIdentifier *identifier in [self variablesRead]) {
         if ( [[identifier identifierName] hasPrefix:@"$"] ) {
             [implicits addObject:[identifier identifierName]];
         }

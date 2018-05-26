@@ -13,6 +13,16 @@
 
 objectAccessor( MPWIdentifier, nextIdentifer, setNextIdentifier )
 
+-resolveRescursiveIdentifierWithContext:aContext
+{
+    MPWRecursiveIdentifier *identifier=[super resolveRescursiveIdentifierWithContext:aContext];
+    [identifier setNextIdentifier:[self nextIdentifer]];
+    return identifier;
+}
+
+
+
+
 -(void)dealloc
 {
 	[nextIdentifer release];

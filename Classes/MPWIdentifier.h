@@ -13,10 +13,8 @@
 
 @interface MPWIdentifier : MPWGenericReference {
 	id	scheme;
-	id	schemeName;
 }
 
-idAccessor_h( schemeName, setSchemeName )
 idAccessor_h( scheme, setScheme )
 
 +identifierWithName:(NSString*)name;

@@ -12,7 +12,7 @@
 
 @interface MPWIdentifierExpression : MPWExpression {
 	id	evaluationEnvironment;
-	id  identifier;
+	MPWIdentifier*  identifier;
 }
 
 //idAccessor_h( name, setName )

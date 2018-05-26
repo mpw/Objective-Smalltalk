@@ -36,6 +36,7 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
     return [self bindingWithContext:[self evaluationEnvironment]];
 }
 
+
 -evaluateIn:passedEnvironment
 {
 	//--- have identifier instead of name+scheme-string

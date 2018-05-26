@@ -13,11 +13,9 @@
 @implementation MPWIdentifier
 
 idAccessor( scheme, setScheme )
-idAccessor( schemeName, setSchemeName )
 
 -initWithName:(NSString*)name
 {
-    
     return [super initWithPath:name];
 }
 
@@ -92,11 +90,19 @@ idAccessor( schemeName, setSchemeName )
 #endif
 }
 
+-resolveRescursiveIdentifierWithContext:aContext
+{
+    MPWIdentifier *evaluatedIdentifier = [[[[self class] alloc] initWithPathComponents:[self evaluatedPathComponentsInContext:aContext] scheme:[self schemeName]] autorelease];
+    [evaluatedIdentifier setScheme:[self scheme]];
+    return evaluatedIdentifier;
+}
+
+
 -evaluateIn:aContext
 {
-    id evaluatedScheme = [self schemeWithContext:aContext];
-//    NSLog(@"-[%@ %@] scheme: %@",[self className],NSStringFromSelector(_cmd),evaluatedScheme);
-	return [evaluatedScheme evaluateIdentifier:self withContext:aContext];
+    MPWScheme* evaluatedScheme = [self schemeWithContext:aContext];
+    MPWIdentifier *evaluatedIdentifier = [self resolveRescursiveIdentifierWithContext:aContext];
+	return [evaluatedScheme evaluateIdentifier:evaluatedIdentifier withContext:aContext];
 }
 
 -(NSUInteger)hash
@@ -124,7 +130,6 @@ idAccessor( schemeName, setSchemeName )
 -(void)dealloc
 {
 	[scheme release];
-	[schemeName release];
 	[super dealloc];
 }
 

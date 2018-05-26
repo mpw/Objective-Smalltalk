@@ -11,7 +11,6 @@
 #import "MPWInterval.h"
 #import "MPWMethodStore.h"
 #import "MPWIdentifier.h"
-#import "MPWNamedIdentifier.h"
 #import "MPWRecursiveIdentifier.h"
 #import "MPWURLSchemeResolver.h"
 #import "MPWFileSchemeResolver.h"
@@ -370,7 +369,7 @@ idAccessor(solver, setSolver)
 -makeComplexIdentifier:aToken
 {
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
-	MPWIdentifier *identifier=[[[MPWNamedIdentifier alloc] init] autorelease];
+	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	MPWIdentifier *identifierToAddNameTo=identifier;
 	NSString *scheme=[aToken stringValue];
     [variable setOffset:[scanner offset]];
@@ -452,7 +451,7 @@ idAccessor(solver, setSolver)
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
     [variable setOffset:[scanner offset]];
     [variable setLen:1];
-	MPWNamedIdentifier *identifier=[[[MPWNamedIdentifier alloc] init] autorelease];
+	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	NSString* name = [aToken stringValue];
 	[identifier setIdentifierName:name];
 	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
