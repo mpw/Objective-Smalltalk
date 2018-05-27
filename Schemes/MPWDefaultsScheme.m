@@ -26,14 +26,14 @@
 	return [[NSUserDefaults standardUserDefaults] objectForKey:[aBinding name]] != nil;
 }
 
--valueForBinding:aBinding
+-objectForReference:aReference
 {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:[aBinding name]];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference path]];
 }
 
--(void)setValue:newValue forBinding:aBinding
+-(void)setObject:newValue forReference:aReference
 {
-    NSString *name = [aBinding name];
+    NSString *name = [aReference path];
     if ( [name hasPrefix:@"initial/"]){
         name=[[name componentsSeparatedByString:@"/"] lastObject];
         [[NSUserDefaults standardUserDefaults] registerDefaults:@{ name : newValue }];

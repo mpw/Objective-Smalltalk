@@ -48,15 +48,6 @@ idAccessor(storedContext, setStoredContext)
     So:  delegate to 
 */
 
--bindingWithIdentifier:anIdentifier withContext:aContext
-{
-    if ( !aContext ) {
-        aContext=[self storedContext];
-    }
-    MPWBinding *binding=[super bindingWithIdentifier:anIdentifier withContext:aContext];
-    [binding setScheme:[self source]];
-    return binding;
-}
 
 -(NSString*)filteredPath:(NSString*)path
 {
@@ -76,10 +67,7 @@ idAccessor(storedContext, setStoredContext)
 
 -(void)setObject:newValue forReference:aReference
 {
-//    NSLog(@"[rel-scheme, setObject:%@ forReference:%@]",newValue,aReference);
     [[self source] setObject:newValue forReference:[self filteredReference:aReference]];
-    //    NSLog(@"relative scheme valueForBinding: %@/%@ -> mapped binding: %@ -> value %@",
-    //          aBinding,[aBinding name],aBinding,[aBinding value]);
 }
 
 -(void)setBaseRef:(MPWBinding *)aRef
