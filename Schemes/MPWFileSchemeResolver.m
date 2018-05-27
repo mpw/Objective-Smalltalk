@@ -61,14 +61,11 @@
 //}
 //
 
--(NSArray*)childrenOf:(MPWBinding*)binding
-{
-    return [binding children];
-}
 
--(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
+-(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
 {
-    return [binding children];
+    NSArray *childNames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[aReference path] error:nil];
+    return (NSArray*)[[MPWGenericReference collect] referenceWithPath:[childNames each]];
 }
 
 -(NSString*)completePartialPathFromAbsoluetPath:(NSString*)partialPath
@@ -85,7 +82,8 @@
         basePath=[self completePartialPathFromAbsoluetPath:partialName];
         partialName=[partialName substringFromIndex:[basePath length]];
     }
-    NSArray *childNames=[[self bindingForName:basePath inContext:aContext] childNames];
+    NSArray *childRefs=[self childrenOfReference:[MPWGenericReference referenceWithPath:basePath]];
+    NSArray *childNames=[[childRefs collect] path];
     NSMutableArray *names=[NSMutableArray array];
     for ( NSString *name in childNames) {
         if ( !partialName || [partialName length]==0 || [name hasPrefix:partialName]) {

@@ -97,19 +97,18 @@ extern char ***_NSGetEnviron( void );
     return nil;
 }
 
--(NSArray*)childrenOf:(MPWGenericBinding*)binding
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    if ( [self hasChildren:binding]) {
+    if ( ![self isLeafReference:aReference]) {
         NSArray *envNames = [[self class] getAllEnvironemntVariableNames];
         NSMutableArray *children=[NSMutableArray array];
         
         for ( NSString *name in envNames) {
-            [children addObject:[[binding class] bindingWithName:name scheme:self]];
+            [children addObject:[MPWGenericReference referenceWithPath:name]];
         }
-        NSLog(@"children of '%@': %@",[binding name],children);
         return children;
     }
-    return [NSArray array];
+    return @[];
 }
 
 

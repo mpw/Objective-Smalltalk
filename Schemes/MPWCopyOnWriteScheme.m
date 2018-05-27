@@ -67,14 +67,14 @@ boolAccessor(cacheReads, setCacheReads)
     [(MPWGenericScheme*)[self readWrite] setObject:newValue forReference:aReference];
 }
 
--(BOOL)hasChildren:(MPWGenericBinding*)binding
+-(BOOL)isLeafReference:(MPWReference *)aReference
 {
-    return [[[self source] bindingForName:[binding name] inContext:nil] hasChildren];
+    return [[self source] isLeafReference:aReference];
 }
 
--childrenOf:(MPWGenericBinding*)binding
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    return [[[self source] bindingForName:[binding name] inContext:nil] children];
+    return [[self source] childrenOfReference:aReference];
 }
 
 
