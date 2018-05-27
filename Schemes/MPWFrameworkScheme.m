@@ -41,9 +41,9 @@
     return [self frameworksIn:[self basePaths][0]];
 }
 
--(NSArray *)childrenOf:(MPWGenericBinding *)binding
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    return (NSArray *)[[self collect] bindingForName:[[self allFrameworks] each] inContext:self];
+    return (NSArray *)[[MPWGenericReference collect] referenceWithPath:[[self allFrameworks] each]];
 }
 
 @end

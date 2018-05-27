@@ -148,16 +148,18 @@
     [self setValue:nil forBinding:aBinding];
 }
 
--(NSArray*)childrenOf:(MPWGenericBinding*)aBinding
+// FIXME: this code is duplicated, for example in MPWS3Scheme
+
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    NSArray *children=[self valueForBinding:aBinding];
-    NSMutableArray *childBindings=[NSMutableArray array];
+    NSArray *children=[self objectForReference:aReference];
+    NSMutableArray *childReferences=[NSMutableArray array];
     for ( NSString *child in children ) {
         if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {
-            [childBindings addObject:[MPWGenericBinding bindingWithName:child scheme:self]];
+            [childReferences addObject:[MPWGenericReference referenceWithPath:child]];
         }
     }
-    return childBindings;
+    return childReferences;
 }
 
 -defaultInputPort

@@ -146,20 +146,20 @@
     }
 }
 
--(NSArray*)childrenOf:(MPWGenericBinding*)aBinding
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-//    NSLog(@"childrenOf: %@",[aBinding name]);
-    NSArray *children=[self valueForBinding:aBinding];
+//    NSLog(@"childrenOfReference: %@",[aReference name]);
+    NSArray *children=[self objectForReference:aReference];
 //    NSLog(@"children: %@",children);
-    NSMutableArray *childBindings=[NSMutableArray array];
+    NSMutableArray *childReferences=[NSMutableArray array];
     for ( NSString *child in children ) {
         if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {
 //            NSLog(@"create binding for: %@",child);
-            [childBindings addObject:[MPWGenericBinding bindingWithName:child scheme:self]];
+            [childReferences addObject:[MPWGenericReference referenceWithPath:child]];
         }
     }
 //    NSLog(@"bindings: %@",children);
-    return childBindings;
+    return childReferences;
 }
 
 
