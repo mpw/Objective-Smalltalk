@@ -10,14 +10,10 @@
 
 
 @interface MPWGenericBinding : MPWBinding {
-	NSString* name;
 }
 
 -initWithName:(NSString*)envName scheme:newScheme;
 +bindingWithName:(NSString*)envName scheme:newScheme;
--(NSString*)name;
 -(BOOL)hasChildren;
--path;
--(void)delete;
 
 @end
