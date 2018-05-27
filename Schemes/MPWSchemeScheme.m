@@ -69,14 +69,14 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 	return [[self schemes] objectForKey:aKey];
 }
 
--(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
     NSArray *allNames=[[self schemes] allKeys];
-    NSMutableArray *bindings=[NSMutableArray array];
+    NSMutableArray *reference=[NSMutableArray array];
     for ( NSString *variableName in allNames) {
-        [bindings addObject:[self bindingForName:variableName inContext:aContext]];
+        [reference addObject:[MPWGenericReference referenceWithPath:variableName]];
     }
-    return bindings;
+    return reference;
 }
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext

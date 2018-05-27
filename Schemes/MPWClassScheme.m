@@ -22,9 +22,9 @@
     return binding;
 }
 
--bindingForMirror:aClassMirror
+-referenceForMirror:aClassMirror
 {
-    return [self bindingForName:[aClassMirror name] inContext:nil];
+    return [MPWGenericReference referenceWithPath:[aClassMirror name]];
 }
 
 -(NSArray *)allClassMirrors
@@ -60,7 +60,7 @@
 }
 
 
--(NSArray*)childrenOf:(MPWGenericBinding*)binding
+-(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
 {
 //    NSLog(@"childrenOf with binding '%@'",[binding name]);
 //    if ( [[binding name] isEqualToString:@"/"]  || [[binding name] isEqualToString:@"."]) {
@@ -70,7 +70,7 @@
 //        NSLog(@"bindings: %@",bindings);
 //        return bindings;
 //    }
-    return [[self collect] bindingForMirror:[[self allClassMirrors] each]];
+    return [[self collect] referenceForMirror:[[self allClassMirrors] each]];
 }
 
 

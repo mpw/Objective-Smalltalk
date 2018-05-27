@@ -14,7 +14,6 @@
 #import "MPWMessage.h"
 #import "MPWClassScheme.h"
 #import <ObjectiveSmalltalk/MPWExpression.h>
-#import "MPWVARBinding.h"
 #import "MPWRefScheme.h"
 #import "MPWSchemeScheme.h"
 #import "MPWVarScheme.h"

@@ -89,14 +89,9 @@
     return [[[MPWCopyOnWriteScheme alloc] initWithBase:self cache:otherScheme] autorelease];
 }
 
--(NSArray*)childrenOf:(MPWBinding*)aBinding
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
     return @[];
-}
-
--(NSArray*)childrenOf:(MPWBinding*)aBinding inContext:aContext
-{
-    return [self childrenOf:aBinding];
 }
 
 
@@ -111,10 +106,11 @@
         prefix=@".";
     }
 //    NSLog(@"prefix: '%@' suffix: '%@'",prefix,suffix);
-    NSArray *potentialChildren=[self childrenOf:[self bindingForName:prefix inContext:aContext] inContext:aContext];
+    MPWGenericReference *ref=[MPWGenericReference referenceWithPath:prefix];
+    NSArray *potentialChildren=[self childrenOfReference:ref];
     NSMutableArray *names=[NSMutableArray array];
-    for ( MPWBinding *binding in potentialChildren) {
-        NSString *name = [binding name];
+    for ( MPWGenericReference *reference in potentialChildren) {
+        NSString *name = [reference path];
 //        NSLog(@"name: %@",name);
         if ( !suffix || [suffix length]==0 || [name hasPrefix:suffix] ) {
             if ( [suffix isEqualToString:name] ) {

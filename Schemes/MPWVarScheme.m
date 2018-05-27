@@ -57,33 +57,13 @@
     return tempValue;
 }
 
-//-(void)setObject:(id)theObject forReference:(id)aReference
-//{
-//    NSArray *pathComponents = [aReference pathComponents];
-//    MPWBinding *binding = [self.context bindingForLocalVariableNamed: [pathComponents firstObject]];
-//    if ( pathComponents.count <= 1) {
-//        [binding setValue:theObject];
-//    } else {
-//        id target = [binding value];
-//        for (long i=1,max=pathComponents.count-1; i<max;i++) {
-//            target=[target valueForKey:pathComponents[i]];
-//        }
-//        [target setValue:theObject forKey:pathComponents.lastObject];
-//    }
-//}
 
-//-(id)valueForBinding:aBinding
-//{
-//    return [[self bindingForName:[aBinding name] inContext:[aBinding defaultContext]] value ];
-//}
-
-
--(NSArray*)childrenOf:(MPWBinding*)binding inContext:aContext
+-(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    NSArray *allNames=[[aContext localVars] allKeys];
+    NSArray *allNames=[[self.context localVars] allKeys];
     NSMutableArray *bindings=[NSMutableArray array];
     for ( NSString *variableName in allNames) {
-        [bindings addObject:[self bindingForName:variableName inContext:aContext]];
+        [bindings addObject:[MPWGenericReference referenceWithPath:variableName]];
     }
     return bindings;
 }

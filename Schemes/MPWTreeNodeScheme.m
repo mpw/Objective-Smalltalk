@@ -64,9 +64,9 @@ idAccessor( root, setRoot )
     return [[self nodeFoBinding:binding] childWithName:name];
 }
 
--(NSArray*)childrenOf:(MPWGenericBinding*)binding
+-(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
 {
-    return [[self nodeFoBinding:binding] children];
+    return [[self nodeForPath:[aReference relativePathComponents]] children];
 }
 
 -(void)dealloc

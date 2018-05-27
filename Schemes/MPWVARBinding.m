@@ -20,9 +20,19 @@ idAccessor( baseObject, setBaseObject )
 	self=[super init];
 	[self _setPathComponents:newPathComponents];
     self.reference = [[[MPWGenericReference alloc] initWithPathComponents:newPathComponents scheme:nil] autorelease];
+    NSAssert( [[self.reference pathComponents] isEqual:[self pathComponents]], @"pathComponents");
 	[self setBaseObject:newBase];
 	return self;
 	
+}
+
+-(void)setReference:(MPWReference *)reference
+{
+    [super setReference:reference];
+//    [self _setPathComponents:[reference pathComponents]];
+//    if ( ![[self.reference pathComponents] isEqual:[self pathComponents]]) {
+//        NSAssert( [[self.reference pathComponents] isEqual:[self pathComponents]], @"pathComponents");
+//    }
 }
 
 -path
