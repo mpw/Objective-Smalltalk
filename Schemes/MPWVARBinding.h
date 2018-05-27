@@ -11,7 +11,7 @@
 
 @interface MPWVARBinding : MPWBinding {
 	id			baseObject;
-	NSArray     *pathComponents;
+	NSArray     *_pathComponents;
     BOOL        isObserving;
 }
 

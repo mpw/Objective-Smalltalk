@@ -11,14 +11,15 @@
 
 @implementation MPWVARBinding
 
-objectAccessor( NSArray, pathComponents, setPathComponents )
+objectAccessor( NSArray, _pathComponents, _setPathComponents )
 idAccessor( baseObject, setBaseObject )
 
 
 -initWithBaseObject:newBase pathComponents:(NSArray*)newPathComponents
 {
 	self=[super init];
-	[self setPathComponents:newPathComponents];
+	[self _setPathComponents:newPathComponents];
+    self.reference = [[[MPWGenericReference alloc] initWithPathComponents:newPathComponents scheme:nil] autorelease];
 	[self setBaseObject:newBase];
 	return self;
 	
@@ -27,6 +28,11 @@ idAccessor( baseObject, setBaseObject )
 -path
 {
     return [[self pathComponents] componentsJoinedByString:@"/"];
+}
+
+-pathComponents
+{
+    return _pathComponents;
 }
 
 -initWithBaseObject:newBase path:newPath
@@ -53,7 +59,7 @@ idAccessor( baseObject, setBaseObject )
 -(id)_objectToIndex:(int)anIndex
 {
     if ( anIndex < 0 ) {
-        anIndex=[[self pathComponents] count]+anIndex;
+        anIndex=(int)[[self pathComponents] count]+anIndex;
     }
 	anIndex=MIN(anIndex, (int)[[self pathComponents] count]);
 	id result=baseObject;
@@ -95,7 +101,7 @@ idAccessor( baseObject, setBaseObject )
 -(void)dealloc
 {
 	[baseObject release];
-	[pathComponents release];
+	[_pathComponents release];
 	[super dealloc];
 }
 
