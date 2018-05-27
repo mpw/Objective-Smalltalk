@@ -47,11 +47,11 @@ idAccessor( baseObject, setBaseObject )
 
 -(id)_objecToIndex:(int)anIndex
 {
-	anIndex=MIN(anIndex, (int)[pathComponents count]);
+	anIndex=MIN(anIndex, (int)[[self pathComponents] count]);
 	id result=baseObject;
 	int i;
 	for (i=0;i<anIndex;i++) {
-		result=[result valueForPathComponent:[pathComponents objectAtIndex:i]];
+		result=[result valueForPathComponent:[[self pathComponents] objectAtIndex:i]];
 	}
 	return result;
 				
@@ -59,14 +59,14 @@ idAccessor( baseObject, setBaseObject )
 
 -_value
 {
-	return [self _objecToIndex:(int)[pathComponents count]];
+	return [self _objecToIndex:(int)[[self pathComponents] count]];
 }
 
 -(void)startObserving
 {
     if (!isObserving) {
-        id base = [self _objecToIndex:(int)[pathComponents count]-1];
-        NSString *property=[pathComponents lastObject];
+        id base = [self _objecToIndex:(int)[[self pathComponents] count]-1];
+        NSString *property=[[self pathComponents] lastObject];
         //    NSLog(@"%p start observing '%@' of %@ with %@",self,property,base,[self name]);
         [base objst_addObserver:self forKey:property];
         isObserving=YES;
@@ -76,8 +76,8 @@ idAccessor( baseObject, setBaseObject )
 
 -(void)stopObserving
 {
-    id base = [self _objecToIndex:(int)[pathComponents count]-1];
-    NSString *property=[pathComponents lastObject];
+    id base = [self _objecToIndex:(int)[[self pathComponents] count]-1];
+    NSString *property=[[self pathComponents] lastObject];
     [base removeObserver:base forKeyPath:property];
     isObserving=NO;
 }
@@ -87,8 +87,8 @@ idAccessor( baseObject, setBaseObject )
 
 -(void)setValue:newValue
 {
-	id target=[self _objecToIndex:(int)[pathComponents count]-1];
-	[target setValue:newValue forKey:[pathComponents lastObject]];
+	id target=[self _objecToIndex:(int)[[self pathComponents] count]-1];
+	[target setValue:newValue forKey:[[self pathComponents] lastObject]];
 }
 
 -(void)dealloc
