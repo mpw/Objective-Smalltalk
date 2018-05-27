@@ -9,6 +9,7 @@
 #import <CoreServices/CoreServices.h>
 #import "MPWFileBinding.h"
 #import "MPWDirectoryBinding.h"
+#import <MPWFoundation/MPWGenericReference.h>
 
 @interface MPWSpotlightSearchBinding : MPWDirectoryBinding
 {
@@ -16,7 +17,7 @@
 }
 
 @property (nonatomic,strong) NSMetadataQuery *query;
-@property (nonatomic,strong) MPWGenericBinding *originalBinding;
+@property (nonatomic,strong) MPWGenericReference *originalReference;
 
 
 
@@ -56,15 +57,14 @@
 @implementation MPWSpotlightScheme
 
 
-
--valueForBinding:aBinding
+-(id)objectForReference:(MPWGenericReference*)aReference
 {
     NSDictionary *queryStrings=@{
                              @"type": @"kMDItemContentTypeTree == %@",
                              @"content": @"kMDItemTextContent CONTAINS %@",
 
     };
-    NSURLComponents *components = [NSURLComponents componentsWithString:[aBinding path]];
+    NSURLComponents *components = [NSURLComponents componentsWithString:[aReference path]];
     NSMetadataQuery *q = [[NSMetadataQuery new] autorelease];
     if ( [components path]) {
         [q setSearchScopes:@[ [components path]]];
@@ -77,14 +77,13 @@
             [predicates addObject:p];
         }
     }
-    NSPredicate *p=nil;
     if (predicates.count){
         [q setPredicate:predicates.count==1 ? predicates.firstObject : [NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
     }
     [q setSearchScopes:@[ components.path ]];
     [q setOperationQueue:[[NSOperationQueue new] autorelease]];
     MPWSpotlightSearchBinding *sb=[MPWSpotlightSearchBinding bindingWithName:components.path scheme:self];
-    sb.originalBinding=aBinding;
+    sb.originalReference=aReference;
     sb.query=q;
     [sb.query startQuery];
     return sb;

@@ -50,11 +50,6 @@
     return NO;
 }
 
--childWithName:(NSString*)name of:(MPWGenericBinding*)binding
-{
-    return nil;
-}
-
 -(NSArray*)childrenOf:(MPWGenericBinding*)binding
 {
     return @[];

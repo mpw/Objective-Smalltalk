@@ -59,11 +59,6 @@ objectAccessor( NSString, name, setName )
     return [GENERICSCHEME hasChildren:self];
 }
 
--childWithName:(NSString*)aName
-{
-    return [GENERICSCHEME childWithName:aName of:self];
-}
-
 -(NSArray*)children
 {
     return [GENERICSCHEME childrenOf:self];

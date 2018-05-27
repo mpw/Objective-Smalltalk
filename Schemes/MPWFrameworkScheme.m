@@ -18,9 +18,9 @@
               ];
 }
 
--valueForBinding:(MPWGenericBinding*)aBinding
+-(id)objectForReference:(id)aReference
 {
-    NSString *name=[aBinding name];
+    NSString *name=[aReference name];
     NSBundle *result=nil;
     for ( NSString *base in [self basePaths]) {
         result=[NSBundle bundleWithPath:[[base stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"framework"]];

@@ -1,0 +1,23 @@
+#!/usr/local/bin/stsh
+
+class Koan : NSObject {
+
+   var tracker.
+
+   -<void>setTrackerToFalse:aString
+   {
+      stdout println:'false: ', aString.
+   }
+
+   -<void>setTrackerToTrue:aString
+   {
+      stdout println:'true: ', aString.
+   }
+
+}
+
+a := Koan new.
+a setTrackerToFalse:'falsy'.
+a setTrackerToTrue:'hi'.
+a setTracker:'hi'.
+stdout println:a tracker.

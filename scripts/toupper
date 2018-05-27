@@ -1,0 +1,2 @@
+#!/usr/local/bin/stsh
+(stdin -> [ :s | s stringValue uppercaseString. ] -> rawstdout ) run
