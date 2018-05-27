@@ -41,9 +41,4 @@
     return [GENERICSCHEME hasChildren:self];
 }
 
--(void)dealloc
-{
-	[super dealloc];
-}
-
 @end

@@ -14,12 +14,6 @@
 
 
 -(MPWBinding*)bindingForName:uriString inContext:aContext;
--valueForBinding:(MPWGenericBinding*)aBinding;
--(void)setValue:newValue forBinding:aBinding;
--(BOOL)hasChildren:(MPWGenericBinding*)binding;
--childWithName:(NSString*)name of:(MPWGenericBinding*)binding;
--(NSArray*)childrenOf:(MPWGenericBinding*)binding;
--(void)delete:(MPWGenericBinding*)binding;
 
 
 
