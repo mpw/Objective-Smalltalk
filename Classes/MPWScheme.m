@@ -20,16 +20,6 @@
 	return [[[self alloc] init] autorelease];
 }
 
--valueForBinding:(MPWBinding*)aBinding
-{
-    return nil;
-}
-
--value
-{
-	return self;		// FIXME:  this is a workaround for not returning proper bindings from the scheme scheme
-}
-
 -bindingForName:(NSString*)variableName inContext:aContext
 {
 	return nil;
@@ -49,7 +39,6 @@
 //    NSLog(@"bindingWithIdentifier binding iidentifier: %@",[binding identifier]);
     return binding;
 }
-
 
 
 -evaluateIdentifier:anIdentifer withContext:aContext

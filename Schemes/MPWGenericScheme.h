@@ -13,7 +13,6 @@
 @interface MPWGenericScheme : MPWScheme
 
 
--contentForURI:uri;
 -(MPWBinding*)bindingForName:uriString inContext:aContext;
 -valueForBinding:(MPWGenericBinding*)aBinding;
 -(void)setValue:newValue forBinding:aBinding;

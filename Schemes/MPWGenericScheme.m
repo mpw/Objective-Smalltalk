@@ -11,11 +11,6 @@
 
 @implementation MPWGenericScheme
 
--contentForPath:(NSArray*)array
-{
-    return nil;
-}
-
 -(NSArray*)pathArrayForPathString:(NSString*)uri
 {
 	NSArray *pathArray = [uri componentsSeparatedByString:@"/"];
@@ -25,25 +20,11 @@
     return pathArray;
 }
 
--contentForURI:uri
-{
-    return [self contentForPath:[self pathArrayForPathString:uri]];               
-}
-
 -(MPWBinding*)bindingForName:uriString inContext:aContext
 {
 	return [[[MPWGenericBinding alloc] initWithName:uriString scheme:self] autorelease];
 }
 
--valueForBinding:(MPWGenericBinding*)aBinding
-{
-    return [self contentForPath:[self pathArrayForPathString:[aBinding path]]];
-}
-
--(void)setValue:newValue forBinding:aBinding
-{
-    
-}
 
 -(BOOL)hasChildren:(MPWGenericBinding*)binding
 {

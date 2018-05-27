@@ -23,26 +23,14 @@ idAccessor( root, setRoot )
 	return self;
 }
 
--(NSArray*)pathArrayForPathString:(NSString*)uri
-{
-	NSArray *pathArray = [super pathArrayForPathString:uri];
-    if ( [pathArray count] > 1 && [[pathArray objectAtIndex:0] length] == 0 ) {
-        pathArray=[pathArray subarrayWithRange:NSMakeRange(1, [pathArray count]-1)];
-    }
-    return pathArray;
-}
-
-
 -nodeForPath:(NSArray*)pathArray
 {
     return [root nodeForPathEnumerator:[pathArray objectEnumerator]];
 }
 
-
 -nodeFoBinding:(MPWGenericBinding*)aBinding
 {
-    NSString *uri=[aBinding name];
-    return [self nodeForPath:[self pathArrayForPathString:uri]];
+    return [self nodeForPath:[[aBinding reference] relativePathComponents]];
 }
 
 -contentForPath:(NSArray*)array
@@ -50,15 +38,14 @@ idAccessor( root, setRoot )
 	return [[self nodeForPath:array] content];
 }
 
--(id)objectForReference:(id)aReference
+-(id)objectForReference:(MPWGenericReference*)aReference
 {
-    return [[self nodeFoBinding:aReference] content];
+    return [[self nodeForPath:[aReference relativePathComponents]] content];
 }
-
 
 -(void)setObject:newValue forReference:aReference
 {
-    NSArray *pathArray=[self pathArrayForPathString:[aReference name]];
+    NSArray *pathArray=[aReference relativePathComponents];
     MPWTreeNode *node=[self nodeForPath:pathArray];
     if ( !node ) {
         node = [[self root] mkdirs:[pathArray objectEnumerator]];
@@ -82,14 +69,11 @@ idAccessor( root, setRoot )
     return [[self nodeFoBinding:binding] children];
 }
 
-
-
 -(void)dealloc
 {
 	[root release];
 	[super dealloc];
 }
-
 
 @end
 
