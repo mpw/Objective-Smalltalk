@@ -19,7 +19,6 @@
 -(BOOL)hasChildren:(MPWGenericBinding*)binding;
 -childWithName:(NSString*)name of:(MPWGenericBinding*)binding;
 -(NSArray*)childrenOf:(MPWGenericBinding*)binding;
--(NSArray*)pathArrayForPathString:(NSString*)uri;
 -(void)delete:(MPWGenericBinding*)binding;
 
 

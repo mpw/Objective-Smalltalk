@@ -111,7 +111,7 @@
 
 -(void)setValue:newValue forBinding:aBinding
 {
-    NSArray *pathArray=[self pathArrayForPathString:[aBinding path]];
+    NSArray *pathArray=[aBinding relativePathComponents];
     if ( [pathArray.firstObject length] == 0) {
         pathArray=[pathArray subarrayWithRange:NSMakeRange(1, pathArray.count-1)];
     }

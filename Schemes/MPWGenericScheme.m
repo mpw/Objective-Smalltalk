@@ -11,14 +11,6 @@
 
 @implementation MPWGenericScheme
 
--(NSArray*)pathArrayForPathString:(NSString*)uri
-{
-	NSArray *pathArray = [uri componentsSeparatedByString:@"/"];
-    if ( [pathArray count] > 1 && [[pathArray lastObject] length] == 0 ) {
-        pathArray=[pathArray subarrayWithRange:NSMakeRange(0, [pathArray count]-1)];
-    }
-    return pathArray;
-}
 
 -(MPWBinding*)bindingForName:uriString inContext:aContext
 {

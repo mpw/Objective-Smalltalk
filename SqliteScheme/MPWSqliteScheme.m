@@ -11,6 +11,7 @@
 #import <ObjectiveSmalltalk/MPWGenericBinding.h>
 #import <ObjectiveSmalltalk/MPWURLBinding.h>
 #import <ObjectiveSmalltalk/MPWMessagePortDescriptor.h>
+#import <MPWFoundation/MPWFoundation.h>
 #import "sqlite3.h"
 #import <FMDB/FMDB.h>
 
@@ -79,9 +80,6 @@
 
 -contentForPath:(NSArray*)array
 {
-    if ( [array.firstObject length] == 0) {
-        array=[array subarrayWithRange:NSMakeRange(1, array.count-1)];
-    }
     if ( [array count] == 3) {
         NSString *table=array[0];
         NSString *column=array[1];
@@ -96,12 +94,14 @@
     }
 }
 
+-(id)objectForReference:(id)aReference
+{
+    return [self contentForPath:[aReference relativePathComponents]];
+}
+
 -(void)setValue:newValue forBinding:aBinding
 {
-    NSArray *pathArray=[self pathArrayForPathString:[aBinding path]];
-    if ( [pathArray.firstObject length] == 0) {
-        pathArray=[pathArray subarrayWithRange:NSMakeRange(1, pathArray.count-1)];
-    }
+    NSArray *pathArray=[(MPWGenericReference*)[aBinding reference] relativePathComponents];
     if ( pathArray.count== 1 ) {
         NSString *table=pathArray[0];
         NSMutableString *queryString=[NSMutableString stringWithFormat:@"insert into %@ ",table];
