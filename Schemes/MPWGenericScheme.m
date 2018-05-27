@@ -18,18 +18,4 @@
 }
 
 
--(BOOL)hasChildren:(MPWGenericBinding*)binding
-{
-    return NO;
-}
-
--(NSArray*)childrenOf:(MPWGenericBinding*)binding
-{
-    return @[];
-}
-
--(void)delete:(MPWGenericBinding*)binding
-{
-}
-
 @end

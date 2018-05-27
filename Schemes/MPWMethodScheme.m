@@ -156,9 +156,9 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
 }
 
 
--(id)valueForBinding:(MPWGenericBinding*)aBinding
+-(id)objectForReference:(MPWGenericReference*)aReference
 {
-    return [self contentForPath:[[aBinding name] componentsSeparatedByString:@"/"]];
+    return [self contentForPath:[aReference relativePathComponents]];
 }
 
 
