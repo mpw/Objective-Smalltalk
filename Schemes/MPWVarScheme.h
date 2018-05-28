@@ -6,11 +6,11 @@
 //  Copyright 2009 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWScheme.h"
+#import "MPWSelfContainedBindingsScheme.h"
 
 @class MPWEvaluator;
 
-@interface MPWVarScheme : MPWScheme {
+@interface MPWVarScheme : MPWSelfContainedBindingsScheme {
 }
 
 @property (nonatomic, strong ) MPWEvaluator *context;
