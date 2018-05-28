@@ -167,8 +167,6 @@
 		1F7E05CA144B417D008F349D /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CE144B4188008F349D /* Foundation.framework */; };
-		1F80973715A72A77004AB773 /* MPWPlistScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F80973515A72A77004AB773 /* MPWPlistScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1F81C06519699AE10066DF43 /* MethodServerTouch.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F81C06419699AE10066DF43 /* MethodServerTouch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F81C07519699AE10066DF43 /* MethodServerTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F81C06019699AE00066DF43 /* MethodServerTouch.framework */; };
 		1F81C07619699AE10066DF43 /* MethodServerTouch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F81C06019699AE00066DF43 /* MethodServerTouch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -432,8 +430,6 @@
 		1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */; };
 		1FE37BF91969612700C9A378 /* MPWCopyOnWriteScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BFA1969612700C9A378 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
-		1FE37BFB1969612700C9A378 /* MPWPlistScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F80973515A72A77004AB773 /* MPWPlistScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37BFC1969612700C9A378 /* MPWPlistScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F80973615A72A77004AB773 /* MPWPlistScheme.m */; };
 		1FE37BFD1969612700C9A378 /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
 		1FE37BFF1969612800C9A378 /* MPWFrameworkScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -634,8 +630,6 @@
 		1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = "../../Build/Development-iphoneos/libMPWFoundationTouch.a"; sourceTree = "<group>"; };
 		1F7E05CC144B417D008F349D /* MPWSideweb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWSideweb.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release/MPWSideweb.framework"; sourceTree = "<group>"; };
 		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		1F80973515A72A77004AB773 /* MPWPlistScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWPlistScheme.h; sourceTree = "<group>"; };
-		1F80973615A72A77004AB773 /* MPWPlistScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWPlistScheme.m; sourceTree = "<group>"; };
 		1F81C06019699AE00066DF43 /* MethodServerTouch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MethodServerTouch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F81C06319699AE10066DF43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F81C06419699AE10066DF43 /* MethodServerTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodServerTouch.h; sourceTree = "<group>"; };
@@ -1052,8 +1046,6 @@
 				1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */,
 				1FD1B4451492657300919385 /* MPWCopyOnWriteScheme.h */,
 				1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */,
-				1F80973515A72A77004AB773 /* MPWPlistScheme.h */,
-				1F80973615A72A77004AB773 /* MPWPlistScheme.m */,
 				1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */,
 				1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */,
 				1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */,
@@ -1610,7 +1602,6 @@
 				1FF4A342147AB6C7001FCCCD /* MPWGenericScheme.h in Headers */,
 				1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1FD1B4471492657300919385 /* MPWCopyOnWriteScheme.h in Headers */,
-				1F80973715A72A77004AB773 /* MPWPlistScheme.h in Headers */,
 				1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
 				1FFE3AD720B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */,
 				1F68D1E715D2E945005C7BF5 /* MPWFilterScheme.h in Headers */,
@@ -1780,7 +1771,6 @@
 				1FE37B851969610600C9A378 /* MPWEvaluator.h in Headers */,
 				1FE37BF71969612700C9A378 /* MPWTreeNodeScheme.h in Headers */,
 				1FE37BAF1969610700C9A378 /* MPWRecursiveIdentifier.h in Headers */,
-				1FE37BFB1969612700C9A378 /* MPWPlistScheme.h in Headers */,
 				1FE37BCC1969612400C9A378 /* MPWVarScheme.h in Headers */,
 				1FE37B931969610600C9A378 /* MPWInstanceVariable.h in Headers */,
 				1FE37BA11969610600C9A378 /* MPWMethodHeader.h in Headers */,
@@ -2422,7 +2412,6 @@
 				1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1FED18C11544684600E0D765 /* JSGCDDispatcher.m in Sources */,
-				1F80973A15A72A77004AB773 /* MPWPlistScheme.m in Sources */,
 				1F5501B315ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
 				1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */,
@@ -2585,7 +2574,6 @@
 				1FE37BC01969610800C9A378 /* MPWStTests.m in Sources */,
 				1FE37BA41969610700C9A378 /* MPWMethodMirror.m in Sources */,
 				1F86CE21203338A8000F0B81 /* MPWSpotlightScheme.m in Sources */,
-				1FE37BFC1969612700C9A378 /* MPWPlistScheme.m in Sources */,
 				1FB7D7F51E9E5ACC008E5D8E /* MPWClassDefinition.m in Sources */,
 				1FE37B941969610600C9A378 /* MPWInstanceVariable.m in Sources */,
 				1FE37B791969610600C9A378 /* MPWBlockExpression.m in Sources */,
