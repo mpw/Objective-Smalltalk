@@ -15,7 +15,6 @@
     id value = [super evaluateIdentifier:anIdentifer withContext:aContext];
     if ( !value ) {
         id binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
-        NSLog(@"evaluateIdentifier falling back: %@",self);
         if (!binding) {
             value=[aContext valueForUndefinedVariableNamed:[anIdentifer identifierName]];
         } else {
