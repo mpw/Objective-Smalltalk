@@ -42,16 +42,6 @@
 
 
 
--get:uri
-{
-    return [self objectForReference:[MPWGenericReference referenceWithPath:uri]];
-}
-
--get:uri parameters:params
-{
-    return [self get:uri];
-}
-
 
 -(BOOL)isBoundBinding:(MPWBinding*)aBinding
 {
