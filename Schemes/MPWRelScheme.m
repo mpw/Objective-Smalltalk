@@ -16,92 +16,15 @@
 
 @implementation MPWRelScheme
 
-objectAccessor( NSString, baseIdentifier, setBaseIdentifier )
-objectAccessor( MPWBinding, baseRef, _setBaseRef)
-idAccessor(storedContext, setStoredContext)
-
-/*
-   FIXME!!
- 
-   Different kinds of source schemes/bindings need to be adjusted at different times.
- 
-   GenericBindings only start evaluating their identifiers at valueForBinding: time,
-   so the path adjustment needs to be done then.  (Or rather:  some other scheme
-   may have created the binding, in which case we only find out about it at valueForBinding:
-   time and thus didn't have the opportunity to adjust the path during creation).
- 
-   However, that's too late for var: bindings and evaluation of embedded expressions
-     (for example  {env:HOME} because at valueForBinding: time there is no context,
-     and the context is required to evaluat these.
- 
-   Not entirely sure how to fix this (might go away if I do away with GenericBindings?)
-   Alternatively:   keep the context around for later.
-
- 
-   Also:  this problem only started manifesting itself when I added storing the scheme
-       to MPWBinding (and therefore all MPWBindings).
- 
- 
-    Possibly need to go via the original binding (in case we have it, and some relative
-    schemes will only work when done this way):  VAR-Ref has its context, with the context
-    already used to get the base object (so it is this resolved base object that we need).
-    So:  delegate to 
-*/
-
-
--(NSString*)filteredPath:(NSString*)path
-{
-    return [[self baseIdentifier] stringByAppendingPathComponent:path];
-}
-
--(MPWGenericReference*)filteredReference:(MPWGenericReference*)ref
-{
-    return [[ref class] referenceWithPath:[self filteredPath:[ref path]] ];
-}
-
-
--(id)objectForReference:(id)aReference
-{
-    return [[self source] objectForReference:[self filteredReference:aReference]];
-}
-
--(void)setObject:newValue forReference:aReference
-{
-    [[self source] setObject:newValue forReference:[self filteredReference:aReference]];
-}
-
--(void)setBaseRef:(MPWBinding *)aRef
-{
-    MPWBinding *resolved=[aRef bindNames];
-	[self setSource:[resolved scheme]];
-	[self setBaseIdentifier:[[resolved identifier] identifierName]];
-    [self _setBaseRef:resolved];
-}
-
 
 -initWithBaseScheme:(MPWScheme*)aScheme baseURL:(NSString*)str
 {
-	self=[super init];
-	[self setSource:aScheme];
-	[self setBaseIdentifier:str];
-	return self;
+    return [super initWithSource:aScheme reference:[self referenceForPath:str]];
 }
 
 -initWithRef:(MPWBinding*)aBinding
 {
-    MPWBinding *resolved=[aBinding bindNames];
-//    NSLog(@"initWithRef: %@",aBinding);
-//    NSLog(@"binding value: %@",[aBinding value]);
-    self = [self initWithBaseScheme:[resolved scheme] baseURL:[[resolved identifier] identifierName]];
-    
-    return self;
-}
-
--(void)dealloc
-{
-	[baseIdentifier release];
-    [baseRef release];
-	[super dealloc];
+    return [self initWithSource:[aBinding scheme] reference:[aBinding identifier]];
 }
 
 @end
@@ -110,11 +33,12 @@ idAccessor(storedContext, setStoredContext)
 
 @implementation MPWRelScheme(testing)
 
-+_testSchemeInterpreter
++_testSchemeInterpreter:(NSString*)baseRef
 {
     MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
     [interpreter evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme."];
-    [interpreter evaluateScriptString:@"scheme:rel := MPWRelScheme alloc initWithBaseScheme: scheme:base baseURL:'/'."];
+    [interpreter bindValue:baseRef toVariableNamed:@"baseRef"];
+    [interpreter evaluateScriptString:@"scheme:rel := MPWRelScheme alloc initWithBaseScheme: scheme:base baseURL:baseRef."];
     [interpreter evaluateScriptString:@"base:/ := 'root' "];
     [interpreter evaluateScriptString:@"base:/subtree := 'subtree-content' "];
     return interpreter;
@@ -122,15 +46,15 @@ idAccessor(storedContext, setStoredContext)
 
 +(void)testBasicLookup
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter];
+    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/"];
     IDEXPECT([interpreter evaluateScriptString:@"base:/"] , @"root", @"eval rel:/");
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"root", @"eval rel:/");
 }
 
 +(void)testRelativeLookup
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter];
-    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
+    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/subtree"];
+//    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"subtree-content", @"eval rel:/");
 }
 
@@ -163,7 +87,7 @@ idAccessor(storedContext, setStoredContext)
 
 +(void)testWriteThrough
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter];
+    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/"];
     IDEXPECT([interpreter evaluateScriptString:@"base:/"] , @"root", @"eval rel:/");
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"root", @"eval rel:/");
     [interpreter evaluateScriptString:@"rel:/ := 'new root'"];
@@ -173,8 +97,8 @@ idAccessor(storedContext, setStoredContext)
 
 +(void)testRelativeWriteThrough
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter];
-    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
+    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/subtree"];
+//    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"subtree-content", @"eval rel:/");
     [interpreter evaluateScriptString:@"rel:/ := 'new subtree'"];
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"new subtree", @"eval rel:/");

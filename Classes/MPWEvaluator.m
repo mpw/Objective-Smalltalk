@@ -201,15 +201,19 @@ idAccessor( localVars, setLocalVars )
     return binding;
 }
 
--(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:scheme
+-(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:schemeName
 {
-	MPWBinding* binding=[[self schemeForName:scheme] bindingForName:variableName inContext:self];
-    // FIXME
-    binding.reference = [[[MPWGenericReference alloc] initWithPath:variableName] autorelease];
-	if ( !binding ) {
-        binding = [self createLocalBindingForName:variableName];
-	}
-	[binding setValue:value];
+    MPWScheme* scheme=[self schemeForName:schemeName];
+    if ( [scheme isKindOfClass:[MPWVarScheme class]]) {   // legacy workaround, FIXME
+        MPWBinding* binding=[scheme bindingForName:variableName inContext:self];
+        binding.reference = [[[MPWGenericReference alloc] initWithPath:variableName] autorelease];
+        if ( !binding ) {
+            binding = [self createLocalBindingForName:variableName];
+        }
+        [binding setValue:value];
+    } else {            // the way it should be
+        [scheme setObject:value forReference:[scheme referenceForPath:variableName]];
+    }
 }
 
 -(NSString*)defaultScheme

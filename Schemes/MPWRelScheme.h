@@ -6,14 +6,11 @@
 //  Copyright 2012 metaobject ltd. All rights reserved.
 //
 
-#import "MPWFilterScheme.h"
+#import <MPWFoundation/MPWPathRelativeStore.h>
 
 @class MPWBinding;
 
-@interface MPWRelScheme : MPWFilterScheme {
-	NSString* baseIdentifier;
-    id storedContext;
-    MPWBinding *baseRef;        // not used yet
+@interface MPWRelScheme : MPWPathRelativeStore {
 }
 
 -initWithRef:(MPWBinding*)aBinding;

@@ -41,27 +41,6 @@
 }
 
 
--evaluateIdentifier:anIdentifer withContext:aContext
-{
-//    NSLog(@"-[%@ %@]",[self className],NSStringFromSelector(_cmd));
-    MPWScheme *scheme=[anIdentifer scheme];
-    id value = [scheme objectForReference:anIdentifer];
-    if ( !value ) {
-        MPWBinding *binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
-        if (!binding) {
-            value=[aContext valueForUndefinedVariableNamed:[anIdentifer identifierName]];
-//            NSLog(@"no binding, valueForUndefined value: %@",value);
-        } else {
-            value=[binding value];
-        }
-    }
-    
-    if ( [value respondsToSelector:@selector(isNotNil)]  && ![value isNotNil] ) {
-        value=nil;
-    }
-    return value;
-}
-
 -get:uri
 {
     return [self objectForReference:[MPWGenericReference referenceWithPath:uri]];
