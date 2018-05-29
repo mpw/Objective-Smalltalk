@@ -63,7 +63,7 @@
     NSArray *allNames=[[self.context localVars] allKeys];
     NSMutableArray *bindings=[NSMutableArray array];
     for ( NSString *variableName in allNames) {
-        [bindings addObject:[MPWGenericReference referenceWithPath:variableName]];
+        [bindings addObject:[self referenceForPath:variableName]];
     }
     return bindings;
 }

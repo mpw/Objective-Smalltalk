@@ -76,7 +76,7 @@
         prefix=@".";
     }
 //    NSLog(@"prefix: '%@' suffix: '%@'",prefix,suffix);
-    MPWGenericReference *ref=[MPWGenericReference referenceWithPath:prefix];
+    MPWGenericReference *ref=[self referenceForPath:prefix];
     NSArray *potentialChildren=[self childrenOfReference:ref];
     NSMutableArray *names=[NSMutableArray array];
     for ( MPWGenericReference *reference in potentialChildren) {

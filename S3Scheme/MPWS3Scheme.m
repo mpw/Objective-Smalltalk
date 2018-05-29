@@ -155,7 +155,7 @@
     for ( NSString *child in children ) {
         if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {
 //            NSLog(@"create binding for: %@",child);
-            [childReferences addObject:[MPWGenericReference referenceWithPath:child]];
+            [childReferences addObject:[self referenceForPath:child]];
         }
     }
 //    NSLog(@"bindings: %@",children);

@@ -104,7 +104,7 @@ extern char ***_NSGetEnviron( void );
         NSMutableArray *children=[NSMutableArray array];
         
         for ( NSString *name in envNames) {
-            [children addObject:[MPWGenericReference referenceWithPath:name]];
+            [children addObject:[self referenceForPath:name]];
         }
         return children;
     }

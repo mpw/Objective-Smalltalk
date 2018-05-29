@@ -24,7 +24,7 @@
 
 -referenceForMirror:aClassMirror
 {
-    return [MPWGenericReference referenceWithPath:[aClassMirror name]];
+    return [self referenceForPath:[aClassMirror name]];
 }
 
 -(NSArray *)allClassMirrors

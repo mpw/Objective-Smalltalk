@@ -70,8 +70,8 @@
         basePath=[self completePartialPathFromAbsoluetPath:partialName];
         partialName=[partialName substringFromIndex:[basePath length]];
     }
-    NSArray *childRefs=[self childrenOfReference:[MPWGenericReference referenceWithPath:basePath]];
-    NSArray *childNames=[[childRefs collect] path];
+    NSArray *childRefs=[self childrenOfReference:[self referenceForPath:basePath]];
+    NSArray *childNames=(NSArray*)[[childRefs collect] path];
     NSMutableArray *names=[NSMutableArray array];
     for ( NSString *name in childNames) {
         if ( !partialName || [partialName length]==0 || [name hasPrefix:partialName]) {

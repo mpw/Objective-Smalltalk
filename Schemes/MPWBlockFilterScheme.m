@@ -34,7 +34,7 @@ idAccessor( valueFilter, setValueFilter)
     if ( [self identifierFilter]){
         NSString *variableName = [aReference path];
         variableName =((FilterBlock)identifierFilter)(variableName);
-        aReference = [[[MPWGenericReference alloc] initWithPath:variableName] autorelease];
+        aReference = [self referenceForPath:variableName];
     }
     return aReference;
 }

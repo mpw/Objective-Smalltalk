@@ -63,7 +63,7 @@ objectAccessor( NSBundle, bundle ,setBundle )
 
 -(id)objectForReference:(id)aReference
 {
-    return [super objectForReference:[MPWGenericReference referenceWithPath:[self resourcePathForPath:[aReference path]]]];
+    return [super objectForReference:[self referenceForPath:[self resourcePathForPath:[aReference path]]]];
 }
 
 

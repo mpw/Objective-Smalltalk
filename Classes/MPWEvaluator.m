@@ -206,7 +206,6 @@ idAccessor( localVars, setLocalVars )
     MPWScheme* scheme=[self schemeForName:schemeName];
     if ( [scheme isKindOfClass:[MPWVarScheme class]]) {   // legacy workaround, FIXME
         MPWBinding* binding=[scheme bindingForName:variableName inContext:self];
-        binding.reference = [[[MPWGenericReference alloc] initWithPath:variableName] autorelease];
         if ( !binding ) {
             binding = [self createLocalBindingForName:variableName];
         }

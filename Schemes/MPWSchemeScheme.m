@@ -74,7 +74,7 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     NSArray *allNames=[[self schemes] allKeys];
     NSMutableArray *reference=[NSMutableArray array];
     for ( NSString *variableName in allNames) {
-        [reference addObject:[MPWGenericReference referenceWithPath:variableName]];
+        [reference addObject:[self referenceForPath:variableName]];
     }
     return reference;
 }

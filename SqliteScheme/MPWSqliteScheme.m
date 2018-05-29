@@ -156,7 +156,7 @@
     NSMutableArray *childReferences=[NSMutableArray array];
     for ( NSString *child in children ) {
         if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {
-            [childReferences addObject:[MPWGenericReference referenceWithPath:child]];
+            [childReferences addObject:[self referenceForPath:child]];
         }
     }
     return childReferences;

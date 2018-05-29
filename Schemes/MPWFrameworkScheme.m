@@ -43,7 +43,7 @@
 
 -(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    return (NSArray *)[[MPWGenericReference collect] referenceWithPath:[[self allFrameworks] each]];
+    return (NSArray *)[[self collect] referenceForPath:[[self allFrameworks] each]];
 }
 
 @end

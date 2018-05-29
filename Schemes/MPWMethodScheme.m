@@ -27,14 +27,14 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     return self;
 }
 
--bindingForName:aName inContext:aContext
-{
-	if ( [aName hasPrefix:@"/"] ) {
-		aName=[aName substringFromIndex:1];
-	}
-//    NSLog(@"bindingForName: %@",aName);
-    return [super bindingForName:aName inContext:aContext];
-}
+//-bindingForName:aName inContext:aContext
+//{
+//    if ( [aName hasPrefix:@"/"] ) {
+//        aName=[aName substringFromIndex:1];
+//    }
+////    NSLog(@"bindingForName: %@",aName);
+//    return [super bindingForName:aName inContext:aContext];
+//}
 
 
 -(MPWMethodStore*)methodStore
