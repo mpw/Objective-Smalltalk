@@ -86,10 +86,10 @@ extern char ***_NSGetEnviron( void );
 	}
 }
 
--(BOOL)hasChildren:(MPWGenericBinding*)binding
+-(BOOL)isLeafReference:(MPWReference*)reference
 {
-//    NSLog(@"hasChildren: %@",[binding name]);
-    return [[binding name] length]==0 || [[binding name] isEqual:@"/"];
+    NSString *path=[reference path];
+    return !([path length]==0 || [path isEqual:@"/"]);
 }
 
 -childWithName:(NSString*)name of:(MPWGenericBinding*)binding
@@ -164,6 +164,8 @@ extern char ***_NSGetEnviron( void );
 {
 //	NSArray *allEnvVars=[self linesFromCommand:@"env"];
 	MPWBinding *rootEnv=[MPWStCompiler evaluate:@"ref:env:/"];
+    NSLog(@"rootEnv: %@",rootEnv);
+    BOOL hasChildren=[rootEnv hasChildren];
     EXPECTTRUE([rootEnv hasChildren],@"root should have children");
 
 //    INTEXPECT( [[rootEnv childNames] count],[allEnvVars count],@"number of environment variables");

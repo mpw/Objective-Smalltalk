@@ -22,7 +22,11 @@
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {
-	return nil;
+    MPWBinding *binding=[[MPWBinding new] autorelease];
+    binding.store=self;
+    binding.reference=[self referenceForPath:variableName];
+
+    return binding;
 }
 
 

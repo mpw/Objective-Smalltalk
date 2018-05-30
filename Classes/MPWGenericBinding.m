@@ -36,9 +36,9 @@
 	return [GENERICSCHEME isBoundBinding:self];
 }
 
--(BOOL)hasChildren
-{
-    return [GENERICSCHEME hasChildren:self];
-}
+//-(BOOL)hasChildren
+//{
+//    return [GENERICSCHEME hasChildren:self];
+//}
 
 @end

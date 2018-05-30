@@ -12,9 +12,4 @@
 @implementation MPWGenericScheme
 
 
--(MPWBinding*)bindingForName:uriString inContext:aContext
-{
-    return [[[MPWGenericBinding alloc] initWithName:uriString scheme:self] autorelease];
-}
-
 @end
