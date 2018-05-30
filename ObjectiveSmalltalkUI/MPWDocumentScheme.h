@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWGenericScheme.h>
+#import <ObjectiveSmalltalk/MPWScheme.h>
 #import <MPWFoundation/MPWFoundation.h>
 
-@interface MPWDocumentScheme : MPWGenericScheme
+@interface MPWDocumentScheme : MPWScheme
 {
     NSMutableSet *_referencedDocuments;
     id  currentDocument;

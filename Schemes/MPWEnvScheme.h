@@ -6,9 +6,9 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWGenericScheme.h>
+#import <ObjectiveSmalltalk/MPWScheme.h>
 
-@interface MPWEnvScheme : MPWGenericScheme {
+@interface MPWEnvScheme : MPWScheme {
 
 }
 

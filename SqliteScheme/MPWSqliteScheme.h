@@ -6,8 +6,8 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWGenericScheme.h>
+#import <ObjectiveSmalltalk/MPWScheme.h>
 
-@interface MPWSqliteScheme : MPWGenericScheme
+@interface MPWSqliteScheme : MPWScheme
 
 @end

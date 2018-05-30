@@ -8,9 +8,9 @@
 
 #import "MPWConnectToDefault.h"
 #import "MPWMessagePortDescriptor.h"
-#import "MPWFilterScheme.h"
 #import <MPWFoundation/MPWStreamSource.h>
 #import "MPWFileBinding.h"
+#import "MPWScheme.h"
 
 // FIXME:   need some tests for this!
 //          (just had a hard-to-find bug where I was getting the IN/OUT
@@ -133,7 +133,7 @@ idAccessor( lhs, setLhs )
 
 @end
 
-@implementation MPWFilterScheme(connecting)
+@implementation MPWMappingStore(connecting)
 
 -defaultInputPort
 {

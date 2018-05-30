@@ -6,10 +6,10 @@
 //  Copyright 2012 metaobject ltd. All rights reserved.
 //
 
-#import "MPWGenericScheme.h"
+#import "MPWScheme.h"
 
 
-@interface MPWDefaultsScheme : MPWGenericScheme {
+@interface MPWDefaultsScheme : MPWScheme {
 	NSString *domain;
 }
 
