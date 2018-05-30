@@ -13,13 +13,16 @@
 
 @implementation MPWCopyOnWriteScheme
 
-objectAccessor(MPWScheme, readWrite, setReadWrite)
+objectAccessor(MPWAbstractStore, readWrite, setReadWrite)
 boolAccessor(cacheReads, setCacheReads)
 
+// legacy
++scheme
+{
+    return [[[self alloc] init] autorelease];
+}
 
-
-
--initWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache
+-initWithBase:(MPWAbstractStore*)newBase cache:(MPWAbstractStore*)newCache
 {
     self=[super init];
     [self setSource:newBase];
@@ -28,7 +31,7 @@ boolAccessor(cacheReads, setCacheReads)
 
 }
      
-+cacheWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache
++cacheWithBase:(MPWAbstractStore*)newBase cache:(MPWAbstractStore*)newCache
 {
     MPWCopyOnWriteScheme *newScheme=[[[self alloc] initWithBase:newBase cache:newCache] autorelease];
     [newScheme setCacheReads:YES];

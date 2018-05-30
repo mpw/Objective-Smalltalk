@@ -14,7 +14,6 @@
 #include "win_oper.h"
 #include <sys/stat.h>
 #import <MPWFoundation/MPWFoundation.h>
-#import <ObjectiveSmalltalk/MPWGenericScheme.h>
 #import <ObjectiveSmalltalk/MPWStCompiler.h>
 
 

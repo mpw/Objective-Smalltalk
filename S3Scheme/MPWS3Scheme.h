@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWGenericScheme.h>
+#import <ObjectiveSmalltalk/MPWScheme.h>
 
-@interface MPWS3Scheme : MPWGenericScheme
+@interface MPWS3Scheme : MPWScheme
 
 @property NSTimeInterval timeout;
 

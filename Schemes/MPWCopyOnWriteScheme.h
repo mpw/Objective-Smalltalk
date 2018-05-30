@@ -6,22 +6,21 @@
 //  Copyright (c) 2012 metaobject ltd. All rights reserved.
 //
 
-#import "MPWFilterScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 
-@interface MPWCopyOnWriteScheme : MPWFilterScheme
+@interface MPWCopyOnWriteScheme : MPWMappingStore
 {
-    MPWScheme *readWrite;
+    MPWAbstractStore *readWrite;
     BOOL cacheReads;
 }
 
--initWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache;
-+cacheWithBase:(MPWScheme*)newBase cache:(MPWScheme*)newCache;
+-initWithBase:(MPWAbstractStore*)newBase cache:(MPWAbstractStore*)newCache;
++cacheWithBase:(MPWAbstractStore*)newBase cache:(MPWAbstractStore*)newCache;
 +cache:cacheScheme;
 +memoryCache;
 
 
 boolAccessor_h(cacheReads, setCacheReads)
-objectAccessor_h(MPWScheme, readWrite, setReadWrite)
+objectAccessor_h(MPWAbstractStore, readWrite, setReadWrite)
 
 @end
