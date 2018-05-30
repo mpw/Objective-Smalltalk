@@ -53,7 +53,6 @@
 {
     NSError *error=nil;
     NSURL *aURL=[aReference asURL];
-    NSLog(@"url: %@",aURL);
     NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
     MPWResource *result=[[[MPWResource alloc] init] autorelease];
     [result setSource:aURL];
