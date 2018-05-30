@@ -58,8 +58,9 @@ objectAccessor( NSBundle, bundle ,setBundle )
 
 -bindingForName:aName inContext:aContext
 {
- 	return [super bindingForName:[self resourcePathForPath:aName] inContext:aContext];
+     return [super bindingForName:[self resourcePathForPath:aName] inContext:aContext];
 }
+
 
 -(id)objectForReference:(id)aReference
 {

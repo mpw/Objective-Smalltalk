@@ -26,7 +26,7 @@
 
 -(NSArray*)appBindingsList
 {
-    return [[MPWGenericBinding collect] bindingWithName:[[self appNameList] each] scheme:self];
+    [[self collect] bindingForName:[[self appNameList] each] inContext:nil];
 }
 
 
@@ -43,7 +43,7 @@
         }
     }
     NSArray *windowNameArray = [[windowNames allObjects] sortedArrayUsingSelector:@selector(compare:)];
-    return [[MPWGenericBinding collect] bindingWithName:[windowNameArray each] scheme:self];
+    return [self collect] bindingForName:[windowNameArray each] inContext:nil];
 }
 
 
@@ -83,7 +83,7 @@
     return nil;
 }
 
--valueForBinding:(MPWGenericBinding*)aBinding
+-(id)objectForReference:(MPWGenericReference*)aReference
 {
     NSArray* resultArray=nil;
 
@@ -91,21 +91,21 @@
     if ( [path isEqualToString:@"/"]) {
         path=@"";
     }
-    NSArray *pathArray=[[aBinding name] componentsSeparatedByString:@"/"];
-    if ( pathArray.count == 0 || pathArray.count==1 ) {
+    NSArray *pathArray=[aReference relativePathComponents];
+    if ( [aReference isRoot] || pathArray.count==0) {
         resultArray = [self appBindingsList];
-    } else if (pathArray.count==2  ) {
-        NSString *appName=pathArray[1];
+    } else if (pathArray.count==1  ) {
+        NSString *appName=pathArray.firstObject;
         resultArray = [self windowListForAppName:appName];
+    } else if (pathArray.count==2  ) {
+        return [self windowForAppName:pathArray[0] andWindowName:pathArray[1]];
     } else if (pathArray.count==3  ) {
-        return [self windowForAppName:pathArray[1] andWindowName:pathArray[2]];
-    } else if (pathArray.count==4  ) {
         NSLog(@"last path: %@",pathArray.lastObject);
         if ( [pathArray.lastObject isEqualToString:@"screenshot"]) {
             NSLog(@"take screenshot");
-            return [self screenshotForAppName:pathArray[1] andWindowName:pathArray[2]];
+            return [self screenshotForAppName:pathArray[0] andWindowName:pathArray[1]];
         } else {
-            return [self windowForAppName:pathArray[1] andWindowName:pathArray[2]][pathArray.lastObject];
+            return [self windowForAppName:pathArray[0] andWindowName:pathArray[1]][pathArray.lastObject];
         }
     }
     if ( resultArray ) {

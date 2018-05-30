@@ -7,7 +7,6 @@
 //
 
 #import "MPWEnvScheme.h"
-#import "MPWGenericBinding.h"
 #import <MPWFoundation/DebugMacros.h>
 #import <MPWFoundation/MPWGenericReference.h>
 
@@ -90,11 +89,6 @@ extern char ***_NSGetEnviron( void );
 {
     NSString *path=[reference path];
     return !([path length]==0 || [path isEqual:@"/"]);
-}
-
--childWithName:(NSString*)name of:(MPWGenericBinding*)binding
-{
-    return nil;
 }
 
 -(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference

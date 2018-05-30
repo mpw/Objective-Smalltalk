@@ -8,19 +8,11 @@
 
 #import "MPWClassScheme.h"
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWGenericBinding.h"
-#import "MPWGenericBinding.h"
 #import "MPWIdentifier.h"
 #import "MPWClassMirror.h"
 
 @implementation MPWClassScheme
 
-
--bindingForName:aName inContext:aContext
-{
-    id binding = [MPWGenericBinding bindingWithName:aName scheme:self];
-    return binding;
-}
 
 -referenceForMirror:aClassMirror
 {

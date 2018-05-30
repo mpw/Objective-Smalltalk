@@ -83,22 +83,16 @@ idAccessor(currentDocument, setCurrentDocument)
 
 
 
--(id)valueForBinding:(MPWGenericBinding *)aBinding
+-(id)objectForReference:(id)aReference
 {
-    NSString *path=[aBinding name];
-    NSLog(@"path: %@",path);
-    if ( [path isEqualTo:@"."] || [path isEqualTo:@"./"]) {
+    NSArray *lookupPath=[aReference relativePathComponents];
+    if ( lookupPath.count == 1 && [lookupPath[0] isEqualToString:@"."]) {
         return [self currentDoc];
-    } else if ( [path isEqualTo:@"/"] || [path isEqualToString:@""]) {
+    } else if ( lookupPath.count == 0 || [aReference isRoot] )
         return [[[self allDocs] collect] displayName];
     }
-    NSArray *lookupPath=[[aBinding name] componentsSeparatedByString:@"/"];
-    if ( [lookupPath count] > 1 ) {
-        lookupPath=[lookupPath subarrayWithRange:NSMakeRange(1, [lookupPath count]-1)];
-        
-    }
-    
-    NSString *docName=[lookupPath objectAtIndex:0];
+
+    NSString *docName=lookupPath[0];
     id doc=[self docForName:docName];
     if ( doc ) {
         [[self _referencedDocuments] addObject:doc];

@@ -9,7 +9,6 @@
 #import "MPWTreeNodeScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWTreeNode.h"
-#import "MPWGenericBinding.h"
 #import "MPWStCompiler.h"
 
 @implementation MPWTreeNodeScheme
@@ -28,19 +27,14 @@ idAccessor( root, setRoot )
     return [root nodeForPathEnumerator:[pathArray objectEnumerator]];
 }
 
--nodeFoBinding:(MPWGenericBinding*)aBinding
+-nodeForReference:(MPWGenericReference*)aReference
 {
-    return [self nodeForPath:[[aBinding reference] relativePathComponents]];
-}
-
--contentForPath:(NSArray*)array
-{
-	return [[self nodeForPath:array] content];
+    return [self nodeForPath:[aReference relativePathComponents]];
 }
 
 -(id)objectForReference:(MPWGenericReference*)aReference
 {
-    return [[self nodeForPath:[aReference relativePathComponents]] content];
+    return [[self nodeForReference:aReference] content];
 }
 
 -(void)setObject:newValue forReference:aReference
@@ -54,14 +48,9 @@ idAccessor( root, setRoot )
 }
 
 
--(BOOL)hasChildren:(MPWGenericBinding*)binding
+-(BOOL)isLeafReference:(MPWReference *)aReference
 {
-    return [[self nodeFoBinding:binding] hasChildren];
-}
-
--childWithName:(NSString*)name of:(MPWGenericBinding*)binding
-{
-    return [[self nodeFoBinding:binding] childWithName:name];
+    return [[self nodeForReference:aReference] hasChildren];
 }
 
 -(NSArray*)childrenOfReference:(MPWGenericReference*)aReference

@@ -7,7 +7,6 @@
 //
 
 #import "MPWMethodScheme.h"
-#import "MPWGenericBinding.h"
 #import "MPWStCompiler.h"
 #import "MPWMethodStore.h"
 #import "MPWClassMirror.h"
@@ -26,15 +25,6 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     [self setExceptions:[NSMutableArray arrayWithCapacity:20]];
     return self;
 }
-
-//-bindingForName:aName inContext:aContext
-//{
-//    if ( [aName hasPrefix:@"/"] ) {
-//        aName=[aName substringFromIndex:1];
-//    }
-////    NSLog(@"bindingForName: %@",aName);
-//    return [super bindingForName:aName inContext:aContext];
-//}
 
 
 -(MPWMethodStore*)methodStore
@@ -162,9 +152,9 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
 }
 
 
--(void)setValue:newValue forBinding:(MPWGenericBinding*)aBinding
+-(void)setObject:newValue forReference:(MPWGenericReference*)aReference
 {
-    NSString *uri=[aBinding name];
+    NSString *uri=[aReference path];
 //    NSLog(@"setValue to %@",uri);
     if ( [uri hasPrefix:@"methods"] ) {
         [self defineMethodsInExternalDict:newValue];

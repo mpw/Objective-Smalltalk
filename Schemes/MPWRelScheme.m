@@ -11,7 +11,6 @@
 #import <MPWFoundation/MPWGenericReference.h>
 #import "MPWIdentifier.h"
 #import "MPWBinding.h"
-#import "MPWGenericBinding.h"
 #import "MPWVarScheme.h"
 
 @implementation MPWRelScheme

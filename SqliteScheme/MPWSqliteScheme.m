@@ -8,7 +8,6 @@
 
 #import "MPWSqliteScheme.h"
 #import <ObjectiveSmalltalk/MPWStCompiler.h>
-#import <ObjectiveSmalltalk/MPWGenericBinding.h>
 #import <ObjectiveSmalltalk/MPWURLBinding.h>
 #import <ObjectiveSmalltalk/MPWMessagePortDescriptor.h>
 #import <MPWFoundation/MPWFoundation.h>
@@ -143,7 +142,7 @@
 }
 
 
--(void)delete:(MPWGenericBinding *)aBinding
+-(void)delete:(MPWGenericReference *)aRefence
 {
     [self setValue:nil forBinding:aBinding];
 }

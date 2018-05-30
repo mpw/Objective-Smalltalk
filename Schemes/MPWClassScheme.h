@@ -6,10 +6,10 @@
 //  Copyright 2009 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWGenericScheme.h"
+#import "MPWScheme.h"
 
 
-@interface MPWClassScheme : MPWGenericScheme {
+@interface MPWClassScheme : MPWScheme {
 
 }
 

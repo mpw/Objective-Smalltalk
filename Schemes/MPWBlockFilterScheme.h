@@ -6,11 +6,11 @@
 //
 //
 
-#import "MPWFilterScheme.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 typedef id (^FilterBlock)(id );
 
-@interface MPWBlockFilterScheme : MPWFilterScheme
+@interface MPWBlockFilterScheme : MPWMappingStore
 {
     id identifierFilter,valueFilter;
     

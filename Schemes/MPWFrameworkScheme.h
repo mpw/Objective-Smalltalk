@@ -6,8 +6,8 @@
 //
 //
 
-#import "MPWGenericScheme.h"
+#import "MPWScheme.h"
 
-@interface MPWFrameworkScheme : MPWGenericScheme
+@interface MPWFrameworkScheme : MPWScheme
 
 @end

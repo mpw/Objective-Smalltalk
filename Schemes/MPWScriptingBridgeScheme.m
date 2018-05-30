@@ -8,7 +8,6 @@
 
 #import "MPWScriptingBridgeScheme.h"
 #import "MPWScriptingBridgeBinding.h"
-#import "MPWGenericBinding.h"
 
 @interface NSObject(scriptingBridge)
 
@@ -78,7 +77,7 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
         id binding= [[[MPWScriptingBridgeBinding alloc] initWithBaseObject:remoteApp path:path] autorelease];
         return binding;
     } else {
-        return [MPWGenericBinding bindingWithName:@"/" scheme:self];
+        return [super bindingForName:aName inContext:nil];
     }
 }
 

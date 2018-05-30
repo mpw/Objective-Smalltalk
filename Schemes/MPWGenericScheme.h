@@ -8,13 +8,9 @@
 
 #import "MPWScheme.h"
 
-@class MPWGenericBinding;
 
 @interface MPWGenericScheme : MPWScheme
 
-
--(MPWBinding*)bindingForName:uriString inContext:aContext;
-
-
+//  YES, this is completely empty, it's ready for removal
 
 @end

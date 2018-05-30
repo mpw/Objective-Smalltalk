@@ -7,18 +7,9 @@
 //
 
 #import "MPWDefaultsScheme.h"
-#import "MPWGenericBinding.h"
 
 @implementation MPWDefaultsScheme
 
-
--bindingForName:aName inContext:aContext
-{
-	if ( [aName hasPrefix:@"/"] ) {
-		aName=[aName substringFromIndex:1];
-	}
-	return [super bindingForName:aName inContext:aContext];
-}
 
 
 -(BOOL)isBoundBinding:aBinding
@@ -28,12 +19,12 @@
 
 -objectForReference:aReference
 {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference path]];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference relativePath]];
 }
 
 -(void)setObject:newValue forReference:aReference
 {
-    NSString *name = [aReference path];
+    NSString *name = [aReference relativePath];
     if ( [name hasPrefix:@"initial/"]){
         name=[[name componentsSeparatedByString:@"/"] lastObject];
         [[NSUserDefaults standardUserDefaults] registerDefaults:@{ name : newValue }];

@@ -6,10 +6,10 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWGenericBinding.h>
+#import <MPWFoundation/MPWBinding.h>
 
 
-@interface MPWFileBinding : MPWGenericBinding {
+@interface MPWFileBinding : MPWBinding {
 	id	url;
     BOOL ignoreChanges;
     NSTimeInterval lastRead,lastWritten;

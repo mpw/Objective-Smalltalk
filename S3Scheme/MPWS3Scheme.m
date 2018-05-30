@@ -10,7 +10,6 @@
 #import <AWSS3/AWSS3.h>
 #import <MPWFoundation/NSThreadWaiting.h>
 #import <MPWFoundation/MPWFoundation.h>
-#import <ObjectiveSmalltalk/MPWGenericBinding.h>
 
 @interface MPWS3Scheme ()
 

@@ -52,11 +52,6 @@
     return YES;
 }
 
--(MPWScheme*)cachedBy:cacheScheme
-{
-    return [MPWCopyOnWriteScheme cacheWithBase:self cache:cacheScheme];
-}
-
 
 -(MPWScheme*)before:otherScheme
 {
@@ -99,3 +94,14 @@
 
 
 @end
+
+@implementation MPWAbstractStore(caching)
+
+
+-(MPWScheme*)cachedBy:cacheScheme
+{
+    return [MPWCopyOnWriteScheme cacheWithBase:self cache:cacheScheme];
+}
+
+@end
+

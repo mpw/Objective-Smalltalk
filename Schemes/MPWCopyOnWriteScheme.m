@@ -9,7 +9,6 @@
 #import "MPWCopyOnWriteScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWStCompiler.h"
-#import "MPWGenericBinding.h"
 #import "MPWTreeNodeScheme.h"
 
 @implementation MPWCopyOnWriteScheme
@@ -64,7 +63,7 @@ boolAccessor(cacheReads, setCacheReads)
 
 -(void)setObject:newValue forReference:aReference
 {
-    [(MPWGenericScheme*)[self readWrite] setObject:newValue forReference:aReference];
+    [(MPWAbstractStore*)[self readWrite] setObject:newValue forReference:aReference];
 }
 
 -(BOOL)isLeafReference:(MPWReference *)aReference

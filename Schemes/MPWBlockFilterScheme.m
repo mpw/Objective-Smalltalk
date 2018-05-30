@@ -7,17 +7,16 @@
 //
 
 #import "MPWBlockFilterScheme.h"
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 @implementation MPWBlockFilterScheme
 
 idAccessor(identifierFilter, setIdentifierFilter)
 idAccessor( valueFilter, setValueFilter)
 
--initWithSource:(MPWScheme*)sourceScheme identifierFilter:idFilter valueFilter:vFilter
+-(instancetype)initWithSource:(MPWAbstractStore*)sourceStore identifierFilter:idFilter valueFilter:vFilter
 {
-    self=[super init];
-    [self setSource:sourceScheme];
+    self=[super initWithSource:sourceStore];
     [self setValueFilter:vFilter];
     [self setIdentifierFilter:idFilter];
     return self;
@@ -39,16 +38,21 @@ idAccessor( valueFilter, setValueFilter)
     return aReference;
 }
 
--(id)objectForReference:(id)aReference
+-(MPWGenericReference*)mapReference:(MPWGenericReference*)aReference
 {
-    aReference = [self filterReference:aReference];
-    id value=[[self source] objectForReference:aReference];
-    if ( valueFilter){
-        NSLog(@"before filtering: %@",value);
-        value=((FilterBlock)valueFilter)(value);
-        NSLog(@"after filtering: %@",value);
+    if ( [self identifierFilter]){
+        NSString *variableName = [aReference path];
+        variableName =((FilterBlock)identifierFilter)(variableName);
+        aReference = [self referenceForPath:variableName];
     }
-    return value;
+    return aReference;
+}
+-mapRetrievedObject:anObject
+{
+    if ( valueFilter){
+        anObject=((FilterBlock)valueFilter)(anObject);
+    }
+    return anObject;
 }
 
 @end
