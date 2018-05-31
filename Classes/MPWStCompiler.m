@@ -424,8 +424,8 @@ idAccessor(solver, setSolver)
 		[scanner setNoNumbers:NO];
 	}
 	[identifierToAddNameTo setIdentifierName:name];
-	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
-	[identifierToAddNameTo setScheme:[self schemeForName:[identifierToAddNameTo schemeName]]];
+//	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
+//	[identifierToAddNameTo setScheme:[self schemeForName:[identifierToAddNameTo schemeName]]];
 	[variable setIdentifier:identifier];
 	[variable setEvaluationEnvironment:self];
 
@@ -454,7 +454,7 @@ idAccessor(solver, setSolver)
 	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	NSString* name = [aToken stringValue];
 	[identifier setIdentifierName:name];
-	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
+//	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
 	[variable setIdentifier:identifier];
 	[variable setEvaluationEnvironment:self];
 	return variable;

@@ -17,8 +17,9 @@
 -bindingWithIdentifier:(MPWRecursiveIdentifier*)anIdentifier withContext:(MPWEvaluator*)aContext
 {
     MPWIdentifier* nextIdentifer = [anIdentifier nextIdentifer];
-    NSAssert1( [nextIdentifer scheme], @"nextIdentifer", nil );
-    id originalBinding = [[nextIdentifer scheme] bindingWithIdentifier:nextIdentifer withContext:aContext];
+//    NSAssert1( [nextIdentifer scheme], @"nextIdentifer", nil );
+    MPWScheme *originalScheme=[aContext schemeForName:[nextIdentifer schemeName]];
+    id originalBinding = [originalScheme bindingWithIdentifier:nextIdentifer withContext:aContext];
 //    NSLog(@"eval ref, original binding: %@",originalBinding);
     id binding = [MPWSelfContainedBinding bindingWithValue:originalBinding];
 //    NSLog(@"eval ref, ref binding: %@",binding);

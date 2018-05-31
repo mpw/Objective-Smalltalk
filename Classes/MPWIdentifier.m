@@ -12,13 +12,7 @@
 
 @implementation MPWIdentifier
 
-idAccessor( _scheme, setScheme )
 
-
--(id)scheme
-{
-    return [self _scheme];
-}
 
 -initWithName:(NSString*)name
 {
@@ -99,7 +93,7 @@ idAccessor( _scheme, setScheme )
 -resolveRescursiveIdentifierWithContext:aContext
 {
     MPWIdentifier *evaluatedIdentifier = [[[[self class] alloc] initWithPathComponents:[self evaluatedPathComponentsInContext:aContext] scheme:[self schemeName]] autorelease];
-    [evaluatedIdentifier setScheme:[self scheme]];
+//    [evaluatedIdentifier setScheme:[self scheme]];
     return evaluatedIdentifier;
 }
 
@@ -137,11 +131,6 @@ idAccessor( _scheme, setScheme )
             [self class],self,[self schemeName],[self identifierName]];
     }
 
--(void)dealloc
-{
-	[_scheme release];
-	[super dealloc];
-}
 
 @end
 

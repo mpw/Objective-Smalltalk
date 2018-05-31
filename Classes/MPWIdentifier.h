@@ -12,10 +12,8 @@
 @class MPWBinding;
 
 @interface MPWIdentifier : MPWGenericReference {
-	id	_scheme;
 }
 
-idAccessor_h( scheme, setScheme )
 
 +identifierWithName:(NSString*)name;
 -evaluatedIdentifierNameInContext:aContext;
