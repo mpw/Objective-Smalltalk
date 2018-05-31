@@ -29,7 +29,7 @@ longAccessor(len, setLen)
 
 -(NSException*)handleOffsetsInException:(NSException*)exception
 {
-    NSLog(@"handleOffsetsInException: %@",exception);
+//    NSLog(@"handleOffsetsInException: %@",exception);
     id dict=[exception userInfo];
     if ( ![dict objectForKey:@"offset"]) {
         if (dict) {
@@ -39,7 +39,7 @@ longAccessor(len, setLen)
         }
         [dict setObject:[NSNumber numberWithLong:offset] forKey:@"offset"];
         exception =  [NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:dict];
-        NSLog(@"offset: %ld",offset);
+//        NSLog(@"offset: %ld",offset);
    }
     return exception;
 }
