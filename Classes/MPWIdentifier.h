@@ -12,7 +12,7 @@
 @class MPWBinding;
 
 @interface MPWIdentifier : MPWGenericReference {
-	id	scheme;
+	id	_scheme;
 }
 
 idAccessor_h( scheme, setScheme )

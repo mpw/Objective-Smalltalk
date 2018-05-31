@@ -82,7 +82,8 @@
     }
     [q setSearchScopes:@[ components.path ]];
     [q setOperationQueue:[[NSOperationQueue new] autorelease]];
-    MPWSpotlightSearchBinding *sb=[MPWSpotlightSearchBinding bindingWithName:components.path scheme:self];
+    MPWSpotlightSearchBinding *sb=[[MPWSpotlightSearchBinding new] autorelease];
+    sb.store = self;
     sb.originalReference=aReference;
     sb.query=q;
     [sb.query startQuery];

@@ -20,21 +20,30 @@
 	return [[[self alloc] init] autorelease];
 }
 
--bindingForName:(NSString*)variableName inContext:aContext
+-bindingForReference:aReference inContext:aContext
 {
     MPWBinding *binding=[[MPWBinding new] autorelease];
     binding.store=self;
-    binding.reference=[self referenceForPath:variableName];
-
+    binding.reference=aReference;
+    [binding setDefaultContext:aContext];
     return binding;
 }
+
+-bindingForName:(NSString*)variableName inContext:aContext
+{
+    return [self bindingForReference:[self referenceForPath:variableName] inContext:aContext];
+}
+
 
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
+//    return [self bindingForReference:anIdentifier inContext:aContext];
+    
+    
     id evaluatedName=[anIdentifier evaluatedIdentifierNameInContext:aContext];
 //    NSLog(@"bindingWithIdentifier evaluatedName: %@",evaluatedName);
-	MPWBinding *binding = [self bindingForName:evaluatedName inContext:aContext];
+    MPWBinding *binding = [self bindingForName:evaluatedName inContext:aContext];
 //    NSLog(@"bindingWithIdentifier binding: %@",binding);
     [binding setScheme:self];
     [binding setIdentifier:anIdentifier];

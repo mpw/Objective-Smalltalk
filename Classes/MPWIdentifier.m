@@ -12,7 +12,13 @@
 
 @implementation MPWIdentifier
 
-idAccessor( scheme, setScheme )
+idAccessor( _scheme, setScheme )
+
+
+-(id)scheme
+{
+    return [self _scheme];
+}
 
 -initWithName:(NSString*)name
 {
@@ -100,7 +106,11 @@ idAccessor( scheme, setScheme )
 
 -evaluateIn:aContext
 {
-    MPWScheme* evaluatedScheme = [self schemeWithContext:aContext];
+    MPWScheme *evaluatedScheme = [aContext schemeForName:[self schemeName]];
+    if (!evaluatedScheme) {
+        [NSException raise:@"unknownscheme" format:@"scheme with name '%@' not found",[self schemeName]];
+    }
+    
     MPWIdentifier *evaluatedIdentifier = [self resolveRescursiveIdentifierWithContext:aContext];
 	return [evaluatedScheme evaluateIdentifier:evaluatedIdentifier withContext:aContext];
 }
@@ -129,7 +139,7 @@ idAccessor( scheme, setScheme )
 
 -(void)dealloc
 {
-	[scheme release];
+	[_scheme release];
 	[super dealloc];
 }
 
