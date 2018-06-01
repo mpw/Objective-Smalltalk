@@ -14,7 +14,7 @@
 @implementation MPWRefScheme
 
 
--bindingWithIdentifier:(MPWRecursiveIdentifier*)anIdentifier withContext:(MPWEvaluator*)aContext
+-bindingForReference:(MPWRecursiveIdentifier*)anIdentifier inContext:(MPWEvaluator*)aContext
 {
     MPWIdentifier* nextIdentifer = [anIdentifier nextIdentifer];
 //    NSAssert1( [nextIdentifer scheme], @"nextIdentifer", nil );
@@ -26,6 +26,10 @@
     return binding;
 }
 
+-bindingWithIdentifier:anIdentifier withContext:aContext
+{
+    return [self bindingForReference:anIdentifier inContext:aContext];
+}
 
 
 @end

@@ -28,29 +28,17 @@
     return binding;
 }
 
+
+-bindingWithIdentifier:anIdentifier withContext:aContext
+{
+    return [self bindingForReference:[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]] inContext:aContext];
+}
+
 -bindingForName:(NSString*)variableName inContext:aContext
 {
     return [self bindingForReference:[self referenceForPath:variableName] inContext:aContext];
 }
 
-
-
--bindingWithIdentifier:anIdentifier withContext:aContext
-{
-//    return [self bindingForReference:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
-    
-    
-    id evaluatedName=[anIdentifier evaluatedIdentifierNameInContext:aContext];
-//    NSLog(@"bindingWithIdentifier evaluatedName: %@",evaluatedName);
-    MPWBinding *binding = [self bindingForName:evaluatedName inContext:aContext];
-//    NSLog(@"bindingWithIdentifier binding: %@",binding);
-    [binding setScheme:self];
-    [binding setIdentifier:anIdentifier];
-    [binding setDefaultContext:aContext];
-//    NSLog(@"bindingWithIdentifier binding scheme: %@",[binding scheme]);
-//    NSLog(@"bindingWithIdentifier binding iidentifier: %@",[binding identifier]);
-    return binding;
-}
 
 
 
