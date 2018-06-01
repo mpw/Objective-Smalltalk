@@ -24,14 +24,6 @@
     return [[[self alloc] initWithName:name] autorelease];
 }
 
--schemeWithContext:aContext
-{
-    id theScheme=[self scheme];
-    if ( theScheme == nil ) {
-        [NSException raise:@"invalidscheme" format:@"scheme %@ could not be evaluated", [self schemeName]];
-    }
-    return theScheme;
-}
 
 -(NSArray*)componentsOfPath:(NSString*)path
 {

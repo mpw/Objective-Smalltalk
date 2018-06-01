@@ -25,7 +25,6 @@
     MPWBinding *binding=[[MPWBinding new] autorelease];
     binding.store=self;
     binding.reference=aReference;
-    [binding setDefaultContext:aContext];
     return binding;
 }
 
@@ -38,7 +37,7 @@
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
-//    return [self bindingForReference:anIdentifier inContext:aContext];
+//    return [self bindingForReference:[anIdentifier evaluatedIdentifierNameInContext:aContext] inContext:aContext];
     
     
     id evaluatedName=[anIdentifier evaluatedIdentifierNameInContext:aContext];

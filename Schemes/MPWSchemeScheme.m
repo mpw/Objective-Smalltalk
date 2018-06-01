@@ -49,9 +49,9 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     [self _schemes][[aReference identifierName]]=theObject;
 }
 
--bindingForName:(NSString*)variableName inContext:aContext
+-bindingForReference:aReference inContext:aContext
 {
-    
+    NSString *variableName=[aReference path];
 //    NSLog(@"%p bindingForName: %@",self,variableName);
     id localVars = [self localVarsForContext:aContext];
     id binding=nil;

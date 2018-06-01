@@ -43,9 +43,9 @@
 }
 
 
--(MPWURLBinding*)bindingForName:aName inContext:aContext
+-bindingForReference:aReference inContext:aContext
 {
-    id urlbinding = [[[MPWURLBinding alloc] initWithURLString:[[[self schemePrefix] stringByAppendingString:@":" ] stringByAppendingString:aName]] autorelease];
+    id urlbinding = [[[MPWURLBinding alloc] initWithURLString:[[[self schemePrefix] stringByAppendingString:@":" ] stringByAppendingString:[aReference path]]] autorelease];
 	return urlbinding;
 }
 

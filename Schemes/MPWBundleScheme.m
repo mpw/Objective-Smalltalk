@@ -59,9 +59,9 @@ objectAccessor( NSBundle, bundle ,setBundle )
 // FIXME:  this is wrong, appendinig the path should not happen here but
 //  when generating the URL.
 
--bindingForName:aName inContext:aContext
+-bindingForReference:aReference inContext:aContext
 {
-     return [super bindingForName:[self resourcePathForPath:aName] inContext:aContext];
+    return [super bindingForReference:[self referenceForPath:[self resourcePathForPath:[aReference path]]] inContext:aContext];
 }
 
 

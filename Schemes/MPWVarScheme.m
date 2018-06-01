@@ -17,8 +17,9 @@
     return [MPWVARBinding class];
 }
 
--(MPWBinding *)bindingForName:(NSString *)variableName inContext:(id)aContext
+-bindingForReference:aReference inContext:aContext
 {
+    NSString *variableName=[aReference path];
     MPWBinding *binding = [aContext cachedBindingForName:variableName];
     if (!binding)  {
         binding=[self createBindingForName:variableName inContext:aContext];

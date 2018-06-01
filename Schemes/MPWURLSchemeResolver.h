@@ -21,6 +21,5 @@
 
 
 -(NSString*)schemePrefix;
--(MPWURLBinding*)bindingForName:aName inContext:aContext;
 
 @end

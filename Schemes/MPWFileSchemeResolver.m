@@ -43,9 +43,11 @@
     [theObject writeToFile:[aReference path] atomically:YES];
 }
 
--bindingForName:aName inContext:aContext
+
+
+-bindingForReference:aReference inContext:aContext
 {
-    id binding = [[[MPWFileBinding alloc] initWithPath:aName] autorelease];
+    id binding = [[[MPWFileBinding alloc] initWithPath:[aReference path]] autorelease];
     return binding;
 }
 

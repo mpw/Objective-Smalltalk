@@ -64,9 +64,9 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
 	return remoteApp;
 }
 
--bindingForName:aName inContext:aContext
+-bindingForReference:aReference inContext:aContext
 {
-	NSURL *url=[NSURL URLWithString:aName];
+	NSURL *url=[NSURL URLWithString:[aReference path]];
 	NSString *appIdentifier = [url host];
 	NSString *path = [url path];
 	if ( [path hasPrefix:@"/"] ) {
@@ -77,7 +77,7 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
         id binding= [[[MPWScriptingBridgeBinding alloc] initWithBaseObject:remoteApp path:path] autorelease];
         return binding;
     } else {
-        return [super bindingForName:aName inContext:nil];
+        return [super bindingForReference:aReference inContext:nil];
     }
 }
 
