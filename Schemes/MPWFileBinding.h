@@ -10,7 +10,7 @@
 
 
 @interface MPWFileBinding : MPWBinding {
-	id	url;
+//	id	url;
     BOOL ignoreChanges;
     NSTimeInterval lastRead,lastWritten;
 }

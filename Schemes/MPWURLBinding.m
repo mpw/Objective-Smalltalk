@@ -24,6 +24,8 @@ idAccessor( target, setTarget )
 -(BOOL)respondsToSelector:(SEL)selector { return YES; }
 -getWithArgs:(NSInvocation*)inv
 {
+    NSLog(@"getWithArgs:%@",inv);
+    NSLog(@"sending to target: %@",target);
 	return [target getWithArgs:inv];
 }
 -methodSignatureForSelector:(SEL)aSelector
@@ -58,6 +60,7 @@ idAccessor( target, setTarget )
 @implementation MPWURLBinding
 
 objectAccessor(NSError, error, setError)
+
 -get
 {
 	return [self _value];
@@ -67,47 +70,10 @@ objectAccessor(NSError, error, setError)
 	return YES;
 }
 
--(NSString*)mimeTypeForData:(NSData*)rawData andResponse:(NSURLResponse*)aResponse
-{
-    NSString *mime = [aResponse MIMEType];
-    const char *ptr=[rawData bytes];
-    if ( ptr && [rawData length]) {
-        if (( !mime ||  [mime isEqualToString:@"text/html"] ||  [mime isEqualToString:@"text/plain"] )&& (*ptr == '{' || *ptr == '[' )) {
-            mime=@"application/json";
-        }
-    }
-    return mime;
-}
-
--(MPWResource*)resourceWithRequest:(NSURLRequest*)request
-{
-    NSHTTPURLResponse *response=nil;
-    NSError *localError=nil;
-    NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&localError];
-
-    if ( [response statusCode] != 404 ) {
-        MPWResource *result=[[[MPWResource alloc] init] autorelease];
-        [result setSource:[request URL]];
-        [result setRawData:rawData];
-        [result setMIMEType:[self mimeTypeForData:rawData andResponse:response]];
-        return result;
-    } else {
-        return nil;
-    }
-}
-
--_valueWithURL:(NSURL*)aURL
-{
-	NSMutableURLRequest *request=[[[NSMutableURLRequest alloc] initWithURL:aURL] autorelease];
-	NSMutableDictionary *headers=[NSMutableDictionary dictionaryWithObject:@"locale=en-us" forKey:@"Cookies"];
-	[headers setObject:@"stsh" forKey:@"User-Agent"];
-	[headers setObject:@"*/*" forKey:@"Accept"];
-	[request setAllHTTPHeaderFields:headers];
-    return [self resourceWithRequest:request];
-}
 
 -getWithArgs
 {
+    NSLog(@"getWithArgs");
 	id yes=[[[SayYES alloc] init] autorelease];
 	MPWTrampoline	*trampoline=[MPWTrampoline quickTrampoline];
 	[yes setTarget:self];
@@ -133,23 +99,23 @@ objectAccessor(NSError, error, setError)
 
 -getWithArgs:(NSInvocation*)inv
 {
-	NSString *selname=NSStringFromSelector([inv selector]);
-	NSMutableArray *args=[NSMutableArray array];
-	long i,max=[[inv methodSignature] numberOfArguments];
-	for (i=2; i<max; i++) {
-		id arg=nil;
-		[inv getArgument:&arg atIndex:i];
-		if ( !arg ) {
-			NSLog(@"nil arg at %ld",i);
-			arg=@"";
-		}
-		[args addObject:arg];
-	}
-	id query = [self urlWithArgsFromSelectorString:selname args:args];
-	NSURL *fullURL=[NSURL URLWithString:[[[self url] stringValue] stringByAppendingString:query]];
-	id result= [self _valueWithURL:fullURL];
-	[inv setReturnValue:&result];
-	return result;
+    NSString *selname=NSStringFromSelector([inv selector]);
+    NSMutableArray *args=[NSMutableArray array];
+    long i,max=[[inv methodSignature] numberOfArguments];
+    for (i=2; i<max; i++) {
+        id arg=nil;
+        [inv getArgument:&arg atIndex:i];
+        if ( !arg ) {
+            NSLog(@"nil arg at %ld",i);
+            arg=@"";
+        }
+        [args addObject:arg];
+    }
+    id query = [self urlWithArgsFromSelectorString:selname args:args];
+    NSURL *fullURL=[NSURL URLWithString:[[[self url] stringValue] stringByAppendingString:query]];
+    id result= [self.store _valueWithURL:fullURL];
+    [inv setReturnValue:&result];
+    return result;
 }
 
 -fileSystemValue
@@ -232,7 +198,10 @@ objectAccessor(NSError, error, setError)
 
 +(void)testURLArgsFromSelectorAndArgs
 {
-	MPWURLBinding *binding=[[[self alloc] initWithPath:@"http://ajax.googleapis.com/ajax/services/language/translate"] autorelease];
+    MPWGenericReference *ref=[MPWGenericReference referenceWithPath:@"//ajax.googleapis.com/ajax/services/language/translate" ];
+    ref.schemeName=@"http";
+    MPWURLBinding *binding=[self bindingWithReference:ref inStore:nil];
+    
 	NSString *pathArgs=[binding urlWithArgsFromSelectorString:@"v:langpair:q:" 
 													 args:[NSArray arrayWithObjects:@"1.0",@"en|de",@"Delete",nil]];
 	IDEXPECT( pathArgs, @"?v=1.0&langpair=en%7Cde&q=Delete", @"basic path args" );

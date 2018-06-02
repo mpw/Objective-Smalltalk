@@ -22,7 +22,12 @@
 
 @implementation MPWFileBinding
 
-idAccessor( url , setUrl )
+// idAccessor( url , setUrl )
+
+-(id)url
+{
+    return [self URL];
+}
 
 
 -(NSTimeInterval)lastWritten
@@ -45,13 +50,6 @@ idAccessor( url , setUrl )
     return [self lastModifiedTime] > [self lastRead];
 }
 
--initWithURL:(NSURL*)newURL
-{
-	self=[super initWithValue:nil];
-	[self setUrl:newURL];
-	return self;
-}
-
 -(void)startWatching
 {
     [[self scheme] startWatching:self];
@@ -72,16 +70,6 @@ idAccessor( url , setUrl )
     }
 }
 
-
--initWithPath:(NSString*)path
-{
-	return [self initWithURL:[NSURL fileURLWithPath:path]];
-}
-
--initWithURLString:(NSString*)urlString
-{
-	return [self initWithURL:[NSURL URLWithString:urlString]];
-}
 
 -(NSString*)fileSystemPath
 {
@@ -168,11 +156,11 @@ idAccessor( url , setUrl )
     }
 }
 
--_value
-{
-	return [self _valueWithURL:[self url]];
-}
-
+//-_value
+//{
+//    return [self _valueWithURL:[self url]];
+//}
+//
 -(void)setValue:newValue
 {
     NSLog(@"_setValue in file binding %@",self);
@@ -286,7 +274,7 @@ idAccessor( url , setUrl )
 
 -(void)dealloc
 {
-	[url release];
+//	[url release];
 	[super dealloc];
 }
 

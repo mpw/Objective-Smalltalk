@@ -45,11 +45,10 @@
 
 
 
--bindingForReference:aReference inContext:aContext
-{
-    id binding = [[[MPWFileBinding alloc] initWithPath:[aReference path]] autorelease];
-    return binding;
-}
+//-bindingForReference:aReference inContext:aContext
+//{
+//    return [[[MPWFileBinding alloc] initWithReference:aReference inStore:self] autorelease];
+//}
 
 
 -(NSArray*)childrenOfReference:(MPWGenericReference*)aReference

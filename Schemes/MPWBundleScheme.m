@@ -86,7 +86,7 @@ objectAccessor( NSBundle, bundle ,setBundle )
 +(void)testGettingRoot
 {
 	chdir("/");
-	IDEXPECT( [[[MPWStCompiler evaluate:@"ref:bundle:/"] url] path], [[MPWStCompiler evaluate:@"scheme:bundle bundle resourcePath."] stringValue], @"root");
+	IDEXPECT( [[[MPWStCompiler evaluate:@"ref:bundle:/"] URL] path], [[MPWStCompiler evaluate:@"scheme:bundle bundle resourcePath."] stringValue], @"root");
 }
 
 

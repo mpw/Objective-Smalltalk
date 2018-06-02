@@ -42,17 +42,26 @@
     return [[[self alloc] initWithSchemePrefix:@"https"] autorelease];
 }
 
-
--bindingForReference:aReference inContext:aContext
+-(id)referenceForPath:(NSString *)name
 {
-    id urlbinding = [[[MPWURLBinding alloc] initWithURLString:[[[self schemePrefix] stringByAppendingString:@":" ] stringByAppendingString:[aReference path]]] autorelease];
-	return urlbinding;
+    NSLog(@"referenceForPath: %@",name);
+    MPWGenericReference *reference=[super referenceForPath:name];
+    reference.schemeName=[self schemePrefix];
+    return reference;
 }
+
+//-bindingForReference:aReference inContext:aContext
+//{
+//    MPWURLBinding* urlbinding = [[[MPWURLBinding alloc] initWithURLString:[[[self schemePrefix] stringByAppendingString:@":" ] stringByAppendingString:[aReference path]]] autorelease];
+//    urlbinding.store=self;
+//    urlbinding.reference=aReference;
+//    return urlbinding;
+//}
 
 -(id)objectForReference:(id)aReference
 {
     NSError *error=nil;
-    NSURL *aURL=[aReference asURL];
+    NSURL *aURL=[aReference URL];
     NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
     MPWResource *result=[[[MPWResource alloc] init] autorelease];
     [result setSource:aURL];
@@ -60,6 +69,49 @@
     [result setError:error];
     return result;
 }
+
+
+///----- support for HOM-based argument-construction
+
+-(NSString*)mimeTypeForData:(NSData*)rawData andResponse:(NSURLResponse*)aResponse
+{
+    NSString *mime = [aResponse MIMEType];
+    const char *ptr=[rawData bytes];
+    if ( ptr && [rawData length]) {
+        if (( !mime ||  [mime isEqualToString:@"text/html"] ||  [mime isEqualToString:@"text/plain"] )&& (*ptr == '{' || *ptr == '[' )) {
+            mime=@"application/json";
+        }
+    }
+    return mime;
+}
+
+-(MPWResource*)resourceWithRequest:(NSURLRequest*)request
+{
+    NSHTTPURLResponse *response=nil;
+    NSError *localError=nil;
+    NSData *rawData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&localError];
+    
+    if ( [response statusCode] != 404 ) {
+        MPWResource *result=[[[MPWResource alloc] init] autorelease];
+        [result setSource:[request URL]];
+        [result setRawData:rawData];
+        [result setMIMEType:[self mimeTypeForData:rawData andResponse:response]];
+        return result;
+    } else {
+        return nil;
+    }
+}
+
+-_valueWithURL:(NSURL*)aURL
+{
+    NSMutableURLRequest *request=[[[NSMutableURLRequest alloc] initWithURL:aURL] autorelease];
+    NSMutableDictionary *headers=[NSMutableDictionary dictionaryWithObject:@"locale=en-us" forKey:@"Cookies"];
+    [headers setObject:@"stsh" forKey:@"User-Agent"];
+    [headers setObject:@"*/*" forKey:@"Accept"];
+    [request setAllHTTPHeaderFields:headers];
+    return [self resourceWithRequest:request];
+}
+
 
 
 @end
@@ -72,8 +124,8 @@
 {
     IDEXPECT( [[self httpScheme] schemePrefix], @"http",@"insecure");
     IDEXPECT( [[self httpsScheme] schemePrefix], @"https",@"secure");
-    IDEXPECT( [[(MPWURLBinding*)[[self httpsScheme] bindingForName:@"//localhost" inContext:nil] url] absoluteString], @"https://localhost",@"secure");
-    IDEXPECT( [[(MPWURLBinding*)[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] bindingForName:@"localhost" inContext:nil] url] absoluteString], @"ftp:localhost" ,@"ftp");
+    IDEXPECT( [[(MPWURLBinding*)[[self httpsScheme] bindingForName:@"//localhost" inContext:nil] URL] absoluteString], @"https://localhost",@"secure");
+    IDEXPECT( [[(MPWURLBinding*)[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] bindingForName:@"localhost" inContext:nil] URL] absoluteString], @"ftp:localhost" ,@"ftp");
     
 }
 
