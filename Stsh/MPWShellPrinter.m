@@ -97,7 +97,7 @@
         int numSpaces=10-(int)[formattedSize length];
         numSpaces=MAX(0,numSpaces);
         NSString *spaces=[@"               " substringToIndex:numSpaces];
-        [self printFormat:@"%@%@  %@%c\n",spaces,formattedSize,name,[binding isDirectory] ? '/':' '];
+        [self printFormat:@"%@%@  %@%c\n",spaces,formattedSize,name,[binding hasChildren] ? '/':' '];
     }
 }
 
@@ -107,7 +107,7 @@
     for ( MPWFileBinding *binding in [aBinding contents]) {
         NSString *name=[(NSString*)[binding path] lastPathComponent];
         if ( ![name hasPrefix:@"."]) {
-            if ( [binding isDirectory]) {
+            if ( [binding hasChildren]) {
                 name=[name stringByAppendingString:@"/"];
             }
             [names addObject:name];

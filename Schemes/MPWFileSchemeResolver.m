@@ -15,6 +15,11 @@
 @implementation MPWFileSchemeResolver
 
 
+-bindingForReference:aReference inContext:aContext
+{
+    return [MPWFileBinding bindingWithReference:aReference inStore:self];
+}
+
 -(void)startWatching:(MPWFileBinding*)binding
 {
     NSString *path=[binding path];
@@ -37,7 +42,8 @@
         [result setError:error];
         return result;
     } else {
-        return [self childrenOfReference:aReference];
+        NSArray *bindings = [[self collect] bindingForReference:[[self childrenOfReference:aReference] each] inContext:self];
+        return [[[MPWDirectoryBinding alloc] initWithContents:bindings] autorelease];
     }
  }
 
@@ -108,6 +114,14 @@
     IDEXPECT([[MPWStCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
 }
 
++(void)testGetDirContents
+{
+    MPWDirectoryBinding* dirContents =[MPWStCompiler evaluate:@"file:/"];
+    EXPECTTRUE(dirContents.contents.count> 15, @"got directory contents");
+    
+}
+
+
 +(void)testCompleteSubpath
 {
     MPWFileSchemeResolver *s=[self scheme];
@@ -121,6 +135,7 @@
 {
 	return [NSArray arrayWithObjects:
             @"testGettingASimpleFile",
+            @"testGetDirContents",
             @"testCompleteSubpath",
 			nil];
 }

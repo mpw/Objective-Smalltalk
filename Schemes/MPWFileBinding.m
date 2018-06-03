@@ -71,20 +71,11 @@
 }
 
 
--(NSString*)fileSystemPath
-{
-	return [[self url] path];
-}
-
--path
-{
-    return [self fileSystemPath];
-}
 
 -(BOOL)existsAndIsDirectory:(BOOL*)isDirectory
 {
 	NSFileManager *manager=[NSFileManager defaultManager];
-	return [manager fileExistsAtPath:[self fileSystemPath] isDirectory:isDirectory];;
+	return [manager fileExistsAtPath:[self path] isDirectory:isDirectory];;
 }
 
 -(BOOL)isBound
@@ -103,34 +94,34 @@
     return [self isDirectory];
 }
 
--(NSArray*)directoryContents
-{
-	return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self fileSystemPath] error:nil];
-    
-}
-
--childWithName:(NSString*)newName
-{
-    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByAppendingPathComponent:newName]] autorelease];
-}
-
--(NSArray*)children
-{
-    NSArray *childEntries=nil;
-    if ( [self hasChildren] ) {
-        NSArray *childNames = [self directoryContents];
-        childEntries = [[self collect] childWithName:[childNames each]];
-    } else {
-        childEntries = [NSArray array];
-    }
-    return childEntries;
-}
-
--(NSArray*)childNames
-{
-    return [self directoryContents];
-}
-
+//-(NSArray*)directoryContents
+//{
+//    return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self fileSystemPath] error:nil];
+//
+//}
+//
+//-childWithName:(NSString*)newName
+//{
+//    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByAppendingPathComponent:newName]] autorelease];
+//}
+//
+//-(NSArray*)children
+//{
+//    NSArray *childEntries=nil;
+//    if ( [self hasChildren] ) {
+//        NSArray *childNames = [self directoryContents];
+//        childEntries = [[self collect] childWithName:[childNames each]];
+//    } else {
+//        childEntries = [NSArray array];
+//    }
+//    return childEntries;
+//}
+//
+//-(NSArray*)childNames
+//{
+//    return [self directoryContents];
+//}
+//
 -_valueWithDataURL:(NSURL*)aURL
 {
     NSError *error=nil;
@@ -164,11 +155,11 @@
 -(void)setValue:newValue
 {
     NSLog(@"_setValue in file binding %@",self);
- 	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
+     if ( [newValue isKindOfClass:[MPWBinding class]] ) {
         newValue=[newValue fileSystemValue];
-	}
+    }
     [[self parent] mkdir];
-	[newValue writeToURL:[self url] atomically:YES];
+    [newValue writeToURL:[self url] atomically:YES];
     lastWritten=[NSDate timeIntervalSinceReferenceDate];
 }
 
@@ -185,7 +176,7 @@
 
 -(BOOL)writeToURL:(NSURL*)targetURL atomically:(BOOL)atomically
 {
-    NSString *sourcePath=[self fileSystemPath];
+    NSString *sourcePath=[self path];
     NSString *targetPath = [targetURL path];
     if ( sourcePath && targetPath ) {
         symlink([sourcePath fileSystemRepresentation], [targetPath fileSystemRepresentation]);
@@ -211,27 +202,6 @@
     return self;
 }
 
--(MPWFileBinding*)with:otherPath
-{
-	NSString *selfPath = [self fileSystemPath];
-	NSString *newPath = nil;
-	if ( [self isDirectory] ) {
-		if ( selfPath && otherPath ) {
-			if ( [otherPath isEqual:@".."] ) {
-				newPath=[selfPath stringByDeletingLastPathComponent];
-			} else {
-				newPath=[selfPath stringByAppendingPathComponent:otherPath];
-			}
-			return [[[[self class] alloc] initWithPath:newPath] autorelease];
-		}
-	}
-	return nil;
-}
-
--parent
-{
-    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByDeletingLastPathComponent]] autorelease];
-}
 
 -(NSString *)description
 {
@@ -242,7 +212,7 @@
 {
 	if ( ![self isBound] ) {
         [[self parent] mkdir];
-		[[NSFileManager defaultManager] createDirectoryAtPath:[self fileSystemPath] withIntermediateDirectories:YES attributes:nil error:nil];
+		[[NSFileManager defaultManager] createDirectoryAtPath:[self path] withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 }
 

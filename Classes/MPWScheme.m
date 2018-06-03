@@ -10,6 +10,7 @@
 #import "MPWBinding.h"
 #import "MPWCopyOnWriteScheme.h"
 #import "MPWIdentifier.h"
+#import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/NSNil.h>
 #import "MPWEvaluator.h"
 
@@ -22,12 +23,8 @@
 
 -bindingForReference:aReference inContext:aContext
 {
-    MPWBinding *binding=[[MPWBinding new] autorelease];
-    binding.store=self;
-    binding.reference=aReference;
-    return binding;
+    return [MPWBinding bindingWithReference:aReference inStore:self];
 }
-
 
 -bindingWithIdentifier:anIdentifier withContext:aContext
 {
@@ -38,10 +35,6 @@
 {
     return [self bindingForReference:[self referenceForPath:variableName] inContext:aContext];
 }
-
-
-
-
 
 -(BOOL)isBoundBinding:(MPWBinding*)aBinding
 {
