@@ -27,15 +27,19 @@
 
 -(id)objectForReference:(id)aReference
 {
-    NSError *error=nil;
-    NSURL *aURL=[NSURL fileURLWithPath:[aReference path]];
-    NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
-    MPWResource *result=[[[MPWResource alloc] init] autorelease];
-    [result setSource:aURL];
-    [result setRawData:rawData];
-    [result setError:error];
-    return result;
-}
+    if ( [self isLeafReference:aReference]) {
+        NSError *error=nil;
+        NSURL *aURL=[NSURL fileURLWithPath:[aReference path]];
+        NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
+        MPWResource *result=[[[MPWResource alloc] init] autorelease];
+        [result setSource:aURL];
+        [result setRawData:rawData];
+        [result setError:error];
+        return result;
+    } else {
+        return [self childrenOfReference:aReference];
+    }
+ }
 
 -(void)setObject:(id)theObject forReference:(id)aReference
 {
@@ -44,6 +48,13 @@
 }
 
 
+-(BOOL)isLeafReference:(MPWReference *)aReference
+{
+    BOOL    isDirectory=NO;
+    BOOL    exists=NO;
+    exists=[[NSFileManager defaultManager] fileExistsAtPath:[aReference path] isDirectory:&isDirectory];
+    return !isDirectory;
+}
 
 //-bindingForReference:aReference inContext:aContext
 //{
