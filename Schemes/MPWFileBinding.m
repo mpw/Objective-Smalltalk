@@ -22,13 +22,6 @@
 
 @implementation MPWFileBinding
 
-// idAccessor( url , setUrl )
-
--(id)url
-{
-    return [self URL];
-}
-
 
 -(NSTimeInterval)lastWritten
 {
@@ -83,85 +76,6 @@
 	return [self existsAndIsDirectory:NULL];;
 }
 
--(BOOL)isDirectory
-{
-	BOOL isDirectory = NO;
-	return [self existsAndIsDirectory:&isDirectory] && isDirectory;
-}
-
--(BOOL)hasChildren
-{
-    return [self isDirectory];
-}
-
-//-(NSArray*)directoryContents
-//{
-//    return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self fileSystemPath] error:nil];
-//
-//}
-//
-//-childWithName:(NSString*)newName
-//{
-//    return [[[[self class] alloc] initWithPath:[[self fileSystemPath] stringByAppendingPathComponent:newName]] autorelease];
-//}
-//
-//-(NSArray*)children
-//{
-//    NSArray *childEntries=nil;
-//    if ( [self hasChildren] ) {
-//        NSArray *childNames = [self directoryContents];
-//        childEntries = [[self collect] childWithName:[childNames each]];
-//    } else {
-//        childEntries = [NSArray array];
-//    }
-//    return childEntries;
-//}
-//
-//-(NSArray*)childNames
-//{
-//    return [self directoryContents];
-//}
-//
--_valueWithDataURL:(NSURL*)aURL
-{
-    NSError *error=nil;
-	NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
-	MPWResource *result=[[[MPWResource alloc] init] autorelease];
-	[result setSource:aURL];
-	[result setRawData:rawData];
-    [result setError:error];
-    lastRead=[NSDate timeIntervalSinceReferenceDate];
-	return result;
-}
-
-
--_valueWithURL:(NSURL*)aURL
-{
-    lastRead=[NSDate timeIntervalSinceReferenceDate];
-    if ( [self hasChildren] ) {
-        MPWDirectoryBinding * result = [[[MPWDirectoryBinding alloc] initWithContents:[self children]] autorelease];
-        [result setIdentifier:[self identifier]];
-        return result;
-    } else {
-        return [self _valueWithDataURL:aURL];
-    }
-}
-
-//-_value
-//{
-//    return [self _valueWithURL:[self url]];
-//}
-//
--(void)setValue:newValue
-{
-    NSLog(@"_setValue in file binding %@",self);
-     if ( [newValue isKindOfClass:[MPWBinding class]] ) {
-        newValue=[newValue fileSystemValue];
-    }
-    [[self parent] mkdir];
-    [newValue writeToURL:[self url] atomically:YES];
-    lastWritten=[NSDate timeIntervalSinceReferenceDate];
-}
 
 -(NSDate *)lastModifiedDate
 {
@@ -210,15 +124,15 @@
 
 -(void)mkdir
 {
-	if ( ![self isBound] ) {
+    if ( ![self isBound] ) {
         [[self parent] mkdir];
-		[[NSFileManager defaultManager] createDirectoryAtPath:[self path] withIntermediateDirectories:YES attributes:nil error:nil];
-	}
+        [[NSFileManager defaultManager] createDirectoryAtPath:[self path] withIntermediateDirectories:YES attributes:nil error:nil];
+    }
 }
 
 -(void)open
 {
-    [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[self url]];
+    [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[self URL]];
 }
 
 // FIXME:  change notification should probably be delegated to the store/scheme handler
@@ -236,17 +150,6 @@
 //    }
 //}
 
--(void)delete
-{
-    unlink( [[self path] fileSystemRepresentation]);
-}
-
-
--(void)dealloc
-{
-//	[url release];
-	[super dealloc];
-}
 
 -(MPWFDStreamSource*)source
 {

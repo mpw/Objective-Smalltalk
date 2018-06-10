@@ -10,17 +10,11 @@
 
 
 @interface MPWFileBinding : MPWBinding {
-//	id	url;
     BOOL ignoreChanges;
     NSTimeInterval lastRead,lastWritten;
 }
 
 @property (nonatomic,strong) NSString *parentPath;
-
--url;
--initWithURLString:(NSString*)urlString;
--initWithURL:(NSURL*)newURL;
--initWithPath:(NSString*)path;
 
 -(NSString*)fancyPath;
 

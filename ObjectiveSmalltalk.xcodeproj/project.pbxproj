@@ -516,6 +516,7 @@
 		1F22D86413916E0400D99DAB /* varname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = varname.txt; sourceTree = "<group>"; };
 		1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWBoxerUnboxer+MPWBoxingAdditions.h"; sourceTree = "<group>"; };
 		1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWBoxerUnboxer+MPWBoxingAdditions.m"; sourceTree = "<group>"; };
+		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -598,7 +599,6 @@
 		1F7B75BC14629431002F38D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1F7B75BE14629431002F38D1 /* MPWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWAppDelegate.h; sourceTree = "<group>"; };
 		1F7B75BF14629431002F38D1 /* MPWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWAppDelegate.m; sourceTree = "<group>"; };
-		1F7B75C214629431002F38D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F7B75C814629521002F38D1 /* MPWSchemeFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSchemeFilesystem.h; sourceTree = "<group>"; };
 		1F7B75C914629521002F38D1 /* MPWSchemeFilesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSchemeFilesystem.m; sourceTree = "<group>"; };
 		1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSXFUSE.framework; path = SDKs/MacOSX10.7.sdk/Library/Frameworks/OSXFUSE.framework; sourceTree = DEVELOPER_DIR; };
@@ -2049,6 +2049,7 @@
 				French,
 				German,
 				en,
+				Base,
 			);
 			mainGroup = F5A74ABB00F0A61B015ADD82 /* MPWTalk */;
 			productRefGroup = F5A74ACE00F0A61B015ADD82 /* Products */;
@@ -2599,7 +2600,7 @@
 		1F7B75C114629431002F38D1 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1F7B75C214629431002F38D1 /* en */,
+				1F27800120CB2D3D00D00AA3 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -2971,6 +2972,7 @@
 		1F5E508B09B4B754000298D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -3012,6 +3014,7 @@
 		1F5E508C09B4B754000298D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;

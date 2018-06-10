@@ -6,11 +6,11 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWScheme.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 @class MPWFileBinding;
 
-@interface MPWFileSchemeResolver : MPWScheme {
+@interface MPWFileSchemeResolver : MPWDiskStore {
 
 }
 

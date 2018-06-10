@@ -41,7 +41,7 @@
         remainder=[variableName substringFromIndex:firstPathSeparator.location+1];
     }
     theBinding=[aContext bindingForLocalVariableNamed:firstName];
-    [theBinding setIdentifier:[MPWIdentifier identifierWithName:firstName]];
+    [theBinding setReference:[MPWIdentifier identifierWithName:firstName]];
     if ( isCompound) {
         theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
     }

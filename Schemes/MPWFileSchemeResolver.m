@@ -14,7 +14,6 @@
 
 @implementation MPWFileSchemeResolver
 
-
 -bindingForReference:aReference inContext:aContext
 {
     return [MPWFileBinding bindingWithReference:aReference inStore:self];
@@ -30,49 +29,15 @@
     
 }
 
--(id)objectForReference:(id)aReference
-{
-    if ( [self isLeafReference:aReference]) {
-        NSError *error=nil;
-        NSURL *aURL=[NSURL fileURLWithPath:[aReference path]];
-        NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
-        MPWResource *result=[[[MPWResource alloc] init] autorelease];
-        [result setSource:aURL];
-        [result setRawData:rawData];
-        [result setError:error];
-        return result;
-    } else {
-        NSArray *bindings = [[self collect] bindingForReference:[[self childrenOfReference:aReference] each] inContext:self];
-        return [[[MPWDirectoryBinding alloc] initWithContents:bindings] autorelease];
-    }
- }
 
--(void)setObject:(id)theObject forReference:(id)aReference
+-directoryForReference:(MPWGenericReference*)aReference
 {
-    NSLog(@"write a file: %@",aReference);
-    [theObject writeToFile:[aReference path] atomically:YES];
+    NSArray *bindings = [[self collect] bindingForReference:[[self childrenOfReference:aReference] each] inContext:self];
+    return [[[MPWDirectoryBinding alloc] initWithContents:bindings] autorelease];
 }
 
 
--(BOOL)isLeafReference:(MPWReference *)aReference
-{
-    BOOL    isDirectory=NO;
-    BOOL    exists=NO;
-    exists=[[NSFileManager defaultManager] fileExistsAtPath:[aReference path] isDirectory:&isDirectory];
-    return !isDirectory;
-}
 
-//-bindingForReference:aReference inContext:aContext
-//{
-//    return [[[MPWFileBinding alloc] initWithReference:aReference inStore:self] autorelease];
-//}
-
-
--(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
-{
-    NSArray *childNames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[aReference path] error:nil];
-    return (NSArray*)[[MPWGenericReference collect] referenceWithPath:[childNames each]];
-}
 
 -(NSString*)completePartialPathFromAbsoluetPath:(NSString*)partialPath
 {
@@ -124,7 +89,7 @@
 
 +(void)testCompleteSubpath
 {
-    MPWFileSchemeResolver *s=[self scheme];
+    MPWFileSchemeResolver *s=[self store];
     NSString *tempUrlString = @"/tm";
     NSString *base=[s completePartialPathFromAbsoluetPath:tempUrlString ];
     IDEXPECT( base, @"/", @"base path");

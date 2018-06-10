@@ -14,11 +14,11 @@
 #import <MPWFoundation/NSNil.h>
 #import "MPWEvaluator.h"
 
-@implementation MPWScheme
+@implementation MPWAbstractStore(SchemeCompatibility)
 
 +scheme
 {
-	return [[[self alloc] init] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
 -bindingForReference:aReference inContext:aContext
@@ -26,10 +26,19 @@
     return [MPWBinding bindingWithReference:aReference inStore:self];
 }
 
--bindingWithIdentifier:anIdentifier withContext:aContext
+-bindingWithIdentifier:(MPWGenericReference*)anIdentifier withContext:aContext
 {
-    return [self bindingForReference:[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]] inContext:aContext];
+    MPWGenericReference *ref=[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]];
+    ref.schemeName=anIdentifier.schemeName;
+    return [self bindingForReference:ref inContext:aContext];
 }
+
+
+@end
+
+
+@implementation MPWScheme
+
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {

@@ -61,10 +61,6 @@ idAccessor( target, setTarget )
 
 objectAccessor(NSError, error, setError)
 
--get
-{
-	return [self _value];
-}
 -(BOOL)isBound
 {
 	return YES;
@@ -73,7 +69,7 @@ objectAccessor(NSError, error, setError)
 
 -getWithArgs
 {
-    NSLog(@"getWithArgs");
+//  NSLog(@"getWithArgs");
 	id yes=[[[SayYES alloc] init] autorelease];
 	MPWTrampoline	*trampoline=[MPWTrampoline quickTrampoline];
 	[yes setTarget:self];
@@ -112,7 +108,7 @@ objectAccessor(NSError, error, setError)
         [args addObject:arg];
     }
     id query = [self urlWithArgsFromSelectorString:selname args:args];
-    NSURL *fullURL=[NSURL URLWithString:[[[self url] stringValue] stringByAppendingString:query]];
+    NSURL *fullURL=[NSURL URLWithString:[[[self URL] stringValue] stringByAppendingString:query]];
     id result= [self.store _valueWithURL:fullURL];
     [inv setReturnValue:&result];
     return result;
@@ -120,19 +116,19 @@ objectAccessor(NSError, error, setError)
 
 -fileSystemValue
 {
-    return [NSDictionary dictionaryWithObject:[[self url] stringValue] forKey:@"URL"];
+    return [NSDictionary dictionaryWithObject:[[self URL] stringValue] forKey:@"URL"];
 }
 
 -(void)put:data
 {
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self url]];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self URL]];
     [urlRequest setHTTPMethod:@"PUT"];
     
     
     [urlRequest setHTTPBody:data];
     [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     if ( inPOST ) {
-        [NSException raise:@"PUT in progress" format:@"PUT to %@/%@ already in progress",self,[self url]];
+        [NSException raise:@"PUT in progress" format:@"PUT to %@/%@ already in progress",self,[self URL]];
     }
     inPOST=YES;
     while (inPOST) {
@@ -143,7 +139,7 @@ objectAccessor(NSError, error, setError)
 -(NSData*)post:data withName:(NSString*)postName
 {
     NSString *boundary=@"0xKhTmLbOuNdArY";
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self url]];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self URL]];
 
     [urlRequest setHTTPMethod:@"POST"];
     
@@ -183,12 +179,12 @@ objectAccessor(NSError, error, setError)
 
 -stream
 {
-    return [[[MPWSocketStream alloc] initWithURL:[self url]] autorelease];
+    return [[[MPWSocketStream alloc] initWithURL:[self URL]] autorelease];
 }
 
 -(NSString *)description
 {
-    return [[self url] absoluteString];
+    return [[self URL] absoluteString];
 }
 
 @end
