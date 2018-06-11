@@ -24,7 +24,6 @@
 
 }
 
-+scheme;
 -evaluateIdentifier:anIdentifer withContext:aContext;
 -get:uriString;
 -get:uri parameters:params;

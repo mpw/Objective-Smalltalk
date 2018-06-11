@@ -162,17 +162,17 @@ idAccessor(solver, setSolver)
 
 #pragma mark Evaluator
 
--createSchemes
+-(MPWSchemeScheme*)createSchemes
 {
-	id schemes=[super createSchemes];
-	[schemes setSchemeHandler:[MPWDefaultsScheme scheme]  forSchemeName:@"defaults"];
-	[schemes setSchemeHandler:[MPWFileSchemeResolver scheme]  forSchemeName:@"file"];
+	MPWSchemeScheme* schemes=[super createSchemes];
+	[schemes setSchemeHandler:[MPWDefaultsScheme store]  forSchemeName:@"defaults"];
+	[schemes setSchemeHandler:[MPWFileSchemeResolver store]  forSchemeName:@"file"];
 	[schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
 	[schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
     [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
     
 	[schemes setSchemeHandler:[NSClassFromString(@"MPWEnvScheme") scheme]  forSchemeName:@"env"];
-	[schemes setSchemeHandler:[MPWBundleScheme scheme]  forSchemeName:@"bundle"];
+	[schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
 	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
 //	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
 	

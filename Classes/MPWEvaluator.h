@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWBinding,MPWScheme;
+@class MPWBinding,MPWScheme,MPWSchemeScheme;
 
 @interface MPWEvaluator : MPWObject {
 	id localVars;
@@ -25,7 +25,7 @@
 -(void)bindValue:value toVariableNamed:(NSString*)variableName;
 -(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:scheme;
 
--createSchemes;
+-(MPWSchemeScheme*)screateSchemes;
 
 -valueOfVariableNamed:aName;
 -(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;

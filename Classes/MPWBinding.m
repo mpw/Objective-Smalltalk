@@ -9,12 +9,6 @@
 
 @implementation MPWBinding(legacy)
 
--(void)bindValue:newValue
-{
-    [self setValue:newValue];
-    //    [self setIsBound:YES];
-    //    [self didChange];
-}
 
 -(void)setIdentifier:newIdentifier
 {

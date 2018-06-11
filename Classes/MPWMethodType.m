@@ -32,20 +32,20 @@ objectAccessor( NSString, methodClassName, setMethodClassName )
 	return NSClassFromString([self methodClassName]);
 }
 
--(void)encodeWithCoder:aCoder
-{
-	[super encodeWithCoder:aCoder];
-	encodeVar( aCoder, typeName );
-	encodeVar( aCoder, methodClassName );
-}
-
--initWithCoder:aCoder
-{
-	self=[super initWithCoder:aCoder];
-	decodeVar( aCoder, typeName );
-	decodeVar( aCoder, methodClassName );
-	return self;
-}
+//-(void)encodeWithCoder:aCoder
+//{
+//    [super encodeWithCoder:aCoder];
+//    encodeVar( aCoder, typeName );
+//    encodeVar( aCoder, methodClassName );
+//}
+//
+//-initWithCoder:aCoder
+//{
+//    self=[super initWithCoder:aCoder];
+//    decodeVar( aCoder, typeName );
+//    decodeVar( aCoder, methodClassName );
+//    return self;
+//}
 
 
 -(void)dealloc

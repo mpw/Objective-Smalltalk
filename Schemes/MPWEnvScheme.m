@@ -158,8 +158,6 @@ extern char ***_NSGetEnviron( void );
 {
 //	NSArray *allEnvVars=[self linesFromCommand:@"env"];
 	MPWBinding *rootEnv=[MPWStCompiler evaluate:@"ref:env:/"];
-    NSLog(@"rootEnv: %@",rootEnv);
-    BOOL hasChildren=[rootEnv hasChildren];
     EXPECTTRUE([rootEnv hasChildren],@"root should have children");
 
 //    INTEXPECT( [[rootEnv childNames] count],[allEnvVars count],@"number of environment variables");

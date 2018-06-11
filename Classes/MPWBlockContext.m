@@ -87,7 +87,7 @@ typedef id (^ZeroArgBlock)(void);
     id returnVal=nil;
     for (int i=0;i<numArgs;i++) {
         MPWBinding *b=[aContext createLocalBindingForName:[formals objectAtIndex:i]];
-        [b bindValue:[args objectAtIndex:i]];
+        [b setValue:[args objectAtIndex:i]];
 //        [aContext bindValue:[args objectAtIndex:i] toVariableNamed:[formals objectAtIndex:i]];
     }
     

@@ -30,7 +30,7 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 	return [self schemes];
 }
 
--(void)setSchemeHandler:(MPWScheme*)aScheme   forSchemeName:(NSString*)schemeName
+-(void)setSchemeHandler:(MPWAbstractStore*)aScheme   forSchemeName:(NSString*)schemeName
 {
 //    NSLog(@"%p scheme handler: '%@' for scheme name: '%@'",self,aScheme,schemeName);
     if ( aScheme && schemeName) {

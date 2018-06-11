@@ -9,6 +9,23 @@
 #import "MPWVARBinding.h"
 #import "MPWInterval.h"
 
+
+@implementation NSObject(valueForPathComponent)
+
+-valueForPathComponent:(NSString*)pathComponent
+{
+    return [self valueForKey:pathComponent];
+}
+
+-(void)objst_addObserver:anObserver forKey:aKey
+{
+    //    NSLog(@"%@ objst_addObserver: %@",self,anObserver);
+    [self addObserver:anObserver forKeyPath:aKey options:0 context:NULL];
+}
+
+
+@end
+
 @implementation MPWVARBinding
 
 idAccessor( baseObject, setBaseObject )
@@ -102,22 +119,6 @@ idAccessor( baseObject, setBaseObject )
 	[super dealloc];
 }
 
-
-
-@end
-
-@implementation NSObject(valueForPathComponent)
-
--valueForPathComponent:(NSString*)pathComponent
-{
-	return [self valueForKey:pathComponent];
-}
-
--(void)objst_addObserver:anObserver forKey:aKey
-{
-//    NSLog(@"%@ objst_addObserver: %@",self,anObserver);
-    [self addObserver:anObserver forKeyPath:aKey options:0 context:NULL];
-}
 
 
 @end

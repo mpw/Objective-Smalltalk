@@ -14,6 +14,6 @@
 }
 
 -(NSDictionary*)schemes;
--(void)setSchemeHandler:(MPWScheme*)aSchem   forSchemeName:(NSString*)schemeName;
+-(void)setSchemeHandler:(MPWAbstractStore*)aScheme   forSchemeName:(NSString*)schemeName;
 
 @end

@@ -93,10 +93,10 @@
 
 idAccessor( _schemes, setSchemes )
 
--createSchemes
+-(MPWSchemeScheme*)createSchemes
 {
-	MPWSchemeScheme *schemes=[[[MPWSchemeScheme alloc] init] autorelease];
-	id varScheme = [[MPWVarScheme new] autorelease];
+	MPWSchemeScheme *schemes=[MPWSchemeScheme store];
+	id varScheme = [MPWVarScheme store];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"var"];
     [varScheme setContext:self];
 	[schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];

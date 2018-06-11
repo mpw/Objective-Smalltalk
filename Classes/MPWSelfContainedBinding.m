@@ -34,6 +34,22 @@
     self.value = nil;
 }
 
+- (NSURL *)URL { 
+    return nil;
+}
+
+
++ (instancetype)bindingWithReference:(id)aReference inStore:(id)aStore { 
+    return nil;
+}
+
+
+- (BOOL)hasChildren { 
+    return NO;
+}
+
+
+
 
 -(void)dealloc
 {
