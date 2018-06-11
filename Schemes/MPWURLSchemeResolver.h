@@ -10,7 +10,7 @@
 
 @class MPWURLBinding;
 
-@interface MPWURLSchemeResolver : MPWScheme {
+@interface MPWURLSchemeResolver : MPWURLBasedStore {
 
 }
 
