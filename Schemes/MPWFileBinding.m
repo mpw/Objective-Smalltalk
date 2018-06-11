@@ -119,7 +119,7 @@
 
 -(NSString *)description
 {
-    return [NSString stringWithFormat:@"file:%@",[self fileSystemPath]];
+    return [NSString stringWithFormat:@"file:%@",[self path]];
 }
 
 -(void)mkdir
