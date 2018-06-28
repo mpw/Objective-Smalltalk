@@ -51,10 +51,6 @@
 }
 
 
--(MPWScheme*)before:otherScheme
-{
-    return [[[MPWCopyOnWriteScheme alloc] initWithBase:self cache:otherScheme] autorelease];
-}
 
 -(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
@@ -100,6 +96,12 @@
 {
     return [MPWCopyOnWriteScheme cacheWithBase:self cache:cacheScheme];
 }
+
+-before:otherScheme
+{
+    return [self cachedBy:otherScheme];
+}
+
 
 @end
 
