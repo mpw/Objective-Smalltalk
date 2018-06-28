@@ -120,22 +120,22 @@ idAccessor( script, _setScript )
             [[self script] stringValue]];
 }
 
--(void)encodeWithCoder:aCoder
-{
-	id scriptData = [script dataUsingEncoding:NSUTF8StringEncoding];
-	[super encodeWithCoder:aCoder];
-	encodeVar( aCoder, scriptData );
-}
-
--initWithCoder:aCoder
-{
-	id scriptData=nil;
-	self = [super initWithCoder:aCoder];
-	decodeVar( aCoder, scriptData );
-	[self setScript:[scriptData stringValue]];
-	[scriptData release];
-	return self;
-}
+//-(void)encodeWithCoder:aCoder
+//{
+//    id scriptData = [script dataUsingEncoding:NSUTF8StringEncoding];
+//    [super encodeWithCoder:aCoder];
+//    encodeVar( aCoder, scriptData );
+//}
+//
+//-initWithCoder:aCoder
+//{
+//    id scriptData=nil;
+//    self = [super initWithCoder:aCoder];
+//    decodeVar( aCoder, scriptData );
+//    [self setScript:[scriptData stringValue]];
+//    [scriptData release];
+//    return self;
+//}
 
 -(void)dealloc 
 {

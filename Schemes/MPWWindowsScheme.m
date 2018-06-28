@@ -26,7 +26,7 @@
 
 -(NSArray*)appBindingsList
 {
-    [[self collect] bindingForName:[[self appNameList] each] inContext:nil];
+    return [[self collect] bindingForName:[[self appNameList] each] inContext:nil];
 }
 
 
@@ -43,7 +43,7 @@
         }
     }
     NSArray *windowNameArray = [[windowNames allObjects] sortedArrayUsingSelector:@selector(compare:)];
-    return [self collect] bindingForName:[windowNameArray each] inContext:nil];
+    return [[self collect] bindingForName:[windowNameArray each] inContext:nil];
 }
 
 
@@ -87,7 +87,7 @@
 {
     NSArray* resultArray=nil;
 
-    NSString *path=[aBinding name];
+    NSString *path=[aReference name];
     if ( [path isEqualToString:@"/"]) {
         path=@"";
     }

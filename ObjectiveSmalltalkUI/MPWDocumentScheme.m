@@ -88,7 +88,7 @@ idAccessor(currentDocument, setCurrentDocument)
     NSArray *lookupPath=[aReference relativePathComponents];
     if ( lookupPath.count == 1 && [lookupPath[0] isEqualToString:@"."]) {
         return [self currentDoc];
-    } else if ( lookupPath.count == 0 || [aReference isRoot] )
+    } else if ( lookupPath.count == 0 || [aReference isRoot] ) {
         return [[[self allDocs] collect] displayName];
     }
 

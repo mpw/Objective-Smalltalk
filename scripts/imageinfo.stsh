@@ -1,4 +1,4 @@
 #!/usr/local/bin/stsh
-#-imageInfo:name
+#-imageInfo:<ref>image
 framework:AppKit load.
-NSBitmapImageRep alloc initWithData: file:{name}
+NSBitmapImageRep alloc initWithData: image value.

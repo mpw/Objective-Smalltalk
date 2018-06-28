@@ -23,7 +23,7 @@
 
 -initWithRef:(MPWBinding*)aBinding
 {
-    return [self initWithSource:[aBinding scheme] reference:[aBinding identifier]];
+    return [self initWithSource:[aBinding store] reference:[aBinding reference]];
 }
 
 @end
