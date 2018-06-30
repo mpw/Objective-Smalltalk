@@ -9,6 +9,16 @@
 #import "MPWObjCGenerator.h"
 #import "MPWLiteralExpression.h"
 
+@implementation NSObject(generateObjectiveCOn)
+
+-(void)generateObjectiveCOn:aGenerator
+{
+    [self writeOnByteStream:aGenerator];
+}
+
+
+@end
+
 @implementation MPWObjCGenerator
 
 +defaultTarget
@@ -63,15 +73,6 @@
 
 @end
 
-@implementation NSObject(generateObjectiveCOn)
-
--(void)generateObjectiveCOn:aGenerator
-{
-    [self writeOnByteStream:aGenerator];
-}
-
-
-@end
 
 @implementation NSString(generateObjectiveCOn)
 

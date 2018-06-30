@@ -18,6 +18,7 @@
 #import "MPWBundleScheme.h"
 //#import "MPWScriptingBridgeScheme.h"
 #import "MPWDefaultsScheme.h"
+#import "MPWEnvScheme.h"
 #import "MPWSchemeScheme.h"
 #import "MPWConnectToDefault.h"
 #import <MPWFoundation/NSNil.h>
@@ -171,7 +172,7 @@ idAccessor(solver, setSolver)
 	[schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
     [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
     
-	[schemes setSchemeHandler:[NSClassFromString(@"MPWEnvScheme") scheme]  forSchemeName:@"env"];
+	[schemes setSchemeHandler:[MPWEnvScheme scheme]  forSchemeName:@"env"];
 	[schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
 	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
 //	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];

@@ -156,7 +156,7 @@ boolAccessor( noNumbers, setNoNumbers )
         charSwitch[i]=(IDIMP0)[self methodForSelector:@selector(scanUTF8Name)];
     }
     charSwitch['\'']=(IDIMP0)[self methodForSelector:@selector(scanString)];
-    charSwitch['\"']=(IDIMP0)[self methodForSelector:@selector(scanComment)];
+    charSwitch['\"']=(IDIMP0)[self methodForSelector:@selector(scanString)];
     charSwitch['<']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['+']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['[']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
@@ -164,12 +164,12 @@ boolAccessor( noNumbers, setNoNumbers )
     charSwitch[':']=(IDIMP0)[self methodForSelector:@selector(scanPossibleAssignment)];
     charSwitch['=']=(IDIMP0)[self methodForSelector:@selector(scanPossibleEquals)];
     charSwitch['_']=(IDIMP0)[self methodForSelector:@selector(scanASCIIName)];
-    charSwitch[0]=(IDIMP0)[self methodForSelector:@selector(skip)];
+    charSwitch[0]=(IDIMP0)[self methodForSelector:@selector(nop)];
 //    charSwitch[10]=[self methodForSelector:@selector(skip)];
 //    charSwitch[13]=[self methodForSelector:@selector(skip)];
 }
 
-
+-nop { return nil; }
 
 static inline int decodeUTF8FirstByte( int ch, int *numChars)
 {

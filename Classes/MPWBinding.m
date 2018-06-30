@@ -34,11 +34,6 @@
 {
 }
 
--name
-{
-    return [self.reference path];
-}
-
 -initWithValue:aValue
 {
     NSAssert1( aValue == nil,@"-initWithValue expecting nil, got %@",aValue);

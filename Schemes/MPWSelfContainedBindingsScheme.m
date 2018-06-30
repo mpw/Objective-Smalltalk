@@ -6,6 +6,7 @@
 //
 
 #import "MPWSelfContainedBindingsScheme.h"
+#import "MPWEvaluator.h"
 
 @implementation MPWSelfContainedBindingsScheme
 
@@ -16,7 +17,7 @@
     if ( !value ) {
         id binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
         if (!binding) {
-            value=[aContext valueForUndefinedVariableNamed:[anIdentifer identifierName]];
+            value=[aContext valueForUndefinedVariableNamed:[anIdentifer path]];
         } else {
             value=[binding value];
         }

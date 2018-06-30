@@ -25,12 +25,12 @@
 -(void)bindValue:value toVariableNamed:(NSString*)variableName;
 -(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:scheme;
 
--(MPWSchemeScheme*)screateSchemes;
+-(MPWSchemeScheme*)createSchemes;
 
 -valueOfVariableNamed:aName;
 -(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;
 -(MPWBinding*)cachedBindingForName:aName;
--(void)cacheBinding:(MPWBinding*)binding ForName:aName;
+-(void)cacheBinding:(MPWBinding*)binding forName:aName;
 
 //-valueOfVariableNamed:aName withScheme:scheme;
 -(MPWBinding*)createLocalBindingForName:(NSString*)variableName;
