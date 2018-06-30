@@ -54,11 +54,11 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     NSString *variableName=[aReference path];
 //    NSLog(@"%p bindingForName: %@",self,variableName);
     id localVars = [self localVarsForContext:aContext];
-    id binding=nil;
+    MPWBinding* binding=nil;
 //    NSLog(@"scheme %p: localVars: %@",self,localVars);
     binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
-    [binding setIdentifier:[MPWIdentifier identifierWithName:variableName]];
-    [binding setScheme:self];
+    [binding setReference:[MPWIdentifier identifierWithName:variableName]];
+    [binding setStore:self];
 //    NSLog(@"binding: %@",binding);
     return binding;
 }

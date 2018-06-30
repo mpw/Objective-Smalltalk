@@ -26,7 +26,7 @@
     return [MPWBinding bindingWithReference:aReference inStore:self];
 }
 
--bindingWithIdentifier:(MPWGenericReference*)anIdentifier withContext:aContext
+-bindingWithIdentifier:(MPWIdentifier*)anIdentifier withContext:aContext
 {
     MPWGenericReference *ref=[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]];
     ref.schemeName=anIdentifier.schemeName;
@@ -50,12 +50,6 @@
     return YES;
 }
 
-
-
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
-{
-    return @[];
-}
 
 
 

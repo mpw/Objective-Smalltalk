@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/MPWScheme.h>
 
-@class MPWURLBinding;
+@class MPWURLBinding,MPWResource;
 
 @interface MPWURLSchemeResolver : MPWURLBasedStore {
 
@@ -21,5 +21,6 @@
 
 
 -(NSString*)schemePrefix;
+-(MPWResource*)resourceWithRequest:(NSURLRequest*)request;
 
 @end

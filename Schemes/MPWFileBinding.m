@@ -45,7 +45,7 @@
 
 -(void)startWatching
 {
-    [[self scheme] startWatching:self];
+    [[self store] startWatching:self];
 }
 
 -(void)stopWatching

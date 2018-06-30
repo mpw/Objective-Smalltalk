@@ -172,7 +172,7 @@ idAccessor(solver, setSolver)
 	[schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
     [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
     
-	[schemes setSchemeHandler:[MPWEnvScheme scheme]  forSchemeName:@"env"];
+	[schemes setSchemeHandler:[MPWEnvScheme store]  forSchemeName:@"env"];
 	[schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
 	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
 //	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
@@ -424,7 +424,7 @@ idAccessor(solver, setSolver)
         }
 		[scanner setNoNumbers:NO];
 	}
-	[identifierToAddNameTo setIdentifierName:name];
+	[identifierToAddNameTo setPath:name];
 //	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
 //	[identifierToAddNameTo setScheme:[self schemeForName:[identifierToAddNameTo schemeName]]];
 	[variable setIdentifier:identifier];
@@ -454,7 +454,7 @@ idAccessor(solver, setSolver)
     [variable setLen:1];
 	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	NSString* name = [aToken stringValue];
-	[identifier setIdentifierName:name];
+	[identifier setPath:name];
 //	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
 	[variable setIdentifier:identifier];
 	[variable setEvaluationEnvironment:self];
