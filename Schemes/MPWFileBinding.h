@@ -17,5 +17,6 @@
 @property (nonatomic,strong) NSString *parentPath;
 
 -(NSString*)fancyPath;
+-source;
 
 @end

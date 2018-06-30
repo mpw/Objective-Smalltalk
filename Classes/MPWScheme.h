@@ -12,7 +12,6 @@
 
 @protocol Scheme <NSObject>
 
--valueForBinding:(MPWBinding*)aBinding;
 -(MPWBinding*)bindingWithIdentifier:(MPWIdentifier*)anIdentifier withContext:aContext;
 -(MPWBinding*)bindingForName:(NSString*)variableName inContext:aContext;
 -(BOOL)isBoundBinding:(MPWBinding*)aBinding;

@@ -48,7 +48,7 @@ idAccessor( root, setRoot )
 }
 
 
--(BOOL)isLeafReference:(MPWReference *)aReference
+-(BOOL)isLeafReference:(MPWGenericReference *)aReference
 {
     return [[self nodeForReference:aReference] hasChildren];
 }
