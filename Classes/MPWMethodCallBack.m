@@ -203,6 +203,7 @@ idAccessor( method, _setMethod )
 @interface __MPWMethodCallBackDummyTestClass(silenceWarningsAboutMethodsWeWillDefineDynamically)
 
 -xxxDummy2;
+-xxxDummy3;
 -xxxDummyMulti:anArg andMore:moreArgs;
 
 @end
@@ -302,7 +303,7 @@ idAccessor( method, _setMethod )
 	[callback setName:@"xxxDummy3"];
 	[callback installInClass:[target class] withSignature:"@@:"];
 	function = (IMP0)[callback function];
-	returnValue = function( target, @selector(dummy3) );
+	returnValue = function( target, @selector(xxxDummy3) );
 	IDEXPECT( returnValue, expectedReturn, @"expected return of install");
 }
 
