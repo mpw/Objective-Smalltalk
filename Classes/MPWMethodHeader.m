@@ -71,10 +71,9 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(const char*)typeSignature
 {
 	id sig = [self typeString];
-	int siglen = (int)[sig length];
-	char *signature=malloc( siglen+1 );
-	[sig getCString:signature maxLength:siglen];
-	signature[siglen]=0;
+	int siglen = (int)[sig length]+1;
+	char *signature=malloc( siglen+2 );
+	[sig getCString:signature maxLength:siglen encoding:NSISOLatin1StringEncoding];
 	return (const char*)signature;
 }
 
