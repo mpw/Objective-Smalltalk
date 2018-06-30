@@ -93,26 +93,26 @@ objectAccessor(NSError, error, setError)
 	return result;
 }
 
--getWithArgs:(NSInvocation*)inv
-{
-    NSString *selname=NSStringFromSelector([inv selector]);
-    NSMutableArray *args=[NSMutableArray array];
-    long i,max=[[inv methodSignature] numberOfArguments];
-    for (i=2; i<max; i++) {
-        id arg=nil;
-        [inv getArgument:&arg atIndex:i];
-        if ( !arg ) {
-            NSLog(@"nil arg at %ld",i);
-            arg=@"";
-        }
-        [args addObject:arg];
-    }
-    id query = [self urlWithArgsFromSelectorString:selname args:args];
-    NSURL *fullURL=[NSURL URLWithString:[[[self URL] stringValue] stringByAppendingString:query]];
-    id result= [self.store _valueWithURL:fullURL];
-    [inv setReturnValue:&result];
-    return result;
-}
+//-getWithArgs:(NSInvocation*)inv
+//{
+//    NSString *selname=NSStringFromSelector([inv selector]);
+//    NSMutableArray *args=[NSMutableArray array];
+//    long i,max=[[inv methodSignature] numberOfArguments];
+//    for (i=2; i<max; i++) {
+//        id arg=nil;
+//        [inv getArgument:&arg atIndex:i];
+//        if ( !arg ) {
+//            NSLog(@"nil arg at %ld",i);
+//            arg=@"";
+//        }
+//        [args addObject:arg];
+//    }
+//    id query = [self urlWithArgsFromSelectorString:selname args:args];
+//    NSURL *fullURL=[NSURL URLWithString:[[[self URL] stringValue] stringByAppendingString:query]];
+//    id result= [self.store _valueWithURL:fullURL];
+//    [inv setReturnValue:&result];
+//    return result;
+//}
 
 -fileSystemValue
 {
@@ -136,23 +136,23 @@ objectAccessor(NSError, error, setError)
     }
 }
 
--(NSData*)post:data withName:(NSString*)postName
-{
-    NSString *boundary=@"0xKhTmLbOuNdArY";
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self URL]];
-
-    [urlRequest setHTTPMethod:@"POST"];
-    
-    [urlRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
-    
-    NSMutableData *postData = [NSMutableData data];
-    [postData appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", postName, postName] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postData appendData:data];
-    [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [urlRequest setHTTPBody:postData];
-    return [self resourceWithRequest:urlRequest];
-}
+//-(NSData*)post:data withName:(NSString*)postName
+//{
+//    NSString *boundary=@"0xKhTmLbOuNdArY";
+//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self URL]];
+//
+//    [urlRequest setHTTPMethod:@"POST"];
+//    
+//    [urlRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+//    
+//    NSMutableData *postData = [NSMutableData data];
+//    [postData appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", postName, postName] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [postData appendData:data];
+//    [postData appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [urlRequest setHTTPBody:postData];
+//    return [self resourceWithRequest:urlRequest];
+//}
 
 -(NSData*)post:data
 {

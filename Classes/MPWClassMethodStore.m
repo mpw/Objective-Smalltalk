@@ -43,15 +43,15 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
     return methodCallback;
 }
 
--(MPWMethod*)methodForName:(NSString*)name
+-(MPWScriptedMethod*)methodForName:(NSString*)name
 {
-    return (MPWMethod*)[[self callbackForName:name] method];
+    return (MPWScriptedMethod*)[[self callbackForName:name] method];
 }
 
 
 #ifndef __clang_analyzer__
 
--(MPWMethodCallBack*)addMethod:(MPWMethod*)method
+-(MPWMethodCallBack*)addMethod:(MPWScriptedMethod*)method
 {
     NSString* methodName = [[method methodHeader] methodName];
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];

@@ -15,7 +15,7 @@
 
 -(void)addMethodsIn:(MPWClassMethodStore*)store
 {
-    for ( MPWMethod *method in self.methods) {
+    for ( MPWScriptedMethod *method in self.methods) {
         [store installMethod:method];
     }
 }

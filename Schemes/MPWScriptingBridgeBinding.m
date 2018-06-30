@@ -16,9 +16,9 @@
 
 @implementation MPWScriptingBridgeBinding
 
--_value
+-value
 {
-	id value=[super _value];
+	id value=[super value];
 	if ( [value isKindOfClass:NSClassFromString(@"SBObject")] ) {
 		id getValue=[value get];
 		if ( getValue ) {

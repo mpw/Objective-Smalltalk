@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWClassMirror,MPWStCompiler,MPWMethod,MPWMethodCallBack;
+@class MPWClassMirror,MPWStCompiler,MPWMethodCallBack,MPWScriptedMethod;
 
 @interface MPWClassMethodStore : NSObject
 {
@@ -18,9 +18,9 @@
 }
 
 -initWithClassMirror:(MPWClassMirror*)newMirror compiler:aCompiler;
--(MPWMethodCallBack*)addMethod:(MPWMethod*)method;
--(void)installMethod:(MPWMethod*)method;
--(MPWMethod*)methodForName:(NSString*)name;
+-(MPWMethodCallBack*)addMethod:(MPWScriptedMethod*)method;
+-(void)installMethod:(MPWScriptedMethod*)method;
+-(MPWScriptedMethod*)methodForName:(NSString*)name;
 -(NSArray*)allMethodNames;
 -(void)defineMethodsInExternalMethodDict:(NSDictionary*)dict;
 -(NSDictionary*)externalMethodDict;

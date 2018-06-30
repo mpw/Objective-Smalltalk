@@ -85,10 +85,10 @@ idAccessor( baseObject, setBaseObject )
 	return result;
 }
 
--_value
-{
-	return [self _objectToIndex:(int)[[self pathComponents] count]];
-}
+//-_value
+//{
+//    return [self _objectToIndex:(int)[[self pathComponents] count]];
+//}
 
 -(void)startObserving
 {

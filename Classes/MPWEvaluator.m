@@ -103,7 +103,7 @@ idAccessor( _schemes, setSchemes )
 	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];
-	[schemes setSchemeHandler:[MPWFrameworkScheme scheme] forSchemeName:@"framework"];
+	[schemes setSchemeHandler:[MPWFrameworkScheme store] forSchemeName:@"framework"];
 	return schemes;
 }
 

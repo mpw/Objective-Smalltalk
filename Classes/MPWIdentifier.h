@@ -20,6 +20,5 @@
 
 -(MPWBinding*)bindingWithContext:aContext;
 
--identifierName;
 
 @end

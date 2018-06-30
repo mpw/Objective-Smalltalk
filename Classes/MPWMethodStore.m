@@ -172,23 +172,23 @@ scalarAccessor( id , compiler , setCompiler )
 }
 
 
--(void)installMethod:(MPWMethod*)method inClass:(NSString*)className
+-(void)installMethod:(MPWScriptedMethod*)method inClass:(NSString*)className
 {
     [[self classStoreForName:className] installMethod:method];
 }
 
--(void)installMethod:(MPWMethod*)method inMetaClass:(NSString*)className
+-(void)installMethod:(MPWScriptedMethod*)method inMetaClass:(NSString*)className
 {
     [[self metaClassStoreForName:className] installMethod:method];
 }
 
 
--(void)addMethodOnly:(MPWMethod*)method forClass:(NSString*)className
+-(void)addMethodOnly:(MPWScriptedMethod*)method forClass:(NSString*)className
 {
     [[self classStoreForName:className] addMethod:method];
 }
 
--(void)addMethod:(MPWMethod*)method forClass:(NSString*)className
+-(void)addMethod:(MPWScriptedMethod*)method forClass:(NSString*)className
 {
 //	[self addMethodOnly:method forClass:className];
 	[self installMethod:method inClass:className];
