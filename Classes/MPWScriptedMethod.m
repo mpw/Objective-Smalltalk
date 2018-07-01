@@ -10,6 +10,14 @@
 #import "MPWEvaluator.h"
 #import "MPWStCompiler.h"
 #import "MPWMethodHeader.h"
+
+@interface NSObject(MethodServeraddException)
+
++(void)addException:(NSException*)newException;
+
+@end
+
+
 @implementation MPWScriptedMethod
 
 

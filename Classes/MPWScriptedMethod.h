@@ -27,7 +27,10 @@ idAccessor_h( script, setScript )
 @interface NSException(scriptStackTrace)
 
 -(NSMutableArray*)scriptStackTrace;
--(NSMutableArray*)combinedStackTrace;
+
+objectAccessor_h( NSMutableArray, combinedStackTrace, setCombinedStackTrace)
+//-(NSMutableArray*)combinedStackTrace;
+//-(void)setCombined
 -(void)addCombinedFrame:(NSString*)frame frameToReplace:original previousTrace:previousTrace;
 -(void)addScriptFrame:(NSString*)frame;
 

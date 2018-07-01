@@ -12,9 +12,17 @@
 #import <MPWFoundation/MPWBlockFilterStream.h>
 #import "MPWBinding.h"
 #import "MPWMethodHeader.h"
+#import "MPWScriptedMethod.h"    // for stack-trace 
 
 #include <Block.h>
 #import <objc/runtime.h>
+
+@interface NSObject(MethodServeraddException)
+
++(void)addException:(NSException*)newException;
+
+@end
+
 
 @implementation MPWBlockContext
 
@@ -99,7 +107,7 @@ typedef id (^ZeroArgBlock)(void);
         }
     } @catch (NSException * exception) {
 #if 1
-        [exception setCombinedStackTrace:[exception callStackSymbols]];
+        [exception setCombinedStackTrace:[[[exception callStackSymbols] mutableCopy] autorelease]];
         NSLog(@"exception: %@ at %@",exception,[exception combinedStackTrace]);
         Class c=NSClassFromString(@"MethodServer");
         [c addException:exception];
