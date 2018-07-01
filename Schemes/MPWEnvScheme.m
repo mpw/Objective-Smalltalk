@@ -39,19 +39,16 @@ extern char ***_NSGetEnviron( void );
     return env;
 }
 
--(id)objectForReference:(id)aReference
+-(id)objectForReference:(MPWGenericReference*)aReference
 {
-    NSString *name=[aReference name];
+    NSString *path=[aReference path];
 //    NSLog(@"-[%@ %@:%@",[self className],NSStringFromSelector(_cmd),name);
 //    NSLog(@"reference: %@",aReference);
 //    NSLog(@"name: %@",name);
-    if ( [aReference isRoot]) {
-        
-    }
-    if ( [name length]==0 || [name isEqual:@"/"]) {
+    if ( [aReference isRoot] || [path length]==0) {
         return [[self class] getAllEnvironemntVariableNames];
     } else {
-        const char *val=[self cstringValueForName:name];
+        const char *val=[self cstringValueForName:path];
         if ( val ) {
             return [NSString stringWithUTF8String:val];
         } else {

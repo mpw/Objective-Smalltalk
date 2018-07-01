@@ -216,18 +216,18 @@ idAccessor(solver, setSolver)
 	return [super evaluate:script];
 }
 
--lookupScriptNamed:methodName forClassName:className
-{
-	return [[self methodDictionaryForClassNamed:className] objectForKey:methodName];
-}
-
--evaluateScriptNamed:methodName onObject:receiver
-{
-	NSString *className=NSStringFromClass([receiver class]);
-	NSString *scriptString=[self lookupScriptNamed:methodName forClassName:className];
-    [self resetSmbolTable];
-	return [self evaluateScript:scriptString onObject:receiver];
-}
+//-lookupScriptNamed:methodName forClassName:className
+//{
+//    return [[self methodDictionaryForClassNamed:className] objectForKey:methodName];
+//}
+//
+//-evaluateScriptNamed:methodName onObject:receiver
+//{
+//    NSString *className=NSStringFromClass([receiver class]);
+//    NSString *scriptString=[self lookupScriptNamed:methodName forClassName:className];
+//    [self resetSmbolTable];
+//    return [self evaluateScript:scriptString onObject:receiver];
+//}
 
 -(void)parseError:(NSString*)msg token:(id)token selector:(SEL)sel
 {

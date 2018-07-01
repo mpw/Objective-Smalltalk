@@ -91,14 +91,6 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
     return (NSArray*)[[self collect] bindingForName:[cleanedNames each] inContext:nil];
 }
 
--(id)valueForBinding:aBinding
-{
-    if ( [[aBinding name] isEqualToString:@"/"])  {
-        return [self listOfApps];
-    } else {
-        return [super valueForBinding:aBinding];
-    }
-}
 @end
 
 

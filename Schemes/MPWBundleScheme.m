@@ -11,6 +11,7 @@
 #import <MPWFoundation/AccessorMacros.h>
 #import <MPWFoundation/MPWGenericReference.h>
 #import "MPWFileBinding.h"
+#import "MPWScheme.h"
 
 @implementation MPWBundleScheme
 
