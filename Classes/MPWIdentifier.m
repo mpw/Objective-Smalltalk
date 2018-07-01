@@ -68,10 +68,10 @@
 	
 }
 
--(MPWBinding*)bindingWithContext:aContext
-{
-    return [[self scheme] bindingWithIdentifier:self withContext:aContext];
-}
+//-(MPWBinding*)bindingWithContext:aContext
+//{
+//    return [[self scheme] bindingWithIdentifier:self withContext:aContext];
+//}
 
 -evaluatedIdentifierNameInContext:aContext
 {

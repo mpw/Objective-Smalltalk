@@ -36,7 +36,7 @@ idAccessor( method, _setMethod )
 
 -script
 {
-	return [[self method] script];
+	return [(MPWScriptedMethod*)[self method] script];
 }
 
 -header

@@ -45,7 +45,7 @@ boolAccessor(cacheReads, setCacheReads)
 
 +memoryCache
 {
-    return [self cache:[MPWTreeNodeScheme scheme]];
+    return [self cache:[MPWTreeNodeScheme store]];
 }
 
 

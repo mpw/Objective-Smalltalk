@@ -45,7 +45,7 @@
 -(NSArray*)methodNamesForClassName:(NSString*)className;
 -(NSDictionary*)externalScriptDict;
 -(void)defineMethodsInExternalDict:(NSDictionary*)scriptDict;
--methodDictionaryForClassNamed:(NSString*)className;
+//-methodDictionaryForClassNamed:(NSString*)className;
 -methodForClass:aClassName name:aMethodName;
 
 idAccessor_h(solver, setSolver)

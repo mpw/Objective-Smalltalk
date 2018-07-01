@@ -43,25 +43,25 @@
     return [self lastModifiedTime] > [self lastRead];
 }
 
--(void)startWatching
-{
-    [[self store] startWatching:self];
-}
-
--(void)stopWatching
-{
-    
-}
-
--(void)setDelegate:aDelegate
-{
-    [super setDelegate:aDelegate];
-    if ( aDelegate ) {
-        [self startWatching];
-    } else {
-        [self stopWatching];
-    }
-}
+//-(void)startWatching
+//{
+//    [[self store] startWatching:self];
+//}
+//
+//-(void)stopWatching
+//{
+//    
+//}
+//
+//-(void)setDelegate:aDelegate
+//{
+//    [super setDelegate:aDelegate];
+//    if ( aDelegate ) {
+//        [self startWatching];
+//    } else {
+//        [self stopWatching];
+//    }
+//}
 
 
 
@@ -122,13 +122,13 @@
     return [NSString stringWithFormat:@"file:%@",[self path]];
 }
 
--(void)mkdir
-{
-    if ( ![self isBound] ) {
-        [[self parent] mkdir];
-        [[NSFileManager defaultManager] createDirectoryAtPath:[self path] withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-}
+//-(void)mkdir          --- don't have -parent, so no sense to keep this
+//{
+//    if ( ![self isBound] ) {
+//        [[self parent] mkdir];
+//        [[NSFileManager defaultManager] createDirectoryAtPath:[self path] withIntermediateDirectories:YES attributes:nil error:nil];
+//    }
+//}
 
 -(void)open
 {

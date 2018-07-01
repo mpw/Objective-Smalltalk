@@ -473,20 +473,20 @@
 	IDEXPECT( [methodDict objectForKey:externalizedMethodHeader] , originalScript, @"externalized method body" );
 }
 
-+(void)testDefinedMethodsForExternalDict1
-{
-	id evaluator=[[[self alloc] init] autorelease];
-	id externalDictString = @"{ NSString = { \"<int>lengthMultipliedByIntExternal:<int>a\" = \"self length*a.\"; }; }";
-	NSDictionary *externalDict=[externalDictString propertyList];
-	INTEXPECT( [[evaluator classesWithScripts] count], 0 , @"before defining external script dict" );
-	[evaluator defineMethodsInExternalDict:externalDict];
-	INTEXPECT( [[evaluator classesWithScripts] count], 1 , @"after defining external script dict" );
-	IDEXPECT( [[evaluator classesWithScripts] lastObject], @"NSString" , @"class with scripts" );
-	INTEXPECT( [[evaluator methodDictionaryForClassNamed:@"NSString" ] count], 1 , @"1 method defined" );
-	IDEXPECT( [[[evaluator methodForClass:@"NSString" name:@"lengthMultipliedByIntExternal:"] header] headerString], @"<int>lengthMultipliedByIntExternal:<int>a" , @"defined method header" );
-	INTEXPECT( [@"someString" lengthMultipliedByIntExternal:3], 30, @"method actually defined and usable" );
-
-}
+//+(void)testDefinedMethodsForExternalDict   // disabled
+//{
+//    id evaluator=[[[self alloc] init] autorelease];
+//    id externalDictString = @"{ NSString = { \"<int>lengthMultipliedByIntExternal:<int>a\" = \"self length*a.\"; }; }";
+//    NSDictionary *externalDict=[externalDictString propertyList];
+//    INTEXPECT( [[evaluator classesWithScripts] count], 0 , @"before defining external script dict" );
+//    [evaluator defineMethodsInExternalDict:externalDict];
+//    INTEXPECT( [[evaluator classesWithScripts] count], 1 , @"after defining external script dict" );
+//    IDEXPECT( [[evaluator classesWithScripts] lastObject], @"NSString" , @"class with scripts" );
+//    INTEXPECT( [[evaluator methodDictionaryForClassNamed:@"NSString" ] count], 1 , @"1 method defined" );
+//    IDEXPECT( [[[evaluator methodForClass:@"NSString" name:@"lengthMultipliedByIntExternal:"] header] headerString], @"<int>lengthMultipliedByIntExternal:<int>a" , @"defined method header" );
+//    INTEXPECT( [@"someString" lengthMultipliedByIntExternal:3], 30, @"method actually defined and usable" );
+//
+//}
 
 +(void)testDefineMethodInUnknownClassDoesntCrash
 {

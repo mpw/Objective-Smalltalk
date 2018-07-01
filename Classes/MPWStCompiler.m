@@ -150,10 +150,10 @@ idAccessor(solver, setSolver)
 }
 
 
--methodDictionaryForClassNamed:(NSString*)aName
-{
-	return [[self methodStore] methodDictionaryForClassNamed:aName];
-}
+//-methodDictionaryForClassNamed:(NSString*)aName
+//{
+//    return [[self methodStore] methodDictionaryForClassNamed:aName];
+//}
 
 -methodForClass:aClassName name:aMethodName
 {

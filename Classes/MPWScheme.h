@@ -15,17 +15,19 @@
 -(MPWBinding*)bindingWithIdentifier:(MPWIdentifier*)anIdentifier withContext:aContext;
 -(MPWBinding*)bindingForName:(NSString*)variableName inContext:aContext;
 -(BOOL)isBoundBinding:(MPWBinding*)aBinding;
+-bindingForReference:aReference inContext:aContext;
 
 @end
 
+@interface MPWAbstractStore(SchemeCompatibility) <Scheme>
 
-@interface MPWScheme : MPWAbstractStore <Scheme> {
+@end
+
+@interface MPWScheme : MPWAbstractStore  {
 
 }
 
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext;
-
-
 
 @end

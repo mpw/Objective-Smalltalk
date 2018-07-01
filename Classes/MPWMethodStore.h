@@ -22,7 +22,7 @@
 
 -initWithCompiler:aCompiler;
 -(void)defineMethodsInExternalDict:(NSDictionary*)scriptDict;
--methodDictionaryForClassNamed:(NSString*)className;
+//-methodDictionaryForClassNamed:(NSString*)className;
 -(NSArray*)classesWithScripts;
 -(void)addScript:(NSString*)scriptString forClass:(NSString*)className methodHeader:(MPWMethodHeader*)header;
 	//  private

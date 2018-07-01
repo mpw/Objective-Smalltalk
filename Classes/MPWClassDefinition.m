@@ -8,7 +8,9 @@
 
 #import "MPWClassDefinition.h"
 #import "NSObjectScripting.h"
+#import "MPWMethodStore.h"
 #import "MPWClassMethodStore.h"
+#import "MPWStCompiler.h"
 
 @implementation MPWClassDefinition
 
@@ -43,7 +45,7 @@
             [superclass createSubclassWithName:self.name instanceVariableArray:[self ivarNames]];
             theClassToDefine=NSClassFromString(self.name);
             for ( NSString *ivarName in [self ivarNames]) {
-               	[theClassToDefine generateAccessorsFor:ivarName];
+                   [theClassToDefine generateAccessorsFor:ivarName];
 
             }
         }

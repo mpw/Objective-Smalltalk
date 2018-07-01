@@ -89,15 +89,15 @@ scalarAccessor( id , compiler , setCompiler )
 }
 
 
--(NSDictionary*)externalizeScriptsForClass:(NSString*)className
-{
-	NSDictionary *methodDict = [self methodDictionaryForClassNamed:className];
-	NSArray* methods = [methodDict allValues];
-	NSArray* methodHeaders = (NSArray*)[[methods collect] header];
-	NSArray* methodHeaderStrings = (NSArray*)[[methodHeaders collect] headerString];
-	NSArray* scripts = [[methods collect] script];
-	return [NSDictionary dictionaryWithObjects:scripts forKeys:methodHeaderStrings];
-}
+//-(NSDictionary*)externalizeScriptsForClass:(NSString*)className
+//{
+//    NSDictionary *methodDict = [self methodDictionaryForClassNamed:className];
+//    NSArray* methods = [methodDict allValues];
+//    NSArray* methodHeaders = (NSArray*)[[methods collect] header];
+//    NSArray* methodHeaderStrings = (NSArray*)[[methodHeaders collect] headerString];
+//    NSArray* scripts = [[methods collect] script];
+//    return [NSDictionary dictionaryWithObjects:scripts forKeys:methodHeaderStrings];
+//}
 
 -(NSDictionary*)externalScriptDict
 {

@@ -26,16 +26,16 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 	return [[self identifier] identifierName];
 }
 
--bindingWithContext:aContext
-{
-    return [[self identifier] bindingWithContext:aContext];
-}
+//-bindingWithContext:aContext
+//{
+//    return [[self identifier] bindingWithContext:aContext];
+//}
 
--binding
-{
-    return [self bindingWithContext:[self evaluationEnvironment]];
-}
-
+//-binding
+//{
+//    return [self bindingWithContext:[self evaluationEnvironment]];
+//}
+//
 
 -evaluateIn:passedEnvironment
 {

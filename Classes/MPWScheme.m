@@ -33,6 +33,18 @@
     return [self bindingForReference:ref inContext:aContext];
 }
 
+-(BOOL)isBoundBinding:(MPWBinding*)aBinding
+{
+    return YES;
+}
+
+-bindingForName:(NSString*)variableName inContext:aContext
+{
+    return [self bindingForReference:[self referenceForPath:variableName] inContext:aContext];
+}
+
+
+
 
 @end
 
@@ -40,15 +52,6 @@
 @implementation MPWScheme
 
 
--bindingForName:(NSString*)variableName inContext:aContext
-{
-    return [self bindingForReference:[self referenceForPath:variableName] inContext:aContext];
-}
-
--(BOOL)isBoundBinding:(MPWBinding*)aBinding
-{
-    return YES;
-}
 
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
