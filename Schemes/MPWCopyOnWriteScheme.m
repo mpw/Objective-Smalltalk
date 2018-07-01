@@ -69,12 +69,12 @@ boolAccessor(cacheReads, setCacheReads)
     [(MPWAbstractStore*)[self readWrite] setObject:newValue forReference:aReference];
 }
 
--(BOOL)isLeafReference:(MPWReference *)aReference
+-(BOOL)isLeafReference:(id <MPWReferencing>)aReference
 {
     return [[self source] isLeafReference:aReference];
 }
 
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
+-(NSArray<MPWReference*>*)childrenOfReference:(id <MPWReferencing>)aReference
 {
     return [[self source] childrenOfReference:aReference];
 }

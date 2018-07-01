@@ -85,13 +85,13 @@ extern char ***_NSGetEnviron( void );
 	}
 }
 
--(BOOL)isLeafReference:(MPWReference*)reference
+-(BOOL)isLeafReference:(id <MPWReferencing>)reference
 {
     NSString *path=[reference path];
     return !([path length]==0 || [path isEqual:@"/"]);
 }
 
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
+-(NSArray<MPWReference*>*)childrenOfReference:(id <MPWReferencing>)aReference
 {
     if ( ![self isLeafReference:aReference]) {
         NSArray *envNames = [[self class] getAllEnvironemntVariableNames];

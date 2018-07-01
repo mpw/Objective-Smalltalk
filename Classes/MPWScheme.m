@@ -51,24 +51,22 @@
 }
 
 
-
-
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
-//    NSLog(@"completionsForPartialName: '%@' %@",partialName,[partialName class]);
+    //    NSLog(@"completionsForPartialName: '%@' %@",partialName,[partialName class]);
     NSArray *pathComponents=[partialName componentsSeparatedByString:@"/"];
     NSString *prefix=[[pathComponents subarrayWithRange:NSMakeRange(0, pathComponents.count-1)] componentsJoinedByString:@"/"];
     NSString *suffix=pathComponents.lastObject;
     if ( prefix.length == 0 ) {
         prefix=@".";
     }
-//    NSLog(@"prefix: '%@' suffix: '%@'",prefix,suffix);
+    //    NSLog(@"prefix: '%@' suffix: '%@'",prefix,suffix);
     MPWGenericReference *ref=[self referenceForPath:prefix];
     NSArray *potentialChildren=[self childrenOfReference:ref];
     NSMutableArray *names=[NSMutableArray array];
     for ( MPWGenericReference *reference in potentialChildren) {
         NSString *name = [reference path];
-//        NSLog(@"name: %@",name);
+        //        NSLog(@"name: %@",name);
         if ( !suffix || [suffix length]==0 || [name hasPrefix:suffix] ) {
             if ( [suffix isEqualToString:name] ) {
                 name=@"/";
@@ -76,7 +74,7 @@
             [names addObject:name];
         }
     }
-//    NSLog(@"potential names: %@",names);
+    //    NSLog(@"potential names: %@",names);
     return names;
 }
 

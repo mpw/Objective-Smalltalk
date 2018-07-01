@@ -154,28 +154,28 @@ objectAccessor(NSError, error, setError)
 //    return [self resourceWithRequest:urlRequest];
 //}
 
--(NSData*)post:data
-{
-    return [self post:data withName:@"methods"];       // FIXME:  remove
-}
+//-(NSData*)post:data
+//{
+//    return [self post:data withName:@"methods"];       // FIXME:  remove
+//}
+//
+//- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+//{
+//    inPOST=NO;
+//}
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    inPOST=NO;
-}
+//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)localError
+//{
+//    inPOST=NO;
+//    [self setError:localError];
+//}
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)localError
-{
-    inPOST=NO;
-    [self setError:localError];
-}
-
--(void)_setValue:newValue
-{
-    if (newValue) {
-        [self put:newValue];
-    }
-}
+//-(void)_setValue:newValue
+//{
+//    if (newValue) {
+//        [self put:newValue];
+//    }
+//}
 
 -stream
 {
