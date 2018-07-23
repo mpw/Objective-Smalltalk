@@ -4130,8 +4130,8 @@
 				);
 				INFOPLIST_FILE = MPWCSourceKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = /Applications/Xcode.app/Contents/Frameworks/;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Developer/CommandLineTools/usr/lib/";
+				LIBRARY_SEARCH_PATHS = /Library/Developer/CommandLineTools/usr/lib/;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.MPWCSourceKit;
@@ -4178,8 +4178,8 @@
 				);
 				INFOPLIST_FILE = MPWCSourceKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = /Applications/Xcode.app/Contents/Frameworks/;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Developer/CommandLineTools/usr/lib/";
+				LIBRARY_SEARCH_PATHS = /Library/Developer/CommandLineTools/usr/lib/;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.MPWCSourceKit;
