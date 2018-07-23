@@ -53,22 +53,22 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
     return [result asData];
 }
 
--methodsForPath:(NSArray*)components
-{
-    if ( [components count] > 0 ) {
-        NSDictionary *methodDict=[[self methodStore] methodDictionaryForClassNamed:[components objectAtIndex:0]];
-        if ( [components count] == 1 ) {
-            return [methodDict allKeys];
-        } else   if ( [components count] == 2 ){
-            return [methodDict objectForKey:[components objectAtIndex:1]];
-        } else {
-            return nil;
-        }
-    }
-    else {
-        return [[self methodStore] externalScriptDict];
-    }
-}
+//-methodsForPath:(NSArray*)components
+//{
+//    if ( [components count] > 0 ) {
+//        NSDictionary *methodDict=[[self methodStore] methodDictionaryForClassNamed:[components objectAtIndex:0]];
+//        if ( [components count] == 1 ) {
+//            return [methodDict allKeys];
+//        } else   if ( [components count] == 2 ){
+//            return [methodDict objectForKey:[components objectAtIndex:1]];
+//        } else {
+//            return nil;
+//        }
+//    }
+//    else {
+//        return [[self methodStore] externalScriptDict];
+//    }
+//}
 
 -(NSArray*)allClasses
 {
@@ -86,8 +86,8 @@ objectAccessor(NSMutableArray, exceptions, setExceptions)
             return [self methodList];
         } else if ( [first isEqual:@"allclasses"] ) {
                 return [self allClasses];
-        } else if ( [first isEqual:@"methods"] ) {
-            return [self methodsForPath:[components subarrayWithRange:NSMakeRange(1, [components count]-1)]];
+//        } else if ( [first isEqual:@"methods"] ) {
+//            return [self methodsForPath:[components subarrayWithRange:NSMakeRange(1, [components count]-1)]];
 //        } else if ( [first isEqual:@"theAnswer"] ) {
 //            return [[NSString stringWithFormat:@"the answer: %d",[self theAnswer]] asData];
         } else if ( [first isEqual:@"bundles"] ) {

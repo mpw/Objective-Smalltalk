@@ -1,0 +1,1 @@
+These headers for clang-c are only used on Mac OS X, because we link to a private system copy of libclang.dylib. 
