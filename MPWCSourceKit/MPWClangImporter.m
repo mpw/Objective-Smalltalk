@@ -80,7 +80,18 @@
                          CXType argType=clang_getCursorType(argCursor);
                          printf("  arg[%d] name=%s type=%s\n",i,
                                 [[self nameAtCursor:argCursor] UTF8String],
-                                [[self cxstringToNSString:clang_getTypeSpelling(argType)] UTF8String]);
+                                [[self cxstringToNSString:clang_getTypeSpelling(argType)] UTF8String]
+                                );
+                         if (argType.kind==CXType_BlockPointer) {
+                             printf("   block\n");
+                             clang_visitChildrenWithBlock(argCursor,
+                                                          ^ enum CXChildVisitResult (CXCursor blockCursor, CXCursor blockParent)
+                                                          {
+                                                              printf("   unhandled in block: %d\n",blockCursor.kind);
+                                                              return CXChildVisit_Continue;
+
+                                                          });
+                         }
                      }
 
                      break;
