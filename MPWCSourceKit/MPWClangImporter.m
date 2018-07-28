@@ -24,10 +24,11 @@
 
 -(void)initializeTranslationUnit:(nullable NSString*)filename
 {
-    const char *argv[]={ "-v", "-v", NULL};
-    int argc=2;
+    const char *argv[]={  NULL};
+    int argc=0;
     const char *mainFile = "/tmp/hi.m";
-    NSString *syntheticMainfile=[NSString stringWithFormat:@"#define nullable \n#define nonnull \n#import <Foundation/Foundation.h>\n"];
+//    NSString *syntheticMainfile=[NSString stringWithFormat:@"#define nullable \n#define nonnull \n#import <Foundation/Foundation.h>\n"];
+    NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <Foundation/Foundation.h>\n"];
     struct CXUnsavedFile unsaved[] = {
         {mainFile, [syntheticMainfile UTF8String], [syntheticMainfile length]},
         {NULL, NULL, 0}};
@@ -38,8 +39,7 @@
     
     
     translationUnit =
-    clang_parseTranslationUnit(clangIndex, mainFile, argv, argc, unsaved,
-                               1,
+    clang_parseTranslationUnit(clangIndex, mainFile, argv, argc, unsaved, 1,
                                clang_defaultEditingTranslationUnitOptions());
 }
 

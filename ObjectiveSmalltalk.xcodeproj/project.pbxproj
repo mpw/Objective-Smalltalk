@@ -2778,7 +2778,8 @@
 				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				LLVM_LDFLAGS = "-L/usr/local/lib  -lpthread -lm  -lc++ -ltermcap";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "${LLVM_CFLAGS}";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -2790,6 +2791,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -2828,7 +2830,8 @@
 				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				LLVM_LDFLAGS = "-L/usr/local/lib  -lpthread -lm  -lc++ -ltermcap";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_CFLAGS = "${LLVM_CFLAGS}";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
@@ -2839,6 +2842,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
