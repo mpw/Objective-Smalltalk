@@ -19,6 +19,8 @@
 #import "MPWIdentifierExpression.h"
 #import "MPWLiteralExpression.h"
 #import "MPWMethodDescriptor.h"
+#import "MPWClassDefinition.h"
+
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
 
@@ -219,6 +221,17 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [assemblyGenerator writeClassWithName:classname superclassName:superclassname instanceMethodListRef:methodListRef  numInstanceMethods:(int)[descriptors count]];
 }
 
+-(void)generateClass:(MPWClassDefinition*)classDef
+{
+    NSString *classname=[classDef name];
+    NSString *methodListRef=nil;
+    if ( [[classDef methods] count]>0) {
+        methodListRef=[self generateMethodList:[classDef methods] forClassName:classname];
+    }
+    [assemblyGenerator writeClassWithName:classname superclassName:[classDef superclassName] instanceMethodListRef:methodListRef  numInstanceMethods:(int)[[classDef methods] count]];
+}
+
+
 -(void)flush
 {
     [assemblyGenerator flushSelectorReferences];
@@ -261,12 +274,21 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 @end
 
 
-
 @implementation MPWLiteralExpression(generation)
 
 -(NSString*)generateOn:(MPWCodeGenerator*)generator
 {
     return [generator generateLiteral:self];
+}
+
+@end
+
+@implementation MPWClassDefinition(generation)
+
+-(NSString*)generateOn:(MPWCodeGenerator*)generator
+{
+    [generator generateClass:self];
+    return nil;
 }
 
 @end
@@ -333,7 +355,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [gen writeHeaderWithName:@"testModule"];
     [gen writeClassWithName:classname superclassName:@"NSObject" instanceMethodListRef:nil numInstanceMethods:0];
     NSData *source=[self resultOfFlushing:gen];
-    
+    [source writeToFile:@"/tmp/smalltalkmanualemptyclass.s" atomically:YES];
+
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
     EXPECTNOTNIL(loadedClass, @"test class should exist after load");
@@ -715,6 +738,44 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
 }
 
++(void)testCreateEmptyClassUsingClassSyntax
+{
+    MPWCodeGenerator *codegen=[self codegen];
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    NSString *classname=[self anotherTestClassName];
+    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { } ", classname];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
+    EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
+    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
+    [classDef generateOn:codegen];
+    [codegen flush];
+    NSData *source=[[codegen assemblyGenerator] target];
+    //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    id a=[[NSClassFromString(classname) new] autorelease];
+    EXPECTNOTNIL(a, @"should be able to instantiate new class");
+    IDEXPECT([a className],classname,@"should be instance of class I crated");
+}
+
++(void)testeCreateClassWithMethodssUsingClassSyntax
+{
+    MPWCodeGenerator *codegen=[self codegen];
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    NSString *classname=[self anotherTestClassName];
+    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { -add5:arg { arg+5.  } ", classname];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
+    EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
+    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
+    [classDef generateOn:codegen];
+    [codegen flush];
+    NSData *source=[[codegen assemblyGenerator] target];
+    //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    id a=[[NSClassFromString(classname) new] autorelease];
+    id result=[a add5:@(10)];
+    IDEXPECT(result,@(15),@"add 5 to 10");
+}
+
 +testSelectors
 {
     return @[
@@ -731,6 +792,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 //             @"testGenerateStackBlockWithVariableCapture",  currently fails
              @"testDefineClassWithOneSimpleSmalltalkMethod",
              @"testSmalltalkLiterals",
+             @"testCreateEmptyClassUsingClassSyntax",
+//             @"testCreateClassWithMethodssUsingClassSyntax",  doesn't work yet
               ];
 }
 
