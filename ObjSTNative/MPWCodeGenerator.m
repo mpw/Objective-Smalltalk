@@ -20,6 +20,7 @@
 #import "MPWLiteralExpression.h"
 #import "MPWMethodDescriptor.h"
 #import "MPWClassDefinition.h"
+#import "MPWScriptedMethod.h"
 
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
@@ -35,6 +36,7 @@
 -(NSArray*)linesViaBlock:(NSString*)s;
 -(NSNumber*)answer;
 -(NSString*)answerString;
+-(NSNumber*)fifteen;
 
 @end
 
@@ -162,7 +164,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 -(NSString*)generateMethodWithHeader:(MPWMethodHeader*)header body:(MPWStatementList*)method forClass:(NSString*)classname
 {
     NSString *objcReturnType = [[header typeString] substringToIndex:1];
-    
+    NSLog(@"return type: '%@'",objcReturnType);
     NSString *llvmReturnType = [assemblyGenerator typeToLLVMType:[objcReturnType characterAtIndex:0]];
     
     
@@ -170,17 +172,21 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
     NSMutableArray *allMethodArguments=[NSMutableArray array];
     for ( int i=0;i<[header numArguments];i++) {
+        NSLog(@"will get typchar for arg[%d]",i);
         char typeChar =[[header typeStringForTypeName:[header argumentNameAtIndex:i]] characterAtIndex:0];
-        
+        NSLog(@"typeChar for arg[%d] = %c",i,typeChar);
         [allMethodArguments addObject:[NSString stringWithFormat:@"%@ %@",[assemblyGenerator typeToLLVMType:typeChar],[@"%" stringByAppendingString:[header argumentNameAtIndex:i]]]];
+        NSLog(@"all args now: %@",allMethodArguments);
     }
 
     stringGenerator=assemblyGenerator;
     assemblyGenerator=nil;
+    NSLog(@"will generatOn:");
     [method generateOn:self];
+    NSLog(@"did generatOn:");
     assemblyGenerator=stringGenerator;
     stringGenerator=nil;
-    
+    NSLog(@"will write assembly");
     NSString *methodSymbol1 = [assemblyGenerator writeMethodNamed:[header methodName]
                                           className:classname
                                          methodType:llvmReturnType
@@ -190,20 +196,30 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
                                              
                                              [assemblyGenerator emitReturnVal:retval type:@"%id"];
                                          }];
+    NSLog(@"did write assembly");
     return methodSymbol1;
 }
 
--(MPWMethodDescriptor*)compileMethodForClass:(NSString*)className withHeader:(NSString*)methodHeaderString body:(NSString*)methodBodyString
+-(MPWMethodDescriptor*)compileMethodForClass:(NSString*)className withHeader:(MPWMethodHeader*)header body:methodBody
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:methodHeaderString];
-    NSString *methodSymbol1 = [self generateMethodWithHeader:header body:[compiler compile:methodBodyString] forClass:className];
+    NSLog(@"will generate");
+    NSString *methodSymbol1 = [self generateMethodWithHeader:header body:methodBody forClass:className];
+    NSLog(@"did generate, fill out descriptor");
     MPWMethodDescriptor *descriptor=[[MPWMethodDescriptor new] autorelease];
     [descriptor setName:[header methodName]];
     [descriptor setObjcType:[header typeString]];
     [descriptor setSymbol:methodSymbol1];
     return descriptor;
+    
+}
 
+-(MPWMethodDescriptor*)compileMethodForClass:(NSString*)className withHeaderString:(NSString*)methodHeaderString bodyText:(NSString*)methodBodyString
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:methodHeaderString];
+    id body=[compiler compile:methodBodyString];
+    return [self compileMethodForClass:className withHeader:header body:body];
+    
 }
 
 -(NSString*)generateMethodList:(NSArray*)methodDescriptors forClassName:(NSString*)classname
@@ -225,10 +241,22 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 {
     NSString *classname=[classDef name];
     NSString *methodListRef=nil;
-    if ( [[classDef methods] count]>0) {
-        methodListRef=[self generateMethodList:[classDef methods] forClassName:classname];
+    NSMutableArray *methodRefs=[NSMutableArray array];
+    for ( MPWScriptedMethod *method in [classDef methods] ) {
+        NSLog(@"will generate: %@ body: %p/%@",[[method header] methodName],[method methodBody],[method methodBody]);
+        MPWMethodDescriptor *ref=[self compileMethodForClass:classname withHeader:[method header] body:[method methodBody]];
+        NSLog(@"did generate: %@",[[method header] methodName]);
+        if (ref) {
+            [methodRefs addObject:ref];
+        } else {
+            [NSException raise:@"compilefailure" format:@"method ref nil"];
+        }
     }
-    [assemblyGenerator writeClassWithName:classname superclassName:[classDef superclassName] instanceMethodListRef:methodListRef  numInstanceMethods:(int)[[classDef methods] count]];
+    
+    if ( [methodRefs count]>0) {
+        methodListRef=[self generateMethodList:methodRefs forClassName:classname];
+    }
+    [assemblyGenerator writeClassWithName:classname superclassName:[classDef superclassName] instanceMethodListRef:methodListRef  numInstanceMethods:(int)[methodRefs count]];
 }
 
 
@@ -245,7 +273,11 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 -(NSString*)generateOn:(MPWCodeGenerator*)generator
 {
-    return [generator generateMessageSend:self];
+    NSLog(@"will generate message expression: %@",self);
+    id retval = [generator generateMessageSend:self];
+    NSLog(@"did generate message expression: %@",self);
+
+    return retval;
 }
 
 @end
@@ -255,8 +287,11 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 -(NSString*)generateOn:(MPWCodeGenerator*)generator
 {
     NSString *result=nil;
+    NSLog(@"write statement list with %ld entries",(long)[[self statements] count]);
     for ( MPWExpression *expression in [self statements]) {
+        NSLog(@"will generate: %@",expression);
         result = [expression generateOn:generator];
+        NSLog(@"did generate: %@",expression);
     }
     return result;
 }
@@ -386,7 +421,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 ];
     NSData *source=[self resultOfFlushing:gen];
 
-    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
+//    [source writeToFile:@"/tmp/onemethodclass.s" atomically:YES];
     EXPECTNIL(NSClassFromString(classname), @"test class should not exist before load");
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     Class loadedClass =NSClassFromString(classname);
@@ -571,7 +606,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
     
-    EXPECTTRUE([instance respondsToSelector:@selector(three)], @"responds tp selector three before loading class");
+    EXPECTTRUE([instance respondsToSelector:@selector(three)], @"responds tp selector three after loading class");
     
     NSNumber *three=[instance three];
     IDEXPECT(three, @(3), @"number from int");
@@ -687,8 +722,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
     
     MPWMethodDescriptor *methodDescriptor1 = [codegen compileMethodForClass:classname
-                                                                 withHeader:@"components:source splitInto:separator"
-                                                                       body:@"source componentsSeparatedByString:separator."];
+                                                                 withHeaderString:@"components:source splitInto:separator"
+                                                                       bodyText:@"source componentsSeparatedByString:separator."];
     
     [codegen writeClassWithName:classname
                  superclassName:@"NSObject"
@@ -715,11 +750,11 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
     
     MPWMethodDescriptor *methodDescriptor1 = [codegen compileMethodForClass:classname
-                                                                 withHeader:@"answer"
-                                                                       body:@"42."];
+                                                                 withHeaderString:@"answer"
+                                                                       bodyText:@"42."];
     MPWMethodDescriptor *methodDescriptor2 = [codegen compileMethodForClass:classname
-                                                                 withHeader:@"answerString"
-                                                                       body:@"'The answer'."];
+                                                                 withHeaderString:@"answerString"
+                                                                       bodyText:@"'The answer'."];
     
     [codegen writeClassWithName:classname
                  superclassName:@"NSObject"
@@ -757,12 +792,12 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     IDEXPECT([a className],classname,@"should be instance of class I crated");
 }
 
-+(void)testeCreateClassWithMethodssUsingClassSyntax
++(void)testCreateClassWithMethodReturningConstantUsingClassSyntax
 {
     MPWCodeGenerator *codegen=[self codegen];
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     NSString *classname=[self anotherTestClassName];
-    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { -add5:arg { arg+5.  } ", classname];
+    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { -fifteen { 15. } } ", classname];
     MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
     EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
     [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
@@ -772,8 +807,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     id a=[[NSClassFromString(classname) new] autorelease];
-    id result=[a add5:@(10)];
-    IDEXPECT(result,@(15),@"add 5 to 10");
+    id result=[a fifteen];
+    IDEXPECT(result,@(15),@"constant 15");
 }
 
 +testSelectors
@@ -793,7 +828,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testDefineClassWithOneSimpleSmalltalkMethod",
              @"testSmalltalkLiterals",
              @"testCreateEmptyClassUsingClassSyntax",
-//             @"testCreateClassWithMethodssUsingClassSyntax",  doesn't work yet
+             @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
               ];
 }
 
