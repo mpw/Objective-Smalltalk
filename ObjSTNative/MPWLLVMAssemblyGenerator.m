@@ -330,8 +330,12 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     int returnIndex=-1;
     NSString *returnCode=@"";
     if ( ![retType isEqualToString:@"void"] ) {
+        NSLog(@"non-void return");
         returnIndex=++numLocals;
+        NSLog(@"returnIndex=%d",returnIndex);
         returnCode=[NSString stringWithFormat:@"%%%d = ",returnIndex];
+    } else {
+        NSLog(@"void return");
     }
     
     [self printLine:@"%%%d = load i8*, i8** @\"%@\", !invariant.load !4",selectorIndex,selectorRef];
@@ -344,19 +348,23 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         [self printFormat:@", %@ %@ ",argTypes[i],args[i]];
     }
     [self printLine:@" )"];
+    NSLog(@"returnIndex: %d",returnIndex);
     return returnIndex >= 0 ? [NSString stringWithFormat:@"%%%d",returnIndex] : nil;
 }
 
 
 -(NSString*)writeNSNumberLiteralForInt:(NSString*)theIntSymbolOrLiteral
 {
+    NSLog(@"writeNSNumberLiteralForInt: %@",theIntSymbolOrLiteral);
     numLocals++;
     int loadedClass=numLocals;
     numLocals++;
     int bitcastClass=numLocals;
     [self printLine:@"%%%d = load %%struct._class_t*,%%struct._class_t** @\"%@\", align 8",loadedClass,[self nsnumberclassref ]];
     [self printLine:@"%%%d = bitcast %%struct._class_t* %%%d to %%id",bitcastClass,loadedClass];
+    NSLog(@"will emit message for number literal");
     NSString *retval=[self emitMsg:@"numberWithInt:" receiver:[NSString stringWithFormat:@"%%%d",bitcastClass] returnType:@"%id" args:@[ theIntSymbolOrLiteral ] argTypes:@[ @"i32"]];
+    NSLog(@"did emit message for number literal, retval: %@",retval);
     return retval;
 }
 

@@ -37,6 +37,7 @@
 -(NSNumber*)answer;
 -(NSString*)answerString;
 -(NSNumber*)fifteen;
+-(NSNumber*)add5:arg;
 
 @end
 
@@ -125,10 +126,14 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     NSMutableArray *messageArgumentNames = [NSMutableArray array];
     NSMutableArray *messageArgumentTypes = [NSMutableArray array];
     for ( int i=0;i<[[messageSend args] count];i++) {
-        [messageArgumentNames addObject:[[[messageSend args] objectAtIndex:i] generateOn:self]];
+        NSLog(@"will add argument[%d]: %@",i,[[messageSend args] objectAtIndex:i]);
+        id arg=[[messageSend args] objectAtIndex:i];
+        id generatedTag=[arg generateOn:self];
+        NSLog(@"will add argument[%d]: %@ generated: %@",i,arg,generatedTag);
+        [messageArgumentNames addObject:generatedTag ?: @"dummy"];
         [messageArgumentTypes addObject:@"%id"];
     }
-    
+    NSLog(@"Did generate args, will generate the message send");
     NSString *retval =[assemblyGenerator emitMsg:[messageSend messageName]
                       receiver:[[messageSend receiver] generateOn:self]
                     returnType:@"%id"
@@ -146,7 +151,9 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 -(NSString*)generateLiteral:(MPWLiteralExpression*)literal
 {
     id value=[literal theLiteral];
+    NSLog(@"generate literal: %@: %@ of class %@",literal,value,[value class]);
     if ( [value isKindOfClass:[NSString class]] ) {
+        NSLog(@"string literal");
         NSString *symbol= [stringGenerator writeNSConstantString:value];
         if ( symbol ) {
             [stringMap setObject:symbol forKey:value];
@@ -154,7 +161,9 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
         return [assemblyGenerator stringRef:[stringMap objectForKey:value]];
         
     } else if ( [value isKindOfClass:[NSNumber class]]) {
-        return [assemblyGenerator writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",[value intValue]]];
+        NSLog(@"number literal, generate on assemblyGenerator: %@",[self assemblyGenerator]);
+        
+        return [[self assemblyGenerator] writeNSNumberLiteralForInt:[NSString stringWithFormat:@"%d",[value intValue]]];
     } else {
         @throw [NSException exceptionWithName:@"unsuppertedLiteral" reason:[NSString stringWithFormat:@"Unsupported Literal of class: %@",[value class]] userInfo:nil];
         return nil;
@@ -811,6 +820,26 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     IDEXPECT(result,@(15),@"constant 15");
 }
 
++(void)testCreateClassWithMethoWithAMessageSendUsingClassSyntax
+{
+    MPWCodeGenerator *codegen=[self codegen];
+    NSLog(@"assembly generator: %@",[codegen assemblyGenerator]);
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    NSString *classname=[self anotherTestClassName];
+    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { -add5:arg { arg+5. } } ", classname];
+    MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
+    EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
+    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
+    [classDef generateOn:codegen];
+    [codegen flush];
+    NSData *source=[[codegen assemblyGenerator] target];
+    //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
+    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
+    id a=[[NSClassFromString(classname) new] autorelease];
+    id result=[a add5:@(7)];
+    IDEXPECT(result,@(12),@"computed 12");
+}
+
 +testSelectors
 {
     return @[
@@ -829,6 +858,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testSmalltalkLiterals",
              @"testCreateEmptyClassUsingClassSyntax",
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
+             @"testCreateClassWithMethoWithAMessageSendUsingClassSyntax",
               ];
 }
 
