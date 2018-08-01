@@ -31,16 +31,21 @@
     }
 }
 
+-(NSString*)defaultSuperclassName
+{
+    return @"NSObject";
+}
+
+-(NSString*)superclassNameToUse
+{
+    return self.superclassName ?: [self defaultSuperclassName];
+}
+
 -(id)evaluateIn:(id)aContext
 {
     Class theClassToDefine=NSClassFromString(self.name);
     if (!theClassToDefine) {
-        Class superclass;
-        if (self.superclassName) {
-            superclass=NSClassFromString(self.superclassName);
-        } else {
-            superclass=[NSObject class];  // FIXME should probably be pluggable
-        }
+        Class superclass=NSClassFromString([self superclassNameToUse]);
         if ( superclass ) {
             [superclass createSubclassWithName:self.name instanceVariableArray:[self ivarNames]];
             theClassToDefine=NSClassFromString(self.name);

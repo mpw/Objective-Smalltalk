@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *superclassName;
+@property (nonatomic, readonly) NSString *superclassNameToUse;
 
 @property (nonatomic, strong) NSArray  *instanceVariableDescriptions;
 @property (nonatomic, strong) NSArray  *methods;

@@ -265,7 +265,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     if ( [methodRefs count]>0) {
         methodListRef=[self generateMethodList:methodRefs forClassName:classname];
     }
-    [assemblyGenerator writeClassWithName:classname superclassName:[classDef superclassName] instanceMethodListRef:methodListRef  numInstanceMethods:(int)[methodRefs count]];
+    [assemblyGenerator writeClassWithName:classname superclassName:[classDef superclassNameToUse] instanceMethodListRef:methodListRef  numInstanceMethods:(int)[methodRefs count]];
 }
 
 
@@ -805,19 +805,19 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 +(void)testCreateEmptyClassUsingClassSyntax
 {
-    [self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : NSObject { } "];
+    [self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { } "];
 }
 
 +(void)testCreateClassWithMethodReturningConstantUsingClassSyntax
 {
-    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : NSObject { -fifteen { 15. } } "];
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -fifteen { 15. } } "];
     id result=[a fifteen];
     IDEXPECT(result,@(15),@"constant 15");
 }
 
 +(void)testCreateClassWithMethoWithAMessageSendUsingClassSyntax
 {
-    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : NSObject { -add5:arg { arg+5. } } "];
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -add5:arg { arg+5. } } "];
     id result=[a add5:@(7)];
     IDEXPECT(result,@(12),@"computed 12");
 }
