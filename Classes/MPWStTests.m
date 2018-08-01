@@ -1089,9 +1089,9 @@
 +(void)testSimpleFilterDefSyntax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"filter MyFilter |{  self target writeObject:$0 uppercaseString. }"];
-//    id result=[compiler evaluateScriptString:@" MyFilter processOject:'lowercase world'."];
-//    IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
+    [compiler evaluateScriptString:@"filter MyFilter |{  self target writeObject:object uppercaseString. }"];
+    id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
+    IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
 }
 
 +(NSArray*)testSelectors

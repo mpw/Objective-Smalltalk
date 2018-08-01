@@ -251,6 +251,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     NSString *classname=[classDef name];
     NSString *methodListRef=nil;
     NSMutableArray *methodRefs=[NSMutableArray array];
+    NSLog(@"generate class: %@ superclass: %@ with %d method",classDef.className,classDef.superclassNameToUse,(int)[[classDef methods] count]);
     for ( MPWScriptedMethod *method in [classDef methods] ) {
         NSLog(@"will generate: %@ body: %p/%@",[[method header] methodName],[method methodBody],[method methodBody]);
         MPWMethodDescriptor *ref=[self compileMethodForClass:classname withHeader:[method header] body:[method methodBody]];
@@ -794,7 +795,9 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [classDef generateOn:codegen];
     [codegen flush];
     NSData *source=[[codegen assemblyGenerator] target];
-    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
+    NSString *filename=[NSString stringWithFormat:@"/tmp/%@.s",classname];
+    NSLog(@"classDefString: %@",classDefString);
+    [source writeToFile:filename atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     id a=[[NSClassFromString(classname) new] autorelease];
     EXPECTNOTNIL(a, @"should be able to instantiate new class");
@@ -831,7 +834,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 +(void)testCreateFilterClassWithFilterSyntax
 {
-    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@ : MPWStream |{  self target writeObject:object  uppercaseString. } "];
+    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@  |{  self target writeObject:object uppercaseString. } "];
     [a writeObject:@"hello world"];
     IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
 }
@@ -856,7 +859,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
              @"testCreateClassWithMethoWithAMessageSendUsingClassSyntax",
              @"testCreateFilterClass",
-//             @"testCreateFilterClassWithFilterSyntax",  // not working yet
+             @"testCreateFilterClassWithFilterSyntax",  // not working yet
               ];
 }
 

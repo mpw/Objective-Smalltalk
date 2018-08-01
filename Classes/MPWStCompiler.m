@@ -917,7 +917,7 @@ idAccessor(solver, setSolver)
     } else if ( [next isEqual:@"filter"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
-        return [self parseFilterDefinition];
+        return [self parseClassDefinition];
     } else {
         [self pushBack:next];
     }
@@ -1036,10 +1036,17 @@ idAccessor(solver, setSolver)
 }
 
 
--(MPWClassDefinition*)parseClassDefinition:(MPWClassDefinition*)classDef
+-(MPWClassDefinition*)parseClassDefinition
 {
     NSString *s=[self nextToken];
-    if ( [s isEqualToString:@"class"] || [s isEqualToString:@"filter"]) {
+    Class defClass=nil;
+    if ( [s isEqualToString:@"class"]) {
+        defClass=[MPWClassDefinition class];
+    } else  if ( [s isEqualToString:@"filter"]) {
+        defClass=[MPWFilterDefinition class];
+    }
+    MPWClassDefinition *classDef=[[defClass new] autorelease];
+    if ( classDef ) {
         NSString *name=[self nextToken];
         classDef.name = name;
         NSString *separator=[self nextToken];
@@ -1078,29 +1085,19 @@ idAccessor(solver, setSolver)
             classDef.methods=methods;
             classDef.instanceVariableDescriptions=instanceVariables;
         } else if ( [separator isEqualToString:@"|{"]) {
-            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"-writeObject:object"];
+            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"writeObject:object"];
+            [self pushBack:@"{"];
             MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
             [methods addObject:filterMethod];
+            classDef.methods=methods;
+            NSLog(@"methods: %@",methods);
+
         } else {
             PARSEERROR(@"expected { in class definition", separator);
         }
     }
     
     return classDef;
-}
-
--(MPWClassDefinition*)parseClassDefinition
-{
-    MPWClassDefinition *classDef=[[MPWClassDefinition new] autorelease];
-    return [self parseClassDefinition:classDef];
-
-}
-
-
--(MPWFilterDefinition*)parseFilterDefinition
-{
-    MPWFilterDefinition *classDef=[[MPWFilterDefinition new] autorelease];
-    return (MPWFilterDefinition*)[self parseClassDefinition:classDef];
 }
 
 
