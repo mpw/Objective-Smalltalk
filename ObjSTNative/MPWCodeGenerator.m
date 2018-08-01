@@ -100,7 +100,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 -(void)linkOFileName:(NSString*)ofile_name toDylibName:(NSString*)dylib
 {
-    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.9 -dylib -o %@ %@ -framework Foundation -lSystem",dylib,ofile_name];
+    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.9 -dylib -o %@ %@ -framework MPWFoundation -framework Foundation -lSystem",dylib,ofile_name];
     system([o_to_dylib fileSystemRepresentation]);
 }
 
@@ -782,62 +782,51 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     
 }
 
-+(void)testCreateEmptyClassUsingClassSyntax
++instanceOfGeneratedClassDefinedByParametrizedSourceString:(NSString*)sourceCodeTemplates
 {
     MPWCodeGenerator *codegen=[self codegen];
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     NSString *classname=[self anotherTestClassName];
-    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { } ", classname];
+    NSString *classDefString=[NSString stringWithFormat:sourceCodeTemplates, classname];
     MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
     EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
     [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
     [classDef generateOn:codegen];
     [codegen flush];
     NSData *source=[[codegen assemblyGenerator] target];
-    //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
+    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     id a=[[NSClassFromString(classname) new] autorelease];
     EXPECTNOTNIL(a, @"should be able to instantiate new class");
-    IDEXPECT([a className],classname,@"should be instance of class I crated");
+    IDEXPECT([a className],classname,@"should be instance of class I created");
+    return a;
+}
+
+
++(void)testCreateEmptyClassUsingClassSyntax
+{
+    [self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : NSObject { } "];
 }
 
 +(void)testCreateClassWithMethodReturningConstantUsingClassSyntax
 {
-    MPWCodeGenerator *codegen=[self codegen];
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
-    NSString *classname=[self anotherTestClassName];
-    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { -fifteen { 15. } } ", classname];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
-    EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
-    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
-    [classDef generateOn:codegen];
-    [codegen flush];
-    NSData *source=[[codegen assemblyGenerator] target];
-    //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
-    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
-    id a=[[NSClassFromString(classname) new] autorelease];
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : NSObject { -fifteen { 15. } } "];
     id result=[a fifteen];
     IDEXPECT(result,@(15),@"constant 15");
 }
 
 +(void)testCreateClassWithMethoWithAMessageSendUsingClassSyntax
 {
-    MPWCodeGenerator *codegen=[self codegen];
-    NSLog(@"assembly generator: %@",[codegen assemblyGenerator]);
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
-    NSString *classname=[self anotherTestClassName];
-    NSString *classDefString=[NSString stringWithFormat:@"class %@ : NSObject { -add5:arg { arg+5. } } ", classname];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
-    EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
-    [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
-    [classDef generateOn:codegen];
-    [codegen flush];
-    NSData *source=[[codegen assemblyGenerator] target];
-    //    [source writeToFile:@"/tmp/smalltalkclassdef.s" atomically:YES];
-    EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
-    id a=[[NSClassFromString(classname) new] autorelease];
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : NSObject { -add5:arg { arg+5. } } "];
     id result=[a add5:@(7)];
     IDEXPECT(result,@(12),@"computed 12");
+}
+
++(void)testCreateFilterClass
+{
+    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWStream { -writeObject:arg { self target writeObject:arg uppercaseString. } } "];
+    [a writeObject:@"hello world"];
+    IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
 }
 
 +testSelectors
@@ -859,6 +848,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testCreateEmptyClassUsingClassSyntax",
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
              @"testCreateClassWithMethoWithAMessageSendUsingClassSyntax",
+             @"testCreateFilterClass",
               ];
 }
 
