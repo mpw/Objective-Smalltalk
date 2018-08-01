@@ -788,7 +788,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     NSString *classname=[self anotherTestClassName];
     NSString *classDefString=[NSString stringWithFormat:sourceCodeTemplates, classname];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:classDefString];
+    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:classDefString];
     EXPECTNIL(NSClassFromString(classname), @"shouldn't exist");
     [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
     [classDef generateOn:codegen];
@@ -829,6 +829,13 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
 }
 
++(void)testCreateFilterClassWithFilterSyntax
+{
+    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@ : MPWStream |{  self target writeObject:object  uppercaseString. } "];
+    [a writeObject:@"hello world"];
+    IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
+}
+
 +testSelectors
 {
     return @[
@@ -849,6 +856,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
              @"testCreateClassWithMethoWithAMessageSendUsingClassSyntax",
              @"testCreateFilterClass",
+//             @"testCreateFilterClassWithFilterSyntax",  // not working yet
               ];
 }
 

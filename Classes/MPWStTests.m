@@ -607,7 +607,7 @@
 +(void)testParseSubclassWithInstanceVariablesUsingSyntax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
     
     MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
@@ -1022,7 +1022,7 @@
 +(void)testClassDefSyntax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
+    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
     EXPECTNOTNIL(classDef,@"should have a class definition object");
     
     IDEXPECT(classDef.name,@"ObjStTestsMyNumberSubclass",@"name of class" );
@@ -1040,7 +1040,7 @@
 +(void)testCreateSubclassUsingSnytax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinition:@"class ObjStTestsMyNumberSubclass : MPWInteger { -multiplyByNumber:num { self * num. }}"];
+    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : MPWInteger { -multiplyByNumber:num { self * num. }}"];
 
     Class aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
     Class superClass = NSClassFromString( classDef.superclassName);
@@ -1084,6 +1084,14 @@
     [compiler evaluateScriptString:@"b := #{ 'key2' : 42 }."];
     id result=[compiler evaluateScriptString:@"var:b/{var:a/key1}"];
     IDEXPECT( result, @42, @"nested expr result");
+}
+
++(void)testSimpleFilterDefSyntax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"filter MyFilter |{  self target writeObject:$0 uppercaseString. }"];
+//    id result=[compiler evaluateScriptString:@" MyFilter processOject:'lowercase world'."];
+//    IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
 }
 
 +(NSArray*)testSelectors
@@ -1199,6 +1207,7 @@
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
         @"testNestedVarExprWithPath",
+        @"testSimpleFilterDefSyntax",
         ];
 }
 

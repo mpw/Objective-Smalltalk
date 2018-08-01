@@ -31,6 +31,7 @@
 #import "MPWMethodHeader.h"
 #import "MPWClassDefinition.h"
 #import "MPWInstanceVariable.h"
+#import "MPWFilterDefinition.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -529,7 +530,7 @@ idAccessor(solver, setSolver)
 	id statements;
 	id closeBrace;
 	id blockVariables;
-    NSString *endOfBlock=[startOfBlock isEqualToString:@"{"] ? @"}" : @"]";
+    NSString *endOfBlock=[startOfBlock isEqualToString:@"["] ? @"]" : @"}";
 //	NSLog(@"parseBlock");
 	blockVariables = [self parseBlockVariables];
 //	NSLog(@"block variables: %@",blockVariables);
@@ -910,9 +911,13 @@ idAccessor(solver, setSolver)
         }
 
     } else if ( [next isEqual:@"class"]) {
-//        NSLog(@"found a class definition");
+        //        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"filter"]) {
+        //        NSLog(@"found a class definition");
+        [self pushBack:next];
+        return [self parseFilterDefinition];
     } else {
         [self pushBack:next];
     }
@@ -977,27 +982,34 @@ idAccessor(solver, setSolver)
     return [self parseMethodDefinition];
 }
 
+-(MPWScriptedMethod*)parseMethodBodyWithHeader:(MPWMethodHeader*)header
+{
+    MPWScriptedMethod *method=[[MPWScriptedMethod new] autorelease];
+    [method setMethodHeader:header];
+    NSString *bodyStart=[self nextToken];
+    MPWBlockExpression *body=[[self parseBlockWithStart:bodyStart] statements];
+    [method setMethodBody:body];
+    return method;
+}
+
 -(MPWScriptedMethod*)parseMethodDefinition
 {
     MPWScriptedMethod *method=nil;
     NSString *s=[self nextToken];
     if ( [s isEqualToString:@"-"]) {
         MPWMethodHeader *header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
-        method=[[MPWScriptedMethod new] autorelease];
-        [method setMethodHeader:header];
-        NSString *bodyStart=[self nextToken];
-        MPWBlockExpression *body=[[self parseBlockWithStart:bodyStart] statements];
-        [method setMethodBody:body];
-    }
+        method=[self parseMethodBodyWithHeader:header];
+     }
     
     return method;
 }
 
--(MPWClassDefinition*)parseClassDefinition:aString
+-(MPWClassDefinition*)parseClassDefinitionFromString:aString
 {
     [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
     return [self parseClassDefinition];
 }
+
 
 -(MPWInstanceVariable *)parseInstanceVariableDefinition
 {
@@ -1024,12 +1036,10 @@ idAccessor(solver, setSolver)
 }
 
 
--(MPWClassDefinition*)parseClassDefinition
+-(MPWClassDefinition*)parseClassDefinition:(MPWClassDefinition*)classDef
 {
-    MPWClassDefinition *classDef=nil;
     NSString *s=[self nextToken];
-    if ( [s isEqualToString:@"class"]) {
-        classDef=[[MPWClassDefinition new] autorelease];
+    if ( [s isEqualToString:@"class"] || [s isEqualToString:@"filter"]) {
         NSString *name=[self nextToken];
         classDef.name = name;
         NSString *separator=[self nextToken];
@@ -1067,6 +1077,10 @@ idAccessor(solver, setSolver)
             }
             classDef.methods=methods;
             classDef.instanceVariableDescriptions=instanceVariables;
+        } else if ( [separator isEqualToString:@"|{"]) {
+            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"-writeObject:object"];
+            MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
+            [methods addObject:filterMethod];
         } else {
             PARSEERROR(@"expected { in class definition", separator);
         }
@@ -1075,6 +1089,19 @@ idAccessor(solver, setSolver)
     return classDef;
 }
 
+-(MPWClassDefinition*)parseClassDefinition
+{
+    MPWClassDefinition *classDef=[[MPWClassDefinition new] autorelease];
+    return [self parseClassDefinition:classDef];
+
+}
+
+
+-(MPWFilterDefinition*)parseFilterDefinition
+{
+    MPWFilterDefinition *classDef=[[MPWFilterDefinition new] autorelease];
+    return (MPWFilterDefinition*)[self parseClassDefinition:classDef];
+}
 
 
 -(id)compileAndEvaluate:(NSString*)aString

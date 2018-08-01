@@ -18,7 +18,7 @@
 +evaluate:aString;
 -evaluateScriptString:aString;
 -(MPWScriptedMethod*)parseMethodDefinition:aString;
--(MPWClassDefinition*)parseClassDefinition:aString;
+-(MPWClassDefinition*)parseClassDefinitionFromString:aString;
 
 -compile:aString;
 -(id)compileAndEvaluate:(NSString*)aString;
