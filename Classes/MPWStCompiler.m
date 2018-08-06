@@ -1047,7 +1047,14 @@ idAccessor(solver, setSolver)
     [identifierComponents addObject:name];
     while ( (separator=[self nextToken])  &&  [separator isEqualToString:@"/"]) {
         id nextName=[self nextToken];
-        [identifierComponents addObject:nextName];
+        NSLog(@"nextName: %@",nextName);
+       if  ([nextName isEqualToString:@":"]  ) {
+            NSLog(@"arg");
+            nextName=[self nextToken];
+            nextName=[@":" stringByAppendingString:nextName];
+        }
+        NSLog(@"procssed nextName: %@",nextName);
+       [identifierComponents addObject:nextName];
     }
     [self pushBack:separator];
     name = [identifierComponents componentsJoinedByString:@"/"];

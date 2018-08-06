@@ -1127,6 +1127,15 @@
     IDEXPECT( [[[[def propertyPathDefinitions] lastObject] name] identifierName], @"property/path2", @"name of prop def");
 }
 
++(void)testParsePropertyPathWithArg
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg {  arg+4. }}"];
+    INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
+    IDEXPECT( [[[[def propertyPathDefinitions] firstObject] name] identifierName], @"property/:arg", @"name of prop def");
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1245,6 +1254,7 @@
         @"testParseSimpleProperty",
         @"testParsePropertyPathWithTwoComponents",
         @"testParseTwoPropertyPaths",
+        @"testParsePropertyPathWithArg",
         ];
 }
 
