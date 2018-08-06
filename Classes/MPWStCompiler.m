@@ -33,7 +33,7 @@
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
 #import "MPWPropertyPathDefinition.h"
-
+#import "MPWPropertyPath.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -1040,6 +1040,7 @@ idAccessor(solver, setSolver)
 -(MPWPropertyPathDefinition *)parsePropertyPathDefinition
 {
     MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
+    MPWPropertyPath *path=[[MPWPropertyPath new] autorelease];
     NSMutableArray *identifierComponents=[NSMutableArray array];
     
     NSString* name=[self nextToken];
@@ -1057,9 +1058,8 @@ idAccessor(solver, setSolver)
        [identifierComponents addObject:nextName];
     }
     [self pushBack:separator];
-    name = [identifierComponents componentsJoinedByString:@"/"];
-    MPWIdentifier *identifier=[MPWIdentifier identifierWithName:name];
-    propertyDef.name=identifier;
+    path.pathComponents=identifierComponents;
+    propertyDef.propertyPath=path;
 
     NSString *nextToken  = [self nextToken];
     NSLog(@"nextToken after parse of property header: %@",nextToken);
@@ -1123,7 +1123,7 @@ idAccessor(solver, setSolver)
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
                     [self pushBack:next];
-                    NSLog(@"nextToken after property parse of %@: %@",[[prop name] identifierName],next);
+                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
                 } else {
                     PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
                 }

@@ -7,11 +7,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class MPWIdentifier;
+@class MPWPropertyPath;
 
 @interface MPWPropertyPathDefinition : NSObject
 
-@property (nonatomic, strong)  MPWIdentifier* name;
+@property (nonatomic, strong)  MPWPropertyPath* propertyPath;
 @property (nonatomic, strong)  id body;
 
 @end

@@ -11,7 +11,7 @@
 
 -(void)dealloc
 {
-    [_name release];
+    [_propertyPath release];
     [_body release];
     [super dealloc];
 }
