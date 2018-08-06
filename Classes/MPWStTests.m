@@ -1089,9 +1089,24 @@
 +(void)testSimpleFilterDefSyntax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"filter MyFilter |{  self target writeObject:object uppercaseString. }"];
+    [compiler evaluateScriptString:@"filter MyFilter |{  self forward:object uppercaseString. }"];
     id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
     IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
+}
+
++(void)testFilterDefWithNormalMethods
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"filter LowerFilter { -writeObject:object {  self forward:object lowercaseString. }}"];
+    id result=[[compiler evaluateScriptString:@" LowerFilter process:'SHOULD BE LOWER'."] firstObject];
+    IDEXPECT( result, @"should be lower", @"nested expr result");
+}
+
++(void)testParseSimpleProperty
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler compile:@"class PropertyTestClass { /property {  3 }}"];
+    
 }
 
 +(NSArray*)testSelectors
@@ -1208,6 +1223,8 @@
         @"testClassDefWithExistingClassIsClassExtension",
         @"testNestedVarExprWithPath",
         @"testSimpleFilterDefSyntax",
+        @"testFilterDefWithNormalMethods",
+        @"testParseSimpleProperty",
         ];
 }
 

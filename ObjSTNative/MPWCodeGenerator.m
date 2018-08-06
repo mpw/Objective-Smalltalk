@@ -827,16 +827,16 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 +(void)testCreateFilterClass
 {
-    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWStream { -writeObject:arg { self target writeObject:arg uppercaseString. } } "];
+    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWStream { -writeObject:arg { self forward:arg uppercaseString. } } "];
     [a writeObject:@"hello world"];
     IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
 }
 
 +(void)testCreateFilterClassWithFilterSyntax
 {
-    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@  |{  self target writeObject:object uppercaseString. } "];
-    [a writeObject:@"hello world"];
-    IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
+    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@  |{  self forward:object uppercaseString. } "];
+    [a writeObject:@"hello cruel world"];
+    IDEXPECT([[a target] firstObject],@"HELLO CRUEL WORLD",@"stream processing result");
 }
 
 +testSelectors

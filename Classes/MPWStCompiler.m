@@ -32,6 +32,8 @@
 #import "MPWClassDefinition.h"
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
+#import "MPWPropertyPathDefinition.h"
+
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -1035,6 +1037,27 @@ idAccessor(solver, setSolver)
     }
 }
 
+-(MPWPropertyPathDefinition *)parsePropertyPathDefinition
+{
+    NSString* identifier=[self nextToken];
+    MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
+    propertyDef.name=identifier;
+    NSLog(@"identifier: %@",identifier);
+    NSString *nextToken  = [self nextToken];
+    NSLog(@"nextToken after parse of property header: %@",nextToken);
+    if ( [nextToken isEqualToString:@"{"]) {
+        NSLog(@"parse method body");
+        [self pushBack:nextToken];
+        propertyDef.body = [self parseMethodBodyWithHeader:[MPWMethodHeader methodHeaderWithString:@"property"]];
+        NSLog(@"body: %@",propertyDef.body);
+        NSLog(@"scanner after parsing property def: %@",[self scanner]);
+    } else {
+        PARSEERROR(@"expected method body for property def", nextToken);
+    }
+        
+    return propertyDef;
+}
+
 
 -(MPWClassDefinition*)parseClassDefinition
 {
@@ -1057,6 +1080,7 @@ idAccessor(solver, setSolver)
         }
         NSMutableArray *methods=[NSMutableArray array];
         NSMutableArray *instanceVariables=[NSMutableArray array];
+        NSMutableArray *propertyDefinitions=[NSMutableArray array];
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
             while (nil != (next=[self nextToken])) {
@@ -1075,6 +1099,11 @@ idAccessor(solver, setSolver)
                     PARSEERROR(@"const definitions not supported yet", next);
                 } else if ( [next isEqualToString:@"}"]) {
                     break;
+                } else if ( [next isEqualToString:@"/"]) {
+                    MPWPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
+                    [propertyDefinitions addObject:prop];
+                    next=[self nextToken];
+                    break;
                 } else {
                     PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
                 }
@@ -1084,6 +1113,7 @@ idAccessor(solver, setSolver)
             }
             classDef.methods=methods;
             classDef.instanceVariableDescriptions=instanceVariables;
+            classDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"writeObject:object"];
             [self pushBack:@"{"];

@@ -66,6 +66,7 @@
     [_superclassName release];
     [_instanceVariableDescriptions release];
     [_methods release];
+    [_propertyPathDefinitions release];
     [super dealloc];
 }
 
