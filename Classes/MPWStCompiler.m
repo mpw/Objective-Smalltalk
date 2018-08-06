@@ -1040,10 +1040,20 @@ idAccessor(solver, setSolver)
 -(MPWPropertyPathDefinition *)parsePropertyPathDefinition
 {
     MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
+    NSMutableArray *identifierComponents=[NSMutableArray array];
+    
     NSString* name=[self nextToken];
+    NSString *separator=nil;
+    [identifierComponents addObject:name];
+    while ( (separator=[self nextToken])  &&  [separator isEqualToString:@"/"]) {
+        id nextName=[self nextToken];
+        [identifierComponents addObject:nextName];
+    }
+    [self pushBack:separator];
+    name = [identifierComponents componentsJoinedByString:@"/"];
     MPWIdentifier *identifier=[MPWIdentifier identifierWithName:name];
     propertyDef.name=identifier;
-    NSLog(@"identifier: %@",identifier);
+
     NSString *nextToken  = [self nextToken];
     NSLog(@"nextToken after parse of property header: %@",nextToken);
     if ( [nextToken isEqualToString:@"{"]) {
@@ -1085,6 +1095,7 @@ idAccessor(solver, setSolver)
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
             while (nil != (next=[self nextToken])) {
+                NSLog(@"token: %@",next);
                 if ( [next isEqualToString:@"-"]) {
                     [self pushBack:next];
                     MPWScriptedMethod *method=[self parseMethodDefinition];
@@ -1104,7 +1115,8 @@ idAccessor(solver, setSolver)
                     MPWPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
-                    break;
+                    [self pushBack:next];
+                    NSLog(@"nextToken after property parse of %@: %@",[[prop name] identifierName],next);
                 } else {
                     PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
                 }
