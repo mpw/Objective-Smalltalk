@@ -1105,8 +1105,17 @@
 +(void)testParseSimpleProperty
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler compile:@"class PropertyTestClass { /property {  3 }}"];
-    
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property {  3. }}"];
+    INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
+    IDEXPECT( [[[[def propertyPathDefinitions] firstObject] name] identifierName], @"property", @"name of prop def");
+}
+
++(void)testParsePropertyPathWithTwoComponents
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path {  3. }}"];
+    INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
+    IDEXPECT( [[[def propertyPathDefinitions] firstObject] name], @"property/path", @"name of prop def");
 }
 
 +(NSArray*)testSelectors
@@ -1225,6 +1234,7 @@
         @"testSimpleFilterDefSyntax",
         @"testFilterDefWithNormalMethods",
         @"testParseSimpleProperty",
+//        @"testParsePropertyPathWithTwoComponents",
         ];
 }
 

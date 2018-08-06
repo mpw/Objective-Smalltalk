@@ -1039,8 +1039,9 @@ idAccessor(solver, setSolver)
 
 -(MPWPropertyPathDefinition *)parsePropertyPathDefinition
 {
-    NSString* identifier=[self nextToken];
     MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
+    NSString* name=[self nextToken];
+    MPWIdentifier *identifier=[MPWIdentifier identifierWithName:name];
     propertyDef.name=identifier;
     NSLog(@"identifier: %@",identifier);
     NSString *nextToken  = [self nextToken];
