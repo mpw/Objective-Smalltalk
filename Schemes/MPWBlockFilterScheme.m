@@ -30,15 +30,10 @@ idAccessor( valueFilter, setValueFilter)
 
 -filterReference:aReference
 {
-    if ( [self identifierFilter]){
-        NSString *variableName = [aReference path];
-        variableName =((FilterBlock)identifierFilter)(variableName);
-        aReference = [self referenceForPath:variableName];
-    }
-    return aReference;
+    return [self mapReference:aReference];
 }
 
--(MPWGenericReference*)mapReference:(MPWGenericReference*)aReference
+-(id <MPWReferencing>)mapReference:(id <MPWReferencing>)aReference
 {
     if ( [self identifierFilter]){
         NSString *variableName = [aReference path];
@@ -47,7 +42,8 @@ idAccessor( valueFilter, setValueFilter)
     }
     return aReference;
 }
--mapRetrievedObject:anObject
+
+-mapRetrievedObject:anObject forReference:(id<MPWReferencing>)aReference
 {
     if ( valueFilter){
         anObject=((FilterBlock)valueFilter)(anObject);

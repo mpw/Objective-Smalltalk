@@ -6,17 +6,14 @@
 //
 
 #import "MPWPropertyPath.h"
+#import <MPWFoundation/MPWFoundation.h>
+#import "MPWPropertyPathComponent.h"
 
 @implementation MPWPropertyPath
 
 -(NSString*)name
 {
-    return [self.pathComponents componentsJoinedByString:@"/"];
-}
-
--(NSString*)identifierName
-{
-    return [self name];
+    return [(NSArray*)[[self.pathComponents collect] pathName] componentsJoinedByString:@"/"];
 }
 
 -(void)dealloc

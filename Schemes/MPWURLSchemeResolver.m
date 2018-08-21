@@ -45,7 +45,7 @@
 -(id)referenceForPath:(NSString *)name
 {
     NSLog(@"referenceForPath: %@",name);
-    MPWGenericReference *reference=[super referenceForPath:name];
+    id <MPWReferencing> reference=[super referenceForPath:name];
     reference.schemeName=[self schemePrefix];
     return reference;
 }
@@ -124,8 +124,8 @@
 {
     IDEXPECT( [[self httpScheme] schemePrefix], @"http",@"insecure");
     IDEXPECT( [[self httpsScheme] schemePrefix], @"https",@"secure");
-    IDEXPECT( [[[[self httpsScheme] referenceForPath:@"//localhost"] URL] absoluteString], @"https://localhost",@"secure");
-    IDEXPECT( [[[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] referenceForPath:@"localhost"] URL] absoluteString], @"ftp:localhost" ,@"ftp");
+    IDEXPECT( [[(MPWGenericReference*)[[self httpsScheme] referenceForPath:@"//localhost"] URL] absoluteString], @"https://localhost",@"secure");
+    IDEXPECT( [[(MPWGenericReference*)[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] referenceForPath:@"localhost"] URL] absoluteString], @"ftp:localhost" ,@"ftp");
     
 }
 

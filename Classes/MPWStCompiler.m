@@ -34,6 +34,7 @@
 #import "MPWFilterDefinition.h"
 #import "MPWPropertyPathDefinition.h"
 #import "MPWPropertyPath.h"
+#import "MPWPropertyPathComponent.h"
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
@@ -1043,20 +1044,26 @@ idAccessor(solver, setSolver)
     MPWPropertyPath *path=[[MPWPropertyPath new] autorelease];
     NSMutableArray *identifierComponents=[NSMutableArray array];
     
-    NSString* name=[self nextToken];
     NSString *separator=nil;
-    [identifierComponents addObject:name];
-    while ( (separator=[self nextToken])  &&  [separator isEqualToString:@"/"]) {
+    do {
         id nextName=[self nextToken];
-        NSLog(@"nextName: %@",nextName);
-       if  ([nextName isEqualToString:@":"]  ) {
-            NSLog(@"arg");
+        MPWPropertyPathComponent* comp=[[MPWPropertyPathComponent new] autorelease];
+        if ( [nextName isEqualToString:@"*"] ) {
+            comp.isWildcard=YES;
             nextName=[self nextToken];
-            nextName=[@":" stringByAppendingString:nextName];
         }
-        NSLog(@"procssed nextName: %@",nextName);
-       [identifierComponents addObject:nextName];
-    }
+        if  ([nextName isEqualToString:@":"]  ) {
+            nextName=[self nextToken];
+            comp.parameter=nextName;
+        } else {
+            if ( !comp.isWildcard) {
+                comp.name=nextName;
+            } else {
+                [self pushBack:nextName];
+            }
+        }
+        [identifierComponents addObject:comp];
+    } while ( (separator=[self nextToken])  &&  [separator isEqualToString:@"/"]);
     [self pushBack:separator];
     path.pathComponents=identifierComponents;
     propertyDef.propertyPath=path;
