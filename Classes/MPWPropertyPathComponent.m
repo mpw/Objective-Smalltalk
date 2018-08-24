@@ -6,8 +6,16 @@
 //
 
 #import "MPWPropertyPathComponent.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 @implementation MPWPropertyPathComponent
+
+CONVENIENCEANDINIT( component, WithString:(NSString*)s)
+{
+    self=[super init];
+    self.name=s;
+    return self;
+}
 
 -(NSString*)pathName
 {
@@ -32,3 +40,24 @@
 }
 
 @end
+
+
+@implementation MPWPropertyPathComponent(testing)
+
++(void)testPathComponentFromNameSpec
+{
+    MPWPropertyPathComponent *comp=[self componentWithString:@"pathName"];
+    EXPECTFALSE( [comp isWildcard], @"wildcard");
+    IDEXPECT( [comp name], @"pathName",@"name");
+    EXPECTNIL( [comp parameter],@"parameter]");
+}
+
++testSelectors
+{
+    return @[
+             @"testPathComponentFromNameSpec",
+             ];
+}
+
+@end
+

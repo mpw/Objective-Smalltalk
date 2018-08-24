@@ -15,4 +15,9 @@
 
 @property (readonly) NSString *pathName;
 
+
++(instancetype)componentWithString:(NSString*)aString;
+-(instancetype)initWithString:(NSString*)aString;
+
+
 @end
