@@ -30,7 +30,6 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     return [self initWithReference:ref];
 }
 
-
 -(NSString*)name
 {
     return [(NSArray*)[[self.pathComponents collect] pathName] componentsJoinedByString:@"/"];
@@ -62,6 +61,17 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     }
     
     return result;
+}
+
+-(NSArray*)formalParameters
+{
+    NSMutableArray *parameters=[NSMutableArray array];
+    for ( MPWPropertyPathComponent *component in self.pathComponents) {
+        if ( component.parameter ) {
+            [parameters addObject:component.parameter];
+        }
+    }
+    return parameters;
 }
 
 -(NSDictionary*)bindingsForMatchedPath:(NSString*)path
@@ -128,7 +138,7 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     MPWPropertyPath *pp=[self propertyPathWithPathString:@"hello/:arg1/world/:arg2"];
     NSDictionary *result=[pp bindingsForMatchedPath:@"hello/this/world/cruel"];
     EXPECTNOTNIL(result,@"got a match");
-    INTEXPECT(result.count,2,@"no bound vars");
+    INTEXPECT(result.count,2,@"two bound vars");
     IDEXPECT(result[@"arg1"],@"this",@"binding for arg1");
     IDEXPECT(result[@"arg2"],@"cruel",@"binding for arg2");
 }
@@ -138,9 +148,18 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     MPWPropertyPath *pp=[self propertyPathWithPathString:@"hello/:arg1/world/*:arg2"];
     NSDictionary *result=[pp bindingsForMatchedPath:@"hello/this/world/cruel/remainder"];
     EXPECTNOTNIL(result,@"got a match");
-    INTEXPECT(result.count,2,@"no bound vars");
+    INTEXPECT(result.count,2,@"two bound vars");
     IDEXPECT(result[@"arg2"],(@[ @"cruel", @"remainder"]),@"binding for arg2");
 
+}
+
++(void)testListFormalParameters
+{
+    MPWPropertyPath *pp=[self propertyPathWithPathString:@"hello/:arg1/world/:arg2"];
+    NSArray *formalParameters=[pp formalParameters];
+    
+    INTEXPECT(formalParameters.count,2,@"two parameters");
+    IDEXPECT(formalParameters,(@[ @"arg1", @"arg2"]),@"the parameters");
 }
 
 +testSelectors
@@ -152,6 +171,7 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
              @"testMatchAgainstConstantPath",
              @"testMatchAgainstPathWithParameters",
              @"testMatchAgainstWildcard",
+             @"testListFormalParameters",
     ];
 }
 

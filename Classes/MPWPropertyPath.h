@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) NSArray *pathComponents;
 @property (readonly) NSString *name;
+@property (readonly) NSArray *formalParameters;
 
 +(instancetype)propertyPathWithReference:(id <MPWReferencing>)ref;
 -(instancetype)initWithReference:(id <MPWReferencing>)ref;
