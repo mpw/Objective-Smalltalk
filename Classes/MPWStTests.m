@@ -1107,7 +1107,7 @@
 +(void)testParseSimpleProperty
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property {  3. }}"];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass {  /property { get {  3. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property", @"name of prop def");
 }
@@ -1115,7 +1115,7 @@
 +(void)testParsePropertyPathWithTwoComponents
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path {  3. }}"];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path { get {  3. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/path", @"name of prop def");
 }
@@ -1123,7 +1123,7 @@
 +(void)testParseTwoPropertyPaths
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path1 {  3. } /property/path2 {  5. } }"];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path1 { get {  3. }} /property/path2 { get {  5. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 2, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/path1", @"name of prop def");
     IDEXPECT( [[[[def propertyPathDefinitions] lastObject] propertyPath] name], @"property/path2", @"name of prop def");
@@ -1132,7 +1132,7 @@
 +(void)testParsePropertyPathWithArg
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg {  arg+4. }}"];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg { get {  arg+4. }}} "];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/:arg", @"name of prop def");
 }
@@ -1140,7 +1140,7 @@
 +(void)testParsePropertyPathWithWildcard
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/* {  3. }}"];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/* { get {  3.}  }}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/*", @"name of prop def");
 }
@@ -1148,7 +1148,7 @@
 +(void)testParsePropertyPathWithWildcardAndParameter
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/*:path {  path. }}"];
+    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/*:path { get {  path. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/*:path", @"name of prop def");
 }

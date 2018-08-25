@@ -12,6 +12,6 @@
 @interface MPWPropertyPathDefinition : NSObject
 
 @property (nonatomic, strong)  MPWPropertyPath* propertyPath;
-@property (nonatomic, strong)  id body;
+@property (nonatomic, strong)  id get,set;
 
 @end

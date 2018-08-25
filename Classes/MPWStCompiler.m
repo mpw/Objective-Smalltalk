@@ -1071,10 +1071,25 @@ idAccessor(solver, setSolver)
     NSString *nextToken  = [self nextToken];
     NSLog(@"nextToken after parse of property header: %@",nextToken);
     if ( [nextToken isEqualToString:@"{"]) {
-        NSLog(@"parse method body");
-        [self pushBack:nextToken];
-        propertyDef.body = [self parseMethodBodyWithHeader:[MPWMethodHeader methodHeaderWithString:@"property"]];
-        NSLog(@"body: %@",propertyDef.body);
+        NSLog(@"parse get/set method body");
+        nextToken=[self nextToken];
+        NSLog(@"get/set:  %@",nextToken);
+        while ( [nextToken isEqualToString:@"get"] || [nextToken isEqualToString:@"set"]) {
+            NSString *getOrSet=nextToken;
+            id body=[self parseMethodBodyWithHeader:[MPWMethodHeader methodHeaderWithString:@"property"]];
+            NSLog(@"did parse body: %@",body);
+            nextToken=[self nextToken];
+            if ( [getOrSet isEqualToString:@"get"] ) {
+                propertyDef.get=body;
+            } else if ( [getOrSet isEqualToString:@"set"] ) {
+                propertyDef.set=body;
+            } else {
+            }
+        }
+        if ( ![nextToken isEqualToString:@"}"]) {
+            PARSEERROR(@" } to finish get/set property def", nextToken);
+        }
+        
         NSLog(@"scanner after parsing property def: %@",[self scanner]);
     } else {
         PARSEERROR(@"expected method body for property def", nextToken);
