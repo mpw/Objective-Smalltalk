@@ -1069,7 +1069,7 @@ idAccessor(solver, setSolver)
     propertyDef.propertyPath=path;
 
     NSString *nextToken  = [self nextToken];
-    NSLog(@"nextToken after parse of property header: %@",nextToken);
+//    NSLog(@"nextToken after parse of property header: %@",nextToken);
     if ( [nextToken isEqualToString:@"{"]) {
 //        NSLog(@"parse get/set method body");
         nextToken=[self nextToken];
@@ -1077,9 +1077,16 @@ idAccessor(solver, setSolver)
         while ( [nextToken isEqualToString:@"|="] || [nextToken isEqualToString:@"=|"]
                || [nextToken isEqualToString:@"=|="]) {
             NSString *getOrSet=nextToken;
-            id body=[self parseMethodBodyWithHeader:[MPWMethodHeader methodHeaderWithString:@"property"]];
+            NSArray *formals=[propertyDef.propertyPath formalParameters];
+            NSMutableString *s=[@"method" mutableCopy];
+            for (NSString *paramName in formals) {
+                [s appendFormat:@"Arg:%@ ",paramName];
+            }
+            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:s];
+            MPWScriptedMethod* body=[self parseMethodBodyWithHeader:header];
 //            NSLog(@"did parse body: %@",body);
             nextToken=[self nextToken];
+            
             if ( [getOrSet isEqualToString:@"|="]  ) {
                 propertyDef.get=body;
             } else if ( [getOrSet isEqualToString:@"=|"] ) {
@@ -1091,7 +1098,7 @@ idAccessor(solver, setSolver)
             PARSEERROR(@" } to finish get/set property def", nextToken);
         }
         
-        NSLog(@"scanner after parsing property def: %@",[self scanner]);
+//        NSLog(@"scanner after parsing property def: %@",[self scanner]);
     } else {
         PARSEERROR(@"expected method body for property def", nextToken);
     }
@@ -1125,7 +1132,7 @@ idAccessor(solver, setSolver)
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
             while (nil != (next=[self nextToken])) {
-                NSLog(@"token: %@",next);
+//                NSLog(@"token: %@",next);
                 if ( [next isEqualToString:@"-"]) {
                     [self pushBack:next];
                     MPWScriptedMethod *method=[self parseMethodDefinition];
@@ -1146,7 +1153,7 @@ idAccessor(solver, setSolver)
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
                     [self pushBack:next];
-                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
+//                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
                 } else {
                     PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
                 }
@@ -1163,7 +1170,7 @@ idAccessor(solver, setSolver)
             MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
             [methods addObject:filterMethod];
             classDef.methods=methods;
-            NSLog(@"methods: %@",methods);
+//            NSLog(@"methods: %@",methods);
 
         } else {
             PARSEERROR(@"expected { in class definition", separator);

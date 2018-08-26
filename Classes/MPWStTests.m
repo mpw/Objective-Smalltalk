@@ -1164,9 +1164,35 @@
 +(void)testEvaluateSimplePropertyPathGetter
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"class PropertyTestClass1 : MPWScheme { /property { |= {  3.}  }}."];
+    [compiler evaluateScriptString:@"class PropertyTestClass1 : MPWScheme { /property { |= {  42.}  }}."];
     id result = [compiler evaluateScriptString:@"a := PropertyTestClass1 new. scheme:p := a. p:property."];
-    IDEXPECT(result,@(3),@"evaluating a simple property");
+    IDEXPECT(result,@(42),@"evaluating a simple property");
+}
+
++(void)testEvaluatePropertyPathGettersWithArg
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass2 : MPWScheme { /propertyA/:arg1 { |= {  arg1 intValue * 100.  }} /propertyB/:arg2 { |= { arg2 , ' world'.} }} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass2 new. scheme:p := a. p:propertyA/3."];
+    IDEXPECT(result1,@(300),@"evaluating a property with 1 arg");
+    id result2 = [compiler evaluateScriptString:@"p:propertyB/Hello."];
+    IDEXPECT(result2,@"Hello world",@"evaluating a property with 1 arg");
+}
+
++(void)testEvaluatePropertyPathGettersWithSeveralArgs
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass2 : MPWScheme { /propertyA/:arg1/:arg2/:arg3 { |= {  (arg1 intValue * 100) + (arg2 intValue * 10) + (arg3 intValue).  }}} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass2 new. scheme:p := a. p:propertyA/3/4/5."];
+    IDEXPECT(result1,@(345),@"evaluating a property with 3 args");
+}
+
++(void)testEvaluatePropertyPathGetterWithWildcard
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass2 : MPWScheme { /propertyA/*:path { |= {  path   reversedArray componentsJoinedByString:':'. }}} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass2 new. scheme:p := a. p:propertyA/a/b/c."];
+    IDEXPECT(result1,@"c:b:a",@"evaluating a property with 3 args");
 }
 
 +(NSArray*)testSelectors
@@ -1292,6 +1318,9 @@
         @"testParsePropertyPathWithWildcard",
         @"testParsePropertyPathWithWildcardAndParameter",
         @"testEvaluateSimplePropertyPathGetter",
+        @"testEvaluatePropertyPathGettersWithArg",
+        @"testEvaluatePropertyPathGettersWithSeveralArgs",
+        @"testEvaluatePropertyPathGetterWithWildcard",
         ];
 }
 
