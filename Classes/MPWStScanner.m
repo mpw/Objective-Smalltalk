@@ -266,9 +266,10 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 -scanPossibleEquals
 {
     const char *cur=pos;
-    int len=3;
     if ( SCANINBOUNDS(cur+2) && cur[1] == '|' && cur[2] == '=' ) {
-        return [self makeText:len];
+        return [self makeText:3];
+    } else if ( SCANINBOUNDS(cur+1) && cur[1] == '|'  ) {
+        return [self makeText:2];
     } else {
         return [self scanSpecial];
     }
