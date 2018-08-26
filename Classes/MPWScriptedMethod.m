@@ -96,7 +96,7 @@ idAccessor( script, _setScript )
     return newException;
 }
 
--evaluateOnObject:target parameters:parameters
+-evaluateOnObject:target parameters:(NSArray*)parameters
 {
 	id returnVal=nil;
 	id executionContext = [self executionContext];

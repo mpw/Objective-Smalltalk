@@ -12,7 +12,7 @@
 
 @implementation MPWGetAccessor
 
-idAccessor( ivarDef, _setIvarDef )
+objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
 
 
 -declarationString
@@ -20,20 +20,20 @@ idAccessor( ivarDef, _setIvarDef )
 	return [ivarDef name];
 }
 
--(void)setIvarDef:newIvarDef
+-(void)setIvarDef:(MPWInstanceVariable*)newIvarDef
 {
 	[self _setIvarDef:newIvarDef];
 	[self setMethodHeader:[MPWMethodHeader methodHeaderWithString:[self declarationString]]];
 }
 
--initWithInstanceVariableDef:newIvarDef
+-initWithInstanceVariableDef:(MPWInstanceVariable*)newIvarDef
 {
 	self = [super init];
 	[self setIvarDef:newIvarDef];
 	return self;
 }
 
-+accessorForInstanceVariable:ivarDef
++accessorForInstanceVariable:(MPWInstanceVariable*)ivarDef
 {
 	return [[[self alloc] initWithInstanceVariableDef:ivarDef] autorelease];
 }

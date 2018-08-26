@@ -7,11 +7,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class MPWPropertyPath;
+@class MPWPropertyPath,MPWScriptedMethod;
 
 @interface MPWPropertyPathDefinition : NSObject
 
 @property (nonatomic, strong)  MPWPropertyPath* propertyPath;
-@property (nonatomic, strong)  id get,set;
+@property (nonatomic, strong)  MPWScriptedMethod *get,*set;
 
 @end

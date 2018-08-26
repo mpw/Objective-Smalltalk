@@ -11,13 +11,33 @@
 #import "MPWMethodStore.h"
 #import "MPWClassMethodStore.h"
 #import "MPWStCompiler.h"
+#import "MPWPropertyPathGetter.h"
+
+
 
 @implementation MPWClassDefinition
 
+-(NSArray*)generatedMethods
+{
+    NSMutableArray *methods=[NSMutableArray array];
+    
+    if ( self.propertyPathDefinitions.count) {
+        [methods addObject:[MPWPropertyPathGetter getterWithPropertyPathDefinitions:self.propertyPathDefinitions]];
+    }
+    return methods;
+}
+
+
+-(NSArray*)allMethods
+{
+    NSArray *userDefinedMethods=self.methods;
+    NSArray *generatedMethods=[self generatedMethods];
+    return [userDefinedMethods arrayByAddingObjectsFromArray:generatedMethods];
+}
 
 -(void)addMethodsIn:(MPWClassMethodStore*)store
 {
-    for ( MPWScriptedMethod *method in self.methods) {
+    for ( MPWScriptedMethod *method in [self allMethods]) {
         [store installMethod:method];
     }
 }

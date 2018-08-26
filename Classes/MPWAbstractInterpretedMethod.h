@@ -20,9 +20,9 @@ objectAccessor_h( MPWMethodHeader, methodHeader, setMethodHeader )
 idAccessor_h( context, setContext )
 idAccessor_h( methodType, setMethodType )
 
--evaluateOnObject:target parameters:parameters;
+-evaluateOnObject:target parameters:(NSArray*)parameters;
 -(MPWMethodHeader*)header;
--formalParameters;
+-(NSArray*)formalParameters;
 
 
 @end

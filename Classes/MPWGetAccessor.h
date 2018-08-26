@@ -8,11 +8,12 @@
 
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 
+@class MPWInstanceVariable;
 
 @interface MPWGetAccessor : MPWAbstractInterpretedMethod {
-	id ivarDef;
+	MPWInstanceVariable* ivarDef;
 }
 
-+accessorForInstanceVariable:ivarDef;
++accessorForInstanceVariable:(MPWInstanceVariable*)ivarDef;
 
 @end

@@ -1161,6 +1161,13 @@
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/*:path", @"name of prop def");
 }
 
++(void)testEvaluateSimplePropertyPathGetter
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass1 : MPWScheme { /property { |= {  3.}  }}."];
+    id result = [compiler evaluateScriptString:@"a := PropertyTestClass1 new. scheme:p := a. p:property."];
+    IDEXPECT(result,@(3),@"evaluating a simple property");
+}
 
 +(NSArray*)testSelectors
 {
@@ -1284,6 +1291,7 @@
         @"testParsePropertyPathSetter",
         @"testParsePropertyPathWithWildcard",
         @"testParsePropertyPathWithWildcardAndParameter",
+        @"testEvaluateSimplePropertyPathGetter",
         ];
 }
 

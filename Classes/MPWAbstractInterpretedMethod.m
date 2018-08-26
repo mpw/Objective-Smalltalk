@@ -22,12 +22,12 @@ idAccessor( methodType, setMethodType )
 	return [self methodHeader];
 }
 
--formalParameters
+-(NSArray*)formalParameters
 {
 	return [[self methodHeader] parameterNames];
 }
 
--evaluateOnObject:target parameters:parameters
+-evaluateOnObject:target parameters:(NSArray*)parameters
 {
 	[NSException raise:@"abstract method evaluated" format:@"abstract method evaluated"];
 	return nil;
