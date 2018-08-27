@@ -1207,6 +1207,14 @@
     EXPECTFALSE([oldKeyValue isNotNil],@"nil or NSNil");
 }
 
++(void)testConstantPropertyPathGetterWorksWithPlainClass
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass6  { /propertyA { |= {  33.  }}} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass6 new autorelease. var:a/propertyA."];
+    IDEXPECT(result1,@(33),@"evaluating a wildcard property with 3 args");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1335,6 +1343,7 @@
         @"testEvaluatePropertyPathGetterWithWildcard",
         @"testIdentifierInterpolationWorksAsAssignmentTarget",
         @"testSimplePropertyPathSetter",
+        @"testConstantPropertyPathGetterWorksWithPlainClass",
         ];
 }
 

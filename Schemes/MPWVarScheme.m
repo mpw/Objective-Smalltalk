@@ -50,11 +50,15 @@
 
 -(id)objectForReference:(id)aReference
 {
-    NSArray *pathComponents = [aReference pathComponents];
+    NSArray *pathComponents = [aReference relativePathComponents];
     id tempValue = [[self.context bindingForLocalVariableNamed: [pathComponents firstObject]] value];
-    for (long i=1,max=pathComponents.count; i<max;i++) {
-        tempValue=[tempValue valueForKey:pathComponents[i]];
+    if ( pathComponents.count > 1) {
+        id remainingReference = [[[[aReference class] alloc] initWithPathComponents:[pathComponents subarrayWithRange:NSMakeRange(1,pathComponents.count-1)] scheme:[aReference schemeName]] autorelease];
+        tempValue=[tempValue objectForReference:remainingReference];
     }
+//    for (long i=1,max=pathComponents.count; i<max;i++) {
+//        tempValue=[tempValue valueForKey:pathComponents[i]];
+//    }
     return tempValue;
 }
 
@@ -84,6 +88,21 @@
 	} else {
 		return [super valueForUndefinedKey:aKey];
 	}
+}
+
+
+@end
+
+@implementation NSObject(Storage)
+
+-objectForReference:(id <MPWReferencing>)aReference
+{
+    return [self valueForKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
+}
+
+-(void)setObject:anObject forReference:(id <MPWReferencing>)aReference
+{
+    [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }
 
 
