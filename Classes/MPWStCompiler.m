@@ -1082,6 +1082,9 @@ idAccessor(solver, setSolver)
             for (NSString *paramName in formals) {
                 [s appendFormat:@"Arg:%@ ",paramName];
             }
+            if ([getOrSet isEqualToString:@"=|"] ) {
+                [s appendString:@"value:newValue "];
+            }
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:s];
             MPWScriptedMethod* body=[self parseMethodBodyWithHeader:header];
 //            NSLog(@"did parse body: %@",body);

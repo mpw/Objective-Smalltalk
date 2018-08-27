@@ -1182,17 +1182,29 @@
 +(void)testEvaluatePropertyPathGettersWithSeveralArgs
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"class PropertyTestClass2 : MPWScheme { /propertyA/:arg1/:arg2/:arg3 { |= {  (arg1 intValue * 100) + (arg2 intValue * 10) + (arg3 intValue).  }}} "];
-    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass2 new. scheme:p := a. p:propertyA/3/4/5."];
+    [compiler evaluateScriptString:@"class PropertyTestClass3 : MPWScheme { /propertyA/:arg1/:arg2/:arg3 { |= {  (arg1 intValue * 100) + (arg2 intValue * 10) + (arg3 intValue).  }}} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass3 scheme. scheme:p := a. p:propertyA/3/4/5."];
     IDEXPECT(result1,@(345),@"evaluating a property with 3 args");
 }
 
 +(void)testEvaluatePropertyPathGetterWithWildcard
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"class PropertyTestClass2 : MPWScheme { /propertyA/*:path { |= {  path   reversedArray componentsJoinedByString:':'. }}} "];
-    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass2 new. scheme:p := a. p:propertyA/a/b/c."];
-    IDEXPECT(result1,@"c:b:a",@"evaluating a property with 3 args");
+    [compiler evaluateScriptString:@"class PropertyTestClass4 : MPWScheme { /propertyA/*:path { |= {  path   reversedArray componentsJoinedByString:':'. }}} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass4 scheme. scheme:p := a. p:propertyA/a/b/c."];
+    IDEXPECT(result1,@"c:b:a",@"evaluating a wildcard property with 3 args");
+}
+
++(void)testSimplePropertyPathSetter
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass5 : MPWDictStore { /propertyA { =| {  self dict setObject:(newValue + 10)  forKey:'variantOfPropertyA'. }}} "];
+    [compiler evaluateScriptString:@"a := PropertyTestClass5 scheme. scheme:p := a. p:propertyA := 5 ."];
+    id oldKeyValue = [compiler evaluateScriptString:@"a dict objectForKey:'propertyA'."];
+    
+    id result1=[compiler evaluateScriptString:@"a dict objectForKey:'variantOfPropertyA'."];
+    IDEXPECT(result1,@(15),@"did set properly");
+    EXPECTFALSE([oldKeyValue isNotNil],@"nil or NSNil");
 }
 
 +(NSArray*)testSelectors
@@ -1321,9 +1333,10 @@
         @"testEvaluatePropertyPathGettersWithArg",
         @"testEvaluatePropertyPathGettersWithSeveralArgs",
         @"testEvaluatePropertyPathGetterWithWildcard",
+        @"testIdentifierInterpolationWorksAsAssignmentTarget",
+        @"testSimplePropertyPathSetter",
         ];
 }
 
-//			@"testIdentifierInterpolationWorksAsAssignmentTarget",
 
 @end

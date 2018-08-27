@@ -12,6 +12,7 @@
 #import "MPWClassMethodStore.h"
 #import "MPWStCompiler.h"
 #import "MPWPropertyPathGetter.h"
+#import "MPWPropertyPathSetter.h"
 
 
 
@@ -23,6 +24,7 @@
     
     if ( self.propertyPathDefinitions.count) {
         [methods addObject:[MPWPropertyPathGetter getterWithPropertyPathDefinitions:self.propertyPathDefinitions]];
+        [methods addObject:[MPWPropertyPathSetter getterWithPropertyPathDefinitions:self.propertyPathDefinitions]];
     }
     return methods;
 }
