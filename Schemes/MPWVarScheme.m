@@ -48,6 +48,19 @@
     return theBinding;
 }
 
+-(void)setObject:anObject forReference:(id <MPWReferencing>)aReference
+{
+    NSArray *pathComponents = [aReference relativePathComponents];
+    NSString *firstComponent = pathComponents.firstObject;
+    MPWBinding *b=[self.context bindingForLocalVariableNamed: firstComponent];
+    if ( pathComponents.count > 1) {
+        id remainingReference = [[[[(NSObject*)aReference class] alloc] initWithPathComponents:[pathComponents subarrayWithRange:NSMakeRange(1,pathComponents.count-1)] scheme:[aReference schemeName]]    autorelease];
+        [b.value setObject:anObject forReference:remainingReference];
+    } else {
+        b.value = anObject;
+    }
+}
+
 -(id)objectForReference:(id)aReference
 {
     NSArray *pathComponents = [aReference relativePathComponents];

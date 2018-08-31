@@ -1212,8 +1212,26 @@
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     [compiler evaluateScriptString:@"class PropertyTestClass6  { /propertyA { |= {  33.  }}} "];
     id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass6 new autorelease. var:a/propertyA."];
-    IDEXPECT(result1,@(33),@"evaluating a wildcard property with 3 args");
+    IDEXPECT(result1,@(33),@"evaluating constant property");
 }
+
++(void)testPropertyPathGetterWithArgsWorksWithPlainClass
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass7  { /propertyA/:arg1/:arg2 { |= {  arg1 intValue + arg2 intValue.  }}} "];
+    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass7 new autorelease. var:a/propertyA/20/12."];
+    IDEXPECT(result1,@(32),@"evaluating property with args on non-scheme class");
+}
+
++(void)testSimplePropertyPathSetterWorksWithPlainClass
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass8  { var tester. /propertyA { =| {  self setTester:newValue. }}} "];
+    [compiler evaluateScriptString:@" a := PropertyTestClass8 new autorelease. a setTester:'not set'. var:a/propertyA := 'was set correctly''.  "];
+    id result1 = [compiler evaluateScriptString:@"a tester. "];
+    IDEXPECT(result1,@"was set correctly",@"result of property setters");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1344,6 +1362,8 @@
         @"testIdentifierInterpolationWorksAsAssignmentTarget",
         @"testSimplePropertyPathSetter",
         @"testConstantPropertyPathGetterWorksWithPlainClass",
+        @"testPropertyPathGetterWithArgsWorksWithPlainClass",
+        @"testSimplePropertyPathSetterWorksWithPlainClass",
         ];
 }
 
