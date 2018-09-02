@@ -12,7 +12,7 @@
 
 -(NSString*)defaultSuperclassName
 {
-    return @"MPWStream";
+    return @"MPWFilter";
 }
 
 -(void)dealloc

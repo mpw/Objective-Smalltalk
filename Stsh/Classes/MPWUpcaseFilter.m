@@ -13,7 +13,7 @@
 
 -(void)writeNSObject:anObject
 {
-	[target writeObject:[[anObject stringValue] uppercaseString]];
+    FORWARD([[anObject stringValue] uppercaseString] );
 }
 
 -with:arg

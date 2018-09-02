@@ -103,10 +103,10 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     return [[[self alloc] initWithTarget:s1 key:@"target" protocol:@protocol(NSObject) sends:YES] autorelease];
 }
 
-+(void)testConnectMPWStream
++(void)testConnectMPWFilter
 {
-    MPWStream *s1=[MPWStream stream];
-    MPWStream *s2=[MPWStream stream];
+    MPWFilter *s1=[MPWFilter stream];
+    MPWFilter *s2=[MPWFilter stream];
   
     MPWMessagePortDescriptor *input=[self _createInputPortDescriptorForStream:s2];
 
@@ -124,17 +124,17 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
     EXPECTTRUE([input connect:output],@"connected the streams");
     
-    EXPECTNIL([[s2 target] lastObject], @"nothing in target before write");
+    EXPECTNIL([(MPWFilter*)[s2 target] lastObject], @"nothing in target before write");
     [s1 writeObject:@"hi"];
-    IDEXPECT([[s2 target] lastObject], @"hi", @"target written");
+    IDEXPECT([(MPWFilter*)[s2 target] lastObject], @"hi", @"target written");
     
 
 }
 
 +(void)testCannotConnectTwoInputs
 {
-    MPWStream *s1=[MPWStream stream];
-    MPWStream *s2=[MPWStream stream];
+    MPWFilter *s1=[MPWFilter stream];
+    MPWFilter *s2=[MPWFilter stream];
     
     MPWMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
     MPWMessagePortDescriptor *input2=[self _createInputPortDescriptorForStream:s2];
@@ -144,8 +144,8 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 +(void)testCannotConnectIncompatibleProtocols
 {
-    MPWStream *s1=[MPWStream stream];
-    MPWStream *s2=[MPWStream stream];
+    MPWFilter *s1=[MPWFilter stream];
+    MPWFilter *s2=[MPWFilter stream];
     
     MPWMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
     MPWMessagePortDescriptor *output=[self _createOutputPortDescriptorForStreamWithIncompatibleProtool:s2];
@@ -155,7 +155,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 +(NSArray*)testSelectors
 {
-    return @[ @"testConnectMPWStream"
+    return @[ @"testConnectMPWFilter"
     , @"testCannotConnectTwoInputs"
     , @"testCannotConnectIncompatibleProtocols"
     ];

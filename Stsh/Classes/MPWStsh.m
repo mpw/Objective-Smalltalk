@@ -11,6 +11,7 @@
 #include <readline/readline.h>
 
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+#import <ObjectiveSmalltalk/MPWStScanner.h>
 #import "MPWShellCompiler.h"
 #import "MPWStScript.h"
 #import "MPWObjectMirror.h"

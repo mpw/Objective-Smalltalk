@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 
 
-@interface MPWUpcaseFilter : MPWStream {
+@interface MPWUpcaseFilter : MPWFilter {
 	
 }
 

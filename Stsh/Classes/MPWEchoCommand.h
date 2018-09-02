@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 
 
-@interface MPWEchoCommand : MPWStream {
+@interface MPWEchoCommand : MPWFilter {
 	id	toEcho;
 }
 
@@ -22,6 +22,6 @@
 -(MPWStream*)wrappedAsMPWStream;
 -process;
 -adaptCommand:aCommand;
--pipe:other;
+// -pipe:other;
 
 @end

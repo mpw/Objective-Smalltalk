@@ -384,7 +384,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [gen flushSelectorReferences];
     [gen writeTrailer];
     [gen flush];
-    return [gen target];
+    return (NSData*)[gen target];
 }
 
 +(void)testDefineEmptyClassDynamically
@@ -740,7 +740,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
       instanceMethodDescriptors:@[ methodDescriptor1 ]];
     
     [codegen flush];
-    NSData *source=[[codegen assemblyGenerator] target];
+    NSData *source=(NSData*)[[codegen assemblyGenerator] target];  // FIXME
 //    [source writeToFile:@"/tmp/fromsmalltalk.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
@@ -771,7 +771,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
       instanceMethodDescriptors:@[ methodDescriptor1 , methodDescriptor2 ]];
     
     [codegen flush];
-    NSData *source=[[codegen assemblyGenerator] target];
+    NSData *source=(NSData*)[[codegen assemblyGenerator] target];  // FIXME
 //    [source writeToFile:@"/tmp/smalltalkliterals.s" atomically:YES];
     EXPECTTRUE([codegen assembleAndLoad:source],@"codegen");
     
@@ -794,7 +794,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     [[codegen assemblyGenerator] writeHeaderWithName:@"testModule"];
     [classDef generateOn:codegen];
     [codegen flush];
-    NSData *source=[[codegen assemblyGenerator] target];
+    NSData *source=(NSData*)[[codegen assemblyGenerator] target];  // FIXME, cast
     NSString *filename=[NSString stringWithFormat:@"/tmp/%@.s",classname];
     NSLog(@"classDefString: %@",classDefString);
     [source writeToFile:filename atomically:YES];
@@ -827,16 +827,16 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 +(void)testCreateFilterClass
 {
-    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWStream { -writeObject:arg { self forward:arg uppercaseString. } } "];
+    MPWFilter* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWFilter { -writeObject:arg { self forward:arg uppercaseString. } } "];
     [a writeObject:@"hello world"];
-    IDEXPECT([[a target] firstObject],@"HELLO WORLD",@"stream processing result");
+    IDEXPECT([a firstObject],@"HELLO WORLD",@"stream processing result");
 }
 
 +(void)testCreateFilterClassWithFilterSyntax
 {
-    MPWStream* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@  |{  self forward:object uppercaseString. } "];
+    MPWFilter* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"filter %@  |{  self forward:object uppercaseString. } "];
     [a writeObject:@"hello cruel world"];
-    IDEXPECT([[a target] firstObject],@"HELLO CRUEL WORLD",@"stream processing result");
+    IDEXPECT([a firstObject],@"HELLO CRUEL WORLD",@"stream processing result");
 }
 
 +testSelectors

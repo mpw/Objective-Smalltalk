@@ -129,7 +129,7 @@
 
 -(void)writeOnShellPrinter:(MPWShellPrinter*)aPrinter
 {
-    [self writeOnPropertyList:aPrinter];
+    [(id)self writeOnPropertyList:aPrinter];
 }
 
 @end

@@ -86,7 +86,7 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
     MPWExternalFilter *f=[MPWExternalFilter filterWithCommandString:@"osascript -e 'tell application \"System Events\" to get name of every process whose background only is false'"];
     [f run];
     [f close];
-    NSString *appListString=[[f target] target];
+    NSString *appListString=(NSString*)[(MPWFilter*)[f target] target];   // FIXME
     NSString *cleanedNames=[[[appListString componentsSeparatedByString:@","] collect] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     return (NSArray*)[[self collect] bindingForName:[cleanedNames each] inContext:nil];
 }

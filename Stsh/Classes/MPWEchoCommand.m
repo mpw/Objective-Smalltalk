@@ -23,8 +23,8 @@ idAccessor( toEcho, setToEcho )
 -runProcess
 {
 //	NSLog(@"run echo command");
-	[target writeObject:[self toEcho]];
-	return [self result];
+    [self forward:[self toEcho]];
+    return [self result];
 }
 
 
@@ -69,11 +69,11 @@ idAccessor( toEcho, setToEcho )
 
 }
 
--pipe:other
-{
-//	NSLog(@"pipe:");
-	 [self setTarget:[other wrappedAsMPWStream]];
-	 return self;
-}
+//-pipe:other
+//{
+////    NSLog(@"pipe:");
+//     [self setTarget:[other wrappedAsMPWStream]];
+//     return self;
+//}
 
 @end
