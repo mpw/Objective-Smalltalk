@@ -52,9 +52,9 @@ idAccessor( toEcho, setToEcho )
 
 @end
 
-@implementation  MPWStream(wrapped)
+@implementation  MPWWriteStream(wrapped)
 
--(MPWStream*)wrappedAsMPWStream
+-(MPWWriteStream*)wrappedAsMPWStream
 {
 	return self;
 }

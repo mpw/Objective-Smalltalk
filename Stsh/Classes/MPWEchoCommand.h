@@ -17,9 +17,9 @@
 
 @end
 
-@interface  MPWStream(wrapped)
+@interface  MPWWriteStream(wrapped)
 
--(MPWStream*)wrappedAsMPWStream;
+-(MPWWriteStream*)wrappedAsMPWStream;
 -process;
 -adaptCommand:aCommand;
 // -pipe:other;

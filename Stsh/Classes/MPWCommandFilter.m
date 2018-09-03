@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 06/03/2006.
 //  Copyright 2006 Marcel Weiher. All rights reserved.
 //
-//	I wrap an external command (MPWShellProcess) so it looks like a filter stream (MPWStream)
+//	I wrap an external command (MPWShellProcess) so it looks like a filter stream (MPWWriteStream)
 //
 //
 

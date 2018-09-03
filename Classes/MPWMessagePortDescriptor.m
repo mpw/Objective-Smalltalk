@@ -88,17 +88,17 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 @implementation MPWMessagePortDescriptor(testing)
 
-+_createInputPortDescriptorForStream:(MPWStream*)s1
++_createInputPortDescriptorForStream:(MPWWriteStream*)s1
 {
     return [[[self alloc] initWithTarget:s1 key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
 }
 
-+_createOutputPortDescriptorForStream:(MPWStream*)s1
++_createOutputPortDescriptorForStream:(MPWWriteStream*)s1
 {
     return [[[self alloc] initWithTarget:s1 key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
 
-+_createOutputPortDescriptorForStreamWithIncompatibleProtool:(MPWStream*)s1
++_createOutputPortDescriptorForStreamWithIncompatibleProtool:(MPWWriteStream*)s1
 {
     return [[[self alloc] initWithTarget:s1 key:@"target" protocol:@protocol(NSObject) sends:YES] autorelease];
 }

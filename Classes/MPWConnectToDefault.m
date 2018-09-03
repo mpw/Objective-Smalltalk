@@ -92,7 +92,7 @@ idAccessor( lhs, setLhs )
 
 @end
 
-@implementation MPWStream(connecting)
+@implementation MPWWriteStream(connecting)
 
 
 -defaultOutputPort
