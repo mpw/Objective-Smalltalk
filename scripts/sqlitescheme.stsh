@@ -1,0 +1,40 @@
+#!/usr/local/bin/stsh
+#-sqlite:<ref>dbref
+
+framework:FMDB load.
+
+class SQLiteScheme : MPWScheme {
+  var db.
+
+  -initWithPath: dbPath {
+     self setDb:(FMDatabase databaseWithPath:dbPath).
+     self db open.
+     self.
+  }
+
+  -dictionariesForResultSet:resultSet
+  {
+    results := NSMutableArray array.
+    { resultSet next } whileTrue: { results addObject:resultSet resultDictionary. }.
+    results.
+  }
+
+  -dictionariesForQuery:query {
+     self dictionariesForResultSet:(self db executeQuery:query).
+  }
+
+  /. { 
+     |= { (self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" ') collect objectForKey:'name'. }
+  }
+
+  /:column/count { 
+     |= { self dictionariesForQuery: 'select count(*) from ',column | firstObject | objectForKey:'count(*)'. }
+  }
+
+  /:column { 
+     |= { self dictionariesForQuery: 'select * from ',column. }
+  }
+}
+
+scheme:db := SQLiteScheme alloc initWithPath: dbref path.
+shell runInteractiveLoop.

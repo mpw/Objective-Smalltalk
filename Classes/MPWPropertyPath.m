@@ -39,7 +39,7 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
 {
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     NSArray *pathComponents=[ref relativePathComponents];
-
+    BOOL isWild=NO;
     for (long i=0, max=MIN(pathComponents.count,self.pathComponents.count);i<max;i++) {
         NSString *segment=pathComponents[i];
         MPWPropertyPathComponent *matcher=self.pathComponents[i];
@@ -52,6 +52,7 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
             }
         } else if ( argName) {
             if ( matcher.isWildcard ) {
+                isWild=YES;
                 result[argName]=[pathComponents subarrayWithRange:NSMakeRange(i,pathComponents.count-i)];
                 break;
             } else {
@@ -59,8 +60,11 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
             }
         }
     }
-    
-    return result;
+    if ( isWild || pathComponents.count == self.pathComponents.count) {
+        return result;
+    } else {
+        return nil;
+    }
 }
 
 -(NSArray*)formalParameters
@@ -143,6 +147,13 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     IDEXPECT(result[@"arg2"],@"cruel",@"binding for arg2");
 }
 
++(void)testNonMatchTooManyComponentsInProperty
+{
+    MPWPropertyPath *pp=[self propertyPathWithPathString:@":arg1/count"];
+    NSDictionary *result=[pp bindingsForMatchedPath:@"hello"];
+    EXPECTNIL(result,@"no match");
+}
+
 +(void)testMatchAgainstWildcard
 {
     MPWPropertyPath *pp=[self propertyPathWithPathString:@"hello/:arg1/world/*:arg2"];
@@ -162,6 +173,7 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     IDEXPECT(formalParameters,(@[ @"arg1", @"arg2"]),@"the parameters");
 }
 
+
 +testSelectors
 {
     return @[
@@ -172,6 +184,7 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
              @"testMatchAgainstPathWithParameters",
              @"testMatchAgainstWildcard",
              @"testListFormalParameters",
+             @"testNonMatchTooManyComponentsInProperty",
     ];
 }
 
