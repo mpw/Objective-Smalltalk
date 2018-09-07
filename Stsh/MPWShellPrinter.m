@@ -123,6 +123,22 @@
     }
 }
 
+-(void)writeInterpolatedString:(NSString*)s withEnvironment: theEnvironment
+{
+    [self.target writeInterpolatedString:s withEnvironment: theEnvironment];
+}
+
+-(void)print:s
+{
+    [self.target writeInterpolatedString:s withEnvironment: self.environment];
+}
+
+-(void)println:s
+{
+    [self.target writeInterpolatedString:s withEnvironment: self.environment];
+    [self.target outputString:@"\n"];
+}
+
 @end
 
 @implementation NSObject(shellPrinting)

@@ -74,7 +74,8 @@
 {
 	self=[super init];
     id Rawstdout=[MPWByteStream Stdout];
-    id Stdout=[MPWShellPrinter streamWithTarget:[MPWByteStream Stdout] ];
+    MPWShellPrinter* Stdout=[MPWShellPrinter streamWithTarget:[MPWByteStream Stdout] ];
+    Stdout.environment = [self schemeForName:@"var"];
     id Stderr=[MPWByteStream Stderr];
     id Stdin=[MPWFDStreamSource fd:0];
     [self bindValue:Rawstdout toVariableNamed:@"rawstdout"];

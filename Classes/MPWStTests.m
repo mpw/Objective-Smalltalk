@@ -27,6 +27,7 @@
 #import "MPWClassDefinition.h"
 #import "MPWPropertyPathDefinition.h"
 #import "MPWPropertyPath.h"
+#import "MPWLiteralExpression.h"
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
@@ -1233,6 +1234,16 @@
 }
 
 
++(void)testCanParseInterpolatableString
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    id string1=[compiler compile:@"\'plain string'"];
+    id string2=[compiler compile:@"\"interpolateable string\""];
+    IDEXPECT([string1 theLiteral],@"plain string",@"");
+    IDEXPECT([string2 theLiteral],@"interpolateable string",@"");
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1364,6 +1375,7 @@
         @"testConstantPropertyPathGetterWorksWithPlainClass",
         @"testPropertyPathGetterWithArgsWorksWithPlainClass",
         @"testSimplePropertyPathSetterWorksWithPlainClass",
+        @"testCanParseInterpolatableString",
         ];
 }
 

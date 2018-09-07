@@ -301,14 +301,15 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     NSMutableArray *partialStrings=nil;
     const  char *cur=pos;
     id string=nil;
-    if ( *cur =='\'' ) {
+    char startChar = *cur;
+    if ( startChar =='\'' || startChar =='"' ) {
         cur++;
         pos=cur;
         while ( SCANINBOUNDS(cur) ) {
-            if ( *cur=='\''  ) {
+            if ( *cur==startChar  ) {
                 string=[self makeString:cur-pos];
                 UPDATEPOSITION(pos+1);
-                if ( SCANINBOUNDS(cur+1) && cur[1] == '\'' ) {
+                if ( SCANINBOUNDS(cur+1) && cur[1] == startChar ) {
                     if ( partialStrings == nil ) {
                         partialStrings = [NSMutableArray array];
                     }
@@ -326,10 +327,9 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
         }
     }
     if ( partialStrings ) {
-        return [partialStrings componentsJoinedByString:@""];
-    } else {
-        return string;
+        string = [partialStrings componentsJoinedByString:@""];
     }
+    return string;
 }
 
 -createDouble:(double)aFloat

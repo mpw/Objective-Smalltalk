@@ -10,6 +10,8 @@
 
 @interface MPWShellPrinter : MPWPropertyListStream
 
+@property (nonatomic, weak)  id environment;
+
 -(void)printNames:(NSArray*)names limit:(int)completionLimit;
 
 

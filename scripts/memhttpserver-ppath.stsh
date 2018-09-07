@@ -14,5 +14,4 @@ stdout println: site:this/is/a/path.
 server := MPWSchemeHttpServer serverOnPort:8081.
 scheme:site ->  server.
 server start:nil.
-stdout println:'site:<path> := value'.
 shell runInteractiveLoop.
