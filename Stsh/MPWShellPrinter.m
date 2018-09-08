@@ -125,18 +125,28 @@
 
 -(void)writeInterpolatedString:(NSString*)s withEnvironment: theEnvironment
 {
-    [self.target writeInterpolatedString:s withEnvironment: theEnvironment];
+    [(MPWByteStream*)self.target writeInterpolatedString:s withEnvironment: theEnvironment];
 }
 
 -(void)print:s
 {
-    [self.target writeInterpolatedString:s withEnvironment: self.environment];
+    if ( [s isKindOfClass:[NSString class]]) {
+        [self writeInterpolatedString:s withEnvironment: self.environment];
+    } else {
+        [super print:s];
+    }
+    
 }
 
 -(void)println:s
 {
-    [self.target writeInterpolatedString:s withEnvironment: self.environment];
-    [self.target outputString:@"\n"];
+    if ( [s isKindOfClass:[NSString class]]) {
+        [self writeInterpolatedString:s withEnvironment: self.environment];
+        [(MPWByteStream*)self.target outputString:@"\n"];
+    } else {
+        [super println:s];
+    }
+    
 }
 
 @end

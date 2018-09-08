@@ -2,12 +2,14 @@
 
 #import "MPWStScanner.h"
 
-@interface MPWStName  : NSString
-{
-    NSString *realString;
-}
+
+@interface MPWStringLiteral()
+
+@property (nonatomic,assign) BOOL hasSingleQuotes;
 
 @end
+
+
 
 @implementation MPWStName
 
@@ -41,9 +43,26 @@ objectAccessor(NSString, realString, setRealString)
     return NO;
 }
 
+-(BOOL)isEqualToString:(NSString *)aString
+{
+    return [aString isEqualToString:[self realString]];
+}
+
+-(NSUInteger)hash
+{
+    return [[self realString] hash];
+}
+
 @end
 
+@implementation MPWStringLiteral
 
+-(BOOL)isLiteral
+{
+    return YES;
+}
+
+@end
 
 @implementation NSObject(isLiteral)
 
@@ -329,7 +348,9 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     if ( partialStrings ) {
         string = [partialStrings componentsJoinedByString:@""];
     }
-    return string;
+    MPWStringLiteral *s=[[[MPWStringLiteral alloc] initWithString:string] autorelease];
+    s.hasSingleQuotes=startChar == '\'';
+    return s;
 }
 
 -createDouble:(double)aFloat

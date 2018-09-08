@@ -24,15 +24,26 @@ class SQLiteScheme : MPWScheme {
   }
 
   /. { 
-     |= { (self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" ') collect objectForKey:'name'. }
+     |= {
+       resultSet := self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" '.
+       resultSet collect objectForKey:'name'.
+     }
   }
 
-  /:column/count { 
-     |= { self dictionariesForQuery: 'select count(*) from ',column | firstObject | objectForKey:'count(*)'. }
+  /:table/count { 
+     |= { self dictionariesForQuery: 'select count(*) from {table}' | firstObject | objectForKey:'count(*)'. }
   }
 
-  /:column { 
-     |= { self dictionariesForQuery: 'select * from ',column. }
+  /:table { 
+     |= { self dictionariesForQuery: 'select * from {table}'. }
+  }
+
+  /:table/:column/:value { 
+     |= { self dictionariesForQuery: 'select * from {table} where {column} = {value where {column} = {value}'.  }
+  }
+
+  /:table/:column { 
+     |= { self dictionariesForQuery: 'select {column} from {table}'| collect | objectForKey:column. } 
   }
 }
 

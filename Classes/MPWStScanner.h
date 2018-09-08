@@ -28,3 +28,18 @@ boolAccessor_h( noNumbers, setNoNumbers )
 
 -(BOOL)isScheme;
 @end
+
+@interface MPWStName  : NSString
+{
+    NSString *realString;
+}
+
+-(NSString*)realString;
+
+@end
+
+@interface MPWStringLiteral:MPWStName
+
+@property (nonatomic, readonly)  BOOL hasSingleQuotes;
+
+@end

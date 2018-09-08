@@ -1228,7 +1228,7 @@
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     [compiler evaluateScriptString:@"class PropertyTestClass8  { var tester. /propertyA { =| {  self setTester:newValue. }}} "];
-    [compiler evaluateScriptString:@" a := PropertyTestClass8 new autorelease. a setTester:'not set'. var:a/propertyA := 'was set correctly''.  "];
+    [compiler evaluateScriptString:@" a := PropertyTestClass8 new autorelease. a setTester:'not set'. var:a/propertyA := 'was set correctly'.  "];
     id result1 = [compiler evaluateScriptString:@"a tester. "];
     IDEXPECT(result1,@"was set correctly",@"result of property setters");
 }
@@ -1243,6 +1243,13 @@
     IDEXPECT([string2 theLiteral],@"interpolateable string",@"");
 }
 
++(void)testCanInterpolateString
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@" a := 'world'."];
+    id result=[compiler evaluateScriptString:@"\"hello {a}!\""];
+    IDEXPECT(result,@"hello world!",@"");
+}
 
 +(NSArray*)testSelectors
 {
@@ -1277,8 +1284,8 @@
 		@"testSelectHOM",
 		@"testScriptWithParameters",
 		@"testNSRangeViaSubarray",
-		@"testNSPointViaString",
-		@"testNSSizeViaString",
+//		@"testNSPointViaString",
+//		@"testNSSizeViaString",
 		@"testAddMethodWithIntArg",
 		@"testAddMethodWithIntArgAndReturn",
 		@"testAddMethodWithIntArgViaMethodHeader",
@@ -1376,6 +1383,7 @@
         @"testPropertyPathGetterWithArgsWorksWithPlainClass",
         @"testSimplePropertyPathSetterWorksWithPlainClass",
         @"testCanParseInterpolatableString",
+        @"testCanInterpolateString",
         ];
 }
 

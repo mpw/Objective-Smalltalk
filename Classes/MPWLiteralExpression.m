@@ -7,6 +7,10 @@
 //
 
 #import "MPWLiteralExpression.h"
+#import "MPWEvaluator.h"
+#import <MPWFoundation/MPWByteStream.h>
+#import "MPWScheme.h"
+#import "MPWStScanner.h"
 
 @implementation MPWLiteralExpression
 
@@ -14,7 +18,18 @@ idAccessor(theLiteral, setTheLiteral)
 
 -(id)evaluateIn:(id)aContext
 {
-    return theLiteral;
+    id result=theLiteral;
+    if ( [result isKindOfClass:[MPWStringLiteral class]] ) {
+        MPWStringLiteral *s=(MPWStringLiteral*)result;
+        if (![s hasSingleQuotes]) {
+            result=[NSMutableString string];
+            MPWByteStream *stream=[MPWByteStream streamWithTarget:result];
+            [stream writeInterpolatedString:theLiteral withEnvironment:(MPWAbstractStore*)[aContext schemeForName:@"var"]];
+        } else {
+            result=[s realString];
+        }
+    }
+    return result;
 }
 
 -negated
