@@ -89,7 +89,7 @@
 
 -(MPWScheme*)cachedBy:cacheScheme
 {
-    return [MPWCopyOnWriteScheme cacheWithBase:self cache:cacheScheme];
+    return (MPWScheme*)[MPWWriteThroughCache storeWithSource:self cache:cacheScheme];
 }
 
 -before:otherScheme

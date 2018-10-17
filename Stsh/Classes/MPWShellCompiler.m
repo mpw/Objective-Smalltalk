@@ -15,7 +15,7 @@
 #import "MPWFileSchemeResolver.h"
 #import "MPWURLSchemeResolver.h"
 #import "MPWEnvScheme.h"
-#import <MPWFoundation/MPWPropertyListStream.h>
+#import <MPWFoundation/MPWNeXTPListWriter.h>
 #import "MPWAbstractShellCommand.h"
 #import "MPWStsh.h"
 #import "MPWShellPrinter.h"

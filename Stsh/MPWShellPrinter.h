@@ -6,15 +6,15 @@
 //
 //
 
-#import <MPWFoundation/MPWPropertyListStream.h>
+#import <MPWFoundation/MPWNeXTPListWriter.h>
 
-@interface MPWShellPrinter : MPWPropertyListStream
+@interface MPWShellPrinter : MPWNeXTPListWriter
 
 @property (nonatomic, weak)  id environment;
 
 -(void)printNames:(NSArray*)names limit:(int)completionLimit;
 
-
+ 
 -(void)writeDirectory:aBinding;
 -(void)writeFancyDirectory:aBinding;
 

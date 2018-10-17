@@ -56,6 +56,15 @@
     }
 }
 
+-initWithDictionary:(NSDictionary*)newDict
+{
+    NSString *path=newDict[@"path"];
+    if ( [path respondsToSelector:@selector(path)] ) {
+        path=[(id)path path];
+    }
+    return [self initWithPathToDB:path];
+}
+
 -(FMResultSet *)executeQuery:(NSString *)query
 {
     return [self.db executeQuery:query];
@@ -144,7 +153,7 @@
 
 -(void)delete:(MPWGenericReference *)aRefence
 {
-    [self setValue:nil forBinding:aBinding];
+    [self setValue:nil forBinding:aRefence];
 }
 
 // FIXME: this code is duplicated, for example in MPWS3Scheme

@@ -34,15 +34,23 @@ class SQLiteScheme : MPWScheme {
      |= { self dictionariesForQuery: "select count(*) from {table}" | firstObject | objectForKey:'count(*)'. }
   }
 
+  /:table/:index { 
+     |= { self dictionariesForQuery: "select * from {table}" | at: index. }
+  }
+
   /:table { 
      |= { self dictionariesForQuery: "select * from {table}". }
   }
 
-  /:table/:column/:value { 
-     |= { self dictionariesForQuery: "select * from {table} where {column} = {value where {column} = {value}".  }
+  /:table/:column/:index { 
+     |= { self dictionariesForQuery: "select * from {table}" | at: index.  }
   }
 
-  /:table/:column { 
+  /:table/where/:column/:value { 
+     |= { self dictionariesForQuery: "select * from {table} where {column} = {value}".  }
+  }
+
+  /:table/column/:column { 
      |= { self dictionariesForQuery: "select {column} from {table}"| collect | objectForKey:column. } 
   }
 }

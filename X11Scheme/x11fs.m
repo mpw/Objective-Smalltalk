@@ -246,26 +246,3 @@ static int x11fs_rmdir(const char *path)
 
 @end
 
-//
-////Just setup our connection to X then let fuse handle the rest
-//int main(int argc, char **argv)
-//{
-//  MPWByteStream* Stdout=[MPWPropertyListStream Stdout];
-//  MPWStCompiler *compiler=[MPWStCompiler compiler];
-//
-//    if(xcb_init()!=X11FS_SUCCESS){
-//        fputs("Failed to setup xcb. Quiting...\n", stderr);
-//        return 1;
-//    }
-//  [compiler evaluateScriptString:@"scheme:x11 := X11Scheme scheme."];
-//  NSLog(@"did setup environment");
-//  NSString *path=@"/root/geometry";
-//  if ( argc > 1 ) {
-//    path=[NSString stringWithUTF8String:argv[1]];
-//  } else {
-//    NSLog(@"path defaulting to %@",path);
-//  }
-//  id result=[compiler evaluateScriptString:[NSString stringWithFormat:@"x11:%@",path]];
-//  [Stdout writeObject:result];
-//}
-

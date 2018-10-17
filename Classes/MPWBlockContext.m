@@ -9,7 +9,7 @@
 #import "MPWBlockContext.h"
 #import "MPWStatementList.h"
 #import "MPWEvaluator.h"
-#import <MPWFoundation/MPWBlockFilterStream.h>
+#import <MPWFoundation/MPWMapFilter.h>
 #import "MPWBinding.h"
 #import "MPWMethodHeader.h"
 #import "MPWScriptedMethod.h"    // for stack-trace 
@@ -207,11 +207,8 @@ typedef id (^ZeroArgBlock)(void);
 
 
 -defaultComponentInstance
-
 {
-    MPWBlockFilterStream *s=[MPWBlockFilterStream stream];
-    [s setBlock:self];
-    return s;
+    return [MPWMapFilter filterWithBlock:self];
 }
 
 

@@ -154,7 +154,6 @@
 		1F5E508609B4B754000298D9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A74ACB00F0A61B015ADD82 /* Foundation.framework */; };
 		1F5E508709B4B754000298D9 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */; };
-		1F605136187590E5004B6AED /* MPWInternalCodeGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F605134187590E5004B6AED /* MPWInternalCodeGenerator.mm */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
 		1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F63561A179EB68900D2DE58 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
@@ -2429,7 +2428,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F605136187590E5004B6AED /* MPWInternalCodeGenerator.mm in Sources */,
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */,
@@ -2857,7 +2855,6 @@
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
 					"-all_load",
-					"-lstdc++",
 					"${LLVM_LDFLAGS}",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
@@ -2908,7 +2905,6 @@
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
 					"-all_load",
-					"-lstdc++",
 					"${LLVM_LDFLAGS}",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
@@ -3777,6 +3773,7 @@
 		1FAFD98B1855BC5500EC5221 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -3826,6 +3823,7 @@
 		1FAFD98C1855BC5500EC5221 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";

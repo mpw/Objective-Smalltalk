@@ -19,12 +19,12 @@
 
 -objectForReference:aReference
 {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference relativePath]];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference path]];
 }
 
 -(void)setObject:newValue forReference:aReference
 {
-    NSString *name = [aReference relativePath];
+    NSString *name = [aReference path];
     if ( [name hasPrefix:@"initial/"]){
         name=[[name componentsSeparatedByString:@"/"] lastObject];
         [[NSUserDefaults standardUserDefaults] registerDefaults:@{ name : newValue }];
