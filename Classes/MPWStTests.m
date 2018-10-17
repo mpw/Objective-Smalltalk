@@ -1097,6 +1097,14 @@
     IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
 }
 
++(void)testUseStReturnAsForward
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"filter MyFilter |{  ^object uppercaseString. }"];
+    id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
+    IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
+}
+
 +(void)testFilterDefWithNormalMethods
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
@@ -1365,6 +1373,7 @@
         @"testClassDefWithExistingClassIsClassExtension",
         @"testNestedVarExprWithPath",
         @"testSimpleFilterDefSyntax",
+        @"testUseStReturnAsForward",
         @"testFilterDefWithNormalMethods",
         @"testParseSimpleProperty",
         @"testParsePropertyPathWithTwoComponents",

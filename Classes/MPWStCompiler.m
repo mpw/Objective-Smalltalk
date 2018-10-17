@@ -902,6 +902,19 @@ idAccessor(solver, setSolver)
     return [self parseExpressionInLiteral:NO];
 }
 
+-(id)parseSendResult
+{
+    id result=[self parseExpression];
+    MPWIdentifierExpression* selfReceiver=[[[MPWIdentifierExpression alloc] init] autorelease];
+    MPWIdentifier *selfIdentifer=[MPWIdentifier identifierWithName:@"self"];
+    [selfReceiver setIdentifier:selfIdentifer];
+
+    MPWMessageExpression *forward=[[[MPWMessageExpression alloc] initWithReceiver:selfReceiver] autorelease];
+    [forward setSelector:@selector(forward:)];
+    [forward setArgs:@[ result ]];
+    return forward;
+}
+
 -(id)parseStatement
 {
     id next=[self nextToken];
@@ -913,6 +926,8 @@ idAccessor(solver, setSolver)
             next=[self nextToken];
         }
 
+    } else if ( [next isEqual:@"^"]) {
+        return [self parseSendResult];
     } else if ( [next isEqual:@"class"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
