@@ -17,7 +17,7 @@
 static int myTag=3;
 
 static inline float ptr2float( id px ) {
-    unsigned long x=((long long)px)>>8;
+    unsigned long x=(unsigned long)((long long)px)>>8;
     float *pf=(float*)(&x);
     return *pf; 
 }

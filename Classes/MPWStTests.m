@@ -162,7 +162,7 @@
 	id result;
 	[evaluator bindValue:a toVariableNamed:@"a"];
 	result = [(MPWExpression*)[evaluator evaluateScriptString:expr] stringValue];
-    NSAssert3( [result isEqual:expected], @"%@ doesn't evaluate to '%@' but to '%@'",expr,expected,result);
+    IDEXPECT( result, expected, @"send uppercaseString");
 	
 }
 
