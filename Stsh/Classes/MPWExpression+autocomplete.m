@@ -251,13 +251,9 @@
 
 +(void)testMessageCompletions
 {
-    IDEXPECT([self completionsForString:@"3 inte"], (@[@"integerValue",@"interestPercent:overYears:"]), @"");
-    IDEXPECT([self completionsForString:@"3 int"], (@[ @"intValue", @"integerValue",@"interestPercent:overYears:"]), @"");
-    IDEXPECT([self completionsForString:@"3 inter"], (@[@"interestPercent:overYears:"]), @"");
-    IDEXPECT([self completionsForString:@"3 intep"], (@[]), @"");
-    IDEXPECT([self completionsForString:@"3 intValue"], (@[ @" "]), @"");
-    
-    IDEXPECT([self completionsForString:@"3 insertValue:"], (@[ @"insertValue:atIndex:inPropertyWithKey:", @"insertValue:inPropertyWithKey:" ] ), @"");
+    IDEXPECT([self completionsForString:@"MPWAutocompletionTests testS"], (@[@"testSchemeBestCompletion",@"testSchemeCompletions",@"testSelectors"]), @"");
+    IDEXPECT([self completionsForString:@"MPWAutocompletionTests testSe"], (@[@"testSelectors"]), @"");
+    IDEXPECT([self completionsForString:@"MPWAutocompletionTests testSc"], (@[@"testSchemeBestCompletion",@"testSchemeCompletions"]), @"");
 }
 
 +(void)testSchemeCompletions
