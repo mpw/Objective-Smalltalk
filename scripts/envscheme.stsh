@@ -1,0 +1,9 @@
+#!/usr/local/bin/stsh
+#
+
+class EnvScheme : MPWScheme { 
+   /:envVar { |= { NSProcessInfo processInfo environment objectForKey:envVar. }}
+}
+scheme:env := EnvScheme scheme.
+stdout println:'Scheme defined, try env:<var>'.
+shell runInteractiveLoop.
