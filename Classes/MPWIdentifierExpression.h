@@ -22,6 +22,6 @@ objectAccessor_h( MPWIdentifier, identifier, setIdentifier )
 -scheme;
 -name;
 
-//-bindingWithContext:aContext;
+-bindingWithContext:aContext;
 
 @end

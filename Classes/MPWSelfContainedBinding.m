@@ -12,7 +12,7 @@
 @property (nonatomic, strong) id identifier;
 @property (nonatomic, strong) id scheme;
 @property (nonatomic, strong) id reference;         // FIXME:  compatibilty with MPWBinding
-
+@property (nonatomic, assign) BOOL isObserving;
 @end
 
 
@@ -76,6 +76,22 @@
 {
     return [[self.identifier pathComponents] componentsJoinedByString:@"/"];
 }
+
+//-(void)startObserving
+//{
+//        if (!self.isObserving) {
+//                [[self _objectToIndex:-1] objst_addObserver:self forKey:[self finalKey]];
+//                self.isObserving=YES;
+//            }
+//
+//    }
+//
+//-(void)stopObserving
+//{
+//        [[self _objectToIndex:-1] removeObserver:self forKeyPath:[self finalKey]];
+//        self.isObserving=NO;
+//}
+
 
 
 @end

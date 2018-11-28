@@ -89,21 +89,43 @@ idAccessor( context ,setContext )
 	return [NSData dataWithContentsOfFile:[paths lastObject]];
 }
 
+-(BOOL)fload
+{
+    if ([self load] ) {
+        Class readerClass = NSClassFromString(@"MPWBridgeReader");
+        id bridgeSupportFile = [self bridgeSupportFile];
+        if (!readerClass) {
+            readerClass=[MPWFallbackBridgeReader class];
+        }
+        [readerClass parseBridgeDict:bridgeSupportFile forContext:self];
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 
 @implementation MPWEvaluator(loadFramework)
 
--loadFramework:(NSString*)frameworkName
+
+
+-loadFramework:(NSBundle*)bundle
 {
-	Class readerClass = NSClassFromString(@"MPWBridgeReader");
-	id bundle=[NSBundle loadFramework:frameworkName];
-	id bridgeSupportFile = [bundle bridgeSupportFile];
-	if (!readerClass) {
-		readerClass=[MPWFallbackBridgeReader class];
-	}
-	[readerClass parseBridgeDict:bridgeSupportFile forContext:self];
-	return bundle;
+    Class readerClass = NSClassFromString(@"MPWBridgeReader");
+    id bridgeSupportFile = [bundle bridgeSupportFile];
+    [bundle load];
+    if (!readerClass) {
+        readerClass=[MPWFallbackBridgeReader class];
+    }
+    [readerClass parseBridgeDict:bridgeSupportFile forContext:self];
+    return bundle;
+}
+
+-loadFrameworkNamed:(NSString*)frameworkName
+{
+    id bundle=[NSBundle loadFramework:frameworkName];
+    return [self loadFramework:bundle];
 }
 
 -(void*)dlopen:(NSString*)name

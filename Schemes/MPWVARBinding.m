@@ -90,20 +90,6 @@ idAccessor( baseObject, setBaseObject )
 //    return [self _objectToIndex:(int)[[self pathComponents] count]];
 //}
 
--(void)startObserving
-{
-    if (!isObserving) {
-        [[self _objectToIndex:-1] objst_addObserver:self forKey:[self finalKey]];
-        isObserving=YES;
-    }
-    
-}
-
--(void)stopObserving
-{
-    [[self _objectToIndex:-1] removeObserver:self forKeyPath:[self finalKey]];
-    isObserving=NO;
-}
 
 
 

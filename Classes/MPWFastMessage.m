@@ -26,9 +26,9 @@
 }
 -sendTo:receiver withArguments:(id*)argbuf count:(int)argCount
 {
-	IMP0 imp = (IMP0)[receiver methodForSelector:selector];
+	IMP4 imp = (IMP4)[receiver methodForSelector:selector];
 	if ( imp ) {
-		return imp( receiver, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3],argbuf[4] );
+		return imp( receiver, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3] );
 	}
 	return nil;
 }

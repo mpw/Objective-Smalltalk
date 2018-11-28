@@ -26,10 +26,10 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 	return [[self identifier] identifierName];
 }
 
-//-bindingWithContext:aContext
-//{
-//    return [[self identifier] bindingWithContext:aContext];
-//}
+-bindingWithContext:aContext
+{
+    return [[self identifier] bindingWithContext:aContext];
+}
 
 //-binding
 //{

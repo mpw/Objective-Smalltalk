@@ -18,7 +18,7 @@
 +identifierWithName:(NSString*)name;
 -evaluatedIdentifierNameInContext:aContext;
 
-// -(MPWBinding*)bindingWithContext:aContext;
+-(MPWBinding*)bindingWithContext:aContext;
 
 -resolveRescursiveIdentifierWithContext:aContext;
 

@@ -151,7 +151,7 @@ BINARYOP(div, /)
 
 -performSelector:(SEL)selector withObject:anObject
 {
-    return ((IMP0)objc_msgSend)( self, selector, anObject);
+    return ((IMP1)objc_msgSend)( self, selector, anObject);
 }
 
 -description
