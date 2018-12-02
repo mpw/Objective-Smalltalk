@@ -396,7 +396,9 @@ typedef id  (^idBlock)(id arg );
             @"testSTBlockAsObjCBlock",
             @"testCopiedSTBlockAsObjCBlock",
             @"testRetainedSTBlockOriginalAutoreleased",
+#if !TARGET_OS_IPHONE
             @"testBlock_copiedSTBlockOriginalAutoreleased",
+#endif
             @"testBlockInstalledAsMethod",
             @"testBlockAsMethodWithSelfAsArg",
             @"testBlockAsMethodWithArg",

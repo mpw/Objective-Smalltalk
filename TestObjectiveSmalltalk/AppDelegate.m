@@ -28,11 +28,9 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
                                                            ofType:@"plist"];
     NSData *namePlist=[NSData dataWithContentsOfFile:testListPath];
     NSLog(@"got classes to test data");
-    sleep(1);
 
     NSArray *classNamesToTest=[NSPropertyListSerialization propertyListWithData:namePlist options:0 format:0 error:nil];
     NSLog(@"parsed classes to test data");
-    sleep(1);
     //    NSArray *classNamesToTest = @[ @"MPWFastInvocation" ];
 
     NSMutableArray *mirrors=[NSMutableArray array];
@@ -54,7 +52,6 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
     results=[[MPWLoggingTester alloc] init];
     [results setVerbose:veryVerbose];
     fprintf(stderr,"Will run %d tests\n",[test numberOfTests]);
-    sleep(1);
     [results addToTotalTests:[test numberOfTests]];
     [test runTest:results];
     if ( !veryVerbose ){
