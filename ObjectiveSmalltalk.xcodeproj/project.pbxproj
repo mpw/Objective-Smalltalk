@@ -26,6 +26,17 @@
 		1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */; };
 		1F22E0211A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
 		1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
+		1F29D7F121B42BE600AB14D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* AppDelegate.m */; };
+		1F29D7F421B42BE600AB14D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F321B42BE600AB14D8 /* ViewController.m */; };
+		1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F521B42BE600AB14D8 /* Main.storyboard */; };
+		1F29D7F921B42BE900AB14D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F821B42BE900AB14D8 /* Assets.xcassets */; };
+		1F29D7FC21B42BE900AB14D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */; };
+		1F29D7FF21B42BE900AB14D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7FE21B42BE900AB14D8 /* main.m */; };
+		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
+		1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
+		1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F29D80C21B42E5E00AB14D8 /* MPWTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80321B42C7800AB14D8 /* MPWTest.framework */; };
+		1F29D80D21B42E5E00AB14D8 /* MPWTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80321B42C7800AB14D8 /* MPWTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8052111D1670086D540 /* MPWFilterDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2EB8022111D1670086D540 /* MPWFilterDefinition.m */; };
@@ -194,7 +205,7 @@
 		1F81C07519699AE10066DF43 /* MethodServerTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F81C06019699AE00066DF43 /* MethodServerTouch.framework */; };
 		1F81C07619699AE10066DF43 /* MethodServerTouch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F81C06019699AE00066DF43 /* MethodServerTouch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		1F81C08219699AFC0066DF43 /* MethodServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E05AA144B3E22008F349D /* MethodServer.m */; };
-		1F81C08319699B560066DF43 /* ObjectiveSmalltalkTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalkTouch.framework */; };
+		1F81C08319699B560066DF43 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
 		1F81C08419699B6C0066DF43 /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
 		1F81C08719699BF20066DF43 /* MethodServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7E05A9144B3E22008F349D /* MethodServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F81C0891969BAF60066DF43 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -479,6 +490,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F29D80921B42E1600AB14D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FE37B4C19695FA600C9A378;
+			remoteInfo = ObjectiveSmalltalkTouch;
+		};
 		1F81C07319699AE10066DF43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -496,6 +514,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		1F29D80B21B42E1700AB14D8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */,
+				1F29D80D21B42E5E00AB14D8 /* MPWTest.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F81C07D19699AE10066DF43 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -546,6 +576,18 @@
 		1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWBoxerUnboxer+MPWBoxingAdditions.h"; sourceTree = "<group>"; };
 		1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWBoxerUnboxer+MPWBoxingAdditions.m"; sourceTree = "<group>"; };
 		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestObjectiveSmalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F29D7EF21B42BE600AB14D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1F29D7F021B42BE600AB14D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1F29D7F221B42BE600AB14D8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1F29D7F321B42BE600AB14D8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1F29D7F621B42BE600AB14D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1F29D7F821B42BE900AB14D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1F29D7FB21B42BE900AB14D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1F29D7FD21B42BE900AB14D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F29D7FE21B42BE900AB14D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1F29D80321B42C7800AB14D8 /* MPWTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClassesToTest.plist; sourceTree = "<group>"; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -801,7 +843,7 @@
 		1FDCCB37139A60FC00F5F273 /* MPWDefaultsScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDefaultsScheme.m; sourceTree = "<group>"; };
 		1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodCallBack.h; sourceTree = "<group>"; };
 		1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodCallBack.m; sourceTree = "<group>"; };
-		1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalkTouch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalkTouch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE37B5019695FA600C9A378 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FE37B5119695FA600C9A378 /* ObjectiveSmalltalkTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalkTouch.h; sourceTree = "<group>"; };
 		1FE37B68196960E400C9A378 /* MPWFoundationTouch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundationTouch.framework; path = "../../Build/Release-iphoneos/MPWFoundationTouch.framework"; sourceTree = "<group>"; };
@@ -864,6 +906,15 @@
 				1F63561A179EB68900D2DE58 /* Foundation.framework in Frameworks */,
 				1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */,
 				1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F29D7EA21B42BE500AB14D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1F29D80C21B42E5E00AB14D8 /* MPWTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -939,7 +990,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F81C08419699B6C0066DF43 /* ObjectiveHTTPD.framework in Frameworks */,
-				1F81C08319699B560066DF43 /* ObjectiveSmalltalkTouch.framework in Frameworks */,
+				1F81C08319699B560066DF43 /* ObjectiveSmalltalk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1101,9 +1152,27 @@
 			path = Schemes;
 			sourceTree = "<group>";
 		};
+		1F29D7EE21B42BE600AB14D8 /* TestObjectiveSmalltalk */ = {
+			isa = PBXGroup;
+			children = (
+				1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */,
+				1F29D7EF21B42BE600AB14D8 /* AppDelegate.h */,
+				1F29D7F021B42BE600AB14D8 /* AppDelegate.m */,
+				1F29D7F221B42BE600AB14D8 /* ViewController.h */,
+				1F29D7F321B42BE600AB14D8 /* ViewController.m */,
+				1F29D7F521B42BE600AB14D8 /* Main.storyboard */,
+				1F29D7F821B42BE900AB14D8 /* Assets.xcassets */,
+				1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */,
+				1F29D7FD21B42BE900AB14D8 /* Info.plist */,
+				1F29D7FE21B42BE900AB14D8 /* main.m */,
+			);
+			path = TestObjectiveSmalltalk;
+			sourceTree = "<group>";
+		};
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F29D80321B42C7800AB14D8 /* MPWTest.framework */,
 				1FE63E1B210626B60066B335 /* libclang.dylib */,
 				1F43485A1E216905002750C3 /* AWSS3.framework */,
 				1F4348511E216782002750C3 /* AWSCore.framework */,
@@ -1435,6 +1504,7 @@
 				1F59A711202C7ADA00BE06F6 /* X11Scheme */,
 				1FE63E0321061BE20066B335 /* MPWCSourceKit */,
 				1F6C792C2187468D00071DAC /* ObjectiveSwift */,
+				1F29D7EE21B42BE600AB14D8 /* TestObjectiveSmalltalk */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -1585,13 +1655,14 @@
 				1FBAAC16184BDC6400086047 /* stsh */,
 				1FAFD98E1855BC5500EC5221 /* StshFramework.framework */,
 				1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */,
-				1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalkTouch.framework */,
+				1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */,
 				1F81C06019699AE00066DF43 /* MethodServerTouch.framework */,
 				1F6810291E117A78006CE0D1 /* SqliteScheme.framework */,
 				1F4348491E21676F002750C3 /* S3Scheme.framework */,
 				1F59A710202C7ADA00BE06F6 /* X11Scheme.framework */,
 				1FE63E0221061BE10066B335 /* MPWCSourceKit.framework */,
 				1F6C792B2187468D00071DAC /* ObjectiveSwift.framework */,
+				1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1920,6 +1991,25 @@
 			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F29D80221B42BE900AB14D8 /* Build configuration list for PBXNativeTarget "TestObjectiveSmalltalk" */;
+			buildPhases = (
+				1F29D7E921B42BE500AB14D8 /* Sources */,
+				1F29D7EA21B42BE500AB14D8 /* Frameworks */,
+				1F29D7EB21B42BE500AB14D8 /* Resources */,
+				1F29D80B21B42E1700AB14D8 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F29D80A21B42E1600AB14D8 /* PBXTargetDependency */,
+			);
+			name = TestObjectiveSmalltalk;
+			productName = TestObjectiveSmalltalk;
+			productReference = 1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */;
+			productType = "com.apple.product-type.application";
+		};
 		1F4348481E21676F002750C3 /* S3Scheme */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F4348501E21676F002750C3 /* Build configuration list for PBXNativeTarget "S3Scheme" */;
@@ -2158,7 +2248,7 @@
 			);
 			name = ObjectiveSmalltalkTouch;
 			productName = ObjectiveSmalltalkTouch;
-			productReference = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalkTouch.framework */;
+			productReference = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		1FE63E0121061BE10066B335 /* MPWCSourceKit */ = {
@@ -2186,8 +2276,13 @@
 		F5A74ABA00F0A61B015ADD82 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 1010;
 				TargetAttributes = {
+					1F29D7EC21B42BE500AB14D8 = {
+						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Automatic;
+					};
 					1F4348481E21676F002750C3 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = PE4436LT5M;
@@ -2252,6 +2347,7 @@
 				1F59A70F202C7ADA00BE06F6 /* X11Scheme */,
 				1FE63E0121061BE10066B335 /* MPWCSourceKit */,
 				1F6C792A2187468D00071DAC /* ObjectiveSwift */,
+				1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */,
 			);
 		};
 /* End PBXProject section */
@@ -2263,6 +2359,17 @@
 			files = (
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F29D7EB21B42BE500AB14D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F29D7FC21B42BE900AB14D8 /* LaunchScreen.storyboard in Resources */,
+				1F29D7F921B42BE900AB14D8 /* Assets.xcassets in Resources */,
+				1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */,
+				1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2496,6 +2603,16 @@
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */,
 				1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F29D7E921B42BE500AB14D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F29D7F421B42BE600AB14D8 /* ViewController.m in Sources */,
+				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
+				1F29D7F121B42BE600AB14D8 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2798,6 +2915,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1F29D80A21B42E1600AB14D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */;
+			targetProxy = 1F29D80921B42E1600AB14D8 /* PBXContainerItemProxy */;
+		};
 		1F81C07419699AE10066DF43 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1F81C05F19699AE00066DF43 /* MethodServerTouch */;
@@ -2817,6 +2939,22 @@
 				1F084A1416DCE6A200ED2517 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1F29D7F521B42BE600AB14D8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F29D7F621B42BE600AB14D8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F29D7FB21B42BE900AB14D8 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 		1F7B75B514629431002F38D1 /* InfoPlist.strings */ = {
@@ -2982,6 +3120,84 @@
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1F29D80021B42BE900AB14D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = TestObjectiveSmalltalk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.TestObjectiveSmalltalk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F29D80121B42BE900AB14D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = TestObjectiveSmalltalk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.TestObjectiveSmalltalk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -4236,7 +4452,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Marcel Weiher (Q5WV8GLW6P)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -4272,7 +4488,7 @@
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = ObjectiveSmalltalkTouch;
+				PRODUCT_NAME = ObjectiveSmalltalk;
 				PUBLIC_HEADERS_FOLDER_PATH = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -4300,7 +4516,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Marcel Weiher (Q5WV8GLW6P)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -4329,7 +4545,7 @@
 				MACH_O_TYPE = staticlib;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = ObjectiveSmalltalkTouch;
+				PRODUCT_NAME = ObjectiveSmalltalk;
 				PUBLIC_HEADERS_FOLDER_PATH = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -4449,6 +4665,15 @@
 			buildConfigurations = (
 				1F084A1B16DCE6A200ED2517 /* Debug */,
 				1F084A1C16DCE6A200ED2517 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F29D80221B42BE900AB14D8 /* Build configuration list for PBXNativeTarget "TestObjectiveSmalltalk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F29D80021B42BE900AB14D8 /* Debug */,
+				1F29D80121B42BE900AB14D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
