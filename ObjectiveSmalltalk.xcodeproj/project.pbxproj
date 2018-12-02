@@ -35,8 +35,10 @@
 		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
 		1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
 		1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1F29D80C21B42E5E00AB14D8 /* MPWTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80321B42C7800AB14D8 /* MPWTest.framework */; };
-		1F29D80D21B42E5E00AB14D8 /* MPWTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80321B42C7800AB14D8 /* MPWTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F29D80F21B4374600AB14D8 /* MPWTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; };
+		1F29D81021B4374600AB14D8 /* MPWTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; };
+		1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8052111D1670086D540 /* MPWFilterDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2EB8022111D1670086D540 /* MPWFilterDefinition.m */; };
@@ -520,8 +522,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */,
 				1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */,
-				1F29D80D21B42E5E00AB14D8 /* MPWTest.framework in Embed Frameworks */,
+				1F29D81021B4374600AB14D8 /* MPWTest.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -588,6 +591,8 @@
 		1F29D7FE21B42BE900AB14D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1F29D80321B42C7800AB14D8 /* MPWTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClassesToTest.plist; sourceTree = "<group>"; };
+		1F29D80E21B4374600AB14D8 /* MPWTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F29D81121B4376600AB14D8 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -913,8 +918,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */,
 				1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */,
-				1F29D80C21B42E5E00AB14D8 /* MPWTest.framework in Frameworks */,
+				1F29D80F21B4374600AB14D8 /* MPWTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1488,6 +1494,8 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F29D81121B4376600AB14D8 /* MPWFoundation.framework */,
+				1F29D80E21B4374600AB14D8 /* MPWTest.framework */,
 				F5A74ABC00F0A61B015ADD82 /* Classes */,
 				1F222C881394CB90007AE2FB /* Schemes */,
 				1FE8F22513802EB500B37A71 /* Resources */,
@@ -2281,6 +2289,7 @@
 				TargetAttributes = {
 					1F29D7EC21B42BE500AB14D8 = {
 						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = PE4436LT5M;
 						ProvisioningStyle = Automatic;
 					};
 					1F4348481E21676F002750C3 = {
@@ -3143,6 +3152,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PE4436LT5M;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -3184,6 +3194,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PE4436LT5M;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

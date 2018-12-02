@@ -72,7 +72,7 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    runTests( @[ @"MPWFoundation"], @[] , NO, NO);
+    runTests( @[ @"MPWFoundation"], @[] , YES, YES);
     return YES;
 }
 
