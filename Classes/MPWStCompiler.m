@@ -688,6 +688,14 @@ idAccessor(solver, setSolver)
 						subExpr=[self mapConnector:subExpr];
                         [args removeLastObject];
                         [args addObject:subExpr];
+                        id next = [self nextToken];
+                        if ( [next isKeyword]) {
+                            isKeyword=YES;
+                            [selector appendString:next];
+                        } else {
+                            [self pushBack:next];
+                        }
+
                     } else {
 //                        NSLog(@"non-keyword that is not a special selector: %@",keyword);
                     }

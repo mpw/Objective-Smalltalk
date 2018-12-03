@@ -103,6 +103,11 @@
     [self testexpr:@"'Hi ' stringByAppendingString:'there' uppercaseString." expected:@"Hi THERE"];
 }
 
++(void)testKeywordMessageWithBinaryAsArg    // test for a bug with nestes exprs.
+{
+    [self testexpr:@" a:= #( 1, 2, 3) mutableCopy. a replaceObjectAtIndex: 1+1 withObject:'there'. a at:2." expected:@"there"];
+}
+
 +(void)nestedReceiverStringConcat
 {
     [self testexpr:@"'Hi 'uppercaseString stringByAppendingString:'there'." expected:@"HI there"];
@@ -1266,6 +1271,7 @@
 		@"testThreePlusFour",
 		@"stringConcat",
 		@"nestedArgStringConcat",
+        @"testKeywordMessageWithBinaryAsArg",
         @"nestedReceiverStringConcat",@"simpleLiteral",
         @"stackedMappedConcat",@"mixedStackedMappedConcat",
         @"arrayLiteral",
