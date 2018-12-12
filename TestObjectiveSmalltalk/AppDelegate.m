@@ -33,7 +33,7 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
 
     NSArray *classNamesToTest=[NSPropertyListSerialization propertyListWithData:namePlist options:0 format:0 error:nil];
 
-    classNamesToTest = @[ @"MPWStTests" ];
+    classNamesToTest = @[ @"MPWStTests", /* @"MPWMethodCallBack"  */];  // 
     NSLog(@"parsed classes to test data");
 
     NSMutableArray *mirrors=[NSMutableArray array];
@@ -75,7 +75,7 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    runTests( @[ @"MPWFoundation"], @[] , YES, YES);
+    runTests( @[ @"MPWFoundation"], @[] , NO, NO);
     return YES;
 }
 

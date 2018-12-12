@@ -472,6 +472,7 @@
 		1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */; };
 		1FED18C11544684600E0D765 /* JSGCDDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FED18BF1544684600E0D765 /* JSGCDDispatcher.m */; };
 		1FED18C41544684600E0D765 /* JSGCDDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FED18C01544684600E0D765 /* JSGCDDispatcher.h */; };
+		1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6F637F0987C803006F3936 /* NSObjectScripting.m */; };
 		1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; };
 		1FF142381B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
@@ -2620,6 +2621,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F29D7F421B42BE600AB14D8 /* ViewController.m in Sources */,
+				1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */,
 				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
 				1F29D7F121B42BE600AB14D8 /* AppDelegate.m in Sources */,
 			);
@@ -3142,7 +3144,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -3184,7 +3186,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
