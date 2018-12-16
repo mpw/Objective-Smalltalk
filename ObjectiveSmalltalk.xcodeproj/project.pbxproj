@@ -335,7 +335,6 @@
 		1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B6D1969610600C9A378 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
 		1FE37B701969610600C9A378 /* JSGCDDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FED18C01544684600E0D765 /* JSGCDDispatcher.h */; };
-		1FE37B711969610600C9A378 /* JSGCDDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FED18BF1544684600E0D765 /* JSGCDDispatcher.m */; };
 		1FE37B721969610600C9A378 /* MPWAssignmentExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74ADF00F0A95F015ADD82 /* MPWAssignmentExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B731969610600C9A378 /* MPWAssignmentExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ADE00F0A95F015ADD82 /* MPWAssignmentExpression.m */; };
 		1FE37B741969610600C9A378 /* MPWBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC23075256C500A306C8 /* MPWBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -470,7 +469,6 @@
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
 		1FE8F22813802F0700B37A71 /* MPWResourceScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */; };
 		1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */; };
-		1FED18C11544684600E0D765 /* JSGCDDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FED18BF1544684600E0D765 /* JSGCDDispatcher.m */; };
 		1FED18C41544684600E0D765 /* JSGCDDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FED18C01544684600E0D765 /* JSGCDDispatcher.h */; };
 		1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6F637F0987C803006F3936 /* NSObjectScripting.m */; };
 		1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2724,7 +2722,6 @@
 				1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
 				1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
-				1FED18C11544684600E0D765 /* JSGCDDispatcher.m in Sources */,
 				1F5501B315ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
 				1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */,
@@ -2884,7 +2881,6 @@
 				1FE37BB81969610700C9A378 /* MPWSetAccessor.m in Sources */,
 				1FE37BB01969610700C9A378 /* MPWRecursiveIdentifier.m in Sources */,
 				1FE37BBC1969610800C9A378 /* MPWStCompiler.m in Sources */,
-				1FE37B711969610600C9A378 /* JSGCDDispatcher.m in Sources */,
 				1FE37B981969610600C9A378 /* MPWMessage.m in Sources */,
 				1FE37BF01969612700C9A378 /* MPWDefaultsScheme.m in Sources */,
 				1FE37B771969610600C9A378 /* MPWBlockContext.m in Sources */,
@@ -3459,7 +3455,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
-				INSTALL_PATH = "@rpath/Frameworks/";
+				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = "";
@@ -3502,7 +3498,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
-				INSTALL_PATH = "@rpath/Frameworks/";
+				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = "";
@@ -3831,7 +3827,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
-				INSTALL_PATH = "@rpath/Frameworks/";
+				INSTALL_PATH = "@rpath/";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
@@ -3869,7 +3865,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
-				INSTALL_PATH = "@rpath/Frameworks/";
+				INSTALL_PATH = "@rpath/";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
@@ -4117,7 +4113,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
-				INSTALL_PATH = "@rpath/Frameworks/";
+				INSTALL_PATH = "@rpath/";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
@@ -4167,7 +4163,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "ObjectiveSmalltalkUI/ObjectiveSmalltalkUI-Info.plist";
-				INSTALL_PATH = "@rpath/Frameworks/";
+				INSTALL_PATH = "@rpath/";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
