@@ -1197,10 +1197,10 @@ idAccessor(solver, setSolver)
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
             [self pushBack:@"{"];
             MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
-            NSLog(@"parsed: %@",filterMethod);
+//            NSLog(@"parsed: %@",filterMethod);
             [methods addObject:filterMethod];
             classDef.methods=methods;
-            NSLog(@"methods: %@",methods);
+//            NSLog(@"methods: %@",methods);
 
         } else {
             PARSEERROR(@"expected { in class definition", separator);

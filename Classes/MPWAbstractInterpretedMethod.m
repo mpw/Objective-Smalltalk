@@ -36,7 +36,7 @@ idAccessor( methodType, setMethodType )
 #ifndef __clang_analyzer__
 // This leaks because we are installing into the runtime, can't remove after
 
--(void)installInClass:aClass
+-(void)installInClass:(Class)aClass
 {
 	id callback=[[MPWMethodCallBack alloc] init];
 	[callback setMethod:self];

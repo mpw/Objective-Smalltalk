@@ -121,7 +121,7 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
         MPWScriptedMethod *method=(MPWScriptedMethod*)[callback method];
         d[[[method methodHeader] headerString]]=[method script];
     }
-    NSLog(@"external method dict for %@ -> %@",[[self classMirror] name],d);
+//    NSLog(@"external method dict for %@ -> %@",[[self classMirror] name],d);
     return d;
 }
 
