@@ -13,6 +13,8 @@ static void runTests()
 	NSArray *classes=@[
                        @"MPWIdentifier",
                        @"MPWStScanner",
+                       @"MPWScheme",
+                       @"MPWInterval",
 
 	];
 

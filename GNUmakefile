@@ -32,6 +32,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWExpression.m \
     Classes/MPWBinding.m \
     Classes/MPWStScanner.m \
+    Classes/MPWInterval.m \
 
 
 
