@@ -77,20 +77,20 @@
     return [[self.identifier pathComponents] componentsJoinedByString:@"/"];
 }
 
--(void)startObserving
-{
-        if (!self.isObserving) {
-                [[self _objectToIndex:-1] objst_addObserver:self forKey:[self finalKey]];
-                self.isObserving=YES;
-            }
-
-    }
-
--(void)stopObserving
-{
-        [[self _objectToIndex:-1] removeObserver:self forKeyPath:[self finalKey]];
-        self.isObserving=NO;
-}
+//-(void)startObserving
+//{
+//        if (!self.isObserving) {
+//                [[self _objectToIndex:-1] objst_addObserver:self forKey:[self finalKey]];
+//                self.isObserving=YES;
+//            }
+//
+//    }
+//
+//-(void)stopObserving
+//{
+//        [[self _objectToIndex:-1] removeObserver:self forKeyPath:[self finalKey]];
+//        self.isObserving=NO;
+//}
 
 
 

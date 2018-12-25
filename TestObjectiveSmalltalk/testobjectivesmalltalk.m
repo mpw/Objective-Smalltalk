@@ -15,6 +15,12 @@ static void runTests()
                        @"MPWStScanner",
                        @"MPWScheme",
                        @"MPWInterval",
+                       @"MPWFrameworkScheme",
+                       @"MPWSchemeScheme",
+                       @"MPWVarScheme",
+//                       @"MPWVARBinding",
+                       @"MPWSelfContainedBindingsScheme",
+//                       @"MPWEvaluator",
 
 	];
 

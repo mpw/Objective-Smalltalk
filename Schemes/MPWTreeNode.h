@@ -26,5 +26,6 @@
 idAccessor_h( content, setContent )
 -mkdirs:(NSEnumerator*)pathEnumerator;
 -childWithName:childName;
+-nodeForPathComponent:aComponent;
 
 @end

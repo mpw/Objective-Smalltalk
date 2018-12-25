@@ -33,7 +33,7 @@
 
 -(NSString *)frameworksIn:(NSString *)basePath
 {
-    return [[[[[NSFileManager defaultManager] contentsOfDirectoryAtPath:basePath error:nil] pathsMatchingExtensions:@[ @"framework"]] collect] stringByDeletingPathExtension];
+    return [[[[[NSFileManager defaultManager] contentsOfDirectoryAtPath:basePath error:NULL] pathsMatchingExtensions:@[ @"framework"]] collect] stringByDeletingPathExtension];
 }
 
 -(NSString *)allFrameworks

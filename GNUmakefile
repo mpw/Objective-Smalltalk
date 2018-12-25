@@ -33,6 +33,12 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWBinding.m \
     Classes/MPWStScanner.m \
     Classes/MPWInterval.m \
+    Schemes/MPWFrameworkScheme.m \
+    Schemes/MPWSchemeScheme.m \
+    Schemes/MPWVarScheme.m \
+    Schemes/MPWVARBinding.m \
+    Schemes/MPWSelfContainedBindingsScheme.m \
+
 
 
 
