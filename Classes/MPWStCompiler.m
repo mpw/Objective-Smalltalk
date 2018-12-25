@@ -8,7 +8,7 @@
 #import "MPWComplexAssignment.h"
 #import "MPWStatementList.h"
 #import "MPWBlockExpression.h"
-#import "MPWInterval.h"
+#import <MPWFoundation/MPWInterval.h>
 #import "MPWMethodStore.h"
 #import "MPWIdentifier.h"
 #import "MPWRecursiveIdentifier.h"

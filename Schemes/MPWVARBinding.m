@@ -7,7 +7,7 @@
 //
 
 #import "MPWVARBinding.h"
-#import "MPWInterval.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 
 @implementation NSObject(valueForPathComponent)

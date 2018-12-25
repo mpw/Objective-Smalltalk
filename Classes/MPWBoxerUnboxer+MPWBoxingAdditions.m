@@ -7,7 +7,7 @@
 //
 
 #import "MPWBoxerUnboxer+MPWBoxingAdditions.h"
-#import "MPWInterval.h"
+#import <MPWFoundation/MPWInterval.h>
 
 
 @implementation MPWBoxerUnboxer (MPWBoxingAdditions)

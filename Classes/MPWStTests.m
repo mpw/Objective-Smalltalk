@@ -380,7 +380,7 @@
 
 +(void)testNSRangeViaSubarray
 {
-    [self testexpr:@" #( 'Help' , 'Hello World', 'Hello Marcel') subarrayWithRange:( 1 to: 2) " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
+    TESTEXPR(@" #( 'Help' , 'Hello World', 'Hello Marcel') subarrayWithRange:( 1 to: 2) ", ( @[@"Hello World",@"Hello Marcel"] ) )
 }
 
 +(void)testNSPointViaString

@@ -8,7 +8,7 @@
 
 #import "MPWEvaluator.h"
 #import "MPWBinding.h"
-#import "MPWInterval.h"
+#import <MPWFoundation/MPWInterval.h>
 #import <MPWFoundation/NSNil.h>
 #import <MPWFoundation/MPWByteStream.h>
 #import "MPWMessage.h"

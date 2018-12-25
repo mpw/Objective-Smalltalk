@@ -7,7 +7,7 @@
 //
 
 #import "MPWMessage.h"
-#import "MPWInterval.h"
+#import <MPWFoundation/MPWInterval.h>
 #import "MPWFastMessage.h"
 #import <MPWFoundation/AccessorMacros.h>
 #import "MPWBoxerUnboxer+MPWBoxingAdditions.h"
@@ -180,7 +180,7 @@ idAccessor( _signature, setSignature )
 						case '{':
                         {
                             MPWBoxerUnboxer *boxer=[self converterForType:type];
-//                            NSLog(@"boxer: %@",boxer);
+                            NSLog(@"boxer: %@",boxer);
                             if ( boxer ) {
                                 [boxer unboxObject:arg intoBuffer:buffer maxBytes:128];
                                 argp=buffer;
@@ -286,11 +286,14 @@ idAccessor( _signature, setSignature )
 			case '{':
             {
                 MPWBoxerUnboxer *boxer=[self converterForType:returnType];
-                
+                NSLog(@"boxer: %@",boxer);
                 if ( boxer ) {
                     returnValue=[boxer boxedObjectForBuffer:returnBuffer maxBytes:sizeof returnBuffer];
                     break;
-				}
+                } else {
+                    NSLog(@"couldn't get boxer/unboxer for %s",returnType);
+                    NSLog(@"conversionDict: %@",[MPWBoxerUnboxer conversionDict]);
+                }
 				
             }
 			default:
