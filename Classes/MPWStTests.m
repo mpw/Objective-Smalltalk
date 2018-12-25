@@ -367,6 +367,12 @@
 {
     [self testexpr:@"-2" expected:[NSNumber numberWithInt:-2]];
 }
+
++(void)testCollectHOM
+{
+    TESTEXPR(@"#( 'Help ', 'Hello ', 'Hi ') collect , 'World!' ", (@[@"Help World!",@"Hello World!",@"Hi World!"]) );
+}
+
 +(void)testSelectHOM
 {
     [self testexpr:@" #( 'Help', 'Hello World', 'Hello Marcel') select hasPrefix:'Hello' " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
@@ -1298,7 +1304,8 @@
 		@"testAddingMethodToClass",
 		@"testNegativeLiteral",
 		@"testNegativeLiteralComputation",
-		@"testSelectHOM",
+        @"testCollectHOM",
+//        @"testSelectHOM",                 doesn't work on GNUstep
 		@"testScriptWithParameters",
 		@"testNSRangeViaSubarray",
 //		@"testNSPointViaString",
