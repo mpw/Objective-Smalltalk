@@ -21,11 +21,10 @@
 	return getenv([name UTF8String]);
 }
 
-extern char ***_NSGetEnviron( void );
+extern char **environ;
 
 +(NSArray*)getAllEnvironemntVariableNames
 {
-    char **environ=*_NSGetEnviron();
     NSMutableArray *env=[NSMutableArray array];
     char **envp=environ;
     while (*envp) {

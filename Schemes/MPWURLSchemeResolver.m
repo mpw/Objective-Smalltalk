@@ -62,7 +62,11 @@
 {
     NSError *error=nil;
     NSURL *aURL=[aReference URL];
+#ifdef GS_API_LATEST
+    NSData *rawData = [NSData dataWithContentsOfURL:aURL  error:&error];
+#else
     NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
+#endif
     MPWResource *result=[[[MPWResource alloc] init] autorelease];
     [result setSource:aURL];
     [result setRawData:rawData];
@@ -124,8 +128,8 @@
 {
     IDEXPECT( [[self httpScheme] schemePrefix], @"http",@"insecure");
     IDEXPECT( [[self httpsScheme] schemePrefix], @"https",@"secure");
-    IDEXPECT( [[(MPWGenericReference*)[[self httpsScheme] referenceForPath:@"//localhost"] URL] absoluteString], @"https://localhost",@"secure");
-    IDEXPECT( [[(MPWGenericReference*)[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] referenceForPath:@"localhost"] URL] absoluteString], @"ftp:localhost" ,@"ftp");
+    IDEXPECT( [[(MPWGenericReference*)[[self httpsScheme] referenceForPath:@"localhost"] URL] absoluteString], @"https://localhost",@"secure");
+    IDEXPECT( [[(MPWGenericReference*)[[[[self alloc] initWithSchemePrefix:@"ftp" ] autorelease] referenceForPath:@"localhost"] URL] absoluteString], @"ftp://localhost" ,@"ftp");
     
 }
 

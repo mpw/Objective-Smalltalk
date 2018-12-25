@@ -9,10 +9,7 @@
 #import "MPWClassMirror.h"
 #import "MPWMethodMirror.h"
 #import "MPWObjectMirror.h"
-
-#pragma .h #import <Foundation/Foundation.h>
-#pragma .h @class MPWObjectMirror,MPWMethodMirror;
-
+#import <objc/runtime.h>
 
 
 @implementation MPWClassMirror : NSObject
@@ -313,6 +310,8 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 
 
 //extern id _objc_msgForward(id receiver, SEL sel, ...);
+#ifndef GS_API_LATEST
+
 @implementation MPWClassMirror(testing)
 
 -(NSString*)__testMessageHi
@@ -394,4 +393,5 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 
 @end
 
+#endif
 

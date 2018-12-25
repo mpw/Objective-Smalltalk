@@ -9,7 +9,9 @@
 #import "MPWFileSchemeResolver.h"
 #import "MPWFileBinding.h"
 #import "MPWDirectoryBinding.h"
+#ifndef GS_API_LATEST
 #import "MPWFileWatcher.h"
+#endif
 #import "MPWResource.h"
 
 @implementation MPWFileSchemeResolver
@@ -19,6 +21,7 @@
     return [MPWFileBinding bindingWithReference:aReference inStore:self];
 }
 
+#ifndef GS_API_LATEST
 -(void)startWatching:(MPWFileBinding*)binding
 {
     NSString *path=[binding path];
@@ -28,7 +31,10 @@
     [[MPWFileWatcher watcher] watchFile:dir withDelegate:binding];
     
 }
-
+#else
+-(void)startWatching:(MPWFileBinding*)binding
+{}
+#endif
 
 -directoryForReference:(MPWGenericReference*)aReference
 {
@@ -75,7 +81,7 @@
 {
     NSString *tempUrlString = @"file:/tmp/fileSchemeTest.txt";
     NSString *textString = @"hello world!";
-    [textString writeToURL:[NSURL URLWithString:tempUrlString] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    [textString writeToURL:[NSURL URLWithString:tempUrlString] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     IDEXPECT([[MPWStCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
 }
 

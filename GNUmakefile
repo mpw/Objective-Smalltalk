@@ -33,12 +33,65 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWBinding.m \
     Classes/MPWStScanner.m \
     Classes/MPWInterval.m \
+    Classes/MPWMessage.m \
+    Classes/MPWMessage.m \
+    Classes/MPWSelfContainedBinding.m \
+    Classes/MPWClassMirror.m \
+    Classes/MPWEvaluator.m \
+    Classes/MPWMessageExpression.m \
+    Classes/MPWRecursiveIdentifier.m \
+    Classes/MPWFilterDefinition.m \
+    Classes/MPWBidirectionalDataflowConstraintExpression.m \
+    Classes/MPWIdentifierExpression.m \
+    Classes/MPWScriptedMethod.m \
+    Classes/MPWMethodHeader.m \
+    Classes/MPWLiteralExpression.m \
+    Classes/MPWInstanceVariable.m \
+    Classes/MPWLiteralArrayExpression.m \
+    Classes/MPWPropertyPathComponent.m \
+    Classes/MPWBlockExpression.m \
+    Classes/MPWAssignmentExpression.m \
+    Classes/MPWStatementList.m \
+    Classes/MPWDataflowConstraintExpression.m \
+    Classes/MPWLiteralDictionaryExpression.m \
+    Classes/MPWConnectToDefault.m \
+    Classes/MPWClassDefinition.m \
+    Classes/MPWComplexAssignment.m \
+    Classes/MPWPropertyPath.m \
+    Classes/MPWMethodStore.m \
+    Classes/MPWObjCGenerator.m \
+    Classes/MPWPropertyPathDefinition.m \
+    Classes/MPWConnector.m \
+    Classes/MPWMethodType.m \
+    Classes/MPWPropertyPathGetter.m \
+    Classes/MPWPropertyPathSetter.m \
+    Classes/MPWBlockContext.m \
+    Classes/MPWAbstractInterpretedMethod.m \
+    Classes/MPWClassMethodStore.m \
+    Classes/MPWMessagePortDescriptor.m \
+    Classes/MPWMethodCallBack.m \
+    Classes/MPWResource.m \
+    Classes/MPWStCompiler.m \
+    Classes/MPWStTests.m \
+    MPWCascadeExpression.m \
+    Schemes/MPWFileBinding.m \
+    Schemes/MPWDirectoryBinding.m \
+    Schemes/MPWRefScheme.m \
+    Schemes/MPWClassScheme.m \
     Schemes/MPWFrameworkScheme.m \
     Schemes/MPWSchemeScheme.m \
     Schemes/MPWVarScheme.m \
     Schemes/MPWVARBinding.m \
     Schemes/MPWSelfContainedBindingsScheme.m \
+    Schemes/MPWBundleScheme.m \
+    Schemes/MPWFileSchemeResolver.m \
+    Schemes/MPWDefaultsScheme.m \
+    Schemes/MPWURLSchemeResolver.m \
+    Schemes/MPWEnvScheme.m \
 
+
+# Classes/MPWStTests.m \
+# Classes/MPWStCompiler.m \
 
 
 

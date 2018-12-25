@@ -11,16 +11,17 @@ static void runTests()
 	int success=0;
 	int failure=0;
 	NSArray *classes=@[
-                       @"MPWIdentifier",
-                       @"MPWStScanner",
-                       @"MPWScheme",
-                       @"MPWInterval",
-                       @"MPWFrameworkScheme",
-                       @"MPWSchemeScheme",
-                       @"MPWVarScheme",
-//                       @"MPWVARBinding",
-                       @"MPWSelfContainedBindingsScheme",
-//                       @"MPWEvaluator",
+//                       @"MPWIdentifier",
+//                       @"MPWStScanner",
+//                       @"MPWScheme",
+//                       @"MPWInterval",
+//                       @"MPWFrameworkScheme",
+//                       @"MPWSchemeScheme",
+//                       @"MPWVarScheme",
+////                       @"MPWVARBinding",
+//                       @"MPWSelfContainedBindingsScheme",
+//                       @"MPWStCompiler",
+                       @"MPWStTests",
 
 	];
 

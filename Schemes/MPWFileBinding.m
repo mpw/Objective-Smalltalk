@@ -12,6 +12,7 @@
 #import "MPWResource.h"
 #import "MPWDirectoryBinding.h"
 #import <MPWFoundation/MPWFDStreamSource.h>
+#import <unistd.h>
 
 @interface NSObject (workspaceMBethods)
 
@@ -79,7 +80,7 @@
 
 -(NSDate *)lastModifiedDate
 {
-    NSDictionary *attributes=[[NSFileManager defaultManager] attributesOfItemAtPath:[self path] error:nil];
+    NSDictionary *attributes=[[NSFileManager defaultManager] attributesOfItemAtPath:[self path] error:NULL];
     return attributes[NSFileModificationDate];
 }
 

@@ -28,13 +28,13 @@ idAccessor( source, setSource )
 	if ( [[self MIMEType] hasPrefix:@"image/"] ) {
 		return [NSClassFromString(@"NSBitmapImageRep") imageRepWithData:[self rawData]] ;
 	} else if ( ([[self MIMEType] hasPrefix:@"application/json"] || [[self MIMEType] hasPrefix:@"text/javascript"]) && NSClassFromString(@"NSJSONSerialization")) {
-		return [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:[self rawData] options:0 error:nil] ;
+		return [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:[self rawData] options:0 error:NULL] ;
 	}  else if ( [[self extension] isEqual:@"newsplist"] ||
                 [[self extension] isEqual:@"plist"] ) {
 #if TARGET_OS_IPHONE
         return [NSPropertyListSerialization propertyListFromData:[self rawData] mutabilityOption:0 format:nil errorDescription:nil];
 #else
-        return [NSPropertyListSerialization propertyListWithData:[self rawData] options:0 format:0 error:nil];
+        return [NSPropertyListSerialization propertyListWithData:[self rawData] options:0 format:0 error:NULL];
         
 //        [[[self rawData] stringValue] propertyList];
 #endif
