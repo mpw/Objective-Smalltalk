@@ -11,7 +11,8 @@ static void runTests()
 	int success=0;
 	int failure=0;
 	NSArray *classes=@[
-        @"MPWIdentifier",
+                       @"MPWIdentifier",
+                       @"MPWStScanner",
 
 	];
 
