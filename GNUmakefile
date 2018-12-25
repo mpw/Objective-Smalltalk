@@ -73,6 +73,9 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWResource.m \
     Classes/MPWStCompiler.m \
     Classes/MPWStTests.m \
+    Classes/NSObjectScripting.m \
+    Classes/MPWGetAccessor.m \
+    Classes/MPWSetAccessor.m \
     MPWCascadeExpression.m \
     Schemes/MPWFileBinding.m \
     Schemes/MPWDirectoryBinding.m \

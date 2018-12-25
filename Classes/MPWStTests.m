@@ -90,7 +90,7 @@
 
 +(void)testSevenMinus4
 {
-    [self testexpr:@"7-4" expected:@"3"];
+    TESTEXPR(@"7-4",@"3");
 }
 
 +(void)stringConcat
@@ -204,7 +204,10 @@
 
 +(void)testNil
 {
-    [self testexpr:@"nil" expected:nil];
+    id result=[self evaluate:@"nil"];
+    NSLog(@"result %p",result);
+    NSLog(@"result class: %@",[result class]);
+    EXPECTNIL( result, @"result of evaluating nil");
 }
 
 
