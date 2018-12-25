@@ -1105,10 +1105,18 @@
 
 +(void)testSimpleFilterDefSyntax
 {
+    NSString *input=@"lowercase world";
+    NSString *output=@"LOWERCASE WORLD";
     MPWStCompiler *compiler=[MPWStCompiler compiler];
     [compiler evaluateScriptString:@"filter MyFilter |{  self target writeObject: (object uppercaseString) sender:self. }"];
-    id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
-    IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
+    id filter=[compiler evaluateScriptString:@" MyFilter new"];
+    EXPECTNOTNIL(filter,@"got a filter instance");
+
+    [filter writeObject:input];
+    IDEXPECT([input uppercaseString],output,@"check");
+    id result=[[filter target] firstObject];
+//    id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
+    IDEXPECT( result, @"LOWERCASE WORLD", @"result of filtering via defined filter");
 }
 
 +(void)testUseStReturnAsForward

@@ -1014,11 +1014,10 @@ idAccessor(solver, setSolver)
     [method setMethodHeader:header];
     NSString *bodyStart=[self nextToken];
 //    NSLog(@"body start: %@",bodyStart);
-    MPWBlockExpression *body=[self parseBlockWithStart:bodyStart];
-    id statements=[body statements];
+    id body=[self parseBlockWithStart:bodyStart];
 //    NSLog(@"body: %@",body);
 //    NSLog(@"statements: %@",statements);
-    [method setMethodBody:statements];
+    [method setMethodBody:[body statements]];
     return method;
 }
 
@@ -1195,7 +1194,7 @@ idAccessor(solver, setSolver)
             classDef.instanceVariableDescriptions=instanceVariables;
             classDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {
-            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"writeObject:object sender:aSender"];
+            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
             [self pushBack:@"{"];
             MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
             NSLog(@"parsed: %@",filterMethod);
