@@ -3,3 +3,5 @@ CVS
 ObjectiveSmalltalk.xcodeproj/xcuserdata/
 .o
 .dylib
+.headers
+TestObjectiveSmalltalk/testobjectivesmalltalk

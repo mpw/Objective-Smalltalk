@@ -47,6 +47,11 @@ idAccessor( root, setRoot )
     [node setContent:newValue];
 }
 
+-get:(NSString*)uriString parameters:uriParameters
+{
+    return [root nodeForPathComponent:uriString];
+}
+
 
 -(BOOL)isLeafReference:(MPWGenericReference *)aReference
 {

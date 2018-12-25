@@ -552,6 +552,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F04A53121D253F300E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		1F04A53221D25A1800E19C3F /* testobjectivesmalltalk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = testobjectivesmalltalk.m; path = TestObjectiveSmalltalk/testobjectivesmalltalk.m; sourceTree = "<group>"; };
+		1F04A53421D25AEB00E19C3F /* makeheaderdir */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = makeheaderdir; sourceTree = "<group>"; };
+		1F04A53521D25AF200E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = base.make; sourceTree = "<group>"; };
 		1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjSTNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjSTNative-Info.plist"; sourceTree = "<group>"; };
 		1F084A1416DCE6A200ED2517 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1062,6 +1066,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F04A53021D253DC00E19C3F /* GNUstep */ = {
+			isa = PBXGroup;
+			children = (
+				1F04A53521D25AF200E19C3F /* base.make */,
+				1F04A53421D25AEB00E19C3F /* makeheaderdir */,
+				1F04A53221D25A1800E19C3F /* testobjectivesmalltalk.m */,
+				1F04A53121D253F300E19C3F /* GNUmakefile */,
+			);
+			name = GNUstep;
+			sourceTree = "<group>";
+		};
 		1F084A1016DCE6A200ED2517 /* ObjSTNative */ = {
 			isa = PBXGroup;
 			children = (
@@ -1493,6 +1508,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F04A53021D253DC00E19C3F /* GNUstep */,
 				1F29D81121B4376600AB14D8 /* MPWFoundation.framework */,
 				1F29D80E21B4374600AB14D8 /* MPWTest.framework */,
 				F5A74ABC00F0A61B015ADD82 /* Classes */,
