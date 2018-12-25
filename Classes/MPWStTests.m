@@ -1130,7 +1130,7 @@
 +(void)testFilterDefWithNormalMethods
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"filter LowerFilter { -writeObject:object {  self forward:object lowercaseString. }}"];
+    [compiler evaluateScriptString:@"filter LowerFilter { -<void>writeObject:object {  self forward:object lowercaseString. }}"];
     id result=[[compiler evaluateScriptString:@" LowerFilter process:'SHOULD BE LOWER'."] firstObject];
     IDEXPECT( result, @"should be lower", @"nested expr result");
 }
