@@ -1,7 +1,7 @@
 .svn
 CVS
 ObjectiveSmalltalk.xcodeproj/xcuserdata/
-.o
-.dylib
+*.o
+*.dylib
 .headers
 TestObjectiveSmalltalk/testobjectivesmalltalk
