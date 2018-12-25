@@ -37,6 +37,8 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWMessage.m \
     Classes/MPWSelfContainedBinding.m \
     Classes/MPWClassMirror.m \
+    Classes/MPWObjectMirror.m \
+    Classes/MPWMethodMirror.m \
     Classes/MPWEvaluator.m \
     Classes/MPWMessageExpression.m \
     Classes/MPWRecursiveIdentifier.m \

@@ -205,7 +205,7 @@
 
 @end
 
-#if __NEXT_RUNTIME__
+//#if __NEXT_RUNTIME__
 
 #import <objc/runtime.h>
 
@@ -286,11 +286,10 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 
 @end
 
-#elif 0
 
 
 
-#endif
+//#endif
 
 #import <MPWFoundation/DebugMacros.h>
 #import <objc/message.h>

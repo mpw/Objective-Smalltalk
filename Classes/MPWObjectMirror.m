@@ -11,8 +11,6 @@
 #import "MPWClassMirror.h"
 #import <objc/runtime.h>
 
-#pragma .h #import <Foundation/Foundation.h>
-#pragma .h @class MPWClassMirror;
 
 @implementation MPWObjectMirror : NSObject
 
