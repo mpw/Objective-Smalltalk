@@ -20,7 +20,9 @@ static void runTests()
 //                       @"MPWVarScheme",
 ////                       @"MPWVARBinding",
 //                       @"MPWSelfContainedBindingsScheme",
-//                       @"MPWStCompiler",
+                       @"MPWStCompiler",
+//                       @"MPWFilterDefinition",
+                       @"MPWMethodHeader",
                        @"MPWStTests",
 
 	];

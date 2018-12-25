@@ -534,7 +534,7 @@ idAccessor(solver, setSolver)
 	id closeBrace;
 	id blockVariables;
     NSString *endOfBlock=[startOfBlock isEqualToString:@"["] ? @"]" : @"}";
-//	NSLog(@"parseBlock");
+//    NSLog(@"parseBlock");
 	blockVariables = [self parseBlockVariables];
 //	NSLog(@"block variables: %@",blockVariables);
 	statements = [self parseStatements];
@@ -542,7 +542,7 @@ idAccessor(solver, setSolver)
 //	NSLog(@"done with block: %@",closeBrace);
 //	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
 	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
-//  NSLog(@"closeBrace: %@",closeBrace);
+//    NSLog(@"closeBrace: %@",closeBrace);
     [expr setOffset:[scanner offset]];
     [expr setLen:1];
     if ( ![closeBrace isEqual:endOfBlock] ) {
@@ -1013,8 +1013,12 @@ idAccessor(solver, setSolver)
     MPWScriptedMethod *method=[[MPWScriptedMethod new] autorelease];
     [method setMethodHeader:header];
     NSString *bodyStart=[self nextToken];
-    MPWBlockExpression *body=[[self parseBlockWithStart:bodyStart] statements];
-    [method setMethodBody:body];
+//    NSLog(@"body start: %@",bodyStart);
+    MPWBlockExpression *body=[self parseBlockWithStart:bodyStart];
+    id statements=[body statements];
+//    NSLog(@"body: %@",body);
+//    NSLog(@"statements: %@",statements);
+    [method setMethodBody:statements];
     return method;
 }
 
@@ -1191,12 +1195,13 @@ idAccessor(solver, setSolver)
             classDef.instanceVariableDescriptions=instanceVariables;
             classDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {
-            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"writeObject:object"];
+            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"writeObject:object sender:aSender"];
             [self pushBack:@"{"];
             MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
+            NSLog(@"parsed: %@",filterMethod);
             [methods addObject:filterMethod];
             classDef.methods=methods;
-//            NSLog(@"methods: %@",methods);
+            NSLog(@"methods: %@",methods);
 
         } else {
             PARSEERROR(@"expected { in class definition", separator);

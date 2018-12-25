@@ -61,7 +61,7 @@
 {
     MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
     NSString *path = @"/tmp/relativeSchemeTests.txt";
-    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     [interpreter evaluateScriptString:@"scheme:rel := MPWRelScheme alloc initWithBaseScheme: scheme:file baseURL:'/tmp'."];
     IDEXPECT([interpreter evaluateScriptString:@"rel:/relativeSchemeTests.txt stringValue"] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
 }
@@ -70,7 +70,7 @@
 {
     MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
     NSString *path = @"/tmp/relativeSchemeTests.txt";
-    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     id rel=[interpreter evaluateScriptString:@"MPWRelScheme alloc initWithBaseScheme: scheme:file baseURL:'/tmp'."];
     IDEXPECT([[rel get:@"/relativeSchemeTests.txt" parameters:nil] stringValue] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
 }
@@ -79,7 +79,7 @@
 {
     MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
     NSString *path = @"/tmp/relativeSchemeTests.txt";
-    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     [interpreter evaluateScriptString:@"env:a :='tmp'. rel := ref:file:/{env:a} asScheme."];
     IDEXPECT([interpreter evaluateScriptString:@"(rel get:'/relativeSchemeTests.txt' parameters:nil) stringValue"] , @"hello world!", @"eval rel:/relativeSchemeTests.txt");
 }

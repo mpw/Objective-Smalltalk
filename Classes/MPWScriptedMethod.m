@@ -125,7 +125,12 @@ idAccessor( script, _setScript )
 {
     return [NSString stringWithFormat:@"%@\n%@",
             [[self methodHeader] headerString],
-            [[self script] stringValue]];
+            [self script] ? [[self script] stringValue] : [methodBody description]];
+}
+
+-description
+{
+    return [self stringValue];
 }
 
 //-(void)encodeWithCoder:aCoder

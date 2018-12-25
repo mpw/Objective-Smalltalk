@@ -91,6 +91,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWDefaultsScheme.m \
     Schemes/MPWURLSchemeResolver.m \
     Schemes/MPWEnvScheme.m \
+    Schemes/MPWRelScheme.m \
 
 
 # Classes/MPWStTests.m \
