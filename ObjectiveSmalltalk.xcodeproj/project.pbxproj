@@ -552,6 +552,8 @@
 		1F04A53221D25A1800E19C3F /* testobjectivesmalltalk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = testobjectivesmalltalk.m; path = TestObjectiveSmalltalk/testobjectivesmalltalk.m; sourceTree = "<group>"; };
 		1F04A53421D25AEB00E19C3F /* makeheaderdir */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = makeheaderdir; sourceTree = "<group>"; };
 		1F04A53521D25AF200E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = base.make; sourceTree = "<group>"; };
+		1F04A53E21D3D55A00E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; name = base.make; path = Stsh/base.make; sourceTree = SOURCE_ROOT; };
+		1F04A53F21D3D55A00E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; name = GNUmakefile; path = Stsh/GNUmakefile; sourceTree = SOURCE_ROOT; };
 		1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjSTNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjSTNative-Info.plist"; sourceTree = "<group>"; };
 		1F084A1416DCE6A200ED2517 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1425,6 +1427,8 @@
 		1FBAAC18184BDC6400086047 /* stsh */ = {
 			isa = PBXGroup;
 			children = (
+				1F04A53E21D3D55A00E19C3F /* base.make */,
+				1F04A53F21D3D55A00E19C3F /* GNUmakefile */,
 				1FBAAC19184BDC6400086047 /* stsh_main.m */,
 				1FBAAC1D184BDC6400086047 /* stsh.1 */,
 				1FBAAC1B184BDC6400086047 /* Supporting Files */,

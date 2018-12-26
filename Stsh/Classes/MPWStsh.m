@@ -9,6 +9,8 @@
 #import "MPWStsh.h"
 #import <histedit.h>
 #include <readline/readline.h>
+#include <readline/history.h>
+#include <unistd.h>
 
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import <ObjectiveSmalltalk/MPWStScanner.h>
