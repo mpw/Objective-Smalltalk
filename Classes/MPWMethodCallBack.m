@@ -23,9 +23,7 @@
 #import <objc/runtime.h>
 #import <stdarg.h>
 #import <MPWFoundation/NSNil.h>
-#if 0 // !TARGET_OS_IPHONE 
-#import <PLBlockIMP/PLBlockIMP.h>
-#endif
+
 
 @implementation MPWMethodCallBack
 

@@ -214,7 +214,6 @@ idAccessor(solver, setSolver)
 {
     if ( [script isKindOfClass:[NSString class]]) {
         script  = [script compileIn:self];
-    
     }
 //    NSLog(@"script from '%@'/%@ ->  '%@'",aString,[aString class],script);
 	return [super evaluate:script];

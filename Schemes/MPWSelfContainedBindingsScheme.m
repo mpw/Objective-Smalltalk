@@ -7,12 +7,17 @@
 
 #import "MPWSelfContainedBindingsScheme.h"
 #import "MPWEvaluator.h"
+#import <objc/runtime.h>
 
 @implementation MPWSelfContainedBindingsScheme
 
 
 -evaluateIdentifier:anIdentifer withContext:aContext
 {
+    static id nilClass = nil;
+    if (!nilClass) {
+        nilClass=[NSNil class];
+    }
     id value = [super evaluateIdentifier:anIdentifer withContext:aContext];
     if ( !value ) {
         id binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
@@ -22,8 +27,7 @@
             value=[binding value];
         }
     }
-    
-    if ( [value respondsToSelector:@selector(isNotNil)]  && ![value isNotNil] ) {
+    if ( object_getClass( value) == nilClass ) {
         value=nil;
     }
     return value;
