@@ -10,7 +10,7 @@
 
 @interface MPWShellPrinter : MPWNeXTPListWriter
 
-@property (nonatomic, weak)  id environment;
+@property (nonatomic, assign)  id environment;
 
 -(void)printNames:(NSArray*)names limit:(int)completionLimit;
 

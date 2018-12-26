@@ -5,3 +5,4 @@ ObjectiveSmalltalk.xcodeproj/xcuserdata/
 *.dylib
 .headers
 TestObjectiveSmalltalk/testobjectivesmalltalk
+Stsh/stsh

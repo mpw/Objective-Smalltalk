@@ -10,6 +10,7 @@
 #import "MPWDirectoryBinding.h"
 #import <histedit.h>
 #include <readline/readline.h>
+ #include <sys/ioctl.h>
 
 @interface NSObject(shellPrinting)
 
@@ -84,15 +85,28 @@
     [self println:@""];
 }
 
+#ifdef GS_API_LATEST
+-(NSString*)formattedFileSize:(long)filesize
+{
+    return [NSString stringWithFormat:@"%ld",filesize];
+}
+#else
+-(NSString*)formattedFileSize:(long)filesize
+{
+    NSString *formattedSize=[NSByteCountFormatter stringFromByteCount:filesize countStyle:NSByteCountFormatterCountStyleBinary /* NSByteCountFormatterCountStyleFile */];
+    return formattedSize;
+}
+#endif
+
 -(void)writeFancyFileEntry:(MPWFileBinding*)binding
 {
     NSFileManager *fm=[NSFileManager defaultManager];
     NSString *path=(NSString*)[binding path];
     NSString *name=[binding fancyPath];
     if ( ![name hasPrefix:@"."]) {
-        NSDictionary *attributes=[fm attributesOfItemAtPath:path error:nil];
+        NSDictionary *attributes=[fm attributesOfItemAtPath:path error:NULL];
         NSNumber *size=[attributes objectForKey:NSFileSize];
-        NSString *formattedSize=[NSByteCountFormatter stringFromByteCount:[size intValue] countStyle:NSByteCountFormatterCountStyleBinary /* NSByteCountFormatterCountStyleFile */];
+        NSString *formattedSize=[self formattedFileSize:[size longValue]];
         formattedSize=[formattedSize stringByReplacingOccurrencesOfString:@" bytes" withString:@"  B"];
         int numSpaces=10-(int)[formattedSize length];
         numSpaces=MAX(0,numSpaces);

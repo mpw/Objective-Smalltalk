@@ -7,11 +7,11 @@
 //
 
 #import "MPWShellCompiler.h"
-#import "MPWExternalCommand.h"
+//#import "MPWExternalCommand.h"
 
-#import "MPWObjectPipeCommand.h"
-#import "MPWUpcaseFilter.h"
-#import "MPWEchoCommand.h"
+//#import "MPWObjectPipeCommand.h"
+//#import "MPWUpcaseFilter.h"
+//#import "MPWEchoCommand.h"
 #import "MPWFileSchemeResolver.h"
 #import "MPWURLSchemeResolver.h"
 #import "MPWEnvScheme.h"
@@ -26,7 +26,9 @@
 
 +internalCommands
 {
-	return [NSDictionary dictionaryWithObjectsAndKeys:[MPWEchoCommand class],@"echo",[MPWUpcaseFilter class],@"upcase",nil];
+    return @{};
+
+    // [NSDictionary dictionaryWithObjectsAndKeys:[MPWEchoCommand class],@"echo",[MPWUpcaseFilter class],@"upcase",nil];
 }
 
 
@@ -40,16 +42,16 @@
 
 -(void)addExternalCommand:(NSString*)externalCommandName
 {
-    id command = [[[MPWExternalCommand alloc] initWithName:externalCommandName] autorelease];
-	[command setIsText:NO];
-    [self bindValue:command toVariableNamed:externalCommandName];
+//    id command = [[[MPWExternalCommand alloc] initWithName:externalCommandName] autorelease];
+//    [command setIsText:NO];
+//    [self bindValue:command toVariableNamed:externalCommandName];
 }
 
 
 -(void)addInternalCommand:commandClass forName:commandName
 {
-	id command = [[[MPWObjectPipeCommand alloc] initWithCommandClass:commandClass name:commandName] autorelease];
-	[self bindValue:command toVariableNamed:commandName];
+//    id command = [[[MPWObjectPipeCommand alloc] initWithCommandClass:commandClass name:commandName] autorelease];
+//    [self bindValue:command toVariableNamed:commandName];
 }
 
 -(void)addInternalCommands:(NSDictionary*)commands
