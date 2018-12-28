@@ -73,4 +73,4 @@ after-clean ::
 #	LD_LIBRARY_PATH=/home/gnustep/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/MPWFoundation/obj/:/home/gnustep/Build/ObjectiveSmalltalk/obj/:/home/gnustep/Build/stsh/obj/ ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 stsh  : libstsh
-	clang -fblocks -fobjc-runtime=gnustep-1.9 -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/gnustep/Build/MPWFoundation/obj -L/home/gnustep/Build/ObjectiveSmalltalk/obj -L/home/gnustep/Build/stsh/obj -lstsh -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit
+	clang -fblocks -fobjc-runtime=gnustep-1.9 -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/gnustep/Build/MPWFoundation/obj -L/home/gnustep/Build/ObjectiveSmalltalk/obj -L/home/gnustep/Build/ObjectiveHTTPD/obj -L/home/gnustep/Build/stsh/obj -lstsh -lObjectiveHTTPD -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd

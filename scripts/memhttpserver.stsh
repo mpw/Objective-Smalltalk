@@ -1,9 +1,10 @@
 #!/usr/local/bin/stsh
 framework:ObjectiveHTTPD load.
-scheme:site := MPWSiteMap scheme.
-server ← MPWSchemeHttpServer serverOnPort:8081
+scheme:site := MPWTreeNodeScheme scheme.
+server ← MPWSchemeHttpServer serverOnPort:80
 site:/hi ← 'Hello World!'.
-(scheme:site → server) start:nil.
+server setScheme: scheme:site.
+server start:nil.
 stdout println:8081.
 stdout println:'site:<path> := value'.
 shell runInteractiveLoop

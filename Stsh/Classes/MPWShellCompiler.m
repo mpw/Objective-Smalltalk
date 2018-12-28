@@ -94,7 +94,6 @@
 
 -executeShellExpression:compiledExpression
 {
-//	NSLog(@"will execute in shell: %@",compiledExpression);
     return [compiledExpression executeInShell:self];
 }
 

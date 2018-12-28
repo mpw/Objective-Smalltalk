@@ -93,6 +93,9 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWURLSchemeResolver.m \
     Schemes/MPWEnvScheme.m \
     Schemes/MPWRelScheme.m \
+    Schemes/MPWTreeNodeScheme.m \
+    Schemes/MPWTreeNode.m \
+
 
 
 # Classes/MPWStTests.m \

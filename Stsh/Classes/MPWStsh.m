@@ -465,11 +465,15 @@ idAccessor( retval, setRetval )
 
 -executeInShell:aShell
 {
-	id level1result;
-//	NSLog(@"%@ executeInShell:",self);
-	level1result = [self evaluateIn:aShell];
-// 	NSLog(@"level1result: %@ executeInShell:",level1result);
-	return [level1result executeInShell:aShell]; 
+    if ( aShell ) {
+        id level1result;
+//        NSLog(@"%@ executeInShell: %@",self,aShell);
+        level1result = [self evaluateIn:aShell];
+//        NSLog(@"level1result: %@ executeInShell:",level1result);
+        return [level1result executeInShell:aShell];
+    } else {
+        return self;
+    }
 }
 
 @end

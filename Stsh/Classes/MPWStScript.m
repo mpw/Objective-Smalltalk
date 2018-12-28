@@ -17,7 +17,11 @@
 
 -(void)enumerateLinesUsingBlock:(void (^)(NSString *line, BOOL *stop))block
 {
-    for (NSString *line in [self componentsSeparatedByString:@"\n"]) {
+    NSArray *lines=[self componentsSeparatedByString:@"\n"];
+    if ( lines.count && [lines.lastObject length]==0 ) {
+        lines=[lines subarrayWithRange:NSMakeRange(0,lines.count-1)];
+    }
+    for (NSString *line in lines) {
         BOOL stop=NO;
         block( line, &stop);
         if (stop) {
@@ -163,6 +167,7 @@ objectAccessor( NSString, filename, setFilename )
             continue;
         }
 		id localResult = [[executionContext evaluator] executeShellExpression:expr];
+//        NSLog(@"localResult: %@",localResult);
 		if ( [self hasDeclaredReturn] ) {
 			[executionContext setRetval:localResult];
 		}
@@ -170,9 +175,12 @@ objectAccessor( NSString, filename, setFilename )
 		[pool release];
 	}
 	if ( [self hasDeclaredReturn] ) {
+//        NSLog(@"declared return: %@",[executionContext retval]);
 		[[[MPWByteStream Stdout] do] println:[[executionContext retval] each]];
 //		[executionContext setRetval:nil];
-	}
+//    } else {
+//        NSLog(@"no declared return");
+    }
 	NS_HANDLER
 		[[MPWByteStream Stderr] println:[NSString stringWithFormat:@"Exception: %@ in line %d: '%@' ",
 					localException,line,exprString]];

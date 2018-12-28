@@ -39,7 +39,7 @@ idAccessor( lhs, setLhs )
 //        NSLog(@"did connect");
         return [input sendsMessages] ? right : left;
     } else {
-        NSLog(@"did not connect");
+        NSLog(@"did not connect %@ to %@,ports: %@ -> %@",input,output,leftPorts,rightPorts);
         return nil;
     }
 }
