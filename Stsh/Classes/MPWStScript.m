@@ -11,6 +11,27 @@
 #import "MPWStsh.h"
 #import "MPWShellCompiler.h"
 
+#ifdef GS_API_LATEST
+
+@implementation NSString(enumeration)
+
+-(void)enumerateLinesUsingBlock:(void (^)(NSString *line, BOOL *stop))block
+{
+    for (NSString *line in [self componentsSeparatedByString:@"\n"]) {
+        BOOL stop=NO;
+        block( line, &stop);
+        if (stop) {
+            break;
+        }
+    }
+}
+
+
+@end
+
+#endif
+
+
 @implementation MPWStScript
 
 idAccessor( data, setData )
