@@ -29,7 +29,14 @@ stsh_HEADER_FILES_INSTALL_DIR = /stsh
 libstsh_OBJC_FILES = \
     Classes/MPWStScript.m \
     Classes/MPWStsh.m \
+    Classes/MPWEchoCommand.m \
     Classes/MPWShellCompiler.m \
+    Classes/MPWExternalCommand.m \
+    Classes/MPWCommandFilter.m \
+    Classes/MPWObjectPipeCommand.m \
+    Classes/MPWUpcaseFilter.m \
+    Classes/MPWAbstractShellCommand.m \
+    Classes/MPWShellProcess.m \
     MPWShellPrinter.m \
 
 

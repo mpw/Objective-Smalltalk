@@ -63,7 +63,7 @@
     NSError *error=nil;
     NSURL *aURL=[aReference URL];
 #ifdef GS_API_LATEST
-    NSData *rawData = [NSData dataWithContentsOfURL:aURL  error:&error];
+    NSData *rawData = [NSData dataWithContentsOfURL:aURL];
 #else
     NSData *rawData = [NSData dataWithContentsOfURL:aURL  options:NSDataReadingMapped error:&error];
 #endif
