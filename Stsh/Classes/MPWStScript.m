@@ -163,6 +163,7 @@ objectAccessor( NSString, filename, setFilename )
             if ( [exprString hasPrefix:@"!"]) {
                 shellExpr = [exprString substringFromIndex:1];
                 system([shellExpr UTF8String]);
+                [accumulatedExpression setString:@""];
             } else {
                 expr = [[executionContext evaluator] compile:accumulatedExpression];
                 [accumulatedExpression setString:@""];

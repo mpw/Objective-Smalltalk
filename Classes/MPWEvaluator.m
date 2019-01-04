@@ -24,35 +24,6 @@
 @implementation NSNumber(controlStructures)
 
 
--to:otherNumber
-{
-    return [MPWInterval intervalFrom:self to:otherNumber];
-}
-
-
--to:otherNumber by:stepNumber
-{
-    return [MPWInterval intervalFrom:self to:otherNumber step:stepNumber];
-}
-
--max:otherNumber
-{
-    if ( [self doubleValue] < [otherNumber doubleValue] ) {
-        return otherNumber;
-    } else {
-        return self;
-    }
-}
-
--min:otherNumber
-{
-    if ( [self doubleValue] > [otherNumber doubleValue] ) {
-        return otherNumber;
-    } else {
-        return self;
-    }
-}
-
 -(void)to:otherNumber do:aBlock
 {
     [[self to:otherNumber] do:aBlock];
