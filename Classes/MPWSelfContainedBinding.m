@@ -6,6 +6,7 @@
 //
 
 #import "MPWSelfContainedBinding.h"
+#import <MPWFoundation/MPWPathRelativeStore.h>
 
 @interface MPWSelfContainedBinding()
 
@@ -76,6 +77,8 @@
 {
     return [[self.identifier pathComponents] componentsJoinedByString:@"/"];
 }
+
+
 
 //-(void)startObserving
 //{

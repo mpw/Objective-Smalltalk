@@ -1,7 +1,7 @@
 #!/usr/local/bin/stsh
 framework:ObjectiveHTTPD load.
 scheme:site := MPWTreeNodeScheme scheme.
-server ← MPWSchemeHttpServer serverOnPort:80
+server ← MPWSchemeHttpServer serverOnPort:8080
 site:/hi ← 'Hello World!'.
 server setScheme: scheme:site.
 server start:nil.

@@ -100,6 +100,8 @@ idAccessor( script, _setScript )
 {
 	id returnVal=nil;
 	id executionContext = [self executionContext];
+    NSLog(@"evalute scripted method %@",[self header]);
+    NSLog(@"methodBody %@",[self methodBody]);
 	id compiledMethod = [self compiledScript];
 //	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
     

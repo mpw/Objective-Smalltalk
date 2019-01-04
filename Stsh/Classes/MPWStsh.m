@@ -362,14 +362,19 @@ idAccessor( retval, setRetval )
             
             
             BOOL hasBangPrefix = [exprString hasPrefix:@"!"];
+//            NSLog(@"hasBangPrexi: %d",hasBangPrefix);
             NSString *first = [[exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] firstObject];
             BOOL startsWithUnknownIdentifier=NO;
             if ( ![first containsString:@":"] && ![[self evaluator] bindingForLocalVariableNamed:first]) {
                 startsWithUnknownIdentifier=YES;
             }
             @try {
-                expr = [[self evaluator] compile:exprString];
-                level=1;
+                if ( !hasBangPrefix) {
+                    expr = [[self evaluator] compile:exprString];
+                    level=1;
+                } else {
+
+                }
             } @catch ( NSException *exception) {
 //                NSLog(@"might need more input, exception: %@",exception);
                 if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
@@ -380,7 +385,7 @@ idAccessor( retval, setRetval )
             BOOL isAssignment = [self isAssignmentExpresson:expr];
             BOOL isLiteral = [self isLiteral:expr];
             if ( level <=1 &&  (hasBangPrefix || startsWithUnknownIdentifier) && !isAssignment && !isLiteral) {
-                exprString=[@"!" stringByAppendingString:exprString];
+//                exprString=[@"!" stringByAppendingString:exprString];
                [self processShellEscape:exprString];
                 [currentInput setString:@""];
             }

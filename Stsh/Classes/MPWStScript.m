@@ -157,12 +157,19 @@ objectAccessor( NSString, filename, setFilename )
     while ( nil != (exprString=[scriptSource nextObject]) ) {
 		id pool=[NSAutoreleasePool new];
         id expr = nil;
+        id shellExpr = nil;
         [accumulatedExpression appendString:exprString];
 		@try  {
-            expr = [[executionContext evaluator] compile:accumulatedExpression];
-            [accumulatedExpression setString:@""];
+            if ( [exprString hasPrefix:@"!"]) {
+                shellExpr = [exprString substringFromIndex:1];
+                system([shellExpr UTF8String]);
+            } else {
+                expr = [[executionContext evaluator] compile:accumulatedExpression];
+                [accumulatedExpression setString:@""];
+            }
         } @catch (NSException *parseException ){
 //            NSLog(@"keep looking because of exception: %@",parseException);
+
             line++;
             continue;
         }
