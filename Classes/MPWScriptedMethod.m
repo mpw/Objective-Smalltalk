@@ -100,15 +100,15 @@ idAccessor( script, _setScript )
 {
 	id returnVal=nil;
 	id executionContext = [self executionContext];
-    NSLog(@"evalute scripted method %@",[self header]);
-    NSLog(@"methodBody %@",[self methodBody]);
+//    NSLog(@"evalute scripted method %@",[self header]);
+//    NSLog(@"methodBody %@",[self methodBody]);
 	id compiledMethod = [self compiledScript];
 //	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
     
     @try {
 	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
     } @catch (id exception) {
-        NSLog(@"exception evaluating scripted method: %@",[self methodHeader]);
+//        NSLog(@"exception evaluating scripted method: %@",[self methodHeader]);
         id newException = [self handleException:exception target:target];
 #if 1
         NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);

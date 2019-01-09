@@ -96,6 +96,7 @@ objectAccessor( NSString, filename, setFilename )
     if ( [strarg rangeOfString:@":"].length<= 0 ) {
         strarg=[@"file:" stringByAppendingString:strarg];
     }
+//    strarg=[@"ref:" stringByAppendingString:strarg];
     MPWBinding *binding=[[executionContext evaluator] bindingForString:strarg];
     return binding;
 }

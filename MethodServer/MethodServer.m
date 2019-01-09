@@ -80,10 +80,10 @@ static void CatchException(NSException *exception)
 
 -(id)deserializeData:(NSData*)inputData at:(MPWBinding*)aBinding
 {
-    if ( [[aBinding name] isEqual:@"methods"] ) {
-        return [self dictionaryFromData:inputData];
-    }
-    return [super deserializeData:inputData at:aBinding];
+//    if ( [[aBinding name] isEqual:@"methods"] ) {
+//        return [self dictionaryFromData:inputData];
+//    }
+//    return [super deserializeData:inputData at:aBinding];
 }
 
 -(void)setupWithInterpreter:anInterpreter
