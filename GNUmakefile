@@ -8,7 +8,7 @@ OBJC_RUNTIME_LIB=ng
 FRAMEWORK_NAME = ObjectiveSmalltalk
 
 GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES=base.make
-GNUSTEP_BUILD_DIR = ~/Build/ObjectiveSmalltalk
+GNUSTEP_BUILD_DIR = ~/Build/
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
@@ -110,7 +110,7 @@ libObjectiveSmalltalk_C_FILES = \
 
 LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base
 
-LDFLAGS += -L /home/gnustep/Build/MPWFoundation/obj
+LDFLAGS += -L /home/gnustep/Build/obj
 
 
 libObjectiveSmalltalk_INCLUDE_DIRS += -I.headers -I. -I../MPWFoundation/.headers/
@@ -133,7 +133,7 @@ after-clean ::
 
 
 test    : libObjectiveSmalltalk tester
-	LD_LIBRARY_PATH=/home/gnustep/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/MPWFoundation/obj/:/home/gnustep/Build/ObjectiveSmalltalk/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
+	LD_LIBRARY_PATH=/home/gnustep/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	clang -fobjc-runtime=gnustep-1.9 -I../MPWFoundation/.headers/ -I.headers -o testobjectivesmalltalk/testobjectivesmalltalk testobjectivesmalltalk/testobjectivesmalltalk.m -L/home/gnustep/Build/MPWFoundation/obj -L/home/gnustep/Build/ObjectiveSmalltalk/obj -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	clang -fobjc-runtime=gnustep-1.9 -I../MPWFoundation/.headers/ -I.headers -o testobjectivesmalltalk/testobjectivesmalltalk testobjectivesmalltalk/testobjectivesmalltalk.m -L/home/gnustep/Build/obj  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc

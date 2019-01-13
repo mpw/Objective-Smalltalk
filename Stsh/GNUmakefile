@@ -8,7 +8,7 @@ OBJC_RUNTIME_LIB=ng
 FRAMEWORK_NAME = stsh
 
 GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES=base.make
-GNUSTEP_BUILD_DIR = ~/Build/stsh
+GNUSTEP_BUILD_DIR = ~/Build
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
@@ -47,7 +47,7 @@ libstsh_C_FILES = \
 
 LIBRARIES_DEPEND_UPON += -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base
 
-LDFLAGS += -L /home/gnustep/Build/MPWFoundation/obj -L /home/gnustep/Build/ObjectiveSmalltalk/obj
+LDFLAGS += -L /home/gnustep/Build/obj
 
 
 libstsh_INCLUDE_DIRS += -I.headers -I. -I../../MPWFoundation/.headers/ -I../.headers/
@@ -70,7 +70,7 @@ after-clean ::
 
 
 # stsh    : libstsh tester
-#	LD_LIBRARY_PATH=/home/gnustep/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/MPWFoundation/obj/:/home/gnustep/Build/ObjectiveSmalltalk/obj/:/home/gnustep/Build/stsh/obj/ ./TestObjectiveSmalltalk/testobjectivesmalltalk
+#	LD_LIBRARY_PATH=/home/gnustep/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/obj/ ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 stsh  : libstsh
-	clang -fblocks -fobjc-runtime=gnustep-1.9 -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/gnustep/Build/MPWFoundation/obj -L/home/gnustep/Build/ObjectiveSmalltalk/obj -L/home/gnustep/Build/ObjectiveHTTPD/obj -L/home/gnustep/Build/stsh/obj -lstsh -lObjectiveHTTPD -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd
+	clang -fblocks -fobjc-runtime=gnustep-1.9 -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/gnustep/Build/obj -lstsh -lObjectiveHTTPD -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd
