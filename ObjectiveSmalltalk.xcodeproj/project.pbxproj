@@ -600,6 +600,7 @@
 		1F2E6F02142EF26E00B5C827 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFilterDefinition.h; sourceTree = "<group>"; };
 		1F2EB8022111D1670086D540 /* MPWFilterDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFilterDefinition.m; sourceTree = "<group>"; };
+		1F2F5B3921EF9CA300AB0858 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
 		1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodDescriptor.h; sourceTree = "<group>"; };
 		1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodDescriptor.m; sourceTree = "<group>"; };
 		1F2F8DC6192E28AA00A5D1B5 /* MPWShellPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWShellPrinter.h; path = ../MPWShellPrinter.h; sourceTree = "<group>"; };
@@ -1307,6 +1308,7 @@
 		1F7E05A2144B3E22008F349D /* MethodServer */ = {
 			isa = PBXGroup;
 			children = (
+				1F2F5B3921EF9CA300AB0858 /* GNUmakefile */,
 				1F7E05A9144B3E22008F349D /* MethodServer.h */,
 				1F7E05AA144B3E22008F349D /* MethodServer.m */,
 				1F7E05A3144B3E22008F349D /* Supporting Files */,

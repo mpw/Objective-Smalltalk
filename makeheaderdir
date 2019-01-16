@@ -3,3 +3,4 @@ mkdir -p .headers
 cd .headers
 apply 'ln -s %1' `find .. -type f -name '*.h' `
 ln -s . ObjectiveSmalltalk 
+ln -s . MethodServer 
