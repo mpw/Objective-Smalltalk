@@ -290,9 +290,13 @@ dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutab
     NSMutableArray *trace=[self combinedStackTrace];
     if (!trace) {
         trace=[[previousTrace mutableCopy] autorelease];
-        [self setCombinedStackTrace:trace];
+        if (trace) {
+            [self setCombinedStackTrace:trace];
+        }
     }
-    [self cullTrace:trace replacingOriginal:original withFrame:frame];
+    if (trace && original && frame) {
+        [self cullTrace:trace replacingOriginal:original withFrame:frame];
+    }
 }
 
 -(void)addScriptFrame:(NSString*)frame
