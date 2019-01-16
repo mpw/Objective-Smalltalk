@@ -64,7 +64,9 @@ idAccessor( script, _setScript )
 //  (they are inherited from parent), not linking means
 //  schemes are not inherited (and can't be modified)
     
-	return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
+	MPWEvaluator *evaluator = [[[[self contextClass] alloc] initWithParent:nil] autorelease];
+    [evaluator setSchemes:[[self compiledInExecutionContext] schemes]];
+    return evaluator;
 //	return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
 }
 
@@ -75,6 +77,7 @@ idAccessor( script, _setScript )
 
 -executionContext
 {
+    NSLog(@"executionContext");
 	return [self freshExecutionContextForRealLocalVars];
 }
 

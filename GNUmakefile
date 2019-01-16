@@ -96,6 +96,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWTreeNodeScheme.m \
     Schemes/MPWTreeNode.m \
     Schemes/MPWCopyOnWriteScheme.m \
+    Schemes/MPWBlockFilterScheme.m \
 
 
 

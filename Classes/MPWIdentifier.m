@@ -94,6 +94,7 @@
 {
     MPWScheme *evaluatedScheme = [aContext schemeForName:[self schemeName]];
     if (!evaluatedScheme) {
+        NSLog(@"%@ not found in aContext schemes: %@",[self schemeName],[aContext schemes]);
         [NSException raise:@"unknownscheme" format:@"scheme with name '%@' not found",[self schemeName]];
     }
     

@@ -264,9 +264,10 @@ scalarAccessor(id, delegate, setDelegate)
     //  Linking with parent means our local vars aren't local
     //  (they are inherited from parent), not linking means
     //  schemes are not inherited (and can't be modified)
-    
-    //	return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
-	return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
+
+    NSLog(@"freshExecutionContextForRealLocalVars");
+	return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
+//	return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
 }
 
 
