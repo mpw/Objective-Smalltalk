@@ -107,7 +107,10 @@ typedef id (^ZeroArgBlock)(void);
         }
     } @catch (NSException * exception) {
 #if 1
-        [exception setCombinedStackTrace:[[[exception callStackSymbols] mutableCopy] autorelease]];
+        id trace = [[[exception callStackSymbols] mutableCopy] autorelease];
+        if (trace) {
+            [exception setCombinedStackTrace:trace];
+        }
         NSLog(@"exception: %@ at %@",exception,[exception combinedStackTrace]);
         Class c=NSClassFromString(@"MethodServer");
         [c addException:exception];

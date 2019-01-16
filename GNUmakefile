@@ -95,6 +95,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWRelScheme.m \
     Schemes/MPWTreeNodeScheme.m \
     Schemes/MPWTreeNode.m \
+    Schemes/MPWCopyOnWriteScheme.m \
 
 
 
