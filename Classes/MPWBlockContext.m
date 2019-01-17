@@ -88,11 +88,13 @@ typedef id (^ZeroArgBlock)(void);
 
 
 -evaluateIn_block:aContext arguments:(NSArray*)args {
+    id returnVal=nil;
+    @autoreleasepool {
+
     int numArgs=(int)[args count];
     NSArray *formals=[[self block] arguments];
     int formalsCount = (int)[formals count];
     numArgs=MIN(numArgs,formalsCount);
-    id returnVal=nil;
     for (int i=0;i<numArgs;i++) {
         MPWBinding *b=[aContext createLocalBindingForName:[formals objectAtIndex:i]];
         [b setValue:[args objectAtIndex:i]];
@@ -119,7 +121,12 @@ typedef id (^ZeroArgBlock)(void);
         @throw newException;
 #endif
     }
-    return returnVal;
+        [returnVal retain];
+//        NSLog(@"will autorelease after block eval");
+    }
+//    NSLog(@"did autorelease after block eval");
+
+    return [returnVal autorelease];
 }
 
 -(NSArray*)formalParameters

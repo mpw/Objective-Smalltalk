@@ -77,7 +77,7 @@ idAccessor( script, _setScript )
 
 -executionContext
 {
-    NSLog(@"executionContext");
+//    NSLog(@"executionContext");
 	return [self freshExecutionContextForRealLocalVars];
 }
 
@@ -107,7 +107,8 @@ idAccessor( script, _setScript )
 //    NSLog(@"methodBody %@",[self methodBody]);
 	id compiledMethod = [self compiledScript];
 //	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
-    
+    @autoreleasepool {
+
     @try {
 	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
     } @catch (id exception) {
@@ -122,8 +123,10 @@ idAccessor( script, _setScript )
         @throw newException;
 #endif
     }
+        [returnVal retain];
 //	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
-	return returnVal;
+    }
+	return [returnVal autorelease];
 }
 
 -(NSString *)stringValue
