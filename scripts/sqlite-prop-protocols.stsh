@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-#-sqlite:<ref>dbref
+#-sqlite:dbref
 
 framework:FMDB load.
 
@@ -30,6 +30,13 @@ class SQLiteScheme : MPWScheme {
      }
   }
 
+  /schema/:table {
+     |= {
+        resultSet := self dictionariesForQuery: "PRAGMA table_info({table})".
+	    resultSet.
+     }
+  } 
+
   /:table/count { 
      |= { self dictionariesForQuery: "select count(*) from {table}" | firstObject | objectForKey:'count(*)'. }
   }
@@ -55,5 +62,7 @@ class SQLiteScheme : MPWScheme {
   }
 }
 
-scheme:db := SQLiteScheme alloc initWithPath: dbref path.
+
+
+scheme:db := SQLiteScheme alloc initWithPath: dbref.
 shell runInteractiveLoop.
