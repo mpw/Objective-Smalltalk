@@ -1065,7 +1065,7 @@
     EXPECTNOTNIL(superClass, @"superclass should exist");
     
     aClass=(Class)[classDef evaluateIn:compiler];
-    EXPECTNOTNIL(aClass, @"superclass should exist");
+    EXPECTNOTNIL(aClass, @"newly defined class should now exist");
     IDEXPECT(aClass, NSClassFromString( @"ObjStTestsMyNumberSubclass" ),@"class created and accessible");
     
     id mynumber=[aClass numberWithInt:23];

@@ -27,6 +27,8 @@
 
 -(MPWSchemeScheme*)createSchemes;
 
+@property (nonatomic, retain) id schemes;
+
 -valueOfVariableNamed:aName;
 -(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;
 -(MPWBinding*)cachedBindingForName:aName;

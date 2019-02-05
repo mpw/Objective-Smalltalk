@@ -11,6 +11,7 @@
 @interface MPWClassDefinition : MPWExpression
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, readonly) Class classToDefine;
 @property (nonatomic, strong) NSString *superclassName;
 @property (nonatomic, readonly) NSString *superclassNameToUse;
 

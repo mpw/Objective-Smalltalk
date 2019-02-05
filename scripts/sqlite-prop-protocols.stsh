@@ -3,6 +3,22 @@
 
 framework:FMDB load.
 
+class ColumnInfo {
+	var name.
+	var type.
+    -description {
+		self name, ', ',self type.
+    }
+}
+
+class TableInfo  {
+	var name.
+	var columns.
+    -description {
+        'Table ', self name, ' columns: ', self columns description.
+    }
+}
+
 class SQLiteScheme : MPWScheme {
   var db.
 
@@ -33,7 +49,16 @@ class SQLiteScheme : MPWScheme {
   /schema/:table {
      |= {
         resultSet := self dictionariesForQuery: "PRAGMA table_info({table})".
-	    resultSet.
+	    columns := resultSet collect: { :colDict | 
+            col := ColumnInfo new.
+            col setName: (colDict objectForKey:'name') .
+            col setType: (colDict objectForKey:'type') .
+	        col.
+        }.
+	    tinfo := TableInfo new.
+        tinfo setName: table.
+        tinfo setColumns: columns.
+        tinfo. 
      }
   } 
 
