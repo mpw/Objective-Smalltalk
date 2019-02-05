@@ -255,20 +255,20 @@ scalarAccessor(id, delegate, setDelegate)
 
 @end
 
-#import <ObjectiveSmalltalk/MPWScriptedMethod.h>
-@implementation MPWScriptedMethod(wantToDefineSchemesInMethods)
-
--freshExecutionContextForRealLocalVars
-{
-    //  FIXME!!
-    //  Linking with parent means our local vars aren't local
-    //  (they are inherited from parent), not linking means
-    //  schemes are not inherited (and can't be modified)
-
-    NSLog(@"freshExecutionContextForRealLocalVars");
-	return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
-//	return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
-}
-
-
-@end
+//#import <ObjectiveSmalltalk/MPWScriptedMethod.h>
+//@implementation MPWScriptedMethod(wantToDefineSchemesInMethods)
+//
+//-freshExecutionContextForRealLocalVars
+//{
+//    //  FIXME!!
+//    //  Linking with parent means our local vars aren't local
+//    //  (they are inherited from parent), not linking means
+//    //  schemes are not inherited (and can't be modified)
+//
+////    NSLog(@"freshExecutionContextForRealLocalVars");
+//    return [[[[self contextClass] alloc] initWithParent:nil] autorelease];
+////    return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
+//}
+//
+//
+//@end

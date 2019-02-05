@@ -69,8 +69,8 @@ typedef id (^ZeroArgBlock)(void);
 
 -freshExecutionContextForRealLocalVars
 {
-    //	NSLog(@"creating new context from context: %@",[self context]);
-	MPWEvaluator *evalContext= [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
+    //    NSLog(@"creating new context from context: %@",[self context]);
+    MPWEvaluator *evalContext= [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
 
     
     return evalContext;
