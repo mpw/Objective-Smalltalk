@@ -3,16 +3,20 @@
 
 framework:FMDB load.
 
+class NSObject {
+	-initWithDictionary:aDict {
+		aDict allKeys do:{ :key |
+			self setValue: (aDict at:key) forKey:key.
+		}.
+		self.
+	}
+}
+
 class ColumnInfo {
 	var name.
 	var type.
     -description {
 		self name, ', ',self type.
-    }
-    -initWithDictionary:aDictionary { 
-		self setName: (aDictionary objectForKey:'name').
-		self setType: (aDictionary objectForKey:'type').
-        self.
     }
 }
 
@@ -21,11 +25,6 @@ class TableInfo  {
 	var columns.
     -description {
         'Table ', self name, ' columns: ', self columns description.
-    }
-    -initWithDictionary:aDictionary { 
-		self setName: (aDictionary objectForKey:'name').
-		self setColumns: (aDictionary objectForKey:'columns').
-        self.
     }
 }
 
