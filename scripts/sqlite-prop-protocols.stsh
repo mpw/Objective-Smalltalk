@@ -51,7 +51,7 @@ class SQLiteScheme : MPWScheme {
   /. { 
      |= {
        resultSet := self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" '.
-       resultSet collect objectForKey:'name'.
+       resultSet collect at:'name'.
      }
   }
 
@@ -60,8 +60,8 @@ class SQLiteScheme : MPWScheme {
         resultSet := self dictionariesForQuery: "PRAGMA table_info({table})".
 	    columns := resultSet collect: { :colDict | 
             #ColumnInfo{
-				#'name': (colDict objectForKey:'name') ,
-				#'type': (colDict objectForKey:'type')
+				#'name': (colDict at:'name') ,
+				#'type': (colDict at:'type')
 			}.
         }.
         #TableInfo{ #'name': table, #'columns': columns }.
@@ -69,7 +69,7 @@ class SQLiteScheme : MPWScheme {
   } 
 
   /:table/count { 
-     |= { self dictionariesForQuery: "select count(*) from {table}" | firstObject | objectForKey:'count(*)'. }
+     |= { self dictionariesForQuery: "select count(*) from {table}" | firstObject | at:'count(*)'. }
   }
 
   /:table/:index { 
@@ -89,7 +89,7 @@ class SQLiteScheme : MPWScheme {
   }
 
   /:table/column/:column { 
-     |= { self dictionariesForQuery: "select {column} from {table}"| collect | objectForKey:column. } 
+     |= { self dictionariesForQuery: "select {column} from {table}"| collect | at:column. } 
   }
 }
 
