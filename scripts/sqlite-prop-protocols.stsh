@@ -1,5 +1,5 @@
 #!/usr/local/bin/stsh
-#-sqlite:dbref
+#-sqlite:<ref>dbref
 
 framework:FMDB load.
 
@@ -91,9 +91,13 @@ class SQLiteScheme : MPWScheme {
   /:table/column/:column { 
      |= { self dictionariesForQuery: "select {column} from {table}"| collect | at:column. } 
   }
+  -tables {
+	 db:. collect: { :table| db:schema/{table}. }.
+  }
 }
 
 
 
-scheme:db := SQLiteScheme alloc initWithPath: dbref.
+scheme:db := SQLiteScheme alloc initWithPath: dbref path.
+stdout do println: scheme:db tables each.
 shell runInteractiveLoop.
