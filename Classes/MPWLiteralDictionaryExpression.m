@@ -49,8 +49,8 @@
     
     id stackKeys[MAXSTACK];
     id stackValues[MAXSTACK];
-    id *keys=nil;
-    id *values=nil;
+    id *keys=NULL;
+    id *values=NULL;
     Class baseClass=[NSDictionary class];
     Class finalClass=self.literalClass;
 

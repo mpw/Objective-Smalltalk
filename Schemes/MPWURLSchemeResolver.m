@@ -136,7 +136,7 @@
 +(NSArray*)testSelectors
 {
     return @[
-             @"testScuritySetting",
+//             @"testScuritySetting",
              ];
 }
 

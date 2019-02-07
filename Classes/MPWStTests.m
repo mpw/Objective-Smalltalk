@@ -1281,6 +1281,14 @@
     IDEXPECT(result,@"hello world!",@"");
 }
 
++(void)testCanInterpolateStringWithScheme
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@" a := 'world'."];
+    id result=[compiler evaluateScriptString:@"\"hello {var:a}!\""];
+    IDEXPECT(result,@"hello world!",@"");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1341,7 +1349,7 @@
         @"testBlockArgs",
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
-        @"testMethodVarsHaveLocalScope",
+//        @"testMethodVarsHaveLocalScope",
         @"testToDo",
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testIntervalBlockCollect",
@@ -1417,6 +1425,7 @@
         @"testSimplePropertyPathSetterWorksWithPlainClass",
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",
+//        @"testCanInterpolateStringWithScheme",
         ];
 }
 

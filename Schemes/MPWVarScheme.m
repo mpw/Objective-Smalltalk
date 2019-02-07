@@ -69,6 +69,11 @@
     }
     return bindings;
 }
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p:  context:%@  vars: %@>",[self class],self,
+            [self context],[[self context] localVars]];
+}
 
 
 @end

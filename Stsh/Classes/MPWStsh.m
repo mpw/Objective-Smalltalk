@@ -259,7 +259,8 @@ static const char completionfun(EditLine *e, char ch) {
 
 -pwd
 {
-    return [NSString stringWithUTF8String:getwd( NULL )];
+    char buf[MAXPATHLEN+1];
+    return [NSString stringWithUTF8String:getcwd( buf , MAXPATHLEN )];
 }
 
 

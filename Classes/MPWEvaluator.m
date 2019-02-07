@@ -129,6 +129,30 @@ idAccessor( localVars, setLocalVars )
     return [bindingCache objectForKey:aName];
 }
 
+-objectForReference:aReference
+{
+//    NSLog(@"evaluator %@ objectForReferences: %@",self,aReference);
+    MPWScheme *s=[self schemeForName:[aReference schemeName]];
+//    NSLog(@"scheme: %@",s);
+    id value = [s objectForReference:aReference];
+//    NSLog(@"value: %@",value);
+    return value;
+}
+
+-referenceForPath:(NSString*)aPath
+{
+    // FIXME:  workaround for the fact that Stores have  referenceForPath:.
+    //           but path is really defined as without the scheme.
+
+    NSString *scheme=nil;
+    if ( [aPath containsString:@":"]) {
+        NSArray *components = [aPath componentsSeparatedByString:@":"];
+        scheme=components.firstObject;
+        aPath=components.lastObject;
+    }
+    return [[[MPWGenericReference alloc] initWithPathComponents:[aPath componentsSeparatedByString:@"/"] scheme:scheme] autorelease];
+}
+
 -(void)cacheBinding:aBinding forName:aName
 {
     if ( aBinding && aName) {
@@ -157,6 +181,7 @@ idAccessor( localVars, setLocalVars )
 		schemeName=[self defaultScheme];
 	}
 	scheme=[[self schemes] objectForKey:schemeName];
+//    NSLog(@"schemeForName: %@ -> %@",schemeName,scheme);
 	return scheme;
 }
 
@@ -219,6 +244,7 @@ idAccessor( localVars, setLocalVars )
 
 -evaluateScript:aString onObject:anObject
 {
+//    NSLog(@"-[%@ evaluateScript: ...",self);
 	[self bindValue:anObject toVariableNamed:@"self"];
     id result=nil;
 	//	NSLog(@"evaluate script '%@' on object: %@",aString,anObject);

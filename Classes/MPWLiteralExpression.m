@@ -18,13 +18,16 @@ idAccessor(theLiteral, setTheLiteral)
 
 -(id)evaluateIn:(id)aContext
 {
+//    NSLog(@"literalExpression '%@' evaluatIn: %@",theLiteral,aContext);
+//    NSLog(@"aContext var scheme: %@",[aContext schemeForName:@"var"]);
     id result=theLiteral;
     if ( [result isKindOfClass:[MPWStringLiteral class]] ) {
         MPWStringLiteral *s=(MPWStringLiteral*)result;
         if (![s hasSingleQuotes]) {
+//            NSLog(@"==will interpolate===");
             result=[NSMutableString string];
             MPWByteStream *stream=[MPWByteStream streamWithTarget:result];
-            [stream writeInterpolatedString:theLiteral withEnvironment:(MPWAbstractStore*)[aContext schemeForName:@"var"]];
+            [stream writeInterpolatedString:theLiteral withEnvironment:(MPWAbstractStore*)aContext];
         } else {
             result=[s realString];
         }

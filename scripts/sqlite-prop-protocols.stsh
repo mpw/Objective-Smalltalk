@@ -16,7 +16,7 @@ class ColumnInfo {
 	var name.
 	var type.
     -description {
-		self name, ', ',self type.
+		"Column: {var:self/name} type: {var:self/type}".
     }
 }
 
@@ -24,7 +24,8 @@ class TableInfo  {
 	var name.
 	var columns.
     -description {
-        'Table ', self name, ' columns: ', self columns description.
+		cd := self columns description.
+        "Table {var:self/name} columns: {var:cd}".
     }
 }
 
@@ -94,10 +95,13 @@ class SQLiteScheme : MPWScheme {
   -tables {
 	 db:. collect: { :table| db:schema/{table}. }.
   }
+  -<void>logTables {
+     stdout do println: scheme:db tables each.	
+  }
 }
 
 
 
 scheme:db := SQLiteScheme alloc initWithPath: dbref path.
-stdout do println: scheme:db tables each.
+stdout println: db:schema/artists
 shell runInteractiveLoop.

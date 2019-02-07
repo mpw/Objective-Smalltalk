@@ -12,6 +12,8 @@
 #import <MPWFoundation/MPWGenericReference.h>
 #import "MPWFileBinding.h"
 #import "MPWScheme.h"
+#include <unistd.h>
+
 
 @implementation MPWBundleScheme
 

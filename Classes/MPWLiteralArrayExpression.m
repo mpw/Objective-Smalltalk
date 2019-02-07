@@ -33,7 +33,7 @@
     long max=self.objects.count;
     id stackEvalResults[ STACKMAX ];
     id *evalResults=stackEvalResults;
-    id *heapEvalResults=nil;
+    id *heapEvalResults=NULL;
     if ( max < STACKMAX ) {
         evalResults=stackEvalResults;
     } else {

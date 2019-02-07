@@ -10,6 +10,7 @@
 #import "MPWEvaluator.h"
 #import "MPWStCompiler.h"
 #import "MPWMethodHeader.h"
+#import "MPWVarScheme.h"
 
 @interface NSObject(MethodServeraddException)
 
@@ -63,11 +64,22 @@ idAccessor( script, _setScript )
 //  Linking with parent means we don't have local vars
 //  (they are inherited from parent), not linking means
 //  schemes are not inherited (and can't be modified)
-    
-	MPWEvaluator *evaluator = [[[[self contextClass] alloc] initWithParent:nil] autorelease];
-    [evaluator setSchemes:[[self compiledInExecutionContext] schemes]];
+
+//    NSLog(@"==== freshExecutionContextForRealLocalVars ===");
+
+	MPWEvaluator *evaluator = [[[MPWEvaluator alloc] initWithParent:nil] autorelease];
+//    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
+    MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
+    MPWVarScheme *newVarScheme=[MPWVarScheme scheme];
+    [newVarScheme setContext:evaluator];
+    [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"var"];
+    [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"default"];
+    [evaluator setSchemes:newSchemes];
+    [newSchemes release];
+
     return evaluator;
-//	return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
+
+ //   return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
 }
 
 -compiledInExecutionContext
@@ -103,6 +115,7 @@ idAccessor( script, _setScript )
 {
 	id returnVal=nil;
 	id executionContext = [self executionContext];
+    [executionContext bindValue:self toVariableNamed:@"self"];
 //    NSLog(@"evalute scripted method %@",[self header]);
 //    NSLog(@"methodBody %@",[self methodBody]);
 	id compiledMethod = [self compiledScript];

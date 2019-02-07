@@ -93,11 +93,21 @@ objectAccessor( NSString, filename, setFilename )
 -bindingForString:(NSString*)arg withContext:executionContext
 {
     NSString *strarg=arg;
+//    NSLog(@"string arg: %@",strarg);
     if ( [strarg rangeOfString:@":"].length<= 0 ) {
         strarg=[@"file:" stringByAppendingString:strarg];
     }
+//    NSLog(@"arg: %@",strarg);
 //    strarg=[@"ref:" stringByAppendingString:strarg];
+//    NSLog(@"arg: %@",strarg);
     MPWBinding *binding=[[executionContext evaluator] bindingForString:strarg];
+//    NSLog(@"binding: %@",binding);
+//    NSLog(@"binding path: %@",[binding path]);
+//    NSLog(@"binding url: %@",[binding URL]);
+//    NSLog(@"binding url scheme: %@",[[binding URL] scheme]);
+//    id reference=[binding reference];
+//    NSLog(@"reference: %@",reference);
+//    NSLog(@"reference path: %@",[reference path]);
     return binding;
 }
 

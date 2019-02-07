@@ -63,6 +63,17 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     return binding;
 }
 
+-(id)copy
+{
+    MPWSchemeScheme* copy=[[self class] new];
+    NSDictionary *theSchemes=[self schemes];
+    for ( NSString *key in [theSchemes allKeys]) {
+        [copy setSchemeHandler:theSchemes[key] forSchemeName:key];
+    }
+    return copy;
+
+}
+
 
 -objectForKey:aKey
 {
