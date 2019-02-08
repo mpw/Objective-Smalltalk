@@ -939,6 +939,11 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"extension"]) {
+        //        Currently just a synomym for class
+        //        NSLog(@"found an extension definition");
+        [self pushBack:next];
+        return [self parseClassDefinition];
     } else if ( [next isEqual:@"filter"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
@@ -1139,7 +1144,7 @@ idAccessor(solver, setSolver)
 {
     NSString *s=[self nextToken];
     Class defClass=nil;
-    if ( [s isEqualToString:@"class"]) {
+    if ( [s isEqualToString:@"class"] || [s isEqualToString:@"extension"]) {
         defClass=[MPWClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
         defClass=[MPWFilterDefinition class];

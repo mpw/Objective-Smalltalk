@@ -3,15 +3,6 @@
 
 framework:FMDB load.
 
-class NSObject {
-	-initWithDictionary:aDict {
-		aDict allKeys do:{ :key |
-			self setValue: (aDict at:key) forKey:key.
-		}.
-		self.
-	}
-}
-
 class ColumnInfo {
 	var name.
 	var type.
@@ -25,7 +16,7 @@ class TableInfo  {
 	var columns.
     -description {
 		cd := self columns description.
-        "Table {var:self/name} columns: {var:cd}".
+        "Table {var:self/name} columns: {cd}".
     }
 }
 
@@ -100,6 +91,14 @@ class SQLiteScheme : MPWScheme {
   }
 }
 
+extension NSObject {
+	-initWithDictionary:aDict {
+		aDict allKeys do:{ :key |
+			self setValue: (aDict at:key) forKey:key.
+		}.
+		self.
+	}
+}
 
 
 scheme:db := SQLiteScheme alloc initWithPath: dbref path.
