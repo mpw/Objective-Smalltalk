@@ -136,6 +136,9 @@ idAccessor( localVars, setLocalVars )
 //    NSLog(@"scheme: %@",s);
     id value = [s objectForReference:aReference];
 //    NSLog(@"value: %@",value);
+    if (!value) {
+        value=[parent objectForReference:aReference];
+    }
     return value;
 }
 

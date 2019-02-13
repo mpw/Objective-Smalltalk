@@ -9,6 +9,7 @@
 #import "MPWBlockContext.h"
 #import "MPWStatementList.h"
 #import "MPWEvaluator.h"
+#import "MPWStCompiler.h"
 #import <MPWFoundation/MPWMapFilter.h>
 #import "MPWBinding.h"
 #import "MPWMethodHeader.h"
@@ -61,7 +62,7 @@ typedef id (^ZeroArgBlock)(void);
 {
 	id localContextClass=[[self context] class];
 	if ( !localContextClass) {
-		localContextClass=[MPWEvaluator class];
+		localContextClass=[MPWStCompiler class];
 	}
 	return localContextClass;
 }

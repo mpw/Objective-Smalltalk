@@ -58,7 +58,13 @@
         id evaluatedComponent=component;
 		if ( [component hasPrefix:@"{"] && [component hasSuffix:@"}"] ) {
 			NSString *nested=[component substringWithRange:NSMakeRange(1, [component length]-2)];
-			evaluatedComponent=[aContext evaluateScriptString:nested];
+            MPWIdentifier *nestedIdentifer=[MPWIdentifier identifierWithName:nested];
+
+#if 0
+            evaluatedComponent=[aContext objectForReference:nestedIdentifer];
+#else
+            evaluatedComponent=[aContext evaluateScriptString:nested];
+#endif
 			evaluatedComponent = [[evaluatedComponent  stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		}
         NSAssert3(evaluatedComponent!=nil, @"component '%@' of %@ in evaluated in %@ nil",component, [self identifierName],aContext);

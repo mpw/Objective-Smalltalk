@@ -236,7 +236,7 @@ idAccessor( method, _setMethod )
 	MPWMethodCallBack* callback=[[[self alloc] init] autorelease];
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	id returnValue;
-	id expectedReturn = @"45"; // [target evaluateScript:@"45" onObject:target];
+	id expectedReturn = @(45); // [target evaluateScript:@"45" onObject:target];
  	id method = [[[MPWScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
  	[method setScript:@"45"];
@@ -254,7 +254,7 @@ idAccessor( method, _setMethod )
 	id returnValue;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
-	[method setScript:@"dummyReturnValueInsteadOfActualMethodBody"];
+	[method setScript:@"'dummyReturnValueInsteadOfActualMethodBody'"];
 	[callback setMethod:method];
 	[callback setName:@"xxxDummyMulti:andMore:"];
 	[callback installInClass:[target class] withSignature:"@@:@@"];
@@ -291,7 +291,7 @@ idAccessor( method, _setMethod )
 	MPWMethodCallBack* callback=[[[self alloc] init] autorelease];
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	id returnValue;
-	id expectedReturn = @"45"; // [target evaluateScript:@"45" onObject:target];
+	id expectedReturn = @(45); // [target evaluateScript:@"45" onObject:target];
 	IMP0 function;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
@@ -311,7 +311,7 @@ idAccessor( method, _setMethod )
 	id target =[[[__MPWMethodCallBackDummyTestClassSubclass alloc] init] autorelease];
 	id superclassTarget =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	id returnValue;
-	id expectedReturn = @"47"; // [target evaluateScript:@"45" onObject:target];
+	id expectedReturn = @(47); // [target evaluateScript:@"45" onObject:target];
 	id expectedSuperclassReturn = @"43"; // [target evaluateScript:@"45" onObject:target];
 //	IMP function;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
@@ -328,7 +328,8 @@ idAccessor( method, _setMethod )
 //	returnValue = function( target, @selector(answerToEverythingWillOverrideInSubclass) );
     returnValue = (id)[target answerToEverythingWillOverrideInSubclass];
 
-	IDEXPECT( returnValue, expectedReturn, @"expected return for subclass we installed the method in");
+    IDEXPECT( [returnValue className], [expectedReturn className], @"expected return for subclass we installed the method in");
+    IDEXPECT( returnValue, expectedReturn, @"expected return for subclass we installed the method in");
     returnValue = (id)[superclassTarget answerToEverythingWillOverrideInSubclass];
 	IDEXPECT( returnValue, expectedSuperclassReturn, @"expected return for superclass that has the original method (and should not be overridden");
     

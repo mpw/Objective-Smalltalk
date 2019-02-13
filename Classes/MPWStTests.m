@@ -1117,13 +1117,11 @@
 +(void)testNestedVarExprWithPathInBlockInMethod
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= { :blockparam |  {self:a/{blockparam} } value:param1. }}} "];
+    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= {  { :blockparam |  self:a/{blockparam} } value:param1. }}} "];
     [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
     id result=[compiler evaluateScriptString:@"n:a/test1"];
     IDEXPECT( result, @"test1", @"nested expr result1");
-    NSLog(@"==== will evaluate n:b/testb");
     result=[compiler evaluateScriptString:@"n:b/testb"];
-    NSLog(@"==== did evaluate n:b/testb");
     IDEXPECT( result, @"testb", @"nested expr result2");
 }
 
@@ -1394,7 +1392,7 @@
         @"testBlockArgs",
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
-//        @"testMethodVarsHaveLocalScope",
+        @"testMethodVarsHaveLocalScope",
         @"testToDo",
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testIntervalBlockCollect",
@@ -1449,6 +1447,8 @@
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
         @"testNestedVarExprWithPath",
+        @"testNestedVarExprWithPathInMethod",
+        @"testNestedVarExprWithPathInBlockInMethod",
         @"testSelfSchemeInSchemeDefintions",
         @"testSimpleSchemeDefSyntax",
         @"testSimpleFilterDefSyntax",
