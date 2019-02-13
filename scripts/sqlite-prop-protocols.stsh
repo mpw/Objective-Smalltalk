@@ -20,7 +20,7 @@ class TableInfo  {
     }
 }
 
-class SQLiteScheme : MPWScheme {
+scheme SQLiteScheme  {
   var db.
 
   -initWithPath: dbPath {
