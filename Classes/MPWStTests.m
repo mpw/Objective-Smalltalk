@@ -1103,6 +1103,17 @@
     IDEXPECT( result, @42, @"nested expr result");
 }
 
++(void)testSimpleSchemeDefSyntax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+
+    Class schemeDef = [compiler evaluateScriptString:@"scheme MyScheme { }"];
+    IDEXPECT([schemeDef className], @"MyScheme", @"name of scheme");
+    IDEXPECT([[schemeDef superclass] className], @"MPWScheme", @"name of superclass of scheme");
+
+
+}
+
 +(void)testSimpleFilterDefSyntax
 {
     NSString *input=@"lowercase world";
@@ -1126,6 +1137,7 @@
     id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
     IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
 }
+
 
 +(void)testFilterDefWithNormalMethods
 {
@@ -1404,6 +1416,8 @@
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
         @"testNestedVarExprWithPath",
+        @"testSimpleSchemeDefSyntax",
+        @"testSimpleFilterDefSyntax",
         @"testSimpleFilterDefSyntax",
         @"testUseStReturnAsForward",
         @"testFilterDefWithNormalMethods",

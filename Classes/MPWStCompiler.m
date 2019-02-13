@@ -948,6 +948,14 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"scheme"]) {
+        //        NSLog(@"found a class definition");
+        [self pushBack:next];
+        MPWClassDefinition *schemeDef = [self parseClassDefinition];
+        if ( !schemeDef.superclassName ) {
+            schemeDef.superclassName=@"MPWScheme";
+        }
+        return schemeDef;
     } else {
         [self pushBack:next];
     }
@@ -1145,6 +1153,8 @@ idAccessor(solver, setSolver)
     NSString *s=[self nextToken];
     Class defClass=nil;
     if ( [s isEqualToString:@"class"] || [s isEqualToString:@"extension"]) {
+        defClass=[MPWClassDefinition class];
+    } else  if ( [s isEqualToString:@"scheme"]) {
         defClass=[MPWClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
         defClass=[MPWFilterDefinition class];
