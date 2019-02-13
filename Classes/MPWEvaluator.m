@@ -245,7 +245,8 @@ idAccessor( localVars, setLocalVars )
 -evaluateScript:aString onObject:anObject
 {
 //    NSLog(@"-[%@ evaluateScript: ...",self);
-	[self bindValue:anObject toVariableNamed:@"self"];
+    [self bindValue:anObject toVariableNamed:@"self"];
+    [self.schemes setSchemeHandler:anObject forSchemeName:@"self"];
     id result=nil;
 	//	NSLog(@"evaluate script '%@' on object: %@",aString,anObject);
     @try {

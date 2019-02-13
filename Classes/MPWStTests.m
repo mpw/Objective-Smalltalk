@@ -1103,6 +1103,39 @@
     IDEXPECT( result, @42, @"nested expr result");
 }
 
++(void)testNestedVarExprWithPathInMethod
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= { self:a/{param1}. }}} "];
+    [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
+    id result=[compiler evaluateScriptString:@"n:a/test1"];
+    IDEXPECT( result, @"test1", @"nested expr result1");
+    result=[compiler evaluateScriptString:@"n:b/testb"];
+    IDEXPECT( result, @"testb", @"nested expr result2");
+}
+
++(void)testNestedVarExprWithPathInBlockInMethod
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= { :blockparam |  {self:a/{blockparam} } value:param1. }}} "];
+    [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
+    id result=[compiler evaluateScriptString:@"n:a/test1"];
+    IDEXPECT( result, @"test1", @"nested expr result1");
+    NSLog(@"==== will evaluate n:b/testb");
+    result=[compiler evaluateScriptString:@"n:b/testb"];
+    NSLog(@"==== did evaluate n:b/testb");
+    IDEXPECT( result, @"testb", @"nested expr result2");
+}
+
++(void)testSelfSchemeInSchemeDefintions
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"scheme SelfSchemeTester { /a { |= { 3. } } /b { |= { self:a }}}"];
+    [compiler evaluateScriptString:@"scheme:s := SelfSchemeTester scheme."];
+    id result=[compiler evaluateScriptString:@"s:b."];
+    IDEXPECT(result, @(3), @"b via self:a");
+}
+
 +(void)testSimpleSchemeDefSyntax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
@@ -1416,6 +1449,7 @@
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
         @"testNestedVarExprWithPath",
+        @"testSelfSchemeInSchemeDefintions",
         @"testSimpleSchemeDefSyntax",
         @"testSimpleFilterDefSyntax",
         @"testSimpleFilterDefSyntax",
