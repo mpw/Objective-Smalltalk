@@ -1,0 +1,50 @@
+#!/usr/local/bin/stsh
+#-methodstorebrowser
+
+
+scheme MethodStoreBrowser  {
+  var methodStore.
+  -initWithStore: aStore  {
+	self setMethodStore:aStore.
+	self.
+  }
+  -metaclassDefs {
+	self methodStore metaClasses.
+  }
+  -classDefs {
+	self methodStore classes.
+  }
+  /. { 
+     |= {
+     	self classDefs allKeys.
+     }
+  }
+
+  /:className/:which { 
+     |= {
+		self classes:which |  at:className | allMethodNames.
+     }
+  }
+
+  -classes:which {
+	which = 'classMethods' ifTrue: {
+		self metaclassDefs.
+    } ifFalse: {
+		self classDefs.
+    }.
+  }
+
+  /:className/:which/:methodName  { 
+     |= {
+		self classes:which |  at:className | methodForName:methodName | script.
+     }
+	 =| {
+		self classes:which |  at:className | methodForName:methodName.
+     }
+  }
+}
+
+scheme:browser := MethodStoreBrowser alloc initWithStore: context methodStore.
+stdout do println: browser:. each. 
+stdout do println: browser:MethodStoreBrowser/instanceMethods each. 
+shell runInteractiveLoop.
