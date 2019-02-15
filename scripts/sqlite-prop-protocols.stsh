@@ -84,7 +84,7 @@ scheme SQLiteScheme  {
      |= { self dictionariesForQuery: "select {column} from {table}"| collect | at:column. } 
   }
   -tables {
-	 self:. collect: { :table| self:schema/{table}. }.
+	 self:. collect: { :table | self:schema/{table}. }.
   }
   -<void>logTables {
      stdout do println: self tables each.	

@@ -119,9 +119,9 @@
 
 -(id)value
 {
-    NSLog(@"store: %@ ref: %@",self.store,self.reference);
+//    NSLog(@"store: %@ ref: %@",self.store,self.reference);
     id value=[super value];
-    NSLog(@"value: %p, %@: %@",value,[value class],value);
+//    NSLog(@"value: %p, %@: %@",value,[value class],value);
     return value;
 }
 

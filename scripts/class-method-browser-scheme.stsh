@@ -1,0 +1,30 @@
+#!/usr/local/bin/stsh
+#-methodbrowser
+
+
+scheme ClassBrowser  {
+
+  /. { 
+     |= {
+		MPWClassMirror allUsefulClasses collect name.
+     }
+  }
+
+  /:className/instanceMethods { 
+     |= {
+	    mirror := MPWClassMirror mirrorWithClassNamed:className.
+		mirror methodMirrors collect name.	
+     }
+  }
+
+  /:className/classMethods { 
+     |= {
+	    mirror := MPWMetaClassMirror mirrorWithClassNamed:className.
+		mirror methodMirrors collect name.	
+     }
+  }
+}
+
+
+scheme:browser := ClassBrowser scheme.
+shell runInteractiveLoop.
