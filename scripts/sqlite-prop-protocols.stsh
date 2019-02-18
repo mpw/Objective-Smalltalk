@@ -93,7 +93,13 @@ scheme SQLiteScheme  {
   	  classDef := MPWClassDefinition new.
       classDef setName: tableInfo name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
-      classDef setInstanceVariableDescriptions: tableInfo columns.
+	  columns := tableInfo columns collect: { :oldColumn | 
+			newName := oldColumn name lowercaseString.
+			newInfo := ColumnInfo new.
+			newInfo setName: newName.
+            newInfo.
+	  }.
+      classDef setInstanceVariableDescriptions: columns.
       classDef.  
   }
 }
