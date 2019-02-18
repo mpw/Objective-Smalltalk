@@ -89,6 +89,13 @@ scheme SQLiteScheme  {
   -<void>logTables {
      stdout do println: self tables each.	
   }
+  -classForTable:tableInfo  {
+  	  classDef := MPWClassDefinition new.
+      classDef setName: tableInfo name capitalizedString.
+      classDef setSuperclassName: 'NSObject'.
+      classDef setInstanceVariableDescriptions: tableInfo columns.
+      classDef.  
+  }
 }
 
 extension NSObject {
@@ -102,5 +109,11 @@ extension NSObject {
 
 
 scheme:db := SQLiteScheme alloc initWithPath: dbref path.
-stdout println: db:schema/artists
+
+artistsTable :=  scheme:db tables | at: 2
+artistsClass :=  scheme:db classForTable:artistsTable.
+stdout println: artistsClass name.
+stdout println: artistsClass superclassName.
+artistsClass defineClass.
+
 shell runInteractiveLoop.
