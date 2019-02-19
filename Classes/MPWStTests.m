@@ -1117,6 +1117,12 @@
     [proto defineProtocol];
     p=objc_getProtocol("MyStTestProtocol");
     EXPECTNOTNIL(p, @"should have protocol after def");
+    unsigned int count=0;
+    struct objc_method_description *methods = protocol_copyMethodDescriptionList(p, NO, YES, &count);
+    INTEXPECT(count,2, @"2 methods");
+    IDEXPECT( [NSString stringWithUTF8String:sel_getName(methods[0].name)],@"method1",@"name of first method");
+    IDEXPECT( [NSString stringWithUTF8String:sel_getName(methods[1].name)],@"method2",@"name of last method");
+
 }
 
 
