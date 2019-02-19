@@ -1106,12 +1106,17 @@
 
 +(void)testProtocolDefSyntaxWithMethods
 {
+    Protocol *p=objc_getProtocol("MyStTestProtocol");
+    EXPECTNIL(p, @"shouldn't be there");
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyProtocol  { -method1. -method2.}"];
-    IDEXPECT(proto.name, @"MyProtocol", @"name of protocol");
+    MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyStTestProtocol  { -method1. -method2.}"];
+    IDEXPECT(proto.name, @"MyStTestProtocol", @"name of protocol");
     INTEXPECT(proto.methods.count, 2, @"number of messages in protocol");
     IDEXPECT([proto.methods[0] methodName], @"method1", @"first message");
     IDEXPECT([proto.methods[1] methodName], @"method2", @"second message");
+    [proto defineProtocol];
+    p=objc_getProtocol("MyStTestProtocol");
+    EXPECTNOTNIL(p, @"should have protocol after def");
 }
 
 

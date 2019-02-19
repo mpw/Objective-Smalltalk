@@ -6,9 +6,16 @@
 //
 
 #import "MPWProtocolDefinition.h"
+#import <objc/runtime.h>
 
 @implementation MPWProtocolDefinition
 
+
+-(void)defineProtocol
+{
+    Protocol *p = objc_allocateProtocol([[self name] UTF8String]);
+    objc_registerProtocol(p);
+}
 
 -(void)dealloc
 {

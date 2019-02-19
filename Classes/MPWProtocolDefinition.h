@@ -15,5 +15,8 @@
 @property (nonatomic, strong) NSArray  *methods;
 @property (nonatomic, strong) NSArray  *propertyPathDefinitions;
 
+
+-(void)defineProtocol;
+
 @end
 
