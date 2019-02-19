@@ -1054,6 +1054,9 @@
     IDEXPECT( [header typeString], @"@@:@", @"method typestring");
 }
 
+
+
+
 +(void)testCreateSubclassUsingSnytax
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
@@ -1093,6 +1096,22 @@
     id result=[compiler evaluateScriptString:@"NSObject new autorelease st_extend_multiplyByEight:5."];
     IDEXPECT(result,@(40),@"method was successfully defined");
 }
+
++(void)testProtocolDefSyntax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyProtocol  { }"];
+    IDEXPECT(proto.name, @"MyProtocol", @"name of protocol")
+}
+
++(void)testProtocolDefSyntaxWithMethods
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyProtocol  { -method1. -method2.}"];
+    IDEXPECT(proto.name, @"MyProtocol", @"name of protocol");
+    INTEXPECT(proto.methods.count, 2, @"number of messages in protocol");
+}
+
 
 +(void)testNestedVarExprWithPath
 {
@@ -1446,6 +1465,8 @@
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
+        @"testProtocolDefSyntax",
+//        @"testProtocolDefSyntaxWithMethods",
         @"testNestedVarExprWithPath",
         @"testNestedVarExprWithPathInMethod",
         @"testNestedVarExprWithPathInBlockInMethod",

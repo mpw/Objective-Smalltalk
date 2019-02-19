@@ -944,6 +944,21 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found an extension definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"protocol"]) {
+        //        Currently just a synomym for class
+        //        NSLog(@"found an extension definition");
+        [self pushBack:next];
+        return [self parseProtocolDefinition];
+    } else if ( [next isEqual:@"connector"]) {
+        //        Currently just a synomym for class
+        //        NSLog(@"found an extension definition");
+        [self pushBack:next];
+        return [self parseProtocolDefinition];
+    } else if ( [next isEqual:@"notification"]) {
+        //        Currently just a synomym for class
+        //        NSLog(@"found an extension definition");
+        [self pushBack:next];
+        return [self parseProtocolDefinition];
     } else if ( [next isEqual:@"filter"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
@@ -1222,6 +1237,78 @@ idAccessor(solver, setSolver)
     }
     
     return classDef;
+}
+
+-(MPWClassDefinition*)parseProtocolDefinition
+{
+    NSString *s=[self nextToken];
+    Class defClass=nil;
+    if ( [s isEqualToString:@"protocol"] || [s isEqualToString:@"protocol"] ) {
+        defClass=[MPWProtocolDefinition class];
+    }
+    MPWProtocolDefinition *protoDef=[[defClass new] autorelease];
+    if ( protoDef ) {
+        NSString *name=[self nextToken];
+        protoDef.name = name;
+        NSString *separator=[self nextToken];
+        if ( [separator isEqualToString:@":"]) {
+            NSString *superclassName=[self nextToken];
+//            classDef.superclassName=superclassName;
+            separator=[self nextToken];
+        }
+        NSMutableArray *methods=[NSMutableArray array];
+        NSMutableArray *instanceVariables=[NSMutableArray array];
+        NSMutableArray *propertyDefinitions=[NSMutableArray array];
+        if ( [separator isEqualToString:@"{"]) {
+            NSString *next=nil;
+            while (nil != (next=[self nextToken])) {
+                //                NSLog(@"token: %@",next);
+                if ( [next isEqualToString:@"-"]) {
+                    [self pushBack:next];
+                    MPWScriptedMethod *method=[self parseMethodDefinition];
+                    [methods addObject:method];
+                } else if ( [next isEqualToString:@"var"]) {
+                    [self pushBack:next];
+                    [instanceVariables addObject:[self parseInstanceVariableDefinition]];
+                    next=[self nextToken];
+                    if ( ![next isEqualToString:@"."]) {
+                        [self pushBack:next];
+                    }
+                } else if ( [next isEqualToString:@"val"]) {
+                    PARSEERROR(@"const definitions not supported yet", next);
+                } else if ( [next isEqualToString:@"}"]) {
+                    break;
+                } else if ( [next isEqualToString:@"/"]) {
+                    MPWPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
+                    [propertyDefinitions addObject:prop];
+                    next=[self nextToken];
+                    [self pushBack:next];
+                    //                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
+                } else {
+                    PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
+                }
+            }
+            if ( ![next isEqual:@"}"]) {
+                PARSEERROR(@"incomplete class definition", @"");
+            }
+            protoDef.methods=methods;
+            protoDef.instanceVariableDescriptions=instanceVariables;
+            protoDef.propertyPathDefinitions=propertyDefinitions;
+        } else if ( [separator isEqualToString:@"|{"]) {
+            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
+            [self pushBack:@"{"];
+            MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
+            //            NSLog(@"parsed: %@",filterMethod);
+            [methods addObject:filterMethod];
+            protoDef.methods=methods;
+            //            NSLog(@"methods: %@",methods);
+
+        } else {
+            PARSEERROR(@"expected { in class definition", separator);
+        }
+    }
+
+    return protoDef;
 }
 
 

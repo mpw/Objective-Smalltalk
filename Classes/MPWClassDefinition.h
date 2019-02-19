@@ -6,18 +6,14 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/MPWProtocolDefinition.h>
 
-@interface MPWClassDefinition : MPWExpression
+@interface MPWClassDefinition : MPWProtocolDefinition
 
-@property (nonatomic, strong) NSString *name;
 @property (nonatomic, readonly) Class classToDefine;
 @property (nonatomic, strong) NSString *superclassName;
 @property (nonatomic, readonly) NSString *superclassNameToUse;
 
-@property (nonatomic, strong) NSArray  *instanceVariableDescriptions;
-@property (nonatomic, strong) NSArray  *methods;
-@property (nonatomic, strong) NSArray  *propertyPathDefinitions;
 
 
 @end

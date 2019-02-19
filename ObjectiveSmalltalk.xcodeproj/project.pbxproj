@@ -456,6 +456,10 @@
 		1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
 		1FE37BFF1969612800C9A378 /* MPWFrameworkScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37C001969612800C9A378 /* MPWFrameworkScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */; };
+		1FE5CFDC221C4A2B003E11DC /* MPWProtocolDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE5CFDA221C4A2B003E11DC /* MPWProtocolDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE5CFDD221C4A2B003E11DC /* MPWProtocolDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE5CFDA221C4A2B003E11DC /* MPWProtocolDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE5CFDE221C4A2B003E11DC /* MPWProtocolDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5CFDB221C4A2B003E11DC /* MPWProtocolDefinition.m */; };
+		1FE5CFDF221C4A2B003E11DC /* MPWProtocolDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5CFDB221C4A2B003E11DC /* MPWProtocolDefinition.m */; };
 		1FE63E0621061BE20066B335 /* MPWCSourceKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE63E0421061BE20066B335 /* MPWCSourceKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE63E0C21061C0F0066B335 /* MPWClangImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE63E0A21061C0F0066B335 /* MPWClangImporter.h */; };
 		1FE63E0D21061C0F0066B335 /* MPWClangImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE63E0B21061C0F0066B335 /* MPWClangImporter.m */; };
@@ -853,6 +857,8 @@
 		1FE37B5119695FA600C9A378 /* ObjectiveSmalltalkTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalkTouch.h; sourceTree = "<group>"; };
 		1FE37B68196960E400C9A378 /* MPWFoundationTouch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundationTouch.framework; path = "../../Build/Release-iphoneos/MPWFoundationTouch.framework"; sourceTree = "<group>"; };
 		1FE37C011969744C00C9A378 /* MPWFoundationTouch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundationTouch.framework; path = "../../Build/Release-iphoneos/MPWFoundationTouch.framework"; sourceTree = "<group>"; };
+		1FE5CFDA221C4A2B003E11DC /* MPWProtocolDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWProtocolDefinition.h; sourceTree = "<group>"; };
+		1FE5CFDB221C4A2B003E11DC /* MPWProtocolDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWProtocolDefinition.m; sourceTree = "<group>"; };
 		1FE63E0221061BE10066B335 /* MPWCSourceKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWCSourceKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE63E0421061BE20066B335 /* MPWCSourceKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCSourceKit.h; sourceTree = "<group>"; };
 		1FE63E0521061BE20066B335 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1624,6 +1630,8 @@
 				1FF6AC6A0752648B00A306C8 /* MPWStatementList.m */,
 				F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */,
 				F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */,
+				1FE5CFDA221C4A2B003E11DC /* MPWProtocolDefinition.h */,
+				1FE5CFDB221C4A2B003E11DC /* MPWProtocolDefinition.m */,
 				1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */,
 				1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */,
 				F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */,
@@ -1798,6 +1806,7 @@
 				1F88E8B1138ADC1600199F03 /* MPWURLBinding.h in Headers */,
 				1F88E8B3138ADC1600199F03 /* MPWEnvScheme.h in Headers */,
 				1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */,
+				1FE5CFDC221C4A2B003E11DC /* MPWProtocolDefinition.h in Headers */,
 				1F222CA81394D817007AE2FB /* MPWScriptingBridgeBinding.h in Headers */,
 				1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */,
 				1F8F1A04193070F200CC831A /* MPWDirectoryBinding.h in Headers */,
@@ -1943,6 +1952,7 @@
 				1FE37BAB1969610700C9A378 /* MPWObjCGenerator.h in Headers */,
 				1F321C68213334F3001BE6CC /* MPWPropertyPathGetter.h in Headers */,
 				1FE37BD71969612500C9A378 /* MPWURLSchemeResolver.h in Headers */,
+				1FE5CFDD221C4A2B003E11DC /* MPWProtocolDefinition.h in Headers */,
 				1FE37BA31969610700C9A378 /* MPWMethodMirror.h in Headers */,
 				1FE37BCE1969612400C9A378 /* MPWVARBinding.h in Headers */,
 				1FE37BD11969612500C9A378 /* MPWTreeNode.h in Headers */,
@@ -2737,6 +2747,7 @@
 				1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */,
 				1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
+				1FE5CFDE221C4A2B003E11DC /* MPWProtocolDefinition.m in Sources */,
 				1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
 				1F504629211885E900073E1E /* MPWPropertyPath.m in Sources */,
 			);
@@ -2916,6 +2927,7 @@
 				1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */,
 				1FE37BBE1969610800C9A378 /* MPWStScanner.m in Sources */,
 				1FFE3ADA20B46BDD00E65B93 /* MPWSelfContainedBinding.m in Sources */,
+				1FE5CFDF221C4A2B003E11DC /* MPWProtocolDefinition.m in Sources */,
 				1FE37B9E1969610600C9A378 /* MPWAbstractInterpretedMethod.m in Sources */,
 				1F5046302118AEB400073E1E /* MPWPropertyPathComponent.m in Sources */,
 			);
