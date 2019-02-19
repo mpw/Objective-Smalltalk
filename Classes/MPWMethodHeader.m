@@ -117,7 +117,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(id)parseAKeyWordFromScanner:scanner
 {
 	id next = [scanner nextToken];
-	if ( next && ![next isEqualToString:@"{"]) {
+    if ( next && ![next isEqualToString:@"{"] && ![next isEqualToString:@"."]) {
 		id type;
 		id keyword = next;
 //		[self addToMethodName:next];
@@ -126,7 +126,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 			type=@"id";
 		}
 		next = [scanner nextToken];
-        if ( [next isEqualToString:@"{"]) {
+        if ( [next isEqualToString:@"{"] || [next isEqualToString:@"."]) {
             [scanner pushBack:next];
             next=nil;
         }
@@ -316,6 +316,14 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	IDEXPECT( [header typeString] , typeString , msgString);
 }
 
++(void)testMethodHeaderFollowedByPeriod
+{
+    NSString *testMethodHeader = @"someMethod. otherMethod.";
+    MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
+    IDEXPECT([header methodName], @"someMethod",@"shouldn't include the period");
+}
+
+
 +(void)_parseHeaderString:(NSString*)headerString andCompareGeneratedWithCanonical:(NSString*)canonical
 {
 	MPWMethodHeader *header = [self methodHeaderWithString:headerString];
@@ -354,7 +362,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 +(NSArray*)testSelectors
 {
-    return [NSArray arrayWithObjects:
+    return @[
 		@"testParseUnaryUntypedMethodHeader",
 		@"testParseUnaryIntReturnTypedMethodHeader",
 		@"testParseKeywordMethodHeader",
@@ -366,7 +374,9 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 		@"testTypedKeywordFloatTypeString",
 		@"testReconstitutedParameterString",
 		@"testCanonicalParameterString",
-        nil];
+        @"testMethodHeaderFollowedByPeriod",
+        ];
+
 }
 
 @end

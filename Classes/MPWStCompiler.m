@@ -1060,6 +1060,26 @@ idAccessor(solver, setSolver)
     return method;
 }
 
+-(MPWMethodHeader*)parseMethodHeader
+{
+    MPWMethodHeader *header=nil;
+    NSString *s=[self nextToken];
+    NSLog(@"first token: %@",s);
+    if ( [s isEqualToString:@"-"]) {
+        NSLog(@"found '-', parse method header");
+        header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
+        NSLog(@"parsed header: %@",header);
+    }
+    s=[self nextToken];
+    NSLog(@"token after method header: %@",s);
+    if ( [s isEqualToString:@"."] || [s isEqualToString:@"}"]) {
+
+    } else {
+        PARSEERROR(@"unexpected token after method header", s);
+    }
+    return header;
+}
+
 -(MPWClassDefinition*)parseClassDefinitionFromString:aString
 {
     [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
@@ -1239,7 +1259,7 @@ idAccessor(solver, setSolver)
     return classDef;
 }
 
--(MPWClassDefinition*)parseProtocolDefinition
+-(MPWProtocolDefinition*)parseProtocolDefinition
 {
     NSString *s=[self nextToken];
     Class defClass=nil;
@@ -1265,7 +1285,7 @@ idAccessor(solver, setSolver)
                 //                NSLog(@"token: %@",next);
                 if ( [next isEqualToString:@"-"]) {
                     [self pushBack:next];
-                    MPWScriptedMethod *method=[self parseMethodDefinition];
+                    MPWScriptedMethod *method=[self parseMethodHeader];
                     [methods addObject:method];
                 } else if ( [next isEqualToString:@"var"]) {
                     [self pushBack:next];
@@ -1279,17 +1299,17 @@ idAccessor(solver, setSolver)
                 } else if ( [next isEqualToString:@"}"]) {
                     break;
                 } else if ( [next isEqualToString:@"/"]) {
-                    MPWPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
+                    MPWPropertyPathDefinition *prop=[self parsePropertyPathDeclaration];
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
                     [self pushBack:next];
                     //                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
                 } else {
-                    PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
+                    PARSEERROR(@"unexpected symbol in protocol def, expected method, var or val",next);
                 }
             }
             if ( ![next isEqual:@"}"]) {
-                PARSEERROR(@"incomplete class definition", @"");
+                PARSEERROR(@"incomplete protocol definition", @"");
             }
             protoDef.methods=methods;
             protoDef.instanceVariableDescriptions=instanceVariables;
