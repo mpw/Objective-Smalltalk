@@ -44,12 +44,14 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     id <MPWReferencing> ref=parameters.lastObject;
 //    NSLog(@"reference: %@",ref);
     for ( MPWPropertyPathDefinition *def in self.propertyPathDefs) {
+//        NSLog(@"try def: %@",def);
         NSDictionary *pathParams=[def.propertyPath bindingsForMatchedReference:ref];
         if (pathParams) {
+///            NSLog(@"match: %@",def);
             return [self evaluateFoundPropertyPath:def onTarget:target boundParams:pathParams additionalParams:parameters];
         }
     }
-    NSLog(@"no match for %@",ref);
+//    NSLog(@"no match for %@",ref);
     [NSException raise:@"undefined" format:@"undefined path: %@ for object: %@",ref,target];
     return nil;
 }

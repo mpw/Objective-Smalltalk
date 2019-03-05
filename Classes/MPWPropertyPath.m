@@ -83,8 +83,14 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
     return [self bindingsForMatchedReference:[MPWGenericReference referenceWithPath:path]];
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: pathComponents: %@>",[self class],self,[self pathComponents]];
+}
+
 -(void)dealloc
 {
+//    [_name release];
     [_pathComponents release];
     [super dealloc];
 }

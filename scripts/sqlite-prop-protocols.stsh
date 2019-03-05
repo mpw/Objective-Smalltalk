@@ -52,11 +52,11 @@ scheme SQLiteScheme  {
         resultSet := self dictionariesForQuery: "PRAGMA table_info({table})".
 	    columns := resultSet collect: { :colDict | 
             #ColumnInfo{
-				#'name': (colDict at:'name') ,
-				#'type': (colDict at:'type')
+				#name : (colDict at:'name') ,
+				#type : (colDict at:'type')
 			}.
         }.
-        #TableInfo{ #'name': table, #'columns': columns }.
+        #TableInfo{ #name : table, #columns : columns }.
      }
   } 
 

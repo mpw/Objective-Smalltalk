@@ -10,7 +10,10 @@
 @implementation MPWPropertyPathDefinition
 
 
-
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: propertyPath: %@>",[self class],self,[self propertyPath]];
+}
 
 -(void)dealloc
 {

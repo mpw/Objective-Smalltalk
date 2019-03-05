@@ -456,6 +456,7 @@ idAccessor( retval, setRetval )
 
 -executeInShell:aShell
 {
+//    NSLog(@"===");
     NSObject* result = [self evaluateIn:aShell];
 //	NSLog(@"result of initial eval: %s, may no run process",object_getClassName(result));
 	if ( /* [result isKindOfClass:[NSObject class]] && */ [result respondsToSelector:@selector(runProcess)] ) {

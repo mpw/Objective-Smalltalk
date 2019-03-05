@@ -39,6 +39,11 @@ CONVENIENCEANDINIT( component, WithString:(NSString*)s)
     return pathName;
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: propertyPath: name: %@ paramater: %@>",[self class],self,self.name,self.parameter];
+}
+
 -(void)dealloc
 {
     [_name release];
