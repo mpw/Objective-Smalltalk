@@ -1,0 +1,40 @@
+
+scheme ClassBrowser  {
+  var dictionary.
+  -initWithDictionary:aDict {
+	self setDictionary:aDict.
+	self.
+  }
+  -classDefs {
+	self dictionary.
+  }
+  /. { 
+     |= {
+		self classDefs | allKeys | sorted.
+     }
+  }
+
+  /:className/:which/:methodName  { 
+     |= {
+		self classDefs at:className | at:which | at:methodName.
+     }
+	 =| {
+		self classDefs at:className | at:which | at:methodName put:newValue.
+     }
+  }
+
+  /:className/:which { 
+     |= {
+        self classDefs at:className | at:which | allKeys | sorted.
+     }
+  }
+  -<int>hasChildren:ref {
+     ref relativePathComponents count < 3.
+  }
+
+  /:className {
+     |= {
+         self:{className}/instanceMethods.
+     }
+   }
+}

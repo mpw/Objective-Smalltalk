@@ -6,8 +6,6 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
-@interface ObjectiveSmalltalkUI : NSObject
-
-@end
+#import "ObjectiveSmalltalkUI/MPWMethodBrowser.h"
