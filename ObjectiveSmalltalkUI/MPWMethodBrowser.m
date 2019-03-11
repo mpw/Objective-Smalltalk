@@ -70,11 +70,16 @@
     return ![self.mappedStore hasChildren:ref];
 }
 
+-(void)updateBrowserMethodStore
+{
+    methodBrowser.store=self.mappedStore;
+}
+
 -(void)setMethodStore:(id<MPWStorage>)methodStore
 {
     self.baseStore=methodStore;
     self.mappedStore=[MPWClassMethodSwitchStore storeWithSource: methodStore];
-    methodBrowser.store=self.mappedStore;
+    [self updateBrowserMethodStore];
 }
 
 -(id<MPWStorage>)methodStore
@@ -84,7 +89,6 @@
 
 -(void)awakeFromNib
 {
-    NSLog(@"%@:%p awakeFromNib",[self class],self);
     [super awakeFromNib];
     [self.methodBody setAutomaticQuoteSubstitutionEnabled:NO];
     [self.methodBody setAutomaticLinkDetectionEnabled:NO];
@@ -94,10 +98,9 @@
     [self.methodBody setAutomaticSpellingCorrectionEnabled:NO];
     [self.methodBody setFont:[NSFont fontWithName:@"Menlo Regular" size:11]];
     [self.methodHeader setFont:[NSFont fontWithName:@"Menlo Regular" size:12]];
-    methodBrowser.store=self.mappedStore;
+    [self updateBrowserMethodStore];
     [methodBrowser setBrowserDelegate:self];
     [methodBrowser loadColumnZero];
-    NSLog(@"%@:%p awakeFromNib did initialize methodStore %@",[self class],self,methodBrowser.store);
 }
 
 - (void)viewDidLoad {
