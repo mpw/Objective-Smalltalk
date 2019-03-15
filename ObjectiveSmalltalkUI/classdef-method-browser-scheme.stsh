@@ -10,7 +10,12 @@ scheme ClassBrowser  {
   }
   /. { 
      |= {
-		self classDefs | allKeys | sorted.
+        stdout println:'root'.
+        classNames := self classDefs | allKeys | sorted.
+        stdout println:'class names: ', classNames description.
+        refs := self collect referenceForPath:classNames each.
+        stdout println:'refs: ', refs description.
+        refs.
      }
   }
 
@@ -25,7 +30,15 @@ scheme ClassBrowser  {
 
   /:className/:which { 
      |= {
-        self classDefs at:className | at:which | allKeys | sorted.
+        basePath := className,'/', which,'/'.
+        stdout println:'basePath: ',basePath.
+        paths := self classDefs at:className | at:which | allKeys | sorted.
+        stdout println:'paths: ', paths description.
+        combined := basePath collect stringByAppendingString: paths each.
+        stdout println:'combined paths: ', combined description.
+        refs := self collect referenceForPath:combined each.
+        stdout println:'refs: ', refs description.
+        refs.
      }
   }
   -<int>hasChildren:ref {

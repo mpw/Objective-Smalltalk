@@ -14,7 +14,10 @@
 -(id<MPWReferencing>)mapReference:(id<MPWReferencing>)aReference
 {
     NSArray *path=[aReference relativePathComponents];
-    if ( path.count >= 1 && !((path.count==1) &&[path[0] isEqualToString:@"."]) )  {
+    if ( path.count >= 1 && [path[0] isEqualToString:@"."] ){
+        path=[path subarrayWithRange:NSMakeRange(1, path.count-1)];
+    }
+    if ( path.count >= 1 && !(path.count >1 && [path[1] hasSuffix:@"Methods"]) )  {
         NSMutableArray *newPath=[[path mutableCopy] autorelease];
         [newPath insertObject:self.showClassMethods ? @"classMethods" : @"instanceMethods" atIndex:1];
         aReference = [[[[(NSObject*)aReference class] alloc] initWithPathComponents:newPath scheme:nil] autorelease];

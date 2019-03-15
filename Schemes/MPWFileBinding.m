@@ -10,8 +10,7 @@
 #import <MPWFoundation/AccessorMacros.h>
 #import "MPWURLBinding.h"
 #import "MPWResource.h"
-#import "MPWDirectoryBinding.h"
-#import <MPWFoundation/MPWFDStreamSource.h>
+#import <MPWFoundation/MPWFoundation.h>
 #import <unistd.h>
 
 @interface NSObject (workspaceMBethods)

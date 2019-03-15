@@ -8,7 +8,6 @@
 
 #import "MPWFileSchemeResolver.h"
 #import "MPWFileBinding.h"
-#import "MPWDirectoryBinding.h"
 #ifndef GS_API_LATEST
 #import "MPWFileWatcher.h"
 #endif
@@ -35,12 +34,6 @@
 -(void)startWatching:(MPWFileBinding*)binding
 {}
 #endif
-
--directoryForReference:(MPWGenericReference*)aReference
-{
-    NSArray *bindings = [[self collect] bindingForReference:[[self childrenOfReference:aReference] each] inContext:self];
-    return [[[MPWDirectoryBinding alloc] initWithContents:bindings] autorelease];
-}
 
 
 

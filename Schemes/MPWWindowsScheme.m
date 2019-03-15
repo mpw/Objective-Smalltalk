@@ -6,7 +6,6 @@
 //
 
 #import "MPWWindowsScheme.h"
-#import "MPWDirectoryBinding.h"
 
 @implementation MPWWindowsScheme
 
@@ -26,7 +25,7 @@
 
 -(NSArray*)appBindingsList
 {
-    return [[self collect] bindingForName:[[self appNameList] each] inContext:nil];
+    return (NSArray*)[[self collect] bindingForName:[[self appNameList] each] inContext:nil];
 }
 
 
@@ -43,7 +42,7 @@
         }
     }
     NSArray *windowNameArray = [[windowNames allObjects] sortedArrayUsingSelector:@selector(compare:)];
-    return [[self collect] bindingForName:[windowNameArray each] inContext:nil];
+    return (NSArray*)[[self collect] bindingForName:[windowNameArray each] inContext:nil];
 }
 
 

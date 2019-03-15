@@ -8,8 +8,7 @@
 #import "MPWSpotlightScheme.h"
 #import <CoreServices/CoreServices.h>
 #import "MPWFileBinding.h"
-#import "MPWDirectoryBinding.h"
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 @interface MPWSpotlightSearchBinding : MPWDirectoryBinding
 {
