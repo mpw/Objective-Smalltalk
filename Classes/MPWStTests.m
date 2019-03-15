@@ -1275,6 +1275,15 @@
     IDEXPECT(result,@(42),@"evaluating a simple property");
 }
 
++(void)testEvaluateSimplePropertyPathGetterHasRef
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass1 : MPWScheme { /property { |= {  theRef.}  }}."];
+    id result = [compiler evaluateScriptString:@"a := PropertyTestClass1 new. scheme:p := a. p:property."];
+    id ref = [compiler evaluateScriptString:@"ref:p:property reference."];
+    IDEXPECT(result,ref,@"evaluating a simple property");
+}
+
 +(void)testEvaluatePropertyPathGettersWithArg
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
@@ -1497,6 +1506,7 @@
         @"testParsePropertyPathWithWildcard",
         @"testParsePropertyPathWithWildcardAndParameter",
         @"testEvaluateSimplePropertyPathGetter",
+        @"testEvaluateSimplePropertyPathGetterHasRef",
         @"testEvaluatePropertyPathGettersWithArg",
         @"testEvaluatePropertyPathGettersWithSeveralArgs",
         @"testEvaluatePropertyPathGetterWithWildcard",

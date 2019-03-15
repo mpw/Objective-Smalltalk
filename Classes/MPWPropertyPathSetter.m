@@ -16,7 +16,7 @@
     return @"<void>setObject:newValue forReference:aReference";
 }
 
--(id)evaluateFoundPropertyPath:(MPWPropertyPathDefinition*)def onTarget:target boundParams:(NSDictionary*)pathParams additionalParams:param
+-(id)evaluateFoundPropertyPath:(MPWPropertyPathDefinition*)def onTarget:target boundParams:(NSDictionary*)pathParams additionalParams:(NSArray*)param
 {
     //            NSLog(@"matched: %@",def.propertyPath.pathComponents);
     //            NSLog(@"matched args: %@",pathParams);
@@ -24,6 +24,7 @@
     NSArray *params=[pathParams objectsForKeys:[def.propertyPath formalParameters] notFoundMarker:@""];
     params=[params arrayByAddingObject:param[0]];
     //            NSLog(@"array aprams: %@",params);
+    params = [params arrayByAddingObject:param.lastObject];
     id result=[m evaluateOnObject:target parameters:params];
     return result;
 }
