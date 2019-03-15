@@ -26,10 +26,8 @@ scheme ClassBrowser  {
 
   /:className/:which { 
      |= {
-        basePath := className,'/', which,'/'.
         paths := self classDefs at:className | at:which | allKeys | sorted.
-        combined := basePath collect stringByAppendingString: paths each.
-        self collect referenceForPath:combined each.
+        combined := theRef referencesByAppendingPaths: paths .
      }
   }
   -<int>hasChildren:ref {
