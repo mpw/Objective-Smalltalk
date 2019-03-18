@@ -9,7 +9,6 @@
 #import "MPWConnectToDefault.h"
 #import "MPWMessagePortDescriptor.h"
 #import <MPWFoundation/MPWStreamSource.h>
-#import "MPWFileBinding.h"
 #import "MPWScheme.h"
 
 // FIXME:   need some tests for this!

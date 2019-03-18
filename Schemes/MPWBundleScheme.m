@@ -10,7 +10,6 @@
 #import "MPWStCompiler.h"
 #import <MPWFoundation/AccessorMacros.h>
 #import <MPWFoundation/MPWGenericReference.h>
-#import "MPWFileBinding.h"
 #import "MPWScheme.h"
 #include <unistd.h>
 

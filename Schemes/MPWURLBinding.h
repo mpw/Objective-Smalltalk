@@ -6,7 +6,7 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWFileBinding.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 
 @interface MPWURLBinding : MPWFileBinding {

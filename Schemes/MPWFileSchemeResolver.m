@@ -7,7 +7,6 @@
 //
 
 #import "MPWFileSchemeResolver.h"
-#import "MPWFileBinding.h"
 #ifndef GS_API_LATEST
 #import "MPWFileWatcher.h"
 #endif
