@@ -11,11 +11,11 @@ scheme ClassBrowser  {
   /. { 
      |= {
         classNames := self classDefs | allKeys | sorted.
-        self collect referenceForPath:classNames each.
+        self collect bindingForPath:classNames each.
      }
   }
 
-  /:className/:which/:methodName  { 
+  /:className/:which/:methodName { 
      |= {
 		self classDefs at:className | at:which | at:methodName.
      }
@@ -28,6 +28,7 @@ scheme ClassBrowser  {
      |= {
         paths := self classDefs at:className | at:which | allKeys | sorted.
         combined := theRef referencesByAppendingPaths: paths .
+        self collect bindingForReference: combined each.
      }
   }
   -<int>hasChildren:ref {
