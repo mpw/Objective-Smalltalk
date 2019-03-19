@@ -9,3 +9,4 @@
 #import <Cocoa/Cocoa.h>
 
 #import "ObjectiveSmalltalkUI/MPWMethodBrowser.h"
+#import "ObjectiveSmalltalkUI/MPWProgramTextView.h"

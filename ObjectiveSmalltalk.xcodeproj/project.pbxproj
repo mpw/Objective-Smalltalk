@@ -237,6 +237,8 @@
 		1F88E8B4138ADC1600199F03 /* MPWEnvScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */; };
 		1F88E8DB138ADCCA00199F03 /* MPWResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E8D9138ADCCA00199F03 /* MPWResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8DC138ADCCA00199F03 /* MPWResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F88E8DA138ADCCA00199F03 /* MPWResource.m */; };
+		1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F89EB9F2241A175000A82D6 /* MPWProgramTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F89EBA22241A175000A82D6 /* MPWProgramTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F89EBA02241A175000A82D6 /* MPWProgramTextView.m */; };
 		1F8B855219AC72C700F8A107 /* MPWFileWatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8B855019AC72C700F8A107 /* MPWFileWatcher.h */; };
 		1F8B855519AC72C700F8A107 /* MPWFileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */; };
 		1F8E81CC1923AAFD00821570 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
@@ -740,6 +742,8 @@
 		1F88E8A8138ADC1600199F03 /* MPWEnvScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWEnvScheme.m; sourceTree = "<group>"; };
 		1F88E8D9138ADCCA00199F03 /* MPWResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWResource.h; sourceTree = "<group>"; };
 		1F88E8DA138ADCCA00199F03 /* MPWResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWResource.m; sourceTree = "<group>"; };
+		1F89EB9F2241A175000A82D6 /* MPWProgramTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWProgramTextView.h; sourceTree = "<group>"; };
+		1F89EBA02241A175000A82D6 /* MPWProgramTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWProgramTextView.m; sourceTree = "<group>"; };
 		1F8B855019AC72C700F8A107 /* MPWFileWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFileWatcher.h; sourceTree = "<group>"; };
 		1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFileWatcher.m; sourceTree = "<group>"; };
 		1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDocumentScheme.h; sourceTree = "<group>"; };
@@ -1353,24 +1357,26 @@
 		1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */ = {
 			isa = PBXGroup;
 			children = (
-				1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */,
-				1F8E81D01924229B00821570 /* MPWDocumentScheme.m */,
+				1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */,
 				1FA85A181923739E00F52396 /* CLIView.h */,
 				1FA85A191923739E00F52396 /* CLIView.m */,
-				1FA85A1A1923739E00F52396 /* ShellView.h */,
-				1FA85A1B1923739E00F52396 /* ShellView.m */,
 				1FA85A241923746B00F52396 /* FSCommandHistory.h */,
 				1FA85A251923746B00F52396 /* FSCommandHistory.m */,
 				1F7045F222313EA2005ED7FB /* MPWClassMethodSwitchStore.h */,
 				1F7045F322313EA2005ED7FB /* MPWClassMethodSwitchStore.m */,
-				1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */,
+				1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */,
+				1F8E81D01924229B00821570 /* MPWDocumentScheme.m */,
 				1F7045EC22313E83005ED7FB /* MPWMethodBrowser.h */,
 				1F7045ED22313E83005ED7FB /* MPWMethodBrowser.m */,
 				1F7045EE22313E84005ED7FB /* MPWMethodBrowser.xib */,
-				1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */,
-				1FA859F51923731900F52396 /* Supporting Files */,
+				1F89EB9F2241A175000A82D6 /* MPWProgramTextView.h */,
+				1F89EBA02241A175000A82D6 /* MPWProgramTextView.m */,
 				1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */,
 				1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */,
+				1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */,
+				1FA85A1A1923739E00F52396 /* ShellView.h */,
+				1FA85A1B1923739E00F52396 /* ShellView.m */,
+				1FA859F51923731900F52396 /* Supporting Files */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -1876,6 +1882,7 @@
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
+				1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2806,6 +2813,7 @@
 				1F7045F522313EA2005ED7FB /* MPWClassMethodSwitchStore.m in Sources */,
 				1F7045F022313E84005ED7FB /* MPWMethodBrowser.m in Sources */,
 				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
+				1F89EBA22241A175000A82D6 /* MPWProgramTextView.m in Sources */,
 				1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */,
 				1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
