@@ -29,6 +29,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1F14804922476228003C436E"
+            BuildableName = "Objective-Smalltalk.app"
+            BlueprintName = "Objective-Smalltalk"
+            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -42,19 +51,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <PathRunnable
-         runnableDebuggingMode = "0"
-         FilePath = "/usr/local/bin/testlogger64">
-      </PathRunnable>
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F5E504B09B4B754000298D9"
-            BuildableName = "ObjectiveSmalltalk.framework"
-            BlueprintName = "ObjectiveSmalltalk"
+            BlueprintIdentifier = "1F14804922476228003C436E"
+            BuildableName = "Objective-Smalltalk.app"
+            BlueprintName = "Objective-Smalltalk"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "ObjectiveSmalltalk"
@@ -70,6 +76,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1F5E504B09B4B754000298D9"
+            BuildableName = "ObjectiveSmalltalk.framework"
+            BlueprintName = "ObjectiveSmalltalk"
+            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Release">
