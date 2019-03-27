@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F14804922476228003C436E"
-            BuildableName = "Objective-Smalltalk.app"
-            BlueprintName = "Objective-Smalltalk"
+            BuildableName = "Smalltalk.app"
+            BlueprintName = "Smalltalk"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,16 +51,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F14804922476228003C436E"
-            BuildableName = "Objective-Smalltalk.app"
-            BlueprintName = "Objective-Smalltalk"
-            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "ObjectiveSmalltalk"

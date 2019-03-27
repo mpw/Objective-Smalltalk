@@ -23,6 +23,7 @@
 		1F14805E2247625D003C436E /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
+		1F1BE5DC224BC0E9002D58AC /* MPWSketching.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
 		1F222CA81394D817007AE2FB /* MPWScriptingBridgeBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222CA61394D817007AE2FB /* MPWScriptingBridgeBinding.h */; };
@@ -579,7 +580,7 @@
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0F13E518D18C86008B5E80 /* MPWStsh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStsh.h; sourceTree = "<group>"; };
-		1F14804A22476228003C436E /* Objective-Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Objective-Smalltalk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F14804A22476228003C436E /* Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Smalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F14804C22476229003C436E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1F14804D22476229003C436E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1F14804F2247622A003C436E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -589,6 +590,7 @@
 		1F1480572247622A003C436E /* Objective_Smalltalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Objective_Smalltalk.entitlements; sourceTree = "<group>"; };
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
 		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
+		1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWSketching.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
 		1F1F57FB083395A000D3275A /* MPWMethodHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodHeader.m; sourceTree = "<group>"; };
 		1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWScriptingBridgeScheme.h; sourceTree = "<group>"; };
@@ -945,6 +947,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F1BE5DC224BC0E9002D58AC /* MPWSketching.framework in Frameworks */,
 				1F14805D2247625D003C436E /* MPWFoundation.framework in Frameworks */,
 				1F14805E2247625D003C436E /* MPWFoundationUI.framework in Frameworks */,
 				1F14805B2247623D003C436E /* ObjectiveSmalltalk.framework in Frameworks */,
@@ -1238,6 +1241,7 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */,
 				1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */,
 				1F29D80321B42C7800AB14D8 /* MPWTest.framework */,
 				1FE63E1B210626B60066B335 /* libclang.dylib */,
@@ -1744,7 +1748,7 @@
 				1FE63E0221061BE10066B335 /* MPWCSourceKit.framework */,
 				1F6C792B2187468D00071DAC /* ObjectiveSwift.framework */,
 				1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */,
-				1F14804A22476228003C436E /* Objective-Smalltalk.app */,
+				1F14804A22476228003C436E /* Smalltalk.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2073,9 +2077,9 @@
 			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		1F14804922476228003C436E /* Objective-Smalltalk */ = {
+		1F14804922476228003C436E /* Smalltalk */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F14805A2247622A003C436E /* Build configuration list for PBXNativeTarget "Objective-Smalltalk" */;
+			buildConfigurationList = 1F14805A2247622A003C436E /* Build configuration list for PBXNativeTarget "Smalltalk" */;
 			buildPhases = (
 				1F14804622476228003C436E /* Sources */,
 				1F14804722476228003C436E /* Frameworks */,
@@ -2085,9 +2089,9 @@
 			);
 			dependencies = (
 			);
-			name = "Objective-Smalltalk";
+			name = Smalltalk;
 			productName = "Objective-Smalltalk";
-			productReference = 1F14804A22476228003C436E /* Objective-Smalltalk.app */;
+			productReference = 1F14804A22476228003C436E /* Smalltalk.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */ = {
@@ -2457,7 +2461,7 @@
 				1FE63E0121061BE10066B335 /* MPWCSourceKit */,
 				1F6C792A2187468D00071DAC /* ObjectiveSwift */,
 				1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */,
-				1F14804922476228003C436E /* Objective-Smalltalk */,
+				1F14804922476228003C436E /* Smalltalk */,
 			);
 		};
 /* End PBXProject section */
@@ -3293,7 +3297,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.Objective-Smalltalk";
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Smalltalk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -3328,7 +3332,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.Objective-Smalltalk";
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Smalltalk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -4883,7 +4887,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F14805A2247622A003C436E /* Build configuration list for PBXNativeTarget "Objective-Smalltalk" */ = {
+		1F14805A2247622A003C436E /* Build configuration list for PBXNativeTarget "Smalltalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F1480582247622A003C436E /* Debug */,

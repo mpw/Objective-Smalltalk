@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)display;
 
 -(instancetype)initWithDefaultNib;
-
+-(MPWBrowser*)methodBrowser;;
 
 @end
 

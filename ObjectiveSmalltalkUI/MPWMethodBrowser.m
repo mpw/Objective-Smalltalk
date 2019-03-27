@@ -21,6 +21,10 @@
 
 @implementation MPWMethodBrowser
 
+-(MPWBrowser *)methodBrowser
+{
+    return methodBrowser;
+}
 
 -(instancetype)initWithDefaultNib
 {
