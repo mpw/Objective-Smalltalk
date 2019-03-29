@@ -1151,7 +1151,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1F14804B22476229003C436E /* Objective-Smalltalk */ = {
+		1F14804B22476229003C436E /* Smalltalk */ = {
 			isa = PBXGroup;
 			children = (
 				1F14804C22476229003C436E /* AppDelegate.h */,
@@ -1162,7 +1162,7 @@
 				1F1480552247622A003C436E /* main.m */,
 				1F1480572247622A003C436E /* Objective_Smalltalk.entitlements */,
 			);
-			path = "Objective-Smalltalk";
+			path = Smalltalk;
 			sourceTree = "<group>";
 		};
 		1F222C881394CB90007AE2FB /* Schemes */ = {
@@ -1590,7 +1590,7 @@
 				1FE63E0321061BE20066B335 /* MPWCSourceKit */,
 				1F6C792C2187468D00071DAC /* ObjectiveSwift */,
 				1F29D7EE21B42BE600AB14D8 /* TestObjectiveSmalltalk */,
-				1F14804B22476229003C436E /* Objective-Smalltalk */,
+				1F14804B22476229003C436E /* Smalltalk */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
