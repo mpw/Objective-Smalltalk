@@ -6,23 +6,43 @@
 //
 
 #import "AppDelegate.h"
-#import <ObjectiveSmalltalkUI/CLIView.h>
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import "CLIView.h"
+#import "MPWStCompiler.h"
+#import "MPWProgramTextView.h"
 
 @interface AppDelegate ()
 
 @property (weak) IBOutlet NSWindow *window;
 @end
 
-@
+
 @implementation AppDelegate
+
+-(instancetype)init
+{
+    self=[super init];
+    self.compiler = [MPWStCompiler compiler];
+    return self;
+}
+
+-(void)textDidChange:(MPWProgramTextView*)view
+{
+    NSLog(@"text did change");
+}
 
 
 
 -(IBAction)showWorkspace:(id)sender
 {
-    CLIView *cli=[CLIView openInWindow:@"Workspace"];
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWProgramTextView *workspace=[MPWProgramTextView openInWindow:@"Workspace"];
+    workspace.delegate=self;
+    workspace.compiler=self.compiler;
+}
+
+-(IBAction)showREPL:(id)sender
+{
+    CLIView *cli=[CLIView openInWindow:@"CLI"];
+    MPWStCompiler *compiler=self.compiler;
     [cli setCommandHandler:compiler];
 }
 

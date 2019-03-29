@@ -7,6 +7,7 @@
 //
 
 #import "MPWProgramTextView.h"
+#import "MPWStCompiler.h"
 
 @interface MPWProgramTextView ()
 
@@ -102,7 +103,7 @@
         NSRange selectedRange=[self selectedRange];
         [self replaceCharactersInRange:selectedRange withString:[NSString stringWithFormat:@"%d",currentValue]];
         [self setSelectedRange:selectedRange];
-        [self.delegate textDidChange:nil];
+        [self.delegate textDidChange:self];
         numberDraggingStartingPoint=[theEvent locationInWindow];
     } else {
         [super mouseDragged:theEvent];
@@ -463,9 +464,26 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
         NSString *newString = [NSString stringWithFormat:@"%g",currentValue];
         [self replaceCharactersInRange:selectedRange withString:newString];
         [self setSelectedRange:NSMakeRange(selectedRange.location, newString.length)];
-        [self.delegate textDidChange:nil];
+        [self.delegate textDidChange:self];
     }
     fromTouchBar=NO;
+}
+
+-(IBAction)doIt:sender
+{
+    [self.compiler evaluateScriptString:[self selectedText]];
+}
+-(IBAction)printIt:sender;
+{
+    id result = [self.compiler evaluateScriptString:[self selectedText]];
+    NSString *resultText=[result stringValue];
+    NSRange currentSelection=[self selectedRange];
+    [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
+    currentSelection=[self selectedRange];
+    if ( resultText.length ) {
+        [self insertText:resultText];
+        [self setSelectedRange:NSMakeRange( currentSelection.location, resultText.length)];
+    }
 }
 
 

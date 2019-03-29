@@ -8,6 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class MPWStCompiler;
+
 @interface MPWProgramTextView : NSTextView
+
+@property (nonatomic, strong)  MPWStCompiler *compiler;
+
+-(IBAction)doIt:sender;
+-(IBAction)printIt:sender;
 
 @end
