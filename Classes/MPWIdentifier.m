@@ -58,9 +58,9 @@
         id evaluatedComponent=component;
 		if ( [component hasPrefix:@"{"] && [component hasSuffix:@"}"] ) {
 			NSString *nested=[component substringWithRange:NSMakeRange(1, [component length]-2)];
-            MPWIdentifier *nestedIdentifer=[MPWIdentifier identifierWithName:nested];
 
 #if 0
+            MPWIdentifier *nestedIdentifer=[MPWIdentifier identifierWithName:nested];
             evaluatedComponent=[aContext objectForReference:nestedIdentifer];
 #else
             evaluatedComponent=[aContext evaluateScriptString:nested];

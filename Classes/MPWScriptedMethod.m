@@ -11,6 +11,7 @@
 #import "MPWStCompiler.h"
 #import "MPWMethodHeader.h"
 #import "MPWVarScheme.h"
+#import "MPWSchemeScheme.h"
 
 @interface NSObject(MethodServeraddException)
 
@@ -70,7 +71,7 @@ idAccessor( script, _setScript )
 	MPWEvaluator *evaluator = [[[MPWStCompiler alloc] initWithParent:nil] autorelease];
 //    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
-    MPWVarScheme *newVarScheme=[MPWVarScheme scheme];
+    MPWVarScheme *newVarScheme=[MPWVarScheme store];
     [newVarScheme setContext:evaluator];
     [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"var"];
     [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"default"];

@@ -49,6 +49,11 @@
     return NO;
 }
 
+- (NSArray *)children {
+    return nil;
+}
+
+
 
 
 

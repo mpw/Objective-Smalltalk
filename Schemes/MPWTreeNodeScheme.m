@@ -55,7 +55,7 @@ idAccessor( root, setRoot )
 
 -(BOOL)isLeafReference:(MPWGenericReference *)aReference
 {
-    return [[self nodeForReference:aReference] hasChildren];
+    return ![[self nodeForReference:aReference] hasChildren];
 }
 
 -(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
@@ -115,12 +115,27 @@ idAccessor( root, setRoot )
     IDEXPECT([interpreter evaluateScriptString:@"cms:hi"], @"Hello there!", @"result of evaluating hi");
 }
 
++(void)testLeafHasNoChildren
+{
+    MPWTreeNodeScheme *site=[self store];
+    id <MPWReferencing> ref=[site referenceForPath:@"hello"];
+    site[ref]=@"world";
+    MPWBinding *binding=[site bindingForReference:ref inContext:nil];
+    IDEXPECT( ref, binding.reference, @"binding has same ref");
+    IDEXPECT( site[ref], @"world", @"store get");
+    IDEXPECT( [binding value], @"world", @"binding value");
+    EXPECTFALSE([binding hasChildren], @"children of binding");
+}
+
+
+
 +testSelectors
 {
     return [NSArray arrayWithObjects:
             @"testRead",
             @"testWrite",
             @"testStripLeadingSlashesFromPathsInReadAndWrite",
+            @"testLeafHasNoChildren",
             nil];
 }
 

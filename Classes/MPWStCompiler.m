@@ -1064,7 +1064,7 @@ idAccessor(solver, setSolver)
 {
     MPWMethodHeader *header=nil;
     NSString *s=[self nextToken];
-    NSLog(@"first token: %@",s);
+//    NSLog(@"first token: %@",s);
     if ( [s isEqualToString:@"-"]) {
         NSLog(@"found '-', parse method header");
         header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
@@ -1273,7 +1273,7 @@ idAccessor(solver, setSolver)
         protoDef.name = name;
         NSString *separator=[self nextToken];
         if ( [separator isEqualToString:@":"]) {
-            NSString *superclassName=[self nextToken];
+//            NSString *superclassName=[self nextToken];
 //            classDef.superclassName=superclassName;
             separator=[self nextToken];
         }
@@ -1286,7 +1286,7 @@ idAccessor(solver, setSolver)
                 //                NSLog(@"token: %@",next);
                 if ( [next isEqualToString:@"-"]) {
                     [self pushBack:next];
-                    MPWScriptedMethod *method=[self parseMethodHeader];
+                    MPWMethodHeader *method=[self parseMethodHeader];
                     [methods addObject:method];
                 } else if ( [next isEqualToString:@"var"]) {
                     [self pushBack:next];
@@ -1300,10 +1300,10 @@ idAccessor(solver, setSolver)
                 } else if ( [next isEqualToString:@"}"]) {
                     break;
                 } else if ( [next isEqualToString:@"/"]) {
-                    MPWPropertyPathDefinition *prop=[self parsePropertyPathDeclaration];
-                    [propertyDefinitions addObject:prop];
-                    next=[self nextToken];
-                    [self pushBack:next];
+//                    MPWPropertyPathDeclaration *prop=[self parsePropertyPathDeclaration];
+//                    [propertyDefinitions addObject:prop];
+//                    next=[self nextToken];
+//                    [self pushBack:next];
                     //                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
                 } else {
                     PARSEERROR(@"unexpected symbol in protocol def, expected method, var or val",next);

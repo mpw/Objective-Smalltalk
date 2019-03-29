@@ -280,7 +280,7 @@ idAccessor( content, setContent )
 			@"testPathRetrieving",
 			@"testKnowsRoot",
 			@"testAllSubnodes",
-			@"testMkdirs",
+            @"testMkdirs",
 			nil];
 }
 
