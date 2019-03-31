@@ -10,16 +10,16 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="-3" userLabel="Application"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate"/>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
-                <menuItem title="Objective-Smalltalk" id="1Xt-HY-uBw">
+                <menuItem title="Smalltalk" id="1Xt-HY-uBw">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Objective-Smalltalk" systemMenu="apple" id="uQy-DD-JDr">
+                    <menu key="submenu" title="Smalltalk" systemMenu="apple" id="uQy-DD-JDr">
                         <items>
-                            <menuItem title="About Objective-Smalltalk" id="5kV-Vb-QxS">
+                            <menuItem title="About Smalltalk" id="5kV-Vb-QxS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
@@ -33,7 +33,7 @@
                                 <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                            <menuItem title="Hide Objective-Smalltalk" keyEquivalent="h" id="Olw-nP-bQN">
+                            <menuItem title="Hide Smalltalk" keyEquivalent="h" id="Olw-nP-bQN">
                                 <connections>
                                     <action selector="hide:" target="-1" id="PnN-Uc-m68"/>
                                 </connections>
@@ -51,7 +51,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                            <menuItem title="Quit Objective-Smalltalk" keyEquivalent="q" id="4sb-4s-VLi">
+                            <menuItem title="Quit Smalltalk" keyEquivalent="q" id="4sb-4s-VLi">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
                                 </connections>
@@ -114,10 +114,10 @@
                                     <action selector="runPageLayout:" target="-1" id="Din-rz-gC5"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Print…" keyEquivalent=" " id="aTl-1u-JFS">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Print…" keyEquivalent="p" id="aTl-1u-JFS">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="print:" target="-1" id="qaZ-4w-aoO"/>
+                                    <action selector="printDocument:" target="-1" id="qaZ-4w-aoO"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -170,18 +170,18 @@
                                     <action selector="selectAll:" target="-1" id="VNm-Mi-diN"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="Ebo-BJ-jnH"/>
-                            <menuItem title="Do It" keyEquivalent="d" id="6hZ-Hl-DEs">
-                                <connections>
-                                    <action selector="doIt:" target="-1" id="k9x-Z5-fom"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Print It" keyEquivalent="p" id="F4k-fA-G57">
-                                <connections>
-                                    <action selector="printIt:" target="-1" id="2a1-Ym-bfx"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="uyl-h8-XO2"/>
+                            <menuItem title="Do It" keyEquivalent="s" id="hkO-Io-Eep">
+                                <connections>
+                                    <action selector="doIt:" target="-1" id="i3v-Dg-A81"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Print It" keyEquivalent="p" id="gXe-Io-0bV">
+                                <connections>
+                                    <action selector="printIt:" target="-1" id="rr2-0W-ev8"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="tno-Yh-YGJ"/>
                             <menuItem title="Find" id="4EN-yA-p0u">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Find" id="1b7-l0-nxx">
@@ -615,31 +615,6 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Tools" id="yck-mi-nwf">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Tools" id="wgS-jQ-w0e">
-                        <items>
-                            <menuItem title="CLI" id="kas-VC-gGS">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="showCLI:" target="-1" id="YTI-AC-tZ8"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Workspace" id="53o-Ud-rlQ">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="showWorkspace:" target="-1" id="Kps-k7-3YM"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Method Browser" id="H9T-dt-QZp">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="File Browser" id="h7T-Fs-E5O">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="View" id="H8h-7b-M4v">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="View" id="HyV-fh-RgO">
@@ -667,6 +642,25 @@
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="dU3-MA-1Rq"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Tools" id="9KB-gf-REW">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Tools" id="aia-uW-3P1">
+                        <items>
+                            <menuItem title="Workspace..." id="VYj-pQ-SL9">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showWorkspace:" target="-1" id="RQZ-l8-Umi"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="REPL..." id="iwN-YL-icb">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showREPL:" target="-1" id="5JO-Y3-1ji"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -701,7 +695,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                         <items>
-                            <menuItem title="Objective-Smalltalk Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                            <menuItem title="Smalltalk Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
@@ -710,269 +704,7 @@
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="49" y="5"/>
+            <point key="canvasLocation" x="-202" y="34"/>
         </menu>
-        <menuItem title="Format" id="hrj-tK-aT9">
-            <modifierMask key="keyEquivalentModifierMask"/>
-            <menu key="submenu" title="Format" id="zBj-hq-3XZ">
-                <items>
-                    <menuItem title="Font" id="dYr-GR-wUw">
-                        <modifierMask key="keyEquivalentModifierMask"/>
-                        <menu key="submenu" title="Font" systemMenu="font" id="R8u-YB-I97">
-                            <items>
-                                <menuItem title="Show Fonts" keyEquivalent="t" id="ucv-GI-2Hc">
-                                    <connections>
-                                        <action selector="orderFrontFontPanel:" target="YLy-65-1bz" id="7Tu-Vq-COQ"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Bold" tag="2" keyEquivalent="b" id="Xd9-Tt-YpZ">
-                                    <connections>
-                                        <action selector="addFontTrait:" target="YLy-65-1bz" id="MrK-6H-ofI"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Italic" tag="1" keyEquivalent="i" id="FP9-Do-Xag">
-                                    <connections>
-                                        <action selector="addFontTrait:" target="YLy-65-1bz" id="lrO-NK-JYR"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Underline" keyEquivalent="u" id="XQc-eP-eUn">
-                                    <connections>
-                                        <action selector="underline:" target="-1" id="LMZ-ym-B7n"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="vTf-Zg-4vR"/>
-                                <menuItem title="Bigger" tag="3" keyEquivalent="+" id="NTt-zT-BLZ">
-                                    <connections>
-                                        <action selector="modifyFont:" target="YLy-65-1bz" id="T2d-sI-7HS"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Smaller" tag="4" keyEquivalent="-" id="oGY-j7-EOQ">
-                                    <connections>
-                                        <action selector="modifyFont:" target="YLy-65-1bz" id="dqA-py-eVc"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="sQg-EK-y0N"/>
-                                <menuItem title="Kern" id="G09-ET-YUg">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                    <menu key="submenu" title="Kern" id="hSf-qr-gFv">
-                                        <items>
-                                            <menuItem title="Use Default" id="eCs-DZ-IMY">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="useStandardKerning:" target="-1" id="sRu-S7-3YK"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Use None" id="VtG-bY-cTs">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="turnOffKerning:" target="-1" id="ih6-2m-vKW"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Tighten" id="8C1-pu-fg5">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="tightenKerning:" target="-1" id="Hmx-th-VDJ"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Loosen" id="Rgc-YO-ooc">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="loosenKerning:" target="-1" id="60e-2H-4uG"/>
-                                                </connections>
-                                            </menuItem>
-                                        </items>
-                                    </menu>
-                                </menuItem>
-                                <menuItem title="Ligatures" id="cad-hi-Ee9">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                    <menu key="submenu" title="Ligatures" id="Ems-ND-XSM">
-                                        <items>
-                                            <menuItem title="Use Default" id="WOc-Aa-27G">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="useStandardLigatures:" target="-1" id="qv1-lA-Ge8"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Use None" id="ZFM-NZ-Ie2">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="turnOffLigatures:" target="-1" id="yI1-Lc-do1"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Use All" id="mYH-4g-4r1">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="useAllLigatures:" target="-1" id="R9g-DW-csY"/>
-                                                </connections>
-                                            </menuItem>
-                                        </items>
-                                    </menu>
-                                </menuItem>
-                                <menuItem title="Baseline" id="DXU-aX-vfk">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                    <menu key="submenu" title="Baseline" id="WHd-ey-SeC">
-                                        <items>
-                                            <menuItem title="Use Default" id="jqa-Lz-ve4">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="unscript:" target="-1" id="rgl-RA-DRf"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Superscript" id="Kb8-zi-r6r">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="superscript:" target="-1" id="uhv-cY-PFl"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Subscript" id="B2I-vv-19F">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="subscript:" target="-1" id="6sS-a0-FUK"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Raise" id="GRG-gt-cO5">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="raiseBaseline:" target="-1" id="AFU-Go-rxR"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem title="Lower" id="FZI-kV-LYx">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="lowerBaseline:" target="-1" id="A2Y-dI-fUO"/>
-                                                </connections>
-                                            </menuItem>
-                                        </items>
-                                    </menu>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="ryk-tE-xaz"/>
-                                <menuItem title="Show Colors" keyEquivalent="C" id="eEP-9u-idA">
-                                    <connections>
-                                        <action selector="orderFrontColorPanel:" target="-1" id="qkl-xY-laz"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="aNL-jZ-vLE"/>
-                                <menuItem title="Copy Style" keyEquivalent="c" id="Myq-6V-0h1">
-                                    <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                    <connections>
-                                        <action selector="copyFont:" target="-1" id="hFu-qd-PdG"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Paste Style" keyEquivalent="v" id="lth-V2-WvS">
-                                    <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                    <connections>
-                                        <action selector="pasteFont:" target="-1" id="TlA-sc-Ezg"/>
-                                    </connections>
-                                </menuItem>
-                            </items>
-                        </menu>
-                    </menuItem>
-                    <menuItem title="Text" id="jaj-To-7qQ">
-                        <modifierMask key="keyEquivalentModifierMask"/>
-                        <menu key="submenu" title="Text" id="lGv-ud-Vft">
-                            <items>
-                                <menuItem title="Align Left" keyEquivalent="{" id="35p-Nt-xGL">
-                                    <connections>
-                                        <action selector="alignLeft:" target="-1" id="olu-b3-u7h"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Center" keyEquivalent="|" id="Yl6-32-kUB">
-                                    <connections>
-                                        <action selector="alignCenter:" target="-1" id="H6p-fd-l6d"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Justify" id="fnn-D5-nzT">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                    <connections>
-                                        <action selector="alignJustified:" target="-1" id="NVw-bN-8pc"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Align Right" keyEquivalent="}" id="rYZ-kv-eD9">
-                                    <connections>
-                                        <action selector="alignRight:" target="-1" id="Kim-D9-rdD"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="Bbz-Vx-ks6"/>
-                                <menuItem title="Writing Direction" id="8Al-xo-odh">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                    <menu key="submenu" title="Writing Direction" id="QdA-AZ-u53">
-                                        <items>
-                                            <menuItem title="Paragraph" enabled="NO" id="vkr-Es-SLA">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem id="ttB-Bx-GCo">
-                                                <string key="title">	Default</string>
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="makeBaseWritingDirectionNatural:" target="-1" id="Prn-Ul-OJs"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem id="BGj-OJ-DjG">
-                                                <string key="title">	Left to Right</string>
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="makeBaseWritingDirectionLeftToRight:" target="-1" id="Y8B-EK-a2t"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem id="3DD-be-OhY">
-                                                <string key="title">	Right to Left</string>
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="makeBaseWritingDirectionRightToLeft:" target="-1" id="HxR-KX-sa8"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem isSeparatorItem="YES" id="8vS-St-DWa"/>
-                                            <menuItem title="Selection" enabled="NO" id="Lyn-cP-JJb">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem id="eJx-8P-YFc">
-                                                <string key="title">	Default</string>
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="makeTextWritingDirectionNatural:" target="-1" id="Pmt-Af-c78"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem id="iSG-72-AI6">
-                                                <string key="title">	Left to Right</string>
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="makeTextWritingDirectionLeftToRight:" target="-1" id="Qj8-33-wjr"/>
-                                                </connections>
-                                            </menuItem>
-                                            <menuItem id="zlE-aQ-AbO">
-                                                <string key="title">	Right to Left</string>
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                                <connections>
-                                                    <action selector="makeTextWritingDirectionRightToLeft:" target="-1" id="DSp-pK-5G2"/>
-                                                </connections>
-                                            </menuItem>
-                                        </items>
-                                    </menu>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="dfK-2P-86w"/>
-                                <menuItem title="Show Ruler" id="JEw-mM-NVK">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                    <connections>
-                                        <action selector="toggleRuler:" target="-1" id="M6M-xE-wwz"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Copy Ruler" keyEquivalent="c" id="zhl-Xm-alD">
-                                    <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                    <connections>
-                                        <action selector="copyRuler:" target="-1" id="rUY-lz-qQx"/>
-                                    </connections>
-                                </menuItem>
-                                <menuItem title="Paste Ruler" keyEquivalent="v" id="LUn-N8-LhP">
-                                    <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                    <connections>
-                                        <action selector="pasteRuler:" target="-1" id="sTQ-UI-znE"/>
-                                    </connections>
-                                </menuItem>
-                            </items>
-                        </menu>
-                    </menuItem>
-                </items>
-            </menu>
-        </menuItem>
     </objects>
 </document>

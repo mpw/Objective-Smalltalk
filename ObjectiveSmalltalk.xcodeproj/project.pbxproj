@@ -13,17 +13,8 @@
 		1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1F16DCE6E600ED2517 /* MPWCodeGenerator.m */; };
 		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
 		1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* MPWStsh.h */; };
-		1F14804E22476229003C436E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F14804D22476229003C436E /* AppDelegate.m */; };
-		1F1480502247622A003C436E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F14804F2247622A003C436E /* Assets.xcassets */; };
-		1F1480532247622A003C436E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F1480512247622A003C436E /* MainMenu.xib */; };
-		1F1480562247622A003C436E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1480552247622A003C436E /* main.m */; };
-		1F14805B2247623D003C436E /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F14805C2247623D003C436E /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; };
-		1F14805D2247625D003C436E /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1F14805E2247625D003C436E /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
-		1F1BE5DC224BC0E9002D58AC /* MPWSketching.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */; };
 		1F1BE5F7224D2FAF002D58AC /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
@@ -49,6 +40,16 @@
 		1F29D81021B4374600AB14D8 /* MPWTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; };
 		1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F2D95D22250FCC500D025D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D12250FCC500D025D8 /* AppDelegate.m */; };
+		1F2D95D52250FCC500D025D8 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* Document.m */; };
+		1F2D95D82250FCC500D025D8 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D62250FCC500D025D8 /* Document.xib */; };
+		1F2D95DA2250FCC800D025D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D92250FCC800D025D8 /* Assets.xcassets */; };
+		1F2D95DD2250FCC800D025D8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95DB2250FCC800D025D8 /* MainMenu.xib */; };
+		1F2D95E02250FCC800D025D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95DF2250FCC800D025D8 /* main.m */; };
+		1F2D95E52250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F2D95E62250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F2D95E92250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; };
+		1F2D95EA2250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8052111D1670086D540 /* MPWFilterDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2EB8022111D1670086D540 /* MPWFilterDefinition.m */; };
@@ -509,6 +510,20 @@
 			remoteGlobalIDString = 1FE37B4C19695FA600C9A378;
 			remoteInfo = ObjectiveSmalltalkTouch;
 		};
+		1F2D95E72250FD9D00D025D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F5E504B09B4B754000298D9;
+			remoteInfo = ObjectiveSmalltalk;
+		};
+		1F2D95EB2250FD9D00D025D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FA859F11923731900F52396;
+			remoteInfo = ObjectiveSmalltalkUI;
+		};
 		1F81C07319699AE10066DF43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -535,6 +550,18 @@
 				1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */,
 				1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */,
 				1F29D81021B4374600AB14D8 /* MPWTest.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F2D95ED2250FD9D00D025D8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F2D95EA2250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Embed Frameworks */,
+				1F2D95E62250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -581,14 +608,6 @@
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0F13E518D18C86008B5E80 /* MPWStsh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStsh.h; sourceTree = "<group>"; };
-		1F14804A22476228003C436E /* Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Smalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F14804C22476229003C436E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		1F14804D22476229003C436E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1F14804F2247622A003C436E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1F1480522247622A003C436E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		1F1480542247622A003C436E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F1480552247622A003C436E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		1F1480572247622A003C436E /* Objective_Smalltalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Objective_Smalltalk.entitlements; sourceTree = "<group>"; };
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
 		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
 		1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWSketching.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -618,6 +637,17 @@
 		1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClassesToTest.plist; sourceTree = "<group>"; };
 		1F29D80E21B4374600AB14D8 /* MPWTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D81121B4376600AB14D8 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F2D95CE2250FCC500D025D8 /* Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Smalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F2D95D02250FCC500D025D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1F2D95D12250FCC500D025D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1F2D95D32250FCC500D025D8 /* Document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
+		1F2D95D42250FCC500D025D8 /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
+		1F2D95D72250FCC500D025D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
+		1F2D95D92250FCC800D025D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1F2D95DC2250FCC800D025D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1F2D95DE2250FCC800D025D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F2D95DF2250FCC800D025D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Smalltalk.entitlements; sourceTree = "<group>"; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -944,18 +974,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1F14804722476228003C436E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F1BE5DC224BC0E9002D58AC /* MPWSketching.framework in Frameworks */,
-				1F14805D2247625D003C436E /* MPWFoundation.framework in Frameworks */,
-				1F14805E2247625D003C436E /* MPWFoundationUI.framework in Frameworks */,
-				1F14805B2247623D003C436E /* ObjectiveSmalltalk.framework in Frameworks */,
-				1F14805C2247623D003C436E /* ObjectiveSmalltalkUI.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F29D7EA21B42BE500AB14D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -963,6 +981,15 @@
 				1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */,
 				1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */,
 				1F29D80F21B4374600AB14D8 /* MPWTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F2D95CB2250FCC500D025D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F2D95E92250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Frameworks */,
+				1F2D95E52250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1151,20 +1178,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1F14804B22476229003C436E /* Smalltalk */ = {
-			isa = PBXGroup;
-			children = (
-				1F14804C22476229003C436E /* AppDelegate.h */,
-				1F14804D22476229003C436E /* AppDelegate.m */,
-				1F14804F2247622A003C436E /* Assets.xcassets */,
-				1F1480512247622A003C436E /* MainMenu.xib */,
-				1F1480542247622A003C436E /* Info.plist */,
-				1F1480552247622A003C436E /* main.m */,
-				1F1480572247622A003C436E /* Objective_Smalltalk.entitlements */,
-			);
-			path = Smalltalk;
-			sourceTree = "<group>";
-		};
 		1F222C881394CB90007AE2FB /* Schemes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1237,6 +1250,23 @@
 				1F29D7FE21B42BE900AB14D8 /* main.m */,
 			);
 			path = TestObjectiveSmalltalk;
+			sourceTree = "<group>";
+		};
+		1F2D95CF2250FCC500D025D8 /* Smalltalk */ = {
+			isa = PBXGroup;
+			children = (
+				1F2D95D02250FCC500D025D8 /* AppDelegate.h */,
+				1F2D95D12250FCC500D025D8 /* AppDelegate.m */,
+				1F2D95D32250FCC500D025D8 /* Document.h */,
+				1F2D95D42250FCC500D025D8 /* Document.m */,
+				1F2D95D62250FCC500D025D8 /* Document.xib */,
+				1F2D95D92250FCC800D025D8 /* Assets.xcassets */,
+				1F2D95DB2250FCC800D025D8 /* MainMenu.xib */,
+				1F2D95DE2250FCC800D025D8 /* Info.plist */,
+				1F2D95DF2250FCC800D025D8 /* main.m */,
+				1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */,
+			);
+			path = Smalltalk;
 			sourceTree = "<group>";
 		};
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
@@ -1590,7 +1620,7 @@
 				1FE63E0321061BE20066B335 /* MPWCSourceKit */,
 				1F6C792C2187468D00071DAC /* ObjectiveSwift */,
 				1F29D7EE21B42BE600AB14D8 /* TestObjectiveSmalltalk */,
-				1F14804B22476229003C436E /* Smalltalk */,
+				1F2D95CF2250FCC500D025D8 /* Smalltalk */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -1749,7 +1779,7 @@
 				1FE63E0221061BE10066B335 /* MPWCSourceKit.framework */,
 				1F6C792B2187468D00071DAC /* ObjectiveSwift.framework */,
 				1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */,
-				1F14804A22476228003C436E /* Smalltalk.app */,
+				1F2D95CE2250FCC500D025D8 /* Smalltalk.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2079,23 +2109,6 @@
 			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		1F14804922476228003C436E /* Smalltalk */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1F14805A2247622A003C436E /* Build configuration list for PBXNativeTarget "Smalltalk" */;
-			buildPhases = (
-				1F14804622476228003C436E /* Sources */,
-				1F14804722476228003C436E /* Frameworks */,
-				1F14804822476228003C436E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Smalltalk;
-			productName = "Objective-Smalltalk";
-			productReference = 1F14804A22476228003C436E /* Smalltalk.app */;
-			productType = "com.apple.product-type.application";
-		};
 		1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F29D80221B42BE900AB14D8 /* Build configuration list for PBXNativeTarget "TestObjectiveSmalltalk" */;
@@ -2113,6 +2126,26 @@
 			name = TestObjectiveSmalltalk;
 			productName = TestObjectiveSmalltalk;
 			productReference = 1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1F2D95CD2250FCC500D025D8 /* Smalltalk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F2D95E22250FCC800D025D8 /* Build configuration list for PBXNativeTarget "Smalltalk" */;
+			buildPhases = (
+				1F2D95CA2250FCC500D025D8 /* Sources */,
+				1F2D95CB2250FCC500D025D8 /* Frameworks */,
+				1F2D95CC2250FCC500D025D8 /* Resources */,
+				1F2D95ED2250FD9D00D025D8 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F2D95E82250FD9D00D025D8 /* PBXTargetDependency */,
+				1F2D95EC2250FD9D00D025D8 /* PBXTargetDependency */,
+			);
+			name = Smalltalk;
+			productName = Smalltalk;
+			productReference = 1F2D95CE2250FCC500D025D8 /* Smalltalk.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1F4348481E21676F002750C3 /* S3Scheme */ = {
@@ -2384,18 +2417,13 @@
 				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 1010;
 				TargetAttributes = {
-					1F14804922476228003C436E = {
-						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.Sandbox = {
-								enabled = 0;
-							};
-						};
-					};
 					1F29D7EC21B42BE500AB14D8 = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = PE4436LT5M;
+						ProvisioningStyle = Automatic;
+					};
+					1F2D95CD2250FCC500D025D8 = {
+						CreatedOnToolsVersion = 10.2;
 						ProvisioningStyle = Automatic;
 					};
 					1F4348481E21676F002750C3 = {
@@ -2462,7 +2490,7 @@
 				1FE63E0121061BE10066B335 /* MPWCSourceKit */,
 				1F6C792A2187468D00071DAC /* ObjectiveSwift */,
 				1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */,
-				1F14804922476228003C436E /* Smalltalk */,
+				1F2D95CD2250FCC500D025D8 /* Smalltalk */,
 			);
 		};
 /* End PBXProject section */
@@ -2477,15 +2505,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1F14804822476228003C436E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F1480502247622A003C436E /* Assets.xcassets in Resources */,
-				1F1480532247622A003C436E /* MainMenu.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F29D7EB21B42BE500AB14D8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2494,6 +2513,16 @@
 				1F29D7F921B42BE900AB14D8 /* Assets.xcassets in Resources */,
 				1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */,
 				1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F2D95CC2250FCC500D025D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F2D95DA2250FCC800D025D8 /* Assets.xcassets in Resources */,
+				1F2D95D82250FCC500D025D8 /* Document.xib in Resources */,
+				1F2D95DD2250FCC800D025D8 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2732,15 +2761,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1F14804622476228003C436E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F1480562247622A003C436E /* main.m in Sources */,
-				1F14804E22476229003C436E /* AppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F29D7E921B42BE500AB14D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2749,6 +2769,16 @@
 				1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */,
 				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
 				1F29D7F121B42BE600AB14D8 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F2D95CA2250FCC500D025D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F2D95D52250FCC500D025D8 /* Document.m in Sources */,
+				1F2D95E02250FCC800D025D8 /* main.m in Sources */,
+				1F2D95D22250FCC500D025D8 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3052,6 +3082,16 @@
 			target = 1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */;
 			targetProxy = 1F29D80921B42E1600AB14D8 /* PBXContainerItemProxy */;
 		};
+		1F2D95E82250FD9D00D025D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */;
+			targetProxy = 1F2D95E72250FD9D00D025D8 /* PBXContainerItemProxy */;
+		};
+		1F2D95EC2250FD9D00D025D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */;
+			targetProxy = 1F2D95EB2250FD9D00D025D8 /* PBXContainerItemProxy */;
+		};
 		1F81C07419699AE10066DF43 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1F81C05F19699AE00066DF43 /* MethodServerTouch */;
@@ -3073,14 +3113,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1F1480512247622A003C436E /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1F1480522247622A003C436E /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		1F29D7F521B42BE600AB14D8 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3095,6 +3127,22 @@
 				1F29D7FB21B42BE900AB14D8 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		1F2D95D62250FCC500D025D8 /* Document.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F2D95D72250FCC500D025D8 /* Base */,
+			);
+			name = Document.xib;
+			sourceTree = "<group>";
+		};
+		1F2D95DB2250FCC800D025D8 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F2D95DC2250FCC800D025D8 /* Base */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 		1F7B75B514629431002F38D1 /* InfoPlist.strings */ = {
@@ -3263,81 +3311,6 @@
 			};
 			name = Release;
 		};
-		1F1480582247622A003C436E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "$(SRCROOT)/Smalltalk/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Smalltalk;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		1F1480592247622A003C436E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "$(SRCROOT)/Smalltalk/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Smalltalk;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		1F29D80021B42BE900AB14D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3415,6 +3388,83 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1F2D95E32250FCC800D025D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = Smalltalk/Smalltalk.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = Smalltalk/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Smalltalk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1F2D95E42250FCC800D025D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = Smalltalk/Smalltalk.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = Smalltalk/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Smalltalk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -3648,6 +3698,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3693,6 +3744,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -4294,6 +4346,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -4349,6 +4402,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -4888,20 +4942,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F14805A2247622A003C436E /* Build configuration list for PBXNativeTarget "Smalltalk" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1F1480582247622A003C436E /* Debug */,
-				1F1480592247622A003C436E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1F29D80221B42BE900AB14D8 /* Build configuration list for PBXNativeTarget "TestObjectiveSmalltalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F29D80021B42BE900AB14D8 /* Debug */,
 				1F29D80121B42BE900AB14D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F2D95E22250FCC800D025D8 /* Build configuration list for PBXNativeTarget "Smalltalk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F2D95E32250FCC800D025D8 /* Debug */,
+				1F2D95E42250FCC800D025D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

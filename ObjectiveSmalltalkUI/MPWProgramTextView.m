@@ -481,8 +481,9 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
     [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
     currentSelection=[self selectedRange];
     if ( resultText.length ) {
+        [self insertText:@" "];
         [self insertText:resultText];
-        [self setSelectedRange:NSMakeRange( currentSelection.location, resultText.length)];
+        [self setSelectedRange:NSMakeRange( currentSelection.location+1, resultText.length)];
     }
 }
 

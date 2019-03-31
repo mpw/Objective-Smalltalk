@@ -1,8 +1,8 @@
 //
 //  main.m
-//  Objective-Smalltalk
+//  Smalltalk
 //
-//  Created by Marcel Weiher on 24.03.19.
+//  Created by Marcel Weiher on 31.03.19.
 //
 
 #import <Cocoa/Cocoa.h>

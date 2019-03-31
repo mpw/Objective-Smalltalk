@@ -8,7 +8,12 @@ scheme ClassBrowser  {
   -classDefs {
 	self dictionary.
   }
-  /. { 
+
+  -<int>hasChildren:ref {
+     ref relativePathComponents count < 3.
+  }
+
+  /. {
      |= {
         classNames := self classDefs | allKeys | sorted.
         self collect referenceForPath:classNames each.
@@ -29,9 +34,6 @@ scheme ClassBrowser  {
         paths := self classDefs at:className | at:which | allKeys | sorted.
         theRef referencesByAppendingPaths: paths .
      }
-  }
-  -<int>hasChildren:ref {
-     ref relativePathComponents count < 3.
   }
 
   /:className {
