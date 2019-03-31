@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWAppDelegate.h"
+#import "MPWFUSEAppDelegate.h"
 #import "MPWSchemeFilesystem.h"
 #import <OSXFUSE/OSXFUSE.h>
 
-@implementation MPWAppDelegate
+@implementation MPWFUSEAppDelegate
 
 // @synthesize window = _window;
 

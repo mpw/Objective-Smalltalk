@@ -10,7 +10,7 @@
 
 @class GMUserFileSystem;
 
-@interface MPWAppDelegate : NSObject <NSApplicationDelegate> {
+@interface MPWFUSEAppDelegate : NSObject <NSApplicationDelegate> {
     GMUserFileSystem* fs_;
 }
 

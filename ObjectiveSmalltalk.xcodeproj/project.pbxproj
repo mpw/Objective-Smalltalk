@@ -50,6 +50,9 @@
 		1F2D95E62250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2D95E92250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; };
 		1F2D95EA2250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */; };
+		1F2D95F522511A6600D025D8 /* AppDelegate.st in Copy Smalltalk Files */ = {isa = PBXBuildFile; fileRef = 1F2D95F22251198D00D025D8 /* AppDelegate.st */; };
 		1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8052111D1670086D540 /* MPWFilterDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2EB8022111D1670086D540 /* MPWFilterDefinition.m */; };
@@ -206,7 +209,7 @@
 		1F7B75B714629431002F38D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75B514629431002F38D1 /* InfoPlist.strings */; };
 		1F7B75B914629431002F38D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75B814629431002F38D1 /* main.m */; };
 		1F7B75BD14629431002F38D1 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75BB14629431002F38D1 /* Credits.rtf */; };
-		1F7B75C014629431002F38D1 /* MPWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75BF14629431002F38D1 /* MPWAppDelegate.m */; };
+		1F7B75C014629431002F38D1 /* MPWFUSEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75BF14629431002F38D1 /* MPWFUSEAppDelegate.m */; };
 		1F7B75C314629431002F38D1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F7B75C114629431002F38D1 /* MainMenu.xib */; };
 		1F7B75CA14629521002F38D1 /* MPWSchemeFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75C914629521002F38D1 /* MPWSchemeFilesystem.m */; };
 		1F7B75CC146295E5002F38D1 /* OSXFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */; };
@@ -566,6 +569,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F2D95F422511A4800D025D8 /* Copy Smalltalk Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Smalltalk;
+			dstSubfolderSpec = 7;
+			files = (
+				1F2D95F522511A6600D025D8 /* AppDelegate.st in Copy Smalltalk Files */,
+			);
+			name = "Copy Smalltalk Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F81C07D19699AE10066DF43 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -648,6 +662,9 @@
 		1F2D95DE2250FCC800D025D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F2D95DF2250FCC800D025D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Smalltalk.entitlements; sourceTree = "<group>"; };
+		1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWAppDelegate.h; sourceTree = "<group>"; };
+		1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWAppDelegate.m; sourceTree = "<group>"; };
+		1F2D95F22251198D00D025D8 /* AppDelegate.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = AppDelegate.st; sourceTree = "<group>"; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -750,8 +767,8 @@
 		1F7B75B814629431002F38D1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1F7B75BA14629431002F38D1 /* SchemeFS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SchemeFS-Prefix.pch"; sourceTree = "<group>"; };
 		1F7B75BC14629431002F38D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		1F7B75BE14629431002F38D1 /* MPWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWAppDelegate.h; sourceTree = "<group>"; };
-		1F7B75BF14629431002F38D1 /* MPWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWAppDelegate.m; sourceTree = "<group>"; };
+		1F7B75BE14629431002F38D1 /* MPWFUSEAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFUSEAppDelegate.h; sourceTree = "<group>"; };
+		1F7B75BF14629431002F38D1 /* MPWFUSEAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFUSEAppDelegate.m; sourceTree = "<group>"; };
 		1F7B75C814629521002F38D1 /* MPWSchemeFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSchemeFilesystem.h; sourceTree = "<group>"; };
 		1F7B75C914629521002F38D1 /* MPWSchemeFilesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSchemeFilesystem.m; sourceTree = "<group>"; };
 		1F7B75CB146295E5002F38D1 /* OSXFUSE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSXFUSE.framework; path = SDKs/MacOSX10.7.sdk/Library/Frameworks/OSXFUSE.framework; sourceTree = DEVELOPER_DIR; };
@@ -1265,6 +1282,7 @@
 				1F2D95DE2250FCC800D025D8 /* Info.plist */,
 				1F2D95DF2250FCC800D025D8 /* main.m */,
 				1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */,
+				1F2D95F22251198D00D025D8 /* AppDelegate.st */,
 			);
 			path = Smalltalk;
 			sourceTree = "<group>";
@@ -1368,8 +1386,8 @@
 			children = (
 				1F7B75CE146296DE002F38D1 /* Fuse.icns */,
 				1F7B75CF146296DE002F38D1 /* hellodoc.icns */,
-				1F7B75BE14629431002F38D1 /* MPWAppDelegate.h */,
-				1F7B75BF14629431002F38D1 /* MPWAppDelegate.m */,
+				1F7B75BE14629431002F38D1 /* MPWFUSEAppDelegate.h */,
+				1F7B75BF14629431002F38D1 /* MPWFUSEAppDelegate.m */,
 				1F7B75C114629431002F38D1 /* MainMenu.xib */,
 				1F7B75B314629431002F38D1 /* Supporting Files */,
 				1F7B75C814629521002F38D1 /* MPWSchemeFilesystem.h */,
@@ -1438,6 +1456,8 @@
 				1FA85A191923739E00F52396 /* CLIView.m */,
 				1FA85A241923746B00F52396 /* FSCommandHistory.h */,
 				1FA85A251923746B00F52396 /* FSCommandHistory.m */,
+				1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */,
+				1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */,
 				1F7045F222313EA2005ED7FB /* MPWClassMethodSwitchStore.h */,
 				1F7045F322313EA2005ED7FB /* MPWClassMethodSwitchStore.m */,
 				1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */,
@@ -1956,6 +1976,7 @@
 				1F86CE182031DE84000F0B81 /* MPWWindowsScheme.h in Headers */,
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */,
+				1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */,
 				1F7045EF22313E84005ED7FB /* MPWMethodBrowser.h in Headers */,
 				1F7045F422313EA2005ED7FB /* MPWClassMethodSwitchStore.h in Headers */,
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
@@ -2136,6 +2157,7 @@
 				1F2D95CB2250FCC500D025D8 /* Frameworks */,
 				1F2D95CC2250FCC500D025D8 /* Resources */,
 				1F2D95ED2250FD9D00D025D8 /* Embed Frameworks */,
+				1F2D95F422511A4800D025D8 /* Copy Smalltalk Files */,
 			);
 			buildRules = (
 			);
@@ -2907,7 +2929,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7B75B914629431002F38D1 /* main.m in Sources */,
-				1F7B75C014629431002F38D1 /* MPWAppDelegate.m in Sources */,
+				1F7B75C014629431002F38D1 /* MPWFUSEAppDelegate.m in Sources */,
 				1F7B75CA14629521002F38D1 /* MPWSchemeFilesystem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2942,6 +2964,7 @@
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
+				1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

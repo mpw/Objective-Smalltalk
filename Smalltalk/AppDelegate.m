@@ -18,12 +18,6 @@
 
 @implementation AppDelegate
 
--(instancetype)init
-{
-    self=[super init];
-    self.compiler = [MPWStCompiler compiler];
-    return self;
-}
 
 -(void)textDidChange:(MPWProgramTextView*)view
 {
@@ -32,12 +26,12 @@
 
 
 
--(IBAction)showWorkspace:(id)sender
-{
-    MPWProgramTextView *workspace=[MPWProgramTextView openInWindow:@"Workspace"];
-    workspace.delegate=self;
-    workspace.compiler=self.compiler;
-}
+//-(IBAction)showWorkspace:(id)sender
+//{
+//    MPWProgramTextView *workspace=[MPWProgramTextView openInWindow:@"Workspace"];
+//    workspace.delegate=self;
+//    workspace.compiler=self.compiler;
+//}
 
 -(IBAction)showREPL:(id)sender
 {

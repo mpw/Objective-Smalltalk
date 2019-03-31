@@ -5,13 +5,12 @@
 //  Created by Marcel Weiher on 24.03.19.
 //
 
+#import "MPWAppDelegate.h"
 #import <Cocoa/Cocoa.h>
 
-@class MPWStCompiler;
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@interface AppDelegate : MPWAppDelegate <NSApplicationDelegate>
 
-@property (nonatomic, retain) MPWStCompiler *compiler;
 
 -(IBAction)showWorkspace:(id)sender;
 -(IBAction)showREPL:(id)sender;
