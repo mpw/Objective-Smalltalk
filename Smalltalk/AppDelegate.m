@@ -21,7 +21,6 @@
 
 -(void)textDidChange:(MPWProgramTextView*)view
 {
-    NSLog(@"text did change");
 }
 
 

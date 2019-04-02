@@ -23,6 +23,18 @@
     NSPoint numberDraggingStartingPoint;
 }
 
+-(instancetype)initWithFrame:(NSRect)frameRect
+{
+    self=[super initWithFrame:frameRect];
+    [self setAutomaticQuoteSubstitutionEnabled:NO];
+    [self setAutomaticLinkDetectionEnabled:NO];
+    [self setAutomaticDataDetectionEnabled:NO];
+    [self setAutomaticDashSubstitutionEnabled:NO];
+    [self setAutomaticTextReplacementEnabled:NO];
+    [self setAutomaticSpellingCorrectionEnabled:NO];
+    return self;
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
 //    NSLog(@"-[%@ %@]",[self className],NSStringFromSelector(_cmd));
     [super drawRect:dirtyRect];
