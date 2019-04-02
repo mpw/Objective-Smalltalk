@@ -11,4 +11,20 @@ extension AppDelegate {
       workspace setDelegate: self.
       stdout println:'did set up workspace'.
   }
+  -validRequestorForSendType_disabled:sendType
+                  returnType:returnType
+  {
+         stdout println:'AppDelegate'.
+         stdout println:'sendType: ',sendType stringValue.
+         stdout println:'returnType: ',returnType stringValue.
+         nil.
+  }
+  -<void>evaluateSmalltalk_disabled:pasteboard userData:userData error:error
+  {
+      stdout println:'evaluteSmalltalk'.
+      pastboard clearContents.
+      pasteboard writeObjects: #( 'evaluted smalltalk' ).
+  }
+
 }
+

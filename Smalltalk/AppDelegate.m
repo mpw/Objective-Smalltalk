@@ -40,7 +40,32 @@
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    [[NSApplication sharedApplication] setServicesProvider:self];
     
+}
+
+-validRequestorForSendType:sendType
+                returnType:returnType
+{
+    NSLog(@"AppDelegate validRequestFor...");
+    return nil;
+}
+-(void)evaluateSmalltalk:(NSPasteboard*)pasteboard userData:userData error:error
+{
+    NSPasteboardItem *item=[[pasteboard pasteboardItems] firstObject];
+    NSString *stRequest=[item stringForType:NSPasteboardTypeString];
+    [pasteboard clearContents];
+    NSString *result=@"";
+    @try {
+        result = [[self.compiler evaluateScriptString:stRequest] stringValue] ?: @"";
+    } @catch ( id error ) {
+        NSLog(@"erorr evaluating: %@",error);
+    }
+//    NSLog(@"result: '%@'",result);
+    [pasteboard writeObjects: @[ result ]];
+
+
+
 }
 
 
