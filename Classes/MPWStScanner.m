@@ -240,6 +240,10 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     do {
         theChar = [self scanUTF8Char];
         if ( theChar  ) {
+            if ( theChar == 0x2018) {
+                NSString *restString=[self scanStringBodyWithStartChar:theChar];
+                return restString;
+            }
             [result appendFormat:@"%C",(unsigned short)theChar];
         }
     } while ( NO);
@@ -317,14 +321,35 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 -scanString
 {
-    NSMutableArray *partialStrings=nil;
     const  char *cur=pos;
-    id string=nil;
     char startChar = *cur;
     if ( startChar =='\'' || startChar =='"' ) {
         cur++;
         pos=cur;
+        return [self scanStringBodyWithStartChar:startChar];
+    } else {
+        return nil;
+    }
+}
+
+-scanStringBodyWithStartChar:(int)startChar
+{
+    const char *cur=pos;
+    id string=nil;
+    NSMutableArray *partialStrings=nil;
+    {
         while ( SCANINBOUNDS(cur) ) {
+            if ( startChar > 255 && *cur < 0) {
+                const char *old=pos;
+                pos=cur;
+                /* int endChar = */[self scanUTF8Char];
+                const char *afterDelim=pos;
+                pos=old;
+                string=[self makeString:cur-old];
+                pos=afterDelim;
+                break;
+            }
+
             if ( *cur==startChar  ) {
                 string=[self makeString:cur-pos];
                 UPDATEPOSITION(pos+1);
@@ -505,12 +530,23 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 {
     unichar pival=960;
     NSString *pi_string=[NSString stringWithCharacters:&pival length:1];
-	MPWStScanner *scanner=[self scannerWithString:pi_string];
+    MPWStScanner *scanner=[self scannerWithString:pi_string];
     NSString *token=[scanner nextToken];
     INTEXPECT([token length], 1, @"length of scanned token pi");
-    
+
     INTEXPECT([token characterAtIndex:0], pival, @"pi");
     IDEXPECT(token, pi_string, @"the string");
+}
+
++(void)testScanStringWithUnicodeQuotationMark
+{
+    NSString *s=@"‘Hello’";
+    MPWStScanner *scanner=[self scannerWithString:s];
+    NSString *token=[[scanner nextToken] realString];
+    NSLog(@"real string: %@/%@",[token class],token);
+
+    IDEXPECT(token,@"Hello",@"string with left quote");
+    EXPECTNIL([[scanner nextToken] realString],@"should only have one string");
 }
 
 +(NSArray*)testSelectors
@@ -524,6 +560,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"testSimpleLiteralString",
             @"singleMinusString",
             @"testScanUTF8Name",
+            @"testScanStringWithUnicodeQuotationMark",
         nil];
 }
 
