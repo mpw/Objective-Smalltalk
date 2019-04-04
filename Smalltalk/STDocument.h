@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface Document : NSDocument
+@interface STDocument : NSDocument
 
 
 @end

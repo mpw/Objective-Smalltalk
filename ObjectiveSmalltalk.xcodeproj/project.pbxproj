@@ -41,7 +41,7 @@
 		1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; };
 		1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2D95D22250FCC500D025D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D12250FCC500D025D8 /* AppDelegate.m */; };
-		1F2D95D52250FCC500D025D8 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* Document.m */; };
+		1F2D95D52250FCC500D025D8 /* STDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* STDocument.m */; };
 		1F2D95D82250FCC500D025D8 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D62250FCC500D025D8 /* Document.xib */; };
 		1F2D95DA2250FCC800D025D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D92250FCC800D025D8 /* Assets.xcassets */; };
 		1F2D95DD2250FCC800D025D8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95DB2250FCC800D025D8 /* MainMenu.xib */; };
@@ -654,8 +654,8 @@
 		1F2D95CE2250FCC500D025D8 /* Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Smalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2D95D02250FCC500D025D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1F2D95D12250FCC500D025D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1F2D95D32250FCC500D025D8 /* Document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
-		1F2D95D42250FCC500D025D8 /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
+		1F2D95D32250FCC500D025D8 /* STDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDocument.h; sourceTree = "<group>"; };
+		1F2D95D42250FCC500D025D8 /* STDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDocument.m; sourceTree = "<group>"; };
 		1F2D95D72250FCC500D025D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
 		1F2D95D92250FCC800D025D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F2D95DC2250FCC800D025D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -1274,8 +1274,8 @@
 			children = (
 				1F2D95D02250FCC500D025D8 /* AppDelegate.h */,
 				1F2D95D12250FCC500D025D8 /* AppDelegate.m */,
-				1F2D95D32250FCC500D025D8 /* Document.h */,
-				1F2D95D42250FCC500D025D8 /* Document.m */,
+				1F2D95D32250FCC500D025D8 /* STDocument.h */,
+				1F2D95D42250FCC500D025D8 /* STDocument.m */,
 				1F2D95D62250FCC500D025D8 /* Document.xib */,
 				1F2D95D92250FCC800D025D8 /* Assets.xcassets */,
 				1F2D95DB2250FCC800D025D8 /* MainMenu.xib */,
@@ -2803,7 +2803,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F2D95D52250FCC500D025D8 /* Document.m in Sources */,
+				1F2D95D52250FCC500D025D8 /* STDocument.m in Sources */,
 				1F2D95E02250FCC800D025D8 /* main.m in Sources */,
 				1F2D95D22250FCC500D025D8 /* AppDelegate.m in Sources */,
 			);

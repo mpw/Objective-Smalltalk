@@ -5,18 +5,21 @@
 //  Created by Marcel Weiher on 31.03.19.
 //
 
-#import "Document.h"
+#import "STDocument.h"
+#import "MPWProgramTextView.h"
 
-@interface Document ()
+@interface STDocument ()
+
+@property (nonatomic, strong) NSMutableSet *workspaces;
 
 @end
 
-@implementation Document
+@implementation STDocument
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // Add your subclass-specific initialization here.
+        self.workspaces = [NSMutableSet set];
     }
     return self;
 }
@@ -25,6 +28,15 @@
     return YES;
 }
 
+-(void)windowWillClose:(NSNotification*)closeNotification
+{
+    NSWindow *windowToClose=closeNotification.object;
+    for ( NSView *workspace in [self.workspaces allObjects] ) {
+        if ( workspace.window == windowToClose) {
+            [self.workspaces removeObject:workspace];
+        }
+    }
+}
 
 - (NSString *)windowNibName {
     // Override returning the nib file name of the document
@@ -34,10 +46,7 @@
 
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-    // Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error if you return nil.
-    // Alternatively, you could remove this method and override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-    [NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
-    return nil;
+    return [[(MPWProgramTextView*)[[self workspaces] anyObject] text] asData];
 }
 
 
