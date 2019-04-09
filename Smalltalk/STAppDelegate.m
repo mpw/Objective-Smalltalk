@@ -5,18 +5,18 @@
 //  Created by Marcel Weiher on 24.03.19.
 //
 
-#import "AppDelegate.h"
+#import "STAppDelegate.h"
 #import "CLIView.h"
 #import "MPWStCompiler.h"
 #import "MPWProgramTextView.h"
 
-@interface AppDelegate ()
+@interface STAppDelegate ()
 
 @property (weak) IBOutlet NSWindow *window;
 @end
 
 
-@implementation AppDelegate
+@implementation STAppDelegate
 
 
 -(void)textDidChange:(MPWProgramTextView*)view

@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface AppDelegate : MPWAppDelegate <NSApplicationDelegate>
+@interface STAppDelegate : MPWAppDelegate <NSApplicationDelegate>
 
 
 -(IBAction)showWorkspace:(id)sender;

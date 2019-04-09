@@ -34,9 +34,12 @@
 {
     self=[super init];
     self.compiler = [MPWStCompiler compiler];
+    [self.compiler bindValue:self toVariableNamed:@"delegate"];
+    [self.compiler evaluateScriptString:@"scheme:doc := MPWDocumentScheme scheme."];
     [self loadSmalltalkMethods];
     return self;
 }
+
 
 
 @end
