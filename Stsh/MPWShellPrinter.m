@@ -7,7 +7,8 @@
 //
 
 #import "MPWShellPrinter.h"
-#import "MPWDirectoryBinding.h"
+#import <MPWFoundation/MPWDirectoryBinding.h>
+#import <MPWFoundation/MPWFileBinding.h>
 #import <histedit.h>
 #include <readline/readline.h>
  #include <sys/ioctl.h>
