@@ -481,13 +481,29 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
     fromTouchBar=NO;
 }
 
--(IBAction)doIt:sender
+
+-(NSString*)selectedTextOrCurrentLine
 {
-    [self.compiler evaluateScriptString:[self selectedText]];
+    NSString *result=@"";
+    NSRange selected=self.selectedRange;
+    if ( selected.length == 0) {
+        NSRange beginningOfLine=[[self string] rangeOfString:@"\n" options:NSBackwardsSearch range:NSMakeRange(0,selected.location)];
+        if ( beginningOfLine.location == NSNotFound ) {
+            beginningOfLine=NSMakeRange(0, 0);
+        }
+        if (beginningOfLine.location != NSNotFound) {
+            NSRange lineRange = NSMakeRange( beginningOfLine.location, selected.location - beginningOfLine.location);
+            result = [[self string] substringWithRange:lineRange];
+        }
+    } else {
+        result = [self selectedText];
+    }
+    return result;
 }
+
 -(IBAction)printIt:sender;
 {
-    id result = [self.compiler evaluateScriptString:[self selectedText]];
+    id result = [self.compiler evaluateScriptString:[self selectedTextOrCurrentLine]];
     NSString *resultText=[result stringValue];
     NSRange currentSelection=[self selectedRange];
     [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
@@ -500,4 +516,16 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
 }
 
 
+-(IBAction)doIt:sender
+{
+    [self.compiler evaluateScriptString:[self selectedTextOrCurrentLine]];
+}
+
 @end
+
+
+@implementation MPWProgramTextView(testing)
+
+
+@end
+

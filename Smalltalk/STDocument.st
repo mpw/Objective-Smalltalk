@@ -11,7 +11,9 @@ extension STDocument {
       scrollView setHasVerticalScroller: 1.
       workspace := MPWProgramTextView alloc initWithFrame: (0@0 extent: 500@400).
       scrollView setDocumentView:workspace.
-      window := scrollView openInWindow:'Workspace'.
+      windowController := scrollView openInWindowController:'Workspace'.
+      self addWindowController:windowController.
+      window := windowController window.
       window setDelegate:self.
       workspace setCompiler: self compiler.
       workspace setDelegate: self.

@@ -44,11 +44,44 @@
     return @"Document";
 }
 
+- (NSFileWrapper *)fileWrapperOfType:(NSString *)typeName
+                               error:(NSError * _Nullable *)outError
+{
+    NSData *windowControllerArchive = [NSKeyedArchiver archivedDataWithRootObject:[self windowControllers] requiringSecureCoding:NO error:nil];
 
-- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-    return [[(MPWProgramTextView*)[[self workspaces] anyObject] text] asData];
+    NSFileWrapper *windowsWrapper = [[[NSFileWrapper alloc] initRegularFileWithContents:windowControllerArchive] autorelease];
+    NSDictionary *wrappers=@{
+                             @"windows": windowsWrapper,
+                             };
+    return [[[NSFileWrapper alloc] initDirectoryWithFileWrappers:wrappers] autorelease];
 }
 
+//- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
+//    return [[(MPWProgramTextView*)[[self workspaces] anyObject] text] asData];
+//}
+
+-(BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
+{
+    NSError *unarchiveError=nil;
+    NSFileWrapper *windowsWrapper=[fileWrapper fileWrappers][@"windows"];
+    NSData *windowsArchive = [windowsWrapper regularFileContents];
+    NSLog(@"windowsArchive length: %ld",(long)windowsArchive.length);
+    NSArray *windowControllers = [NSKeyedUnarchiver unarchiveObjectWithData:windowsArchive];
+    if ( !windowControllers && unarchiveError) {
+        NSLog(@"error unarchiving: %@",unarchiveError);
+        if ( outError ) {
+            *outError=unarchiveError;
+        }
+    }
+    for ( NSWindowController *c in windowControllers) {
+        if ( [c respondsToSelector:@selector(view)]) {
+            NSWindow *w = [[c view] openInWindow:@"Worksapce"];
+            [c setWindow:w];
+        }
+        [self addWindowController:c];
+    }
+    return YES;
+}
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
     // Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error if you return NO.

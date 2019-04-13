@@ -52,7 +52,7 @@
 		1F2D95EA2250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */; };
-		1F2D95F522511A6600D025D8 /* AppDelegate.st in Copy Smalltalk Files */ = {isa = PBXBuildFile; fileRef = 1F2D95F22251198D00D025D8 /* AppDelegate.st */; };
+		1F2D95F522511A6600D025D8 /* STDocument.st in Copy Smalltalk Files */ = {isa = PBXBuildFile; fileRef = 1F2D95F22251198D00D025D8 /* STDocument.st */; };
 		1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2EB8012111D1670086D540 /* MPWFilterDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2EB8052111D1670086D540 /* MPWFilterDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2EB8022111D1670086D540 /* MPWFilterDefinition.m */; };
@@ -575,7 +575,7 @@
 			dstPath = Smalltalk;
 			dstSubfolderSpec = 7;
 			files = (
-				1F2D95F522511A6600D025D8 /* AppDelegate.st in Copy Smalltalk Files */,
+				1F2D95F522511A6600D025D8 /* STDocument.st in Copy Smalltalk Files */,
 			);
 			name = "Copy Smalltalk Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -664,7 +664,7 @@
 		1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Smalltalk.entitlements; sourceTree = "<group>"; };
 		1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWAppDelegate.h; sourceTree = "<group>"; };
 		1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWAppDelegate.m; sourceTree = "<group>"; };
-		1F2D95F22251198D00D025D8 /* AppDelegate.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = AppDelegate.st; sourceTree = "<group>"; };
+		1F2D95F22251198D00D025D8 /* STDocument.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = STDocument.st; sourceTree = "<group>"; };
 		1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		1F2E6F00142EF26E00B5C827 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1F2E6F01142EF26E00B5C827 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -1282,7 +1282,7 @@
 				1F2D95DE2250FCC800D025D8 /* Info.plist */,
 				1F2D95DF2250FCC800D025D8 /* main.m */,
 				1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */,
-				1F2D95F22251198D00D025D8 /* AppDelegate.st */,
+				1F2D95F22251198D00D025D8 /* STDocument.st */,
 			);
 			path = Smalltalk;
 			sourceTree = "<group>";
