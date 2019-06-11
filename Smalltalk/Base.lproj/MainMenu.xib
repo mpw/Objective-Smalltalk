@@ -171,7 +171,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="uyl-h8-XO2"/>
-                            <menuItem title="Do It" keyEquivalent="s" id="hkO-Io-Eep">
+                            <menuItem title="Do It" keyEquivalent="d" id="hkO-Io-Eep">
                                 <connections>
                                     <action selector="doIt:" target="-1" id="i3v-Dg-A81"/>
                                 </connections>

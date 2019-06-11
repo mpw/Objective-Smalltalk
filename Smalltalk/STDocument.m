@@ -77,6 +77,7 @@
         if ( [c respondsToSelector:@selector(view)]) {
             NSWindow *w = [[c view] openInWindow:@"Worksapce"];
             [c setWindow:w];
+            [[[c view] documentView] setCompiler:[self compiler]];
         }
         [self addWindowController:c];
     }

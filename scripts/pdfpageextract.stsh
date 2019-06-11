@@ -1,0 +1,10 @@
+#!/usr/local/bin/stsh
+#-<void>pdf:name from:<int>from to:<int>to
+framework:EGOS load.
+pdf := MPWPDFFile pdfFileWithContentsOfMappedFile: name.
+outstream := MPWPDFByteStream stream.
+writer := MPWPDFWriter streamWithTarget:outstream.
+pages := pdf pages subarrayWithRange: (from to: to ).
+writer outputPages:pages.
+writer close.
+file:out.pdf := writer target target

@@ -50,6 +50,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWInstanceVariable.m \
     Classes/MPWLiteralArrayExpression.m \
     Classes/MPWPropertyPathComponent.m \
+    Classes/MPWProtocolDefinition.m \
     Classes/MPWBlockExpression.m \
     Classes/MPWAssignmentExpression.m \
     Classes/MPWStatementList.m \
@@ -78,8 +79,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWGetAccessor.m \
     Classes/MPWSetAccessor.m \
     MPWCascadeExpression.m \
-    Schemes/MPWFileBinding.m \
-    Schemes/MPWDirectoryBinding.m \
     Schemes/MPWRefScheme.m \
     Schemes/MPWClassScheme.m \
     Schemes/MPWFrameworkScheme.m \

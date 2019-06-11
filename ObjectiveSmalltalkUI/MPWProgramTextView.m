@@ -23,16 +23,28 @@
     NSPoint numberDraggingStartingPoint;
 }
 
--(instancetype)initWithFrame:(NSRect)frameRect
+-(void)setDefaultAttributes
 {
-    self=[super initWithFrame:frameRect];
     [self setAutomaticQuoteSubstitutionEnabled:NO];
     [self setAutomaticLinkDetectionEnabled:NO];
     [self setAutomaticDataDetectionEnabled:NO];
     [self setAutomaticDashSubstitutionEnabled:NO];
     [self setAutomaticTextReplacementEnabled:NO];
     [self setAutomaticSpellingCorrectionEnabled:NO];
+    [self setAllowsUndo:YES];
+}
+
+-(instancetype)initWithFrame:(NSRect)frameRect
+{
+    self=[super initWithFrame:frameRect];
+    [self setDefaultAttributes];
     return self;
+}
+
+-(void)awakeFromNib
+{
+    [super awakeFromNib];
+    [self setDefaultAttributes];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -474,9 +486,13 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
     if ( [self isSelectedTextNumeric]) {
         NSRange selectedRange=[self selectedRange];
         NSString *newString = [NSString stringWithFormat:@"%g",currentValue];
-        [self replaceCharactersInRange:selectedRange withString:newString];
-        [self setSelectedRange:NSMakeRange(selectedRange.location, newString.length)];
-        [self.delegate textDidChange:self];
+        @try {
+            [[self undoManager] beginUndoGrouping];
+            [self replaceCharactersInRange:selectedRange withString:newString];
+            [self setSelectedRange:NSMakeRange(selectedRange.location, newString.length)];
+        } @finally {
+            [[self undoManager] endUndoGrouping];
+        }
     }
     fromTouchBar=NO;
 }

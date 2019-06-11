@@ -1182,22 +1182,24 @@
     NSString *input=@"lowercase world";
     NSString *output=@"LOWERCASE WORLD";
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"filter MyFilter |{  self target writeObject: (object uppercaseString) sender:self. }"];
-    id filter=[compiler evaluateScriptString:@" MyFilter new"];
+    [compiler evaluateScriptString:@"filter MyFilter1 |{  self target writeObject: (object uppercaseString) sender:self. } "];
+    id filter=[compiler evaluateScriptString:@" MyFilter1 new"];
     EXPECTNOTNIL(filter,@"got a filter instance");
+    EXPECTNOTNIL([filter target],@"filter has a target");
 
     [filter writeObject:input];
     IDEXPECT([input uppercaseString],output,@"check");
+    INTEXPECT([[filter target] count], 1, @"one result written");
     id result=[[filter target] firstObject];
-//    id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
+//   id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
     IDEXPECT( result, @"LOWERCASE WORLD", @"result of filtering via defined filter");
 }
 
 +(void)testUseStReturnAsForward
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"filter MyFilter |{  ^object uppercaseString. }"];
-    id result=[[compiler evaluateScriptString:@" MyFilter process:'lowercase world'."] firstObject];
+    [compiler evaluateScriptString:@"filter MyFilter2 |{  ^object uppercaseString. }"];
+    id result=[[compiler evaluateScriptString:@" MyFilter2 process:'lowercase world'."] firstObject];
     IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
 }
 
