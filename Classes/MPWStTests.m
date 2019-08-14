@@ -1375,6 +1375,12 @@
     IDEXPECT(result,@"hello world!",@"");
 }
 
++(void)testReduceFactorial
+{
+    [self testexpr:@"(1 to: 5) reduce * 1" expected:@(120)];
+
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1519,6 +1525,7 @@
         @"testSimplePropertyPathSetterWorksWithPlainClass",
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",
+        @"testReduceFactorial",
 //        @"testCanInterpolateStringWithScheme",
         ];
 }

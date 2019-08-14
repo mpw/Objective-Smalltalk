@@ -8,10 +8,17 @@
 #import "MPWBigInteger.h"
 #include <gmp.h>
 
+@import MPWFoundation;
+
 @implementation MPWBigInteger
 {
 @public
     mpz_t n;
+}
+
+-to:other
+{
+    return [MPWInterval intervalFrom:self to:other];
 }
 
 +(instancetype)numberWithString:(NSString*)s
@@ -119,7 +126,6 @@
 @end
 
 
-@import MPWFoundation;
 
 @implementation MPWBigInteger(tests)
 

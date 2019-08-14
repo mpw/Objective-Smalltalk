@@ -1,0 +1,5 @@
+#!/usr/local/bin/stsh
+#-factorial:<int>n
+framework:ObjectiveArithmetic load.
+class MPWStScanner { -defaultIntClass { MPWBigInteger. } }
+(1 to:n) reduce * 1
