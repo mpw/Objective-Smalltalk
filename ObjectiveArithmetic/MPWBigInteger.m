@@ -19,6 +19,11 @@
     return [[[self alloc] initWithString:s] autorelease];
 }
 
++(instancetype)numberWithLong:(long)l
+{
+    return [[[self alloc] initWithLong:l] autorelease];
+}
+
 -(instancetype)initWithString:(NSString*)s
 {
     self=[super init];
@@ -26,6 +31,14 @@
     mpz_set_ui(n,0);
 
     mpz_set_str(n,[s UTF8String], 10);
+    return self;
+}
+
+-(instancetype)initWithLong:(long)l
+{
+    self=[super init];
+    mpz_init(n);
+    mpz_set_si(n,l);
     return self;
 }
 
@@ -118,8 +131,8 @@
 
 +(void)testBasicArithmetic
 {
-    MPWBigInteger *a=[self numberWithString:@"1000"];
-    MPWBigInteger *b=[self numberWithString:@"2"];
+    MPWBigInteger *a=[self numberWithLong:1000];
+    MPWBigInteger *b=[self numberWithLong:2];
 
     INTEXPECT([[a add:b] intValue], 1002, @"add");
     INTEXPECT([[a sub:b] intValue], 998, @"subtract");
@@ -136,9 +149,9 @@
 
 +(void)testFactorial
 {
-    IDEXPECT( [[[self numberWithString:@"3"] factorial] stringValue], @"6", @"3 factorial");
-    IDEXPECT( [[[self numberWithString:@"4"] factorial] stringValue], @"24", @"4 factorial");
-    IDEXPECT( [[[self numberWithString:@"100"] factorial] stringValue], @"93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000", @"100 factorial");
+    INTEXPECT( [[[self numberWithLong:3] factorial] longValue], 6, @"3 factorial");
+    INTEXPECT( [[[self numberWithLong:4] factorial] longValue], 24, @"4 factorial");
+    IDEXPECT( [[[self numberWithLong:100] factorial] stringValue], @"93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000", @"100 factorial");
 }
 
 +testSelectors
