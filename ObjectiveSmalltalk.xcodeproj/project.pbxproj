@@ -196,7 +196,7 @@
 		1F6C7934218746DA00071DAC /* StSwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6C7933218746DA00071DAC /* StSwiftBridge.swift */; };
 		1F6FBE8923040F1B00025C80 /* ObjectiveArithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6FBE8723040F1B00025C80 /* ObjectiveArithmetic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F6FBE8E23040F5900025C80 /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F6FBE8D23040F5900025C80 /* libgmp.10.dylib */; };
-		1F6FBE9223040FD500025C80 /* MPWBigInteger.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6FBE9023040FD500025C80 /* MPWBigInteger.h */; };
+		1F6FBE9223040FD500025C80 /* MPWBigInteger.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6FBE9023040FD500025C80 /* MPWBigInteger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F6FBE9323040FD500025C80 /* MPWBigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6FBE9123040FD500025C80 /* MPWBigInteger.m */; };
 		1F6FBE942304106A00025C80 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F7045EF22313E84005ED7FB /* MPWMethodBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7045EC22313E83005ED7FB /* MPWMethodBrowser.h */; settings = {ATTRIBUTES = (Public, ); }; };

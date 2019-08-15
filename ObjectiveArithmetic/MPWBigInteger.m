@@ -113,6 +113,11 @@
 
 }
 
+-(NSString *)description
+{
+    return [self stringValue];
+}
+
 
 -(instancetype)factorial
 {
