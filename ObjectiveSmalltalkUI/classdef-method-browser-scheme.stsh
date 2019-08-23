@@ -1,5 +1,5 @@
 
-scheme ClassBrowser  {
+scheme ClassBrowser {
   var dictionary.
   -initWithDictionary:aDict {
 	self setDictionary:aDict.
@@ -20,25 +20,25 @@ scheme ClassBrowser  {
      }
   }
 
-  /:className/:which/:methodName { 
-     |= {
-		self classDefs at:className | at:which | at:methodName.
-     }
-	 =| {
-		self classDefs at:className | at:which | at:methodName put:newValue.
-     }
-  }
-
-  /:className/:which { 
-     |= {
-        paths := self classDefs at:className | at:which | allKeys | sorted.
-        theRef referencesByAppendingPaths: paths .
-     }
-  }
-
   /:className {
      |= {
          self:{className}/instanceMethods.
      }
    }
+
+  /:className/:classInstance { 
+     |= {
+        paths := self classDefs at:className | at:classInstance | allKeys | sorted.
+        theRef referencesByAppendingPaths: paths .
+     }
+  }
+
+  /:className/:classInstance/:methodName { 
+     |= {
+		self classDefs at:className | at:classInstance | at:methodName.
+     }
+	 =| {
+		self classDefs at:className | at:classInstance | at:methodName put:newValue.
+     }
+  }
 }

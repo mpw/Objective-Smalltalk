@@ -41,6 +41,13 @@
     return self;
 }
 
+-(instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    [self setDefaultAttributes];
+    return self;
+}
+
 -(void)awakeFromNib
 {
     [super awakeFromNib];
