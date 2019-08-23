@@ -949,10 +949,19 @@
 }
 
 
+
 +(void)testCompositionViaPipeDoesntBlockFurtherEval
 {
     NSString *result=[self evaluate:@"'a' stringByAppendingString:'b' | stringByAppendingString:'c'. 'hello'"];
     IDEXPECT(result, @"hello", @"after");
+}
+
++(void)testCompositionViaPipeDoesntBlockFurtherEval2
+{
+    NSString *resultWithoutPipe=[self evaluate:@"1   stringValue  stringByAppendingString: 'hello'"];
+    IDEXPECT(resultWithoutPipe, @"1hello", @"after");
+    NSString *resultWithPipe=[self evaluate:@"1 | stringValue  stringByAppendingString: 'hello'"];
+    IDEXPECT(resultWithPipe, @"1hello", @"after");
 }
 
 
@@ -1478,6 +1487,7 @@
             @"testSmalltalkCascade",
             @"testCompositionViaPipe",
             @"testCompositionViaPipeDoesntBlockFurtherEval",
+//         @"testCompositionViaPipeDoesntBlockFurtherEval2",
             @"testCurlyBracesAllowedForBlocks",
             @"testDefineClassMethod",
             @"testPipeEqualsCompilesButDoesSameAsAssignment",

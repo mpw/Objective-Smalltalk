@@ -27,13 +27,13 @@ idAccessor( lhs, setLhs )
     
     NSDictionary *leftPorts = [left ports];
     NSDictionary *rightPorts = [right ports];
-//    NSLog(@"left: %@",left);
-//    NSLog(@"right: %@",right);
+//    NSLog(@"connect: left: %@",left);
+//    NSLog(@"connect: right: %@",right);
     
     id input=rightPorts[@"IN"];
     id output=leftPorts[@"OUT"];
-//    NSLog(@"input: %@",input);
-//    NSLog(@"output: %@",output);
+//    NSLog(@"input port: %@",input);
+//    NSLog(@"output port: %@",output);
     if ( [input connect:output]) {
 //        NSLog(@"did connect");
         return [input sendsMessages] ? right : left;
@@ -123,23 +123,6 @@ idAccessor( lhs, setLhs )
 @end
 
 
-@implementation MPWScheme(connecting)
-
--defaultOutputPort
-{
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Scheme) sends:NO] autorelease];
-}
-
-@end
-
-@implementation MPWMappingStore(connecting)
-
--defaultInputPort
-{
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:@protocol(Scheme) sends:YES] autorelease];
-}
-
-@end
 
 @implementation MPWFileBinding(connecting)
 

@@ -40,14 +40,17 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 -(BOOL)isCompatible:(MPWMessagePortDescriptor*)other
 {
-//    NSLog(@"self: %@",self);
+//    NSLog(@"isCompatible self: %@",self);
 //    NSLog(@"other: %@",other);
 //    NSLog(@"self isSettable: %d",[self isSettable]);
 //    NSLog(@"other isSettable: %d",[other isSettable]);
 //    NSLog(@"self sendsMessages: %d",[self sendsMessages]);
 //    NSLog(@"other sendsMessages: %d",[other sendsMessages]);
 //    NSLog(@"messageProtocols equivalent %d",[[self messageProtocol] isEqual:[other messageProtocol]]);
+//    NSLog(@"self protocol %s",protocol_getName([self messageProtocol]));
+//    NSLog(@"other protocol %s",protocol_getName([other messageProtocol]));
     return
+
     ([self isSettable] != [other isSettable]) &&
         ([self sendsMessages] != [other sendsMessages]) &&
     [[self messageProtocol] isEqual:[other messageProtocol]];
