@@ -75,8 +75,12 @@
     }
     for ( NSWindowController *c in windowControllers) {
         if ( [c respondsToSelector:@selector(view)]) {
-            NSWindow *w = [[c view] openInWindow:@"Worksapce"];
+            NSWindow *w = [[c view] openInWindow:@"Workspace"];
             [c setWindow:w];
+            NSLog(@"workspace view: %@",[c view]);
+            if ( [[c view] respondsToSelector:@selector(setDefaultAttributes)] ) {
+                [[c view] setDefaultAttributes];
+            }
             [[[c view] documentView] setCompiler:[self compiler]];
         }
         [self addWindowController:c];

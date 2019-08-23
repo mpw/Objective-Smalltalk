@@ -10,6 +10,7 @@ extension STDocument {
       scrollView setAutoresizingMask: 18.
       scrollView setHasVerticalScroller: 1.
       workspace := MPWProgramTextView alloc initWithFrame: (0@0 extent: 500@400).
+      workspace setAutoresizingMask: 18.
       scrollView setDocumentView:workspace.
       windowController := scrollView openInWindowController:'Workspace'.
       self addWindowController:windowController.
