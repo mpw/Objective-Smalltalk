@@ -1,10 +1,8 @@
 #!/usr/local/bin/stsh
 framework:ObjectiveHTTPD load.
 scheme:site := MPWSiteMap scheme.
-hello := 'Hello World!' asData mutableCopy.
-stdout println:hello.
-1 to:0 do:[ :i | hello appendData:hello.].
-site:/hi := hello.
-(scheme:site ->  (MPWSchemeHttpServer serverOnPort:8081)) start:nil.
+server      := MPWSchemeHttpServer serverOnPort:8081.
+server -> scheme:site.
+server start:nil.
 stdout println:'site:<path> := value'.
 shell runInteractiveLoop.
