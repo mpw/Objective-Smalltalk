@@ -1,4 +1,4 @@
-framework:Slides3D load.  
+framework:Slides3D load.
 
 class ProgramVsSystem : ASCSlide {
    var code.
@@ -57,7 +57,7 @@ class ProgramVsSystem : ASCSlide {
          }.
    }
 }
-   
+
 
 controller := #ASCPresentationViewController{
     #Name : ‘ESUG Demo’.
@@ -68,10 +68,10 @@ controller := #ASCPresentationViewController{
          }  ,
 
         #ASCBulletSlide{ 
-             #title : 'Objective-Smalltalk'.
+             #title : 'Objective-SmallTalk'.
              #bullets : #( 
                 'Embeddable Smalltalk-ish language',
-                'Objective-C framework',
+                'Objective-C framework (and semantics+interop)',
                 'Generalizes Objects+Messages to Components+Connectors',
                 'Enable composition by solving Architectural Mismatch',
              )
@@ -124,6 +124,16 @@ controller := #ASCPresentationViewController{
          }  ,
 
        #ASCBulletSlide{ 
+             #title : 'Solution Ideas'.
+             #bullets : #( 
+                'ALan Kay: figure out the metasystem',
+                'Unicon:  connectors ←→ programming language metaystem',
+                'ST: decouple class hiearchy from implementation hierarchy',
+             )
+        } ,
+
+
+       #ASCBulletSlide{ 
              #title : 'Architectural Styles'.
              #bullets : #( 
                 'Objects and Messages',
@@ -139,13 +149,12 @@ controller := #ASCPresentationViewController{
 
 
        #ASCChapterSlide { 
-               #text : 'Objective-Smalltalk'
+               #text : 'Objective-SmallTalk'
          } 
       )
 }
- 
+  
    
 
-controller view openInWindow:'Presentation'.  
+controller view openInWindow:'Presentation'.
 
-     
