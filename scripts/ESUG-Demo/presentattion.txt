@@ -143,8 +143,8 @@ controller := #ASCPresentationViewController{
              #title : 'Objective-SmallTalk'.
              #bullets : #( 
                 'Implement different architectural styles',
-                'Pipes and Filters',
-                'REST, in-process and HTTP',
+                'Add language support',
+                'Inform the metasystem',
              )
         } ,
 
@@ -181,8 +181,9 @@ controller := #ASCPresentationViewController{
                 'Unix-inspired',
                 'In-process, object/message-based',
                 'Mostly synchronous, asynchrony-agnostic',
+                'Serialisation, PDF/PS processing (Squeak)',
                 'Used in Wunderlist/Microsoft To Do',
-             )
+            )
         } ,
        #ASCBulletSlide{ 
              #title : 'Implicit Invocation'.
@@ -195,6 +196,7 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'In-Process REST'.
              #bullets : #( 
+                'What real large-scale networks use',
                 'Polymorphic Identifiers',
                 'Stores',
                 'Storage Combinators',
@@ -236,7 +238,38 @@ controller := #ASCPresentationViewController{
              #title : 'Storage Combinators'.
              #bullets : #( 
                 'Stores can be composed',
-                'Cache, mapper, ',
+                'Cache, map, log',
+             )
+        } ,
+
+
+       #ASCBulletSlide{ 
+             #title : 'Example compositions'.
+             #bullets : #( 
+                'In-memory + storage (async)',
+                'MVC',
+                'Microsoft To-Do',
+             )
+        } ,
+
+       #ASCBulletSlide{ 
+             #title : 'Example compositions'.
+             #bullets : #( 
+                'In-memory + storage (async)',
+                'MVC',
+                'Microsoft To-Do',
+             )
+        } ,
+
+       #ASCBulletSlide{ 
+             #title : 'Language support'.
+             #bullets : #( 
+                'Class and method definition syntax',
+                'Polymorphic Identifiers',
+                'Composition "operator" → ',
+                'Stores and Filters as class templates',
+                'Property Paths',
+                '',
              )
         } ,
 
@@ -245,10 +278,10 @@ controller := #ASCPresentationViewController{
                #text : 'Objective-SmallTalk'
          } 
       )
-}
+} 
    
     
 
-controller view openInWindow:'Presentation'.
+controller view openInWindow:'Presentation'. <NSWindow: 0x600003f05400>
 
 controller  numberOfSlides    
