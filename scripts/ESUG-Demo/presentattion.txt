@@ -1,0 +1,136 @@
+framework:Slides3D load. 
+
+class ProgramVsSystem : ASCSlide {
+   var code.
+   var system.
+   var tools.
+   var shapeGroup.
+
+   -<void>setupSlideWithPresentationViewController:controller {
+        self textManager setTitle:'Architectural Mismatch'.
+        self textManager addBullet:'Gap between Program and System' atLevel:0.
+       shapeGroup := SCNNode node.
+       self setShapeGroup:shapeGroup.
+       self rootNode addChildNode:shapeGroup.
+       boxer := ASCBoxMaker new.
+       boxer setP: ( -8 @ 0.2 ).
+       boxer setColor: (NSColor colorWithDeviceRed:105 / 255.0 green:145.0 / 255.0 blue:14.0 / 255.0 alpha:1 ).  
+       boxer setPosition: 0@0 .
+       boxer setHeight:120. 
+       boxer setYHeight:1.5. 
+       boxer setPadding:140. 
+       code :=  boxer box:'Code' width:160.
+       self setCode:code.
+       boxer setPadding:20. 
+
+       system := boxer  box:'System' width:160 color:(NSColor blueColor).
+       self setSystem:system.
+
+       problem := boxer box:'Problem' width:160 color:(NSColor redColor).
+
+       shapeGroup do addChildNode: #( code, system, problem ) each.
+ 
+   }
+
+   -<int>numberOfSteps {  4. }
+ 
+   -<void>presentStepIndex:<int>index withPresentionViewController:controller {
+         index = 0 ifTrue:{ 
+            SCNTransaction setAnimationDuration:1.5.
+         }.
+         index = 1 ifTrue:{
+            self textManager addBullet:'FP' atLevel:1.
+            self system setXYPosition: -10.0  @ 0.20 .
+         }.
+         index = 2 ifTrue:{
+            self system setXYPosition: -8.0  @ 0.20 .
+         }.
+         index = 3 ifTrue:{
+            self textManager addBullet:'Objective-Smalltalk' atLevel:1.
+            self code setXYPosition: -5.5  @ 0.20 .
+         }.
+   }
+}
+ 
+
+controller := #ASCPresentationViewController{
+    #Name : ‘ESUG Demo’.
+    #Slides : #(
+
+       #ASCChapterSlide { 
+               #text : 'Objective-Smalltalk'
+         }  ,
+
+        #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk'.
+             #bullets : #( 
+                'Embeddable Smalltalk-ish language',
+                'Objective-C framework',
+                'Generalizes Objects+Messages to Components+Connectors',
+                'Enable composition by solving Architectural Mismatch',
+             )
+        } ,
+       #ASCChapterSlide { 
+               #text : 'Architectural Mismatch'
+         }  ,
+
+
+        #ASCBulletSlide{ 
+             #title : 'Architectural Mismatch'.
+             #bullets : #( 
+                'Packaging mismatch (Garlan et al)',
+                'Interactive programs vs. programming languages',
+                'Programs vs. Systems, Computers do not compute',
+             )
+        } ,
+        #ASCBulletSlide{ 
+             #title : 'Packaging Mismatch'.
+             #bullets : #( 
+                'Garlan et al (1995)',
+                'Application, Filter, Server',
+                'Who has the thread of control?',
+                '→ it is more important to be easy to talk to than right',
+             )
+        } ,
+        } ,
+        #ASCBulletSlide{ 
+             #title : 'Interactive Programs'.
+             #bullets : #( 
+                'Programs = Algorithms + Data Structurs + Architecture (Chatty 2007)',
+                'y = f(x)    ←→   interactive programs',
+                'Transformational ←→  reactive',
+                'Temperature Converter Example (Modularity 2016)',
+             )
+        } ,
+
+        #ASCBulletSlide{ 
+             #title : 'Architectural Styles'.
+             #bullets : #( 
+                'Objects and Messages',
+                'Pipes and Filters',
+                'REST, in-process and HTTP',
+             )
+        } ,
+
+        #ProgramVsSystem { 
+              #lightIntensities : #( 0.2 , 0.7 )
+              
+         }  ,
+
+
+       #ASCSlideSkinning { 
+              #lightIntensities : #( 0.2 , 0.7 )
+         }  ,
+
+
+       #ASCChapterSlide { 
+               #text : 'Objective-Smalltalk'
+         } 
+      )
+}
+
+  
+
+controller view openInWindow:'Presentation'. <NSWindow: 0x600003eac700>
+
+     
