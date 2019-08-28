@@ -1,4 +1,4 @@
-framework:Slides3D load. 
+framework:Slides3D load.  
 
 class ProgramVsSystem : ASCSlide {
    var code.
@@ -39,19 +39,25 @@ class ProgramVsSystem : ASCSlide {
             SCNTransaction setAnimationDuration:1.5.
          }.
          index = 1 ifTrue:{
+            SCNTransaction begin.
             self textManager addBullet:'FP' atLevel:1.
             self system setXYPosition: -10.0  @ 0.20 .
+            SCNTransaction commit.
          }.
          index = 2 ifTrue:{
+            SCNTransaction begin.
             self system setXYPosition: -8.0  @ 0.20 .
+            SCNTransaction commit.
          }.
          index = 3 ifTrue:{
+            SCNTransaction begin.
             self textManager addBullet:'Objective-Smalltalk' atLevel:1.
             self code setXYPosition: -5.5  @ 0.20 .
+            SCNTransaction commit.
          }.
    }
 }
- 
+   
 
 controller := #ASCPresentationViewController{
     #Name : ‘ESUG Demo’.
@@ -92,13 +98,12 @@ controller := #ASCPresentationViewController{
                 '→ it is more important to be easy to talk to than right',
              )
         } ,
-        } ,
         #ASCBulletSlide{ 
              #title : 'Interactive Programs'.
              #bullets : #( 
                 'Programs = Algorithms + Data Structurs + Architecture (Chatty 2007)',
-                'y = f(x)    ←→   interactive programs',
-                'Transformational ←→  reactive',
+                'y = f(x)    v.   interactive programs',
+                'Transformational v. reactive',
                 'Temperature Converter Example (Modularity 2016)',
              )
         } ,
@@ -129,8 +134,8 @@ controller := #ASCPresentationViewController{
       )
 }
 
-  
+   
 
-controller view openInWindow:'Presentation'. <NSWindow: 0x600003eac700>
+controller view openInWindow:'Presentation'.  
 
      
