@@ -107,8 +107,23 @@ controller := #ASCPresentationViewController{
                 'Temperature Converter Example (Modularity 2016)',
              )
         } ,
+       #ASCBulletSlide{ 
+             #title : 'Tyranny of Call/Return'.
+             #bullets : #( 
+                'Feymnan: we name everything just a little wrong',
+                'Multiparadigm: procedural, oo and fp!',
+                "Guy Steele: it's no longer about completion",
+                "Oscar Nierstraß: we were told we could just model the domain",
+                "Andrew Black: good OO students antropmorphise the objects",
+             )
+        } ,
 
-        #ASCBulletSlide{ 
+         #ProgramVsSystem { 
+              #lightIntensities : #( 0.2 , 0.7 )
+              
+         }  ,
+
+       #ASCBulletSlide{ 
              #title : 'Architectural Styles'.
              #bullets : #( 
                 'Objects and Messages',
@@ -116,11 +131,6 @@ controller := #ASCPresentationViewController{
                 'REST, in-process and HTTP',
              )
         } ,
-
-        #ProgramVsSystem { 
-              #lightIntensities : #( 0.2 , 0.7 )
-              
-         }  ,
 
 
        #ASCSlideSkinning { 
@@ -133,7 +143,7 @@ controller := #ASCPresentationViewController{
          } 
       )
 }
-
+ 
    
 
 controller view openInWindow:'Presentation'.  
