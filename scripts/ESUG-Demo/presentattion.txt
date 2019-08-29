@@ -1,4 +1,4 @@
-framework:Slides3D load. 
+framework:Slides3D load.     
 
 class ProgramVsSystem : ASCSlide {
    var code.
@@ -8,9 +8,9 @@ class ProgramVsSystem : ASCSlide {
    var shapeGroup.
 
    -<void>setupSlideWithPresentationViewController:controller {
-        self textManager setTitle:'Static Program Text vs. Dynamic Execution'.
-        self textManager addBullet:'FORTRAN' atLevel:0.
-        shapeGroup := SCNNode node.
+       self textManager setTitle:'Static Program Text vs. Dynamic Execution'.
+       self textManager addBullet:'FORTRAN' atLevel:0.
+       shapeGroup := SCNNode node.
        self setShapeGroup:shapeGroup.
        self rootNode addChildNode:shapeGroup.
        boxer := ASCBoxMaker new.
@@ -42,7 +42,7 @@ class ProgramVsSystem : ASCSlide {
          }.
          index = 1 ifTrue:{ 
             SCNTransaction begin.
-            self textManager addBullet:'Non Call/Return' atLevel:0.
+            self textManager addBullet:'Non-Computation' atLevel:0.
             self problem setXYPosition: -3.0  @ 0.20 .
             SCNTransaction commit.
          }.
@@ -82,7 +82,7 @@ class ProgramVsSystem : ASCSlide {
          }.
    }
 }
-       
+        
    
 class ImageSlide : ASCSlide { 
      var image.
@@ -91,10 +91,10 @@ class ImageSlide : ASCSlide {
         
      }
 
-} 
+}
 
 controller := #ASCPresentationViewController{
-    #Name : ‘ESUG Demo’.
+    #Name : 'ESUG Demo'.
     #Slides : #(
 
 
@@ -113,7 +113,7 @@ controller := #ASCPresentationViewController{
         } ,
        #ASCChapterSlide { 
                #text : 'Architectural Mismatch'
-         }  ,
+         }    ,
 
 
         #ASCBulletSlide{ 
@@ -127,7 +127,7 @@ controller := #ASCPresentationViewController{
         #ASCBulletSlide{ 
              #title : 'Packaging Mismatch'.
              #bullets : #( 
-                'Garlan et al (1995)',
+                'Garlan et al (''95)',
                 'Application, Filter, Server',
                 'Who has the thread of control?',
                 '→ It is more important to be easy to talk to than right',
@@ -140,7 +140,7 @@ controller := #ASCPresentationViewController{
                 'Programs = Algorithms + Data Structurs + Architecture',
                 'y = f(x)    v.   interactive programs',
                 'Transformational v. reactive',
-                'Temperature Converter Example (Modularity 2016)',
+                'Temperature Converter Example (Modularity ''16)',
              )
         } ,
        #ASCBulletSlide{ 
@@ -162,27 +162,28 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'Solution Ideas'.
              #bullets : #( 
-                'ALan Kay: figure out the metasystem',
+                'Alan Kay: figure out the metasystem',
                 'Unicon:  connectors ←→ programming language metaystem',
                 'ST: decouple class hiearchy from implementation hierarchy',
                 '→ metasystem: conceptual class hierarchy of connectors',
              )
         } ,
 
-       #ASCChapterSlide { 
-               #text : 'Objective-SmallTalk'
-         }  ,
+       #ASCChapterSlide{ 
+               #text : 'Objective-SmallTalk'.
+               #subtitle : 'Approach'
+         } ,
 
 
 
        #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk'.
+             #title : 'Objective-SmallTalk: Approach'.
              #bullets : #( 
                 'Implement different architectural styles',
                 'Add language support',
                 'Inform the metasystem',
              )
-        } ,
+        }  ,
 
        #ASCBulletSlide{ 
              #title : 'Architectural Styles'.
@@ -194,14 +195,16 @@ controller := #ASCPresentationViewController{
              )
         } ,
 
-       #ASCBulletSlide{ 
+       #ASCSlideWithFigure{ 
+             #delayInSeconds : 3.0.
              #title : 'Objects and Messages'.
              #bullets : #( 
                 'Objective-C compatible semantics',
                 'Interpreted and native-compiled',
-                'C using type annotations',
+                '"C" using type annotations',
                 'Higher Order Messaging',
-                'Framework-oriented programming',
+                'Framework-oriented development',
+                'Full platform integration',
              )
         } ,
   
@@ -214,8 +217,8 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'Pipes and Filters'.
              #bullets : #( 
-                'Unix-inspired',
-                'In-process, object/message-based',
+                'Polymorphic Write Streams (DLS ''19)',
+                '#writeObject:anObject',
                 'Mostly synchronous, asynchrony-agnostic',
                 'Serialisation, PDF/PS processing (Squeak)',
                 'Used in Wunderlist/Microsoft To Do',
@@ -286,7 +289,7 @@ controller := #ASCPresentationViewController{
                 'MVC',
                 'Microsoft To-Do',
              )
-        } ,
+        }  ,
 
        #ASCBulletSlide{ 
              #title : 'Example compositions'.
@@ -295,7 +298,7 @@ controller := #ASCPresentationViewController{
                 'MVC',
                 'Microsoft To-Do',
              )
-        } ,
+        }  ,
 
        #ASCBulletSlide{ 
              #title : 'Language support'.
@@ -307,17 +310,15 @@ controller := #ASCPresentationViewController{
                 'Property Paths',
                 '',
              )
-        } ,
-
+        }  ,
 
        #ASCChapterSlide { 
                #text : 'Objective-SmallTalk'
-         } 
+         } ,
       )
 } 
-          
-    
+       
 
-controller view openInWindow:'Presentation'.   <NSWindow: 0x600003e62600>
+controller view openInWindow:'Presentation'.  
 
 controller  numberOfSlides    
