@@ -526,7 +526,13 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
 
 -(IBAction)printIt:sender;
 {
-    id result = [self.compiler evaluateScriptString:[self selectedTextOrCurrentLine]];
+    id result = nil;
+
+    @try {
+        result = [self.compiler evaluateScriptString:[self selectedTextOrCurrentLine]];
+    } @catch (NSException *e) {
+        result = e;
+    }
     NSString *resultText=[result stringValue];
     NSRange currentSelection=[self selectedRange];
     [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
