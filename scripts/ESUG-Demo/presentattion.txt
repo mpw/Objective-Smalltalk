@@ -151,7 +151,7 @@ controller := #ASCPresentationViewController{
                 'Application, Filter, Server',
                 'Who has the thread of control?',
                 '→ It is more important to be easy to talk to than right',
-                '→ (see also: Hexagonal or Ports/Adaptors)',
+                '→ (see also: Hexagonal, Ports/Adaptors, Naked Objects)',
              )
         } ,
         #ASCBulletSlide{ 
@@ -294,25 +294,28 @@ controller := #ASCPresentationViewController{
              #bullets : #( 
                 'Onward! ''19',
                 'Uniform interface (REST) enables generic intermediaries',
-                '',
+                'Storage-oriented architecture',
                 '10x productivity/code improvments',
              )
         } ,
 
-
-       #ASCBulletSlide{ 
-             #title : 'Example compositions'.
-             #bullets : #( 
-                'In-memory + storage (async)',
-                'MVC',
-                'Microsoft To-Do',
-             )
-        }  ,
       #ImageSlide{ 
+               #text : 'Simple Composed Store'.
+               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/disk-cache-json-aligned.png'.
+               #xOffset : 2.0 .
+               #imageScale : 0.8
+         }  , 
+    #ImageSlide{ 
+               #text : 'Async Writer'.
+               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/async-writer.png'.
+               #xOffset : 2.0 .
+               #imageScale : 0.6
+         }  , 
+    #ImageSlide{ 
                #text : 'To Do Store Hierarchy'.
                #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/store-hierarchy-intermediate.png'.
                #xOffset : 2.0 .
-               #imageScale : 0.34
+               #imageScale : 0.38
          }  , 
 
        #ASCChapterSlide{ 
@@ -373,9 +376,10 @@ controller := #ASCPresentationViewController{
       )
 } 
               
-
-controller view openInWindow:'Presentation'.  <NSWindow: 0x600003e37b00>
+  
+controller view openInWindow:'Presentation'.
 
 controller  numberOfSlides   
-    
 
+controller goToSlideAtIndex:19. nil 
+    
