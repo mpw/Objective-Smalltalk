@@ -1,15 +1,16 @@
-framework:Slides3D load.
+framework:Slides3D load. 
 
 class ProgramVsSystem : ASCSlide {
    var code.
    var system.
+   var problem.
    var tools.
    var shapeGroup.
 
    -<void>setupSlideWithPresentationViewController:controller {
-        self textManager setTitle:'Architectural Mismatch'.
-        self textManager addBullet:'Gap between Program and System' atLevel:0.
-       shapeGroup := SCNNode node.
+        self textManager setTitle:'Static Program Text vs. Dynamic Execution'.
+        self textManager addBullet:'FORTRAN' atLevel:0.
+        shapeGroup := SCNNode node.
        self setShapeGroup:shapeGroup.
        self rootNode addChildNode:shapeGroup.
        boxer := ASCBoxMaker new.
@@ -18,7 +19,7 @@ class ProgramVsSystem : ASCSlide {
        boxer setPosition: 0@0 .
        boxer setHeight:120. 
        boxer setYHeight:1.5. 
-       boxer setPadding:140. 
+       boxer setPadding:10. 
        code :=  boxer box:'Code' width:160.
        self setCode:code.
        boxer setPadding:20. 
@@ -27,43 +28,77 @@ class ProgramVsSystem : ASCSlide {
        self setSystem:system.
 
        problem := boxer box:'Problem' width:160 color:(NSColor redColor).
+       self setProblem: problem.
 
        shapeGroup do addChildNode: #( code, system, problem ) each.
  
    }
 
-   -<int>numberOfSteps {  4. }
+   -<int>numberOfSteps {  8. }
  
    -<void>presentStepIndex:<int>index withPresentionViewController:controller {
          index = 0 ifTrue:{ 
             SCNTransaction setAnimationDuration:1.5.
          }.
-         index = 1 ifTrue:{
+         index = 1 ifTrue:{ 
             SCNTransaction begin.
-            self textManager addBullet:'FP' atLevel:1.
-            self system setXYPosition: -10.0  @ 0.20 .
+            self textManager addBullet:'Non Call/Return' atLevel:0.
+            self problem setXYPosition: -3.0  @ 0.20 .
             SCNTransaction commit.
          }.
-         index = 2 ifTrue:{
+           index = 2 ifTrue:{ 
             SCNTransaction begin.
+            self textManager addBullet:'OOP' atLevel:0.
+            self system setXYPosition: -3.0 @ 0.20 .
+            SCNTransaction commit.
+         }.
+       index = 3 ifTrue:{
+            SCNTransaction begin.
+            self textManager addBullet:'Ruby' atLevel:0.
+            self code setXYPosition: -14.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+       index = 4 ifTrue:{
+            SCNTransaction begin.
+            self code setXYPosition: -8.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+       index = 5 ifTrue:{
+            SCNTransaction begin.
+            self textManager addBullet:'FP' atLevel:0.
             self system setXYPosition: -8.0  @ 0.20 .
             SCNTransaction commit.
          }.
-         index = 3 ifTrue:{
+         index = 6 ifTrue:{
             SCNTransaction begin.
-            self textManager addBullet:'Objective-Smalltalk' atLevel:1.
-            self code setXYPosition: -5.5  @ 0.20 .
+            self system setXYPosition: -3.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+         index = 7 ifTrue:{
+            SCNTransaction begin.
+            self textManager addBullet:'Objective-Smalltalk' atLevel:0.
+            self code setXYPosition: -3.0  @ 0.20 .
             SCNTransaction commit.
          }.
    }
 }
+       
+   
+class ImageSlide : ASCSlide { 
+     var image.
+     var url.
+     -<void>setupSlideWithPresentationViewController:controller {
+        
+     }
 
+} 
 
 controller := #ASCPresentationViewController{
     #Name : ‘ESUG Demo’.
     #Slides : #(
 
-       #ASCChapterSlide { 
+
+      #ASCChapterSlide { 
                #text : 'Objective-SmallTalk'
          }  ,
 
@@ -84,7 +119,7 @@ controller := #ASCPresentationViewController{
         #ASCBulletSlide{ 
              #title : 'Architectural Mismatch'.
              #bullets : #( 
-                'Packaging mismatch (Garlan et al)',
+                'Packaging mismatch',
                 'Interactive programs vs. programming languages',
                 'Programs vs. Systems, Computers do not compute',
              )
@@ -95,13 +130,14 @@ controller := #ASCPresentationViewController{
                 'Garlan et al (1995)',
                 'Application, Filter, Server',
                 'Who has the thread of control?',
-                '→ it is more important to be easy to talk to than right',
+                '→ It is more important to be easy to talk to than right',
+                '→ (see also: Hexagonal or Ports/Adaptors)',
              )
         } ,
         #ASCBulletSlide{ 
              #title : 'Interactive Programs'.
              #bullets : #( 
-                'Programs = Algorithms + Data Structurs + Architecture (Chatty 2007)',
+                'Programs = Algorithms + Data Structurs + Architecture',
                 'y = f(x)    v.   interactive programs',
                 'Transformational v. reactive',
                 'Temperature Converter Example (Modularity 2016)',
@@ -113,7 +149,7 @@ controller := #ASCPresentationViewController{
                 'Feymnan: we name everything just a little wrong',
                 'Multiparadigm: procedural, oo and fp!',
                 "Guy Steele: it's no longer about completion",
-                "Oscar Nierstraß: we were told we could just model the domain",
+                "Oscar Nierstrasz: we were told we could just model the domain",
                 "Andrew Black: good OO students antropmorphise the objects",
              )
         } ,
@@ -279,9 +315,9 @@ controller := #ASCPresentationViewController{
          } 
       )
 } 
-   
+          
     
 
-controller view openInWindow:'Presentation'. <NSWindow: 0x600003f05400>
+controller view openInWindow:'Presentation'.   <NSWindow: 0x600003e62600>
 
 controller  numberOfSlides    
