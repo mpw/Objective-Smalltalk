@@ -170,8 +170,8 @@ controller := #ASCPresentationViewController{
         } ,
 
        #ASCChapterSlide{ 
-               #text : 'Objective-SmallTalk'.
-               #subtitle : 'Approach'
+               #subtitle : 'Objective-SmallTalk'.
+               #text : 'Approach'
          } ,
 
 
@@ -196,7 +196,7 @@ controller := #ASCPresentationViewController{
         } ,
 
        #ASCSlideWithFigure{ 
-             #delayInSeconds : 3.0.
+             #delayInSeconds : 5.0.
              #title : 'Objects and Messages'.
              #bullets : #( 
                 'Objective-C compatible semantics',
@@ -208,11 +208,6 @@ controller := #ASCPresentationViewController{
              )
         } ,
   
-     #ASCSlideSkinning { 
-              #lightIntensities : #( 0.2 , 0.7 )
-         }  ,
-
-
 
        #ASCBulletSlide{ 
              #title : 'Pipes and Filters'.
@@ -276,7 +271,7 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'Storage Combinators'.
              #bullets : #( 
-                'Stores can be composed',
+                'Onward! ''19',
                 'Cache, map, log',
              )
         } ,
@@ -291,14 +286,12 @@ controller := #ASCPresentationViewController{
              )
         }  ,
 
-       #ASCBulletSlide{ 
-             #title : 'Example compositions'.
-             #bullets : #( 
-                'In-memory + storage (async)',
-                'MVC',
-                'Microsoft To-Do',
-             )
-        }  ,
+       #ASCChapterSlide{ 
+               #subtitle : 'Objective-SmallTalk'.
+               #text : 'Language Support'
+         } ,
+
+
 
        #ASCBulletSlide{ 
              #title : 'Language support'.
@@ -306,19 +299,58 @@ controller := #ASCPresentationViewController{
                 'Class and method definition syntax',
                 'Polymorphic Identifiers',
                 'Composition "operator" → ',
+                'Permanent Assignment |= ',
                 'Stores and Filters as class templates',
                 'Property Paths',
-                '',
+                '(Demo)',
              )
         }  ,
 
-       #ASCChapterSlide { 
-               #text : 'Objective-SmallTalk'
+       #ASCChapterSlide{ 
+               #subtitle : 'Objective-SmallTalk'.
+               #text : 'Metasystem'
          } ,
+      #ASCBulletSlide{ 
+             #title : 'Metasystem'.
+             #bullets : #( 
+                'Apply/Eval → Connect/Run',
+                'Class is subclass of Component',
+                'Message, Interface etc. subclasses of Connector',
+                'Components have ports, connectors roles',
+             )
+        }  ,
+
+       #ASCChapterSlide{ 
+               #subtitle : 'Objective-SmallTalk'.
+               #text : 'Outlook'
+         } ,
+
+      #ASCBulletSlide{ 
+             #title : 'Outlook'.
+             #bullets : #( 
+                'Move beyond scripting',
+                'Documentation / Sample Code',
+                'Improve native compiler',
+                'Tooling (Debugger)',
+                'Write up Thesis',
+             )
+        }  ,
+
+
+
+      #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk'.
+             #bullets : #( 
+                'http://objective.st/',
+                '@mpweiher',
+                'Marcel Weiher',
+              
+             )
+        }  ,
       )
 } 
-       
+          
 
 controller view openInWindow:'Presentation'.  
 
-controller  numberOfSlides    
+controller  numberOfSlides     
