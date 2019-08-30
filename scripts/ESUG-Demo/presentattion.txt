@@ -1,4 +1,4 @@
-framework:Slides3D load.      
+framework:Slides3D load.
 
 class ProgramVsSystem : ASCSlide {
    var code.
@@ -82,7 +82,7 @@ class ProgramVsSystem : ASCSlide {
          }.
    }
 }
-        
+         
     
    
 class ImageSlide : ASCSlide { 
@@ -112,27 +112,28 @@ class ImageSlide : ASCSlide {
 }
 
  
+
 controller := #ASCPresentationViewController{
     #Name : 'ESUG Demo'.
     #Slides : #(
 
-
       #ASCChapterSlide { 
                #text : 'Objective-SmallTalk'.
-               #subtitle : ' http://objective.st    Marcel Weiher        @mpweiher'
+               #subtitle : 'Marcel Weiher (@mpweiher)'
          }  ,
 
         #ASCBulletSlide{ 
              #title : 'Objective-SmallTalk'.
              #bullets : #( 
-                'Embeddable Smalltalk-ish language',
-                'Objective-C framework (and semantics+interop)',
+                'Embeddable SmallTalk language (Mac, iOS, Linux, Windows)',
+                'Objective-C framework (peer/interop)',
                 'Generalizes Objects+Messages to Components+Connectors',
                 'Enable composition by solving Architectural Mismatch',
              )
         } ,
        #ASCChapterSlide { 
-               #text : 'Architectural Mismatch'
+               #text : 'Architectural Mismatch'.
+               #subtitle : 'Objective-SmallTalk'
          }    ,
 
 
@@ -148,23 +149,23 @@ controller := #ASCPresentationViewController{
              #title : 'Packaging Mismatch'.
              #bullets : #( 
                 'Garlan et al (''95)',
-                'Application, Filter, Server',
+                'Functionality available but not accessible',
                 'Who has the thread of control?',
-                '→ It is more important to be easy to talk to than right',
+                '→ Minimize assumptions',
                 '→ (see also: Hexagonal, Ports/Adaptors, Naked Objects)',
              )
         } ,
         #ASCBulletSlide{ 
              #title : 'Interactive Programs'.
              #bullets : #( 
-                'Programs = Algorithms + Data Structurs + Architecture',
+                '"Programs = Algorithms + Data Structurs + Architecture"',
                 'y = f(x)    v.   interactive programs',
                 'Transformational v. reactive',
                 'Temperature Converter Example (Modularity ''16)',
              )
         } ,
        #ASCBulletSlide{ 
-             #title : 'Tyranny of Call/Return'.
+             #title : 'The Gentle Tyranny of Call/Return'.
              #bullets : #( 
                 'Feymnan: we name everything just a little wrong',
                 'Multiparadigm: Procedural, OO and FP!',
@@ -234,10 +235,11 @@ controller := #ASCPresentationViewController{
              #bullets : #( 
                 'Polymorphic Write Streams (DLS ''19)',
                 '#writeObject:anObject',
+                'Triple Dispatch + Message chaining',
                 'Asynchrony-agnostic',
-                'Streaming / de-matierlized objects',
+                'Streaming / de-materialized objects',
                 'Serialisation, PDF/PS (Squeak), Wunderlist, MS , To Do',
-                'Outlook: filters generalise methods',
+                'Outlook: filters generalise methods?',
             )
         } ,
        #ASCBulletSlide{ 
@@ -266,7 +268,7 @@ controller := #ASCPresentationViewController{
                 'All identifiers are URIs',
                 "var:hello := 'World!",
                 'file:{env:HOME}/Downloads/site := http://objective.st',
-                'ref:var:hello',
+                'slider setValueHolder: ref:var:celsius',
              )
         } ,
 
@@ -276,7 +278,7 @@ controller := #ASCPresentationViewController{
                 'PIs are evaluated via stores',
                 'Like in-process REST servers',
                 'Or composable dictionaries',
-                "var:hello ←→ (schemes at:'var') at:'hello'",
+                'var:hello <-> (schemes at:''var'') at:''hello''',
              )
         }  ,
        #ASCBulletSlide{ 
@@ -286,6 +288,7 @@ controller := #ASCPresentationViewController{
                 'Filesystems, HTTP',
                 'Databases: SQL/SQLite',
                 'Other applications (via Apple Events)',
+                'etc.',
              )
         }  ,
 
@@ -293,11 +296,13 @@ controller := #ASCPresentationViewController{
              #title : 'Storage Combinators'.
              #bullets : #( 
                 'Onward! ''19',
-                'Uniform interface (REST) enables generic intermediaries',
-                'Storage-oriented architecture',
+                'Combinator exposes + consumes REST interfaces',
+                'Uniform interface (REST) enables pluggability',
+                'Narrow, semantically tight interface enables intermediaries',
                 '10x productivity/code improvments',
              )
         } ,
+
 
       #ImageSlide{ 
                #text : 'Simple Composed Store'.
@@ -311,11 +316,11 @@ controller := #ASCPresentationViewController{
                #xOffset : 2.0 .
                #imageScale : 0.6
          }  , 
-    #ImageSlide{ 
+      #ImageSlide{ 
                #text : 'To Do Store Hierarchy'.
                #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/store-hierarchy-intermediate.png'.
                #xOffset : 2.0 .
-               #imageScale : 0.38
+               #imageScale : 0.34
          }  , 
 
        #ASCChapterSlide{ 
@@ -328,16 +333,19 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'Language support'.
              #bullets : #( 
-                'Class and method definition syntax',
+                'Class, method, protocol syntax',
                 'Polymorphic Identifiers',
                 'Composition "operator" → ',
                 'Permanent Assignment |= ',
                 'Stores and Filters as class templates',
                 'Property Paths',
-                '(Demo)',
              )
         }  ,
 
+       #ASCChapterSlide{ 
+               #subtitle : 'Objective-SmallTalk'.
+               #text : 'Demo'
+         } ,
        #ASCChapterSlide{ 
                #subtitle : 'Objective-SmallTalk'.
                #text : 'Metasystem'
@@ -360,26 +368,26 @@ controller := #ASCPresentationViewController{
       #ASCBulletSlide{ 
              #title : 'Outlook'.
              #bullets : #( 
-                'Move beyond scripting',
+                'Port Stores and Polymorphic Write Streams',
                 'Documentation / Sample Code',
                 'Improve native compiler',
                 'Tooling (Debugger)',
-                'Write up Thesis',
+                'You! (http://objective.st)',
              )
         }  ,
 
 
       #ASCChapterSlide { 
-               #text : 'Objective-SmallTalk: Q&A'.
-               #subtitle : ' http://objective.st    Marcel Weiher        @mpweiher'
+               #text : 'Q&A   http://objective.st'.
+               #subtitle : 'Marcel Weiher (@mpweiher)'
          }  ,
       )
 } 
-              
-  
-controller view openInWindow:'Presentation'.
+                       
+ 
+controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'. 
 
 controller  numberOfSlides   
-
-controller goToSlideAtIndex:19. nil 
     
+
+controller goToSlideAtIndex:0    
