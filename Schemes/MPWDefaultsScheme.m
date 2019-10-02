@@ -17,18 +17,12 @@
 	return [[NSUserDefaults standardUserDefaults] objectForKey:[aBinding name]] != nil;
 }
 
--(MPWDirectoryBinding*)list
-{
-    NSArray *keys=[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys];
-    NSArray *refs=[[MPWGenericReference collect] referenceWithPath:[keys each]];
-    return [[[MPWDirectoryBinding alloc] initWithContents:refs] autorelease];
-}
 
 -objectForReference:aReference
 {
     NSString *path=[aReference path];
     if ( [path length]==0 || [path isEqualToString:@"."]) {
-        return [self list];
+        return [self listForNames:[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]];
     }
 	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference path]];
 }

@@ -11,13 +11,14 @@ typedef enum {DECOMPOSE,NO_DECOMPOSE} T_parser_mode;
 - (void)command:(NSString *)command from:(id)sender;
 @end
 
-@class MPWByteStream;
+@class MPWByteStream,MPWREPLViewPrinter;
 
 @interface ShellView : NSTextView <NSTextViewDelegate>
 {
   NSString *prompt;
-    MPWByteStream *stdout;
-  NSUInteger start;                   // The start of the current command (i.e. the command beign edited) 
+    MPWByteStream *rawstdout;
+  MPWREPLViewPrinter *standardOut;
+  NSUInteger start;                   // The start of the current command (i.e. the command beign edited)
                                       // in term of its character position in the whole NSTextView.
   
   id<ShellViewCommandHandler> commandHandler; // The object that is notified when a command is entered.     

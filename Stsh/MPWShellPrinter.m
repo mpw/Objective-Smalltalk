@@ -40,14 +40,19 @@
     return width;
 }
 
-
+-(int)numColumnsForTerminalWidth:(int)terminalWidth maxWidth:(int)maxWidth
+{
+    int minSpacing=2;
+    int numColumns=terminalWidth / (maxWidth+minSpacing);
+    numColumns=MAX(numColumns,1);
+    return numColumns;
+}
 
 -(void)printNames:(NSArray*)names limit:(int)completionLimit
 {
     int numEntries=MIN(completionLimit,(int)[names count]);
     int numColumns=1;
     int terminalWidth=[self terminalWidth];
-    int minSpacing=2;
     int maxWidth=0;
     int columnWidth=0;
     int numRows=0;
@@ -56,8 +61,7 @@
             maxWidth=(int)[names[i] length];
         }
     }
-    numColumns=terminalWidth / (maxWidth+minSpacing);
-    numColumns=MAX(numColumns,1);
+    numColumns=[self numColumnsForTerminalWidth:terminalWidth maxWidth:maxWidth];
     columnWidth=terminalWidth/(numColumns);
     numRows=(numEntries+numColumns-1)/numColumns;
     
@@ -138,7 +142,7 @@
     }
 }
 
--(void)writeInterpolatedString:(NSString*)s withEnvironment: theEnvironment
+-(void)writeInterpolatedString_disabled:(NSString*)s withEnvironment: theEnvironment
 {
     [(MPWByteStream*)self.target writeInterpolatedString:s withEnvironment: theEnvironment];
 }
@@ -157,7 +161,7 @@
 {
     if ( [s isKindOfClass:[NSString class]]) {
         [self writeInterpolatedString:s withEnvironment: self.environment];
-        [(MPWByteStream*)self.target outputString:@"\n"];
+        [self appendBytes:"\n" length:1];
     } else {
         [super println:s];
     }

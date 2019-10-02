@@ -38,14 +38,15 @@ extern char **environ;
     return env;
 }
 
+
 -(id)objectForReference:(MPWGenericReference*)aReference
 {
     NSString *path=[aReference path];
 //    NSLog(@"-[%@ %@:%@",[self className],NSStringFromSelector(_cmd),name);
 //    NSLog(@"reference: %@",aReference);
 //    NSLog(@"name: %@",name);
-    if ( [aReference isRoot] || [path length]==0) {
-        return [[self class] getAllEnvironemntVariableNames];
+    if ( [aReference isRoot] || [path length]==0 || [path isEqualToString:@"."]) {
+        return [self listForNames:[[self class] getAllEnvironemntVariableNames]];
     } else {
         const char *val=[self cstringValueForName:path];
         if ( val ) {

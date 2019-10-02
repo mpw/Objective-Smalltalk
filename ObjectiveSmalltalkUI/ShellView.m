@@ -7,6 +7,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWStCompiler.h"
 #import "MPWExpression+autocomplete.h"
+#import "MPWShellPrinter.h"
 
 
 #define RETURN_CHAR    0x0D
@@ -412,8 +413,8 @@ static BOOL useMaxSize;
 //  [commandHandler command:command from:self]; // The command handler is notified
     if ( result && ![result isNil] ) {
 //        NSLog(@"result class: %@ result: '%@'",[result class],result);
-        [stdout writeObject:result];
-        [stdout writeString:@"\n"];
+        [standardOut writeObject:result];
+        [standardOut appendBytes:"\n" length:1];
     }
   [self insertText:prompt];
   [self scrollRangeToVisible:[self selectedRange]];
@@ -488,8 +489,8 @@ static BOOL useMaxSize;
 
 -(void)setupStdioForCommandHandler
 {
-    stdout=[[MPWByteStream streamWithTarget:[[self textStorage] mutableString] ] retain];
-    [commandHandler bindValue:stdout toVariableNamed:@"stdout"];
+    standardOut=[[MPWREPLViewPrinter streamWithTarget:[[self textStorage] mutableString] ] retain];
+    [commandHandler bindValue:standardOut toVariableNamed:@"stdout"];
 
 }
 
