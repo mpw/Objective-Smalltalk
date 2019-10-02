@@ -31,6 +31,7 @@
     [self setAutomaticDashSubstitutionEnabled:NO];
     [self setAutomaticTextReplacementEnabled:NO];
     [self setAutomaticSpellingCorrectionEnabled:NO];
+    [self setRichText:NO];
     [self setAllowsUndo:YES];
 }
 
@@ -110,7 +111,7 @@
     if ( [self isSelectedTextNumeric] && ([theEvent modifierFlags] & NSAlternateKeyMask)) {
         isDraggingNumber=YES;
         numberDraggingStartingPoint=[theEvent locationInWindow];
-        NSLog(@"start number dragging, start value = %d",[[self selectedText] intValue]);
+//        NSLog(@"start number dragging, start value = %d",[[self selectedText] intValue]);
     } else {
         [super mouseDown:theEvent];
     }
@@ -124,7 +125,7 @@
         double deltaX = [theEvent locationInWindow].x - numberDraggingStartingPoint.x;
         int currentValue = [[self selectedText] intValue];
         int increment = 1;
-        NSLog(@"in number dragging, current value = %d",currentValue);
+//        NSLog(@"in number dragging, current value = %d",currentValue);
         if ( deltaX > 0 ) {
             currentValue+=increment;
         } else {

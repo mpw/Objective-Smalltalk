@@ -10,12 +10,12 @@
 
 @implementation MPWAppDelegate
 
--(void)loadSmalltalkMethods
+-(void)loadSmalltalkMethodsFromDirectory:(NSString*)appBundleSubDir
 {
     NSBundle *appBundle = [NSBundle bundleForClass:[self class]];
-    NSURL *smalltalkDirectory = [[appBundle resourcePath] stringByAppendingPathComponent:@"smalltalk"];
+    NSString *smalltalkDirectory = [[appBundle resourcePath] stringByAppendingPathComponent:appBundleSubDir];
     NSFileManager *fm=[NSFileManager defaultManager];
-    for ( NSString *stFile in [fm contentsOfDirectoryAtPath:smalltalkDirectory error:nil] ) {
+    for ( NSString *stFile in [[fm contentsOfDirectoryAtPath:smalltalkDirectory error:nil] sortedArrayUsingSelector:@selector(compare:)] ) {
         NSError *error=nil;
         NSString *smalltalk=[NSString stringWithContentsOfFile:[smalltalkDirectory stringByAppendingPathComponent:stFile] encoding:NSUTF8StringEncoding error:&error];
         if ( smalltalk ) {
@@ -29,6 +29,10 @@
         }
     }
 }
+-(void)loadSmalltalkMethods
+{
+    [self loadSmalltalkMethodsFromDirectory:@"smalltalk"];
+}
 
 -(instancetype)init
 {
@@ -40,6 +44,9 @@
     return self;
 }
 
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    [self loadSmalltalkMethodsFromDirectory:@"finishLaunching"];
+}
 
 
 @end
