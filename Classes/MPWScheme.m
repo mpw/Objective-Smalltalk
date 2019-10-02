@@ -49,8 +49,10 @@
 
 @end
 
-
 @implementation MPWScheme
+@end
+
+@implementation MPWAbstractStore(completion)
 
 
 
@@ -70,6 +72,9 @@
     NSMutableArray *names=[NSMutableArray array];
     for ( MPWGenericReference *reference in potentialChildren) {
         NSString *name = [reference path];
+        if ( [name hasPrefix:@"./"]) {
+             name=[name substringFromIndex:2];
+        }
         //        NSLog(@"name: %@",name);
         if ( !suffix || [suffix length]==0 || [name hasPrefix:suffix] ) {
             if ( [suffix isEqualToString:name] ) {

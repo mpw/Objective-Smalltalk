@@ -155,7 +155,7 @@
         completions=[self identifiersInEvaluator:evaluator matchingPrefix:[self name] schemeNames:schemesToCheck];
         *resultName=[self name];
     }
-//    NSLog(@"completions: '%@'",completions);
+//    NSLog(@"for: '%@' completions: '%@' resultName: %@",s,completions,*resultName );
     return completions;
 }
 

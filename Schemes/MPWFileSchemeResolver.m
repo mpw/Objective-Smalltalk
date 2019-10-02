@@ -53,6 +53,20 @@
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
+    // FIXME: stripping "./" prefixes that probably shouldn't be there in the first place
+    NSMutableArray *stripped=[NSMutableArray array];
+    for ( NSString *name in [super completionsForPartialName:partialName inContext:aContext]) {
+        if ( [name hasPrefix:@"./"] && [name length]>2) {
+            name=[name substringFromIndex:2];
+        }
+        [stripped addObject:name];
+    }
+    return stripped;
+}
+
+
+-(NSArray *)completionsForPartialName_disabled:(NSString *)partialName inContext:aContext
+{
     NSString *basePath=@".";
     if ( [partialName containsString:@"/"]) {
         basePath=[self completePartialPathFromAbsoluetPath:partialName];
