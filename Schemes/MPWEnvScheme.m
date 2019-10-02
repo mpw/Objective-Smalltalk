@@ -23,6 +23,7 @@
 
 extern char **environ;
 
+
 +(NSArray*)getAllEnvironemntVariableNames
 {
     NSMutableArray *env=[NSMutableArray array];
@@ -57,16 +58,18 @@ extern char **environ;
     }
 }
 
+-(BOOL)isBoundBinding:aBinding
+{
+    return [self objectForKey:[aBinding name]] != nil;
+}
+
+
 -(void)setObject:(id)theObject forReference:(id)aReference
 {
 //    NSLog(@"setObject: %@ forReference: %@",theObject,aReference);
     [self setValue:theObject forBinding:aReference];
 }
 
--(BOOL)isBoundBinding:aBinding
-{
-	return [self cstringValueForName:[aBinding name]] != NULL;
-}
 
 
 -(void)setValue:newValue forBinding:aBinding
@@ -87,20 +90,20 @@ extern char **environ;
     NSString *path=[reference path];
     return !([path length]==0 || [path isEqual:@"/"]);
 }
-
--(NSArray<MPWReference*>*)childrenOfReference:(id <MPWReferencing>)aReference
-{
-    if ( ![self isLeafReference:aReference]) {
-        NSArray *envNames = [[self class] getAllEnvironemntVariableNames];
-        NSMutableArray *children=[NSMutableArray array];
-        
-        for ( NSString *name in envNames) {
-            [children addObject:[self referenceForPath:name]];
-        }
-        return children;
-    }
-    return @[];
-}
+//
+//-(NSArray<MPWReference*>*)childrenOfReference:(id <MPWReferencing>)aReference
+//{
+//    if ( ![self isLeafReference:aReference]) {
+//        NSArray *envNames = [[self class] getAllEnvironemntVariableNames];
+//        NSMutableArray *children=[NSMutableArray array];
+//
+//        for ( NSString *name in envNames) {
+//            [children addObject:[self referenceForPath:name]];
+//        }
+//        return children;
+//    }
+//    return @[];
+//}
 
 
 

@@ -24,7 +24,7 @@
     if ( [path length]==0 || [path isEqualToString:@"."]) {
         return [self listForNames:[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]];
     }
-	return [[NSUserDefaults standardUserDefaults] objectForKey:[aReference path]];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:[[aReference path] lastPathComponent]];
 }
 
 -(void)setObject:newValue forReference:aReference
