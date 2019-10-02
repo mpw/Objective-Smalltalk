@@ -13,6 +13,7 @@
 @property (nonatomic, strong)  NSMutableArray *keys;
 @property (nonatomic, strong)  NSMutableArray *values;
 @property (nonatomic, assign)  Class literalClass;
+@property (nonatomic, strong)  NSString *literalClassName;
 
 
 @end
@@ -36,9 +37,18 @@
 
 -(void)setClassName:(NSString *)name
 {
-    //    [super setClassName:name];
-    if ( name ) {
-        self.literalClass=NSClassFromString(name);
+    self.literalClassName=name;
+}
+
+-(void)loadClass
+{
+    if ( self.literalClassName ) {
+//        NSLog(@"set literal class name: '%@'",self.literalClassName);
+        self.literalClass=NSClassFromString(self.literalClassName);
+//        NSLog(@"literal class: %@",self.literalClass);
+        if ( !self.literalClass) {
+            [NSException raise:@"undefinedclass" format:@"Literal Class %@ undefined for dictionary literal",self.literalClassName];
+        }
     }
 }
 
@@ -52,6 +62,7 @@
     id *keys=NULL;
     id *values=NULL;
     Class baseClass=[NSDictionary class];
+    [self loadClass];
     Class finalClass=self.literalClass;
 
     unsigned long maxKeyVal=MIN(self.keys.count,self.values.count);

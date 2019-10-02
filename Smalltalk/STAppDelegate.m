@@ -41,7 +41,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     [[NSApplication sharedApplication] setServicesProvider:self];
-    
+    [super applicationDidFinishLaunching:aNotification];
 }
 
 -validRequestorForSendType:sendType

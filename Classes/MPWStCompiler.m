@@ -343,12 +343,14 @@ idAccessor(solver, setSolver)
 
 -parseLiteral
 {
+    NSLog(@"parse literal");
     id object = [self nextToken];
     MPWLiteralExpression *e=nil;
     NSString *className=nil;
     id next=[self nextToken];
     if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
         className=object;
+        NSLog(@"got a class name: %@",className);
         object=next;
     } else {
         [self pushBack:next];

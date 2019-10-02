@@ -43,7 +43,6 @@
 		1F2D95D22250FCC500D025D8 /* STAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D12250FCC500D025D8 /* STAppDelegate.m */; };
 		1F2D95D52250FCC500D025D8 /* STDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* STDocument.m */; };
 		1F2D95D82250FCC500D025D8 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D62250FCC500D025D8 /* Document.xib */; };
-		1F2D95DA2250FCC800D025D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D92250FCC800D025D8 /* Assets.xcassets */; };
 		1F2D95DD2250FCC800D025D8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95DB2250FCC800D025D8 /* MainMenu.xib */; };
 		1F2D95E02250FCC800D025D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95DF2250FCC800D025D8 /* main.m */; };
 		1F2D95E52250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
@@ -207,6 +206,8 @@
 		1F7045F722313F4B005ED7FB /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F7045FB2231417E005ED7FB /* classdef-method-browser-scheme.stsh in Resources */ = {isa = PBXBuildFile; fileRef = 1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */; };
+		1F73288A2344B0D300379386 /* STImage.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7328892344B0D200379386 /* STImage.icns */; };
+		1F73288C2344B22600379386 /* STImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F73288B2344B22500379386 /* STImage.png */; };
 		1F7A21B91B779CDD00FF6C03 /* MPWDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */; };
 		1F7A351018B3570F0009E97D /* MPWStNativeCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7A350E18B3570F0009E97D /* MPWStNativeCompiler.h */; };
 		1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7A350F18B3570F0009E97D /* MPWStNativeCompiler.m */; };
@@ -662,7 +663,6 @@
 		1F2D95D32250FCC500D025D8 /* STDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDocument.h; sourceTree = "<group>"; };
 		1F2D95D42250FCC500D025D8 /* STDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDocument.m; sourceTree = "<group>"; };
 		1F2D95D72250FCC500D025D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
-		1F2D95D92250FCC800D025D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F2D95DC2250FCC800D025D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F2D95DE2250FCC800D025D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F2D95DF2250FCC800D025D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -770,6 +770,8 @@
 		1F7045F322313EA2005ED7FB /* MPWClassMethodSwitchStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMethodSwitchStore.m; sourceTree = "<group>"; };
 		1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "classdef-method-browser-scheme.stsh"; sourceTree = "<group>"; };
+		1F7328892344B0D200379386 /* STImage.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = STImage.icns; sourceTree = "<group>"; };
+		1F73288B2344B22500379386 /* STImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = STImage.png; sourceTree = "<group>"; };
 		1F7A350E18B3570F0009E97D /* MPWStNativeCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStNativeCompiler.h; sourceTree = "<group>"; };
 		1F7A350F18B3570F0009E97D /* MPWStNativeCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStNativeCompiler.m; sourceTree = "<group>"; };
 		1F7B75AF14629431002F38D1 /* SchemeFS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchemeFS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1297,7 +1299,8 @@
 				1F2D95D32250FCC500D025D8 /* STDocument.h */,
 				1F2D95D42250FCC500D025D8 /* STDocument.m */,
 				1F2D95D62250FCC500D025D8 /* Document.xib */,
-				1F2D95D92250FCC800D025D8 /* Assets.xcassets */,
+				1F73288B2344B22500379386 /* STImage.png */,
+				1F7328892344B0D200379386 /* STImage.icns */,
 				1F2D95DB2250FCC800D025D8 /* MainMenu.xib */,
 				1F2D95DE2250FCC800D025D8 /* Info.plist */,
 				1F2D95DF2250FCC800D025D8 /* main.m */,
@@ -2614,8 +2617,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F2D95DA2250FCC800D025D8 /* Assets.xcassets in Resources */,
+				1F73288A2344B0D300379386 /* STImage.icns in Resources */,
 				1F2D95D82250FCC500D025D8 /* Document.xib in Resources */,
+				1F73288C2344B22600379386 /* STImage.png in Resources */,
 				1F2D95DD2250FCC800D025D8 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3523,7 +3527,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -3564,7 +3567,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

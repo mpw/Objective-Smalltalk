@@ -38,6 +38,8 @@
     }
 }
 
+
+
 - (NSString *)windowNibName {
     // Override returning the nib file name of the document
     // If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
@@ -48,6 +50,9 @@
                                error:(NSError * _Nullable *)outError
 {
     NSData *windowControllerArchive = [NSKeyedArchiver archivedDataWithRootObject:[self windowControllers] requiringSecureCoding:NO error:nil];
+
+    NSSet *workspaces = [self workspaces];
+
 
     NSFileWrapper *windowsWrapper = [[[NSFileWrapper alloc] initRegularFileWithContents:windowControllerArchive] autorelease];
     NSDictionary *wrappers=@{

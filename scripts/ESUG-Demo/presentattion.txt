@@ -387,7 +387,13 @@ controller := #ASCPresentationViewController{
  
 controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'. 
 
-controller  numberOfSlides   
+file:/tmp/lastpage.tiff := (controller view snapshot)  
+
+controller view frame   
+
+
+
+controller     
     
 
 controller goToSlideAtIndex:0    

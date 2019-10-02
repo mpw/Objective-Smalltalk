@@ -82,7 +82,8 @@
                            @"MPWClassMirrorSubclassForTesting",
                            @"MPWNamedIdentifier",
                            @"NSLayoutXAxisAnchor",
-                           
+                           @"MPWDirectForwardingTrampoline",
+
                            
 #if WINDOWS						   
 						   @"Object",
