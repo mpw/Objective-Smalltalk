@@ -83,7 +83,7 @@ class ProgramVsSystem : ASCSlide {
    var shapeGroup.
 
    -<void>setupSlideWithPresentationViewController:controller {
-       self textManager setTitle:'Static Program Text vs. Dynamic Execution'.
+       self textManager setTitle:'Programmtext vs. System'.
        self textManager addBullet:'FORTRAN' atLevel:0.
        shapeGroup := SCNNode node.
        self setShapeGroup:shapeGroup.
@@ -159,6 +159,7 @@ class ProgramVsSystem : ASCSlide {
 }
                     
   
+ 
 controller := #ASCPresentationViewController{
     #Name : 'Objective-Smalltalk: Macoun 2019'.
     #Slides : #(
@@ -167,19 +168,6 @@ controller := #ASCPresentationViewController{
                #subtitle : 'Marcel Weiher (@mpweiher)'
          }  ,
 
-       #ASCBulletSlide{ 
-             #title : 'Objective-Smalltalk: Überlappungen'.
-             #bullets : #( 
-                'Syntax:  []',
-                'C Array / Objective-C Array',
-                'C String / NSString',
-                'int,float  / NSNumber',
-                'Literale / @Literale',
-                'struct / Klasse',
-                'Funktionen / Methoden',
-                '{Blöcke} / ^{Blöcke}'
-            )
-        } ,
 
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk'.
@@ -253,10 +241,74 @@ controller := #ASCPresentationViewController{
                 'Smalltalk is klein',
              )
         } ,
+
          #ObjCAndSmalltalk { 
               #lightIntensities : #( 0.2 , 0.7 )
          }  ,
-   
+          #ASCBulletSlide{ 
+             #title : 'Objective-C: Überlappungen'.
+             #bullets : #( 
+                'Syntax:  []',
+                'C Array / Objective-C Array',
+                'C String / NSString',
+                'int,float  / NSNumber',
+                'Literale / @Literale',
+                'struct / Klasse',
+                'Funktionen / Methoden',
+                '{Blöcke} / ^{Blöcke}'
+            )
+        } ,
+         #ASCBulletSlide{ 
+             #title : 'C → Smalltalk'.
+             #bullets : #( 
+                'Kontrollstrukturen:  Messages',
+                'Array Syntax: Messages',
+                'Operatoren: Messages',
+                'Nur eine Art von Block',
+            )
+        } ,
+
+     #ASCChapterSlide { 
+               #text : 'Programmvereinnfachung'.
+               #subtitle : 'Objective-Smalltalk: Motivation'
+         }    ,
+         
+         #ASCBulletSlide{ 
+             #title : 'Programmvereinfachung'.
+             #bullets : #( 
+                'Wunderlist iOS client: 160 KLOC',
+                'Microsoft Office:  400 MLOC',
+            )
+        } ,
+         #ASCBulletSlide{ 
+             #title : 'Programmvereinfachung'.
+             #bullets : #( 
+                'Programmiersprachen sind prozedural',
+                'Unsere Aufgaben sind es nicht',
+                'Lücke zwischen Programmtext und System',
+            )
+        } ,
+        #ASCBulletSlide{ 
+             #title : 'Programmvereinfachung'.
+             #bullets : #( 
+                'Programmiersprachen sind prozedural',
+                'Vor allem die Abstraktionsmechanismen',
+                'Unsere Aufgaben sind es nicht',
+            )
+        } ,
+        #ASCBulletSlide{ 
+             #title : 'Zitate'.
+             #bullets : #( 
+                'Feynnman:  "Computers don''t compute"',
+                'Guy Steele: "No longer about termination"',
+                'A. Black: "Communication, not computation"',
+            )
+        } ,
+         #ProgramVsSystem { 
+              #lightIntensities : #( 0.2 , 0.7 )
+         }  ,
+
+
        #ASCBulletSlide{ 
              #title : 'Polymorphic Identifiers'.
              #bullets : #( 
@@ -314,8 +366,9 @@ controller := #ASCPresentationViewController{
       )
   }. 
           
-controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.
- 
+controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'. 
+
+
 framework:EGOS load.
 framework:EGOS_Cocoa load.
   
