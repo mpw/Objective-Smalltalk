@@ -13,12 +13,10 @@ extension STDocument {
       workspace setAutoresizingMask: 18.
       scrollView setDocumentView:workspace.
       windowController := scrollView openInWindowController:'Workspace'.
-      self addWindowController:windowController.
       window := windowController window.
       window setDelegate:self.
       workspace setCompiler: self compiler.
       workspace setDelegate: self.
-      self workspaces addObject:workspace.
       stdout println:'did set up workspace'.
   }
 

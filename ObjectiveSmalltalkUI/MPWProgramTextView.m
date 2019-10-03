@@ -8,6 +8,7 @@
 
 #import "MPWProgramTextView.h"
 #import "MPWStCompiler.h"
+#import "MPWREPLViewPrinter.h"
 
 @interface MPWProgramTextView ()
 
@@ -534,7 +535,9 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
     } @catch (NSException *e) {
         result = e;
     }
-    NSString *resultText=[result stringValue];
+    MPWREPLViewPrinter *printer=[MPWREPLViewPrinter streamWithTarget:[NSMutableString string]];
+    [printer writeObject:result];
+    NSString *resultText=[printer targete;
     NSRange currentSelection=[self selectedRange];
     [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
     currentSelection=[self selectedRange];
