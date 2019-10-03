@@ -49,6 +49,7 @@ scheme SQLiteScheme  {
      }
   }
 
+
   /schema/:table {
      |= {
         resultSet := self dictionariesForQuery: "PRAGMA table_info({table})".
@@ -61,6 +62,12 @@ scheme SQLiteScheme  {
         #TableInfo{ #name : table, #columns : columns }.
      }
   } 
+
+  /schema {
+	|= { 
+		self tables.
+	}
+  }
 
   /:table/count { 
      |= { self dictionariesForQuery: "select count(*) from {table}" | firstObject | at:'count(*)'. }
