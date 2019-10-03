@@ -582,3 +582,29 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
 
 @end
 
+@implementation NSTextView(zooming)
+
+
+-(void)changeFontSizeBy:(float)sizeChange
+{
+    long textLen=[[self textStorage] length];
+    NSFont *font = [[self textStorage] attribute:NSFontAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0,textLen)];
+    double fontSize=[font pointSize];
+    font=[NSFont fontWithName:[font fontName] size:fontSize+sizeChange];
+    [self setFont:font];
+    [[self textStorage] setAttributes:@{ NSFontAttributeName: font} range:NSMakeRange(0,textLen)];
+}
+
+
+-(IBAction)zoomContentsUpWithoutFittingWindow:sender
+{
+    [self changeFontSizeBy:1];
+}
+
+-(IBAction)zoomContentsDownWithoutFittingWindow:sender
+{
+    [self changeFontSizeBy:-1];
+}
+
+
+@end

@@ -53,6 +53,12 @@ static BOOL useMaxSize;
 
 //- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {/*NSLog(@"ShellView acceptsFirstMouse:");*/ return YES;}
 
+-(void)awakeFromNib
+{
+    [super awakeFromNib];
+    [self setRichText:NO];
+}
+
 - (id)commandHandler { return commandHandler;}
 
 - (NSArray *)completionsForPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index
@@ -120,9 +126,9 @@ static BOOL useMaxSize;
     lineEdited         = NO;
     last_command_start = 0;
     shouldRetainCommandHandler = YES;
-      
+
     [self setUsesFindPanel:YES];
-    [self setFont:[NSFont userFixedPitchFontOfSize:-1]]; // -1 to get the default font size
+//    [self setFont:[NSFont userFixedPitchFontOfSize:-1]]; // -1 to get the default font size
     [self setSelectedRange:NSMakeRange([[self string] length],0)];
     [super insertText:prompt];
     start = [[self string] length];
@@ -134,7 +140,8 @@ static BOOL useMaxSize;
       [self setAutomaticSpellingCorrectionEnabled:NO];
      
       [self setAutomaticQuoteSubstitutionEnabled:NO];
- 
+ [self setRichText:NO];
+
       
     return self;
   }
@@ -154,7 +161,7 @@ static BOOL useMaxSize;
   
   [self setSelectedRange:NSMakeRange(start,[[self string] length])];
   [self insertText:[NSString stringWithFormat:@"\n%@\n%@%@", notification, prompt, command]];
-  [self setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSize]] range:NSMakeRange(start, [notification length]+1)];
+//  [self setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSize]] range:NSMakeRange(start, [notification length]+1)];
   start += delta;
   [self setSelectedRange:NSMakeRange(selectedRange.location+delta, selectedRange.length)]; 
 } 
