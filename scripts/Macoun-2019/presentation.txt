@@ -31,7 +31,7 @@ class ImageSlide : ASCSlide {
 
 class ObjCAndSmalltalk : ASCSlide {
    var c.
-   var smalltalk.
+   var Smalltalk.
    var shapeGroup.
 
    -<void>setupSlideWithPresentationViewController:controller {
@@ -46,9 +46,9 @@ class ObjCAndSmalltalk : ASCSlide {
        boxer setHeight:40. 
        boxer setYHeight:5.0. 
        boxer setPadding:10. 
-       smalltalk := boxer  box:'Smalltalk' width:500 color:(NSColor redColor).
-       self setSmalltalk:smalltalk.
-       shapeGroup addChildNode:smalltalk.
+       Smalltalk := boxer  box:'Smalltalk' width:500 color:(NSColor redColor).
+       self setSmalltalk:Smalltalk.
+       shapeGroup addChildNode:Smalltalk.
        boxer nextLine.
        boxer setHeight:240. 
       c :=  boxer box:'C' width:500.
@@ -65,12 +65,12 @@ controller := #ASCPresentationViewController{
     #Slides : #(
 
       #ASCChapterSlide { 
-               #text : 'Objective-SmallTalk'.
+               #text : 'Objective-Smalltalk'.
                #subtitle : 'Marcel Weiher (@mpweiher)'
          }  ,
 
        #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk'.
+             #title : 'Objective-Smalltalk'.
              #bullets : #( 
                 'Variante von Smalltalk',
                 'Objective-C kompatibel',
@@ -79,7 +79,7 @@ controller := #ASCPresentationViewController{
              )
         } ,
        #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk'.
+             #title : 'Objective-Smalltalk'.
              #bullets : #( 
                 'Motivation',
                 'Die Sprache',
@@ -87,10 +87,10 @@ controller := #ASCPresentationViewController{
         } ,
        #ASCChapterSlide { 
                #text : 'Motivation'.
-               #subtitle : 'Objective-SmallTalk'
+               #subtitle : 'Objective-Smalltalk'
          }    ,
       #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk: Motivation'.
+             #title : 'Objective-Smalltalk: Motivation'.
              #bullets : #( 
                 'Scripting',
                 'Sprachvereinfachung',
@@ -99,32 +99,44 @@ controller := #ASCPresentationViewController{
         } ,
         #ASCChapterSlide { 
                #text : 'Scripting'.
-               #subtitle : 'Objective-SmallTalk: Motivation'
+               #subtitle : 'Objective-Smalltalk: Motivation'
          }    ,
 
       #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk: Scripting'.
+             #title : 'Objective-Smalltalk: Scripting'.
              #bullets : #( 
+                'Scripted Components / Software-ICs',
+                'Kleine Systeme werden groß',
                 'WebScript',
-                'Jedes große System das funtkioniert ist aus einem kleineen System entstanden das funktioniert',
-             )
+            )
         } ,
-       #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk: Motivation'/ Scripting.
+      #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Scripting'.
              #bullets : #( 
-                'WebScript',
-                'Jedes große System das funtkioniert ist aus einem kleineen System entstanden das funktioniert',
-             )
+                'Applikationen?',
+                'Shell Scripts?',
+                'Web Server?',
+                'Naked Objects',
+            )
+        } ,
+      #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Framework-Scripting'.
+             #bullets : #( 
+                'App = Framework + Script',
+                'Shell Script = Framework + Script',
+                'Web Server = Framework + Script',
+                'Neues Framework = Framework + Script?',
+            )
         } ,
         #ASCChapterSlide { 
                #text : 'Sprachvereinfachung'.
-               #subtitle : 'Objective-SmallTalk: Motivation'
+               #subtitle : 'Objective-Smalltalk: Motivation'
          }    ,
        #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk: Sprachvereinfachung'.
+             #title : 'Objective-Smalltalk: Sprachvereinfachung'.
              #bullets : #( 
-                'WebScript',
-                'Jedes große System das funtkioniert ist aus einem kleineen System entstanden das funktioniert',
+                'C ist groß',
+                'Smalltalk is klein',
              )
         } ,
 
@@ -191,7 +203,7 @@ controller := #ASCPresentationViewController{
       )
   }. 
           
-controller view openInWindow:'Objective-SmallTalk (Objective-Smalltalk Macoun 2019)'.  
+controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.  
 
 
 
