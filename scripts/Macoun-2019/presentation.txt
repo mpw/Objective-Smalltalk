@@ -1,0 +1,249 @@
+framework:Slides3D load. 
+
+   
+class ImageSlide : ASCSlide { 
+     var text.
+     var image.
+     var imageURL.
+     var imageScale.
+     var xOffset.
+     -<void>setupSlideWithPresentationViewController:controller {
+       self textManager setTitle:self text.
+       shapeGroup := SCNNode node.
+       self rootNode addChildNode:shapeGroup.
+       image := NSImage alloc initWithContentsOfFile:self imageURL.
+       size := image size.
+       size := size * self imageScale .
+       boxer := ASCBoxMaker new.
+       boxer setP: ( (self xOffset - 8 ) @ 0.2 ).
+       boxer setColor: (NSColor grayColor).  
+       boxer setPosition: 0@0 .
+       boxer setHeight: size y. 
+       boxer setYHeight:3.5. 
+       boxer setPadding:10. 
+       imageBox :=  boxer box:'' width: size x.
+       imageBox geometry materials firstObject diffuse setContents: image.
+       shapeGroup addChildNode: imageBox.
+     }
+}
+       
+  
+
+class ObjCAndSmalltalk : ASCSlide {
+   var c.
+   var smalltalk.
+   var shapeGroup.
+
+   -<void>setupSlideWithPresentationViewController:controller {
+       self textManager setTitle:''.
+       shapeGroup := SCNNode node.
+       self setShapeGroup:shapeGroup.
+       self rootNode addChildNode:shapeGroup.
+       boxer := ASCBoxMaker new.
+       boxer setP: ( -8 @ 6.2 ).
+       boxer setColor: (NSColor colorWithDeviceRed:145.0 / 255.0 green:145.0 / 255.0 blue:253.0 / 255.0 alpha:1 ).  
+       boxer setPosition: 0@0 .
+       boxer setHeight:40. 
+       boxer setYHeight:5.0. 
+       boxer setPadding:10. 
+       smalltalk := boxer  box:'Smalltalk' width:500 color:(NSColor redColor).
+       self setSmalltalk:smalltalk.
+       shapeGroup addChildNode:smalltalk.
+       boxer nextLine.
+       boxer setHeight:240. 
+      c :=  boxer box:'C' width:500.
+       self setC:c.
+       shapeGroup addChildNode:c.
+       boxer setPadding:20. 
+   }
+}.
+  
+                      
+ 
+controller := #ASCPresentationViewController{
+    #Name : 'Objective-Smalltalk: Macoun 2019'.
+    #Slides : #(
+
+      #ASCChapterSlide { 
+               #text : 'Objective-SmallTalk'.
+               #subtitle : 'Marcel Weiher (@mpweiher)'
+         }  ,
+
+       #ASCBulletSlide{ 
+             #title : 'Objective-SmallTalk'.
+             #bullets : #( 
+                'Variante von Smalltalk',
+                'Objective-C kompatibel',
+                'Skript- und Programmiersprache',
+                '',
+             )
+        } ,
+       #ASCBulletSlide{ 
+             #title : 'Objective-SmallTalk'.
+             #bullets : #( 
+                'Motivation',
+                'Die Sprache',
+             )
+        } ,
+       #ASCChapterSlide { 
+               #text : 'Motivation'.
+               #subtitle : 'Objective-SmallTalk'
+         }    ,
+      #ASCBulletSlide{ 
+             #title : 'Objective-SmallTalk: Motivation'.
+             #bullets : #( 
+                'Scripting',
+                'Sprachvereinfachung',
+                'Programmvereinfachung',
+             )
+        } ,
+        #ASCChapterSlide { 
+               #text : 'Scripting'.
+               #subtitle : 'Objective-SmallTalk: Motivation'
+         }    ,
+
+      #ASCBulletSlide{ 
+             #title : 'Objective-SmallTalk: Scripting'.
+             #bullets : #( 
+                'WebScript',
+                'Jedes große System das funtkioniert ist aus einem kleineen System entstanden das funktioniert',
+             )
+        } ,
+       #ASCBulletSlide{ 
+             #title : 'Objective-SmallTalk: Motivation'/ Scripting.
+             #bullets : #( 
+                'WebScript',
+                'Jedes große System das funtkioniert ist aus einem kleineen System entstanden das funktioniert',
+             )
+        } ,
+        #ASCChapterSlide { 
+               #text : 'Sprachvereinfachung'.
+               #subtitle : 'Objective-SmallTalk: Motivation'
+         }    ,
+       #ASCBulletSlide{ 
+             #title : 'Objective-SmallTalk: Sprachvereinfachung'.
+             #bullets : #( 
+                'WebScript',
+                'Jedes große System das funtkioniert ist aus einem kleineen System entstanden das funktioniert',
+             )
+        } ,
+
+          #ObjCAndSmalltalk { 
+              #lightIntensities : #( 0.2 , 0.7 )
+              
+         }  ,
+
+ 
+       #ASCBulletSlide{ 
+             #title : 'Polymorphic Identifiers'.
+             #bullets : #( 
+                'All identifiers are URIs',
+                "var:hello := 'World!",
+                'file:{env:HOME}/Downloads/site := http://objective.st',
+                'slider setValueHolder: ref:var:celsius',
+             )
+        } ,
+
+       #ASCBulletSlide{ 
+             #title : 'Stores'.
+             #bullets : #( 
+                'PIs are evaluated via stores',
+                'Like in-process REST servers',
+                'Or composable dictionaries',
+                'var:hello <-> (schemes at:''var'') at:''hello''',
+             )
+        }  ,
+       #ASCBulletSlide{ 
+             #title : 'Example Stores'.
+             #bullets : #( 
+                'Local variables, environment variables',
+                'Filesystems, HTTP',
+                'Databases: SQL/SQLite',
+                'Other applications (via Apple Events)',
+                'etc.',
+             )
+        }  ,
+
+       #ASCBulletSlide{ 
+             #title : 'Storage Combinators'.
+             #bullets : #( 
+                'Onward! ''19',
+                'Combinator exposes + consumes REST interfaces',
+                'Uniform interface (REST) enables pluggability',
+                'Narrow, semantically tight interface enables intermediaries',
+                '10x productivity/code improvments',
+             )
+        } ,
+
+
+      #ImageSlide{ 
+               #text : 'Simple Composed Store'.
+               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/disk-cache-json-aligned.png'.
+               #xOffset : 2.0 .
+               #imageScale : 0.8
+         }  , 
+    #ImageSlide{ 
+               #text : 'Async Writer'.
+               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/async-writer.png'.
+               #xOffset : 2.0 .
+               #imageScale : 0.6
+         }  ,
+      )
+  }. 
+          
+controller view openInWindow:'Objective-SmallTalk (Objective-Smalltalk Macoun 2019)'.  
+
+
+
+
+
+framework:EGOS load.
+framework:EGOS_Cocoa load.
+  
+
+size := controller view frame size  .
+
+outfile := MPWByteStream fileName:'/tmp/presentation.pdf'.     
+pageDict := NSDictionary dictionary. 
+
+pdfstream := MPWCGPDFContext pdfContextWithTarget:outfile size:size.     
+
+{ controller  isAtEnd not } whileTrue: {
+    
+    image := controller view snapshot.  
+    image lockFocus.
+    bitmapRep := NSBitmapImageRep alloc initWithFocusedViewRect: (0@0 extent: image size).
+    image unlockFocus.
+    pdfstream beginPage: pageDict.
+    pdfstream scale: 0.5.
+    pdfstream drawImage:image .
+    pdfstream endPage .
+
+     controller goToNextSlideStep. 
+     NSThread sleepForTimeInterval:3.
+} 
+ .
+pdfstream close. 
+outfile close. 
+ nil        
+  
+NSCGImageSnapshotRep superclass 
+
+controller goToSlideAtIndex:12  nil
+
+size := controller view frame size.  
+
+framework:EGOS_Cocoa load 
+
+(0 to:38) do: { :i |
+
+    image := NSBitmapImageRep alloc initWithData: file:/tmp/pages/{i} .
+    stdout println:image.
+    pdfstream scale: 0.5.
+    pdfstream drawImage:image .
+    pdfstream endPage .
+}  
+.
+pdfstream close. 
+outfile close. 
+       
