@@ -1,4 +1,4 @@
-framework:Slides3D load. 
+framework:Slides3D load.       
 
    
 class ImageSlide : ASCSlide { 
@@ -26,13 +26,18 @@ class ImageSlide : ASCSlide {
        shapeGroup addChildNode: imageBox.
      }
 }
-       
+ 
+        
   
-
 class ObjCAndSmalltalk : ASCSlide {
    var c.
    var Smalltalk.
    var shapeGroup.
+   var steps.
+
+   -<int>numberOfSteps {
+       self steps intValue.
+   }
 
    -<void>setupSlideWithPresentationViewController:controller {
        self textManager setTitle:''.
@@ -50,24 +55,131 @@ class ObjCAndSmalltalk : ASCSlide {
        self setSmalltalk:Smalltalk.
        shapeGroup addChildNode:Smalltalk.
        boxer nextLine.
-       boxer setHeight:240. 
-      c :=  boxer box:'C' width:500.
+       boxer setHeight:240.
+       boxer setFontSize:200. 
+       stdout println:'font size: ', boxer fontSize stringValue.
+       c :=  boxer box:'C' width:500.
        self setC:c.
        shapeGroup addChildNode:c.
        boxer setPadding:20. 
    }
-}.
-  
-                      
+    -<void>presentStepIndex:<int>index withPresentionViewController:controller {
+       index = 0 ifTrue:{ 
+            SCNTransaction setAnimationDuration:1.5.
+         }.
+         index = 1 ifTrue:{ 
+            SCNTransaction begin.
+            self c setXYPosition: -40.0  @ 1.20 .
+            SCNTransaction commit.
+         }.
+     }
+}.    
+      
+class ProgramVsSystem : ASCSlide {
+   var code.
+   var system.
+   var problem.
+   var tools.
+   var shapeGroup.
+
+   -<void>setupSlideWithPresentationViewController:controller {
+       self textManager setTitle:'Static Program Text vs. Dynamic Execution'.
+       self textManager addBullet:'FORTRAN' atLevel:0.
+       shapeGroup := SCNNode node.
+       self setShapeGroup:shapeGroup.
+       self rootNode addChildNode:shapeGroup.
+       boxer := ASCBoxMaker new.
+       boxer setP: ( -8 @ 0.2 ).
+       boxer setColor: (NSColor colorWithDeviceRed:105 / 255.0 green:145.0 / 255.0 blue:14.0 / 255.0 alpha:1 ).  
+       boxer setPosition: 0@0 .
+       boxer setHeight:120. 
+       boxer setYHeight:1.5. 
+       boxer setPadding:10. 
+       code :=  boxer box:'Code' width:160.
+       self setCode:code.
+       boxer setPadding:20. 
+
+       system := boxer  box:'System' width:160 color:(NSColor blueColor).
+       self setSystem:system.
+
+       problem := boxer box:'Problem' width:160 color:(NSColor redColor).
+       self setProblem: problem.
+
+       shapeGroup do addChildNode: #( code, system, problem ) each.
  
+   }
+
+   -<int>numberOfSteps {  8. }
+ 
+   -<void>presentStepIndex:<int>index withPresentionViewController:controller {
+         index = 0 ifTrue:{ 
+            SCNTransaction setAnimationDuration:1.5.
+         }.
+         index = 1 ifTrue:{ 
+            SCNTransaction begin.
+            self textManager addBullet:'Non-Computation' atLevel:0.
+            self problem setXYPosition: -3.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+           index = 2 ifTrue:{ 
+            SCNTransaction begin.
+            self textManager addBullet:'OOP' atLevel:0.
+            self system setXYPosition: -3.0 @ 0.20 .
+            SCNTransaction commit.
+         }.
+       index = 3 ifTrue:{
+            SCNTransaction begin.
+            self textManager addBullet:'Ruby' atLevel:0.
+            self code setXYPosition: -14.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+       index = 4 ifTrue:{
+            SCNTransaction begin.
+            self code setXYPosition: -8.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+       index = 5 ifTrue:{
+            SCNTransaction begin.
+            self textManager addBullet:'FP' atLevel:0.
+            self system setXYPosition: -8.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+         index = 6 ifTrue:{
+            SCNTransaction begin.
+            self system setXYPosition: -3.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+         index = 7 ifTrue:{
+            SCNTransaction begin.
+            self textManager addBullet:'Objective-Smalltalk' atLevel:0.
+            self code setXYPosition: -3.0  @ 0.20 .
+            SCNTransaction commit.
+         }.
+   }
+}
+                    
+  
 controller := #ASCPresentationViewController{
     #Name : 'Objective-Smalltalk: Macoun 2019'.
     #Slides : #(
-
-      #ASCChapterSlide { 
+       #ASCChapterSlide { 
                #text : 'Objective-Smalltalk'.
                #subtitle : 'Marcel Weiher (@mpweiher)'
          }  ,
+
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Überlappungen'.
+             #bullets : #( 
+                'Syntax:  []',
+                'C Array / Objective-C Array',
+                'C String / NSString',
+                'int,float  / NSNumber',
+                'Literale / @Literale',
+                'struct / Klasse',
+                'Funktionen / Methoden',
+                '{Blöcke} / ^{Blöcke}'
+            )
+        } ,
 
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk'.
@@ -75,10 +187,12 @@ controller := #ASCPresentationViewController{
                 'Variante von Smalltalk',
                 'Objective-C kompatibel',
                 'Skript- und Programmiersprache',
-                '',
+                'Architekturorientierte Konzepte',
+                'Frameworks, Sprache, Tools',
              )
         } ,
-       #ASCBulletSlide{ 
+
+      #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk'.
              #bullets : #( 
                 'Motivation',
@@ -139,13 +253,10 @@ controller := #ASCPresentationViewController{
                 'Smalltalk is klein',
              )
         } ,
-
-          #ObjCAndSmalltalk { 
+         #ObjCAndSmalltalk { 
               #lightIntensities : #( 0.2 , 0.7 )
-              
          }  ,
-
- 
+   
        #ASCBulletSlide{ 
              #title : 'Polymorphic Identifiers'.
              #bullets : #( 
@@ -203,12 +314,8 @@ controller := #ASCPresentationViewController{
       )
   }. 
           
-controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.  
-
-
-
-
-
+controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.
+ 
 framework:EGOS load.
 framework:EGOS_Cocoa load.
   
