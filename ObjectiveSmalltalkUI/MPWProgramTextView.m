@@ -537,7 +537,7 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
     }
     MPWREPLViewPrinter *printer=[MPWREPLViewPrinter streamWithTarget:[NSMutableString string]];
     [printer writeObject:result];
-    NSString *resultText=[printer targete;
+    NSString *resultText=(NSString*)[printer target];
     NSRange currentSelection=[self selectedRange];
     [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
     currentSelection=[self selectedRange];

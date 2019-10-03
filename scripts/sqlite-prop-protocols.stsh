@@ -43,7 +43,8 @@ scheme SQLiteScheme  {
   /. { 
      |= {
        resultSet := self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" '.
-       resultSet collect at:'name'.
+       names := resultSet collect at:'name'.
+       self listForNames:names.
      }
   }
 
@@ -84,7 +85,7 @@ scheme SQLiteScheme  {
      |= { self dictionariesForQuery: "select {column} from {table}"| collect | at:column. } 
   }
   -tables {
-	 self:. collect: { :table | self:schema/{table}. }.
+	 self:. contents collect path collect: { :table | self:schema/{table}. }.
   }
   -<void>logTables {
      stdout do println: self tables each.	
