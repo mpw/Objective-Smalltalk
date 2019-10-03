@@ -44,6 +44,7 @@ scheme SQLiteScheme  {
      |= {
        resultSet := self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" '.
        names := resultSet collect at:'name'.
+       names := names, 'schema'.
        self listForNames:names.
      }
   }
