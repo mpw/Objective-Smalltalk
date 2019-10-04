@@ -76,7 +76,7 @@ class ObjCAndSmalltalk : ASCSlide {
          }.
      }
 }.    
-        
+         
 class ProgramVsSystem : ASCSlide {
    var code.
    var system.
@@ -160,7 +160,7 @@ class ProgramVsSystem : ASCSlide {
    }
 }
                     
-   
+    
   
 controller := #ASCPresentationViewController{
     #Name : 'Objective-Smalltalk: Macoun 2019'.
@@ -364,9 +364,10 @@ controller := #ASCPresentationViewController{
              #bullets : #( 
                 'HOM (Sam Adams talk)',
                 'Objektfilter',
+                '->',
                 'Stores und Polymorphic Identifier',
              )
-        }  ,
+        }   ,
 
 
        #ASCBulletSlide{ 
@@ -381,11 +382,21 @@ controller := #ASCPresentationViewController{
       #ImageSlide{ 
                #text : 'Call/Return vs. Objektfilter'.
                #imageURL : '/Users/marcel/Macoun-2019/pipe-vs-call.png'.
-               #yOffset : 2.0 .
+               #xOffset : -2.0 .
+               #yOffset :  3.0 .
                #imageScale : 0.8
          }   , 
 
-       #ASCBulletSlide{ 
+        #ASCBulletSlide{ 
+             #title : 'Objekfilter'.
+             #bullets : #( 
+                'Eine Objekt das -writeObject: implementiert',
+                'Ein target der wieder in Filter ist',
+                'Demo',
+            )
+        }  ,
+
+      #ASCBulletSlide{ 
              #title : 'Polymorphic Identifier'.
              #bullets : #( 
                 'Alle Namen sind URIs',
@@ -396,6 +407,16 @@ controller := #ASCPresentationViewController{
 
              )
         }  ,
+      #ASCBulletSlide{ 
+             #title : 'Komposition mit -> '.
+             #bullets : #( 
+                'Verbindet Default IN mit Default OUT',
+                'Bei Pipes wie | mit stdin/stdout',
+                'Unterscheid zu setXYZ: ?',
+                'Statische Beziehung',
+
+             )
+        }    ,
 
        #ASCBulletSlide{ 
              #title : 'Stores'.
@@ -407,7 +428,7 @@ controller := #ASCPresentationViewController{
                 'Datenbanken: SQL/SQLite',
 
              )
-        }   ,
+        }    ,
       #ASCBulletSlide{ 
              #title : 'Was ist ein Store?'.
              #bullets : #( 
@@ -452,13 +473,39 @@ controller := #ASCPresentationViewController{
                 'setter: =| { }',
                 'Demo: SiteBuilder, MethodStore, SQLite',
              )
-        }   ,
+       }  ,
+     #ASCChapterSlide { 
+               #text : 'Swift'.
+               #subtitle : 'Objective-Smalltalk'
+         }      ,
+       #ASCBulletSlide{ 
+             #title : 'Swift und ObjST'.
+             #bullets : #( 
+                'Frameworks von Swift nutzbar',
+                '80-90% der Funktionalität',
+                'Interop zu Swift...',
+             )
+        }    ,
+     #ASCChapterSlide { 
+               #text : 'Objective-Smalltalk'.
+               #subtitle : 'Zusammenfassung'
+         }       ,
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk'.
+             #bullets : #( 
+                 'Vereinfachung von Sprache und Programmen',
+                 'Nicht-prozedurale Modellierung',
+                 'Iterative Entwicklung, Skripte',
+                 'Inkrementelle Adoption',
+             )
+        } ,
      )
     
   }. 
            
-controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.
- 
+controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.   
+
+controller goToSlideAtIndex:28. 
 
 
 controller numberOfSlides   
@@ -513,7 +560,3 @@ framework:EGOS_Cocoa load
 pdfstream close. 
 outfile close. 
 
-
-
-
-       
