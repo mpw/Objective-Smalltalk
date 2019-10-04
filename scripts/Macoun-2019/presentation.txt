@@ -1,4 +1,4 @@
-framework:Slides3D load.       
+framework:Slides3D load.
 
    
 class ImageSlide : ASCSlide { 
@@ -26,8 +26,8 @@ class ImageSlide : ASCSlide {
        shapeGroup addChildNode: imageBox.
      }
 }
- 
-        
+
+
   
 class ObjCAndSmalltalk : ASCSlide {
    var c.
@@ -74,7 +74,7 @@ class ObjCAndSmalltalk : ASCSlide {
          }.
      }
 }.    
-      
+       
 class ProgramVsSystem : ASCSlide {
    var code.
    var system.
@@ -158,7 +158,7 @@ class ProgramVsSystem : ASCSlide {
    }
 }
                     
-  
+   
  
 controller := #ASCPresentationViewController{
     #Name : 'Objective-Smalltalk: Macoun 2019'.
@@ -166,7 +166,7 @@ controller := #ASCPresentationViewController{
        #ASCChapterSlide { 
                #text : 'Objective-Smalltalk'.
                #subtitle : 'Marcel Weiher (@mpweiher)'
-         }  ,
+         }   ,
 
 
        #ASCBulletSlide{ 
@@ -178,7 +178,7 @@ controller := #ASCPresentationViewController{
                 'Architekturorientierte Konzepte',
                 'Frameworks, Sprache, Tools',
              )
-        } ,
+        }  ,
 
       #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk'.
@@ -220,16 +220,16 @@ controller := #ASCPresentationViewController{
                 'Web Server?',
                 'Naked Objects',
             )
-        } ,
+        }  ,
       #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk: Framework-Scripting'.
              #bullets : #( 
-                'App = Framework + Script',
-                'Shell Script = Framework + Script',
+                'App = Frameworks + GUI',
+                'Scripted App = Frameworks + Script + GUI',
                 'Web Server = Framework + Script',
                 'Neues Framework = Framework + Script?',
             )
-        } ,
+        }  ,
         #ASCChapterSlide { 
                #text : 'Sprachvereinfachung'.
                #subtitle : 'Objective-Smalltalk: Motivation'
@@ -240,7 +240,7 @@ controller := #ASCPresentationViewController{
                 'C ist groß',
                 'Smalltalk is klein',
              )
-        } ,
+        }  ,
 
          #ObjCAndSmalltalk { 
               #lightIntensities : #( 0.2 , 0.7 )
@@ -257,7 +257,7 @@ controller := #ASCPresentationViewController{
                 'Funktionen / Methoden',
                 '{Blöcke} / ^{Blöcke}'
             )
-        } ,
+        }  ,
          #ASCBulletSlide{ 
              #title : 'C → Smalltalk'.
              #bullets : #( 
@@ -266,20 +266,21 @@ controller := #ASCPresentationViewController{
                 'Operatoren: Messages',
                 'Nur eine Art von Block',
             )
-        } ,
+        }  ,
 
      #ASCChapterSlide { 
                #text : 'Programmvereinfachung'.
                #subtitle : 'Objective-Smalltalk: Motivation'
-         }    ,
+         }     ,
          
          #ASCBulletSlide{ 
              #title : 'Programmvereinfachung'.
              #bullets : #( 
                 'Wunderlist iOS client: 160 KLOC',
                 'Microsoft Office:  400 MLOC',
+                'Fred Brooks: No Silver Bullet',
             )
-        } ,
+        }   ,
          #ASCBulletSlide{ 
              #title : 'Programmvereinfachung'.
              #bullets : #( 
@@ -287,7 +288,7 @@ controller := #ASCPresentationViewController{
                 'Unsere Aufgaben sind es nicht',
                 'Lücke zwischen Programmtext und System',
             )
-        } ,
+        }  ,
         #ASCBulletSlide{ 
              #title : 'Programmvereinfachung'.
              #bullets : #( 
@@ -303,7 +304,7 @@ controller := #ASCPresentationViewController{
                 'Guy Steele: "No longer about termination"',
                 'A. Black: "Communication, not computation"',
             )
-        } ,
+        }  ,
          #ProgramVsSystem { 
               #lightIntensities : #( 0.2 , 0.7 )
          }  ,
@@ -318,11 +319,21 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk'.
              #bullets : #( 
+                'Ansatz',
                 'Sprache',
                 "Frameworks",
-                'Weeerkzeuge',
+                'Werkzeuge',
              )
-        } ,
+        }  ,
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Ansatz'.
+             #bullets : #( 
+                'Metasystem',
+                "",
+                '+ Architekturkonzepte',
+             )
+        }  ,
+
      #ASCChapterSlide { 
                #text : 'Sprache'.
                #subtitle : 'Objective-Smalltalk'
@@ -335,7 +346,7 @@ controller := #ASCPresentationViewController{
                 "+ Syntax Verbesserungen",
                 '+ Architekturkonzepte',
              )
-        } ,
+        }  ,
 
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk: Syntax'.
@@ -347,32 +358,33 @@ controller := #ASCPresentationViewController{
                 'Objektliterale',
                 '<types>',
              )
-        } ,
+        }  ,
      #ASCChapterSlide { 
                #text : 'Architekturkonzepte'.
                #subtitle : 'Objective-Smalltalk'
-         }    ,
+         }      ,
 
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk: Architekturkonzepte'.
              #bullets : #( 
-                'Stores und Polymorphic Identifiers',
+                'Stores und Polymorphic Identifier',
                 'Objektfilter',
                 'HOM',
              )
-        } ,
+        }  ,
 
 
        #ASCBulletSlide{ 
-             #title : 'Polymorphic Identifiers'.
+             #title : 'Polymorphic Identifier'.
              #bullets : #( 
                 'Alle Namen sind URIs',
                 "var:hello := 'World!",
                 "Pfadnavigation, Rekursion",
                 'file:{env:HOME}/Downloads/site := http://objective.st',
-                'Werden durch "Stores" ausgewertet',
+                'Demo: stsh, file,env,defaultd,db',
+
              )
-        } ,
+        }  ,
 
        #ASCBulletSlide{ 
              #title : 'Stores'.
@@ -380,18 +392,31 @@ controller := #ASCPresentationViewController{
                 'Wie in-process REST Server',
                 'Oder Dictionaries',
                 'Lokale Variablen, Environmentvariablen',
-                'Dateisystem, HTTP',
+                'Dateisystem, defaults, HTTP',
                 'Datenbanken: SQL/SQLite',
 
              )
-        }  ,
+        }   ,
+      #ASCBulletSlide{ 
+             #title : 'Was ist ein Store?'.
+             #bullets : #( 
+                'Objekt, implementiert Storage Protokoll',
+                ' -objectForReference:aRefence',
+                ' -setObjet:object forReference:aRefence',
+                'Demo:  default:, env:',
+             )
+        }   ,
  
        #ASCBulletSlide{ 
              #title : 'Storage Combinators'.
              #bullets : #( 
+                'Komponierbare Stores',
+                'Durchgehende Abstraktion',
+                'Wunderlist, To-Do',
+                '2x - 10x Produktivität',
                 'Onward! ''19',
              )
-        } ,
+        }   ,
 
 
       #ImageSlide{ 
@@ -406,14 +431,25 @@ controller := #ASCPresentationViewController{
                #xOffset : 2.0 .
                #imageScale : 0.6
          }  ,
-      )
+        #ASCBulletSlide{ 
+             #title : 'Property Paths'.
+             #bullets : #( 
+                'Sugar für -objectForReference:',
+                'Header: /path/to/:parameter',
+                'getter: |= { }',
+                'setter: =| { }',
+                'Demo: MethodStore, SQLite',
+             )
+        }   ,
+     )
+    
   }. 
            
 controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.
  
 
 
-controller numberOfSlides  
+controller numberOfSlides   
 
 framework:EGOS load.
 framework:EGOS_Cocoa load.
@@ -465,3 +501,7 @@ framework:EGOS_Cocoa load
 pdfstream close. 
 outfile close. 
 
+
+
+
+       

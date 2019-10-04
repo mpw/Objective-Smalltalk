@@ -1,0 +1,16 @@
+browser := MPWBrowser new.
+browser setStore: ref:file:/ asScheme.
+browser openInWindow:'File Browser'. 
+
+scheme DotFilter : MPWMappingStore {
+  -mapRetrievedObject:anObject forReference:ref {
+      anObject isKindOfClass: MPWDirectoryBinding ifTrue: {
+          refs := anObject contents select: { :ref | 
+              ref pathComponents lastObject hasPrefix:'.' not.
+          }.
+          anObject := MPWDirectoryBinding alloc initWithContents: refs.
+      }.
+      anObject.
+  }
+}.
+   
