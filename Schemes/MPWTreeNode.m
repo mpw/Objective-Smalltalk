@@ -163,6 +163,11 @@ idAccessor( content, setContent )
 	return anArray;
 }
 
+-relativePathComponents
+{
+    return @[];
+}
+
 -allSubnodes
 {
 	return [self accumulateSelfAndAllSubnodesInto:[NSMutableArray array]];

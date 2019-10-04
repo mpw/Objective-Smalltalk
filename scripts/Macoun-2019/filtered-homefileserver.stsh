@@ -1,0 +1,24 @@
+#!/usr/local/bin/stsh
+framework:ObjectiveHTTPD load.
+home := ref:file:{env:HOME}/Sites asScheme.
+cache := MPWCachingStore store.
+server := MPWSchemeHttpServer serverOnPort:8082.
+
+scheme DotFilter : MPWMappingStore {
+  -mapRetrievedObject:anObject forReference:ref {
+      (anObject isKindOfClass: MPWDirectoryBinding) ifTrue: {
+          nodot  := anObject contents select: { :theRef | 
+              theRef pathComponents lastObject hasPrefix:'.'  | not.
+          }.
+          anObject := MPWDirectoryBinding alloc initWithContents: nodot.
+      }.
+      anObject.
+  }
+}.
+filter := DotFilter scheme.
+
+server -> cache -> filter -> home.
+
+server start:nil.
+shell runInteractiveLoop.
+

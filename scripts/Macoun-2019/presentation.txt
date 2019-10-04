@@ -1,6 +1,7 @@
 framework:Slides3D load.
 
-   
+
+ 
 class ImageSlide : ASCSlide { 
      var text.
      var image.
@@ -312,25 +313,16 @@ controller := #ASCPresentationViewController{
 
      #ASCChapterSlide { 
                #text : 'Objective-Smalltalk'.
-               #subtitle : 'Objective-Smalltalk'
+               #subtitle : 'Weniger kompliziert durch Architektur'
          }    ,
 
 
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk'.
              #bullets : #( 
-                'Ansatz',
-                'Sprache',
+                'Sprache (Ansatz)',
                 "Frameworks",
                 'Werkzeuge',
-             )
-        }  ,
-       #ASCBulletSlide{ 
-             #title : 'Objective-Smalltalk: Ansatz'.
-             #bullets : #( 
-                'Metasystem',
-                "",
-                '+ Architekturkonzepte',
              )
         }  ,
 
@@ -353,7 +345,7 @@ controller := #ASCPresentationViewController{
              #bullets : #( 
                 'Klassendefinition',
                 'Extensions',
-                'Methodendefition',
+                'Methodendefinition',
                 '{} für Blöcke, statt []',
                 'Objektliterale',
                 '<types>',
@@ -438,7 +430,7 @@ controller := #ASCPresentationViewController{
                 'Header: /path/to/:parameter',
                 'getter: |= { }',
                 'setter: =| { }',
-                'Demo: MethodStore, SQLite',
+                'Demo: SiteBuilder, MethodStore, SQLite',
              )
         }   ,
      )
