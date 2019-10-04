@@ -269,7 +269,7 @@ controller := #ASCPresentationViewController{
         } ,
 
      #ASCChapterSlide { 
-               #text : 'Programmvereinnfachung'.
+               #text : 'Programmvereinfachung'.
                #subtitle : 'Objective-Smalltalk: Motivation'
          }    ,
          
@@ -309,65 +309,111 @@ controller := #ASCPresentationViewController{
          }  ,
 
 
+     #ASCChapterSlide { 
+               #text : 'Objective-Smalltalk'.
+               #subtitle : 'Objective-Smalltalk'
+         }    ,
+
+
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk'.
+             #bullets : #( 
+                'Sprache',
+                "Frameworks",
+                'Weeerkzeuge',
+             )
+        } ,
+     #ASCChapterSlide { 
+               #text : 'Sprache'.
+               #subtitle : 'Objective-Smalltalk'
+         }    ,
+
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Sprache'.
+             #bullets : #( 
+                'Smalltalk',
+                "+ Syntax Verbesserungen",
+                '+ Architekturkonzepte',
+             )
+        } ,
+
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Syntax'.
+             #bullets : #( 
+                'Klassendefinition',
+                'Extensions',
+                'Methodendefition',
+                '{} für Blöcke, statt []',
+                'Objektliterale',
+                '<types>',
+             )
+        } ,
+     #ASCChapterSlide { 
+               #text : 'Architekturkonzepte'.
+               #subtitle : 'Objective-Smalltalk'
+         }    ,
+
+       #ASCBulletSlide{ 
+             #title : 'Objective-Smalltalk: Architekturkonzepte'.
+             #bullets : #( 
+                'Stores und Polymorphic Identifiers',
+                'Objektfilter',
+                'HOM',
+             )
+        } ,
+
+
        #ASCBulletSlide{ 
              #title : 'Polymorphic Identifiers'.
              #bullets : #( 
-                'All identifiers are URIs',
+                'Alle Namen sind URIs',
                 "var:hello := 'World!",
+                "Pfadnavigation, Rekursion",
                 'file:{env:HOME}/Downloads/site := http://objective.st',
-                'slider setValueHolder: ref:var:celsius',
+                'Werden durch "Stores" ausgewertet',
              )
         } ,
 
        #ASCBulletSlide{ 
              #title : 'Stores'.
              #bullets : #( 
-                'PIs are evaluated via stores',
-                'Like in-process REST servers',
-                'Or composable dictionaries',
-                'var:hello <-> (schemes at:''var'') at:''hello''',
-             )
-        }  ,
-       #ASCBulletSlide{ 
-             #title : 'Example Stores'.
-             #bullets : #( 
-                'Local variables, environment variables',
-                'Filesystems, HTTP',
-                'Databases: SQL/SQLite',
-                'Other applications (via Apple Events)',
-                'etc.',
-             )
-        }  ,
+                'Wie in-process REST Server',
+                'Oder Dictionaries',
+                'Lokale Variablen, Environmentvariablen',
+                'Dateisystem, HTTP',
+                'Datenbanken: SQL/SQLite',
 
+             )
+        }  ,
+ 
        #ASCBulletSlide{ 
              #title : 'Storage Combinators'.
              #bullets : #( 
                 'Onward! ''19',
-                'Combinator exposes + consumes REST interfaces',
-                'Uniform interface (REST) enables pluggability',
-                'Narrow, semantically tight interface enables intermediaries',
-                '10x productivity/code improvments',
              )
         } ,
 
 
       #ImageSlide{ 
-               #text : 'Simple Composed Store'.
+               #text : 'Storage Combinator: Platte und Speicher'.
                #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/disk-cache-json-aligned.png'.
                #xOffset : 2.0 .
                #imageScale : 0.8
          }  , 
     #ImageSlide{ 
-               #text : 'Async Writer'.
+               #text : 'Storage Combinator: Asynchrones Schreiben'.
                #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/async-writer.png'.
                #xOffset : 2.0 .
                #imageScale : 0.6
          }  ,
       )
   }. 
-          
-controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'. 
+           
+controller view openInWindow:'Objective-Smalltalk (Objective-Smalltalk Macoun 2019)'.
+ 
 
+
+controller numberOfSlides  
 
 framework:EGOS load.
 framework:EGOS_Cocoa load.
@@ -418,4 +464,4 @@ framework:EGOS_Cocoa load
 .
 pdfstream close. 
 outfile close. 
-       
+
