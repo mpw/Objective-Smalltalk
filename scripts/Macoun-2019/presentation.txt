@@ -1,4 +1,4 @@
-framework:Slides3D load. 
+framework:Slides3D load.  
 
    
 class ImageSlide : ASCSlide { 
@@ -7,6 +7,8 @@ class ImageSlide : ASCSlide {
      var imageURL.
      var imageScale.
      var xOffset.
+     var yOffset.
+
      -<void>setupSlideWithPresentationViewController:controller {
        self textManager setTitle:self text.
        shapeGroup := SCNNode node.
@@ -15,7 +17,7 @@ class ImageSlide : ASCSlide {
        size := image size.
        size := size * self imageScale .
        boxer := ASCBoxMaker new.
-       boxer setP: ( (self xOffset - 8 ) @ 0.2 ).
+       boxer setP: ( (self xOffset - 8 ) @ (0.2  + self yOffset)).
        boxer setColor: (NSColor grayColor).  
        boxer setPosition: 0@0 .
        boxer setHeight: size y. 
@@ -25,9 +27,9 @@ class ImageSlide : ASCSlide {
        imageBox geometry materials firstObject diffuse setContents: image.
        shapeGroup addChildNode: imageBox.
      }
-}
- 
-
+}.
+  
+  
   
 class ObjCAndSmalltalk : ASCSlide {
    var c.
@@ -360,12 +362,28 @@ controller := #ASCPresentationViewController{
        #ASCBulletSlide{ 
              #title : 'Objective-Smalltalk: Architekturkonzepte'.
              #bullets : #( 
-                'Stores und Polymorphic Identifier',
+                'HOM (Sam Adams talk)',
                 'Objektfilter',
-                'HOM',
+                'Stores und Polymorphic Identifier',
              )
         }  ,
 
+
+       #ASCBulletSlide{ 
+             #title : 'Objektfilter'.
+             #bullets : #( 
+                'Wie Unix P/F',
+                'Im Prozess, mit Objekten',
+                'Ähnlichkeit zu Rx',
+            )
+        }  ,
+
+      #ImageSlide{ 
+               #text : 'Call/Return vs. Objektfilter'.
+               #imageURL : '/Users/marcel/Macoun-2019/pipe-vs-call.png'.
+               #yOffset : 2.0 .
+               #imageScale : 0.8
+         }   , 
 
        #ASCBulletSlide{ 
              #title : 'Polymorphic Identifier'.
@@ -497,3 +515,5 @@ outfile close.
 
 
 
+
+       
