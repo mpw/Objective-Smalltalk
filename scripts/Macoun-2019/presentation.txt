@@ -1,7 +1,6 @@
-framework:Slides3D load.
+framework:Slides3D load. 
 
-
- 
+   
 class ImageSlide : ASCSlide { 
      var text.
      var image.
@@ -27,7 +26,7 @@ class ImageSlide : ASCSlide {
        shapeGroup addChildNode: imageBox.
      }
 }
-
+ 
 
   
 class ObjCAndSmalltalk : ASCSlide {
@@ -75,7 +74,7 @@ class ObjCAndSmalltalk : ASCSlide {
          }.
      }
 }.    
-       
+        
 class ProgramVsSystem : ASCSlide {
    var code.
    var system.
@@ -160,7 +159,7 @@ class ProgramVsSystem : ASCSlide {
 }
                     
    
- 
+  
 controller := #ASCPresentationViewController{
     #Name : 'Objective-Smalltalk: Macoun 2019'.
     #Slides : #(
@@ -209,6 +208,7 @@ controller := #ASCPresentationViewController{
              #title : 'Objective-Smalltalk: Scripting'.
              #bullets : #( 
                 'Scripted Components / Software-ICs',
+                'Interaktive und Iterative Entwicklung',
                 'Kleine Systeme werden groß',
                 'WebScript',
             )
@@ -349,6 +349,7 @@ controller := #ASCPresentationViewController{
                 '{} für Blöcke, statt []',
                 'Objektliterale',
                 '<types>',
+                'Demo (Workspace)',
              )
         }  ,
      #ASCChapterSlide { 
@@ -407,6 +408,7 @@ controller := #ASCPresentationViewController{
                 'Wunderlist, To-Do',
                 '2x - 10x Produktivität',
                 'Onward! ''19',
+                'Demo: HTTP Server, Browser',
              )
         }   ,
 
@@ -495,5 +497,3 @@ outfile close.
 
 
 
-
-       

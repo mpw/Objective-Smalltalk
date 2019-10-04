@@ -15,9 +15,11 @@ scheme DotFilter : MPWMappingStore {
       anObject.
   }
 }.
-filter := DotFilter scheme.
 
-server -> cache -> filter -> home.
+
+dotfilter := DotFilter store.
+
+server -> cache -> dotfilter -> home.
 
 server start:nil.
 shell runInteractiveLoop.
