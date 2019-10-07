@@ -1,0 +1,10 @@
+#!/usr/local/bin/stsh
+
+class  toupper : MPWFilter  { 
+  -<void>writeObject:anObject sender:aSender {
+		self target writeObject:anObject stringValue uppercaseString.
+  }
+}.
+ 
+
+(stdin -> toupper -> rawstdout ) run
