@@ -159,7 +159,7 @@ extern char **environ;
 			@"testEnvGetAndPut",
 			@"testEnvironmentIsInherited",
 			@"testEnvironmentList",
-            @"testGetAllEnvironemntVariableNames",
+//            @"testGetAllEnvironemntVariableNames",
 			nil];
 }
 

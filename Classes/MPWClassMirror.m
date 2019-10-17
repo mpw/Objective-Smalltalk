@@ -100,6 +100,7 @@
 						   @"MPWXmlWrapper",
 						   @"MPWXmlArchiver",
 						   @"MPWXmlUnarchiver",
+                           @"NSViewServiceApplication",
 #endif						   
 						   nil];
 		

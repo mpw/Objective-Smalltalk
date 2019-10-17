@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1F5E504B09B4B754000298D9"
-               BuildableName = "ObjectiveSmalltalk.framework"
-               BlueprintName = "ObjectiveSmalltalk"
+               BlueprintIdentifier = "1FA859F11923731900F52396"
+               BuildableName = "ObjectiveSmalltalkUI.framework"
+               BlueprintName = "ObjectiveSmalltalkUI"
                ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,15 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F2D95CD2250FCC500D025D8"
-            BuildableName = "Smalltalk.app"
-            BlueprintName = "Smalltalk"
-            ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -54,18 +45,12 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F5E504B09B4B754000298D9"
-            BuildableName = "ObjectiveSmalltalk.framework"
-            BlueprintName = "ObjectiveSmalltalk"
+            BlueprintIdentifier = "1FA859F11923731900F52396"
+            BuildableName = "ObjectiveSmalltalkUI.framework"
+            BlueprintName = "ObjectiveSmalltalkUI"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "ObjectiveSmalltalk"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -78,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1F5E504B09B4B754000298D9"
-            BuildableName = "ObjectiveSmalltalk.framework"
-            BlueprintName = "ObjectiveSmalltalk"
+            BlueprintIdentifier = "1FA859F11923731900F52396"
+            BuildableName = "ObjectiveSmalltalkUI.framework"
+            BlueprintName = "ObjectiveSmalltalkUI"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
