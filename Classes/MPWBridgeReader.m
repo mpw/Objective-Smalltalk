@@ -40,7 +40,12 @@ idAccessor( context ,setContext )
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
 	if ( [elementName isEqual:@"enum"] ) {
-		[context bindValue:[NSNumber numberWithInt:[[attributeDict objectForKey:@"value"] intValue]] toVariableNamed:[attributeDict objectForKey:@"name"]];
+        NSString *key=[attributeDict objectForKey:@"name"];
+        NSString *value=[attributeDict objectForKey:@"value64"];
+        if ( !value ) {
+            value=[attributeDict objectForKey:@"value"];
+        }
+		[context bindValue:@([value intValue]) toVariableNamed:key];
 	} else if ( [elementName isEqual:@"constant"] ) {
 		if ( [[attributeDict objectForKey:@"type"] isEqual:@"@"] ) {
 			char symbol[256]="";
@@ -89,7 +94,9 @@ idAccessor( context ,setContext )
 	return [NSData dataWithContentsOfFile:[paths lastObject]];
 }
 
--(BOOL)fload
+
+
+-(BOOL)loadFrameworkAndSymbols:aContext
 {
     if ([self load] ) {
         Class readerClass = NSClassFromString(@"MPWBridgeReader");
@@ -97,7 +104,7 @@ idAccessor( context ,setContext )
         if (!readerClass) {
             readerClass=[MPWFallbackBridgeReader class];
         }
-        [readerClass parseBridgeDict:bridgeSupportFile forContext:self];
+        [readerClass parseBridgeDict:bridgeSupportFile forContext:aContext];
         return YES;
     }
     return NO;
