@@ -46,7 +46,7 @@ extern char **environ;
 
 
 
--(id)objectForReference:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericReference*)aReference
 {
     NSString *path=[aReference path];
     if ( [aReference isRoot] || [path length]==0 || [path isEqualToString:@"."]) {
@@ -62,7 +62,7 @@ extern char **environ;
 }
 
 
--(void)setObject:(id)theObject forReference:(id)aReference
+-(void)put:(id)theObject at:(id)aReference
 {
     [self setValue:theObject forBinding:aReference];
 }

@@ -48,13 +48,13 @@
     return theBinding;
 }
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     NSArray *pathComponents = [aReference relativePathComponents];
     id tempValue = [[self.context bindingForLocalVariableNamed: [pathComponents firstObject]] value];
     if ( pathComponents.count > 1) {
         id remainingReference = [[[[aReference class] alloc] initWithPathComponents:[pathComponents subarrayWithRange:NSMakeRange(1,pathComponents.count-1)] scheme:[aReference schemeName]] autorelease];
-        tempValue=[tempValue objectForReference:remainingReference];
+        tempValue=[tempValue at:remainingReference];
     }
     return tempValue;
 }

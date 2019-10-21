@@ -49,24 +49,24 @@ boolAccessor(cacheReads, setCacheReads)
 }
 
 
--objectForReference:aReference
+-at:aReference
 {
     id result=nil;
-    result=[[self readWrite] objectForReference:aReference];
+    result=[[self readWrite] at:aReference];
 //    NSLog(@"COW:  readWrite %@ for %@ returned %@",[self readWrite],[aBinding name],result);
     if ( !result ) {
 //        NSLog(@"COW:  source %@ for %@ returned %@",[self source],[aBinding name],result);
-        result=[[self source] objectForReference:aReference];
+        result=[[self source] at:aReference];
         if ( [self cacheReads] ) {
-            [[self readWrite] setObject:result forReference:aReference];
+            [[self readWrite] put:result at:aReference];
         }
     }
     return result;
 }
 
--(void)setObject:newValue forReference:aReference
+-(void)put:newValue at:aReference
 {
-    [(MPWAbstractStore*)[self readWrite] setObject:newValue forReference:aReference];
+    [(MPWAbstractStore*)[self readWrite] put:newValue at:aReference];
 }
 
 -(BOOL)isLeafReference:(id <MPWReferencing>)aReference

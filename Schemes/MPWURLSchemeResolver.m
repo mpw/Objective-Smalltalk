@@ -58,7 +58,7 @@
 //    return urlbinding;
 //}
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     NSError *error=nil;
     NSURL *aURL=[aReference URL];

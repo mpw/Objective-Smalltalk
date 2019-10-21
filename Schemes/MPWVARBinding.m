@@ -98,7 +98,7 @@ idAccessor( baseObject, setBaseObject )
 {
     id ref=[[[MPWGenericReference alloc] initWithPathComponents:[self pathComponents] scheme:nil] autorelease];
 //    NSLog(@"baseObject: %@ setValue: %@, reference: %@",baseObject,newValue,[ref path]);
-    [baseObject setObject:newValue forReference: ref];
+    [baseObject put:newValue at: ref];
 //s	[[self _objectToIndex:-1] setValue:newValue forKey:[self finalKey]];
 }
 

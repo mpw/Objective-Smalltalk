@@ -55,7 +55,7 @@
 @implementation MPWSpotlightScheme
 
 
--(id)objectForReference:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericReference*)aReference
 {
     NSDictionary *queryStrings=@{
                              @"type": @"kMDItemContentTypeTree == %@",

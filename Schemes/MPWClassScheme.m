@@ -36,7 +36,7 @@
     return result;
 }
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     NSString *className=[aReference name];
     if ( [className length] == 0 || [className isEqualToString:@"."] ) {
@@ -75,7 +75,7 @@
 +(void)testSimpleClassResolve
 {
 	id resolver=[[self new] autorelease];
-    INTEXPECT( [resolver objectForReference:[MPWGenericReference referenceWithPath:@"NSString"]], [NSString class] , @"class resolver for NSString");
+    INTEXPECT( [resolver at:[MPWGenericReference referenceWithPath:@"NSString"]], [NSString class] , @"class resolver for NSString");
 }
 
 +testSelectors

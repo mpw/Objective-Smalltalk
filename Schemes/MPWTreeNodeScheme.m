@@ -32,12 +32,12 @@ idAccessor( root, setRoot )
     return [self nodeForPath:[aReference relativePathComponents]];
 }
 
--(id)objectForReference:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericReference*)aReference
 {
     return [[self nodeForReference:aReference] content];
 }
 
--(void)setObject:newValue forReference:aReference
+-(void)put:newValue at:aReference
 {
     NSArray *pathArray=[aReference relativePathComponents];
     MPWTreeNode *node=[self nodeForPath:pathArray];

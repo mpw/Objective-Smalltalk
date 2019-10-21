@@ -150,7 +150,7 @@
 {
     id <MPWReferencing> ref=[sender currentReference];
     if ( [self isReferencingMethod:ref]) {
-        [self.mappedStore deleteObjectForReference:ref];
+        [self.mappedStore deleteAt:ref];
         [self clearMethodFromUI];
     } else {
         // delete a class

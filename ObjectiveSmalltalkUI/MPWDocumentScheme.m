@@ -86,7 +86,7 @@ idAccessor(currentDocument, setCurrentDocument)
     return [aReference isRoot];
 }
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     NSArray *lookupPath=[aReference relativePathComponents];
     if ( lookupPath.count == 1 && [lookupPath[0] isEqualToString:@"."]) {

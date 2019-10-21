@@ -38,13 +38,13 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     }
 }
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     // FIXME:  identiifierName is legacy 
     return [[self schemes] objectForKey:[aReference identifierName]];
 }
 
--(void)setObject:(id)theObject forReference:(id)aReference
+-(void)put:(id)theObject at:(id)aReference
 {
     [self _schemes][[aReference identifierName]]=theObject;
 }

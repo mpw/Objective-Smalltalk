@@ -102,7 +102,7 @@
     }
 }
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     return [self contentForPath:[aReference relativePathComponents]];
 }
@@ -160,7 +160,7 @@
 
 -(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
-    NSArray *children=[self objectForReference:aReference];
+    NSArray *children=[self at:aReference];
     NSMutableArray *childReferences=[NSMutableArray array];
     for ( NSString *child in children ) {
         if ( [child respondsToSelector:@selector(characterAtIndex:)] ) {

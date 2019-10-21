@@ -148,7 +148,7 @@
 -(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
 {
 //    NSLog(@"childrenOfReference: %@",[aReference name]);
-    NSArray *children=[self objectForReference:aReference];
+    NSArray *children=[self at:aReference];
 //    NSLog(@"children: %@",children);
     NSMutableArray *childReferences=[NSMutableArray array];
     for ( NSString *child in children ) {

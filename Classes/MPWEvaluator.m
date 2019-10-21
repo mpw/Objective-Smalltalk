@@ -134,10 +134,10 @@ idAccessor( localVars, setLocalVars )
 //    NSLog(@"evaluator %@ objectForReferences: %@",self,aReference);
     MPWScheme *s=[self schemeForName:[aReference schemeName]];
 //    NSLog(@"scheme: %@",s);
-    id value = [s objectForReference:aReference];
+    id value = [s at:aReference];
 //    NSLog(@"value: %@",value);
     if (!value) {
-        value=[parent objectForReference:aReference];
+        value=[parent at:aReference];
     }
     return value;
 }
@@ -210,7 +210,7 @@ idAccessor( localVars, setLocalVars )
         }
         [binding setValue:value];
     } else {            // the way it should be
-        [scheme setObject:value forReference:[scheme referenceForPath:variableName]];
+        [scheme put:value at:[scheme referenceForPath:variableName]];
     }
 }
 

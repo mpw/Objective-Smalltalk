@@ -67,9 +67,9 @@ objectAccessor( NSBundle, bundle ,setBundle )
 }
 
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
-    return [super objectForReference:[self referenceForPath:[self resourcePathForPath:[aReference path]]]];
+    return [super at:[self referenceForPath:[self resourcePathForPath:[aReference path]]]];
 }
 
 

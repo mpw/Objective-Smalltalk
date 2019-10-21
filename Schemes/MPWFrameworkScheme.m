@@ -18,7 +18,7 @@
               ];
 }
 
--(id)objectForReference:(id)aReference
+-(id)at:(id)aReference
 {
     NSString *name=[aReference name];
     NSBundle *result=nil;
