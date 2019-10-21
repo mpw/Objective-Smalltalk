@@ -95,12 +95,12 @@
 
 @implementation NSObject(Storage)
 
--objectForReference:(id <MPWReferencing>)aReference
+-at:(id <MPWReferencing>)aReference
 {
     return [self valueForKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }
 
--(void)setObject:anObject forReference:(id <MPWReferencing>)aReference
+-(void)put:anObject at:(id <MPWReferencing>)aReference
 {
     [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }

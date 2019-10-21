@@ -59,7 +59,7 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 
 -declarationString
 {
-    return @"objectForReference:aReference";
+    return @"at:aReference";
 }
 
 -(void)dealloc

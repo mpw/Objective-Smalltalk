@@ -61,7 +61,7 @@
 
 #if 0
             MPWIdentifier *nestedIdentifer=[MPWIdentifier identifierWithName:nested];
-            evaluatedComponent=[aContext objectForReference:nestedIdentifer];
+            evaluatedComponent=[aContext at:nestedIdentifer];
 #else
             evaluatedComponent=[aContext evaluateScriptString:nested];
 #endif

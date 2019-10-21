@@ -129,7 +129,7 @@ idAccessor( localVars, setLocalVars )
     return [bindingCache objectForKey:aName];
 }
 
--objectForReference:aReference
+-at:aReference
 {
 //    NSLog(@"evaluator %@ objectForReferences: %@",self,aReference);
     MPWScheme *s=[self schemeForName:[aReference schemeName]];

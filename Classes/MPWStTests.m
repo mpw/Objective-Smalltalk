@@ -852,13 +852,22 @@
 	[self testexpr:@" ( 2@3 extent:10@20 ) origin y  " expected:@"3"];
 }
 
++(void)testVarShemeWithPath
+{
+    id defScheme = @" a := NSMutableDictionary dictionary. a setObject:'there' forKey:'hi'. ";
+    id useScheme = @" var:a/hi ";
+    id evaluator = [[[self alloc] init] autorelease];
+    [evaluator evaluateScriptString:defScheme];
+    IDEXPECT( [evaluator evaluateScriptString:useScheme], @"there", @"evaluating scheme");
+}
+
 +(void)testRelScheme
 {
-	id defScheme = @" a := NSMutableDictionary dictionary. a setObject:'there' forKey:'hi'. scheme:my := MPWRelScheme alloc initWithBaseScheme: scheme:var baseURL:'a'. ";
-	id useScheme = @" my:hi ";
-	id evaluator = [[[self alloc] init] autorelease];
-	[evaluator evaluateScriptString:defScheme];
-	IDEXPECT( [evaluator evaluateScriptString:useScheme], @"there", @"evaluating scheme");
+    id defScheme = @" a := NSMutableDictionary dictionary. a setObject:'there' forKey:'hi'. scheme:my := MPWRelScheme alloc initWithBaseScheme: scheme:var baseURL:'a'. ";
+    id useScheme = @" my:hi ";
+    id evaluator = [[[self alloc] init] autorelease];
+    [evaluator evaluateScriptString:defScheme];
+    IDEXPECT( [evaluator evaluateScriptString:useScheme], @"there", @"evaluating scheme");
 }
 
 +(void)testIdentifierInterpolation
@@ -1473,6 +1482,7 @@
 			@"testHttpArgWithLeadingZero",
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
+            @"testVarShemeWithPath",
 			@"testRelScheme",
 			@"testIdentifierInterpolation",
 			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",

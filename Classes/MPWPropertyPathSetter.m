@@ -13,7 +13,7 @@
 
 -declarationString
 {
-    return @"<void>setObject:newValue forReference:aReference";
+    return @"<void>put:newValue at:aReference";
 }
 
 -(id)evaluateFoundPropertyPath:(MPWPropertyPathDefinition*)def onTarget:target boundParams:(NSDictionary*)pathParams additionalParams:(NSArray*)param
