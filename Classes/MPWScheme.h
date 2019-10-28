@@ -27,6 +27,10 @@
 
 }
 
+@end
+
+
+@interface MPWAbstractStore(completion)
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext;
 

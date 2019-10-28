@@ -587,8 +587,8 @@
 	IDEXPECT( [[variableDescriptions objectAtIndex:1] name], @"variable1", @"first varname" );
 	IDEXPECT( [[variableDescriptions objectAtIndex:2] name], @"variable2", @"2nd varname" );
 //	IDEXPECT( [[variableDescriptions objectAtIndex:0] type], @"@", @"isa type" );   '#' under Leopard, '@' under Tiger?
-	IDEXPECT( [[variableDescriptions objectAtIndex:1] type], @"@", @"1st type" );
-	IDEXPECT( [[variableDescriptions objectAtIndex:2] type], @"@", @"2nd type" );
+	IDEXPECT( [(MPWInstanceVariable*)[variableDescriptions objectAtIndex:1] type], @"@", @"1st type" );
+	IDEXPECT( [(MPWInstanceVariable*)[variableDescriptions objectAtIndex:2] type], @"@", @"2nd type" );
 }
 
 +(void)testAccessingInstanceVariablesOfCreatedClass
@@ -671,7 +671,7 @@
 
 +(void)testGetInstanceVarDefByName
 {
-	id ivardef = [NSString ivarForName:@"isa"];
+	MPWInstanceVariable* ivardef = [NSString ivarForName:@"isa"];
 	IDEXPECT( [ivardef name], @"isa" ,@"name of isa");
 //	IDEXPECT( [ivardef type], @"@" ,@"type of isa");
 	IDEXPECT( [ivardef type], @"#" ,@"type of isa");

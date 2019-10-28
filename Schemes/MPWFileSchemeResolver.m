@@ -11,6 +11,7 @@
 #import "MPWFileWatcher.h"
 #endif
 #import "MPWResource.h"
+#import "MPWScheme.h"
 
 @implementation MPWFileSchemeResolver
 

@@ -213,7 +213,7 @@ static id ivarsByClassAndName=nil;
 #endif	
 }
 
-+ivarForName:(NSString*)name
++(MPWInstanceVariable*)ivarForName:(NSString*)name
 {
 	id className = NSStringFromClass(self);
 	id instVarDict=nil;

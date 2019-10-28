@@ -20,11 +20,6 @@
 @implementation NSObject(evaluation)
 
 
--evaluateIn:aContext
-{
-    return self;
-}
-
 -evaluate
 {
 	return [self evaluateIn:nil];

@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class MPWInstanceVariable;
 
 @interface NSObject(stScripting)
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariableArray:(NSArray*)vars;
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariables:(NSString*)varsAsString;
 +(BOOL)createSubclassWithName:(NSString*)className;
 +instanceVariables;
-+ivarForName:(NSString*)name;
++(MPWInstanceVariable*)ivarForName:(NSString*)name;
 +(void)generateAccessorsFor:(NSString*)varName;
 -evaluateScript:(NSString*)scriptString;
 

@@ -205,6 +205,11 @@
     return theClass;
 }
 
+-(MPWClassMirror*)metaClassMirror
+{
+    return [[MPWObjectMirror mirrorWithObject:[self theClass]] classMirror];
+}
+
 @end
 
 //#if __NEXT_RUNTIME__
@@ -281,10 +286,6 @@ static MPWMethodMirror* methodMirrorFromMethod( Method m )
 	return  methods;
 }
 
--(MPWClassMirror*)metaClassMirror
-{
-	return [[MPWObjectMirror mirrorWithObject:[self theClass]] classMirror];
-}
 
 @end
 
