@@ -22,6 +22,19 @@ extension STDocument {
       self workspaces addObject:workspace.
       stdout println:'did set up workspace'.
   }
+ -<bool>turnIntoApp {
+       fm := NSFileManager defaultManager.
+       appPath := NSBundle mainBundle bundlePath.
+      docPath := self fileURL path.
+       newAppPath := docPath stringByDeletingPathExtension stringByAppendingPathExtension:'app'.
+       resourcesPath := newAppPath , '/Contents/Resources/finishLaunching/', docPath lastPathComponent.
+       stdout println: resourcesPath.
+       fm copyItemAtPath:appPath toPath:newAppPath error:nil.
+       text := self workspaces anyObject string .
+       stdout println:text.
+       didWrite := (text dataUsingEncoding:4) writeToFile:resourcesPath atomically:1.
+       stdout println:didWrite.
+  }
 
 
 }

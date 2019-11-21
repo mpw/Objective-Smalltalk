@@ -493,6 +493,7 @@
 		1FE8F22813802F0700B37A71 /* MPWResourceScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */; };
 		1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */; };
 		1FED18C41544684600E0D765 /* JSGCDDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FED18C01544684600E0D765 /* JSGCDDispatcher.h */; };
+		1FEE11DA2386EAF20042B149 /* NSApplication.st in Copy Smalltalk files for finishLaunching */ = {isa = PBXBuildFile; fileRef = 1FEE11D92386EAF20042B149 /* NSApplication.st */; };
 		1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6F637F0987C803006F3936 /* NSObjectScripting.m */; };
 		1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; };
@@ -608,6 +609,17 @@
 				1FBAAC1E184BDC6400086047 /* stsh.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1FEE11DB2386F3040042B149 /* Copy Smalltalk files for finishLaunching */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = finishLaunching;
+			dstSubfolderSpec = 7;
+			files = (
+				1FEE11DA2386EAF20042B149 /* NSApplication.st in Copy Smalltalk files for finishLaunching */,
+			);
+			name = "Copy Smalltalk files for finishLaunching";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -960,6 +972,7 @@
 		1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWResourceScheme.m; sourceTree = "<group>"; };
 		1FED18BF1544684600E0D765 /* JSGCDDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSGCDDispatcher.m; sourceTree = "<group>"; };
 		1FED18C01544684600E0D765 /* JSGCDDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSGCDDispatcher.h; sourceTree = "<group>"; };
+		1FEE11D92386EAF20042B149 /* NSApplication.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = NSApplication.st; sourceTree = "<group>"; };
 		1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBidirectionalDataflowConstraintExpression.h; sourceTree = "<group>"; };
 		1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBidirectionalDataflowConstraintExpression.m; sourceTree = "<group>"; };
 		1FF6AC23075256C500A306C8 /* MPWBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWBinding.h; path = Classes/MPWBinding.h; sourceTree = SOURCE_ROOT; };
@@ -1310,6 +1323,7 @@
 				1F2D95DF2250FCC800D025D8 /* main.m */,
 				1F2D95E12250FCC800D025D8 /* Smalltalk.entitlements */,
 				1F2D95F22251198D00D025D8 /* STDocument.st */,
+				1FEE11D92386EAF20042B149 /* NSApplication.st */,
 			);
 			path = Smalltalk;
 			sourceTree = "<group>";
@@ -2211,6 +2225,7 @@
 				1F2D95CC2250FCC500D025D8 /* Resources */,
 				1F2D95ED2250FD9D00D025D8 /* Embed Frameworks */,
 				1F2D95F422511A4800D025D8 /* Copy Smalltalk Files */,
+				1FEE11DB2386F3040042B149 /* Copy Smalltalk files for finishLaunching */,
 			);
 			buildRules = (
 			);

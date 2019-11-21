@@ -87,6 +87,7 @@
                 [[c view] setDefaultAttributes];
             }
             [[[c view] documentView] setCompiler:[self compiler]];
+            [self.workspaces addObject:[[c view] documentView]];
         }
         [self addWindowController:c];
     }
