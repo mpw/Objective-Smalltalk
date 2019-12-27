@@ -1,0 +1,14 @@
+c scale: 2.5.
+
+c rect:700; clip.
+blue := (c colorRed:0.0 green:0.3 blue:0.9 alpha:1.0).
+c setFillColor: blue.
+c setFont:(NSFont fontWithName:'Futura Condensed ExtraBold' size:290).
+c translate: 10 @ 120.
+c show:'>_'.
+c translate:175 @ 0.
+c scale:0.45.
+image := NSBitmapImageRep imageRepWithContentsOfFile: '/Users/marcel/programming/Kits/ObjectiveSmalltalk/Smalltalk/STImage.png' . 
+c drawImage: image.
+
+

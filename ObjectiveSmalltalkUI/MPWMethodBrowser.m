@@ -137,9 +137,11 @@
 
 -(IBAction)saveMethodBody
 {
-    MPWGenericReference *ref=[self selectedReference];
+    id <MPWReferencing> ref=[[self selectedReference] reference];
     if ( [self isReferencingMethod:ref]) {
-        self.mappedStore[ref]=[self uiMethodBodyString];
+        NSString *body=[self uiMethodBodyString];
+        id <MPWStorage> s=self.mappedStore;
+        s[ref]=body;
     }
 }
 
