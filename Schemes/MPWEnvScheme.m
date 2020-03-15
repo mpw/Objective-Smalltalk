@@ -39,10 +39,6 @@ extern char **environ;
     return env;
 }
 
--(BOOL)isBoundBinding:aBinding
-{
-    return [self objectForKey:[aBinding name]] != nil;
-}
 
 
 

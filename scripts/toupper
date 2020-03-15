@@ -1,2 +1,3 @@
 #!/usr/local/bin/stsh
-(stdin -> { $0 stringValue uppercaseString. } -> rawstdout ) run
+filter toupper |{  ^object stringValue uppercaseString. }
+(stdin -> toupper -> rawstdout ) run

@@ -154,7 +154,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 -initWithString:(NSString*)aString
 {
-    return [self initWithScanner:[MPWStScanner scannerWithData:[aString asData]]];
+    return [self initWithScanner:[MPWStScanner scannerWithData:[(aString ?: @"") asData]]];
 }
 
 

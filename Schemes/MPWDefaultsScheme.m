@@ -12,12 +12,6 @@
 
 
 
--(BOOL)isBoundBinding:aBinding
-{
-	return [[NSUserDefaults standardUserDefaults] objectForKey:[aBinding name]] != nil;
-}
-
-
 -at:aReference
 {
     NSString *path=[aReference path];

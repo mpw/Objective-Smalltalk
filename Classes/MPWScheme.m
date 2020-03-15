@@ -34,10 +34,6 @@
     return [self bindingForReference:ref inContext:aContext];
 }
 
--(BOOL)isBoundBinding:(MPWBinding*)aBinding
-{
-    return YES;
-}
 
 -bindingForName:(NSString*)variableName inContext:aContext
 {

@@ -14,7 +14,6 @@
 
 -(MPWBinding*)bindingWithIdentifier:(MPWIdentifier*)anIdentifier withContext:aContext;
 -(MPWBinding*)bindingForName:(NSString*)variableName inContext:aContext;
--(BOOL)isBoundBinding:(MPWBinding*)aBinding;
 -bindingForReference:aReference inContext:aContext;
 
 @end
