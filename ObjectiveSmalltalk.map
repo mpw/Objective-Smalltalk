@@ -1,0 +1,8 @@
+
+framework module ObjectiveSmalltalk {
+    umbrella header "ObjectiveSmalltalk.h"
+    module * { export * }
+    export *
+
+}
+

@@ -14,9 +14,9 @@
 	Class theClass;
 }
 
-+mirrorWithClassNamed:(NSString*)aClassName;
-+mirrorWithMetaClassNamed:(NSString*)aClassName;
-+mirrorWithClass:(Class)aClass;
++(instancetype)mirrorWithClassNamed:(NSString*)aClassName;
++(instancetype)mirrorWithMetaClassNamed:(NSString*)aClassName;
++(instancetype)mirrorWithClass:(Class)aClass;
 -(NSString*)name;
 +(NSArray*)allUsefulClasses;
 -(Class)theClass;

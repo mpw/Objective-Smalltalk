@@ -341,14 +341,14 @@
 		1FD1B44A1492657300919385 /* MPWCopyOnWriteScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1B4461492657300919385 /* MPWCopyOnWriteScheme.m */; };
 		1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */; };
 		1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */; };
-		1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
-		1FD713CF1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; };
+		1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD713CF1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
-		1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
-		1FD713DB1522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; };
+		1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD713DB1522DA96004A5E15 /* MPWMethodMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */; };
-		1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
-		1FD713E71522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; };
+		1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD713E71522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FDB6CB41855BE1400623042 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -499,6 +499,7 @@
 		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; };
 		1FF142381B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
 		1FF1423B1B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
+		1FF556FE2456AF84006B8E0F /* ObjectiveSmalltalk.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; };
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -975,6 +976,8 @@
 		1FEE11D92386EAF20042B149 /* NSApplication.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = NSApplication.st; sourceTree = "<group>"; };
 		1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBidirectionalDataflowConstraintExpression.h; sourceTree = "<group>"; };
 		1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBidirectionalDataflowConstraintExpression.m; sourceTree = "<group>"; };
+		1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalk.h; sourceTree = "<group>"; };
+		1FF556FF2456AFCF006B8E0F /* ObjectiveSmalltalk.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = ObjectiveSmalltalk.map; sourceTree = "<group>"; };
 		1FF6AC23075256C500A306C8 /* MPWBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWBinding.h; path = Classes/MPWBinding.h; sourceTree = SOURCE_ROOT; };
 		1FF6AC24075256C500A306C8 /* MPWBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBinding.m; sourceTree = "<group>"; };
 		1FF6AC690752648B00A306C8 /* MPWStatementList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWStatementList.h; path = Classes/MPWStatementList.h; sourceTree = SOURCE_ROOT; };
@@ -1675,6 +1678,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1FF556FF2456AFCF006B8E0F /* ObjectiveSmalltalk.map */,
 				1F04A53021D253DC00E19C3F /* GNUstep */,
 				1F29D81121B4376600AB14D8 /* MPWFoundation.framework */,
 				1F29D80E21B4374600AB14D8 /* MPWTest.framework */,
@@ -1823,6 +1827,7 @@
 				1F504626211885E900073E1E /* MPWPropertyPath.m */,
 				1F50462B2118AEB400073E1E /* MPWPropertyPathComponent.h */,
 				1F50462C2118AEB400073E1E /* MPWPropertyPathComponent.m */,
+				1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1976,6 +1981,7 @@
 				1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */,
 				1FDCCB38139A60FC00F5F273 /* MPWDefaultsScheme.h in Headers */,
 				1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */,
+				1FF556FE2456AF84006B8E0F /* ObjectiveSmalltalk.h in Headers */,
 				1FA5F490147CE04A007EE753 /* MPWTreeNode.h in Headers */,
 				1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */,
 				1FD713D81522DA96004A5E15 /* MPWMethodMirror.h in Headers */,
@@ -2524,7 +2530,7 @@
 			isa = PBXProject;
 			attributes = {
 				DefaultBuildSystemTypeForWorkspace = Original;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1140;
 				TargetAttributes = {
 					1F29D7EC21B42BE500AB14D8 = {
 						CreatedOnToolsVersion = 10.1;
@@ -3854,6 +3860,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3870,6 +3877,7 @@
 				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MODULEMAP_FILE = ObjectiveSmalltalk.map;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -3900,6 +3908,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3914,6 +3923,7 @@
 				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MODULEMAP_FILE = ObjectiveSmalltalk.map;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
