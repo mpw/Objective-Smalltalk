@@ -173,7 +173,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 -(NSString*)generateMethodWithHeader:(MPWMethodHeader*)header body:(MPWStatementList*)method forClass:(NSString*)classname
 {
     NSString *objcReturnType = [[header typeString] substringToIndex:1];
-    NSLog(@"return type: '%@'",objcReturnType);
+    BOOL isVoidReturn=[objcReturnType isEqualToString:@"v"];
     NSString *llvmReturnType = [assemblyGenerator typeToLLVMType:[objcReturnType characterAtIndex:0]];
     
     
@@ -202,8 +202,11 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
                                 additionalParametrs:allMethodArguments
                                          methodBody:^(MPWLLVMAssemblyGenerator *generator) {
                                              NSString *retval=[method generateOn:self];
-                                             
-                                             [assemblyGenerator emitReturnVal:retval type:@"%id"];
+        if ( isVoidReturn) {
+            [assemblyGenerator emitReturnVal:@"" type:@"void"];
+        } else {
+                                                [assemblyGenerator emitReturnVal:retval type:@"%id"];
+        }
                                          }];
     NSLog(@"did write assembly");
     return methodSymbol1;
@@ -827,7 +830,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 +(void)testCreateFilterClass
 {
-    MPWFilter* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWFilter { -writeObject:arg { self forward:arg uppercaseString. } } "];
+    MPWFilter* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWFilter { -<void>writeObject:arg { self forward:arg uppercaseString. } } "];
     [a writeObject:@"hello world"];
     IDEXPECT([a firstObject],@"HELLO WORLD",@"stream processing result");
 }
@@ -859,7 +862,7 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
              @"testCreateClassWithMethoWithAMessageSendUsingClassSyntax",
              @"testCreateFilterClass",
-             @"testCreateFilterClassWithFilterSyntax",  // not working yet
+             @"testCreateFilterClassWithFilterSyntax",
               ];
 }
 

@@ -208,6 +208,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         case '?':
         case '@':
             return @"%id ";
+        case 'v':
+            return @"void ";
         case ':':
             return @"i8* ";
         case 'i':
