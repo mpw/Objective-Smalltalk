@@ -4,14 +4,17 @@
 
 @interface MPWMessageExpression : MPWConnector
 {
-    MPWExpression*	receiver;
-    SEL	selector;
-    id	args;
+    MPWExpression*      receiver;
+    SEL	                selector;
+    NSArray*            args;
+    const char*         _argtypes;
 }
 
 idAccessor_h( receiver, setReceiver )
 scalarAccessor_h( SEL, selector, setSelector )
-idAccessor_h( args, setArgs )
+scalarAccessor_h( const char*, argtypes, setArgtypes )
+
+objectAccessor_h( NSArray, args, setArgs )
 -initWithReceiver:newReceiver;
 
 -(NSString*)messageName;

@@ -31,7 +31,8 @@
 
 idAccessor( receiver, setReceiver )
 scalarAccessor( SEL, selector, setSelector )
-idAccessor( args, setArgs )
+objectAccessor( NSArray, args, setArgs )
+scalarAccessor( const char*, _argtypes, setArgtypes )
 
 -initWithReceiver:newReceiver
 {
@@ -92,6 +93,10 @@ idAccessor( args, setArgs )
     [aGenerator writeMessage:NSStringFromSelector([self selector]) toReceiver:[self receiver] withArgs:[self args]];
 }
 
+-(const char*)argtypes
+{
+    return _argtypes ? _argtypes : "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+}
 
 
 -(void)dealloc

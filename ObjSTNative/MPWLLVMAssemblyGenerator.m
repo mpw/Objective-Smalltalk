@@ -207,13 +207,13 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     switch (typeChar) {
         case '?':
         case '@':
-            return @"%id ";
+            return @"%id";
         case 'v':
-            return @"void ";
+            return @"void";
         case ':':
-            return @"i8* ";
+            return @"i8*";
         case 'i':
-            return @"i32 ";
+            return @"i32";
         default:
             [NSException raise:@"invalidtype" format:@"unrecognized type char '%c' when converting to LLVM types",typeChar];
             return @"";
@@ -242,7 +242,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     typeBytes[to]=0;
     from=0;
     [llvmType appendString:typeCharToLLVMType(typeBytes[from++])];
-    [llvmType appendString:@"( "];
+    [llvmType appendString:@" ( "];
     while ( from < to) {
         [llvmType appendString:typeCharToLLVMType(typeBytes[from++])];
         if ( from < to ) {

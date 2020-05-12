@@ -38,6 +38,7 @@
 -(NSString*)answerString;
 -(NSNumber*)fifteen;
 -(NSNumber*)add5:arg;
+-(NSString*)withoutFirst:(NSString*)arg;
 
 @end
 
@@ -121,17 +122,45 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 }
 
+static NSString *typeCharToLLVMType( char typeChar ) {
+    switch (typeChar) {
+        case '?':
+        case '@':
+            return @"%id";
+        case 'v':
+            return @"void";
+        case ':':
+            return @"i8*";
+        case 'i':
+            return @"i32";
+        default:
+            [NSException raise:@"invalidtype" format:@"unrecognized type char '%c' when converting to LLVM types",typeChar];
+            return @"";
+    }
+}
+
+
+-(NSString*)typeToLLVMType:(char)typeChar
+{
+    return typeCharToLLVMType(typeChar);
+}
+
+
 -(NSString*)generateMessageSend:(MPWMessageExpression*)messageSend
 {
     NSMutableArray *messageArgumentNames = [NSMutableArray array];
     NSMutableArray *messageArgumentTypes = [NSMutableArray array];
-    for ( int i=0;i<[[messageSend args] count];i++) {
+    const char *typeString=[messageSend argtypes];
+    long numArgs=[[messageSend args] count];
+    NSAssert(numArgs < sizeof typeString - 2, @"too many arguments");
+    for ( int i=0;i<numArgs;i++) {
         NSLog(@"will add argument[%d]: %@",i,[[messageSend args] objectAtIndex:i]);
         id arg=[[messageSend args] objectAtIndex:i];
         id generatedTag=[arg generateOn:self];
         NSLog(@"will add argument[%d]: %@ generated: %@",i,arg,generatedTag);
         [messageArgumentNames addObject:generatedTag ?: @"dummy"];
-        [messageArgumentTypes addObject:@"%id"];
+        NSString *llvmArgType=[self typeToLLVMType:typeString[i]];
+        [messageArgumentTypes addObject:llvmArgType];
     }
     NSLog(@"Did generate args, will generate the message send");
     NSString *retval =[assemblyGenerator emitMsg:[messageSend messageName]
@@ -821,11 +850,18 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
     IDEXPECT(result,@(15),@"constant 15");
 }
 
-+(void)testCreateClassWithMethoWithAMessageSendUsingClassSyntax
++(void)testCreateClassWithMethodWithAMessageSendUsingClassSyntax
 {
     id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -add5:arg { arg+5. } } "];
     id result=[a add5:@(7)];
     IDEXPECT(result,@(12),@"computed 12");
+}
+
++(void)testUseOfIntegerParameterInMessageSend       // not implemented yet
+{
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -withoutFirst:arg { arg substringFromIndex:1. } } "];
+    id result=[a withoutFirst:@"Hello"];
+    IDEXPECT(result,@"ello",@"Hello without first character");
 }
 
 +(void)testCreateFilterClass
@@ -860,7 +896,8 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
              @"testSmalltalkLiterals",
              @"testCreateEmptyClassUsingClassSyntax",
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
-             @"testCreateClassWithMethoWithAMessageSendUsingClassSyntax",
+             @"testCreateClassWithMethodWithAMessageSendUsingClassSyntax",
+//             @"testUseOfIntegerParameterInMessageSend",
              @"testCreateFilterClass",
              @"testCreateFilterClassWithFilterSyntax",
               ];
