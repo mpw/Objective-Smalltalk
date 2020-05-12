@@ -145,21 +145,46 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     return typeCharToLLVMType(typeChar);
 }
 
+-(NSString*)generateIntegerUnboxing:(NSString*)varToUnbox
+{
+    NSLog(@"generateIntegerUnboxing");
+    NSString *retval =[assemblyGenerator emitMsg:@"integerValue"
+                                        receiver:varToUnbox
+                                      returnType:@"i32"
+                                            args:@[]
+                                        argTypes:@[]
+                       ];
+    return retval;
+}
+
+-(MPWMessageExpression*)resolveTypesInMessageSend:(MPWMessageExpression*)messageSend
+{
+    if ( [messageSend selector] == @selector(substringFromIndex:)) {
+        [messageSend setArgtypes:"i"];
+    }
+    return  messageSend;
+}
+
 
 -(NSString*)generateMessageSend:(MPWMessageExpression*)messageSend
 {
     NSMutableArray *messageArgumentNames = [NSMutableArray array];
     NSMutableArray *messageArgumentTypes = [NSMutableArray array];
+    [self resolveTypesInMessageSend:messageSend];
     const char *typeString=[messageSend argtypes];
     long numArgs=[[messageSend args] count];
     NSAssert(numArgs < sizeof typeString - 2, @"too many arguments");
     for ( int i=0;i<numArgs;i++) {
+        char argtype=typeString[i];
         NSLog(@"will add argument[%d]: %@",i,[[messageSend args] objectAtIndex:i]);
         id arg=[[messageSend args] objectAtIndex:i];
         id generatedTag=[arg generateOn:self];
+        if ( argtype=='i'|| argtype=='I') {
+            generatedTag=[self generateIntegerUnboxing:generatedTag];
+        }
         NSLog(@"will add argument[%d]: %@ generated: %@",i,arg,generatedTag);
         [messageArgumentNames addObject:generatedTag ?: @"dummy"];
-        NSString *llvmArgType=[self typeToLLVMType:typeString[i]];
+        NSString *llvmArgType=[self typeToLLVMType:argtype];
         [messageArgumentTypes addObject:llvmArgType];
     }
     NSLog(@"Did generate args, will generate the message send");
@@ -897,7 +922,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
              @"testCreateEmptyClassUsingClassSyntax",
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
              @"testCreateClassWithMethodWithAMessageSendUsingClassSyntax",
-//             @"testUseOfIntegerParameterInMessageSend",
+             @"testUseOfIntegerParameterInMessageSend",
              @"testCreateFilterClass",
              @"testCreateFilterClassWithFilterSyntax",
               ];
