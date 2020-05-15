@@ -40,6 +40,7 @@
 -(NSNumber*)fifteen;
 -(NSNumber*)add5:arg;
 -(NSString*)withoutFirst:(NSString*)arg;
+-(NSNumber*)startsWithHello:(NSString*)arg;
 
 @end
 
@@ -134,6 +135,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
             return @"i8*";
         case 'i':
             return @"i32";
+        case 'c':
+            return @"i32";
         case 'Q':
             return @"i32";
         default:
@@ -217,13 +220,19 @@ static NSString *typeCharToLLVMType( char typeChar ) {
         NSString *llvmArgType=[self typeToLLVMType:argtype];
         [messageArgumentTypes addObject:llvmArgType];
     }
+    char returnType=[messageSend returnType];
+    NSString *llvmReturnType=[self typeToLLVMType:returnType];
     NSLog(@"Did generate args, will generate the message send");
     NSString *retval =[assemblyGenerator emitMsg:[messageSend messageName]
                       receiver:[[messageSend receiver] generateOn:self]
-                    returnType:@"%id"
+                    returnType:llvmReturnType
                           args:messageArgumentNames
                       argTypes:messageArgumentTypes
     ];
+    NSLog(@"returnTyp: '%c'",returnType);
+    if ( returnType == 'B' || returnType == 'i' || returnType == 'c' || returnType == 'Q' ) {
+        retval = [assemblyGenerator writeNSNumberLiteralForInt:retval];
+    }
     return retval;
 }
 
@@ -926,6 +935,17 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     IDEXPECT(result,@"He",@"Hello up to 2nd char");
 }
 
++(void)testBooleanReturnFromMessage
+{
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -startsWithHello:arg {  arg hasPrefix:'Hello'. } }"];
+    id result1=[a startsWithHello:@"Hello World"];
+    IDEXPECT(result1,@(1),@"did contain hello");
+    id result2=[a startsWithHello:@"Bye World"];
+    IDEXPECT(result2,@(0),@"did not start with  hello");
+}
+
+
+
 +(void)testCreateFilterClass
 {
     MPWFilter* a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@ : MPWFilter { -<void>writeObject:arg { self forward:arg uppercaseString. } } "];
@@ -961,7 +981,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
              @"testCreateClassWithMethodWithAMessageSendUsingClassSyntax",
              @"testUseOfIntegerParameterInMessageSend",
              @"testUseOfAnotherIntegerParameterInMessageSend",
-//             @"testBooleanReturnFromMessage",
+             @"testBooleanReturnFromMessage",
              @"testCreateFilterClass",
              @"testCreateFilterClassWithFilterSyntax",
               ];
