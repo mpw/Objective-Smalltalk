@@ -21,4 +21,5 @@
 -(IMP)imp;
 -(void)setImp:(IMP)newImp;
 -(NSString*)name;
+-(const char*)typestring;
 @end

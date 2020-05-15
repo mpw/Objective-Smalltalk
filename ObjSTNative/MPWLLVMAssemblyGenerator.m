@@ -214,6 +214,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
             return @"i8*";
         case 'i':
             return @"i32";
+        case 'Q':
+            return @"i32";
         default:
             [NSException raise:@"invalidtype" format:@"unrecognized type char '%c' when converting to LLVM types",typeChar];
             return @"";

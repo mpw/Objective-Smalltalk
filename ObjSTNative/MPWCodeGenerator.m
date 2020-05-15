@@ -21,7 +21,8 @@
 #import "MPWMethodDescriptor.h"
 #import "MPWClassDefinition.h"
 #import "MPWScriptedMethod.h"
-
+#import "MPWClassMirror.h"
+#import "MPWMethodMirror.h"
 
 @interface NSObject(dynamicallyGeneratedTestMessages)
 
@@ -133,6 +134,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
             return @"i8*";
         case 'i':
             return @"i32";
+        case 'Q':
+            return @"i32";
         default:
             [NSException raise:@"invalidtype" format:@"unrecognized type char '%c' when converting to LLVM types",typeChar];
             return @"";
@@ -159,9 +162,36 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(MPWMessageExpression*)resolveTypesInMessageSend:(MPWMessageExpression*)messageSend
 {
-    if ( [messageSend selector] == @selector(substringFromIndex:)) {
-        [messageSend setArgtypes:"i"];
+    NSArray *classes=[MPWClassMirror allUsefulClasses];
+    for ( MPWClassMirror *theClass in classes) {
+        NSArray *methods=[theClass methodMirrors];
+        for ( MPWMethodMirror *method in methods) {
+            if ( [method selector] == [messageSend selector] ) {
+                NSLog(@"found method %@ in class %@",method,theClass);
+                const char *origTypestring=(const char*)[method typestring];
+                long len=strlen(origTypestring);
+                int dest=0;
+                char *typestring=calloc( len+1,1);
+                for (int i=0;i<len;i++) {
+                    char ch=origTypestring[i];
+                    if ( !isdigit(ch)) {
+                        if ( ch=='Q') {
+                            ch='i';
+                        }
+                        typestring[dest++]=ch;
+                    }
+                }
+                typestring[dest]=0;
+                [messageSend setArgtypes:typestring+3];
+                [messageSend setReturnType:typestring[0]];
+                return  messageSend;
+            }
+        }
     }
+//
+//    if ( [messageSend selector] == @selector(substringFromIndex:)) {
+//        [messageSend setArgtypes:"i"];
+//    }
     return  messageSend;
 }
 
@@ -882,11 +912,18 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     IDEXPECT(result,@(12),@"computed 12");
 }
 
-+(void)testUseOfIntegerParameterInMessageSend       // not implemented yet
++(void)testUseOfIntegerParameterInMessageSend
 {
     id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -withoutFirst:arg { arg substringFromIndex:1. } } "];
     id result=[a withoutFirst:@"Hello"];
     IDEXPECT(result,@"ello",@"Hello without first character");
+}
+
++(void)testUseOfAnotherIntegerParameterInMessageSend
+{
+    id a=[self instanceOfGeneratedClassDefinedByParametrizedSourceString:@"class %@  { -withoutFirst:arg { arg substringToIndex:2. } } "];
+    id result=[a withoutFirst:@"Hello"];
+    IDEXPECT(result,@"He",@"Hello up to 2nd char");
 }
 
 +(void)testCreateFilterClass
@@ -923,6 +960,8 @@ static NSString *typeCharToLLVMType( char typeChar ) {
              @"testCreateClassWithMethodReturningConstantUsingClassSyntax",
              @"testCreateClassWithMethodWithAMessageSendUsingClassSyntax",
              @"testUseOfIntegerParameterInMessageSend",
+             @"testUseOfAnotherIntegerParameterInMessageSend",
+//             @"testBooleanReturnFromMessage",
              @"testCreateFilterClass",
              @"testCreateFilterClassWithFilterSyntax",
               ];
