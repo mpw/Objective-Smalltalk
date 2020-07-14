@@ -46,20 +46,6 @@
     return @"Document";
 }
 
-- (NSFileWrapper *)_disabled_fileWrapperOfType:(NSString *)typeName
-                               error:(NSError * _Nullable *)outError
-{
-    NSData *windowControllerArchive = [NSKeyedArchiver archivedDataWithRootObject:[self windowControllers] requiringSecureCoding:NO error:nil];
-
-    NSSet *workspaces = [self workspaces];
-
-
-    NSFileWrapper *windowsWrapper = [[[NSFileWrapper alloc] initRegularFileWithContents:windowControllerArchive] autorelease];
-    NSDictionary *wrappers=@{
-                             @"windows": windowsWrapper,
-                             };
-    return [[[NSFileWrapper alloc] initDirectoryWithFileWrappers:wrappers] autorelease];
-}
 
 -(MPWProgramTextView*)programTextView
 {
@@ -70,49 +56,51 @@
     return [[[self programTextView] text] asData];
 }
 
--(BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
+-(BOOL)importOldWindowBasedWorkspace:(NSFileWrapper *)fileWrapper error:(NSError **)outError
 {
     NSError *unarchiveError=nil;
-    if ( [fileWrapper isDirectory]) {
-        NSFileWrapper *windowsWrapper=[fileWrapper fileWrappers][@"windows"];
-        NSData *windowsArchive = [windowsWrapper regularFileContents];
-        NSLog(@"windowsArchive length: %ld",(long)windowsArchive.length);
-        if ( windowsArchive) {
-            NSArray *windowControllers = [NSKeyedUnarchiver unarchiveObjectWithData:windowsArchive];
-            if ( !windowControllers && unarchiveError) {
-                NSLog(@"error unarchiving: %@",unarchiveError);
-                if ( outError ) {
-                    *outError=unarchiveError;
-                }
-            }
-            for ( NSWindowController *c in windowControllers) {
-                if ( [c respondsToSelector:@selector(view)]) {
-                    NSWindow *w = [[c view] openInWindow:@"Workspace"];
-                    [c setWindow:w];
-                    NSLog(@"workspace view: %@",[c view]);
-                    if ( [[c view] respondsToSelector:@selector(setDefaultAttributes)] ) {
-                        [[c view] setDefaultAttributes];
-                    }
-                    [[[c view] documentView] setCompiler:[self compiler]];
-                    [self.workspaces addObject:[[c view] documentView]];
-                }
-                [self addWindowController:c];
+    NSFileWrapper *windowsWrapper=[fileWrapper fileWrappers][@"windows"];
+    NSData *windowsArchive = [windowsWrapper regularFileContents];
+    NSLog(@"windowsArchive length: %ld",(long)windowsArchive.length);
+    if ( windowsArchive) {
+        NSArray *windowControllers = [NSKeyedUnarchiver unarchiveObjectWithData:windowsArchive];
+        if ( !windowControllers && unarchiveError) {
+            NSLog(@"error unarchiving: %@",unarchiveError);
+            if ( outError ) {
+                *outError=unarchiveError;
             }
         }
+        for ( NSWindowController *c in windowControllers) {
+            if ( [c respondsToSelector:@selector(view)]) {
+                NSWindow *w = [[c view] openInWindow:@"Workspace"];
+                [c setWindow:w];
+                NSLog(@"workspace view: %@",[c view]);
+                if ( [[c view] respondsToSelector:@selector(setDefaultAttributes)] ) {
+                    [[c view] setDefaultAttributes];
+                }
+                [[[c view] documentView] setCompiler:[self compiler]];
+                [self.workspaces addObject:[[c view] documentView]];
+            }
+            [self addWindowController:c];
+        }
+    }
+    return YES;
+}
+
+-(BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
+{
+    if ( [fileWrapper isDirectory]) {
+        return [self importOldWindowBasedWorkspace:fileWrapper error:outError];
     } else {
-        NSData *data=[fileWrapper regularFileContents];
-        [self showWorkspace:nil];
-        [[self programTextView] setString:[data stringValue]];
+        return [self readFromData:[fileWrapper regularFileContents] ofType:typeName error:outError];
     }
 
     return YES;
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
-    // Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error if you return NO.
-    // Alternatively, you could remove this method and override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
-    // If you do, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
-    [NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
+    [self showWorkspace:nil];
+    [[self programTextView] setString:[data stringValue]];
     return YES;
 }
 
