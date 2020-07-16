@@ -16,7 +16,7 @@
 -initWithContext:aContext;
 +(void)parseBridgeDict:aDict forContext:aContext;
 
--parse:xmlData;
+-(BOOL)parse:(NSData*)xmlData;
 
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright 2012 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWFileSchemeResolver.h"
+#import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 
 
 @interface MPWBundleScheme : MPWFileSchemeResolver {

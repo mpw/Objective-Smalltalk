@@ -19,7 +19,7 @@
 -directoryForReference:(MPWGenericReference*)aReference
 {
     MPWDirectoryBinding *dir=[super directoryForReference:aReference];
-    return [[[MPWDirectoryBinding alloc] initWithContents:[[self collect] bindingForReference:dir.contents.each inContext:nil]] autorelease];
+    return [[[MPWDirectoryBinding alloc] initWithContents:(NSArray*)[[self collect] bindingForReference:dir.contents.each inContext:nil]] autorelease];
 }
 
 -bindingForReference:aReference inContext:aContext

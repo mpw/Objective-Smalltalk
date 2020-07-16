@@ -61,7 +61,7 @@ idAccessor( context ,setContext )
 	}
 }
 
--parse:xmlData
+-(BOOL)parse:(NSData*)xmlData
 {
 	Class parserClass = NSClassFromString(@"MPWXmlParser");
 	
@@ -73,7 +73,7 @@ idAccessor( context ,setContext )
 	NSXMLParser* parser = [[[parserClass alloc] initWithData:xmlData] autorelease];
 	[parser setDelegate:(id <NSXMLParserDelegate>)self];
 	[parser parse];
-	return nil;
+	return YES;
 }
 
 -(void)dealloc

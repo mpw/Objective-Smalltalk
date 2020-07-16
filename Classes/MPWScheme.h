@@ -6,7 +6,7 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+@import MPWFoundation;
 
 @class MPWBinding,MPWIdentifier;
 
