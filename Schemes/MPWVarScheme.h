@@ -6,7 +6,7 @@
 //  Copyright 2009 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWSelfContainedBindingsScheme.h"
+#import <ObjectiveSmalltalk/MPWSelfContainedBindingsScheme.h>
 
 @class MPWEvaluator;
 

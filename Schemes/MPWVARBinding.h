@@ -6,7 +6,7 @@
 //  Copyright 2009 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWBinding.h"
+#import <ObjectiveSmalltalk/MPWBinding.h>
 
 
 @interface MPWVARBinding : MPWBinding {

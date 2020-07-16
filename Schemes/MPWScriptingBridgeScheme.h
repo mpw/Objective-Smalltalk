@@ -6,7 +6,7 @@
 //  Copyright 2012 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWVarScheme.h"
+#import <ObjectiveSmalltalk/MPWVarScheme.h>
 
 
 @interface MPWScriptingBridgeScheme : MPWVarScheme {

@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 2/12/18.
 //
 
-#import "MPWWindowsScheme.h"
+#import <ObjectiveSmalltalk/MPWWindowsScheme.h>
 
 @implementation MPWWindowsScheme
 

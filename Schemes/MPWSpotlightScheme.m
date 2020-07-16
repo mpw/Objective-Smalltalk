@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 2/13/18.
 //
 
-#import "MPWSpotlightScheme.h"
+#import <ObjectiveSmalltalk/MPWSpotlightScheme.h>
 #import <CoreServices/CoreServices.h>
 #import <MPWFoundation/MPWFoundation.h>
 
