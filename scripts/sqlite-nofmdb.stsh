@@ -26,25 +26,40 @@ class TableInfo  {
 
 scheme SQLiteScheme  {
   var db.
+  var table2class.
 
   -initWithPath: dbPath {
      self setDb:(MPWStreamQLite alloc initWithPath:dbPath).
      self db open.
+     self setTable2class: NSMutableDictionary dictionary.
      self.
   }
 
+  -<void>setClass:aClass forTable:tableName {
+     self table2class setObject:aClass forKey:tableName.
+  }
 
-  -dictionariesForQuery:query {
-	 self db setBuilder:MPWPListBuilder builder.
+  -objectsForQuery:query class:aClass {
+     builder := MPWPListBuilder builder.
+     aClass ifNotNil: { builder := MPWObjectBuilder alloc initWithClass:aClass. }.
+	 self db setBuilder:builder.
      self db exec:query.
 	 result := self db builder result.
 #     stdout println:result.
      result.
   }
 
+  -objectsForQuery:query table:aTableName {
+      self objectsForQuery:query class: (self table2class objectForKey:aTableName).
+  }
+
+  -objectsForQuery:query  {
+      self objectsForQuery:query class: nil.
+  }
+
   /. { 
      |= {
-       resultSet := self dictionariesForQuery: 'select name from sqlite_master where [type] = "table" '.
+       resultSet := self objectsForQuery: 'select name from sqlite_master where [type] = "table" '.
        names := resultSet collect objectForKey:'name'.
        names := names, 'schema'.
        self listForNames:names.
@@ -54,7 +69,7 @@ scheme SQLiteScheme  {
 
   /schema/:table {
      |= {
-        resultSet := self dictionariesForQuery: "PRAGMA table_info({table})".
+        resultSet := self objectsForQuery: "PRAGMA table_info({table})".
 	    columns := resultSet collect: { :colDict | 
             #ColumnInfo{
 				#name : (colDict at:'name') ,
@@ -72,27 +87,27 @@ scheme SQLiteScheme  {
   }
 
   /:table/count { 
-     |= { self dictionariesForQuery: "select count(*) from {table}" | firstObject | at:'count(*)'. }
+     |= { self objectsForQuery: "select count(*) from {table}" | firstObject | at:'count(*)'. }
   }
 
   /:table/:index { 
-     |= { self dictionariesForQuery: "select * from {table}" | at: index. }
+     |= { self objectsForQuery: "select * from {table}" table:table | at: index. }
   }
 
   /:table { 
-     |= { self dictionariesForQuery: "select * from {table}". }
+     |= { self objectsForQuery: "select * from {table}" table:table. }
   }
 
   /:table/:column/:index { 
-     |= { self dictionariesForQuery: "select * from {table}" | at: index.  }
+     |= { self objectsForQuery: "select * from {table}" | at: index.  }
   }
 
   /:table/where/:column/:value { 
-     |= { self dictionariesForQuery: "select * from {table} where {column} = {value}".  }
+     |= { self objectsForQuery: "select * from {table} where {column} = {value}".  }
   }
 
   /:table/column/:column { 
-     |= { self dictionariesForQuery: "select {column} from {table}"| collect | at:column. } 
+     |= { self objectsForQuery: "select {column} from {table}"| collect | at:column. } 
   }
   -tables {
 	 content := self:. contents.
@@ -108,7 +123,7 @@ scheme SQLiteScheme  {
       classDef setName: tableInfo name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
 	  columns := tableInfo columns collect: { :oldColumn | 
-			newName := oldColumn name lowercaseString.
+			newName := oldColumn name.
 			newInfo := ColumnInfo new.
 			newInfo setName: newName.
             newInfo.
@@ -130,12 +145,15 @@ extension NSObject {
 
 scheme:db := SQLiteScheme alloc initWithPath: dbpath.
 
-stdout println:'Hi there!'.
 artistsTable :=  scheme:db tables | at: 2
-stdout println:'artists table'.
 artistsClass :=  scheme:db classForTable:artistsTable.
 stdout println: artistsClass name.
-stdout println: artistsClass superclassName.
 artistsClass defineClass.
+scheme:db setClass:Artists forTable:'artists'.
 
+extension Artists { -description { name:=self Name. "Artist: {name} ". }  }
+
+2.
+
+stdout println:'try "stdout do println: db:artists collect Name each."'.
 shell runInteractiveLoop.
