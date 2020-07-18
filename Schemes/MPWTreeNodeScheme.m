@@ -37,7 +37,7 @@ idAccessor( root, setRoot )
     return [[self nodeForReference:aReference] content];
 }
 
--(void)put:newValue at:aReference
+-(void)at:aReference put:newValue 
 {
     NSArray *pathArray=[aReference relativePathComponents];
     MPWTreeNode *node=[self nodeForPath:pathArray];
