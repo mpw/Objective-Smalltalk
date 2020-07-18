@@ -6,7 +6,7 @@
 //
 //
 
-#import "MPWScheme.h"
+#import <ObjectiveSmalltalk/MPWScheme.h>
 
 @interface MPWFrameworkScheme : MPWScheme
 
