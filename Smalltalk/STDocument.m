@@ -63,7 +63,7 @@
     NSData *windowsArchive = [windowsWrapper regularFileContents];
     NSLog(@"windowsArchive length: %ld",(long)windowsArchive.length);
     if ( windowsArchive) {
-        NSArray *windowControllers = [NSKeyedUnarchiver unarchiveObjectWithData:windowsArchive];
+        NSArray *windowControllers = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSArray class] fromData:windowsArchive  error:&unarchiveError];
         if ( !windowControllers && unarchiveError) {
             NSLog(@"error unarchiving: %@",unarchiveError);
             if ( outError ) {
@@ -72,14 +72,15 @@
         }
         for ( NSWindowController *c in windowControllers) {
             if ( [c respondsToSelector:@selector(view)]) {
-                NSWindow *w = [[c view] openInWindow:@"Workspace"];
+                NSView *view=[[c contentViewController] view];
+                NSWindow *w = [view openInWindow:@"Workspace"];
                 [c setWindow:w];
-                NSLog(@"workspace view: %@",[c view]);
-                if ( [[c view] respondsToSelector:@selector(setDefaultAttributes)] ) {
-                    [[c view] setDefaultAttributes];
+                NSLog(@"workspace view: %@",view);
+                if ( [view respondsToSelector:@selector(setDefaultAttributes)] ) {
+                    [view setDefaultAttributes];
                 }
-                [[[c view] documentView] setCompiler:[self compiler]];
-                [self.workspaces addObject:[[c view] documentView]];
+                [[view documentView] setCompiler:[self compiler]];
+                [self.workspaces addObject:[view documentView]];
             }
             [self addWindowController:c];
         }
