@@ -25,11 +25,6 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 	return self;
 }
 
--localVarsForContext:aContext
-{
-	return [self schemes];
-}
-
 -(void)setSchemeHandler:(MPWAbstractStore*)aScheme   forSchemeName:(NSString*)schemeName
 {
 //    NSLog(@"%p scheme handler: '%@' for scheme name: '%@'",self,aScheme,schemeName);
@@ -40,28 +35,13 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 
 -(id)at:(id)aReference
 {
-    // FIXME:  identiifierName is legacy 
-    return [[self schemes] objectForKey:[aReference identifierName]];
+    return [[self schemes] objectForKey:[aReference path]];
 }
 
 -(void)at:(id)aReference put:(id)theObject
 {
     [self _schemes][[aReference identifierName]]=theObject;
 }
-
-//-bindingForReference1:aReference inContext:aContext
-//{
-//    NSString *variableName=[aReference path];
-////    NSLog(@"%p bindingForName: %@",self,variableName);
-//    id localVars = [self localVarsForContext:aContext];
-//    MPWBinding* binding=nil;
-////    NSLog(@"scheme %p: localVars: %@",self,localVars);
-//    binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
-//    [binding setReference:[MPWIdentifier identifierWithName:variableName]];
-//    [binding setStore:self];
-////    NSLog(@"binding: %@",binding);
-//    return binding;
-//}
 
 -(id)copy
 {
