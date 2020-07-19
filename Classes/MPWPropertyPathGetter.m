@@ -11,11 +11,6 @@
 #import "MPWPropertyPathDefinition.h"
 #import "MPWMethodHeader.h"
 
-@interface MPWPropertyPathGetter()
-
-@property (nonatomic,strong) NSArray<MPWPropertyPathDefinition*> *propertyPathDefs;
-
-@end
 
 @implementation MPWPropertyPathGetter
 

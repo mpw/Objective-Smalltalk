@@ -14,4 +14,6 @@
 +(instancetype)getterWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 -(instancetype)initWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 
+@property (nonatomic,strong) NSArray<MPWPropertyPathDefinition*> *propertyPathDefs;
+
 @end
