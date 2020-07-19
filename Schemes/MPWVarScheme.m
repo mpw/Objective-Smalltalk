@@ -100,9 +100,15 @@
     return [self valueForKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }
 
--(void)put:anObject at:(id <MPWReferencing>)aReference
+-(void)at:(id <MPWReferencing>)aReference put:anObject
 {
     [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
+}
+
+-(void)put:anObject at:(id <MPWReferencing>)aReference 
+{
+    [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];            // FIXME at:put:
+    // NOTE:  [self at:aReference put:anObject] does not work here.
 }
 
 
