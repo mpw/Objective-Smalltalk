@@ -49,19 +49,19 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     [self _schemes][[aReference identifierName]]=theObject;
 }
 
--bindingForReference:aReference inContext:aContext
-{
-    NSString *variableName=[aReference path];
-//    NSLog(@"%p bindingForName: %@",self,variableName);
-    id localVars = [self localVarsForContext:aContext];
-    MPWBinding* binding=nil;
-//    NSLog(@"scheme %p: localVars: %@",self,localVars);
-    binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
-    [binding setReference:[MPWIdentifier identifierWithName:variableName]];
-    [binding setStore:self];
-//    NSLog(@"binding: %@",binding);
-    return binding;
-}
+//-bindingForReference1:aReference inContext:aContext
+//{
+//    NSString *variableName=[aReference path];
+////    NSLog(@"%p bindingForName: %@",self,variableName);
+//    id localVars = [self localVarsForContext:aContext];
+//    MPWBinding* binding=nil;
+////    NSLog(@"scheme %p: localVars: %@",self,localVars);
+//    binding = [[[MPWVARBinding alloc] initWithBaseObject:localVars path:variableName] autorelease];
+//    [binding setReference:[MPWIdentifier identifierWithName:variableName]];
+//    [binding setStore:self];
+////    NSLog(@"binding: %@",binding);
+//    return binding;
+//}
 
 -(id)copy
 {

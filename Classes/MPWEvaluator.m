@@ -184,7 +184,6 @@ idAccessor( localVars, setLocalVars )
 		schemeName=[self defaultScheme];
 	}
 	scheme=[[self schemes] objectForKey:schemeName];
-//    NSLog(@"schemeForName: %@ -> %@",schemeName,scheme);
 	return scheme;
 }
 
@@ -208,10 +207,10 @@ idAccessor( localVars, setLocalVars )
         if ( !binding ) {
             binding = [self createLocalBindingForName:variableName];
         }
+//        NSLog(@"binding  %@ setValue",binding);
         [binding setValue:value];
     } else {            // the way it should be
-        [scheme put:value at:[scheme referenceForPath:variableName]];
-//        [scheme at:[scheme referenceForPath:variableName] put:value ];        FIXME at:put:
+        [scheme at:[scheme referenceForPath:variableName] put:value ];      //  FIXME at:put:
     }
 }
 

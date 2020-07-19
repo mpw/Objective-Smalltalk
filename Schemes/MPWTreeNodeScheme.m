@@ -76,8 +76,7 @@ idAccessor( root, setRoot )
 +_testInterpreterWithCMSScheme
 {
     MPWStCompiler *interpreter=[[MPWStCompiler new] autorelease];
-    [interpreter evaluateScriptString:@" site := MPWTreeNodeScheme scheme."];
-    [interpreter evaluateScriptString:@" scheme:cms := site "];
+    [interpreter evaluateScriptString:@" site := MPWTreeNodeScheme scheme. scheme:cms := site."];
     return interpreter;
 }
 

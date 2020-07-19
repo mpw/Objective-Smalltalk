@@ -9,7 +9,7 @@
 #import <ObjectiveSmalltalk/MPWVarScheme.h>
 
 
-@interface MPWSchemeScheme : MPWVarScheme {
+@interface MPWSchemeScheme : MPWAbstractStore {
 	NSMutableDictionary *_schemes;
 }
 

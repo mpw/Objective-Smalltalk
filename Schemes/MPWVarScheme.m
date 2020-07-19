@@ -102,15 +102,22 @@
 
 -(void)at:(id <MPWReferencing>)aReference put:anObject
 {
+    NSLog(@"NSObject at:%@ put:%@",aReference,anObject);
     [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }
 
--(void)put:anObject at:(id <MPWReferencing>)aReference 
+-(void)put:obj at:ref
 {
-    [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];            // FIXME at:put:
-    // NOTE:  [self at:aReference put:anObject] does not work here.
+    NSLog(@"put:at: called by: %@",[NSThread callStackSymbols]);
 }
-
 
 @end
 
+@implementation NSMutableDictionary(putat)
+
+-(void)put:obj at:ref
+{
+    self[[ref path]]=obj;
+}
+
+@end

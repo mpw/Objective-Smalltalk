@@ -35,7 +35,7 @@ idAccessor( lhs, setLhs )
 -(NSObject<MPWEvaluable>*)evaluateIn:aContext
 {
 	id value = [aContext evaluate:[self rhs]];
-//	NSLog(@"rhs: %@ value: %@, varName: %@",[self rhs],value,varName);
+//	NSLog(@"rhs: %@ value: %@, lhs: %@",[self rhs],value,lhs);
 	[aContext bindValue:value toVariableNamed:[[lhs identifier] evaluatedIdentifierNameInContext:aContext] withScheme:[lhs scheme]];
 	return value;
 }
