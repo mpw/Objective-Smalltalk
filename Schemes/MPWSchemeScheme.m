@@ -44,7 +44,7 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
     return [[self schemes] objectForKey:[aReference identifierName]];
 }
 
--(void)put:(id)theObject at:(id)aReference
+-(void)at:(id)aReference put:(id)theObject
 {
     [self _schemes][[aReference identifierName]]=theObject;
 }

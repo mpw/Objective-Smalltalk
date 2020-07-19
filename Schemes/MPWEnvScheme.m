@@ -58,7 +58,7 @@ extern char **environ;
 }
 
 
--(void)put:(id)theObject at:(id)aReference
+-(void)at:(id)aReference put:(id)theObject
 {
     [self setValue:theObject forBinding:aReference];
 }

@@ -64,9 +64,9 @@ boolAccessor(cacheReads, setCacheReads)
     return result;
 }
 
--(void)put:newValue at:aReference
+-(void)at:aReference put:newValue
 {
-    [(MPWAbstractStore*)[self readWrite] put:newValue at:aReference];
+    [(MPWAbstractStore*)[self readWrite] at:aReference put:newValue];
 }
 
 -(BOOL)isLeafReference:(id <MPWReferencing>)aReference

@@ -21,7 +21,7 @@
 	return [[NSUserDefaults standardUserDefaults] objectForKey:[[aReference path] lastPathComponent]];
 }
 
--(void)put:newValue at:aReference
+-(void)at:aReference put:newValue 
 {
     NSString *name = [aReference path];
     if ( [name hasPrefix:@"initial/"]){

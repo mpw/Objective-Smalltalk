@@ -211,6 +211,7 @@ idAccessor( localVars, setLocalVars )
         [binding setValue:value];
     } else {            // the way it should be
         [scheme put:value at:[scheme referenceForPath:variableName]];
+//        [scheme at:[scheme referenceForPath:variableName] put:value ];        FIXME!!
     }
 }
 
