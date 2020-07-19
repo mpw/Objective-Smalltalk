@@ -58,7 +58,7 @@ boolAccessor(cacheReads, setCacheReads)
 //        NSLog(@"COW:  source %@ for %@ returned %@",[self source],[aBinding name],result);
         result=[[self source] at:aReference];
         if ( [self cacheReads] ) {
-            [[self readWrite] put:result at:aReference];
+            [[self readWrite] at:aReference put:result];
         }
     }
     return result;

@@ -14,6 +14,7 @@
 -declarationString
 {
     return @"<void>put:newValue at:aReference";
+//    return @"<void>at:aReference put:newValue";
 }
 
 -(id)evaluateFoundPropertyPath:(MPWPropertyPathDefinition*)def onTarget:target boundParams:(NSDictionary*)pathParams additionalParams:(NSArray*)param
