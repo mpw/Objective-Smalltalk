@@ -55,11 +55,11 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 {
     NSString* methodName = [[method methodHeader] methodName];
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
-    
+    [methodCallback setMethod:method];
+//    NSLog(@"addMethod class %@ methodName: %@ callback: %@ method %@",[[self classMirror] name],methodName,methodCallback,method);
     if (  [self compiler] ) {
         [method setContext:[self compiler]];
     }
-    [methodCallback setMethod:method];
     return methodCallback;
 }
 
@@ -117,9 +117,16 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 -(NSDictionary*)externalMethodDict
 {
     NSMutableDictionary *d=[NSMutableDictionary dictionary];
-    for ( MPWMethodCallBack *callback in [[self methodCallbacks] allValues]) {
+    for ( NSString *methodName in [self allMethodNames] ) {
+//        NSLog(@"class %@ methodName %@",[[self classMirror] name],methodName);
+        MPWMethodCallBack *callback=[self methodCallbacks][methodName];
         MPWScriptedMethod *method=(MPWScriptedMethod*)[callback method];
-        d[[[method methodHeader] headerString]]=[method script];
+        NSString *headerString=[[method methodHeader] headerString];
+        if ( headerString ) {
+            d[headerString]=[method script];
+        } else {
+            NSLog(@"class %@ methodName: %@ callback: %@ method: %@ no method header string",[[self classMirror] name],methodName,callback,method);
+        }
     }
 //    NSLog(@"external method dict for %@ -> %@",[[self classMirror] name],d);
     return d;

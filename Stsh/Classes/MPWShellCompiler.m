@@ -12,7 +12,7 @@
 #import "MPWObjectPipeCommand.h"
 #import "MPWUpcaseFilter.h"
 #import "MPWEchoCommand.h"
-#import "MPWFileSchemeResolver.h"
+#import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 #import "MPWURLSchemeResolver.h"
 #import "MPWEnvScheme.h"
 #import <MPWFoundation/MPWNeXTPListWriter.h>
