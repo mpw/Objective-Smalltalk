@@ -1041,11 +1041,15 @@ idAccessor(solver, setSolver)
 {
     MPWScriptedMethod *method=[[MPWScriptedMethod new] autorelease];
     [method setMethodHeader:header];
+    long startPos=[[self scanner] currentOffset];
     NSString *bodyStart=[self nextToken];
 //    NSLog(@"body start: %@",bodyStart);
     id body=[self parseBlockWithStart:bodyStart];
 //    NSLog(@"body: %@",body);
 //    NSLog(@"statements: %@",statements);
+    long endPos=[[self scanner] currentOffset]-1;
+    NSString *methodBodyText=[[self scanner] makeTextFrom:startPos to:endPos];
+    [method setScript:methodBodyText];
     [method setMethodBody:[body statements]];
     return method;
 }
@@ -1421,6 +1425,15 @@ idAccessor(solver, setSolver)
     IDEXPECT([identifier identifierName], @".", @"path");
 }
 
++(void)testParsingMethodBodyPreservesSource
+{
+    MPWStCompiler *compiler=[self compiler];
+    [compiler evaluateScriptString:@"class  MPWMethodSourceCompilerTestClass1 : NSObject { -answer { 42. } }. "];
+    MPWScriptedMethod *method=[[compiler methodStore] methodForClass:@"MPWMethodSourceCompilerTestClass1" name:@"answer"];
+    EXPECTNOTNIL(method, @"got a method");
+    IDEXPECT([method script], @" 42. ",@"body");
+}
+
 
 +testSelectors
 {
@@ -1428,7 +1441,7 @@ idAccessor(solver, setSolver)
               @"testRightArrowDoesntGenerateMsgExpr",
               @"testPipeSymbolForTemps",
               @"testSchemeWithDot",
-//              @"testParsingMethodBodyPreservesSource",
+              @"testParsingMethodBodyPreservesSource",
               ];
 }
 
