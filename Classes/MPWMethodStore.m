@@ -236,8 +236,8 @@ scalarAccessor( id , compiler , setCompiler )
             [s writeString:@" {\n"];
             [s writeString:[method script]];
             [s writeString:@"\n}\n"];
-
         }
+        [s writeString:@"\n}\n"];
     }
 }
 
@@ -281,7 +281,7 @@ scalarAccessor( id , compiler , setCompiler )
 
     // FIXME / WAITFORFIX:  MPWScriptedMethods created by MPWStCompiler do not contain the method source
 
-    NSString *expected=@"class MPWMethodWriterTestClass1 : NSObject\n{\n-answer {";
+    NSString *expected=@"class MPWMethodWriterTestClass1 : NSObject\n{\n-answer {\n 42. \n}\n\n}\n";
     NSLog(@"got: '%@'",got);
     NSLog(@"expected: '%@'",expected);
 
@@ -292,7 +292,7 @@ scalarAccessor( id , compiler , setCompiler )
 +testSelectors
 {
     return @[
-//        @"testWriteSingleMethodClass",
+        @"testWriteSingleMethodClass",
     ];
 }
 #endif
