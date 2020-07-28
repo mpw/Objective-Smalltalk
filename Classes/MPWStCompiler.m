@@ -1428,6 +1428,7 @@ idAccessor(solver, setSolver)
               @"testRightArrowDoesntGenerateMsgExpr",
               @"testPipeSymbolForTemps",
               @"testSchemeWithDot",
+//              @"testParsingMethodBodyPreservesSource",
               ];
 }
 

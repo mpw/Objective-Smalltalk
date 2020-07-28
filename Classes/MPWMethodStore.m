@@ -12,6 +12,7 @@
 #import "MPWMethodCallBack.h"
 #import "MPWScriptedMethod.h"
 #import "MPWMethodType.h"
+#import "MPWMethod.h"
 #import "MPWStCompiler.h"
 #import "MPWClassMethodStore.h"
 #import "MPWClassMirror.h"
@@ -52,6 +53,10 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(MPWClassMethodStore*)classStoreForName:(NSString*)name
 {
+    NSLog(@"-[MPWMethodStore classStoreForName: %@]",name);
+    if (!name) {
+        return nil;
+    }
     MPWClassMethodStore *theClass=[self classes][name];
     if ( !theClass ) {
         MPWClassMirror *mirror = [MPWClassMirror mirrorWithClassNamed:name];
@@ -211,6 +216,31 @@ scalarAccessor( id , compiler , setCompiler )
     [[self metaClassStoreForName:className] installMethodString:scriptString withHeaderString:headerString];
 }
 
+-(void)fileout:(MPWByteStream*)s
+{
+    for (NSString *className in [[self classes] allKeys]) {
+        [s writeString:@"class "];
+        [s writeString:className];
+        [s writeString:@" : "];
+        Class *c=NSClassFromString(className);
+        Class *superclass=[c superclass];
+        NSString *superclassName=NSStringFromClass(superclass);
+        [s writeString:superclassName];
+        [s writeString:@"\n{\n"];
+        NSArray *methodNames = [[self methodNamesForClassName:className] sortedArrayUsingSelector:@selector(compare:)];
+        for ( NSString *methodName in methodNames) {
+            MPWScriptedMethod *method=[self methodForClass:className name:methodName];
+            MPWMethodHeader *header=[method methodHeader];
+            [s writeString:@"-"];
+            [s writeString:[header headerString]];
+            [s writeString:@" {\n"];
+            [s writeString:[method script]];
+            [s writeString:@"\n}\n"];
+
+        }
+    }
+}
+
 -(void)dealloc
 {
  	[classes release];
@@ -237,10 +267,33 @@ scalarAccessor( id , compiler , setCompiler )
 
 #if !TARGET_OS_IPHONE
 
++(void)testWriteSingleMethodClass
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodStore *store=[compiler methodStore];
+    EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClass1"), @"class not defined");
+    [compiler evaluateScriptString:@"class  MPWMethodWriterTestClass1 : NSObject { -answer { 42. } }. "];
+    EXPECTNOTNIL(NSClassFromString(@"MPWMethodWriterTestClass1"), @"class defined");
+    INTEXPECT([[store classes] count],1,@"number of classes defined");
+    MPWByteStream *s=[MPWByteStream streamWithTarget:[NSMutableString string]];
+    [store fileout:s];
+    NSString *got=[s target];
+
+    // FIXME / WAITFORFIX:  MPWScriptedMethods created by MPWStCompiler do not contain the method source
+
+    NSString *expected=@"class MPWMethodWriterTestClass1 : NSObject\n{\n-answer {";
+    NSLog(@"got: '%@'",got);
+    NSLog(@"expected: '%@'",expected);
+
+    EXPECTTRUE([got hasPrefix:expected], @"matches as far as it goes");
+    IDEXPECT(got,expected,@"fileout");
+}
 
 +testSelectors
 {
-    return @[ ];
+    return @[
+//        @"testWriteSingleMethodClass",
+    ];
 }
 #endif
 @end
