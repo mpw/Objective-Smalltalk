@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
     IBOutlet NSTextField *createClassField;
 
     IBOutlet NSWindow    *replWindow;
-    IBOutlet CLIView    *cliView;
 
     IBOutlet NSMatrix   *instanceClassSelector;
 
@@ -39,9 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   IBOutlet NSTextField *methodHeader;
 @property (nonatomic, strong)   IBOutlet NSTextView  *methodBody;
-@property (nonatomic, weak)     id delegate;
-@property (assign)              BOOL continuous;
-@property (nonatomic, strong)   id <MPWStorage> methodStore;
+@property (assign)              BOOL                 continuous;
+@property (nonatomic, strong)   id <MPWStorage>      methodStore;
+@property (nonatomic, strong)   IBOutlet CLIView     *cliView;
+@property (nonatomic, weak)     id                   delegate;
 
 -(void)display;
 

@@ -63,4 +63,9 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     [super dealloc];
 }
 
+-(NSString*)script
+{
+    return @" 'property path'. ";
+}
+
 @end

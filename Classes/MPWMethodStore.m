@@ -219,6 +219,7 @@ scalarAccessor( id , compiler , setCompiler )
 -(void)fileout:(MPWByteStream*)s
 {
     for (NSString *className in [[self classes] allKeys]) {
+        NSLog(@"=== write class: %@",className);
         [s writeString:@"class "];
         [s writeString:className];
         [s writeString:@" : "];
@@ -229,6 +230,7 @@ scalarAccessor( id , compiler , setCompiler )
         [s writeString:@"\n{\n"];
         NSArray *methodNames = [[self methodNamesForClassName:className] sortedArrayUsingSelector:@selector(compare:)];
         for ( NSString *methodName in methodNames) {
+            NSLog(@" -- write method: %@",methodName);
             MPWScriptedMethod *method=[self methodForClass:className name:methodName];
             MPWMethodHeader *header=[method methodHeader];
             [s writeString:@"-"];

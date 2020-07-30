@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17140" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17140"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MPWMethodBrowser">
             <connections>
+                <outlet property="cliView" destination="0G6-hg-Zoo" id="Ay7-th-AJk"/>
                 <outlet property="instanceClassSelector" destination="elh-2a-Abw" id="h2T-US-GgP"/>
                 <outlet property="isOK" destination="ZgR-yY-yrP" id="bqs-DI-RHX"/>
                 <outlet property="methodBody" destination="izd-Ba-grr" id="Fow-R5-dIt"/>
@@ -23,14 +24,14 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="133" y="235" width="510" height="470"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="94" height="86"/>
-            <view key="contentView" id="itg-Od-bqf">
+            <view key="contentView" id="itg-Od-bqf" userLabel="view">
                 <rect key="frame" x="0.0" y="0.0" width="510" height="470"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NuV-Hf-QtH" userLabel="Method Name">
-                        <rect key="frame" x="23" y="318" width="315" height="22"/>
+                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NuV-Hf-QtH" userLabel="Method Name">
+                        <rect key="frame" x="20" y="318" width="296" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="7ac-8s-IiD"/>
                         </constraints>
@@ -47,7 +48,7 @@
                         </connections>
                     </browser>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ZgR-yY-yrP">
-                        <rect key="frame" x="486" y="320" width="22" height="18"/>
+                        <rect key="frame" x="486" y="321" width="22" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="18" id="NiC-1Y-rVU"/>
                         </constraints>
@@ -57,15 +58,16 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yzx-w6-nyz">
-                        <rect key="frame" x="1" y="318" width="22" height="19"/>
-                        <buttonCell key="cell" type="roundRect" title="+" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iT2-lV-jSw">
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e8z-ZN-YqZ">
+                        <rect key="frame" x="484" y="319" width="22" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="roundRect" title="+" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rC2-JX-zgK">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="cellTitle"/>
                         </buttonCell>
                     </button>
                     <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="Za6-gF-B7b" userLabel="Connection Status">
-                        <rect key="frame" x="14" y="1" width="485" height="21"/>
+                        <rect key="frame" x="14" y="1" width="485" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="485" id="70R-34-gxn"/>
                         </constraints>
@@ -75,13 +77,13 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" translatesAutoresizingMaskIntoConstraints="NO" id="elh-2a-Abw">
-                        <rect key="frame" x="339" y="316" width="160" height="22"/>
+                    <matrix verticalHuggingPriority="750" misplaced="YES" allowsEmptySelection="NO" autorecalculatesCellSize="YES" translatesAutoresizingMaskIntoConstraints="NO" id="elh-2a-Abw">
+                        <rect key="frame" x="328" y="318" width="152" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="160" id="j2N-uY-MvK"/>
                         </constraints>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        <size key="cellSize" width="74" height="18"/>
+                        <size key="cellSize" width="74" height="20"/>
                         <size key="intercellSpacing" width="4" height="2"/>
                         <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="U0z-Dx-gKV">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -118,7 +120,7 @@
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <size key="minSize" width="493" height="230"/>
-                                            <size key="maxSize" width="510" height="10000000"/>
+                                            <size key="maxSize" width="514" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <connections>
                                                 <outlet property="delegate" destination="-2" id="p7t-1f-ggj"/>
@@ -145,6 +147,24 @@
                             <real value="250"/>
                         </holdingPriorities>
                     </splitView>
+                    <textField verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eja-w0-zxY" userLabel="Method Name">
+                        <rect key="frame" x="26" y="318" width="301" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="22" id="4In-uy-wWZ"/>
+                        </constraints>
+                        <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="tai-o6-Nig">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yzx-w6-nyz">
+                        <rect key="frame" x="1" y="319" width="22" height="19"/>
+                        <buttonCell key="cell" type="roundRect" title="+" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iT2-lV-jSw">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="cellTitle"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="ZgR-yY-yrP" firstAttribute="baseline" secondItem="Yzx-w6-nyz" secondAttribute="baseline" id="4kb-Xf-6xy"/>

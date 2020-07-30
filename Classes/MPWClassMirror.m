@@ -210,6 +210,8 @@
     return [[MPWObjectMirror mirrorWithObject:[self theClass]] classMirror];
 }
 
+
+
 @end
 
 //#if __NEXT_RUNTIME__

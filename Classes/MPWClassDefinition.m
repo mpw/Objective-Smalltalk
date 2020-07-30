@@ -44,7 +44,7 @@
     }
 }
 
--(NSArray *)ivarNames
+-(NSArray *)allIvarNames
 {
     if ( [[self instanceVariableDescriptions] count] >0 ) {
         return (NSArray *)[[[self instanceVariableDescriptions] collect] name];
@@ -66,7 +66,7 @@
 -(void)generateAccessors
 {
     Class theClassToDefine=[self classToDefine];
-    for ( NSString *ivarName in [self ivarNames]) {
+    for ( NSString *ivarName in [self allIvarNames]) {
         [theClassToDefine generateAccessorsFor:ivarName];
     }
 }
@@ -75,7 +75,7 @@
 {
     Class superclass=NSClassFromString([self superclassNameToUse]);
     if ( superclass ) {
-        [superclass createSubclassWithName:self.name instanceVariableArray:[self ivarNames]];
+        [superclass createSubclassWithName:self.name instanceVariableArray:[self allIvarNames]];
         [self generateAccessors];
     }
 }
