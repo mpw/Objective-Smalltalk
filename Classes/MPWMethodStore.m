@@ -292,6 +292,24 @@ scalarAccessor( id , compiler , setCompiler )
     IDEXPECT(result,expected,@"fileout");
 }
 
++(void)testWriteTwoMethodClass
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodStore *store=[compiler methodStore];
+    EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClass2"), @"class not defined");
+    [compiler evaluateScriptString:@"class  MPWMethodWriterTestClass2 : NSObject { -answer1 { 42. } -answer2 { 82. } }. "];
+    EXPECTNOTNIL(NSClassFromString(@"MPWMethodWriterTestClass2"), @"class defined");
+    INTEXPECT([[store classes] count],1,@"number of classes defined");
+    NSMutableString *result=[NSMutableString string];
+    MPWByteStream *s=[MPWByteStream streamWithTarget:result];
+    [store fileout:s];
+
+    NSString *expected=@"class MPWMethodWriterTestClass2 : NSObject\n{\n-answer1 {\n 42. \n}\n-answer2 {\n 82. \n}\n\n}\n";
+
+    EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
+    IDEXPECT(result,expected,@"fileout");
+}
+
 +(void)testWriteClassWithIvar
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
@@ -314,6 +332,7 @@ scalarAccessor( id , compiler , setCompiler )
 {
     return @[
         @"testWriteSingleMethodClass",
+        @"testWriteTwoMethodClass",
         @"testWriteClassWithIvar",
     ];
 }
