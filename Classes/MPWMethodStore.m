@@ -229,6 +229,11 @@ scalarAccessor( id , compiler , setCompiler )
         [s writeString:superclassName];
         [s writeString:@"\n{\n"];
         NSArray *methodNames = [[self methodNamesForClassName:className] sortedArrayUsingSelector:@selector(compare:)];
+        for ( NSString *ivarName in [c ivarNames]) {
+            [s writeString:@"var "];
+            [s writeString:ivarName];
+            [s writeString:@".\n"];
+        }
         for ( NSString *methodName in methodNames) {
             NSLog(@" -- write method: %@",methodName);
             MPWScriptedMethod *method=[self methodForClass:className name:methodName];
@@ -277,24 +282,39 @@ scalarAccessor( id , compiler , setCompiler )
     [compiler evaluateScriptString:@"class  MPWMethodWriterTestClass1 : NSObject { -answer { 42. } }. "];
     EXPECTNOTNIL(NSClassFromString(@"MPWMethodWriterTestClass1"), @"class defined");
     INTEXPECT([[store classes] count],1,@"number of classes defined");
-    MPWByteStream *s=[MPWByteStream streamWithTarget:[NSMutableString string]];
+    NSMutableString *result=[NSMutableString string];
+    MPWByteStream *s=[MPWByteStream streamWithTarget:result];
     [store fileout:s];
-    NSString *got=[s target];
-
-    // FIXME / WAITFORFIX:  MPWScriptedMethods created by MPWStCompiler do not contain the method source
 
     NSString *expected=@"class MPWMethodWriterTestClass1 : NSObject\n{\n-answer {\n 42. \n}\n\n}\n";
-    NSLog(@"got: '%@'",got);
-    NSLog(@"expected: '%@'",expected);
 
-    EXPECTTRUE([got hasPrefix:expected], @"matches as far as it goes");
-    IDEXPECT(got,expected,@"fileout");
+    EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
+    IDEXPECT(result,expected,@"fileout");
+}
+
++(void)testWriteClassWithIvar
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWMethodStore *store=[compiler methodStore];
+    EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClassWithIVars1"), @"class not defined");
+    [compiler evaluateScriptString:@"class  MPWMethodWriterTestClassWithIVars1 : NSObject { var a. var b. -answer { 42. } }. "];
+    EXPECTNOTNIL(NSClassFromString(@"MPWMethodWriterTestClassWithIVars1"), @"class defined");
+    INTEXPECT([[store classes] count],1,@"number of classes defined");
+    NSMutableString *result=[NSMutableString string];
+    MPWByteStream *s=[MPWByteStream streamWithTarget:result];
+    [store fileout:s];
+
+    NSString *expected=@"class MPWMethodWriterTestClassWithIVars1 : NSObject\n{\nvar a.\nvar b.\n-answer {\n 42. \n}\n\n}\n";
+
+    EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
+    IDEXPECT(result,expected,@"fileout");
 }
 
 +testSelectors
 {
     return @[
         @"testWriteSingleMethodClass",
+        @"testWriteClassWithIvar",
     ];
 }
 #endif
