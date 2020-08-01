@@ -37,5 +37,8 @@
 -(MPWClassMethodStore*)classStoreForName:(NSString*)name;
 -(MPWClassMethodStore*)metaClassStoreForName:(NSString*)name;
 
+-(void)fileoutClass:(NSString*)className toStream:(MPWByteStream*)s;
+-(void)fileout:(MPWByteStream*)s;
+-(void)fileoutToStore:(id <MPWStorage>)store;
 
 @end
