@@ -184,7 +184,7 @@ idAccessor( method, _setMethod )
 #ifdef __x86_64__
 -(long long)answerToEverything
 #else
--(int)answerToEverything
+-(long)answerToEverything
 #endif
 {
     return 42;

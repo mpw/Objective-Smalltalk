@@ -222,8 +222,8 @@ scalarAccessor( id , compiler , setCompiler )
     [s writeString:@"class "];
     [s writeString:className];
     [s writeString:@" : "];
-    Class *c=NSClassFromString(className);
-    Class *superclass=[c superclass];
+    Class c=NSClassFromString(className);
+    Class superclass=[c superclass];
     NSString *superclassName=NSStringFromClass(superclass);
     [s writeString:superclassName];
     [s writeString:@"\n{\n"];
@@ -239,9 +239,9 @@ scalarAccessor( id , compiler , setCompiler )
         MPWMethodHeader *header=[method methodHeader];
         [s writeString:@"-"];
         [s writeString:[header headerString]];
-        [s writeString:@" {\n"];
+        [s writeString:@" {"];
         [s writeString:[method script]];
-        [s writeString:@"\n}\n"];
+        [s writeString:@"}\n"];
     }
     [s writeString:@"\n}.\n"];
 }
@@ -303,7 +303,7 @@ scalarAccessor( id , compiler , setCompiler )
     MPWByteStream *s=[MPWByteStream streamWithTarget:result];
     [store fileout:s];
 
-    NSString *expected=@"class MPWMethodWriterTestClass1 : NSObject\n{\n-answer {\n 42. \n}\n\n}.\n";
+    NSString *expected=@"class MPWMethodWriterTestClass1 : NSObject\n{\n-answer { 42. }\n\n}.\n";
 
     EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
     IDEXPECT(result,expected,@"fileout");
@@ -321,7 +321,7 @@ scalarAccessor( id , compiler , setCompiler )
     MPWByteStream *s=[MPWByteStream streamWithTarget:result];
     [store fileout:s];
 
-    NSString *expected=@"class MPWMethodWriterTestClass2 : NSObject\n{\n-answer1 {\n 42. \n}\n-answer2 {\n 82. \n}\n\n}.\n";
+    NSString *expected=@"class MPWMethodWriterTestClass2 : NSObject\n{\n-answer1 { 42. }\n-answer2 { 82. }\n\n}.\n";
 
     EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
     IDEXPECT(result,expected,@"fileout");
@@ -340,7 +340,7 @@ scalarAccessor( id , compiler , setCompiler )
     [store fileout:s];
 //    [result writeToFile:@"/tmp/hi.st" atomically:YES encoding:NSUTF8StringEncoding error:nil];
 
-    NSString *expected=@"class MPWMethodWriterTestClassWithIVars1 : NSObject\n{\nvar a.\nvar b.\n-answer {\n 42. \n}\n\n}.\n";
+    NSString *expected=@"class MPWMethodWriterTestClassWithIVars1 : NSObject\n{\nvar a.\nvar b.\n-answer { 42. }\n\n}.\n";
     EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
     IDEXPECT(result,expected,@"fileout");
 }
@@ -364,8 +364,8 @@ scalarAccessor( id , compiler , setCompiler )
     NSData *d1=[sourceStore at:[MPWGenericReference referenceWithPath:@"MPWMethodWriterTestClass3.st"]];
     NSData *d2=[sourceStore at:[MPWGenericReference referenceWithPath:@"MPWMethodWriterTestClass5.st"]];
 
-    NSString *expected1=@"class MPWMethodWriterTestClass3 : NSObject\n{\n-answer {\n 42. \n}\n\n}.\n";
-    NSString *expected2=@"class MPWMethodWriterTestClass5 : NSObject\n{\n-answer {\n 43. \n}\n\n}.\n";
+    NSString *expected1=@"class MPWMethodWriterTestClass3 : NSObject\n{\n-answer { 42. }\n\n}.\n";
+    NSString *expected2=@"class MPWMethodWriterTestClass5 : NSObject\n{\n-answer { 43. }\n\n}.\n";
     IDEXPECT([d1 stringValue], expected1, @"first class");
     IDEXPECT([d2 stringValue], expected2, @"second class");
 }
