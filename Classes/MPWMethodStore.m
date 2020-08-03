@@ -53,7 +53,6 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(MPWClassMethodStore*)classStoreForName:(NSString*)name
 {
-    NSLog(@"-[MPWMethodStore classStoreForName: %@]",name);
     if (!name) {
         return nil;
     }
@@ -218,7 +217,6 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)fileoutClass:(NSString*)className toStream:(MPWByteStream*)s
 {
-    NSLog(@"=== write class: %@",className);
     [s writeString:@"class "];
     [s writeString:className];
     [s writeString:@" : "];
@@ -234,7 +232,6 @@ scalarAccessor( id , compiler , setCompiler )
         [s writeString:@".\n"];
     }
     for ( NSString *methodName in methodNames) {
-        NSLog(@" -- write method: %@",methodName);
         MPWScriptedMethod *method=[self methodForClass:className name:methodName];
         MPWMethodHeader *header=[method methodHeader];
         [s writeString:@"-"];
