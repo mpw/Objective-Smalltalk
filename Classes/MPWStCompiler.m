@@ -44,7 +44,7 @@
 
 -concat:other
 {
-	return [self stringByAppendingString:other];
+	return [self stringByAppendingString:[other stringValue]];
 }
 
 @end
