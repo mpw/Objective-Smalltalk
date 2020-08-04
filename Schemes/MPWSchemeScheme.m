@@ -25,7 +25,7 @@ objectAccessor( NSMutableDictionary, _schemes, setSchemes )
 	return self;
 }
 
--(void)setSchemeHandler:(MPWAbstractStore*)aScheme   forSchemeName:(NSString*)schemeName
+-(void)setSchemeHandler:(id <MPWStorage>)aScheme   forSchemeName:(NSString*)schemeName
 {
 //    NSLog(@"%p scheme handler: '%@' for scheme name: '%@'",self,aScheme,schemeName);
     if ( aScheme && schemeName) {
