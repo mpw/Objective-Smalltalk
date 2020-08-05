@@ -312,6 +312,11 @@
 		1FAFD9851855BC5500EC5221 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FAFD9861855BC5500EC5221 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FAFD9891855BC5500EC5221 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAABC4184BDBBA00086047 /* InfoPlist.strings */; };
+		1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FB7AE3124DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FB7AE3224DB0F3000CCBE86 /* STBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */; };
+		1FB7AE3324DB0F3000CCBE86 /* STBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */; };
+		1FB7AE3524DB118E00CCBE86 /* objst.sited in Resources */ = {isa = PBXBuildFile; fileRef = 1FB7AE3424DB118E00CCBE86 /* objst.sited */; };
 		1FB7D7F21E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7D7F01E9E5ACB008E5D8E /* MPWClassDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7D7F31E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7D7F01E9E5ACB008E5D8E /* MPWClassDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7D7F41E9E5ACC008E5D8E /* MPWClassDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7D7F11E9E5ACC008E5D8E /* MPWClassDefinition.m */; };
@@ -888,6 +893,9 @@
 		1FB39F9E088FDAE4008FC5C6 /* MPWSetAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSetAccessor.m; sourceTree = "<group>"; };
 		1FB39FA7088FDB20008FC5C6 /* MPWGetAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWGetAccessor.h; sourceTree = "<group>"; };
 		1FB39FA8088FDB20008FC5C6 /* MPWGetAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWGetAccessor.m; sourceTree = "<group>"; };
+		1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBundle.h; sourceTree = "<group>"; };
+		1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBundle.m; sourceTree = "<group>"; };
+		1FB7AE3424DB118E00CCBE86 /* objst.sited */ = {isa = PBXFileReference; lastKnownFileType = folder; path = objst.sited; sourceTree = "<group>"; };
 		1FB7D7F01E9E5ACB008E5D8E /* MPWClassDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassDefinition.h; sourceTree = "<group>"; };
 		1FB7D7F11E9E5ACC008E5D8E /* MPWClassDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassDefinition.m; sourceTree = "<group>"; };
 		1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveHTTPD.framework; path = ../../Build/Release/ObjectiveHTTPD.framework; sourceTree = "<group>"; };
@@ -1670,6 +1678,7 @@
 		1FE8F22513802EB500B37A71 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1FB7AE3424DB118E00CCBE86 /* objst.sited */,
 				1FA3887513911150007B5CC9 /* testfile.txt */,
 				1F22D86413916E0400D99DAB /* varname.txt */,
 			);
@@ -1829,6 +1838,8 @@
 				1F50462B2118AEB400073E1E /* MPWPropertyPathComponent.h */,
 				1F50462C2118AEB400073E1E /* MPWPropertyPathComponent.m */,
 				1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */,
+				1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */,
+				1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1917,6 +1928,7 @@
 				1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */,
 				1FE7879624C0B440005ED5D4 /* MPWWindowsScheme.h in Headers */,
 				1F5E505C09B4B754000298D9 /* MPWStTests.h in Headers */,
+				1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */,
 				1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */,
 				1F5E505E09B4B754000298D9 /* MPWInstanceVariable.h in Headers */,
 				1FAFD9731855B98200EC5221 /* MPWStScript.h in Headers */,
@@ -2124,6 +2136,7 @@
 				1FE37BB71969610700C9A378 /* MPWSetAccessor.h in Headers */,
 				1FE37BE11969612500C9A378 /* MPWSchemeScheme.h in Headers */,
 				1FE37BDB1969612500C9A378 /* MPWEnvScheme.h in Headers */,
+				1FB7AE3124DB0F3000CCBE86 /* STBundle.h in Headers */,
 				1FE37BC11969610800C9A378 /* MPWTaggedFloat.h in Headers */,
 				1FE37BB91969610700C9A378 /* MPWStatementList.h in Headers */,
 				1FE37B871969610600C9A378 /* MPWExpression.h in Headers */,
@@ -2673,6 +2686,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA3887713911150007B5CC9 /* testfile.txt in Resources */,
+				1FB7AE3524DB118E00CCBE86 /* objst.sited in Resources */,
 				1F22D86613916E0400D99DAB /* varname.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3015,6 +3029,7 @@
 				1F88E8B2138ADC1600199F03 /* MPWURLBinding.m in Sources */,
 				1F9CD1E31A2C94AE00578177 /* MPWCascadeExpression.m in Sources */,
 				1F88E8B4138ADC1600199F03 /* MPWEnvScheme.m in Sources */,
+				1FB7AE3224DB0F3000CCBE86 /* STBundle.m in Sources */,
 				1F88E8DC138ADCCA00199F03 /* MPWResource.m in Sources */,
 				1FA3886A13910FA6007B5CC9 /* MPWBundleScheme.m in Sources */,
 				1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */,
@@ -3185,6 +3200,7 @@
 				1F7A21B91B779CDD00FF6C03 /* MPWDataflowConstraintExpression.m in Sources */,
 				1FE37B6D1969610600C9A378 /* MPWLiteralExpression.m in Sources */,
 				1F575DA120BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
+				1FB7AE3324DB0F3000CCBE86 /* STBundle.m in Sources */,
 				1FE37BA21969610700C9A378 /* MPWMethodHeader.m in Sources */,
 				1FE37BC41969610800C9A378 /* NSObjectScripting.m in Sources */,
 				1FE37BE61969612600C9A378 /* MPWRelScheme.m in Sources */,

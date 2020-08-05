@@ -1,0 +1,63 @@
+(
+
+{
+date = "January 18th, 2019";
+blurb = "Copy of objective.st website running dynamically on a Digital Ocean Droplet.";
+},
+
+
+{
+date = "December 28th, 2018";
+blurb = "Linux port (using GNUstep).";
+},
+
+{
+date = "October 22nd, 2018";
+blurb = "SQLite scheme handler (via property paths).";
+},
+
+{
+date = "October 14th, 2018";
+blurb = "Syntax for defining scheme handlers with property paths.";
+},
+
+{
+date = "April 2nd, 2018";
+blurb = "Filter definition syntax.";
+},
+{
+date = "July 15th, 2017";
+blurb = "Now have real class and method definition syntax.";
+},
+{
+date = "May 15th, 2014";
+blurb = "The Objective-Smalltalk REPL is now available as an embeddable NSTextView subclass, in addition to the Unix command line.";
+},
+{
+date = "May 12th, 2014";
+blurb = "More unicode support: in addition to symbols like π there is now also support for various operator-like constructs like ≠,≤ and ≥ extended (in-)equality tests, the arrows ⇦ and ← for assignment and ⇨, → for attaching connectors to ports.";
+},
+
+
+{
+date = "March 24th, 2014";
+blurb = "Auto-complete for local variables and messages in stsh.  The algorithm takes into account both syntax and actual live objects for very accurate results.";
+},
+{
+date = "February 19th, 2014";
+blurb = "[Cocoa Heads Berlin](http://cocoaheads-berlin.github.io) [presentation](http://www.youtube.com/watch?v=VzTgEQrFY3I).";
+},
+{
+date = "February 7th, 2014";
+blurb = "Simple live coding demo [video](http://www.youtube.com/watch?v=sypkOhE-ufs) driving Apple's Quartz API via [MPWDrawingContext](https://github.com/mpw/MPWDrawingContext).";
+},
+{
+date = "February 1st, 2014";
+blurb = "Objective-Smalltalk presented at the [FOSDEM](https://fosdem.org/2014/) [Smalltalk DevRoom](https://fosdem.org/2014/schedule/track/smalltalk/), [video](http://www.youtube.com/watch?v=NZmgVsk1K6k) available ";
+},
+{
+date = "August 10th, 2013";
+blurb = "Polymorphic Identifiers [paper](https://dl.acm.org/citation.cfm?id=2508168.2508169) accepted at [DLS 2013](https://conf.researchr.org/track/splash-2013/dls-2013-papers) [pdf](https://www.hpi.uni-potsdam.de/hirschfeld/publications/media/WeiherHirschfeld_2013_PolymorphicIdentifiersUniformResourceAccessInObjectiveSmalltalk_AcmDL.pdf).";
+},
+
+)
