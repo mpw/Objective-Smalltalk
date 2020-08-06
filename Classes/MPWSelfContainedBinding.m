@@ -53,6 +53,11 @@
     return nil;
 }
 
+- (id)asScheme {
+    return [self scheme];
+}
+
+
 
 
 

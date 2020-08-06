@@ -316,7 +316,7 @@
 		1FB7AE3124DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7AE3224DB0F3000CCBE86 /* STBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */; };
 		1FB7AE3324DB0F3000CCBE86 /* STBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */; };
-		1FB7AE3524DB118E00CCBE86 /* objst.sited in Resources */ = {isa = PBXBuildFile; fileRef = 1FB7AE3424DB118E00CCBE86 /* objst.sited */; };
+		1FB7AE3524DB118E00CCBE86 /* test.stb in Resources */ = {isa = PBXBuildFile; fileRef = 1FB7AE3424DB118E00CCBE86 /* test.stb */; };
 		1FB7D7F21E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7D7F01E9E5ACB008E5D8E /* MPWClassDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7D7F31E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7D7F01E9E5ACB008E5D8E /* MPWClassDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7D7F41E9E5ACC008E5D8E /* MPWClassDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7D7F11E9E5ACC008E5D8E /* MPWClassDefinition.m */; };
@@ -895,7 +895,7 @@
 		1FB39FA8088FDB20008FC5C6 /* MPWGetAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWGetAccessor.m; sourceTree = "<group>"; };
 		1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBundle.h; sourceTree = "<group>"; };
 		1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBundle.m; sourceTree = "<group>"; };
-		1FB7AE3424DB118E00CCBE86 /* objst.sited */ = {isa = PBXFileReference; lastKnownFileType = folder; path = objst.sited; sourceTree = "<group>"; };
+		1FB7AE3424DB118E00CCBE86 /* test.stb */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test.stb; sourceTree = "<group>"; };
 		1FB7D7F01E9E5ACB008E5D8E /* MPWClassDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassDefinition.h; sourceTree = "<group>"; };
 		1FB7D7F11E9E5ACC008E5D8E /* MPWClassDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassDefinition.m; sourceTree = "<group>"; };
 		1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveHTTPD.framework; path = ../../Build/Release/ObjectiveHTTPD.framework; sourceTree = "<group>"; };
@@ -1678,7 +1678,7 @@
 		1FE8F22513802EB500B37A71 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1FB7AE3424DB118E00CCBE86 /* objst.sited */,
+				1FB7AE3424DB118E00CCBE86 /* test.stb */,
 				1FA3887513911150007B5CC9 /* testfile.txt */,
 				1F22D86413916E0400D99DAB /* varname.txt */,
 			);
@@ -2686,7 +2686,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA3887713911150007B5CC9 /* testfile.txt in Resources */,
-				1FB7AE3524DB118E00CCBE86 /* objst.sited in Resources */,
+				1FB7AE3524DB118E00CCBE86 /* test.stb in Resources */,
 				1F22D86613916E0400D99DAB /* varname.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

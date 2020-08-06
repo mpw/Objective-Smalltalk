@@ -7,6 +7,7 @@
 
 #import "STBundle.h"
 #import "MPWStCompiler.h"
+#import "MPWSchemeScheme.h"
 
 @interface STBundle()
 
@@ -72,10 +73,10 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [NSJSONSerialization JSONObjectWithData:[self storeForSubDir:@"."][@"Info.json"] options:0 error:nil];
 }
 
--(void)configureInterpreter:(MPWStCompiler*)interpreter
+-(void)configureInterpreter:(MPWStCompiler*)newInterpreter
 {
-    [[interpreter schemes] setSchemeHandler:self.resources forSchemeName:@"rsrc"];
-    [interpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
+    [[newInterpreter schemes] setSchemeHandler:self.resources forSchemeName:@"rsrc"];
+    [newInterpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 }
 
 -(MPWStCompiler*)createInterpreter
@@ -110,7 +111,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 +(instancetype)_testBundle
 {
-    NSString *testBundlePath=[[NSBundle bundleForClass:self] pathForResource:@"objst" ofType:@"sited"];
+    NSString *testBundlePath=[[NSBundle bundleForClass:self] pathForResource:@"test" ofType:@"stb"];
     STBundle *bundle=[self bundleWithPath:testBundlePath];
     EXPECTNOTNIL(testBundlePath, @"bundle url");
     return bundle;
@@ -119,7 +120,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 +(void)testBasicCreation
 {
     STBundle *bundle=[self _testBundle];
-    IDEXPECT([[bundle path] lastPathComponent],@"objst.sited",@"bundle URL ivar");
+    IDEXPECT([[bundle path] lastPathComponent],@"test.stb",@"bundle URL ivar");
 }
 
 +(void)testGetResource
@@ -133,19 +134,19 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 +(void)testGetSource
 {
     STBundle *bundle=[self _testBundle];
-    NSData *source=[bundle sourceDir][@"MetaobjectPage.st"];
+    NSData *source=[bundle sourceDir][@"STBundleLoadedTestClass2.st"];
     EXPECTNOTNIL(source, @"got the source");
-    INTEXPECT(source.length, 382, @"and it is the source I expected");
+    INTEXPECT(source.length, 91, @"and it is the source I expected");
 }
 
 +(void)testGetAllSourceNames
 {
     STBundle *bundle=[self _testBundle];
     NSArray<NSString*> *names=[bundle sourceNames];
-    INTEXPECT(names.count, 5, @"number of source files");
+    INTEXPECT(names.count, 2, @"number of source files");
     NSData *s1=[bundle sourceDir][names[0]];
-    IDEXPECT(names[0], @"MPWMetaobjectSite.st", @"what is it?");
-    INTEXPECT(s1.length,2496,@"source file 1");
+    IDEXPECT(names[0], @"STBundleLoadedTestClass1.st", @"what is it?");
+    INTEXPECT(s1.length,92,@"source file 1");
 }
 
 +(void)testReadInfo
@@ -177,7 +178,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     STBundle *bundle=[self _testBundle];
     NSDictionary *methodDict=[bundle methodDict];
-    INTEXPECT( methodDict.count, 5, @"number of classes in methodDict");
+    INTEXPECT( methodDict.count, 2, @"number of classes in methodDict");
 }
 
 +(NSArray*)testSelectors

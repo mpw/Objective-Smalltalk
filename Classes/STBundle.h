@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSDictionary*)info;
 -(MPWStCompiler*)interpreter;
 -(NSDictionary*)methodDict;
--(void)setupSite;
 
 @end
 
