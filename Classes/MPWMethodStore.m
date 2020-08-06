@@ -238,9 +238,9 @@ scalarAccessor( id , compiler , setCompiler )
         [s writeString:[header headerString]];
         [s writeString:@" {"];
         [s writeString:[method script]];
-        [s writeString:@"}\n"];
+        [s writeString:@"}\n\n"];
     }
-    [s writeString:@"\n}.\n"];
+    [s writeString:@"}.\n"];
 }
 
 -(void)fileout:(MPWByteStream*)s
@@ -318,7 +318,7 @@ scalarAccessor( id , compiler , setCompiler )
     MPWByteStream *s=[MPWByteStream streamWithTarget:result];
     [store fileout:s];
 
-    NSString *expected=@"class MPWMethodWriterTestClass2 : NSObject\n{\n-answer1 { 42. }\n-answer2 { 82. }\n\n}.\n";
+    NSString *expected=@"class MPWMethodWriterTestClass2 : NSObject\n{\n-answer1 { 42. }\n\n-answer2 { 82. }\n\n}.\n";
 
     EXPECTTRUE([result hasPrefix:expected], @"matches as far as it goes");
     IDEXPECT(result,expected,@"fileout");

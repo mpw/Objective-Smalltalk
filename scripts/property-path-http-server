@@ -24,6 +24,9 @@ scheme Site  {
   /* { 
      |= { 'Home!'.  }
   }
+  /. { 
+     |= { 'Root!'.  }
+  }
 }
 stdout println:'did define site'.
 scheme:site := Site alloc initSite.
