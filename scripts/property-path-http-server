@@ -1,0 +1,34 @@
+#!/usr/local/bin/stsh
+#-server:<int>port
+#
+framework:ObjectiveHTTPD load.
+
+scheme Site  {
+  var counter.
+
+  -initSite { 
+    self setCounter:0.
+	self.
+  }
+
+  /hello/:name { 
+     |= { "Hello: {name}".  }
+  }
+  /count/:inc { 
+     |= {
+       counter := self counter + inc intValue.
+       self setCounter:counter.
+       "Hello: {counter}". 
+     }
+  }
+  /* { 
+     |= { 'Home!'.  }
+  }
+}
+stdout println:'did define site'.
+scheme:site := Site alloc initSite.
+server ← MPWSchemeHttpServer serverOnPort:port
+server setScheme: scheme:site.
+server start:nil.
+stdout println:port.
+shell runInteractiveLoop
