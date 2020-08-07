@@ -19,14 +19,16 @@
 
 @implementation STBundle
 {
-    NSDictionary  *info;
-    MPWStCompiler *interpreter;
-    NSDictionary  *methodDict;
+    NSDictionary      *info;
+    MPWStCompiler     *interpreter;
+    NSDictionary      *methodDict;
+    MPWWriteBackCache *cachedResources;
 }
 
 lazyAccessor(NSDictionary, info, setInfo, readInfo)
 lazyAccessor(MPWStCompiler, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary, methodDict, setMethodDict, methodDictForSourceFiles)
+lazyAccessor(MPWWriteBackCache, cachedResources, setCachedResources, createResources)
 
 CONVENIENCEANDINIT( binding, WithBinding:newBinding )
 {
@@ -52,10 +54,24 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [[[self binding] referenceByAppendingReference:[subdir asReference]] asScheme];
 }
 
-
 -(id <MPWHierarchicalStorage>)resources
 {
     return [self storeForSubDir:@"Resources"];
+}
+
+-(id <MPWReferencing>)resourceRef
+{
+    NSString *path=[[self path] stringByAppendingPathComponent:@"Resources"];
+    return [path asReference];
+}
+
+-(MPWWriteBackCache*)createResources
+{
+
+    MPWDiskStore *base = [MPWDiskStore store];
+    MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
+    cache.autoFlush=NO;
+    return cache;
 }
 
 -(id <MPWHierarchicalStorage>)sourceDir
@@ -75,7 +91,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(void)configureInterpreter:(MPWStCompiler*)newInterpreter
 {
-    [[newInterpreter schemes] setSchemeHandler:self.resources forSchemeName:@"rsrc"];
+    [[newInterpreter schemes] setSchemeHandler:[MPWPathRelativeStore storeWithSource:self.cachedResources reference:[self resourceRef]]   forSchemeName:@"rsrc"];
     [newInterpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 }
 
