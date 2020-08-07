@@ -356,8 +356,6 @@ scalarAccessor( id , compiler , setCompiler )
     [store fileoutToStore:sourceStore];
     INTEXPECT([d count],2,@"number of classes stored");
 
-    NSLog(@"allKeys: %@",[d allKeys]);
-
     NSData *d1=[sourceStore at:[MPWGenericReference referenceWithPath:@"MPWMethodWriterTestClass3.st"]];
     NSData *d2=[sourceStore at:[MPWGenericReference referenceWithPath:@"MPWMethodWriterTestClass5.st"]];
 
