@@ -21,8 +21,8 @@ scheme Site  {
        "Hello: {counter}". 
      }
   }
-  /* { 
-     |= { 'Home!'.  }
+  /*:rest { 
+     |= { "Home!: {rest}".  }
   }
   /. { 
      |= { 'Root!'.  }

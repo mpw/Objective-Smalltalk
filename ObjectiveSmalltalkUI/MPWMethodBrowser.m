@@ -94,13 +94,15 @@
 -(void)awakeFromNib
 {
     [super awakeFromNib];
-    [self.methodBody setAutomaticQuoteSubstitutionEnabled:NO];
-    [self.methodBody setAutomaticLinkDetectionEnabled:NO];
-    [self.methodBody setAutomaticDataDetectionEnabled:NO];
-    [self.methodBody setAutomaticDashSubstitutionEnabled:NO];
-    [self.methodBody setAutomaticTextReplacementEnabled:NO];
-    [self.methodBody setAutomaticSpellingCorrectionEnabled:NO];
-    [self.methodBody setFont:[NSFont fontWithName:@"Menlo Regular" size:11]];
+    NSTextView *text=self.methodBody;
+
+    [text setAutomaticQuoteSubstitutionEnabled:NO];
+    [text setAutomaticLinkDetectionEnabled:NO];
+    [text setAutomaticDataDetectionEnabled:NO];
+    [text setAutomaticDashSubstitutionEnabled:NO];
+    [text setAutomaticTextReplacementEnabled:NO];
+    [text setAutomaticSpellingCorrectionEnabled:NO];
+    [text setFont:[NSFont fontWithName:@"Menlo Regular" size:11]];
     [self.methodHeader setFont:[NSFont fontWithName:@"Menlo Regular" size:12]];
     [self updateBrowserMethodStore];
     [methodBrowser setBrowserDelegate:self];

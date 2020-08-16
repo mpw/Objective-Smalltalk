@@ -78,6 +78,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/NSObjectScripting.m \
     Classes/MPWGetAccessor.m \
     Classes/MPWSetAccessor.m \
+    Classes/STBundle.m \
     MPWCascadeExpression.m \
     Schemes/MPWRefScheme.m \
     Schemes/MPWClassScheme.m \
@@ -94,7 +95,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWRelScheme.m \
     Schemes/MPWTreeNodeScheme.m \
     Schemes/MPWTreeNode.m \
-    Schemes/MPWCopyOnWriteScheme.m \
     Schemes/MPWBlockFilterScheme.m \
 
 
