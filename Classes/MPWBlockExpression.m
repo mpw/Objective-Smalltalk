@@ -44,7 +44,7 @@ idAccessor( declaredArguments, setDeclaredArguments )
 	[statements addToVariablesRead:variablesRead];
 }
 
--(NSArray*)implicitArguments
+-(NSArray*)implicitUsedArguments
 {
     NSMutableArray *implicits=[NSMutableArray array];
     for ( MPWIdentifier *identifier in [self variablesRead]) {
@@ -55,11 +55,26 @@ idAccessor( declaredArguments, setDeclaredArguments )
     return implicits;
 }
 
+-(NSArray*)addUnusedImplicitArguments:(NSArray*)usedImplicitarguments
+{
+    int maxArgNo=-1;
+    for (NSString *implicitArgName in usedImplicitarguments) {
+        int argNo=[[implicitArgName substringFromIndex:1] intValue];
+        maxArgNo=MAX(maxArgNo,argNo);
+    }
+    NSMutableArray *args=[NSMutableArray array];
+    for (int i=0;i<=maxArgNo;i++) {
+        [args addObject:[NSString stringWithFormat:@"$%d",i]];
+    }
+    return args;
+}
+
 -(NSArray*)arguments
 {
     NSArray *arguments=[self declaredArguments];
     if ( arguments.count == 0) {
-        arguments=[self implicitArguments];
+        arguments=[self implicitUsedArguments];
+        arguments=[self addUnusedImplicitArguments:arguments];
     }
     return arguments;
 }

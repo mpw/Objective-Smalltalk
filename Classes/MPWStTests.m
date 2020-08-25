@@ -731,6 +731,12 @@
     IDEXPECT( [block arguments], @[ @"$0"],@"single implicit argument");
 }
 
++(void)testParseNonSeqeuentialImplicitBlockArgs
+{
+    MPWBlockExpression *block= [self evaluate:@" { $2 * 2. } block."];
+    IDEXPECT( [block arguments], (@[ @"$0", @"$1", @"$2"]),@"three implicit arguments, first two ignored");
+}
+
 +(void)testMethodVarsHaveLocalScope
 {
 
@@ -1459,6 +1465,7 @@
         @"testBlockArgs",
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
+        @"testParseNonSeqeuentialImplicitBlockArgs",
         @"testMethodVarsHaveLocalScope",
         @"testToDo",
         @"testBinarySelectorPrecedenceOverKeyword",

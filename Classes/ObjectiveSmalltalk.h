@@ -26,7 +26,6 @@
 #import <ObjectiveSmalltalk/MPWEvaluable.h>
 #import <ObjectiveSmalltalk/MPWEvaluator.h>
 #import <ObjectiveSmalltalk/MPWExpression+autocomplete.h>
-#import <ObjectiveSmalltalk/MPWExpression+autocomplete.h>
 #import <ObjectiveSmalltalk/MPWExpression.h>
 #import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 #import <ObjectiveSmalltalk/MPWFilterDefinition.h>
@@ -59,7 +58,6 @@
 #import <ObjectiveSmalltalk/MPWURLSchemeResolver.h>
 #import <ObjectiveSmalltalk/MPWVARBinding.h>
 #import <ObjectiveSmalltalk/MPWVarScheme.h>
-#import <ObjectiveSmalltalk/MPWWindowsScheme.h>
 #import <ObjectiveSmalltalk/NSObjectScripting.h>
 #import <ObjectiveSmalltalk/STBundle.h>
 

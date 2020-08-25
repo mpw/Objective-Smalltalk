@@ -111,8 +111,7 @@
 		1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; };
 		1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
 		1F575D9D20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; };
-		1F575D9F20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; };
+		1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
 		1F575DA120BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
 		1F575DA220BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
@@ -242,10 +241,9 @@
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1F86CE182031DE84000F0B81 /* MPWWindowsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */; };
 		1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */; };
 		1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; };
+		1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE1D203338A8000F0B81 /* MPWSpotlightScheme.m */; };
 		1F86CE2620344191000F0B81 /* MPWShellPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2F8DC6192E28AA00A5D1B5 /* MPWShellPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F88E89F138ADC1600199F03 /* MPWFileSchemeResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -262,6 +260,9 @@
 		1F89EBA22241A175000A82D6 /* MPWProgramTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F89EBA02241A175000A82D6 /* MPWProgramTextView.m */; };
 		1F8B855219AC72C700F8A107 /* MPWFileWatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8B855019AC72C700F8A107 /* MPWFileWatcher.h */; };
 		1F8B855519AC72C700F8A107 /* MPWFileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */; };
+		1F8C938A24F5720D00646461 /* ObjectiveSmalltalk.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F8C938B24F573B400646461 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F8C938C24F5748800646461 /* MPWWindowsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F8E81CC1923AAFD00821570 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */; };
 		1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8E81D01924229B00821570 /* MPWDocumentScheme.m */; };
@@ -498,7 +499,7 @@
 		1FEE11DA2386EAF20042B149 /* NSApplication.st in Copy Smalltalk files for finishLaunching */ = {isa = PBXBuildFile; fileRef = 1FEE11D92386EAF20042B149 /* NSApplication.st */; };
 		1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6F637F0987C803006F3936 /* NSObjectScripting.m */; };
 		1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; };
+		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF142381B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
 		1FF1423B1B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
 		1FF556FE2456AF84006B8E0F /* ObjectiveSmalltalk.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2040,7 +2041,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F575D9F20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */,
 				1F1BE5F7224D2FAF002D58AC /* MPWSchemeScheme.h in Headers */,
 				1F81C08719699BF20066DF43 /* MethodServer.h in Headers */,
 				1F81C06519699AE10066DF43 /* MethodServerTouch.h in Headers */,
@@ -2051,7 +2051,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F86CE182031DE84000F0B81 /* MPWWindowsScheme.h in Headers */,
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */,
 				1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */,
@@ -2104,6 +2103,7 @@
 				1FE37B9D1969610600C9A378 /* MPWAbstractInterpretedMethod.h in Headers */,
 				1FE37B991969610600C9A378 /* MPWMessageExpression.h in Headers */,
 				1F50462E2118AEB400073E1E /* MPWPropertyPathComponent.h in Headers */,
+				1F8C938A24F5720D00646461 /* ObjectiveSmalltalk.h in Headers */,
 				1FE37BAD1969610700C9A378 /* MPWObjectMirror.h in Headers */,
 				1FE37B781969610600C9A378 /* MPWBlockExpression.h in Headers */,
 				1FE37B701969610600C9A378 /* JSGCDDispatcher.h in Headers */,
@@ -2162,10 +2162,12 @@
 				1FE37BEF1969612600C9A378 /* MPWDefaultsScheme.h in Headers */,
 				1FE37BD31969612500C9A378 /* MPWFileSchemeResolver.h in Headers */,
 				1FB7D7F31E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */,
+				1F8C938B24F573B400646461 /* MPWDataflowConstraintExpression.h in Headers */,
 				1F321C6E2133F063001BE6CC /* MPWPropertyPathSetter.h in Headers */,
 				1FE37BA71969610700C9A378 /* MPWMethodType.h in Headers */,
 				1F3C6E701E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */,
 				1FE37BE71969612600C9A378 /* MPWResourceScheme.h in Headers */,
+				1F8C938C24F5748800646461 /* MPWWindowsScheme.h in Headers */,
 				1FE37B801969610600C9A378 /* MPWConnector.h in Headers */,
 				1FE37B9B1969610600C9A378 /* MPWMessagePortDescriptor.h in Headers */,
 				1FE37B9F1969610600C9A378 /* MPWMethodCallBack.h in Headers */,
@@ -4361,7 +4363,7 @@
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -4401,7 +4403,7 @@
 				INFOPLIST_FILE = "MethodServer/MethodServer-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -5040,9 +5042,9 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = ObjectiveSmalltalk;
-				PUBLIC_HEADERS_FOLDER_PATH = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -5097,9 +5099,9 @@
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = ObjectiveSmalltalk;
-				PUBLIC_HEADERS_FOLDER_PATH = ObjectiveSmalltalk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
