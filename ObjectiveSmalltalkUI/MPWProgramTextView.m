@@ -136,7 +136,7 @@
         NSRange selectedRange=[self selectedRange];
         [self replaceCharactersInRange:selectedRange withString:[NSString stringWithFormat:@"%d",currentValue]];
         [self setSelectedRange:selectedRange];
-        [self.delegate textDidChange:self];
+        [self.delegate textDidChange:[NSNotification notificationWithName:@"txtDicChange" object: self]];
         numberDraggingStartingPoint=[theEvent locationInWindow];
     } else {
         [super mouseDragged:theEvent];
@@ -499,6 +499,7 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
             [[self undoManager] beginUndoGrouping];
             [self replaceCharactersInRange:selectedRange withString:newString];
             [self setSelectedRange:NSMakeRange(selectedRange.location, newString.length)];
+            [self.delegate textDidChange:[NSNotification notificationWithName:@"txtDicChange" object: self]];
         } @finally {
             [[self undoManager] endUndoGrouping];
         }

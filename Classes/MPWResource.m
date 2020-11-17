@@ -31,13 +31,8 @@ idAccessor( source, setSource )
 		return [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:[self rawData] options:0 error:NULL] ;
 	}  else if ( [[self extension] isEqual:@"newsplist"] ||
                 [[self extension] isEqual:@"plist"] ) {
-#if TARGET_OS_IPHONE
-        return [NSPropertyListSerialization propertyListFromData:[self rawData] mutabilityOption:0 format:nil errorDescription:nil];
-#else
         return [NSPropertyListSerialization propertyListWithData:[self rawData] options:0 format:0 error:NULL];
         
-//        [[[self rawData] stringValue] propertyList];
-#endif
     }
     return nil;
 }

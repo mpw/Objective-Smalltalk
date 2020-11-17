@@ -400,23 +400,21 @@ typedef id  (^idBlock)(id arg );
 
 +(NSArray*)testSelectors
 {
-    return [NSArray arrayWithObjects:
+    return @[
             @"testObjcBlocksWithNoArgsAreMapped",
-//            @"testObjcBlocksWithObjectArgsAreMapped",   FIXME ARM
+            @"testObjcBlocksWithObjectArgsAreMapped", 
             @"testBlockArgsDontMessWithEnclosingScope",
             @"testSTBlockAsObjCBlock",
             @"testCopiedSTBlockAsObjCBlock",
             @"testRetainedSTBlockOriginalAutoreleased",
-#if !TARGET_OS_IPHONE
-//                @"testBlock_copiedSTBlockOriginalAutoreleased",   FIXME ARM
-#endif
+            @"testBlock_copiedSTBlockOriginalAutoreleased",
             @"testBlockInstalledAsMethod",
             @"testBlockAsMethodWithSelfAsArg",
             @"testBlockAsMethodWithArg",
             @"testBlockAsMethodWithArg",
             @"testBlockAsMethodWithIntReturn",
-//            @"testBlockAsMethodWithMethodHeader",   FIXME ARM
-            nil];
+            @"testBlockAsMethodWithMethodHeader",
+            ];
 }
 
 @end

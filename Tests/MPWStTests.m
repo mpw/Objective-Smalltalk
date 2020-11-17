@@ -95,7 +95,7 @@
 
 +(void)stringConcat
 {
-    [self testexpr:@"'Hi ' stringByAppendingString:'there'." expected:@"Hi there"];
+    TESTEXPR(@"'Hi ' stringByAppendingString:'there'." ,@"Hi there");
 }
 
 +(void)nestedArgStringConcat
@@ -1433,7 +1433,7 @@
 		@"testRecursiveInterpret",
 		@"testSevenMinus4",
 		@"testScriptOnObjectKnowsSelf",
-//		@"testAddingMethodToClass",   FIXME ARM
+		@"testAddingMethodToClass", 
 		@"testNegativeLiteral",
 		@"testNegativeLiteralComputation",
         @"testCollectHOM",
@@ -1441,10 +1441,10 @@
 		@"testScriptWithParameters",
 		@"testNSRangeViaSubarray",
 //		@"testNSPointViaString",
-//		@"testNSSizeViaString",
-//		@"testAddMethodWithIntArg",    FIXME ARM
-//		@"testAddMethodWithIntArgAndReturn",   FIXME ARM
-//		@"testAddMethodWithIntArgViaMethodHeader",  FIXME ARM
+		@"testNSSizeViaString",
+		@"testAddMethodWithIntArg",
+		@"testAddMethodWithIntArgAndReturn",
+		@"testAddMethodWithIntArgViaMethodHeader",
 		@"testAllClassesWithScripts",
 		@"testScriptNamesForClass",
 		@"testExternalDictForDefinedMethods",
@@ -1466,7 +1466,7 @@
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
         @"testParseNonSeqeuentialImplicitBlockArgs",
-//        @"testMethodVarsHaveLocalScope",  FIXME ARM
+        @"testMethodVarsHaveLocalScope",
         @"testToDo",
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testIntervalBlockCollect",
@@ -1484,8 +1484,8 @@
 		@"testRefSchemeAccessesBinding",
 		@"testRefSchemeWorksOnTopOfOtherScheme",
 		@"testDotAllowedInIdentifiers",
-//		@"testMethodWithParameters",   FIXME ARM
-//		@"testRedefiningMethod",   FIXME ARM
+		@"testMethodWithParameters",
+		@"testRedefiningMethod",
 			@"testHttpArgWithLeadingZero",
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
@@ -1506,7 +1506,7 @@
             @"testCompositionViaPipeDoesntBlockFurtherEval",
 //         @"testCompositionViaPipeDoesntBlockFurtherEval2",
             @"testCurlyBracesAllowedForBlocks",
-//            @"testDefineClassMethod",  FIXME ARM
+            @"testDefineClassMethod",
             @"testPipeEqualsCompilesButDoesSameAsAssignment",
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
@@ -1519,9 +1519,9 @@
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
-//        @"testCreateSubclassUsingSnytax",  FIXME ARM
-//        @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass", FIXME ARM
-//        @"testClassDefWithExistingClassIsClassExtension", FIXME ARM
+        @"testCreateSubclassUsingSnytax",
+        @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
+        @"testClassDefWithExistingClassIsClassExtension",
         @"testProtocolDefSyntax", 
         @"testProtocolDefSyntaxWithMethods",
         @"testNestedVarExprWithPath",
@@ -1529,9 +1529,9 @@
         @"testNestedVarExprWithPathInBlockInMethod",
         @"testSelfSchemeInSchemeDefintions",
         @"testSimpleSchemeDefSyntax",
-//        @"testSimpleFilterDefSyntax",  FIXME ARM
-//        @"testSimpleFilterDefSyntax", FIXME ARM
-//        @"testUseStReturnAsForward",  FIXME ARM (unknown class)
+        @"testSimpleFilterDefSyntax",
+        @"testSimpleFilterDefSyntax",
+        @"testUseStReturnAsForward",
         @"testFilterDefWithNormalMethods",
         @"testParseSimpleProperty",
         @"testParsePropertyPathWithTwoComponents",
@@ -1546,10 +1546,10 @@
         @"testEvaluatePropertyPathGettersWithSeveralArgs",
         @"testEvaluatePropertyPathGetterWithWildcard",
         @"testIdentifierInterpolationWorksAsAssignmentTarget",
-//        @"testSimplePropertyPathSetter",   FIXME ARM
+        @"testSimplePropertyPathSetter",
         @"testConstantPropertyPathGetterWorksWithPlainClass",
         @"testPropertyPathGetterWithArgsWorksWithPlainClass",
-//        @"testSimplePropertyPathSetterWorksWithPlainClass", FIXME ARM
+        @"testSimplePropertyPathSetterWorksWithPlainClass",
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",
         @"testReduceFactorial",

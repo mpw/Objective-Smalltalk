@@ -73,8 +73,8 @@
         keys=stackKeys;
         values=stackValues;
     }
-    [self.keys getObjects:keys];
-    [self.values getObjects:values];
+    [self.keys getObjects:keys range:NSMakeRange(0, maxKeyVal)];
+    [self.values getObjects:values range:NSMakeRange(0, maxKeyVal)];
     
     for (int i=0;i<maxKeyVal;i++) {
         keys[i]=[keys[i] evaluateIn:aContext];

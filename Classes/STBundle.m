@@ -12,7 +12,7 @@
 @interface STBundle()
 
 @property (nonatomic,strong) MPWBinding *binding;
-@property (readonly) NSURL *path;
+@property (readonly) NSString *path;
 
 @end
 

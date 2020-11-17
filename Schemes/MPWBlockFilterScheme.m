@@ -96,12 +96,12 @@ idAccessor( valueFilter, setValueFilter)
 
 +testSelectors
 {
-    return [NSArray arrayWithObjects:
+    return @[
             @"testSimpleValueFilter",
             @"testSimpleIdentifierFilter",
             @"testIdentifierAndValueFilter",
-//           @"testFilterWorksWithCache",   FIXME ARM
-            nil];
+           @"testFilterWorksWithCache",
+        ];
 }
 
 @end

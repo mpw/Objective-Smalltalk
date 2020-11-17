@@ -5,13 +5,13 @@
 //  Created by Marcel Weiher on 02.12.18.
 //
 
-#import "ViewController.h"
+#import "ViewBuilderController.h"
 
-@interface ViewController ()
+@interface TestObjectiveSmalltalkController ()
 
 @end
 
-@implementation ViewController
+@implementation TestObjectiveSmalltalk Controller
 
 - (void)viewDidLoad {
     [super viewDidLoad];

@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface TestObjectiveSmalltalkController : UIViewController
 
 
 @end

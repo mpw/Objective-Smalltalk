@@ -19,7 +19,7 @@
 @implementation STAppDelegate
 
 
--(void)textDidChange:(MPWProgramTextView*)view
+-(void)textDidChange:(NSNotification*)notificatin
 {
 }
 
