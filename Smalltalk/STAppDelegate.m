@@ -24,14 +24,6 @@
 }
 
 
-
-//-(IBAction)showWorkspace:(id)sender
-//{
-//    MPWProgramTextView *workspace=[MPWProgramTextView openInWindow:@"Workspace"];
-//    workspace.delegate=self;
-//    workspace.compiler=self.compiler;
-//}
-
 -(IBAction)showREPL:(id)sender
 {
     CLIView *cli=[CLIView openInWindow:@"CLI"];

@@ -5,17 +5,17 @@
 //  Created by Marcel Weiher on 02.12.18.
 //
 
-#import "ViewBuilderAppDelegate.h"
+#import "TestObjectiveSmalltalkAppDelegate.h"
 #import <MPWTest/MPWTestSuite.h>
 #import <MPWTest/MPWLoggingTester.h>
 #import <MPWTest/MPWClassMirror.h>
 #import <ObjectiveSmalltalk/MPWStCompiler.h>
 #import <ObjectiveSmalltalk/MPWStTests.h>
-@interface ViewBuilderAppDelegate ()
+@interface TestObjectiveSmalltalkAppDelegate ()
 
 @end
 
-@implementation TestObjectiveSmalltalkrAppDelegate
+@implementation TestObjectiveSmalltalkAppDelegate
 
 
 

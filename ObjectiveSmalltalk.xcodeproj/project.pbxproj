@@ -27,8 +27,8 @@
 		1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */; };
 		1F22E0211A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
 		1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
-		1F29D7F121B42BE600AB14D8 /* ViewBuilderAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* ViewBuilderAppDelegate.m */; };
-		1F29D7F421B42BE600AB14D8 /* ViewBuilderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F321B42BE600AB14D8 /* ViewBuilderController.m */; };
+		1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */; };
+		1F29D7F421B42BE600AB14D8 /* TestObjectiveSmalltalkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F321B42BE600AB14D8 /* TestObjectiveSmalltalkController.m */; };
 		1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F521B42BE600AB14D8 /* Main.storyboard */; };
 		1F29D7F921B42BE900AB14D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F821B42BE900AB14D8 /* Assets.xcassets */; };
 		1F29D7FC21B42BE900AB14D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */; };
@@ -665,10 +665,10 @@
 		1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWBoxerUnboxer+MPWBoxingAdditions.m"; sourceTree = "<group>"; };
 		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestObjectiveSmalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F29D7EF21B42BE600AB14D8 /* ViewBuilderAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewBuilderAppDelegate.h; sourceTree = "<group>"; };
-		1F29D7F021B42BE600AB14D8 /* ViewBuilderAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewBuilderAppDelegate.m; sourceTree = "<group>"; };
-		1F29D7F221B42BE600AB14D8 /* ViewBuilderController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewBuilderController.h; sourceTree = "<group>"; };
-		1F29D7F321B42BE600AB14D8 /* ViewBuilderController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewBuilderController.m; sourceTree = "<group>"; };
+		1F29D7EF21B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestObjectiveSmalltalkAppDelegate.h; sourceTree = "<group>"; };
+		1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestObjectiveSmalltalkAppDelegate.m; sourceTree = "<group>"; };
+		1F29D7F221B42BE600AB14D8 /* TestObjectiveSmalltalkController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestObjectiveSmalltalkController.h; sourceTree = "<group>"; };
+		1F29D7F321B42BE600AB14D8 /* TestObjectiveSmalltalkController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestObjectiveSmalltalkController.m; sourceTree = "<group>"; };
 		1F29D7F621B42BE600AB14D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1F29D7F821B42BE900AB14D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F29D7FB21B42BE900AB14D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1304,10 +1304,10 @@
 			isa = PBXGroup;
 			children = (
 				1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */,
-				1F29D7EF21B42BE600AB14D8 /* ViewBuilderAppDelegate.h */,
-				1F29D7F021B42BE600AB14D8 /* ViewBuilderAppDelegate.m */,
-				1F29D7F221B42BE600AB14D8 /* ViewBuilderController.h */,
-				1F29D7F321B42BE600AB14D8 /* ViewBuilderController.m */,
+				1F29D7EF21B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.h */,
+				1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */,
+				1F29D7F221B42BE600AB14D8 /* TestObjectiveSmalltalkController.h */,
+				1F29D7F321B42BE600AB14D8 /* TestObjectiveSmalltalkController.m */,
 				1F29D7F521B42BE600AB14D8 /* Main.storyboard */,
 				1F29D7F821B42BE900AB14D8 /* Assets.xcassets */,
 				1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */,
@@ -2936,10 +2936,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F29D7F421B42BE600AB14D8 /* ViewBuilderController.m in Sources */,
+				1F29D7F421B42BE600AB14D8 /* TestObjectiveSmalltalkController.m in Sources */,
 				1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */,
 				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
-				1F29D7F121B42BE600AB14D8 /* ViewBuilderAppDelegate.m in Sources */,
+				1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

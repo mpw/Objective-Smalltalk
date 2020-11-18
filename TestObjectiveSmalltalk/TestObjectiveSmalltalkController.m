@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 02.12.18.
 //
 
-#import "ViewBuilderController.h"
+#import "TestObjectiveSmalltalkController.h"
 
 @interface TestObjectiveSmalltalkController ()
 

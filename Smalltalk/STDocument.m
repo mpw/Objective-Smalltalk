@@ -8,6 +8,13 @@
 #import "STDocument.h"
 #import "MPWProgramTextView.h"
 
+@interface STDocument(st)
+
+-(IBAction)showWorkspace:(id)sender;
+
+@end
+
+
 @interface STDocument ()
 
 @property (nonatomic, strong) NSMutableSet *workspaces;
@@ -15,6 +22,14 @@
 @end
 
 @implementation STDocument
+
+- (nullable instancetype)initWithType:(NSString *)typeName error:(NSError **)outError;
+{
+    self=[super initWithType:typeName error:outError];
+    [self showWorkspace:nil];
+    return self;
+}
+
 
 - (instancetype)init {
     self = [super init];

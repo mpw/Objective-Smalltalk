@@ -50,8 +50,10 @@ idAccessor( context ,setContext )
 		if ( [[attributeDict objectForKey:@"type"] isEqual:@"@"] ) {
 			char symbol[256]="";
 			id name = [attributeDict objectForKey:@"name"];
+            long symlen=[name length];
+            NSAssert(symlen < 254, @"symlen %ld > 254",symlen);
 			[name getCString:symbol maxLength:254 encoding:NSASCIIStringEncoding];
-			symbol[ [name length] ] =0;
+			symbol[ symlen ] =0;
 			
 			id* ptr=dlsym( RTLD_DEFAULT, symbol );
 			if ( ptr && *ptr )  {
