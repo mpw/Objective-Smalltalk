@@ -14,3 +14,18 @@
 }
 
 @end
+
+#define TESTEXPR( expr, expected )\
+{\
+   id result=nil;\
+   id expectedString;\
+   @try { \
+      result = (MPWExpression*)[self evaluate:expr];\
+      result = [result stringValue];\
+      expectedString=[expected stringValue];\
+   } @catch (NSException *e) {\
+       NSAssert3( 0, @"evaluating '%@' and expecting '%@' raised %@",expr,expectedString,e);\
+   }\
+   NSAssert3( result==expectedString || [result isEqual:expectedString], @"%@ doesn't evaluate to '%@' but to actual '%@'",expr,expected,result);\
+}\
+
