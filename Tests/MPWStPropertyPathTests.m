@@ -105,10 +105,7 @@
 
 +(void)testEvaluatePropertyPathGettersWithSeveralArgs
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"class PropertyTestClass3 : MPWScheme { /propertyA/:arg1/:arg2/:arg3 { |= {  (arg1 intValue * 100) + (arg2 intValue * 10) + (arg3 intValue).  }}} "];
-    id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass3 scheme. scheme:p := a. p:propertyA/3/4/5."];
-    IDEXPECT(result1,@(345),@"evaluating a property with 3 args");
+    TESTEXPR( @"class PropertyTestClass3 : MPWScheme { /propertyA/:arg1/:arg2/:arg3 { |= {  (arg1 intValue * 100) + (arg2 intValue * 10) + (arg3 intValue).  }}}. a := PropertyTestClass3 scheme. scheme:p := a. p:propertyA/3/4/5.", @(345) );
 }
 
 +(void)testEvaluatePropertyPathGetterWithWildcard

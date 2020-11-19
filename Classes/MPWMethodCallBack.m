@@ -328,7 +328,7 @@ idAccessor( method, _setMethod )
 //	returnValue = function( target, @selector(answerToEverythingWillOverrideInSubclass) );
     returnValue = (id)[target answerToEverythingWillOverrideInSubclass];
 
-    IDEXPECT( [[returnValue class] name], [[expectedReturn class] name], @"expected return for subclass we installed the method in");
+    IDEXPECT( [returnValue className], [expectedReturn className], @"expected return for subclass we installed the method in");
     IDEXPECT( returnValue, expectedReturn, @"expected return for subclass we installed the method in");
     returnValue = (id)[superclassTarget answerToEverythingWillOverrideInSubclass];
 	IDEXPECT( returnValue, expectedSuperclassReturn, @"expected return for superclass that has the original method (and should not be overridden");

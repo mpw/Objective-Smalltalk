@@ -26,6 +26,6 @@
    } @catch (NSException *e) {\
        NSAssert3( 0, @"evaluating '%@' and expecting '%@' raised %@",expr,expectedString,e);\
    }\
-   NSAssert3( result==expectedString || [result isEqual:expectedString], @"%@ doesn't evaluate to '%@' but to actual '%@'",expr,expected,result);\
+   IDEXPECT( result, expectedString , @"not equal");\
 }\
 

@@ -1386,8 +1386,8 @@
         @"testFilterDefWithNormalMethods",
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",
+        @"testCanInterpolateStringWithScheme",
         @"testReduceFactorial",
-//        @"testCanInterpolateStringWithScheme",
         ];
 }
 
