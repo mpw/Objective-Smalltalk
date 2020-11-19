@@ -23,10 +23,17 @@
 
 }
 
++(void)testConnectStores
+{
+    TESTEXPR( (@"scheme:cache := MPWCachingStore store. scheme:site := MPWDictStore store. scheme:cache -> scheme:site. site:hi := 'there'.  cache:hi. "), @"there" );
+
+}
+
 +(NSArray*)testSelectors
 {
    return @[
        @"testConnectFilters",
+       @"testConnectStores",
    ];
 }
 
