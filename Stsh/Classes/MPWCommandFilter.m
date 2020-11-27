@@ -12,7 +12,7 @@
 #import "MPWCommandFilter.h"
 #import "MPWShellProcess.h"
 #import "MPWUpcaseFilter.h"
-#include <sys/select.h>
+#include <sys/time.h>
 
 
 @interface NSFileHandle(isDataAvailable)
