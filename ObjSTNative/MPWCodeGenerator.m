@@ -103,8 +103,9 @@ objectAccessor(NSMutableDictionary, stringMap, setStringMap )
 
 -(void)linkOFileName:(NSString*)ofile_name toDylibName:(NSString*)dylib
 {
-    NSString *o_to_dylib=[NSString stringWithFormat:@"ld  -macosx_version_min 10.9 -dylib -o %@ %@ -framework MPWFoundation -framework Foundation -lSystem",dylib,ofile_name];
-    system([o_to_dylib fileSystemRepresentation]);
+    NSString *o_to_dylib=[NSString stringWithFormat:@"cc -dynamiclib -arch x86_64  -F/Library/Frameworks/ -F/System/Library/Frameworks -o %@ %@ -framework MPWFoundation -framework Foundation -lSystem  2>/tmp/link-errors",dylib,ofile_name];
+    int ok = system([o_to_dylib fileSystemRepresentation]);
+    NSLog(@"did link '%@' -> %d",o_to_dylib,ok);
 }
 
 -(BOOL)assembleAndLoad:(NSData*)llvmAssemblySource
