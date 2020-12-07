@@ -8,11 +8,11 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWValueAccessor;
+@class MPWPropertyBinding;
 
 @interface MPWMessagePortDescriptor : NSObject
 {
-    MPWValueAccessor    *target;
+    MPWPropertyBinding    *target;
     BOOL                isSettable;
     BOOL                sendsMessages;
     Protocol            *messageProtocol;

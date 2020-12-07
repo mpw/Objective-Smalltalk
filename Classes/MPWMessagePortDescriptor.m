@@ -7,12 +7,12 @@
 //
 
 #import "MPWMessagePortDescriptor.h"
-#import <MPWFoundation/MPWValueAccessor.h>
+#import <MPWFoundation/MPWFoundation.h>
 //#import <objc/Protocol.h>
 
 @implementation MPWMessagePortDescriptor
 
-objectAccessor(MPWValueAccessor, target, setTarget)
+objectAccessor(MPWPropertyBinding, target, setTarget)
 boolAccessor(sendsMessages, setSendsMessages)
 boolAccessor(isSettable, setIsSettable)
 objectAccessor(Protocol, messageProtocol, setMessageProtocol)
@@ -21,7 +21,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 {
     self=[super init];
 //    NSLog(@"for %p target: %@ key: %@",self,aTarget,aKey);
-    [self setTarget:[MPWValueAccessor valueForName:aKey ? aKey : @"self"]];
+    [self setTarget:[MPWPropertyBinding valueForName:aKey ? aKey : @"self"]];
     [self setIsSettable:aKey != nil];
     [[self target] bindToTarget:aTarget];
     [self setMessageProtocol:aProtocol];
