@@ -1,0 +1,6 @@
+#!/usr/local/bin/stsh
+extension NSData { -intValue { self stringValue intValue. } }.
+filter adder |{  ^object intValue + 3. }
+filter multiplier |{  ^object intValue * 3. }
+#filter full |[ multiplier, adder ].
+(stdin -> multiplier -> adder -> rawstdout ) run

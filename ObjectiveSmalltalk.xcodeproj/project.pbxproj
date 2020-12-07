@@ -366,6 +366,8 @@
 		1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713E71522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FD9602A257A194700C3F90A /* MPWARMAssemblyGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD96028257A194700C3F90A /* MPWARMAssemblyGenerator.h */; };
+		1FD9602B257A194700C3F90A /* MPWARMAssemblyGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD96029257A194700C3F90A /* MPWARMAssemblyGenerator.m */; };
 		1FDB6CB41855BE1400623042 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
@@ -968,6 +970,8 @@
 		1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodMirror.m; sourceTree = "<group>"; };
 		1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjectMirror.h; sourceTree = "<group>"; };
 		1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjectMirror.m; sourceTree = "<group>"; };
+		1FD96028257A194700C3F90A /* MPWARMAssemblyGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWARMAssemblyGenerator.h; sourceTree = "<group>"; };
+		1FD96029257A194700C3F90A /* MPWARMAssemblyGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWARMAssemblyGenerator.m; sourceTree = "<group>"; };
 		1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSchemeScheme.h; sourceTree = "<group>"; };
 		1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSchemeScheme.m; sourceTree = "<group>"; };
 		1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDefaultsScheme.h; sourceTree = "<group>"; };
@@ -1230,6 +1234,8 @@
 			children = (
 				1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */,
 				1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */,
+				1FD96028257A194700C3F90A /* MPWARMAssemblyGenerator.h */,
+				1FD96029257A194700C3F90A /* MPWARMAssemblyGenerator.m */,
 				1FC2EEF4186CEAB200B3D06F /* MPWLLVMAssemblyGenerator.h */,
 				1FC2EEF5186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m */,
 				1F81D90A16DEBC6300408D41 /* llvm-components.txt */,
@@ -1908,6 +1914,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD9602A257A194700C3F90A /* MPWARMAssemblyGenerator.h in Headers */,
 				1FC2EEF6186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.h in Headers */,
 				1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
@@ -2949,6 +2956,7 @@
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1F084A2116DCE6E600ED2517 /* MPWCodeGenerator.m in Sources */,
+				1FD9602B257A194700C3F90A /* MPWARMAssemblyGenerator.m in Sources */,
 				1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,
 			);
