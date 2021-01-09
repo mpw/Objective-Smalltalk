@@ -8,6 +8,7 @@
 
 #import "MPWBoxerUnboxer+MPWBoxingAdditions.h"
 #import <MPWFoundation/MPWInterval.h>
+@import MPWFoundation.PhoneGeometry;
 
 
 @implementation MPWBoxerUnboxer (MPWBoxingAdditions)

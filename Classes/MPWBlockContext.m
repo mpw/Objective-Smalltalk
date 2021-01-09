@@ -109,7 +109,7 @@ typedef id (^ZeroArgBlock)(void);
             returnVal = [[[self block] statements] evaluateIn:aContext];
         }
     } @catch (NSException * exception) {
-#if 1
+#if 0
         id trace = [[[exception callStackSymbols] mutableCopy] autorelease];
         if (trace) {
             [exception setCombinedStackTrace:trace];
@@ -119,7 +119,7 @@ typedef id (^ZeroArgBlock)(void);
         [c addException:exception];
         NSLog(@"added exception to %@",c);
 #else
-        @throw newException;
+        @throw exception;
 #endif
     }
         [returnVal retain];
