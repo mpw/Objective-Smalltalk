@@ -140,6 +140,11 @@ idAccessor( content, setContent )
 	}
 }
 
+-asReference
+{
+    return [MPWGenericReference referenceWithPath:[self path]];
+}
+
 -fileSystemPath
 {
 	return [[self content] fileSystemPathForBasePath:[self path]];  // external ...
