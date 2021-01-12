@@ -1058,7 +1058,7 @@ idAccessor(solver, setSolver)
 {
     MPWScriptedMethod *method=nil;
     NSString *s=[self nextToken];
-    if ( [s isEqualToString:@"-"]) {
+    if ( [s isEqualToString:@"-"] || [s isEqualToString:@"+"]) {
         MPWMethodHeader *header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
         method=[self parseMethodBodyWithHeader:header];
      }
@@ -1212,6 +1212,7 @@ idAccessor(solver, setSolver)
             separator=[self nextToken];
         }
         NSMutableArray *methods=[NSMutableArray array];
+        NSMutableArray *classMethods=[NSMutableArray array];
         NSMutableArray *instanceVariables=[NSMutableArray array];
         NSMutableArray *propertyDefinitions=[NSMutableArray array];
         if ( [separator isEqualToString:@"{"]) {
@@ -1222,6 +1223,10 @@ idAccessor(solver, setSolver)
                     [self pushBack:next];
                     MPWScriptedMethod *method=[self parseMethodDefinition];
                     [methods addObject:method];
+                } else if ( [next isEqualToString:@"+"]) {
+                    [self pushBack:next];
+                    MPWScriptedMethod *method=[self parseMethodDefinition];
+                    [classMethods addObject:method];
                 } else if ( [next isEqualToString:@"var"]) {
                     [self pushBack:next];
                     [instanceVariables addObject:[self parseInstanceVariableDefinition]];
@@ -1247,6 +1252,7 @@ idAccessor(solver, setSolver)
                 PARSEERROR(@"incomplete class definition", @"");
             }
             classDef.methods=methods;
+            classDef.classMethods=classMethods;
             classDef.instanceVariableDescriptions=instanceVariables;
             classDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {

@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) NSArray  *instanceVariableDescriptions;
 @property (nonatomic, strong) NSArray  *methods;
+@property (nonatomic, strong) NSArray  *classMethods;
 @property (nonatomic, strong) NSArray  *propertyPathDefinitions;
 
 

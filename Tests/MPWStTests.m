@@ -981,6 +981,7 @@
 //    EXPECTTRUE(false, @"implemented");
 }
 
+
 +(void)testPipeEqualsCompilesButDoesSameAsAssignment
 {
     [self testexpr:@"a |= 2.  a." expected:[NSNumber numberWithInt:2]];
@@ -1062,6 +1063,15 @@
     IDEXPECT( header.parameterNames, @[@"num"], @"param name");
     IDEXPECT( [header parameterTypes], @[@"id"], @"param type");
     IDEXPECT( [header typeString], @"@@:@", @"method typestring");
+}
+
++(void)testDefineClassMethodViaSyntax
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    MPWClassDefinition *classDef=[compiler evaluateScriptString:@"class ObjStClassMethodTestClass : NSNumber { +multiplyBy7:num { 7 * num. } }."];
+    id testClass=NSClassFromString(@"ObjStClassMethodTestClass");
+    NSNumber *result=[testClass multiplyBy7:@(3)];
+    INTEXPECT( result.intValue, 21, @"class method result");
 }
 
 
@@ -1370,6 +1380,7 @@
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
+        @"testDefineClassMethodViaSyntax",
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
