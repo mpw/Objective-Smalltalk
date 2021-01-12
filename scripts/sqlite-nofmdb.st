@@ -11,7 +11,7 @@ class ColumnInfo {
 	var name.
 	var type.
     -description {
-		"Column: {var:self/name} type: {var:self/type}".
+		"Column: {this:name} type: {this:type}".
     }
 }
 
@@ -20,7 +20,7 @@ class TableInfo  {
 	var columns.
     -description {
 		cd := self columns description.
-        "Table {var:self/name} columns: {cd}".
+        "Table {this:name} columns: {cd}".
     }
 }
 
