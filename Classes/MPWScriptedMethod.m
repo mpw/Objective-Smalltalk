@@ -115,8 +115,9 @@ idAccessor( script, _setScript )
 -evaluateOnObject:target parameters:(NSArray*)parameters
 {
 	id returnVal=nil;
-	id executionContext = [self executionContext];
+	MPWEvaluator* executionContext = [self executionContext];
     [executionContext bindValue:self toVariableNamed:@"self"];
+    [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
 //    NSLog(@"evalute scripted method %@",[self header]);
 //    NSLog(@"methodBody %@",[self methodBody]);
 	id compiledMethod = [self compiledScript];
@@ -187,8 +188,11 @@ idAccessor( script, _setScript )
 -xxxSimpleNilTestMethod;
 -xxxSimpleMethodThatRaises;
 -xxxSimpleMethodThatCallsMethodThatRaises;
-
+-getTheText;
+-(void)setText:someText;
 @end
+
+
 
 
 @implementation MPWScriptedMethod(testing)
@@ -259,10 +263,31 @@ idAccessor( script, _setScript )
 }
 
 
++(void)testThisSchemeReadsObject
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"extension MPWScriptedMethod { -getTheText { this:script. } }." ];
+    MPWScriptedMethod *tester=[MPWScriptedMethod new];
+    tester.script=@"The Answer";
+    NSString *result=[tester getTheText];
+    IDEXPECT( result, @"The Answer",@"property via self: property-scheme");
+}
+
++(void)testThisSchemeWritesObject
+{
+    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    [compiler evaluateScriptString:@"extension MPWScriptedMethod { -<void>setText:someText { this:script := someText. } }." ];
+    MPWScriptedMethod *tester=[MPWScriptedMethod new];
+    [tester setText:@"some script text"];
+    IDEXPECT( [tester script] , @"some script text",@"property via self: property-scheme");
+}
+
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
             @"testLookupOfNilVariableInMethodWorks",
+            @"testThisSchemeReadsObject",
+            @"testThisSchemeWritesObject",
 //            @"testSimpleBacktrace",                       // FIXME:  exceptions are currently swallowed
 //            @"testNestedBacktrace",
 //            @"testCombinedScriptedAndNativeBacktrace",
@@ -329,5 +354,4 @@ dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutab
 
 
 @end
-
 
