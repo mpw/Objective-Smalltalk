@@ -24,8 +24,8 @@
 
 -(void)initializeTranslationUnit:(nullable NSString*)filename
 {
-    const char *argv[]={  NULL};
-    int argc=0;
+    const char *argv[]={ "-F", "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks","-framework","Foundation", NULL};
+    int argc=4;
     const char *mainFile = "/tmp/hi.m";
 //    NSString *syntheticMainfile=[NSString stringWithFormat:@"#define nullable \n#define nonnull \n#import <Foundation/Foundation.h>\n"];
     NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <Foundation/Foundation.h>\n"];
