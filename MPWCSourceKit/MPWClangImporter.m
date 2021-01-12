@@ -24,11 +24,13 @@
 
 -(void)initializeTranslationUnit:(nullable NSString*)filename
 {
-    const char *argv[]={ "-F", "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks","-framework","Foundation", NULL};
-    int argc=4;
+    const char *argv[]={
+//        "-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
+        "-F","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks", "-framework","UIKit", NULL};
+    int argc=2;
     const char *mainFile = "/tmp/hi.m";
 //    NSString *syntheticMainfile=[NSString stringWithFormat:@"#define nullable \n#define nonnull \n#import <Foundation/Foundation.h>\n"];
-    NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <Foundation/Foundation.h>\n"];
+    NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <UIKit/UIKit.h>\n"];
     struct CXUnsavedFile unsaved[] = {
         {mainFile, [syntheticMainfile UTF8String], [syntheticMainfile length]},
         {NULL, NULL, 0}};
@@ -147,6 +149,9 @@
                  case CXCursor_ObjCPropertyDecl:
                      printf(" property decl %s\n",[[self nameAtCursor:classCursor] UTF8String]);
                      break;
+                 case CXCursor_TemplateTypeParameter:
+                     printf(" generic %s\n",[[self nameAtCursor:classCursor] UTF8String]);
+                     break;
                  default:
                      printf(" unhandled in interface: %d\n",classCursor.kind);
                      break;
@@ -163,23 +168,37 @@
                                  ^ enum CXChildVisitResult (CXCursor cursor, CXCursor parent)
          {
              switch ( cursor.kind) {
+                     
+                 case CXCursor_ObjCProtocolDecl:
+                     printf("protocol declaration %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
+                 case CXCursor_StructDecl:
+                     printf("struct/union %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
                  case CXCursor_ObjCInterfaceDecl:
                      [self handleInterface:cursor];
                      break;
                  case CXCursor_ObjCCategoryDecl:
-                     printf("category\n");
+                     printf("category %s\n",[[self nameAtCursor:cursor] UTF8String]);
                      break;
+                 case CXCursor_ObjCProtocolRef:
+                     printf("@protocol %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
+                 case CXCursor_ObjCClassRef:
+                     printf("@class %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
+
                  case CXCursor_FunctionDecl:
-                     printf("function declaration\n");
+//                     printf("function declaration\n");
                      break;
                  case CXCursor_EnumDecl:
-                     printf("enum\n");
+                     printf("enum: %s\n",[[self nameAtCursor:cursor] UTF8String]);
                      break;
                  case CXCursor_VarDecl:
-                     printf("variable declaration\n");
+                     printf("external variable: %s\n",[[self nameAtCursor:cursor] UTF8String]);
                      break;
                  case CXCursor_TypedefDecl:
-                     printf("typedef\n");
+                     printf("typedef: %s\n",[[self nameAtCursor:cursor] UTF8String]);
                      break;
                  default:
                      printf("unhandled: %d\n",cursor.kind);
