@@ -42,6 +42,11 @@
     for ( MPWScriptedMethod *method in [self allMethods]) {
         [store installMethod:method];
     }
+    if ( self.classMethods.count) {
+        for ( MPWScriptedMethod *method in [self classMethods]) {
+            [store installClassMethod:method];
+        }
+    }
 }
 
 -(NSArray *)allIvarNames

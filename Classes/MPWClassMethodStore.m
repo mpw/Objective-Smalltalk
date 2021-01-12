@@ -24,6 +24,11 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
     return [[self classMirror] theClass];
 }
 
+-(Class)theMetaClass
+{
+    return [[[self classMirror] metaClassMirror] theClass];
+}
+
 -initWithClassMirror:(MPWClassMirror*)newMirror compiler:aCompiler
 {
     self=[super init];
@@ -63,6 +68,20 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
     return methodCallback;
 }
 
+-(MPWMethodCallBack*)addClassMethod:(MPWScriptedMethod*)method
+{
+    NSString* methodName = [[method methodHeader] methodName];
+    MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
+    [methodCallback setMethod:method];
+//    NSLog(@"addMethod class %@ methodName: %@ callback: %@ method %@",[[self classMirror] name],methodName,methodCallback,method);
+    if (  [self compiler] ) {
+        [method setContext:[self compiler]];
+    }
+    return methodCallback;
+}
+
+
+
 #endif
 
 -(void)installMethodNamed:(NSString*)methodName
@@ -75,6 +94,12 @@ scalarAccessor( MPWStCompiler *, compiler, setCompiler)
 {
     MPWMethodCallBack *methodCallback = [self addMethod:aMethod];
     [methodCallback installInClassIfNecessary:[self theClass]];
+}
+
+-(void)installClassMethod:aMethod
+{
+    MPWMethodCallBack *methodCallback = [self addClassMethod:aMethod];
+    [methodCallback installInClassIfNecessary:[self theMetaClass]];
 }
 
 -methodWithHeaderString:header bodyString:body
