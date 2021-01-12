@@ -43,7 +43,7 @@ scheme SQLiteScheme  {
      builder := MPWPListBuilder builder.
      aClass ifNotNil: { builder := MPWObjectBuilder alloc initWithClass:aClass. }.
 	 self db setBuilder:builder.
-     self db exec:query.
+     self db query:query.
 	 result := self db builder result.
 #     stdout println:result.
      result.
