@@ -249,7 +249,7 @@
                      [self handleEnum:cursor];
                      break;
                  case CXCursor_VarDecl:
-                     printf("external variable: %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     printf("global variable: %s type: %s\n",[[self nameAtCursor:cursor] UTF8String],[[self typeAtCursor:cursor] UTF8String]);
                      break;
                  case CXCursor_TypedefDecl:
                      printf("typedef: %s\n",[[self nameAtCursor:cursor] UTF8String]);
