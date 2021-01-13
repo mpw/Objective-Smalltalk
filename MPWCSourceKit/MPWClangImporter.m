@@ -62,6 +62,11 @@
     return [self cxstringToNSString:clang_getDeclObjCTypeEncoding(aCursor)];
 }
 
+-(long long)enumValueAtCursor:(CXCursor)aCursor
+{
+    return clang_getEnumConstantDeclValue(aCursor);
+}
+
 -(void)handleBlockArgumentsAndReturnTypes:(CXCursor)classCursor
 {
     printf("      block objc types %s\n",[[self typeAtCursor:classCursor] UTF8String]);
@@ -161,6 +166,53 @@
          });
 }
 
+-(void)handleEnumConstant:(CXCursor)cursor
+{
+    printf("enum constant %s\n",[[self nameAtCursor:cursor] UTF8String]);
+
+    clang_visitChildrenWithBlock(cursor,
+                                 ^ enum CXChildVisitResult (CXCursor enumCursor, CXCursor parent)
+         {
+             switch ( enumCursor.kind) {
+                 case CXCursor_EnumConstantDecl:
+                     printf("  enum constant %s = %lld\n",[[self nameAtCursor:enumCursor] UTF8String],[self enumValueAtCursor:enumCursor]);
+                     break;
+                 case CXCursor_FirstAttr:
+//                     printf("  first attr in enum constant %s\n",[[self nameAtCursor:enumCursor] UTF8String]);
+                     break;
+                 default:
+                     printf(" unhandled in enum constant: %d\n",enumCursor.kind);
+                     break;
+                     
+             }
+             return CXChildVisit_Continue;
+         });
+}
+
+-(void)handleEnum:(CXCursor)cursor
+{
+    printf("enum %s\n",[[self nameAtCursor:cursor] UTF8String]);
+
+    clang_visitChildrenWithBlock(cursor,
+                                 ^ enum CXChildVisitResult (CXCursor classCursor, CXCursor parent)
+         {
+             switch ( classCursor.kind) {
+                 case CXCursor_EnumConstantDecl:
+                     [self handleEnumConstant:cursor];
+//                     printf("  enum constant %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
+                 case CXCursor_FirstAttr:
+                     printf("  first attr in enum  %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
+                 default:
+                     printf(" unhandled in enum: %d\n",classCursor.kind);
+                     break;
+                     
+             }
+             return CXChildVisit_Continue;
+         });
+}
+
 -parseAFile
 {
     [self initializeTranslationUnit:nil];
@@ -168,7 +220,9 @@
                                  ^ enum CXChildVisitResult (CXCursor cursor, CXCursor parent)
          {
              switch ( cursor.kind) {
-                     
+                 case CXCursor_TranslationUnit:
+                     printf("translation unit %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     break;
                  case CXCursor_ObjCProtocolDecl:
                      printf("protocol declaration %s\n",[[self nameAtCursor:cursor] UTF8String]);
                      break;
@@ -192,7 +246,7 @@
 //                     printf("function declaration\n");
                      break;
                  case CXCursor_EnumDecl:
-                     printf("enum: %s\n",[[self nameAtCursor:cursor] UTF8String]);
+                     [self handleEnum:cursor];
                      break;
                  case CXCursor_VarDecl:
                      printf("external variable: %s\n",[[self nameAtCursor:cursor] UTF8String]);
