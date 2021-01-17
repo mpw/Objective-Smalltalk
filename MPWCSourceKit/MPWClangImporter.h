@@ -7,6 +7,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MPWClangImporter : NSObject
+@protocol CImporterDelegate
+
+-(void)globalVariable:(NSString*)name type:(NSString*)type;
+-(void)enumCase:(NSString*)name value:(long)value;
+
+
+@end
+
+
+@interface MPWClangImporter : NSObject <CImporterDelegate>
 
 @end
