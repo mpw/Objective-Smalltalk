@@ -345,6 +345,9 @@ idAccessor(solver, setSolver)
 {
 //    NSLog(@"parse literal");
     id object = [self nextToken];
+    if ( [object isEqual:@"#"]) {
+        PARSEERROR(@"unexpected # after #", object);
+    }
     MPWLiteralExpression *e=nil;
     NSString *className=nil;
     id next=[self nextToken];
@@ -746,12 +749,12 @@ idAccessor(solver, setSolver)
     
     id expr=receiver;
     id next;
-    while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]&& ![next isEqual:@"}"]) {
+    while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]&& ![next isEqual:@"}"] && ![next isEqual:@"#"]) {
         [self pushBack:next];
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         [expr setOffset:[scanner offset]];
         [expr setLen:1];
-//		NSLog(@"message expression with receiver: %@",expr);
+//		NSLog(@"message expression with scanner: %@",scanner);
         expr=[self parseSelectorAndArgs:expr];
         if ( [expr isKindOfClass:[MPWMessageExpression class]]) {
             expr = [self mapConnector:expr];
@@ -1072,12 +1075,12 @@ idAccessor(solver, setSolver)
     NSString *s=[self nextToken];
 //    NSLog(@"first token: %@",s);
     if ( [s isEqualToString:@"-"]) {
-        NSLog(@"found '-', parse method header");
+//        NSLog(@"found '-', parse method header");
         header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
-        NSLog(@"parsed header: %@",header);
+//        NSLog(@"parsed header: %@",header);
     }
     s=[self nextToken];
-    NSLog(@"token after method header: %@",s);
+//    NSLog(@"token after method header: %@",s);
     if ( [s isEqualToString:@"."] || [s isEqualToString:@"}"]) {
 
     } else {
@@ -1440,6 +1443,18 @@ idAccessor(solver, setSolver)
     IDEXPECT([method script], @" 42. ",@"body");
 }
 
++(void)testParsingPartialNestedLiteralsDoesNotHang
+{
+    
+    NSString *partialNested=@"# #UILabel{ #'text' : 'Hi' }.";
+    MPWStCompiler *compiler=[self compiler];
+    @try {
+        [compiler compile:partialNested];
+    } @catch ( NSException* exception ) {
+        IDEXPECT([exception name],@"unexpected # after #",@"should be syntax error");
+    }
+}
+
 
 +testSelectors
 {
@@ -1448,6 +1463,7 @@ idAccessor(solver, setSolver)
               @"testPipeSymbolForTemps",
               @"testSchemeWithDot",
               @"testParsingMethodBodyPreservesSource",
+              @"testParsingPartialNestedLiteralsDoesNotHang",
               ];
 }
 
