@@ -121,7 +121,7 @@
 
 +(void)testSimpleLiteralDict
 {
-    TESTEXPR(@"#{ 'key': 'value' }" , (@{ @"key": @"value"}) );
+    TESTEXPR(@"#{ #key: 'value' }" , (@{ @"key": @"value"}) );
 }
 
 +(void)testLiteralDictWithNumberKey
@@ -131,7 +131,7 @@
 
 +(void)testTwoElementLiteralDict
 {
-    TESTEXPR(@"#{ 'key': 'value', 'hello': 'world' }" , (@{ @"key": @"value", @"hello": @"world"}));
+    TESTEXPR(@"#{ #key: 'firstValue', #hello: 'world' }" , (@{ @"key": @"firstValue", @"hello": @"world"}));
 }
 
 +(void)collectArrayLiteral
@@ -1149,8 +1149,8 @@
 +(void)testNestedVarExprWithPath
 {
     MPWStCompiler *compiler=[MPWStCompiler compiler];
-    [compiler evaluateScriptString:@"a := #{ 'key1' : 'key2' }."];
-    [compiler evaluateScriptString:@"b := #{ 'key2' : 42 }."];
+    [compiler evaluateScriptString:@"a := #{ #key1: 'key2' }."];
+    [compiler evaluateScriptString:@"b := #{ #key2: 42 }."];
     id result=[compiler evaluateScriptString:@"var:b/{var:a/key1}"];
     IDEXPECT( result, @42, @"nested expr result");
 }

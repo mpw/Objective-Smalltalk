@@ -314,28 +314,49 @@ idAccessor(solver, setSolver)
 
 -parseLiteralDict
 {
-//    NSLog(@"paraseLiteralDict");
     id token=[self nextToken];
-//    NSLog(@"first token: %@",token);
+//    NSLog(@"parseLiteralDict first token: %@",token);
     MPWLiteralDictionaryExpression *dictLit=[[MPWLiteralDictionaryExpression new] autorelease];
+//    NSLog(@"before pushback: %@",scanner);
     [self pushBack:token];
+//    NSLog(@"after pushback: %@",scanner);
     while ( token && ![token isEqual:@"}"]) {
-//        NSLog(@"parse key");
-        id key=[self parseExpressionInLiteral:YES];
-//        NSLog(@"key: %@",key);
-        token=[self nextToken];
-//        NSLog(@"separator token: %@",token);
-        if (![token isEqual:@":"]) {
-            PARSEERROR(@"dictionary syntax: key not folled by ':'  %@", token);
+//        NSLog(@"parse key/val loop, key part, token:%@ scanner:%@",token,scanner);
+        id key=nil;
+        if ( [token isEqual:@"#"]) {
+            [self nextToken];
+            key=[self parseLiteral];
+        } else {
+            key=[self parseExpressionInLiteral:YES];
+        }
+//        NSLog(@"key:%@",key);
+        id literalValueOfKey=[key theLiteral];
+//        NSLog(@"literalValueOfKey: '%@'",literalValueOfKey);
+        if ( [literalValueOfKey isKindOfClass:[NSString class]] ) {
+            NSString *stringKey=(NSString*)literalValueOfKey;
+            if ( [stringKey hasSuffix:@":"]) {
+//                NSLog(@"compact string key: %@",stringKey);
+                [key setTheLiteral:[stringKey substringToIndex:stringKey.length-1]];
+            }
+        } else {
+            token=[self nextToken];
+    //        NSLog(@"separator token: %@",token);
+            if (![token isEqual:@":"]) {
+                PARSEERROR(@"dictionary syntax: key not folled by ':'  %@", token);
+            }
         }
         token=[self nextToken];
         [self pushBack:token];
-//        NSLog(@"will parse value with starting token: %@",token);
+//        NSLog(@"will parse value with starting token: '%@'",token);
         id value=[self parseExpressionInLiteral:YES];
-//        NSLog(@"value: %@",value);
+//        NSLog(@"value: %@",[value theLiteral]);
         [dictLit addKey:key value:value];
         token=[self nextToken];
 //        NSLog(@"nextToken: %@",token);
+        if ( [token isEqual:@","]) {
+            token=[self nextToken];
+            [self pushBack:token];
+        }
     }
 //    NSLog(@"return literal dict: %@",dictLit);
     return dictLit;
@@ -749,6 +770,7 @@ idAccessor(solver, setSolver)
     
     id expr=receiver;
     id next;
+    id prev=nil;
     while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]&& ![next isEqual:@"}"] && ![next isEqual:@"#"]) {
         [self pushBack:next];
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
@@ -761,10 +783,15 @@ idAccessor(solver, setSolver)
         } else {
             return expr;
         }
+        if ( next == prev ) {
+            PARSEERROR(@"No Progress in parseMessageExpression", next);
+        }
+        prev=next;
     }
     if ( next ) {
         [self pushBack:next];
     }
+    
     return expr;
 }
 
@@ -797,6 +824,9 @@ idAccessor(solver, setSolver)
     id cascade=[[MPWCascadeExpression new] autorelease];
     [cascade addMessageExpression:firstExpression];
     while ( (nextToken = [self nextToken]) && [nextToken isEqualToString:@";"]) {
+        if ( ![firstExpression isKindOfClass:[MPWMessageExpression class]]) {
+            PARSEERROR(@"first expression of cascade is not a message", nextToken);
+        }
         id expr=[[[MPWMessageExpression alloc] initWithReceiver:[firstExpression receiver]] autorelease];
         //            NSLog(@"next expr start: %@",expr);
         [expr setOffset:[scanner offset]];
@@ -866,7 +896,7 @@ idAccessor(solver, setSolver)
 {
 //    NSLog(@"parseExpression: inLiteral %d",inLiteral);
 	id first=[self nextToken];
-//    NSLog(@"first: %@",first);
+//    NSLog(@"-parseExpressionInLiteral first: %@",first);
 	id second;
 	if ( [first isToken] && ![first isEqual:@"-"]  ) {
 		first = [self objectifyScanned:first];
@@ -1456,6 +1486,14 @@ idAccessor(solver, setSolver)
 }
 
 
++(void)testParseSimpleLiteralDictWithSimplifiedStringKey
+{
+    NSDictionary *result=[[self compiler] evaluateScriptString:@"#{ #a: 3 }"];
+    INTEXPECT(result.count, 1, @"one element");
+    IDEXPECT( result[@"a"], @(3), @"contents");
+}
+
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1464,6 +1502,7 @@ idAccessor(solver, setSolver)
               @"testSchemeWithDot",
               @"testParsingMethodBodyPreservesSource",
               @"testParsingPartialNestedLiteralsDoesNotHang",
+              @"testParseSimpleLiteralDictWithSimplifiedStringKey",
               ];
 }
 
