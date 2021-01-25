@@ -17,3 +17,4 @@ FOUNDATION_EXPORT const unsigned char ObjectiveSmalltalkTouchUIVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <ObjectiveSmalltalkTouchUI/PublicHeader.h>
 
 #import <ObjectiveSmalltalkTouch/UIView+dictionary.h>
+#import <ObjectiveSmalltalkTouch/MPWUIImageStore.h>
