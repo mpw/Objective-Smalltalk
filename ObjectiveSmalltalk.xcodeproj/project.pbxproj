@@ -28,6 +28,10 @@
 		1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */; };
 		1F22E0211A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
 		1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
+		1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */; };
+		1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */; };
 		1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */; };
 		1F29D7F421B42BE600AB14D8 /* TestObjectiveSmalltalkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F321B42BE600AB14D8 /* TestObjectiveSmalltalkController.m */; };
 		1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F521B42BE600AB14D8 /* Main.storyboard */; };
@@ -362,6 +366,10 @@
 		1FD6CA6325B8340B00639458 /* ObjectiveSmalltalkUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6CA6125B8340B00639458 /* ObjectiveSmalltalkUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD6CA7725B8341500639458 /* UIView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6CA3925B830E600639458 /* UIView+dictionary.m */; };
 		1FD6CA9825B8347D00639458 /* UIView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6CA3825B830E600639458 /* UIView+dictionary.h */; };
+		1FD6CAE225BB026500639458 /* MPWGlobalVariableStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6CAE025BB026400639458 /* MPWGlobalVariableStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD6CAE325BB026500639458 /* MPWGlobalVariableStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6CAE025BB026400639458 /* MPWGlobalVariableStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD6CAE425BB026500639458 /* MPWGlobalVariableStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6CAE125BB026500639458 /* MPWGlobalVariableStore.m */; };
+		1FD6CAE525BB026500639458 /* MPWGlobalVariableStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6CAE125BB026500639458 /* MPWGlobalVariableStore.m */; };
 		1FD713CC1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713CF1522DA1D004A5E15 /* MPWClassMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
@@ -681,6 +689,10 @@
 		1F22D86413916E0400D99DAB /* varname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = varname.txt; sourceTree = "<group>"; };
 		1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWBoxerUnboxer+MPWBoxingAdditions.h"; sourceTree = "<group>"; };
 		1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWBoxerUnboxer+MPWBoxingAdditions.m"; sourceTree = "<group>"; };
+		1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPWUIImageStore.h; path = ../../../Projects/BookLightning/MPWUIImageStore.h; sourceTree = "<group>"; };
+		1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MPWUIImageStore.m; path = ../../../Projects/BookLightning/MPWUIImageStore.m; sourceTree = "<group>"; };
+		1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWColorStore.h; sourceTree = "<group>"; };
+		1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWColorStore.m; sourceTree = "<group>"; };
 		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestObjectiveSmalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D7EF21B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestObjectiveSmalltalkAppDelegate.h; sourceTree = "<group>"; };
@@ -976,6 +988,8 @@
 		1FD6CA5F25B8340B00639458 /* ObjectiveSmalltalkUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalkUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD6CA6125B8340B00639458 /* ObjectiveSmalltalkUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalkUI.h; sourceTree = "<group>"; };
 		1FD6CA6225B8340B00639458 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FD6CAE025BB026400639458 /* MPWGlobalVariableStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWGlobalVariableStore.h; sourceTree = "<group>"; };
+		1FD6CAE125BB026500639458 /* MPWGlobalVariableStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWGlobalVariableStore.m; sourceTree = "<group>"; };
 		1FD713CA1522DA1D004A5E15 /* MPWClassMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMirror.h; sourceTree = "<group>"; };
 		1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMirror.m; sourceTree = "<group>"; };
 		1FD713D61522DA96004A5E15 /* MPWMethodMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodMirror.h; sourceTree = "<group>"; };
@@ -1287,6 +1301,8 @@
 		1F222C881394CB90007AE2FB /* Schemes */ = {
 			isa = PBXGroup;
 			children = (
+				1FD6CAE025BB026400639458 /* MPWGlobalVariableStore.h */,
+				1FD6CAE125BB026500639458 /* MPWGlobalVariableStore.m */,
 				1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */,
 				1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */,
 				1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */,
@@ -1700,6 +1716,10 @@
 		1FD6CA6025B8340B00639458 /* ObjectiveSmalltalkTouchUI */ = {
 			isa = PBXGroup;
 			children = (
+				1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */,
+				1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */,
+				1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */,
+				1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */,
 				1FD6CA6125B8340B00639458 /* ObjectiveSmalltalkUI.h */,
 				1FD6CA3825B830E600639458 /* UIView+dictionary.h */,
 				1FD6CA3925B830E600639458 /* UIView+dictionary.m */,
@@ -1982,6 +2002,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD6CAE225BB026500639458 /* MPWGlobalVariableStore.h in Headers */,
 				1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */,
 				1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */,
 				1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */,
@@ -2167,6 +2188,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FD6CA6325B8340B00639458 /* ObjectiveSmalltalkUI.h in Headers */,
+				1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */,
+				1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */,
 				1FD6CA9825B8347D00639458 /* UIView+dictionary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2190,6 +2213,7 @@
 				1FE37B781969610600C9A378 /* MPWBlockExpression.h in Headers */,
 				1FE37B701969610600C9A378 /* JSGCDDispatcher.h in Headers */,
 				1F504628211885E900073E1E /* MPWPropertyPath.h in Headers */,
+				1FD6CAE325BB026500639458 /* MPWGlobalVariableStore.h in Headers */,
 				1FE37B6A1969610600C9A378 /* MPWExpression+autocomplete.h in Headers */,
 				1FE37BB11969610700C9A378 /* MPWResource.h in Headers */,
 				1FE37BFD1969612700C9A378 /* MPWBlockFilterScheme.h in Headers */,
@@ -3141,6 +3165,7 @@
 				1FFC563B1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m in Sources */,
 				1F5E508409B4B754000298D9 /* MPWConnector.m in Sources */,
 				1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */,
+				1FD6CAE425BB026500639458 /* MPWGlobalVariableStore.m in Sources */,
 				1F22C8CB0BC8DCD2003BC673 /* MPWBridgeReader.m in Sources */,
 				1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */,
 				1F321C69213334F3001BE6CC /* MPWPropertyPathGetter.m in Sources */,
@@ -3294,6 +3319,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */,
+				1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */,
 				1FD6CA7725B8341500639458 /* UIView+dictionary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3317,6 +3344,7 @@
 				1F3C6E6C1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */,
 				1FE37BB21969610700C9A378 /* MPWResource.m in Sources */,
 				1FE37BAC1969610700C9A378 /* MPWObjCGenerator.m in Sources */,
+				1FD6CAE525BB026500639458 /* MPWGlobalVariableStore.m in Sources */,
 				1FE37BA61969610700C9A378 /* MPWMethodStore.m in Sources */,
 				1FE37B8A1969610600C9A378 /* MPWFastMessage.m in Sources */,
 				1F50462A211885E900073E1E /* MPWPropertyPath.m in Sources */,

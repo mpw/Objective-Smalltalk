@@ -30,6 +30,7 @@
 #import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 #import <ObjectiveSmalltalk/MPWFilterDefinition.h>
 #import <ObjectiveSmalltalk/MPWFrameworkScheme.h>
+#import <ObjectiveSmalltalk/MPWGlobalVariableStore.h>
 #import <ObjectiveSmalltalk/MPWGetAccessor.h>
 #import <ObjectiveSmalltalk/MPWMessagePortDescriptor.h>
 #import <ObjectiveSmalltalk/MPWMethodCallBack.h>

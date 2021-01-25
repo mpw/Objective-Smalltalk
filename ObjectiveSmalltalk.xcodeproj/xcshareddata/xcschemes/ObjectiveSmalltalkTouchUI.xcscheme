@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1FD6CA5E25B8340B00639458"
-               BuildableName = "ObjectiveSmalltalkTouchUI.framework"
+               BuildableName = "ObjectiveSmalltalkUI.framework"
                BlueprintName = "ObjectiveSmalltalkTouchUI"
                ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1FD6CA5E25B8340B00639458"
-            BuildableName = "ObjectiveSmalltalkTouchUI.framework"
+            BuildableName = "ObjectiveSmalltalkUI.framework"
             BlueprintName = "ObjectiveSmalltalkTouchUI"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
