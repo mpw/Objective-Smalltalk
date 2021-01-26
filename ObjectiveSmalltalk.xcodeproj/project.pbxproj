@@ -32,6 +32,8 @@
 		1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */; };
 		1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */; };
+		1F23ADBF25C00E3900F51B6F /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */; };
+		1F23ADC025C00E3900F51B6F /* MPWFontStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */; };
 		1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */; };
 		1F29D7F421B42BE600AB14D8 /* TestObjectiveSmalltalkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F321B42BE600AB14D8 /* TestObjectiveSmalltalkController.m */; };
 		1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F521B42BE600AB14D8 /* Main.storyboard */; };
@@ -693,6 +695,8 @@
 		1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MPWUIImageStore.m; path = ../../../Projects/BookLightning/MPWUIImageStore.m; sourceTree = "<group>"; };
 		1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWColorStore.h; sourceTree = "<group>"; };
 		1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWColorStore.m; sourceTree = "<group>"; };
+		1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFontStore.h; sourceTree = "<group>"; };
+		1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFontStore.m; sourceTree = "<group>"; };
 		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestObjectiveSmalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D7EF21B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestObjectiveSmalltalkAppDelegate.h; sourceTree = "<group>"; };
@@ -1720,6 +1724,8 @@
 				1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */,
 				1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */,
 				1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */,
+				1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */,
+				1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */,
 				1FD6CA6125B8340B00639458 /* ObjectiveSmalltalkUI.h */,
 				1FD6CA3825B830E600639458 /* UIView+dictionary.h */,
 				1FD6CA3925B830E600639458 /* UIView+dictionary.m */,
@@ -2190,6 +2196,7 @@
 				1FD6CA6325B8340B00639458 /* ObjectiveSmalltalkUI.h in Headers */,
 				1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */,
 				1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */,
+				1F23ADBF25C00E3900F51B6F /* MPWFontStore.h in Headers */,
 				1FD6CA9825B8347D00639458 /* UIView+dictionary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3320,6 +3327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */,
+				1F23ADC025C00E3900F51B6F /* MPWFontStore.m in Sources */,
 				1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */,
 				1FD6CA7725B8341500639458 /* UIView+dictionary.m in Sources */,
 			);
