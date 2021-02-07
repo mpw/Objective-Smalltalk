@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+
+extern void amIHereFunc( void );
+
 @class MPWInstanceVariable;
 
-@interface NSObject(stScripting)
+@interface NSObject(smalltalkScripting)
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariableArray:(NSArray*)vars;
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariables:(NSString*)varsAsString;
 +(BOOL)createSubclassWithName:(NSString*)className;

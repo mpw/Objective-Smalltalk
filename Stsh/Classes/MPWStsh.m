@@ -224,7 +224,7 @@ static const char * promptfn(EditLine *e) {
 
         MPWExpression *expr=nil;
         NSException *exception=nil;
-        MPWStCompiler *evaluator=[self _evaluator];
+        STCompiler *evaluator=[self _evaluator];
         @try {
             NSString *resultName=@"";
             fprintf(stderr, "\n");

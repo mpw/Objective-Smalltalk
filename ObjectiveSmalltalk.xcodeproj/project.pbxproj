@@ -42,11 +42,8 @@
 		1F29D7FF21B42BE900AB14D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7FE21B42BE900AB14D8 /* main.m */; };
 		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
 		1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
-		1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F29D80F21B4374600AB14D8 /* MPWTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; };
-		1F29D81021B4374600AB14D8 /* MPWTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; };
-		1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2D95D22250FCC500D025D8 /* STAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D12250FCC500D025D8 /* STAppDelegate.m */; };
 		1F2D95D52250FCC500D025D8 /* STDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* STDocument.m */; };
 		1F2D95D82250FCC500D025D8 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D62250FCC500D025D8 /* Document.xib */; };
@@ -131,7 +128,7 @@
 		1F59A722202C7D7800BE06F6 /* win_xcb.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A71C202C7D7800BE06F6 /* win_xcb.m */; };
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F5E504D09B4B754000298D9 /* MPWStCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */; settings = {ATTRIBUTES = (Project, Public, ); }; };
+		1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* STCompiler.h */; settings = {ATTRIBUTES = (Project, Public, ); }; };
 		1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
 		1F5E505009B4B754000298D9 /* MPWAssignmentExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74ADF00F0A95F015ADD82 /* MPWAssignmentExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,7 +154,7 @@
 		1F5E506509B4B754000298D9 /* NSObjectScripting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6F637E0987C803006F3936 /* NSObjectScripting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E506609B4B754000298D9 /* MPWConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FCEB7EA099C03ED00867A95 /* MPWConnector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E506709B4B754000298D9 /* MPWEvaluable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F5E506B09B4B754000298D9 /* MPWStCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */; settings = {ATTRIBUTES = (); }; };
+		1F5E506B09B4B754000298D9 /* STCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABD00F0A61B015ADD82 /* STCompiler.m */; settings = {ATTRIBUTES = (); }; };
 		1F5E506C09B4B754000298D9 /* MPWStScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */; settings = {ATTRIBUTES = (); }; };
 		1F5E506D09B4B754000298D9 /* MPWMessageExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */; settings = {ATTRIBUTES = (); }; };
 		1F5E506E09B4B754000298D9 /* MPWAssignmentExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ADE00F0A95F015ADD82 /* MPWAssignmentExpression.m */; };
@@ -460,8 +457,8 @@
 		1FE37BB81969610700C9A378 /* MPWSetAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB39F9E088FDAE4008FC5C6 /* MPWSetAccessor.m */; };
 		1FE37BB91969610700C9A378 /* MPWStatementList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6AC690752648B00A306C8 /* MPWStatementList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BBA1969610700C9A378 /* MPWStatementList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6AC6A0752648B00A306C8 /* MPWStatementList.m */; };
-		1FE37BBB1969610700C9A378 /* MPWStCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37BBC1969610800C9A378 /* MPWStCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */; };
+		1FE37BBB1969610700C9A378 /* STCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* STCompiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE37BBC1969610800C9A378 /* STCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABD00F0A61B015ADD82 /* STCompiler.m */; };
 		1FE37BBD1969610800C9A378 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BBE1969610800C9A378 /* MPWStScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */; };
 		1FE37BBF1969610800C9A378 /* MPWStTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA741A40886DAFB00121867 /* MPWStTests.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -526,7 +523,6 @@
 		1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */; };
 		1FED18C41544684600E0D765 /* JSGCDDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FED18C01544684600E0D765 /* JSGCDDispatcher.h */; };
 		1FEE11DA2386EAF20042B149 /* NSApplication.st in Copy Smalltalk files for finishLaunching */ = {isa = PBXBuildFile; fileRef = 1FEE11D92386EAF20042B149 /* NSApplication.st */; };
-		1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6F637F0987C803006F3936 /* NSObjectScripting.m */; };
 		1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF142381B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
@@ -592,9 +588,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1F29D81321B4376600AB14D8 /* MPWFoundation.framework in Embed Frameworks */,
-				1F29D80821B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */,
-				1F29D81021B4374600AB14D8 /* MPWTest.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1050,10 +1043,10 @@
 		1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralExpression.m; sourceTree = "<group>"; };
 		1FFE3AD520B46BDD00E65B93 /* MPWSelfContainedBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSelfContainedBinding.h; sourceTree = "<group>"; };
 		1FFE3AD620B46BDD00E65B93 /* MPWSelfContainedBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSelfContainedBinding.m; sourceTree = "<group>"; };
-		F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStCompiler.m; sourceTree = "<group>"; };
+		F5A74ABD00F0A61B015ADD82 /* STCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = STCompiler.m; sourceTree = "<group>"; };
 		F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWStScanner.m; sourceTree = "<group>"; };
 		F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWMessageExpression.m; sourceTree = "<group>"; };
-		F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWStCompiler.h; sourceTree = "<group>"; };
+		F5A74AC100F0A61B015ADD82 /* STCompiler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = STCompiler.h; sourceTree = "<group>"; };
 		F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWStScanner.h; sourceTree = "<group>"; };
 		F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPWMessageExpression.h; sourceTree = "<group>"; };
 		F5A74AC800F0A61B015ADD82 /* m.template */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = m.template; sourceTree = "<group>"; };
@@ -1895,8 +1888,8 @@
 				1FB39F9E088FDAE4008FC5C6 /* MPWSetAccessor.m */,
 				1FF6AC690752648B00A306C8 /* MPWStatementList.h */,
 				1FF6AC6A0752648B00A306C8 /* MPWStatementList.m */,
-				F5A74AC100F0A61B015ADD82 /* MPWStCompiler.h */,
-				F5A74ABD00F0A61B015ADD82 /* MPWStCompiler.m */,
+				F5A74AC100F0A61B015ADD82 /* STCompiler.h */,
+				F5A74ABD00F0A61B015ADD82 /* STCompiler.m */,
 				1FE5CFDA221C4A2B003E11DC /* MPWProtocolDefinition.h */,
 				1FE5CFDB221C4A2B003E11DC /* MPWProtocolDefinition.m */,
 				1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */,
@@ -2027,7 +2020,7 @@
 				1F5E506509B4B754000298D9 /* NSObjectScripting.h in Headers */,
 				1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */,
 				1F22C8CA0BC8DCD2003BC673 /* MPWBridgeReader.h in Headers */,
-				1F5E504D09B4B754000298D9 /* MPWStCompiler.h in Headers */,
+				1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */,
 				1F9CD1E01A2C94AE00578177 /* MPWCascadeExpression.h in Headers */,
 				1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */,
 				1F8B855219AC72C700F8A107 /* MPWFileWatcher.h in Headers */,
@@ -2289,7 +2282,7 @@
 				1FE37BC31969610800C9A378 /* NSObjectScripting.h in Headers */,
 				1FFE3AD820B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */,
 				1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */,
-				1FE37BBB1969610700C9A378 /* MPWStCompiler.h in Headers */,
+				1FE37BBB1969610700C9A378 /* STCompiler.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2721,6 +2714,8 @@
 					};
 					1FE37B4C19695FA600C9A378 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = PE4436LT5M;
+						ProvisioningStyle = Automatic;
 					};
 					1FE63E0121061BE10066B335 = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -3095,7 +3090,6 @@
 				1F29D7F421B42BE600AB14D8 /* TestObjectiveSmalltalkController.m in Sources */,
 				1F9BD24625665748006D7476 /* MPWStConnectorTests.m in Sources */,
 				1F9BD2302566505F006D7476 /* MPWStPropertyPathTests.m in Sources */,
-				1FF0103721C15FBB00A0FCAD /* NSObjectScripting.m in Sources */,
 				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
 				1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */,
 			);
@@ -3133,7 +3127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F5E506B09B4B754000298D9 /* MPWStCompiler.m in Sources */,
+				1F5E506B09B4B754000298D9 /* STCompiler.m in Sources */,
 				1F50461D2118658F00073E1E /* MPWPropertyPathDefinition.m in Sources */,
 				1F5E506C09B4B754000298D9 /* MPWStScanner.m in Sources */,
 				1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
@@ -3391,7 +3385,7 @@
 				1FE37BB01969610700C9A378 /* MPWRecursiveIdentifier.m in Sources */,
 				1F9BD22F2566505F006D7476 /* MPWStPropertyPathTests.m in Sources */,
 				1F9BD24525665748006D7476 /* MPWStConnectorTests.m in Sources */,
-				1FE37BBC1969610800C9A378 /* MPWStCompiler.m in Sources */,
+				1FE37BBC1969610800C9A378 /* STCompiler.m in Sources */,
 				1FE37B981969610600C9A378 /* MPWMessage.m in Sources */,
 				1FE37BF01969612700C9A378 /* MPWDefaultsScheme.m in Sources */,
 				1FE37B771969610600C9A378 /* MPWBlockContext.m in Sources */,
@@ -3683,7 +3677,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -3725,7 +3719,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -5296,11 +5290,14 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -5328,11 +5325,13 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
+				MACH_O_TYPE = mh_dylib;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = ObjectiveSmalltalk;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
@@ -5360,11 +5359,14 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -5386,10 +5388,12 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
+				MACH_O_TYPE = mh_dylib;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = ObjectiveSmalltalk;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;

@@ -9,12 +9,12 @@
 
 #import <ObjectiveHTTPD/MPWSchemeHttpServer.h>
 
-@class MPWStCompiler;
+@class STCompiler;
 
 
 @interface MethodServer : MPWSchemeHttpServer
 {
-    MPWStCompiler *interpreter;
+    STCompiler *interpreter;
     id delegate;
     NSString *methodDictName,*projectDir;
     NSString *uniqueID;
@@ -28,7 +28,7 @@
 
 -(void)setDelegate:aDelegate;
 -delegate;
--(MPWStCompiler*)interpreter;
+-(STCompiler*)interpreter;
 -(void)setMethodDict:(NSDictionary*)dict;
 
 @end

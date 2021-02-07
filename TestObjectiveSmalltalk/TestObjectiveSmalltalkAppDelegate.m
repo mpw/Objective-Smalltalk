@@ -8,9 +8,13 @@
 #import "TestObjectiveSmalltalkAppDelegate.h"
 #import <MPWTest/MPWTestSuite.h>
 #import <MPWTest/MPWLoggingTester.h>
-#import <MPWTest/MPWClassMirror.h>
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/MPWClassMirror.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/MPWStTests.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
+#import <ObjectiveSmalltalk/NSObjectScripting.h>
+
+
 @interface TestObjectiveSmalltalkAppDelegate ()
 
 @end
@@ -24,13 +28,15 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
     MPWTestSuite* test;
     MPWLoggingTester* results;
     int exitCode=0;
-    [MPWStCompiler compiler];
+    [STCompiler compiler];
     [MPWStTests compiler];
     NSString *testListPath=[[NSBundle mainBundle] pathForResource:@"ClassesToTest"
                                                            ofType:@"plist"];
     NSData *namePlist=[NSData dataWithContentsOfFile:testListPath];
     NSLog(@"got classes to test data");
-
+//    amIHereFunc();
+    STCompiler *compiler = [STCompiler compiler];
+    
     NSArray *classNamesToTest=[NSPropertyListSerialization propertyListWithData:namePlist options:0 format:0 error:nil];
 
     classNamesToTest = @[ @"MPWStTests", /* @"MPWMethodCallBack"  */];  // 

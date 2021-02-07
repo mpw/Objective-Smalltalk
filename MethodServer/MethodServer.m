@@ -7,14 +7,14 @@
 //
 
 #import "MethodServer.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWMethodScheme.h"
 #import "MPWBinding.h"
 #import <ObjectiveHTTPD/MPWHTTPServer.h>
 
 @implementation MethodServer
 
-objectAccessor(MPWStCompiler, interpreter, setInterpreter)
+objectAccessor(STCompiler, interpreter, setInterpreter)
 objectAccessor(NSString, methodDictName, setMethodDictName)
 objectAccessor(NSString, projectDir, setProjectDir)
 objectAccessor(NSString, uniqueID, setUniqueID)
@@ -91,7 +91,7 @@ static void CatchException(NSException *exception)
     [self setInterpreter:anInterpreter];
     [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
     [[self interpreter] bindValue:self toVariableNamed:@"methodServer"];
-//    NSLog(@"PATH: %@",[MPWStCompiler evaluate:@"env:PATH"]);
+//    NSLog(@"PATH: %@",[STCompiler evaluate:@"env:PATH"]);
     [self setMethodDict:[self externalMethodsDict]];
 //    NSLog(@"the answer: %d",[self theAnswer]);
     [self setScheme:[[[MPWMethodScheme alloc] initWithInterpreter:[self interpreter]] autorelease]];
@@ -105,7 +105,7 @@ static void CatchException(NSException *exception)
 
 -(void)setupWithoutStarting
 {
-    [self setupWithInterpreter:[[[MPWStCompiler alloc] init] autorelease]];
+    [self setupWithInterpreter:[[[STCompiler alloc] init] autorelease]];
 }
 
 -(void)setupMethodServer

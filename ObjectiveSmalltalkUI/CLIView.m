@@ -33,7 +33,7 @@ the commands entered by the user and the results of those commands etc.
 
 #import "CLIView.h"
 #import "ShellView.h"
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 
 @interface CLIView(CLIViewPrivate)
 - (ShellView *)shellView;
@@ -107,7 +107,7 @@ the commands entered by the user and the results of those commands etc.
     [scrollview setDocumentView:shellView];
     [self addSubview:scrollview];
     
-    [self setCommandHandler:[MPWStCompiler compiler]];
+    [self setCommandHandler:[STCompiler compiler]];
 
     return self;
 }

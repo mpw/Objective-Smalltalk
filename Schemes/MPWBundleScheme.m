@@ -7,7 +7,7 @@
 //
 
 #import "MPWBundleScheme.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import <MPWFoundation/AccessorMacros.h>
 #import <MPWFoundation/MPWGenericReference.h>
 #import "MPWScheme.h"
@@ -81,14 +81,14 @@ objectAccessor( NSBundle, bundle ,setBundle )
 +(void)testGettingASimpleFile
 {
 	chdir("/");
-	IDEXPECT( [[MPWStCompiler evaluate:@"bundle:testfile.txt"] stringValue], @"this is a test file", @"geting testfile.txt");
+	IDEXPECT( [[STCompiler evaluate:@"bundle:testfile.txt"] stringValue], @"this is a test file", @"geting testfile.txt");
 }
 
 
 +(void)testGettingRoot
 {
 	chdir("/");
-	IDEXPECT( [[[MPWStCompiler evaluate:@"ref:bundle:/"] URL] path], [[MPWStCompiler evaluate:@"scheme:bundle bundle resourcePath."] stringValue], @"root");
+	IDEXPECT( [[[STCompiler evaluate:@"ref:bundle:/"] URL] path], [[STCompiler evaluate:@"scheme:bundle bundle resourcePath."] stringValue], @"root");
 }
 
 

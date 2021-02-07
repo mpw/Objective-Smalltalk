@@ -11,7 +11,7 @@
 #import "MPWLLVMAssemblyGenerator.h"
 #import <dlfcn.h>
 #import <objc/runtime.h>
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWMethodHeader.h"
 #import "MPWExpression.h"
 #import "MPWMessageExpression.h"
@@ -321,7 +321,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 
 -(MPWMethodDescriptor*)compileMethodForClass:(NSString*)className withHeaderString:(NSString*)methodHeaderString bodyText:(NSString*)methodBodyString
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:methodHeaderString];
     id body=[compiler compile:methodBodyString];
     return [self compileMethodForClass:className withHeader:header body:body];
@@ -883,7 +883,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
 +instanceOfGeneratedClassDefinedByParametrizedSourceString:(NSString*)sourceCodeTemplates
 {
     MPWCodeGenerator *codegen=[self codegen];
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     NSString *classname=[self anotherTestClassName];
     NSString *classDefString=[NSString stringWithFormat:sourceCodeTemplates, classname];
     MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:classDefString];

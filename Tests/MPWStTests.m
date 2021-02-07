@@ -609,7 +609,7 @@
 
 +(void)testParseSubclassWithInstanceVariablesUsingSyntax
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
     
     MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
@@ -637,7 +637,7 @@
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 type], @"@", @"type of ivar" );
-    MPWStCompiler *testCompiler=[MPWStCompiler compiler];
+    STCompiler *testCompiler=[STCompiler compiler];
     [testCompiler evaluateScriptString:@"testInstance := __TestClassWithIVarsFromSyntax new.  "];
     [testCompiler evaluateScriptString:@"var:testInstance/myIvar := 'hi'. "];
     IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"hi",@"accessor ");
@@ -828,7 +828,7 @@
 +(void)testHttpArgWithLeadingZero
 {
 	NSString *testString = @"var://www.livescribe.com/cgi-bin/WebObjects/LDApp.woa/wa/flashXML?xml=0000C0A8011700003A9B943B0000012A1F327D6595DF6E07";
-	MPWStCompiler *compiler=[[[MPWStCompiler alloc] init] autorelease];
+	STCompiler *compiler=[[[STCompiler alloc] init] autorelease];
 	id compiled = [testString compileIn:compiler];
 	id identifer=[compiled identifier];
 	IDEXPECT( [identifer identifierName], @"//www.livescribe.com/cgi-bin/WebObjects/LDApp.woa/wa/flashXML?xml=0000C0A8011700003A9B943B0000012A1F327D6595DF6E07",@"identifier with leading zeros" );
@@ -876,7 +876,7 @@
 +(void)testGetReasonableCompilerErrorOnMissingBinaryArgument
 {
     NSString *exprWithSyntaxError=@"a:=4.  a + ";
-	MPWStCompiler *compiler=[[[MPWStCompiler alloc] init] autorelease];
+	STCompiler *compiler=[[[STCompiler alloc] init] autorelease];
     @try {
         [compiler compile:exprWithSyntaxError];
         EXPECTTRUE(NO, @"should have gotten an exception here");
@@ -989,7 +989,7 @@
 
 +(void)testSimpleBindingsAreUniquedInCompile
 {
-    MPWStCompiler *compiler = [MPWStCompiler compiler];
+    STCompiler *compiler = [STCompiler compiler];
     MPWAssignmentExpression *e=[compiler compile:@"a:=a"];
     MPWIdentifierExpression *lhs=[e lhs];
     MPWIdentifierExpression *rhs=[e rhs];
@@ -1002,7 +1002,7 @@
 
 +(void)testComplexBindingsAreUniquedInCompile
 {
-    MPWStCompiler *compiler = [MPWStCompiler compiler];
+    STCompiler *compiler = [STCompiler compiler];
     MPWAssignmentExpression *e=[compiler compile:@"var:a := var:a"];
     MPWIdentifierExpression *lhs=[e lhs];
     MPWIdentifierExpression *rhs=[e rhs];
@@ -1049,7 +1049,7 @@
 
 +(void)testClassDefSyntax
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
     EXPECTNOTNIL(classDef,@"should have a class definition object");
     
@@ -1067,7 +1067,7 @@
 
 +(void)testDefineClassMethodViaSyntax
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWClassDefinition *classDef=[compiler evaluateScriptString:@"class ObjStClassMethodTestClass : NSNumber { +multiplyBy7:num { 7 * num. } }."];
     id testClass=NSClassFromString(@"ObjStClassMethodTestClass");
     NSNumber *result=[testClass multiplyBy7:@(3)];
@@ -1079,7 +1079,7 @@
 
 +(void)testCreateSubclassUsingSnytax
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : MPWInteger { -multiplyByNumber:num { self * num. }}"];
 
     Class aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
@@ -1100,7 +1100,7 @@
 {
     Class definedClass=NSClassFromString(@"ObjSTNSObjectSubclass");
     EXPECTNIL(definedClass ,@"should not exist yet");
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"class ObjSTNSObjectSubclass  { -multiplyBySeven:num { 7 * num. }}"];
     definedClass=NSClassFromString(@"ObjSTNSObjectSubclass");
     EXPECTNOTNIL( definedClass,@"should now exist");
@@ -1111,7 +1111,7 @@
 
 +(void)testClassDefWithExistingClassIsClassExtension
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"class NSObject  { -st_extend_multiplyByEight:num { 8 * num. }}"];
     id result=[compiler evaluateScriptString:@"NSObject new autorelease st_extend_multiplyByEight:5."];
     IDEXPECT(result,@(40),@"method was successfully defined");
@@ -1119,7 +1119,7 @@
 
 +(void)testProtocolDefSyntax
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyProtocol  { }"];
     IDEXPECT(proto.name, @"MyProtocol", @"name of protocol")
 }
@@ -1128,7 +1128,7 @@
 {
     Protocol *p=objc_getProtocol("MyStTestProtocol");
     EXPECTNIL(p, @"shouldn't be there");
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyStTestProtocol  { -method1. -method2.}"];
     IDEXPECT(proto.name, @"MyStTestProtocol", @"name of protocol");
     INTEXPECT(proto.methods.count, 2, @"number of messages in protocol");
@@ -1148,7 +1148,7 @@
 
 +(void)testNestedVarExprWithPath
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"a := #{ #key1: 'key2' }."];
     [compiler evaluateScriptString:@"b := #{ #key2: 42 }."];
     id result=[compiler evaluateScriptString:@"var:b/{var:a/key1}"];
@@ -1157,7 +1157,7 @@
 
 +(void)testNestedVarExprWithPathInMethod
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= { self:a/{param1}. }}} "];
     [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
     id result=[compiler evaluateScriptString:@"n:a/test1"];
@@ -1168,7 +1168,7 @@
 
 +(void)testNestedVarExprWithPathInBlockInMethod
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= {  { :blockparam |  self:a/{blockparam} } value:param1. }}} "];
     [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
     id result=[compiler evaluateScriptString:@"n:a/test1"];
@@ -1179,7 +1179,7 @@
 
 +(void)testSelfSchemeInSchemeDefintions
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"scheme SelfSchemeTester { /a { |= { 3. } } /b { |= { self:a }}}"];
     [compiler evaluateScriptString:@"scheme:s := SelfSchemeTester scheme."];
     id result=[compiler evaluateScriptString:@"s:b."];
@@ -1188,7 +1188,7 @@
 
 +(void)testSimpleSchemeDefSyntax
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
 
     Class schemeDef = [compiler evaluateScriptString:@"scheme MyScheme { }"];
     IDEXPECT([schemeDef className], @"MyScheme", @"name of scheme");
@@ -1201,7 +1201,7 @@
 {
     NSString *input=@"lowercase world";
     NSString *output=@"LOWERCASE WORLD";
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"filter MyFilter1 |{  self target writeObject: (object uppercaseString) sender:self. } "];
     id filter=[compiler evaluateScriptString:@" MyFilter1 new"];
     EXPECTNOTNIL(filter,@"got a filter instance");
@@ -1217,7 +1217,7 @@
 
 +(void)testUseStReturnAsForward
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"filter MyFilter2 |{  ^object uppercaseString. }"];
     id result=[[compiler evaluateScriptString:@" MyFilter2 process:'lowercase world'."] firstObject];
     IDEXPECT( result, @"LOWERCASE WORLD", @"nested expr result");
@@ -1226,7 +1226,7 @@
 
 +(void)testFilterDefWithNormalMethods
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"filter LowerFilter { -<void>writeObject:object {  self forward:object lowercaseString. }}"];
     id result=[[compiler evaluateScriptString:@" LowerFilter process:'SHOULD BE LOWER'."] firstObject];
     IDEXPECT( result, @"should be lower", @"nested expr result");
@@ -1235,7 +1235,7 @@
 
 +(void)testCanParseInterpolatableString
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     id string1=[compiler compile:@"\'plain string'"];
     id string2=[compiler compile:@"\"interpolateable string\""];
     IDEXPECT([string1 theLiteral],@"plain string",@"");
@@ -1244,7 +1244,7 @@
 
 +(void)testCanInterpolateString
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@" a := 'world'."];
     id result=[compiler evaluateScriptString:@"\"hello {a}!\""];
     IDEXPECT(result,@"hello world!",@"");
@@ -1252,7 +1252,7 @@
 
 +(void)testCanInterpolateStringWithScheme
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@" a := 'world'."];
     id result=[compiler evaluateScriptString:@"\"hello {var:a}!\""];
     IDEXPECT(result,@"hello world!",@"");

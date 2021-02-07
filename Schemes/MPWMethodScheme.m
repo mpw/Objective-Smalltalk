@@ -7,7 +7,7 @@
 //
 
 #import "MPWMethodScheme.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWMethodStore.h"
 #import "MPWClassMirror.h"
 #import "MPWScriptedMethod.h"
@@ -15,7 +15,7 @@
 @implementation MPWMethodScheme
 
 
-objectAccessor( MPWStCompiler , interpreter, setInterpreter )
+objectAccessor( STCompiler , interpreter, setInterpreter )
 objectAccessor(NSMutableArray, exceptions, setExceptions)
 
 -initWithInterpreter:anInterpreter

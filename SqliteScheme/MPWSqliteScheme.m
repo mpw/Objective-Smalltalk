@@ -7,7 +7,7 @@
 //
 
 #import "MPWSqliteScheme.h"
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/MPWURLBinding.h>
 #import <ObjectiveSmalltalk/MPWMessagePortDescriptor.h>
 #import <MPWFoundation/MPWFoundation.h>
@@ -191,7 +191,7 @@
 
 +_testInterpreter
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler bindValue:[self schemeWithPath:[self _chinookPath]] toVariableNamed:@"testscheme"];
     [compiler evaluateScriptString:@"scheme:chinook := testscheme"];
     return compiler;
@@ -225,7 +225,7 @@
 
 +_memoryTestInterpreter
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler bindValue:[self memoryTestScheme] toVariableNamed:@"testscheme"];
     [compiler evaluateScriptString:@"scheme:memdb := testscheme."];
     return compiler;
@@ -233,14 +233,14 @@
 
 +(NSArray *)_resultsForScript:(NSString *)script
 {
-    MPWStCompiler *compiler=[self _testInterpreter];
+    STCompiler *compiler=[self _testInterpreter];
     NSArray *results =[compiler evaluateScriptString:script];
     return results;
 }
 
 +(NSArray *)_memDBResultsForScript:(NSString *)script
 {
-    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    STCompiler *compiler=[self _memoryTestInterpreter];
     NSArray *results =[compiler evaluateScriptString:script];
     return results;
 }
@@ -309,7 +309,7 @@
 
 +(void)testSimpleSingleRecordUpdate
 {
-    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    STCompiler *compiler=[self _memoryTestInterpreter];
     
     [compiler evaluateScriptString:@"c1 := memdb:mcustomers/CustomerId/1 firstObject mutableCopy autorelease."];
     NSDictionary *before=[compiler evaluateScriptString:@"c1"];
@@ -329,7 +329,7 @@
 
 +(void)testSimpleDeleteRecord
 {
-    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    STCompiler *compiler=[self _memoryTestInterpreter];
     
     NSDictionary *before=[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1 firstObject."];
     IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
@@ -340,7 +340,7 @@
 
 +(void)testDeleteViaRef
 {
-    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    STCompiler *compiler=[self _memoryTestInterpreter];
     NSDictionary *before=[compiler evaluateScriptString:@"memdb:mcustomers/CustomerId/1 firstObject."];
     IDEXPECT( before[@"FirstName"], @"Luís", @"first name");
     [compiler evaluateScriptString:@"ref:memdb:mcustomers/CustomerId/1 delete."];
@@ -350,7 +350,7 @@
 
 +(void)testInsert
 {
-    MPWStCompiler *compiler=[self _memoryTestInterpreter];
+    STCompiler *compiler=[self _memoryTestInterpreter];
     
     [compiler evaluateScriptString:@"c1 := memdb:mcustomers/CustomerId/1 firstObject mutableCopy autorelease."];
     NSDictionary *before=[compiler evaluateScriptString:@"c1"];

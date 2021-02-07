@@ -7,7 +7,7 @@
 //
 
 #import "MPWProgramTextView.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWREPLViewPrinter.h"
 
 @interface MPWProgramTextView ()

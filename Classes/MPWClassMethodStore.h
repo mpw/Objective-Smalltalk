@@ -8,13 +8,13 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWClassMirror,MPWStCompiler,MPWMethodCallBack,MPWScriptedMethod;
+@class MPWClassMirror,STCompiler,MPWMethodCallBack,MPWScriptedMethod;
 
 @interface MPWClassMethodStore : NSObject
 {
     MPWClassMirror  *classMirror;
     NSMutableDictionary *methodCallbacks;
-    MPWStCompiler   *compiler;
+    STCompiler   *compiler;
 }
 
 -initWithClassMirror:(MPWClassMirror*)newMirror compiler:aCompiler;

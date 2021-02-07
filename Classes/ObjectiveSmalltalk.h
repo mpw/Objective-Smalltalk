@@ -53,7 +53,7 @@
 #import <ObjectiveSmalltalk/MPWSelfContainedBindingsScheme.h>
 #import <ObjectiveSmalltalk/MPWSetAccessor.h>
 #import <ObjectiveSmalltalk/MPWSpotlightScheme.h>
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/MPWTreeNodeScheme.h>
 #import <ObjectiveSmalltalk/MPWURLBinding.h>
 #import <ObjectiveSmalltalk/MPWURLSchemeResolver.h>

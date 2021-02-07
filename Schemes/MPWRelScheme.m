@@ -28,13 +28,13 @@
 
 @end
 
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
 @implementation MPWRelScheme(testing)
 
 +_testSchemeInterpreter:(NSString*)baseRef
 {
-    MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
+    STCompiler *interpreter=[[[STCompiler alloc] init] autorelease];
     [interpreter evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme."];
     [interpreter bindValue:baseRef toVariableNamed:@"baseRef"];
     [interpreter evaluateScriptString:@"scheme:rel := MPWRelScheme alloc initWithBaseScheme: scheme:base baseURL:baseRef."];
@@ -45,21 +45,21 @@
 
 +(void)testBasicLookup
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/"];
+    STCompiler *interpreter = [self _testSchemeInterpreter:@"/"];
     IDEXPECT([interpreter evaluateScriptString:@"base:/"] , @"root", @"eval rel:/");
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"root", @"eval rel:/");
 }
 
 +(void)testRelativeLookup
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/subtree"];
+    STCompiler *interpreter = [self _testSchemeInterpreter:@"/subtree"];
 //    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"subtree-content", @"eval rel:/");
 }
 
 +(void)testRelativeFileScheme
 {
-    MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
+    STCompiler *interpreter=[[[STCompiler alloc] init] autorelease];
     NSString *path = @"/tmp/relativeSchemeTests.txt";
     [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     [interpreter evaluateScriptString:@"scheme:rel := MPWRelScheme alloc initWithBaseScheme: scheme:file baseURL:'/tmp'."];
@@ -68,7 +68,7 @@
 
 +(void)testRelativeFileSchemeGET
 {
-    MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
+    STCompiler *interpreter=[[[STCompiler alloc] init] autorelease];
     NSString *path = @"/tmp/relativeSchemeTests.txt";
     [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     id rel=[interpreter evaluateScriptString:@"MPWRelScheme alloc initWithBaseScheme: scheme:file baseURL:'/tmp'."];
@@ -77,7 +77,7 @@
 
 +(void)testRelativeFileSchemeGETViaEvaluatedRef
 {
-    MPWStCompiler *interpreter=[[[MPWStCompiler alloc] init] autorelease];
+    STCompiler *interpreter=[[[STCompiler alloc] init] autorelease];
     NSString *path = @"/tmp/relativeSchemeTests.txt";
     [@"hello world!" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     [interpreter evaluateScriptString:@"env:a :='tmp'. rel := ref:file:/{env:a} asScheme."];
@@ -86,7 +86,7 @@
 
 +(void)testWriteThrough
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/"];
+    STCompiler *interpreter = [self _testSchemeInterpreter:@"/"];
     IDEXPECT([interpreter evaluateScriptString:@"base:/"] , @"root", @"eval rel:/");
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"root", @"eval rel:/");
     [interpreter evaluateScriptString:@"rel:/ := 'new root'"];
@@ -96,7 +96,7 @@
 
 +(void)testRelativeWriteThrough
 {
-    MPWStCompiler *interpreter = [self _testSchemeInterpreter:@"/subtree"];
+    STCompiler *interpreter = [self _testSchemeInterpreter:@"/subtree"];
 //    [interpreter evaluateScriptString:@"scheme:rel setBaseIdentifier:'/subtree'"];
     IDEXPECT([interpreter evaluateScriptString:@"rel:/"] , @"subtree-content", @"eval rel:/");
     [interpreter evaluateScriptString:@"rel:/ := 'new subtree'"];

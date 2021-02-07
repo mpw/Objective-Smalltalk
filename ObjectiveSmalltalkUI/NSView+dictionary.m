@@ -8,7 +8,7 @@
 
 #import "NSView+dictionary.h"
 #import <MPWFoundation/MPWFoundation.h>
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 
 @implementation NSView(dictionary)
 
@@ -49,7 +49,7 @@
 
 +(void)testCanCreateBasicViewFromST
 {
-    NSView *v=[MPWStCompiler evaluate:@" #NSView{} "];
+    NSView *v=[STCompiler evaluate:@" #NSView{} "];
     EXPECTNOTNIL(v, @"got a view");
     EXPECTTRUE( [v isKindOfClass:[NSView class]],@"is a view");
     FLOATEXPECT(v.frame.origin.x, 0, @"zerorect x");
@@ -62,7 +62,7 @@
 
 +(void)testCanSpecifyFrame
 {
-    NSView *v=[MPWStCompiler evaluate:@" #NSView{ #frame : ( 10@20 extent: 400@200) } "];
+    NSView *v=[STCompiler evaluate:@" f := ( 10@20 extent: 400@200).  #NSView{ #frame: f } "];
     EXPECTNOTNIL(v, @"got a view");
     EXPECTTRUE( [v isKindOfClass:[NSView class]],@"is a view");
     FLOATEXPECT(v.frame.origin.x, 10, @"x");
@@ -73,13 +73,13 @@
 
 +(void)testCanSpecifyAdditionalValues
 {
-    NSView *v=[MPWStCompiler evaluate:@" #NSView{ #alphaValue : 0.3 "];
+    NSView *v=[STCompiler evaluate:@" #NSView{ #alphaValue: 0.3 }"];
     FLOATEXPECT(v.alphaValue, 0.3, @"alpha");
 }
 
 +(void)testCanSpecifySubviewAsArray
 {
-    NSView *v=[MPWStCompiler evaluate:@" #NSView{ #subviews :  #(   #NSView{ #alphaValue : 0.3 } ) }"];
+    NSView *v=[STCompiler evaluate:@" #NSView{ #subviews:  #(   #NSView{ #alphaValue: 0.3 } ) }"];
     INTEXPECT( v.subviews.count, 1 ,@"number of subviews");
     EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
 }

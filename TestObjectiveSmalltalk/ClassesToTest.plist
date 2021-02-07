@@ -67,7 +67,7 @@
 	"MPWSelfContainedBinding",
 	"MPWSelfContainedBindingsScheme",
 	MPWSetAccessor,
-	MPWStCompiler,
+	STCompiler,
 	MPWStName,
 	MPWStScanner,
 	MPWStTests,

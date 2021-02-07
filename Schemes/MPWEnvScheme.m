@@ -87,21 +87,21 @@ extern char **environ;
 
 @end
 
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
 @implementation MPWEnvScheme(testing)
 
 +(void)testEnvGetAndPut
 {
-//	EXPECTNIL([MPWStCompiler evaluate:@"env:myvar"] , @"myvar not in env");			   
+//	EXPECTNIL([STCompiler evaluate:@"env:myvar"] , @"myvar not in env");			   
 	putenv("myvar=hi");
-	IDEXPECT([MPWStCompiler evaluate:@"env:myvar"],@"hi",@"env:myvar");
+	IDEXPECT([STCompiler evaluate:@"env:myvar"],@"hi",@"env:myvar");
 	putenv("myvar=hi2");
-	IDEXPECT([MPWStCompiler evaluate:@"env:myvar"],@"hi2",@"env:myvar");
-	IDEXPECT([MPWStCompiler evaluate:@"env:/myvar"],@"hi2",@"env:/myvar");
-	[MPWStCompiler evaluate:@"env:myvar := 42"];
+	IDEXPECT([STCompiler evaluate:@"env:myvar"],@"hi2",@"env:myvar");
+	IDEXPECT([STCompiler evaluate:@"env:/myvar"],@"hi2",@"env:/myvar");
+	[STCompiler evaluate:@"env:myvar := 42"];
 	IDEXPECT( [NSString stringWithUTF8String:getenv("myvar")], @"42", @"getenv after env:myvar := 42");
-	[MPWStCompiler evaluate:@"env:myvar := 44"];
+	[STCompiler evaluate:@"env:myvar := 44"];
 	IDEXPECT( [NSString stringWithUTF8String:getenv("myvar")], @"44", @"getenv after env:myvar := 42");
 }
 
@@ -125,7 +125,7 @@ extern char **environ;
 
 +(void)testEnvironmentIsInherited
 {
-	[MPWStCompiler evaluate:@"env:myvar := 900"];
+	[STCompiler evaluate:@"env:myvar := 900"];
 	NSString *echoResult=[[self linesFromCommand:@"/bin/echo -n $myvar"] lastObject];
 	IDEXPECT( echoResult, @"900", @"inherited var");
 }
@@ -134,7 +134,7 @@ extern char **environ;
 +(void)testEnvironmentList
 {
 //	NSArray *allEnvVars=[self linesFromCommand:@"env"];
-	MPWBinding *rootEnv=[MPWStCompiler evaluate:@"ref:env:/"];
+	MPWBinding *rootEnv=[STCompiler evaluate:@"ref:env:/"];
     EXPECTTRUE([rootEnv hasChildren],@"root should have children");
 
 //    INTEXPECT( [[rootEnv childNames] count],[allEnvVars count],@"number of environment variables");

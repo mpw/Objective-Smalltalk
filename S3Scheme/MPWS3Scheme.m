@@ -167,7 +167,7 @@
 @end
 
 #import <MPWFoundation/DebugMacros.h>
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 
 @implementation MPWScheme(testing)
 
@@ -179,7 +179,7 @@
 
 +_testInterpreter
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler bindValue:[self _testScheme] toVariableNamed:@"testscheme"];
     [compiler evaluateScriptString:@"scheme:s3 := testscheme"];
     return compiler;
@@ -235,7 +235,7 @@
 +(void)testListBucketsViaIdentifer
 {
     [self setupCredentials];
-    MPWStCompiler *interpreter = [self _testInterpreter];
+    STCompiler *interpreter = [self _testInterpreter];
     NSArray* content=[interpreter evaluateScriptString:@"s3:/"];
     INTEXPECT(content.count,1,@"number of files");
     IDEXPECT(content[0],@"testbucket1",@"first bucket");
@@ -245,7 +245,7 @@
 +(void)testListBucketContentListViaIdentifer
 {
     [self setupCredentials];
-    MPWStCompiler *interpreter = [self _testInterpreter];
+    STCompiler *interpreter = [self _testInterpreter];
     NSArray* content=[interpreter evaluateScriptString:@"s3:/testbucket1"];
     INTEXPECT(content.count,2,@"number of files");
     IDEXPECT(content[0],@"alias.py",@"first file in bucket");
@@ -255,7 +255,7 @@
 +(void)testGetBucketContentsViaIdentifer
 {
     [self setupCredentials];
-    MPWStCompiler *interpreter = [self _testInterpreter];
+    STCompiler *interpreter = [self _testInterpreter];
     NSData* aliaspy=[interpreter evaluateScriptString:@"s3:/testbucket1/alias.py"];
     INTEXPECT(aliaspy.length, 11138, @"length");
 }
@@ -263,7 +263,7 @@
 +(void)testGetBucketFolderContentsViaIdentifer
 {
     [self setupCredentials];
-    MPWStCompiler *interpreter = [self _testInterpreter];
+    STCompiler *interpreter = [self _testInterpreter];
     NSData* aliaspy=[interpreter evaluateScriptString:@"s3:/testbucket1/folder/hello.txt"];
     INTEXPECT(aliaspy.length, 12, @"length");
 }

@@ -53,14 +53,14 @@ idAccessor( valueFilter, setValueFilter)
 
 @end
 
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
 @implementation MPWBlockFilterScheme(tests)
 
 
 +(void)testSimpleValueFilter
 {
-    id compiler=[[MPWStCompiler new] autorelease];
+    id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi := 'Hello World'."];
     [compiler evaluateScriptString:@"scheme:len := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:nil valueFilter:[ :value | value length stringValue.]."];
     id result=[compiler evaluateScriptString:@"len:hi"];
@@ -69,7 +69,7 @@ idAccessor( valueFilter, setValueFilter)
 
 +(void)testSimpleIdentifierFilter
 {
-    id compiler=[[MPWStCompiler new] autorelease];
+    id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
     [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:nil."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
@@ -78,7 +78,7 @@ idAccessor( valueFilter, setValueFilter)
 
 +(void)testIdentifierAndValueFilter
 {
-    id compiler=[[MPWStCompiler new] autorelease];
+    id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
     [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
@@ -87,7 +87,7 @@ idAccessor( valueFilter, setValueFilter)
 
 +(void)testFilterWorksWithCache
 {
-    id compiler=[[MPWStCompiler new] autorelease];
+    id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
     [compiler evaluateScriptString:@"scheme:txt := (MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]) cachedBy:MPWTreeNodeScheme scheme."];
     id result=[compiler evaluateScriptString:@"txt:hi"];

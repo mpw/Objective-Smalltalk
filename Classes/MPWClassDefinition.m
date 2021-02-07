@@ -10,7 +10,7 @@
 #import "NSObjectScripting.h"
 #import "MPWMethodStore.h"
 #import "MPWClassMethodStore.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWPropertyPathGetter.h"
 #import "MPWPropertyPathSetter.h"
 

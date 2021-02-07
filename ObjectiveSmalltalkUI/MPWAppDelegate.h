@@ -9,11 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWStCompiler;
+@class STCompiler;
 
 @interface MPWAppDelegate : NSObject
 
-@property (nonatomic, strong) MPWStCompiler *compiler;
+@property (nonatomic, strong) STCompiler *compiler;
 
 -(void)loadSmalltalkMethods;
 
