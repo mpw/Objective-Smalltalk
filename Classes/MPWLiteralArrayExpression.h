@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWLiteralExpression.h>
+#import <ObjectiveSmalltalk/MPWComplexLiteralExpression.h>
 
-@interface MPWLiteralArrayExpression : MPWExpression
+@interface MPWLiteralArrayExpression : MPWComplexLiteralExpression
 
 @property (nonatomic, retain)  NSArray *objects;
 

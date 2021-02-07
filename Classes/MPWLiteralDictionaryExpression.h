@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/MPWComplexLiteralExpression.h>
 
-@interface MPWLiteralDictionaryExpression : MPWExpression
+@interface MPWLiteralDictionaryExpression : MPWComplexLiteralExpression
 
 -(void)addKey:key value:value;
 

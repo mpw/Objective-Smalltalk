@@ -10,7 +10,8 @@
 
 @interface MPWLiteralArrayExpression()
 
-@property (nonatomic, assign) Class literalClass;
+@property (readonly) Class literalClass;
+@property (strong, nonatomic) NSString* literalClassName;
 
 @end
 
@@ -20,13 +21,14 @@
 {
 //    [super setClassName:name];
     if ( name ) {
-        self.literalClass=NSClassFromString(name);
+        self.literalClassName=name;
     }
 }
 
+
 -evaluateIn:aContext
 {
-//    NSLog(@"will evaluate literarl array: %@",[self objects]);
+//    NSLog(@"will evaluate literal array: %@",[self objects]);
 #define STACKMAX 200
     Class baseClass=[NSArray class];
     Class finalClass=self.literalClass;

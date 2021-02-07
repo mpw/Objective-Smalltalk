@@ -70,7 +70,8 @@ idAccessor( _schemes, setSchemes )
 	id varScheme = [MPWVarScheme store];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"var"];
     [varScheme setContext:self];
-	[schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];
+    [schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];
+    [schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"builder"];
 	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];

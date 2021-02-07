@@ -19,6 +19,7 @@
 #import <ObjectiveSmalltalk/MPWBundleScheme.h>
 #import <ObjectiveSmalltalk/MPWClassDefinition.h>
 #import <ObjectiveSmalltalk/MPWClassMirror.h>
+#import <ObjectiveSmalltalk/MPWComplexLiteralExpression.h>
 #import <ObjectiveSmalltalk/MPWConnector.h>
 #import <ObjectiveSmalltalk/MPWDataflowConstraintExpression.h>
 #import <ObjectiveSmalltalk/MPWDefaultsScheme.h>
