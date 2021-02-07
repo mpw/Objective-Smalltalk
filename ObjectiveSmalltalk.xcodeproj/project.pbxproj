@@ -181,6 +181,10 @@
 		1F5E508409B4B754000298D9 /* MPWConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCEB7EB099C03ED00867A95 /* MPWConnector.m */; };
 		1F5E508609B4B754000298D9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A74ACB00F0A61B015ADD82 /* Foundation.framework */; };
 		1F5E508709B4B754000298D9 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1F5EE2BC25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F5EE2BD25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F5EE2BE25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
+		1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
 		1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
 		1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -783,6 +787,8 @@
 		1F59A71D202C7D7800BE06F6 /* x11fs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x11fs.h; sourceTree = "<group>"; };
 		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
+		1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWComplexLiteralExpression.m; sourceTree = "<group>"; };
 		1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWInternalCodeGenerator.h; sourceTree = "<group>"; };
 		1F605134187590E5004B6AED /* MPWInternalCodeGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPWInternalCodeGenerator.mm; sourceTree = "<group>"; };
 		1F635616179EB38500D2DE58 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -1912,6 +1918,8 @@
 				1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */,
 				1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */,
 				1F3C6E6E1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m */,
+				1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */,
+				1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */,
 				1F5046192118658F00073E1E /* MPWPropertyPathDefinition.h */,
 				1F50461A2118658F00073E1E /* MPWPropertyPathDefinition.m */,
 				1F504625211885E900073E1E /* MPWPropertyPath.h */,
@@ -2053,6 +2061,7 @@
 				1FA421411451F9F000F7A277 /* MPWMethodScheme.h in Headers */,
 				1F575D9D20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */,
 				1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
+				1F5EE2BC25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */,
 				1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */,
 				1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
 				1FFE3AD720B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */,
@@ -2228,6 +2237,7 @@
 				1FE37B721969610600C9A378 /* MPWAssignmentExpression.h in Headers */,
 				1F9BD22D2566505F006D7476 /* MPWStPropertyPathTests.h in Headers */,
 				1FE37B971969610600C9A378 /* MPWMessage.h in Headers */,
+				1F5EE2BD25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */,
 				1FE37BBF1969610800C9A378 /* MPWStTests.h in Headers */,
 				1FE37B891969610600C9A378 /* MPWFastMessage.h in Headers */,
 				1FE37BB71969610700C9A378 /* MPWSetAccessor.h in Headers */,
@@ -3189,6 +3199,7 @@
 				1F88E8B4138ADC1600199F03 /* MPWEnvScheme.m in Sources */,
 				1FB7AE3224DB0F3000CCBE86 /* STBundle.m in Sources */,
 				1F88E8DC138ADCCA00199F03 /* MPWResource.m in Sources */,
+				1F5EE2BE25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */,
 				1FA3886A13910FA6007B5CC9 /* MPWBundleScheme.m in Sources */,
 				1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */,
 				1F73288D2344BEF300379386 /* MPWShellPrinter.m in Sources */,
@@ -3388,6 +3399,7 @@
 				1FE37BBC1969610800C9A378 /* STCompiler.m in Sources */,
 				1FE37B981969610600C9A378 /* MPWMessage.m in Sources */,
 				1FE37BF01969612700C9A378 /* MPWDefaultsScheme.m in Sources */,
+				1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */,
 				1FE37B771969610600C9A378 /* MPWBlockContext.m in Sources */,
 				1FE37BA01969610600C9A378 /* MPWMethodCallBack.m in Sources */,
 				1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */,

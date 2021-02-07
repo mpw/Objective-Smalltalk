@@ -7,13 +7,12 @@
 //
 
 #import "MPWLiteralDictionaryExpression.h"
+#import "MPWEvaluator.h"
 
 @interface MPWLiteralDictionaryExpression ()
 
 @property (nonatomic, strong)  NSMutableArray *keys;
 @property (nonatomic, strong)  NSMutableArray *values;
-@property (nonatomic, assign)  Class literalClass;
-@property (nonatomic, strong)  NSString *literalClassName;
 
 
 @end
@@ -40,17 +39,11 @@
     self.literalClassName=name;
 }
 
--(void)loadClass
+-builderForContext:(MPWEvaluator*)aContext
 {
-    if ( self.literalClassName ) {
-//        NSLog(@"set literal class name: '%@'",self.literalClassName);
-        self.literalClass=NSClassFromString(self.literalClassName);
-//        NSLog(@"literal class: %@",self.literalClass);
-        if ( !self.literalClass) {
-            [NSException raise:@"undefinedclass" format:@"Literal Class %@ undefined for dictionary literal",self.literalClassName];
-        }
-    }
+    return [aContext schemeForName:@"builder"];
 }
+
 
 -(id)evaluateIn:(id)aContext
 {
@@ -62,8 +55,16 @@
     id *keys=NULL;
     id *values=NULL;
     Class baseClass=[NSDictionary class];
-    [self loadClass];
+    id <MPWStorage> builder = [self builderForContext:aContext];
+    NSAssert2(builder!= nil, @"builder for context: %@ schemes: %@",aContext,[aContext schemeForName:@"scheme"]);
+    NSString *className = self.literalClassName;
+    if (!className) {
+        className = @"NSMutableDictionary";
+    }
     Class finalClass=self.literalClass;
+    if (!finalClass) {
+        finalClass=[NSMutableDictionary class];
+    }
 
     unsigned long maxKeyVal=MIN(self.keys.count,self.values.count);
     if ( maxKeyVal > MAXSTACK ) {

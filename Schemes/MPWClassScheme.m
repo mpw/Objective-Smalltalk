@@ -38,7 +38,7 @@
 
 -(id)at:(id)aReference
 {
-    NSString *className=[aReference name];
+    NSString *className=[aReference path];
     if ( [className length] == 0 || [className isEqualToString:@"."] ) {
         return [[[self allClassMirrors] collect] name];
     } else if ( [className isEqualToString:@"/"]  )  {
