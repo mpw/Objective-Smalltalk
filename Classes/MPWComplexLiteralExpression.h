@@ -9,10 +9,14 @@
 
 //NS_ASSUME_NONNULL_BEGIN
 
+@class MPWEvaluator;
+
 @interface MPWComplexLiteralExpression : MPWExpression
 
 @property (readonly) Class literalClass;
 @property (nonatomic, strong) NSString *literalClassName;
+
+-(Class)classForContext:(MPWEvaluator*)aContext;
 
 @end
 
