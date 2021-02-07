@@ -7,7 +7,7 @@
 
 #import "STAppDelegate.h"
 #import "CLIView.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWProgramTextView.h"
 
 @interface STAppDelegate ()
@@ -27,7 +27,7 @@
 -(IBAction)showREPL:(id)sender
 {
     CLIView *cli=[CLIView openInWindow:@"CLI"];
-    MPWStCompiler *compiler=self.compiler;
+    STCompiler *compiler=self.compiler;
     [cli setCommandHandler:compiler];
 }
 

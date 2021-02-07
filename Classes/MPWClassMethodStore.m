@@ -17,7 +17,7 @@
 
 objectAccessor( MPWClassMirror, classMirror, setClassMirror )
 objectAccessor( NSMutableDictionary, methodCallbacks, setMethodCallbacks )
-scalarAccessor( MPWStCompiler *, compiler, setCompiler)
+scalarAccessor( STCompiler *, compiler, setCompiler)
 
 -(Class)theClass
 {

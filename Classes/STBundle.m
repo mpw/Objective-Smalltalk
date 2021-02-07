@@ -6,7 +6,7 @@
 //
 
 #import "STBundle.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWSchemeScheme.h"
 
 @interface STBundle()
@@ -20,13 +20,13 @@
 @implementation STBundle
 {
     NSDictionary      *info;
-    MPWStCompiler     *interpreter;
+    STCompiler     *interpreter;
     NSDictionary      *methodDict;
     MPWWriteBackCache *cachedResources;
 }
 
 lazyAccessor(NSDictionary, info, setInfo, readInfo)
-lazyAccessor(MPWStCompiler, interpreter, setInterpreter, createInterpreter)
+lazyAccessor(STCompiler, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary, methodDict, setMethodDict, methodDictForSourceFiles)
 lazyAccessor(MPWWriteBackCache, cachedResources, setCachedResources, createResources)
 
@@ -89,22 +89,22 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [NSJSONSerialization JSONObjectWithData:[self storeForSubDir:@"."][@"Info.json"] options:0 error:nil];
 }
 
--(void)configureInterpreter:(MPWStCompiler*)newInterpreter
+-(void)configureInterpreter:(STCompiler*)newInterpreter
 {
     [[newInterpreter schemes] setSchemeHandler:[MPWPathRelativeStore storeWithSource:self.cachedResources reference:[self resourceRef]]   forSchemeName:@"rsrc"];
     [newInterpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 }
 
--(MPWStCompiler*)createInterpreter
+-(STCompiler*)createInterpreter
 {
-    MPWStCompiler *compiler = [MPWStCompiler compiler];
+    STCompiler *compiler = [STCompiler compiler];
     [self configureInterpreter:compiler];
     return compiler;
 }
 
 -(NSDictionary*)methodDictForSourceFiles
 {
-    MPWStCompiler *compiler=self.interpreter;
+    STCompiler *compiler=self.interpreter;
     id <MPWHierarchicalStorage> sources=[self sourceDir];
     for ( NSString *filename in [self sourceNames] ) {
         @autoreleasepool {
@@ -182,7 +182,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 +(void)testGetInterpreter
 {
     STBundle *bundle=[self _testBundle];
-    MPWStCompiler *interpreter=[bundle interpreter];
+    STCompiler *interpreter=[bundle interpreter];
     IDEXPECT( [interpreter evaluateScriptString:@"3+4"], @(7), @"interpreter works");
     NSData *png=[interpreter evaluateScriptString:@"rsrc:objst.png"];
     EXPECTNOTNIL(png, @"got the png");

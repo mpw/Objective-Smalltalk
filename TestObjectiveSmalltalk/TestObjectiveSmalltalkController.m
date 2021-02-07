@@ -11,7 +11,7 @@
 
 @end
 
-@implementation TestObjectiveSmalltalk Controller
+@implementation TestObjectiveSmalltalkController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

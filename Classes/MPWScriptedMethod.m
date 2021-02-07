@@ -8,7 +8,7 @@
 
 #import "MPWScriptedMethod.h"
 #import "MPWEvaluator.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWMethodHeader.h"
 #import "MPWVarScheme.h"
 #import "MPWSchemeScheme.h"
@@ -68,7 +68,7 @@ idAccessor( script, _setScript )
 
 //    NSLog(@"==== freshExecutionContextForRealLocalVars ===");
 
-	MPWEvaluator *evaluator = [[[MPWStCompiler alloc] initWithParent:nil] autorelease];
+	MPWEvaluator *evaluator = [[[STCompiler alloc] initWithParent:nil] autorelease];
 //    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
     MPWVarScheme *newVarScheme=[MPWVarScheme store];
@@ -199,7 +199,7 @@ idAccessor( script, _setScript )
 
 +(void)testLookupOfNilVariableInMethodWorks
 {
-	MPWStCompiler* compiler = [MPWStCompiler compiler];
+	STCompiler* compiler = [STCompiler compiler];
 	id a=[[NSObject new] autorelease];
 	id result;
 	[compiler addScript:@"a:=nil. b:='2'. a isNil ifTrue:[ b:='335']. b." forClass:@"NSObject" methodHeaderString:@"xxxSimpleNilTestMethod"];
@@ -209,7 +209,7 @@ idAccessor( script, _setScript )
 
 +_objectWithNestedMethodsThatThrow
 {
-	MPWStCompiler* compiler = [MPWStCompiler compiler];
+	STCompiler* compiler = [STCompiler compiler];
 	id a=[[NSObject new] autorelease];
 	[compiler addScript:@"self bozobozozo." forClass:@"NSObject" methodHeaderString:@"xxxSimpleMethodThatRaises"];
 	[compiler addScript:@"self xxxSimpleMethodThatRaises." forClass:@"NSObject" methodHeaderString:@"xxxSimpleMethodThatCallsMethodThatRaises"];
@@ -265,7 +265,7 @@ idAccessor( script, _setScript )
 
 +(void)testThisSchemeReadsObject
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"extension MPWScriptedMethod { -getTheText { this:script. } }." ];
     MPWScriptedMethod *tester=[MPWScriptedMethod new];
     tester.script=@"The Answer";
@@ -275,7 +275,7 @@ idAccessor( script, _setScript )
 
 +(void)testThisSchemeWritesObject
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"extension MPWScriptedMethod { -<void>setText:someText { this:script := someText. } }." ];
     MPWScriptedMethod *tester=[MPWScriptedMethod new];
     [tester setText:@"some script text"];

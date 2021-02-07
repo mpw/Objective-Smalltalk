@@ -7,7 +7,7 @@
 //
 
 #import "MPWAssignmentExpression.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWIdentifier.h"
 

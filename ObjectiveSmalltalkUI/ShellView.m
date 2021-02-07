@@ -5,7 +5,7 @@
 #import "ShellView.h"
 #import "FSCommandHistory.h"
 #import <MPWFoundation/MPWFoundation.h>
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWExpression+autocomplete.h"
 #import "MPWShellPrinter.h"
 

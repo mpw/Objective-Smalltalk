@@ -1,6 +1,6 @@
-/* MPWStCompiler.m created by marcel on Mon 03-Jul-2000 */
+/* STCompiler.m created by marcel on Mon 03-Jul-2000 */
 
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWStScanner.h"
 #import "MPWMessageExpression.h"
 #import "MPWIdentifierExpression.h"
@@ -71,7 +71,7 @@
 @end
 
 
-@implementation MPWStCompiler
+@implementation STCompiler
 
 
 objectAccessor( NSMutableDictionary, symbolTable, setSymbolTable)
@@ -1428,11 +1428,11 @@ idAccessor(solver, setSolver)
 @end
 
 
-@implementation MPWStCompiler(tests)
+@implementation STCompiler(tests)
 
 +(void)testCheckValidSyntax
 {
-    MPWStCompiler *compiler=[self compiler];
+    STCompiler *compiler=[self compiler];
     EXPECTTRUE([compiler isValidSyntax:@" 3+4 "], @"'3+4' valid syntax ");
     EXPECTFALSE([compiler isValidSyntax:@" 3+  "], @"'3+' not valid syntax ");
     EXPECTFALSE([compiler isValidSyntax:@"42 [  "], @"'42 [ ' not valid syntax ");
@@ -1441,14 +1441,14 @@ idAccessor(solver, setSolver)
 
 +(void)testRightArrowDoesntGenerateMsgExpr
 {
-    MPWStCompiler *compiler=[self compiler];
+    STCompiler *compiler=[self compiler];
     id expr=[compiler compile:@"[ :a | a ] -> stdout"];
     EXPECTFALSE([expr isKindOfClass:[MPWMessageExpression class]], @"'[ :a | a ] -> stdout' is msg expr");
 }
 
 +(void)testPipeSymbolForTemps
 {
-    MPWStCompiler *compiler=[self compiler];
+    STCompiler *compiler=[self compiler];
     id expr=[compiler compile:@"| a |"];
     EXPECTNIL(expr, @"expr");
 }
@@ -1456,7 +1456,7 @@ idAccessor(solver, setSolver)
 
 +(void)testSchemeWithDot
 {
-    MPWStCompiler *compiler=[self compiler];
+    STCompiler *compiler=[self compiler];
     MPWIdentifierExpression *expr=[compiler compile:@"doc:."];
     EXPECTTRUE([expr isKindOfClass:[MPWIdentifierExpression class]], @"var:. parses to identifer expression");
     MPWIdentifier *identifier=[expr identifier];
@@ -1466,7 +1466,7 @@ idAccessor(solver, setSolver)
 
 +(void)testParsingMethodBodyPreservesSource
 {
-    MPWStCompiler *compiler=[self compiler];
+    STCompiler *compiler=[self compiler];
     [compiler evaluateScriptString:@"class  MPWMethodSourceCompilerTestClass1 : NSObject { -answer { 42. } }. "];
     MPWScriptedMethod *method=[[compiler methodStore] methodForClass:@"MPWMethodSourceCompilerTestClass1" name:@"answer"];
     EXPECTNOTNIL(method, @"got a method");
@@ -1477,7 +1477,7 @@ idAccessor(solver, setSolver)
 {
     
     NSString *partialNested=@"# #UILabel{ #'text' : 'Hi' }.";
-    MPWStCompiler *compiler=[self compiler];
+    STCompiler *compiler=[self compiler];
     @try {
         [compiler compile:partialNested];
     } @catch ( NSException* exception ) {

@@ -7,19 +7,23 @@
 //
 
 #import "NSObjectScripting.h"
-
+#import "STCompiler.h"
 #import "MPWMethodCallBack.h"
-#import "MPWStCompiler.h"
 #import "MPWInstanceVariable.h"
 #import "MPWSetAccessor.h"
-#import <ObjectiveSmalltalk/MPWGetAccessor.h>
 
-@implementation NSObject(stScripting)
+
+void amIHereFunc( void )
+{
+    NSLog(@"I am here");
+} 
+
+@implementation NSObject(smalltalkScripting)
 
 
 -evaluateScript:(NSString*)scriptString
 {
-	id evaluator=[[[MPWStCompiler alloc] init] autorelease];
+	id evaluator=[[[STCompiler alloc] init] autorelease];
 	id result;
 	result = [evaluator evaluateScript:scriptString onObject:self];
 	return result;

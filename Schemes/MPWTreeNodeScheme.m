@@ -9,7 +9,7 @@
 #import "MPWTreeNodeScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWTreeNode.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
 @implementation MPWTreeNodeScheme
 
@@ -75,14 +75,14 @@ idAccessor( root, setRoot )
 
 +_testInterpreterWithCMSScheme
 {
-    MPWStCompiler *interpreter=[[MPWStCompiler new] autorelease];
+    STCompiler *interpreter=[[STCompiler new] autorelease];
     [interpreter evaluateScriptString:@" site := MPWTreeNodeScheme scheme. scheme:cms := site."];
     return interpreter;
 }
 
 +(void)testRead
 {
-    MPWStCompiler *interpreter=[self _testInterpreterWithCMSScheme];
+    STCompiler *interpreter=[self _testInterpreterWithCMSScheme];
     NSString *result=@"";
    [interpreter evaluateScriptString:@" site  root setContent:'Hello World'."];
     result = [interpreter evaluateScriptString:@"cms:/ "];
@@ -93,7 +93,7 @@ idAccessor( root, setRoot )
 
 +(void)testWrite
 {
-    MPWStCompiler *interpreter=[self _testInterpreterWithCMSScheme];
+    STCompiler *interpreter=[self _testInterpreterWithCMSScheme];
     NSString *result=@"";
     [interpreter evaluateScriptString:@"cms:/ := 'Hello World'"];
     result = [interpreter evaluateScriptString:@" site root content "];
@@ -105,7 +105,7 @@ idAccessor( root, setRoot )
 
 +(void)testStripLeadingSlashesFromPathsInReadAndWrite
 {
-    MPWStCompiler *interpreter=[self _testInterpreterWithCMSScheme];
+    STCompiler *interpreter=[self _testInterpreterWithCMSScheme];
     [interpreter evaluateScriptString:@"cms:/hi := 'Hi there!'"];
     IDEXPECT([interpreter evaluateScriptString:@"cms:/hi"], @"Hi there!", @"result of evaluating /hi");
     IDEXPECT([interpreter evaluateScriptString:@"cms:hi"], @"Hi there!", @"result of evaluating hi");

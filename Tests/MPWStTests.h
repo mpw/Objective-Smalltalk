@@ -6,10 +6,10 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWStCompiler.h>
+#import <ObjectiveSmalltalk/STCompiler.h>
 
 
-@interface MPWStTests : MPWStCompiler {
+@interface MPWStTests : STCompiler {
 
 }
 

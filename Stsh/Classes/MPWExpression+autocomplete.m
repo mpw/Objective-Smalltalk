@@ -18,9 +18,9 @@
 #import "MPWObjectMirror.h"
 #import "MPWClassMirror.h"
 #import "MPWLiteralExpression.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
-@implementation MPWStCompiler(completion)
+@implementation STCompiler(completion)
 
 -(NSArray*)completionsForString:(NSString*)s
 {
@@ -234,7 +234,7 @@
 +completionsForString:(NSString*)s
 {
     NSString *res=nil;
-    MPWStCompiler *c=[MPWStCompiler compiler];
+    STCompiler *c=[STCompiler compiler];
     MPWExpression *e=[c compile:s];
     NSArray *completions = [e completionsForString:s withEvaluator:c resultName:&res];
     return [completions sortedArrayUsingSelector:@selector(compare:)];
@@ -243,7 +243,7 @@
 +bestCompletionForString:(NSString*)s
 {
     NSString *res=nil;
-    MPWStCompiler *c=[MPWStCompiler compiler];
+    STCompiler *c=[STCompiler compiler];
     MPWExpression *e=[c compile:s];
     [e completionsForString:s withEvaluator:c resultName:&res];
     return res;

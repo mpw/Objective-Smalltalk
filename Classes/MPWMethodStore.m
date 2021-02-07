@@ -13,7 +13,7 @@
 #import "MPWScriptedMethod.h"
 #import "MPWMethodType.h"
 #import "MPWMethod.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWClassMethodStore.h"
 #import "MPWClassMirror.h"
 
@@ -283,14 +283,14 @@ scalarAccessor( id , compiler , setCompiler )
 
 +store
 {
-    return [[[self alloc] initWithCompiler:[[[MPWStCompiler alloc] init] autorelease]] autorelease];
+    return [[[self alloc] initWithCompiler:[[[STCompiler alloc] init] autorelease]] autorelease];
 }
 
 #if !TARGET_OS_IPHONE
 
 +(void)testWriteSingleMethodClass
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWMethodStore *store=[compiler methodStore];
     EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClass1"), @"class not defined");
     [compiler evaluateScriptString:@"class  MPWMethodWriterTestClass1 : NSObject { -answer { 42. } }. "];
@@ -308,7 +308,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 +(void)testWriteTwoMethodClass
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWMethodStore *store=[compiler methodStore];
     EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClass2"), @"class not defined");
     [compiler evaluateScriptString:@"class  MPWMethodWriterTestClass2 : NSObject { -answer1 { 42. } -answer2 { 82. } }. "];
@@ -326,7 +326,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 +(void)testWriteClassWithIvar
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWMethodStore *store=[compiler methodStore];
     EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClassWithIVars1"), @"class not defined");
     [compiler evaluateScriptString:@"class  MPWMethodWriterTestClassWithIVars1 : NSObject { var a. var b. -answer { 42. } }. "];
@@ -344,7 +344,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 +(void)testWriteClassesToStore
 {
-    MPWStCompiler *compiler=[MPWStCompiler compiler];
+    STCompiler *compiler=[STCompiler compiler];
     MPWMethodStore *store=[compiler methodStore];
     EXPECTNIL(NSClassFromString(@"MPWMethodWriterTestClassWithIVars3"), @"class not defined");
     [compiler evaluateScriptString:@"class  MPWMethodWriterTestClass3 : NSObject {  -answer { 42. } }. "];

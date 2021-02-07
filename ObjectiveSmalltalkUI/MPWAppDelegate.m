@@ -6,7 +6,7 @@
 //
 
 #import "MPWAppDelegate.h"
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
 @implementation MPWAppDelegate
 
@@ -37,7 +37,7 @@
 -(instancetype)init
 {
     self=[super init];
-    self.compiler = [MPWStCompiler compiler];
+    self.compiler = [STCompiler compiler];
     [self.compiler bindValue:self toVariableNamed:@"delegate"];
     [self.compiler evaluateScriptString:@"scheme:doc := MPWDocumentScheme scheme."];
     [self loadSmalltalkMethods];

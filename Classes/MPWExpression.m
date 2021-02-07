@@ -7,7 +7,7 @@
 //
 
 #import <ObjectiveSmalltalk/MPWExpression.h>
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 #import "MPWIdentifier.h"
 
 @implementation MPWExpression

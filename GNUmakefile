@@ -73,7 +73,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWMessagePortDescriptor.m \
     Classes/MPWMethodCallBack.m \
     Classes/MPWResource.m \
-    Classes/MPWStCompiler.m \
+    Classes/STCompiler.m \
     Classes/MPWStTests.m \
     Classes/NSObjectScripting.m \
     Classes/MPWGetAccessor.m \
@@ -100,7 +100,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
 
 
 # Classes/MPWStTests.m \
-# Classes/MPWStCompiler.m \
+# Classes/STCompiler.m \
 
 
 

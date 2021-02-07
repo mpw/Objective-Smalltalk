@@ -86,7 +86,7 @@
 
 
 @end
-#import "MPWStCompiler.h"
+#import "STCompiler.h"
 
 @implementation MPWFileSchemeResolver(testing)
 
@@ -96,12 +96,12 @@
     NSString *tempUrlString = @"file:/tmp/fileSchemeTest.txt";
     NSString *textString = @"hello world!";
     [textString writeToURL:[NSURL URLWithString:tempUrlString] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-    IDEXPECT([[MPWStCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
+    IDEXPECT([[STCompiler evaluate:tempUrlString] stringValue],textString, @"get test file");
 }
 
 +(void)testGetDirContents
 {
-    MPWDirectoryBinding* dirContents =[MPWStCompiler evaluate:@"file:/"];
+    MPWDirectoryBinding* dirContents =[STCompiler evaluate:@"file:/"];
     EXPECTTRUE(dirContents.contents.count> 15, @"got directory contents");
     
 }

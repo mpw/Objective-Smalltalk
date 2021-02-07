@@ -8,11 +8,11 @@
 
 #import <ObjectiveSmalltalk/MPWScheme.h>
 
-@class MPWStCompiler;
+@class STCompiler;
 
 @interface MPWMethodScheme : MPWScheme
 {
-    MPWStCompiler   *interpreter;
+    STCompiler   *interpreter;
     NSMutableArray  *exceptions;
 }
 
