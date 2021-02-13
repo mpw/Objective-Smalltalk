@@ -9,6 +9,11 @@
 
 @interface TestObjectiveSmalltalkController : UIViewController
 
+@property (nonatomic,strong) IBOutlet UILabel *success;
+@property (nonatomic,strong) IBOutlet UILabel *failure;
+@property (nonatomic,strong) IBOutlet UITextView *failureLog;
+
+
 
 @end
 
