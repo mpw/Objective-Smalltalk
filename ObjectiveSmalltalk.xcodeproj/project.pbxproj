@@ -41,9 +41,6 @@
 		1F29D7FC21B42BE900AB14D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */; };
 		1F29D7FF21B42BE900AB14D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7FE21B42BE900AB14D8 /* main.m */; };
 		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
-		1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
-		1F29D80F21B4374600AB14D8 /* MPWTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; };
-		1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; };
 		1F2D95D22250FCC500D025D8 /* STAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D12250FCC500D025D8 /* STAppDelegate.m */; };
 		1F2D95D52250FCC500D025D8 /* STDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* STDocument.m */; };
 		1F2D95D82250FCC500D025D8 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D62250FCC500D025D8 /* Document.xib */; };
@@ -354,6 +351,15 @@
 		1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
 		1FC2EEF6186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FC2EEF4186CEAB200B3D06F /* MPWLLVMAssemblyGenerator.h */; };
 		1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF5186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m */; };
+		1FC6616C25D7C5B900ED1BCB /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD6CA5F25B8340B00639458 /* ObjectiveSmalltalkUI.framework */; };
+		1FC6616D25D7C5B900ED1BCB /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD6CA5F25B8340B00639458 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1FC6618025D7C5DB00ED1BCB /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
+		1FC6618125D7C5DB00ED1BCB /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1FC6618225D7C5DD00ED1BCB /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; };
+		1FC6618325D7C5DD00ED1BCB /* MPWFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D81121B4376600AB14D8 /* MPWFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1FC6618425D7C5DF00ED1BCB /* MPWTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; };
+		1FC6618525D7C5DF00ED1BCB /* MPWTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F29D80E21B4374600AB14D8 /* MPWTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1FC661B725D7CFC200ED1BCB /* testfile.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3887513911150007B5CC9 /* testfile.txt */; };
 		1FC8F835181BF3A3003980D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
 		1FC8F83B181BF3A3003980D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8F839181BF3A3003980D8 /* InfoPlist.strings */; };
 		1FC8F85B181BF3BB003980D8 /* MPWSchemeFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B75C914629521002F38D1 /* MPWSchemeFilesystem.m */; };
@@ -583,6 +589,13 @@
 			remoteGlobalIDString = 1F81C05F19699AE00066DF43;
 			remoteInfo = MethodServerTouch;
 		};
+		1FC6616E25D7C5B900ED1BCB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FD6CA5E25B8340B00639458;
+			remoteInfo = ObjectiveSmalltalkTouchUI;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -592,6 +605,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1FC6618325D7C5DD00ED1BCB /* MPWFoundation.framework in Embed Frameworks */,
+				1FC6618525D7C5DF00ED1BCB /* MPWTest.framework in Embed Frameworks */,
+				1FC6618125D7C5DB00ED1BCB /* ObjectiveSmalltalk.framework in Embed Frameworks */,
+				1FC6616D25D7C5B900ED1BCB /* ObjectiveSmalltalkUI.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1082,9 +1099,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F29D81221B4376600AB14D8 /* MPWFoundation.framework in Frameworks */,
-				1F29D80721B42E1600AB14D8 /* ObjectiveSmalltalk.framework in Frameworks */,
-				1F29D80F21B4374600AB14D8 /* MPWTest.framework in Frameworks */,
+				1FC6618025D7C5DB00ED1BCB /* ObjectiveSmalltalk.framework in Frameworks */,
+				1FC6618425D7C5DF00ED1BCB /* MPWTest.framework in Frameworks */,
+				1FC6616C25D7C5B900ED1BCB /* ObjectiveSmalltalkUI.framework in Frameworks */,
+				1FC6618225D7C5DD00ED1BCB /* MPWFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2341,6 +2359,7 @@
 			);
 			dependencies = (
 				1F29D80A21B42E1600AB14D8 /* PBXTargetDependency */,
+				1FC6616F25D7C5B900ED1BCB /* PBXTargetDependency */,
 			);
 			name = TestObjectiveSmalltalk;
 			productName = TestObjectiveSmalltalk;
@@ -2916,6 +2935,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FC661B725D7CFC200ED1BCB /* testfile.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3463,6 +3483,11 @@
 			isa = PBXTargetDependency;
 			target = 1F81C05F19699AE00066DF43 /* MethodServerTouch */;
 			targetProxy = 1F81C07719699AE10066DF43 /* PBXContainerItemProxy */;
+		};
+		1FC6616F25D7C5B900ED1BCB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FD6CA5E25B8340B00639458 /* ObjectiveSmalltalkTouchUI */;
+			targetProxy = 1FC6616E25D7C5B900ED1BCB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

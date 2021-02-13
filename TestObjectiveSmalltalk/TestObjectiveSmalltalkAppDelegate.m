@@ -35,11 +35,10 @@ int runTests( NSArray *testSuiteNames , NSArray *testTypeNames,  BOOL verbose ,B
     NSData *namePlist=[NSData dataWithContentsOfFile:testListPath];
     NSLog(@"got classes to test data");
 //    amIHereFunc();
-    STCompiler *compiler = [STCompiler compiler];
     
     NSArray *classNamesToTest=[NSPropertyListSerialization propertyListWithData:namePlist options:0 format:0 error:nil];
 
-    classNamesToTest = @[ @"MPWStTests", /* @"MPWMethodCallBack"  */];  // 
+//    classNamesToTest = @[ @"MPWStTests", /* @"MPWMethodCallBack"  */];  // 
     NSLog(@"parsed classes to test data");
 
     NSMutableArray *mirrors=[NSMutableArray array];

@@ -6,26 +6,14 @@
 //
 
 #import "MPWComplexLiteralExpression.h"
+#import "MPWEvaluator.h"
 
 @implementation MPWComplexLiteralExpression
 
--(Class)literalClass
-{
-    Class theLiteralClass=Nil;
-    if ( self.literalClassName ) {
-//        NSLog(@"set literal class name: '%@'",self.literalClassName);
-        theLiteralClass=NSClassFromString(self.literalClassName);
-//        NSLog(@"literal class: %@",self.literalClass);
-        if ( !theLiteralClass ) {
-            [NSException raise:@"undefinedclass" format:@"Literal Class %@ undefined for dictionary literal",self.literalClassName];
-        }
-    }
-    return theLiteralClass;
-}
 
 -(id <MPWStorage>)builderForContext:(MPWEvaluator*)aContext
 {
-    return [aContext schemeForName:@"builder"];
+    return (id <MPWStorage>)[aContext schemeForName:@"builder"];
 }
 
 -(Class)classForContext:(MPWEvaluator*)aContext
@@ -45,6 +33,11 @@
     return finalClass;
 }
 
+-factoryForContext:(MPWEvaluator*)aContext
+{
+    return [[self classForContext:aContext] factoryForContext:aContext];
+}
+
 
 @end
 
@@ -62,6 +55,21 @@
 {
    return @[
 			];
+}
+
+@end
+
+
+@implementation NSObject(factory)
+
++(id)factory
+{
+    return self;
+}
+
++(id)factoryForContext:(MPWEvaluator*)aContext
+{
+    return [self factory];
 }
 
 @end

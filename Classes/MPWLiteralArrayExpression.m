@@ -10,8 +10,6 @@
 
 @interface MPWLiteralArrayExpression()
 
-@property (readonly) Class literalClass;
-@property (strong, nonatomic) NSString* literalClassName;
 
 @end
 
@@ -31,7 +29,7 @@
 //    NSLog(@"will evaluate literal array: %@",[self objects]);
 #define STACKMAX 200
     Class baseClass=[NSArray class];
-    Class finalClass=self.literalClass;
+    Class finalClass=[self classForContext:aContext];
     long max=self.objects.count;
     id stackEvalResults[ STACKMAX ];
     id *evalResults=stackEvalResults;

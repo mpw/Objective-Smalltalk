@@ -1191,7 +1191,7 @@
     STCompiler *compiler=[STCompiler compiler];
 
     Class schemeDef = [compiler evaluateScriptString:@"scheme MyScheme { }"];
-    IDEXPECT([schemeDef className], @"MyScheme", @"name of scheme");
+    IDEXPECT([(id)schemeDef className], @"MyScheme", @"name of scheme");
     IDEXPECT([[schemeDef superclass] className], @"MPWScheme", @"name of superclass of scheme");
 
 

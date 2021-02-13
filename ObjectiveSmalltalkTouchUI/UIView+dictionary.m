@@ -22,7 +22,7 @@
     NSRect frameRect=NSZeroRect;
     id frameObject=dict[@"frame"];
     if ( frameObject ) {
-        frameRect=[frameObject rectValue];
+        frameRect=[[frameObject asRect] rectValue];
     }
     self=[self initWithFrame:frameRect];
     for ( NSString *key in [dict allKeys]) {
@@ -43,6 +43,21 @@
     for ( UIView *view in views ) {
         [self addArrangedSubview:view];
     }
+}
+
+@end
+
+@interface UIViewDictionaryInitializationTests:NSObject
+{
+}
+@end
+
+@implementation UIViewDictionaryInitializationTests
+
++testSelectors
+{
+    return @[
+    ];
 }
 
 @end
