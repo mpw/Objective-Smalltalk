@@ -364,7 +364,6 @@ idAccessor(solver, setSolver)
 
 -parseLiteral
 {
-//    NSLog(@"parse literal");
     id object = [self nextToken];
     if ( [object isEqual:@"#"]) {
         PARSEERROR(@"unexpected # after #", object);
@@ -1241,6 +1240,14 @@ idAccessor(solver, setSolver)
         NSString *separator=[self nextToken];
         if ( [separator isEqualToString:@":"]) {
             NSString *superclassName=[self nextToken];
+            if ( [superclassName isEqual:@"#"]) {
+                NSLog(@"== template class def ===");
+//              [self pushBack:superclassName];
+                NSLog(@"parse the literal ");
+                id result=[self parseLiteral];
+                NSLog(@"class with literal dict: %@",result);
+                return result;
+            }
             classDef.superclassName=superclassName;
             separator=[self nextToken];
         }
