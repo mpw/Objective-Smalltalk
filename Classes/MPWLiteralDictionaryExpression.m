@@ -43,14 +43,14 @@
 -(id)evaluateIn:(id)aContext
 {
 //    NSLog(@"evaluate literal dict: %@",self);
-#define MAXSTACK 20
+#define MAXSTACK 50
     
     id stackKeys[MAXSTACK];
     id stackValues[MAXSTACK];
     id *keys=NULL;
     id *values=NULL;
     Class baseClass=[NSDictionary class];
-    Class finalClass=[self classForContext:aContext];
+    id factory=[self factoryForContext:aContext];
 
     unsigned long maxKeyVal=MIN(self.keys.count,self.values.count);
     if ( maxKeyVal > MAXSTACK ) {
@@ -68,14 +68,14 @@
         values[i]=[values[i] evaluateIn:aContext];
     }
 //    NSLog(@"evaluated: %@",evaluated);
-    if ( [finalClass respondsToSelector:@selector(dictionaryWithObjects:forKeys:count:)]) {
-        baseClass=finalClass;
+    if ( [factory respondsToSelector:@selector(dictionaryWithObjects:forKeys:count:)]) {
+        baseClass=factory;
     }
     
     NSDictionary *result=[baseClass dictionaryWithObjects:values forKeys:keys count:maxKeyVal];
     
-    if ( finalClass && finalClass != baseClass && [finalClass instancesRespondToSelector:@selector(initWithDictionary:)]) {
-        result=[[[finalClass alloc] initWithDictionary:result] autorelease];
+    if ( factory && factory != baseClass && [factory instancesRespondToSelector:@selector(initWithDictionary:)]) {
+        result=[[[factory alloc] initWithDictionary:result] autorelease];
     }
     if ( keys != stackKeys) {
         free(keys);
