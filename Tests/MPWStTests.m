@@ -1271,7 +1271,7 @@
     [compiler evaluateScriptString:@" b ← #TemplateTestClass{ #a: 23}."];
     id result = [compiler evaluateScriptString:@" b at:'a'. "];
     IDEXPECT(result, @(23),@"cross-check basic object literal");
-    [compiler evaluateScriptString:@" class Instantiated : #TemplateTestClass{ #a: 51 }."  ];
+    [compiler evaluateScriptString:@" object Instantiated : #TemplateTestClass{ #a: 51 }."  ];
 }
 
 

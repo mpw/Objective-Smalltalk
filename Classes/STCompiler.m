@@ -35,7 +35,7 @@
 #import "MPWPropertyPathDefinition.h"
 #import "MPWPropertyPath.h"
 #import "MPWPropertyPathComponent.h"
-
+#import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 
 @class MPWClassMethodStore;
@@ -973,6 +973,9 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"object"]) {
+        //        NSLog(@"found a class definition");
+        return [self parseObjectTemplate];
     } else if ( [next isEqual:@"extension"]) {
         //        Currently just a synomym for class
         //        NSLog(@"found an extension definition");
@@ -1219,6 +1222,24 @@ idAccessor(solver, setSolver)
     }
         
     return propertyDef;
+}
+
+-(STObjectTemplate*)parseObjectTemplate
+{
+    STObjectTemplate *template=[[STObjectTemplate new] autorelease];
+    NSString *name=[self nextToken];
+    template.className = name;
+    NSString *separator=[self nextToken];
+    if ( [separator isEqualToString:@":"]) {
+        NSString *hash=[self nextToken];
+        if ( [hash isEqual:@"#"]) {
+            template.literal=[self parseLiteral];
+        }
+    } else {
+        PARSEERROR(@"expected separator ':' in object template, got", separator);
+
+    }
+    return template;
 }
 
 
