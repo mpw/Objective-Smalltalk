@@ -1228,7 +1228,7 @@ idAccessor(solver, setSolver)
 {
     STObjectTemplate *template=[[STObjectTemplate new] autorelease];
     NSString *name=[self nextToken];
-    template.className = name;
+    template.literalClassName = name;
     NSString *separator=[self nextToken];
     if ( [separator isEqualToString:@":"]) {
         NSString *hash=[self nextToken];

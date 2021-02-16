@@ -13,14 +13,14 @@
 -(id)evaluateIn:(MPWEvaluator*)aContext
 {
     MPWScheme *scheme=[aContext schemeForName:@"template"];
-    [scheme at:self.className put:self.literal];
+    [scheme at:self.literalClassName put:self.literal];
     return self;
 }
 
 
 -(void)dealloc
 {
-    [_className release];
+    [_literalClassName release];
     [_literal release];
     [super dealloc];
 }
