@@ -77,9 +77,15 @@
 -(id)evaluateIn:(id)aContext
 {
 //    NSLog(@"evaluate literal dict: %@",self);
-    
+    MPWScheme *templates=[aContext schemeForName:@"template"];
     Class baseClass=[NSDictionary class];
     id factory=[self factoryForContext:aContext];
+    NSMutableDictionary *baseDictionary=nil;
+    MPWLiteralDictionaryExpression *template = [templates at:self.literalClassName];
+    if ( template ) {
+        factory=[template factoryForContext:aContext];
+        baseDictionary=[template dictionaryForLiteralInContext:aContext class:[NSMutableDictionary class]];
+    }
     if ( self.literalClassName && !factory ) {
         [NSException raise:@"classnotfound" format:@"Class '%@ not found in literal object expression",self.literalClassName];
     }
@@ -90,7 +96,10 @@
     }
     NSDictionary *params=[self dictionaryForLiteralInContext:aContext class:baseClass];
     id result=params;
-
+    if ( baseDictionary.count) {
+        [baseDictionary addEntriesFromDictionary:params];
+        params=baseDictionary;
+    }
     
     if ( factory && factory != baseClass && [factory instancesRespondToSelector:@selector(initWithDictionary:)]) {
         result=[[[factory alloc] initWithDictionary:params] autorelease];
