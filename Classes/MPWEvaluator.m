@@ -72,6 +72,7 @@ idAccessor( _schemes, setSchemes )
     [varScheme setContext:self];
     [schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];
     [schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"builder"];
+    [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
 	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];

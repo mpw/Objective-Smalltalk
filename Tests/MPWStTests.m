@@ -1267,11 +1267,22 @@
 +(void)testObjectTemplate
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@" class TemplateTestClass { var a. }.  "];
+    [compiler evaluateScriptString:@" class TemplateTestClass { var a. var c. }.  "];
     [compiler evaluateScriptString:@" b ← #TemplateTestClass{ #a: 23}."];
     id result = [compiler evaluateScriptString:@" b at:'a'. "];
     IDEXPECT(result, @(23),@"cross-check basic object literal");
     [compiler evaluateScriptString:@" object Instantiated : #TemplateTestClass{ #a: 51 }."  ];
+    return ;
+    @try {
+        [compiler evaluateScriptString:@" d ← #Instantiated{} ."  ];
+    } @catch ( NSException *e) {
+        EXPECTTRUE(false, [e reason]);
+    }
+    id d = [compiler evaluateScriptString:@"d"];
+    EXPECTNOTNIL(d,@"got an object from the template");
+    EXPECTFALSE( [d isKindOfClass:[NSDictionary class]], @"shouldn't be a dictionary (default class)");
+    id result1 = [compiler evaluateScriptString:@" d at:'a'. "];
+    IDEXPECT(result1, @(51),@"template instantiated");
 }
 
 

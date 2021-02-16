@@ -24,11 +24,9 @@
     if (!className) {
         className = @"NSMutableDictionary";
     }
-//    Class finalClass=self.literalClass;
     Class finalClass=[builder at:className];
     if (!finalClass) {
         NSLog(@"builder %@ from context %@ did not deliver a class for name '%@'",builder,aContext,className);
-        finalClass=[NSMutableDictionary class];
     }
     return finalClass;
 }
