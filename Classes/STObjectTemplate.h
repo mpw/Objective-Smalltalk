@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STObjectTemplate : MPWExpression
 
-@property (nonatomic, strong) NSString *className;
+@property (nonatomic, strong) NSString *literalClassName;
 @property (nonatomic, strong) MPWComplexLiteralExpression *literal;
 @end
 

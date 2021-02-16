@@ -28,6 +28,8 @@
 #import "MPWPropertyPathDefinition.h"
 #import "MPWPropertyPath.h"
 #import "MPWLiteralExpression.h"
+#import "STObjectTemplate.h"
+#import "MPWLiteralDictionaryExpression.h"
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
@@ -1272,6 +1274,9 @@
     id result = [compiler evaluateScriptString:@" b at:'a'. "];
     IDEXPECT(result, @(23),@"cross-check basic object literal");
     [compiler evaluateScriptString:@" object Instantiated : #TemplateTestClass{ #a: 51 }."  ];
+    MPWLiteralDictionaryExpression* template=[compiler evaluateScriptString:@" template:Instantiated "];
+    EXPECTNOTNIL(template,@"retrieving just-defined template via template: scheme");
+    IDEXPECT(template.literalClassName,@"TemplateTestClass",@"got the class name");
     return ;
     @try {
         [compiler evaluateScriptString:@" d ← #Instantiated{} ."  ];
