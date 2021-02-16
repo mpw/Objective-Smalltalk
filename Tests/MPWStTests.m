@@ -1277,17 +1277,18 @@
     MPWLiteralDictionaryExpression* template=[compiler evaluateScriptString:@" template:Instantiated "];
     EXPECTNOTNIL(template,@"retrieving just-defined template via template: scheme");
     IDEXPECT(template.literalClassName,@"TemplateTestClass",@"got the class name");
-    return ;
     @try {
-        [compiler evaluateScriptString:@" d ← #Instantiated{} ."  ];
+        [compiler evaluateScriptString:@" d ← #Instantiated{ #c: 23 } ."  ];
     } @catch ( NSException *e) {
         EXPECTTRUE(false, [e reason]);
     }
     id d = [compiler evaluateScriptString:@"d"];
     EXPECTNOTNIL(d,@"got an object from the template");
     EXPECTFALSE( [d isKindOfClass:[NSDictionary class]], @"shouldn't be a dictionary (default class)");
-    id result1 = [compiler evaluateScriptString:@" d at:'a'. "];
+    id result1 = [compiler evaluateScriptString:@"d a. "];
     IDEXPECT(result1, @(51),@"template instantiated");
+    id result2 = [compiler evaluateScriptString:@"d c. "];
+    IDEXPECT(result2, @(23),@"local dictionary params added");
 }
 
 
