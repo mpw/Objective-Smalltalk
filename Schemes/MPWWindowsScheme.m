@@ -86,7 +86,7 @@
 {
     NSArray* resultArray=nil;
 
-    NSString *path=[aReference name];
+    NSString *path=[aReference path];
     if ( [path isEqualToString:@"/"]) {
         path=@"";
     }
