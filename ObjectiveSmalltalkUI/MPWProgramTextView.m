@@ -446,7 +446,7 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
 -(void)setTouchBarRangeFromValue:(float)value
 {
     NSRange r=[self guessRangeFromValue:value];
-    NSLog(@"touch bar from value %g, range: (%d,%d)",value,r.location,r.length);
+    NSLog(@"touch bar from value %g, range: (%ld,%ld)",value,(long)r.location,(long)r.length);
     self.sliderTouchBarItem.slider.minValue = r.location;
     self.sliderTouchBarItem.slider.maxValue = r.length;
     self.sliderTouchBarItem.slider.doubleValue = value;
