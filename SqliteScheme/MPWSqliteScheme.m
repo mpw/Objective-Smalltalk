@@ -9,7 +9,7 @@
 #import "MPWSqliteScheme.h"
 #import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/MPWURLBinding.h>
-#import <ObjectiveSmalltalk/MPWMessagePortDescriptor.h>
+#import <ObjectiveSmalltalk/STMessagePortDescriptor.h>
 #import <MPWFoundation/MPWFoundation.h>
 #import "sqlite3.h"
 #import <FMDB/FMDB.h>
@@ -172,7 +172,7 @@
 
 -defaultInputPort
 {
-    return [[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"path" protocol:nil sends:YES];
+    return [[STMessagePortDescriptor alloc] initWithTarget:self key:@"path" protocol:nil sends:YES];
 }
 
 

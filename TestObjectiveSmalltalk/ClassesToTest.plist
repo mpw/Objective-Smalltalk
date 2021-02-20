@@ -37,7 +37,7 @@
 	MPWLiteralExpression,
 	MPWMessage,
 	MPWMessageExpression,
-	"MPWMessagePortDescriptor",
+	"STMessagePortDescriptor",
 	MPWMethodCallBack,
 	MPWMethodHeader,
 	MPWMethodMirror,

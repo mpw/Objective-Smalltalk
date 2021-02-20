@@ -7,7 +7,7 @@
 //
 
 #import "MPWConnectToDefault.h"
-#import "MPWMessagePortDescriptor.h"
+#import "STMessagePortDescriptor.h"
 #import <MPWFoundation/MPWStreamSource.h>
 #import "MPWScheme.h"
 
@@ -68,7 +68,7 @@ idAccessor( lhs, setLhs )
 
 -defaultInputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:nil sends:NO] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:nil sends:NO] autorelease];
 }
 
 -defaultOutputPort
@@ -96,12 +96,12 @@ idAccessor( lhs, setLhs )
 
 -defaultOutputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
 
 -defaultInputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
 }
 
 +defaultComponentInstance
@@ -116,7 +116,7 @@ idAccessor( lhs, setLhs )
 
 -defaultOutputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
 
 
@@ -133,7 +133,7 @@ idAccessor( lhs, setLhs )
 
 //-defaultInputPort
 //{
-//    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"sink" protocol:@protocol(Streaming) sends:NO] autorelease];
+//    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"sink" protocol:@protocol(Streaming) sends:NO] autorelease];
 //}
 //
 

@@ -47,9 +47,9 @@
 		1F2D95DD2250FCC800D025D8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95DB2250FCC800D025D8 /* MainMenu.xib */; };
 		1F2D95E02250FCC800D025D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95DF2250FCC800D025D8 /* main.m */; };
 		1F2D95E52250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F2D95E62250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1F2D95E62250FD9D00D025D8 /* ObjectiveSmalltalk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2D95E92250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; };
-		1F2D95EA2250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1F2D95EA2250FD9D00D025D8 /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */; };
 		1F2D95F522511A6600D025D8 /* STDocument.st in Copy Smalltalk Files */ = {isa = PBXBuildFile; fileRef = 1F2D95F22251198D00D025D8 /* STDocument.st */; };
@@ -194,8 +194,8 @@
 		1F68103C1E11807F006CE0D1 /* chinook.db in Resources */ = {isa = PBXBuildFile; fileRef = 1F68103B1E11807F006CE0D1 /* chinook.db */; };
 		1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */; };
 		1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
-		1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
+		1F68D1DF15D2DCEB005C7BF5 /* STMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* STMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F68D1E215D2DCEB005C7BF5 /* STMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* STMessagePortDescriptor.m */; };
 		1F6C792F2187468D00071DAC /* ObjectiveSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6C792D2187468D00071DAC /* ObjectiveSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F6C7934218746DA00071DAC /* StSwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6C7933218746DA00071DAC /* StSwiftBridge.swift */; };
 		1F6FBE8923040F1B00025C80 /* ObjectiveArithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6FBE8723040F1B00025C80 /* ObjectiveArithmetic.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -273,7 +273,7 @@
 		1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */; };
 		1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8E81D01924229B00821570 /* MPWDocumentScheme.m */; };
 		1F9BD1CB2562D6F9006D7476 /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
-		1F9BD1CC2562D6F9006D7476 /* MPWFoundationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1F9BD1CC2562D6F9006D7476 /* MPWFoundationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F9BD22C2566505F006D7476 /* MPWStPropertyPathTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9BD22A2566505F006D7476 /* MPWStPropertyPathTests.h */; };
 		1F9BD22D2566505F006D7476 /* MPWStPropertyPathTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9BD22A2566505F006D7476 /* MPWStPropertyPathTests.h */; };
 		1F9BD22E2566505F006D7476 /* MPWStPropertyPathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9BD22B2566505F006D7476 /* MPWStPropertyPathTests.m */; };
@@ -440,8 +440,8 @@
 		1FE37B981969610600C9A378 /* MPWMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2F6D0075227AC00547D6F /* MPWMessage.m */; };
 		1FE37B991969610600C9A378 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B9A1969610600C9A378 /* MPWMessageExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */; };
-		1FE37B9B1969610600C9A378 /* MPWMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37B9C1969610600C9A378 /* MPWMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */; };
+		1FE37B9B1969610600C9A378 /* STMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* STMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE37B9C1969610600C9A378 /* STMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* STMessagePortDescriptor.m */; };
 		1FE37B9D1969610600C9A378 /* MPWAbstractInterpretedMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FCD360508D5D9B10098DA56 /* MPWAbstractInterpretedMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B9E1969610600C9A378 /* MPWAbstractInterpretedMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCD360608D5D9B10098DA56 /* MPWAbstractInterpretedMethod.m */; };
 		1FE37B9F1969610600C9A378 /* MPWMethodCallBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -821,8 +821,8 @@
 		1F68103B1E11807F006CE0D1 /* chinook.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = chinook.db; sourceTree = "<group>"; };
 		1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnectToDefault.h; sourceTree = "<group>"; };
 		1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnectToDefault.m; sourceTree = "<group>"; };
-		1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMessagePortDescriptor.h; sourceTree = "<group>"; };
-		1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessagePortDescriptor.m; sourceTree = "<group>"; };
+		1F68D1DD15D2DCEB005C7BF5 /* STMessagePortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STMessagePortDescriptor.h; sourceTree = "<group>"; };
+		1F68D1DE15D2DCEB005C7BF5 /* STMessagePortDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STMessagePortDescriptor.m; sourceTree = "<group>"; };
 		1F6C792B2187468D00071DAC /* ObjectiveSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F6C792D2187468D00071DAC /* ObjectiveSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSwift.h; sourceTree = "<group>"; };
 		1F6C792E2187468D00071DAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1894,8 +1894,8 @@
 				1FD2F6D0075227AC00547D6F /* MPWMessage.m */,
 				F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */,
 				F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */,
-				1F68D1DD15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h */,
-				1F68D1DE15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m */,
+				1F68D1DD15D2DCEB005C7BF5 /* STMessagePortDescriptor.h */,
+				1F68D1DE15D2DCEB005C7BF5 /* STMessagePortDescriptor.m */,
 				1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */,
 				1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */,
 				1F1F57FA083395A000D3275A /* MPWMethodHeader.h */,
@@ -2084,7 +2084,7 @@
 				1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1F5EE2BC25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */,
 				1F2EB8032111D1670086D540 /* MPWFilterDefinition.h in Headers */,
-				1F68D1DF15D2DCEB005C7BF5 /* MPWMessagePortDescriptor.h in Headers */,
+				1F68D1DF15D2DCEB005C7BF5 /* STMessagePortDescriptor.h in Headers */,
 				1FFE3AD720B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */,
 				1F50461B2118658F00073E1E /* MPWPropertyPathDefinition.h in Headers */,
 				1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */,
@@ -2307,7 +2307,7 @@
 				1FE37BE71969612600C9A378 /* MPWResourceScheme.h in Headers */,
 				1F8C938C24F5748800646461 /* MPWWindowsScheme.h in Headers */,
 				1FE37B801969610600C9A378 /* MPWConnector.h in Headers */,
-				1FE37B9B1969610600C9A378 /* MPWMessagePortDescriptor.h in Headers */,
+				1FE37B9B1969610600C9A378 /* STMessagePortDescriptor.h in Headers */,
 				1FE37B9F1969610600C9A378 /* MPWMethodCallBack.h in Headers */,
 				1FE37BC31969610800C9A378 /* NSObjectScripting.h in Headers */,
 				1FFE3AD820B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */,
@@ -2695,7 +2695,7 @@
 			isa = PBXProject;
 			attributes = {
 				DefaultBuildSystemTypeForWorkspace = Latest;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					1F29D7EC21B42BE500AB14D8 = {
 						CreatedOnToolsVersion = 10.1;
@@ -3243,7 +3243,7 @@
 				1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */,
 				1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
 				1FE5CFDE221C4A2B003E11DC /* MPWProtocolDefinition.m in Sources */,
-				1F68D1E215D2DCEB005C7BF5 /* MPWMessagePortDescriptor.m in Sources */,
+				1F68D1E215D2DCEB005C7BF5 /* STMessagePortDescriptor.m in Sources */,
 				1F504629211885E900073E1E /* MPWPropertyPath.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3392,7 +3392,7 @@
 				1FE37BEA1969612600C9A378 /* MPWBundleScheme.m in Sources */,
 				1FE37B921969610600C9A378 /* MPWIdentifierExpression.m in Sources */,
 				1FE37B751969610600C9A378 /* MPWBinding.m in Sources */,
-				1FE37B9C1969610600C9A378 /* MPWMessagePortDescriptor.m in Sources */,
+				1FE37B9C1969610600C9A378 /* STMessagePortDescriptor.m in Sources */,
 				1FE37B7B1969610600C9A378 /* MPWBridgeReader.m in Sources */,
 				1FE37B861969610600C9A378 /* MPWEvaluator.m in Sources */,
 				1FE37BC21969610800C9A378 /* MPWTaggedFloat.m in Sources */,
@@ -5232,7 +5232,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -5282,7 +5282,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -5331,7 +5331,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -5400,7 +5400,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;

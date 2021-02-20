@@ -12,7 +12,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/NSNil.h>
 #import "MPWEvaluator.h"
-#import "MPWMessagePortDescriptor.h"
+#import "STMessagePortDescriptor.h"
 
 @implementation MPWAbstractStore(SchemeCompatibility)
 
@@ -100,7 +100,7 @@
 
 -defaultInputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(MPWStorage) sends:NO] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(MPWStorage) sends:NO] autorelease];
 }
 
 @end
@@ -109,7 +109,7 @@
 
 -defaultOutputPort
 {
-    return [[[MPWMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:@protocol(MPWStorage) sends:YES] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"source" protocol:@protocol(MPWStorage) sends:YES] autorelease];
 }
 
 
