@@ -84,7 +84,7 @@
     MPWLiteralDictionaryExpression *template = [templates at:self.literalClassName];
     if ( template ) {
         factory=[template factoryForContext:aContext];
-        baseDictionary=[template dictionaryForLiteralInContext:aContext class:[NSMutableDictionary class]];
+        baseDictionary=(NSMutableDictionary*)[template dictionaryForLiteralInContext:aContext class:[NSMutableDictionary class]];
     }
     if ( self.literalClassName && !factory ) {
         [NSException raise:@"classnotfound" format:@"Class '%@ not found in literal object expression",self.literalClassName];

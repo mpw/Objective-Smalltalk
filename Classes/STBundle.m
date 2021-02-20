@@ -51,7 +51,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(id <MPWHierarchicalStorage>)storeForSubDir:(NSString*)subdir
 {
-    return [[[self binding] referenceByAppendingReference:[subdir asReference]] asScheme];
+    return [[[self binding] referenceByAppendingReference:subdir] asScheme];
 }
 
 -(id <MPWHierarchicalStorage>)resources
@@ -62,7 +62,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(id <MPWReferencing>)resourceRef
 {
     NSString *path=[[self path] stringByAppendingPathComponent:@"Resources"];
-    return [path asReference];
+    return path;
 }
 
 -(MPWWriteBackCache*)createResources
@@ -81,7 +81,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSArray<NSString*>*)sourceNames
 {
-    return (NSArray<NSString*>*)[[[[[[self sourceDir] childrenOfReference:[@"." asReference]] collect] path] collect] lastPathComponent];
+    return (NSArray<NSString*>*)[[[[[[self sourceDir] childrenOfReference:@"."] collect] path] collect] lastPathComponent];
 }
 
 -(NSDictionary*)readInfo

@@ -70,7 +70,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWBlockContext.m \
     Classes/MPWAbstractInterpretedMethod.m \
     Classes/MPWClassMethodStore.m \
-    Classes/MPWMessagePortDescriptor.m \
+    Classes/STMessagePortDescriptor.m \
     Classes/MPWMethodCallBack.m \
     Classes/MPWResource.m \
     Classes/STCompiler.m \

@@ -1,16 +1,16 @@
 //
-//  MPWMessagePortDescriptor.m
+//  STMessagePortDescriptor.m
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 8/8/12.
 //
 //
 
-#import "MPWMessagePortDescriptor.h"
+#import "STMessagePortDescriptor.h"
 #import <MPWFoundation/MPWFoundation.h>
 //#import <objc/Protocol.h>
 
-@implementation MPWMessagePortDescriptor
+@implementation STMessagePortDescriptor
 
 objectAccessor(MPWPropertyBinding, target, setTarget)
 boolAccessor(sendsMessages, setSendsMessages)
@@ -38,7 +38,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 }
 
 
--(BOOL)isCompatible:(MPWMessagePortDescriptor*)other
+-(BOOL)isCompatible:(STMessagePortDescriptor*)other
 {
 //    NSLog(@"isCompatible self: %@",self);
 //    NSLog(@"other: %@",other);
@@ -56,7 +56,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     [[self messageProtocol] isEqual:[other messageProtocol]];
 }
 
--(BOOL)connect:(MPWMessagePortDescriptor*)other
+-(BOOL)connect:(STMessagePortDescriptor*)other
 {
     id connectionTarget=nil,source=nil;
 //    NSLog(@"connect: %@ to %@",self,other);
@@ -89,7 +89,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 
 
-@implementation MPWMessagePortDescriptor(testing)
+@implementation STMessagePortDescriptor(testing)
 
 +_createInputPortDescriptorForStream:(MPWWriteStream*)s1
 {
@@ -111,14 +111,14 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     MPWFilter *s1=[MPWFilter stream];
     MPWFilter *s2=[MPWFilter stream];
   
-    MPWMessagePortDescriptor *input=[self _createInputPortDescriptorForStream:s2];
+    STMessagePortDescriptor *input=[self _createInputPortDescriptorForStream:s2];
 
     EXPECTFALSE([input sendsMessages], @"input port sends messages");
     EXPECTFALSE([input isSettable], @"input port is settable");
     EXPECTTRUE([input receivesMessages], @"input port receives messages");
     IDEXPECT([[input target] value], s2, @"input target");
     
-    MPWMessagePortDescriptor *output=[self _createOutputPortDescriptorForStream:s1];
+    STMessagePortDescriptor *output=[self _createOutputPortDescriptorForStream:s1];
 
     
     EXPECTTRUE([output sendsMessages], @"output port sends messages");
@@ -139,8 +139,8 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     MPWFilter *s1=[MPWFilter stream];
     MPWFilter *s2=[MPWFilter stream];
     
-    MPWMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
-    MPWMessagePortDescriptor *input2=[self _createInputPortDescriptorForStream:s2];
+    STMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
+    STMessagePortDescriptor *input2=[self _createInputPortDescriptorForStream:s2];
     EXPECTFALSE([input1 connect:input2], @"connect two input ports");
 }
 
@@ -150,8 +150,8 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     MPWFilter *s1=[MPWFilter stream];
     MPWFilter *s2=[MPWFilter stream];
     
-    MPWMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
-    MPWMessagePortDescriptor *output=[self _createOutputPortDescriptorForStreamWithIncompatibleProtool:s2];
+    STMessagePortDescriptor *input1=[self _createInputPortDescriptorForStream:s1];
+    STMessagePortDescriptor *output=[self _createOutputPortDescriptorForStreamWithIncompatibleProtool:s2];
     EXPECTFALSE([input1 connect:output], @"connect incompatible protocols");
 }
 

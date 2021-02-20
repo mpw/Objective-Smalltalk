@@ -1,5 +1,5 @@
 //
-//  MPWMessagePortDescriptor.h
+//  STMessagePortDescriptor.h
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 8/8/12.
@@ -10,7 +10,7 @@
 
 @class MPWPropertyBinding;
 
-@interface MPWMessagePortDescriptor : NSObject
+@interface STMessagePortDescriptor : NSObject
 {
     MPWPropertyBinding    *target;
     BOOL                isSettable;
@@ -24,6 +24,6 @@ boolAccessor_h(sendsMessages, setSendsMessages)
 boolAccessor_h(isSettable, setIsSettable)
 
 -(BOOL)receivesMessages;
--(BOOL)connect:(MPWMessagePortDescriptor*)other;
+-(BOOL)connect:(STMessagePortDescriptor*)other;
 
 @end

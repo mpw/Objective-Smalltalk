@@ -41,6 +41,7 @@
 -variable1;
 -setVariable1:newValue;
 +(int)theAnswer;
+-multiplyBy7:arg;
 
 @end
 
@@ -1070,7 +1071,7 @@
 +(void)testDefineClassMethodViaSyntax
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *classDef=[compiler evaluateScriptString:@"class ObjStClassMethodTestClass : NSNumber { +multiplyBy7:num { 7 * num. } }."];
+    [compiler evaluateScriptString:@"class ObjStClassMethodTestClass : NSNumber { +multiplyBy7:num { 7 * num. } }."];
     id testClass=NSClassFromString(@"ObjStClassMethodTestClass");
     NSNumber *result=[testClass multiplyBy7:@(3)];
     INTEXPECT( result.intValue, 21, @"class method result");
