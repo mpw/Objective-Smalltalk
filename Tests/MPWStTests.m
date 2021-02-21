@@ -1127,7 +1127,7 @@
     IDEXPECT(proto.name, @"MyProtocol", @"name of protocol")
 }
 
-+(void)testProtocolDefSyntaxWithMethods
++(void)testProtocolDefSyntaxWithMessages
 {
     Protocol *p=objc_getProtocol("MyStTestProtocol");
     EXPECTNIL(p, @"shouldn't be there");
@@ -1137,7 +1137,6 @@
     INTEXPECT(proto.methods.count, 2, @"number of messages in protocol");
     IDEXPECT([proto.methods[0] methodName], @"method1", @"first message");
     IDEXPECT([proto.methods[1] methodName], @"method2", @"second message");
-    [proto defineProtocol];
     p=objc_getProtocol("MyStTestProtocol");
     EXPECTNOTNIL(p, @"should have protocol after def");
     unsigned int count=0;
@@ -1145,6 +1144,8 @@
     INTEXPECT(count,2, @"2 methods");
     IDEXPECT( [NSString stringWithUTF8String:sel_getName(methods[0].name)],@"method1",@"name of first method");
     IDEXPECT( [NSString stringWithUTF8String:sel_getName(methods[1].name)],@"method2",@"name of last method");
+    id protocolViaST=[compiler evaluateScriptString:@"protocol:MyStTestProtocol"];
+    IDEXPECT( protocolViaST, p,@"protocol retrieved via protocol: scheme");
 
 }
 
@@ -1414,7 +1415,7 @@
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
         @"testProtocolDefSyntax", 
-        @"testProtocolDefSyntaxWithMethods",
+        @"testProtocolDefSyntaxWithMessages",
         @"testNestedVarExprWithPath",
         @"testNestedVarExprWithPathInMethod",
         @"testNestedVarExprWithPathInBlockInMethod",

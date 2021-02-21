@@ -28,6 +28,12 @@
     objc_registerProtocol(p);
 }
 
+-(id)evaluateIn:(id)aContext
+{
+    [self defineProtocol];
+    return self;
+}
+
 -(void)dealloc
 {
     [_name release];

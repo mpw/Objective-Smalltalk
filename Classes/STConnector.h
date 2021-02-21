@@ -1,5 +1,5 @@
 //
-//  MPWConnector.h
+//  STConnector.h
 //  MPWTalk
 //
 //  Created by Marcel Weiher on 09/02/2006.
@@ -9,7 +9,7 @@
 #import <ObjectiveSmalltalk/MPWExpression.h>
 
 
-@interface MPWConnector : MPWExpression {
+@interface STConnector : MPWExpression {
 }
 
 
