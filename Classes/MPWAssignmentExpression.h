@@ -6,11 +6,11 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWConnector.h>
+#import <ObjectiveSmalltalk/STConnector.h>
 
 @class MPWIdentifierExpression;
 
-@interface MPWAssignmentExpression : MPWConnector {
+@interface MPWAssignmentExpression : STConnector {
 	MPWIdentifierExpression* lhs;
 	id context;
 	MPWExpression* rhs;

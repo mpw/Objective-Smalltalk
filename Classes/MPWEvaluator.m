@@ -20,6 +20,7 @@
 #import "MPWFrameworkScheme.h"
 #import "MPWSelfContainedBinding.h"
 #import <MPWFoundation/MPWGenericReference.h>
+#import "STProtocolScheme.h"
 
 @implementation NSNumber(controlStructures)
 
@@ -70,8 +71,10 @@ idAccessor( _schemes, setSchemes )
 	id varScheme = [MPWVarScheme store];
 	[schemes setSchemeHandler:varScheme forSchemeName:@"var"];
     [varScheme setContext:self];
-    [schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"class"];
-    [schemes setSchemeHandler:[[MPWClassScheme new] autorelease] forSchemeName:@"builder"];
+    MPWClassScheme *classScheme=[MPWClassScheme store];
+    [schemes setSchemeHandler:classScheme forSchemeName:@"class"];
+    [schemes setSchemeHandler:classScheme forSchemeName:@"builder"];
+    [schemes setSchemeHandler:[STProtocolScheme store] forSchemeName:@"protocol"];
     [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
 	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];

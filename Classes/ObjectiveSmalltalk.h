@@ -20,7 +20,8 @@
 #import <ObjectiveSmalltalk/MPWClassDefinition.h>
 #import <ObjectiveSmalltalk/MPWClassMirror.h>
 #import <ObjectiveSmalltalk/MPWComplexLiteralExpression.h>
-#import <ObjectiveSmalltalk/MPWConnector.h>
+#import <ObjectiveSmalltalk/STConnector.h>
+#import <ObjectiveSmalltalk/STMessageConnector.h>
 #import <ObjectiveSmalltalk/MPWDataflowConstraintExpression.h>
 #import <ObjectiveSmalltalk/MPWDefaultsScheme.h>
 #import <ObjectiveSmalltalk/MPWEnvScheme.h>

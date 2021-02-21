@@ -977,23 +977,19 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found a class definition");
         return [self parseObjectTemplate];
     } else if ( [next isEqual:@"extension"]) {
-        //        Currently just a synomym for class
+        //        Currently just a synomym for class, because
+        //        a class definition will be treated as an
+        //        extension if the class already exists
         //        NSLog(@"found an extension definition");
         [self pushBack:next];
         return [self parseClassDefinition];
     } else if ( [next isEqual:@"protocol"]) {
-        //        Currently just a synomym for class
-        //        NSLog(@"found an extension definition");
         [self pushBack:next];
         return [self parseProtocolDefinition];
     } else if ( [next isEqual:@"connector"]) {
-        //        Currently just a synomym for class
-        //        NSLog(@"found an extension definition");
         [self pushBack:next];
         return [self parseProtocolDefinition];
     } else if ( [next isEqual:@"notification"]) {
-        //        Currently just a synomym for class
-        //        NSLog(@"found an extension definition");
         [self pushBack:next];
         return [self parseProtocolDefinition];
     } else if ( [next isEqual:@"filter"]) {
