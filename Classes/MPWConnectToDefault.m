@@ -30,15 +30,15 @@ idAccessor( lhs, setLhs )
 //    NSLog(@"connect: left: %@",left);
 //    NSLog(@"connect: right: %@",right);
     
-    id input=rightPorts[@"IN"];
-    id output=leftPorts[@"OUT"];
+    id target=rightPorts[@"IN"];
+    id source=leftPorts[@"OUT"];
 //    NSLog(@"input port: %@",input);
 //    NSLog(@"output port: %@",output);
-    if ( [input connect:output]) {
+    if ( [source  connect:target]) {
 //        NSLog(@"did connect");
-        return [input sendsMessages] ? right : left;
+        return [source sendsMessages] ? left : right;
     } else {
-        NSLog(@"did not connect %@ to %@,ports: %@ -> %@",input,output,leftPorts,rightPorts);
+        NSLog(@"did not connect %@ to %@,ports: %@ -> %@",target,source,leftPorts,rightPorts);
         return nil;
     }
 }

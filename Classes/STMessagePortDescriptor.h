@@ -25,5 +25,7 @@ boolAccessor_h(isSettable, setIsSettable)
 
 -(BOOL)receivesMessages;
 -(BOOL)connect:(STMessagePortDescriptor*)other;
+-(Protocol*)messageProtocol;
+-target;
 
 @end
