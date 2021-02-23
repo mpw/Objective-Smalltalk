@@ -8,6 +8,7 @@
 
 #import "STMessagePortDescriptor.h"
 #import <MPWFoundation/MPWFoundation.h>
+#import "STMessageConnector.h"
 //#import <objc/Protocol.h>
 
 @implementation STMessagePortDescriptor
@@ -38,45 +39,16 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 }
 
 
--(BOOL)isCompatible:(STMessagePortDescriptor*)other
-{
-//    NSLog(@"isCompatible self: %@",self);
-//    NSLog(@"other: %@",other);
-//    NSLog(@"self isSettable: %d",[self isSettable]);
-//    NSLog(@"other isSettable: %d",[other isSettable]);
-//    NSLog(@"self sendsMessages: %d",[self sendsMessages]);
-//    NSLog(@"other sendsMessages: %d",[other sendsMessages]);
-//    NSLog(@"messageProtocols equivalent %d",[[self messageProtocol] isEqual:[other messageProtocol]]);
-//    NSLog(@"self protocol %s",protocol_getName([self messageProtocol]));
-//    NSLog(@"other protocol %s",protocol_getName([other messageProtocol]));
-    return
-
-    ([self isSettable] != [other isSettable]) &&
-        ([self sendsMessages] != [other sendsMessages]) &&
-    [[self messageProtocol] isEqual:[other messageProtocol]];
-}
-
 -(BOOL)connect:(STMessagePortDescriptor*)other
 {
-    id connectionTarget=nil,source=nil;
-//    NSLog(@"connect: %@ to %@",self,other);
-    if ( [self isCompatible:other] ) {
-//        NSLog(@"isCompatible");
-        if ( [self isSettable] && ![other isSettable]) {
-            connectionTarget=self;
-            source=other;
-        } else if ( [other isSettable] && ![self isSettable]) {
-            connectionTarget=other;
-            source=self;
-        }
-        if ( connectionTarget && source ) {
-            [[connectionTarget target] setValue:[[source target] value]];
-            return YES;
-        }
-    }
-    return NO;
-
+    STMessageConnector *connector=[[STMessageConnector new] autorelease];
+    connector.source=self;
+    connector.target=other;
+    connector.protocol=[self messageProtocol];
+    
+    return [connector connect];
 }
+
 
 -(NSString *)description{
     id theTarget=[[self target] target];
@@ -108,28 +80,29 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 +(void)testConnectMPWFilter
 {
-    MPWFilter *s1=[MPWFilter stream];
-    MPWFilter *s2=[MPWFilter stream];
+    MPWFilter *sourceFilter=[MPWFilter stream];
+    MPWFilter *targetFilter=[MPWFilter stream];
   
-    STMessagePortDescriptor *input=[self _createInputPortDescriptorForStream:s2];
+    STMessagePortDescriptor *targetPortDescriptor=[self _createInputPortDescriptorForStream:targetFilter];
 
-    EXPECTFALSE([input sendsMessages], @"input port sends messages");
-    EXPECTFALSE([input isSettable], @"input port is settable");
-    EXPECTTRUE([input receivesMessages], @"input port receives messages");
-    IDEXPECT([[input target] value], s2, @"input target");
+    EXPECTFALSE([targetPortDescriptor sendsMessages], @"input port sends messages");
+    EXPECTFALSE([targetPortDescriptor isSettable], @"input port is settable");
+    EXPECTTRUE([targetPortDescriptor receivesMessages], @"input port receives messages");
+    IDEXPECT([[targetPortDescriptor target] value], targetFilter, @"input target");
     
-    STMessagePortDescriptor *output=[self _createOutputPortDescriptorForStream:s1];
+    STMessagePortDescriptor *sourcePortDescriptor=[self _createOutputPortDescriptorForStream:sourceFilter];
 
     
-    EXPECTTRUE([output sendsMessages], @"output port sends messages");
-    EXPECTTRUE([output isSettable], @"output port is settable");
-    EXPECTFALSE([output receivesMessages], @"output port receives messages");
+    EXPECTTRUE([sourcePortDescriptor sendsMessages], @"output port sends messages");
+    EXPECTTRUE([sourcePortDescriptor isSettable], @"output port is settable");
+    EXPECTFALSE([sourcePortDescriptor receivesMessages], @"output port receives messages");
 
-    EXPECTTRUE([input connect:output],@"connected the streams");
-    
-    EXPECTNIL([(MPWFilter*)[s2 target] lastObject], @"nothing in target before write");
-    [s1 writeObject:@"hi"];
-    IDEXPECT([(MPWFilter*)[s2 target] lastObject], @"hi", @"target written");
+    EXPECTTRUE([sourcePortDescriptor connect:targetPortDescriptor],@"connected the streams");
+    EXPECTFALSE([targetPortDescriptor  connect:sourcePortDescriptor],@"connected the streams");
+
+    EXPECTNIL([(MPWFilter*)[targetFilter target] lastObject], @"nothing in target before write");
+    [sourceFilter writeObject:@"hi"];
+    IDEXPECT([(MPWFilter*)[targetFilter target] lastObject], @"hi", @"target written");
     
 
 }

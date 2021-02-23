@@ -16,6 +16,25 @@
     return self;
 }
 
+-(BOOL)isCompatible
+{
+    return self.source.isSettable && self.source.sendsMessages
+            && self.target.receivesMessages &&
+            self.protocol == [self.source messageProtocol] &&
+            self.protocol == [self.target messageProtocol];
+}
+
+-(BOOL)connect
+{
+    if ( [self isCompatible] ) {
+        [[self.source target] setValue:[[self.target target] value]];
+        return YES;
+    }
+    return NO;
+}
+
+
+
 @end
 
 
