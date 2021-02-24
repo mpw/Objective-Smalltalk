@@ -1294,6 +1294,61 @@
 }
 
 
++(void)testConnectFiltersInRightOrderWorks
+{
+    TESTEXPR(@"( (MPWFilter new) → (MPWWriteStream new) ) ≠ nil.", @(true));
+    TESTEXPR(@"((MPWWriteStream new) → (MPWFilter new)). ", (id)nil);
+}
+
++(void)testConnectStoresInRightOrderWorks
+{
+    TESTEXPR(@"( (MPWPathRelativeStore store) → (MPWDictStore store) ) ≠ nil.", @(true));
+    TESTEXPR(@"(MPWDictStore store) → (MPWPathRelativeStore store).", (id)nil);
+}
+
++(void)testConnectViaConnectorManually
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"c ← STMessageConnector new."];
+    [compiler evaluateScriptString:@"c setProtocol: protocol:MPWStorage."];
+    [compiler evaluateScriptString:@"rel ← MPWPathRelativeStore store"];
+    [compiler evaluateScriptString:@"dict ← MPWDictStore store"];
+    [compiler evaluateScriptString:@"c setSource:(rel ports at:'OUT'). c setTarget:(dict ports at:'IN')."];
+    [compiler evaluateScriptString:@"c connect."];
+    EXPECTTRUE([[compiler evaluateScriptString:@"rel source = dict"] boolValue], @"did set");
+}
+
++(void)testConnectViaConnectorUsingSyntax
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"c ← STMessageConnector new."];
+    [compiler evaluateScriptString:@"c setProtocol: protocol:MPWStorage."];
+    [compiler evaluateScriptString:@"rel ← MPWPathRelativeStore store"];
+    [compiler evaluateScriptString:@"dict ← MPWDictStore store"];
+    [compiler evaluateScriptString:@"rel → c → dict."];
+    EXPECTTRUE([[compiler evaluateScriptString:@"rel source = dict"] boolValue], @"did set");
+}
+
++(void)testConnectingFromObjectToConnectorYieldsBoundConnector
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"c ← STMessageConnector new."];
+    [compiler evaluateScriptString:@"c setProtocol: protocol:MPWStorage."];
+    [compiler evaluateScriptString:@"rel ← MPWPathRelativeStore store"];
+    [compiler evaluateScriptString:@"rel → c "];
+    EXPECTTRUE([[compiler evaluateScriptString:@"c source target target = rel"] boolValue], @"did set the source via arrow");
+}
+
++(void)testConnectingFromConnectorToObjectYieldsBoundConnector
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"c ← STMessageConnector new."];
+    [compiler evaluateScriptString:@"c setProtocol: protocol:MPWStorage."];
+    [compiler evaluateScriptString:@"dict ← MPWDictStore store"];
+    [compiler evaluateScriptString:@"c → dict "];
+    EXPECTTRUE([[compiler evaluateScriptString:@"c target target target = dict"] boolValue], @"did set the source via arrow");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1430,6 +1485,12 @@
         @"testCanInterpolateStringWithScheme",
         @"testReduceFactorial",
         @"testObjectTemplate",
+        @"testConnectFiltersInRightOrderWorks",
+        @"testConnectStoresInRightOrderWorks",
+        @"testConnectViaConnectorManually",
+        @"testConnectingFromObjectToConnectorYieldsBoundConnector",
+//        @"testConnectingFromConnectorToObjectYieldsBoundConnector",
+//        @"testConnectViaConnectorUsingSyntax",
         ];
 }
 
