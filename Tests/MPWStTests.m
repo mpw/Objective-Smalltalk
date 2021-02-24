@@ -1489,7 +1489,7 @@
         @"testConnectStoresInRightOrderWorks",
         @"testConnectViaConnectorManually",
         @"testConnectingFromObjectToConnectorYieldsBoundConnector",
-//        @"testConnectingFromConnectorToObjectYieldsBoundConnector",
+        @"testConnectingFromConnectorToObjectYieldsBoundConnector",
 //        @"testConnectViaConnectorUsingSyntax",
         ];
 }
