@@ -10,10 +10,7 @@
 #import "STMessagePortDescriptor.h"
 #import <MPWFoundation/MPWStreamSource.h>
 #import "MPWScheme.h"
-
-// FIXME:   need some tests for this!
-//          (just had a hard-to-find bug where I was getting the IN/OUT
-//          ports both from the right-hand-side...)
+#import "STMessageConnector.h"
 
 @implementation MPWConnectToDefault
 
@@ -22,25 +19,36 @@ idAccessor( lhs, setLhs )
 
 -(id)evaluateIn:(id)aContext
 {
-    id left=[[[self lhs] evaluateIn:aContext] defaultComponentInstance];
-    id right=[[[self rhs] evaluateIn:aContext] defaultComponentInstance];
     
-    NSDictionary *leftPorts = [left ports];
-    NSDictionary *rightPorts = [right ports];
-//    NSLog(@"connect: left: %@",left);
-//    NSLog(@"connect: right: %@",right);
+    id left=[[self lhs] evaluateIn:aContext];
+    id right=[[self rhs] evaluateIn:aContext];
     
-    id target=rightPorts[@"IN"];
-    id source=leftPorts[@"OUT"];
-//    NSLog(@"input port: %@",input);
-//    NSLog(@"output port: %@",output);
-    if ( [source  connect:target]) {
-//        NSLog(@"did connect");
-        return [source sendsMessages] ? left : right;
+    if ( [right isKindOfClass:[STMessageConnector class]]) {
+        left=[left defaultComponentInstance];
+        STMessageConnector *connector=(STMessageConnector*)right;
+        NSDictionary *leftPorts = [left ports];
+        id source=leftPorts[@"OUT"];
+        [connector setSource:source];
+        return connector;
+    } else if ( [left isKindOfClass:[STMessageConnector class]]) {
+        
     } else {
-        NSLog(@"did not connect %@ to %@,ports: %@ -> %@",target,source,leftPorts,rightPorts);
-        return nil;
-    }
+        left=[left defaultComponentInstance];
+        right=[right defaultComponentInstance];
+        NSDictionary *leftPorts = [left ports];
+        NSDictionary *rightPorts = [right ports];
+        
+        id target=rightPorts[@"IN"];
+        id source=leftPorts[@"OUT"];
+        
+        if ( [source  connect:target]) {
+            return [source sendsMessages] ? left : right;
+        } else {
+            NSLog(@"did not connect %@ to %@,ports: %@ -> %@",target,source,leftPorts,rightPorts);
+            return nil;
+        }    }
+    
+    
 }
 
 -(void)dealloc
@@ -91,13 +99,20 @@ idAccessor( lhs, setLhs )
 
 @end
 
-@implementation MPWWriteStream(connecting)
-
+@implementation MPWFilter(connecting)
 
 -defaultOutputPort
 {
     return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
+
+
+
+@end
+
+
+@implementation MPWWriteStream(connecting)
+
 
 -defaultInputPort
 {

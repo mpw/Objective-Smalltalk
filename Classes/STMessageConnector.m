@@ -33,6 +33,13 @@
     return NO;
 }
 
+-(void)dealloc
+{
+    [_source release];
+    [_target release];
+    [_protocol release];
+    [super dealloc];
+}
 
 
 @end
@@ -42,15 +49,11 @@
 
 @implementation STMessageConnector(testing) 
 
-+(void)someTest
-{
-	EXPECTTRUE(false, @"implemented");
-}
+//--- test in STMessagePortDescriptor tests this
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
 			];
 }
 
