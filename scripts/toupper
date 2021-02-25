@@ -1,3 +1,3 @@
-#!/usr/local/bin/stsh
+#!env stsh
 filter toupper |{  ^object stringValue uppercaseString. }
 (stdin -> toupper -> rawstdout ) run

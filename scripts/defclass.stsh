@@ -1,4 +1,4 @@
-#!/usr/local/bin/stsh
+#!env stsh
 
 class Koan : NSObject {
 

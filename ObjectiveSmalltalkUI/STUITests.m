@@ -24,6 +24,7 @@
     id target = [compiler evaluateScriptString:@"t ← STTargetActionTestClass new. t."];
     EXPECTTRUE([target isKindOfClass:NSClassFromString(@"STTargetActionTestClass")], @"I can make instances of the target class");
     [compiler evaluateScriptString:@"b → c → t"];
+    IDEXPECT( [compiler evaluateScriptString:@"c isCompatible"],@(true),@"isCompatible");
     IDEXPECT( [button target], target, @"connecting should have set the target");
     IDEXPECT( NSStringFromSelector([button action]), @"buttonAction:", @"connecting should have set the action");
 }
@@ -31,7 +32,7 @@
 +(NSArray*)testSelectors
 {
     return @[
-//        @"testCanConnectControlToSpecificTargetViaTargetActionConnector",
+        @"testCanConnectControlToSpecificTargetViaTargetActionConnector",
     ];
 }
 @end

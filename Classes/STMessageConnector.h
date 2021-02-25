@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 20.02.21.
 //
 
-#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+#import <ObjectiveSmalltalk/STConnector.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,10 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign) SEL selector;
 @property (nonatomic,strong) id  protocol;
-@property (nonatomic,strong) STMessagePortDescriptor *source,*target;
-
--(BOOL)connect;
--(BOOL)isCompatible;
 
 @end
 

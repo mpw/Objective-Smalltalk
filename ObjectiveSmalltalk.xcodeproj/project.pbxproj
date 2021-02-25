@@ -183,10 +183,6 @@
 		1F5EE2BE25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
 		1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
 		1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */; };
-		1F60963925E786840018BB72 /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
-		1F60963A25E786840018BB72 /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
-		1F60963B25E786840018BB72 /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
-		1F60963C25E786840018BB72 /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
 		1F60964F25E788FC0018BB72 /* STUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60964D25E788FC0018BB72 /* STUITests.h */; };
 		1F60965025E788FC0018BB72 /* STUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60964E25E788FC0018BB72 /* STUITests.m */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
@@ -261,6 +257,7 @@
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1F85AC5625E7E87E00417154 /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
 		1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */; };
 		1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1652,6 +1649,8 @@
 				1FA85A1A1923739E00F52396 /* ShellView.h */,
 				1FA85A1B1923739E00F52396 /* ShellView.m */,
 				1FA859F51923731900F52396 /* Supporting Files */,
+				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
+				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
 				1F60964D25E788FC0018BB72 /* STUITests.h */,
 				1F60964E25E788FC0018BB72 /* STUITests.m */,
 			);
@@ -1888,8 +1887,6 @@
 				1FCEB7EA099C03ED00867A95 /* STConnector.h */,
 				1F697A7E25E15D1600D015DB /* STMessageConnector.h */,
 				1F697A7F25E15D1600D015DB /* STMessageConnector.m */,
-				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
-				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
 				1FCEB7EB099C03ED00867A95 /* STConnector.m */,
 				1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */,
 				1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */,
@@ -2070,7 +2067,6 @@
 				1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */,
 				1FE7879624C0B440005ED5D4 /* MPWWindowsScheme.h in Headers */,
 				1F5E505C09B4B754000298D9 /* MPWStTests.h in Headers */,
-				1F60963925E786840018BB72 /* STTargetActionConnector.h in Headers */,
 				1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */,
 				1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */,
 				1F5E505E09B4B754000298D9 /* MPWInstanceVariable.h in Headers */,
@@ -2328,7 +2324,6 @@
 				1FE37B851969610600C9A378 /* MPWEvaluator.h in Headers */,
 				1FE37BF71969612700C9A378 /* MPWTreeNodeScheme.h in Headers */,
 				1FE37BAF1969610700C9A378 /* MPWRecursiveIdentifier.h in Headers */,
-				1F60963A25E786840018BB72 /* STTargetActionConnector.h in Headers */,
 				1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */,
 				1F9BD24325665748006D7476 /* MPWStConnectorTests.h in Headers */,
 				1FE37BCC1969612400C9A378 /* MPWVarScheme.h in Headers */,
@@ -3219,7 +3214,6 @@
 				1F5E507709B4B754000298D9 /* MPWEvaluator.m in Sources */,
 				1F7328912344C10000379386 /* MPWREPLViewPrinter.m in Sources */,
 				1F5E507809B4B754000298D9 /* MPWMethodCallBack.m in Sources */,
-				1F60963B25E786840018BB72 /* STTargetActionConnector.m in Sources */,
 				1F5E507909B4B754000298D9 /* MPWMethodHeader.m in Sources */,
 				1F5E507A09B4B754000298D9 /* MPWStTests.m in Sources */,
 				1F5E507B09B4B754000298D9 /* MPWObjCGenerator.m in Sources */,
@@ -3352,6 +3346,7 @@
 				1F60965025E788FC0018BB72 /* STUITests.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
+				1F85AC5625E7E87E00417154 /* STTargetActionConnector.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
 				1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
@@ -3468,7 +3463,6 @@
 				1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */,
 				1FE37B771969610600C9A378 /* MPWBlockContext.m in Sources */,
 				1FE37BA01969610600C9A378 /* MPWMethodCallBack.m in Sources */,
-				1F60963C25E786840018BB72 /* STTargetActionConnector.m in Sources */,
 				1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */,
 				1FE37BD21969612500C9A378 /* MPWTreeNode.m in Sources */,
 				1F321C702133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */,
