@@ -13,7 +13,7 @@
     return self.source != nil && self.target != nil;
 }
 -(BOOL)connect {
-    id theControl=[[[self source] target] target];
+    NSControl *theControl=[[[self source] target] target];
     id theTargetObject=[[[self target] target] target];
     [theControl setTarget:theTargetObject];
     [theControl setAction:self.message];
