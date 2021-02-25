@@ -1490,7 +1490,7 @@
         @"testConnectViaConnectorManually",
         @"testConnectingFromObjectToConnectorYieldsBoundConnector",
         @"testConnectingFromConnectorToObjectYieldsBoundConnector",
-//        @"testConnectViaConnectorUsingSyntax",
+        @"testConnectViaConnectorUsingSyntax",
         ];
 }
 
