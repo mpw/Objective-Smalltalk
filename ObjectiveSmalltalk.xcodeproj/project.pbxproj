@@ -183,6 +183,12 @@
 		1F5EE2BE25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
 		1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
 		1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */; };
+		1F60963925E786840018BB72 /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
+		1F60963A25E786840018BB72 /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
+		1F60963B25E786840018BB72 /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
+		1F60963C25E786840018BB72 /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
+		1F60964F25E788FC0018BB72 /* STUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60964D25E788FC0018BB72 /* STUITests.h */; };
+		1F60965025E788FC0018BB72 /* STUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60964E25E788FC0018BB72 /* STUITests.m */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
 		1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F63561A179EB68900D2DE58 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
@@ -818,6 +824,10 @@
 		1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWComplexLiteralExpression.m; sourceTree = "<group>"; };
 		1F605133187590E5004B6AED /* MPWInternalCodeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWInternalCodeGenerator.h; sourceTree = "<group>"; };
 		1F605134187590E5004B6AED /* MPWInternalCodeGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPWInternalCodeGenerator.mm; sourceTree = "<group>"; };
+		1F60963725E786840018BB72 /* STTargetActionConnector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionConnector.h; sourceTree = "<group>"; };
+		1F60963825E786840018BB72 /* STTargetActionConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionConnector.m; sourceTree = "<group>"; };
+		1F60964D25E788FC0018BB72 /* STUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STUITests.h; sourceTree = "<group>"; };
+		1F60964E25E788FC0018BB72 /* STUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUITests.m; sourceTree = "<group>"; };
 		1F635616179EB38500D2DE58 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1F635619179EB68900D2DE58 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1F6810291E117A78006CE0D1 /* SqliteScheme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SqliteScheme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1642,6 +1652,8 @@
 				1FA85A1A1923739E00F52396 /* ShellView.h */,
 				1FA85A1B1923739E00F52396 /* ShellView.m */,
 				1FA859F51923731900F52396 /* Supporting Files */,
+				1F60964D25E788FC0018BB72 /* STUITests.h */,
+				1F60964E25E788FC0018BB72 /* STUITests.m */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -1876,6 +1888,8 @@
 				1FCEB7EA099C03ED00867A95 /* STConnector.h */,
 				1F697A7E25E15D1600D015DB /* STMessageConnector.h */,
 				1F697A7F25E15D1600D015DB /* STMessageConnector.m */,
+				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
+				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
 				1FCEB7EB099C03ED00867A95 /* STConnector.m */,
 				1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */,
 				1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */,
@@ -2056,6 +2070,7 @@
 				1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */,
 				1FE7879624C0B440005ED5D4 /* MPWWindowsScheme.h in Headers */,
 				1F5E505C09B4B754000298D9 /* MPWStTests.h in Headers */,
+				1F60963925E786840018BB72 /* STTargetActionConnector.h in Headers */,
 				1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */,
 				1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */,
 				1F5E505E09B4B754000298D9 /* MPWInstanceVariable.h in Headers */,
@@ -2192,6 +2207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
+				1F60964F25E788FC0018BB72 /* STUITests.h in Headers */,
 				1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */,
 				1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */,
 				1F7045EF22313E84005ED7FB /* MPWMethodBrowser.h in Headers */,
@@ -2312,6 +2328,7 @@
 				1FE37B851969610600C9A378 /* MPWEvaluator.h in Headers */,
 				1FE37BF71969612700C9A378 /* MPWTreeNodeScheme.h in Headers */,
 				1FE37BAF1969610700C9A378 /* MPWRecursiveIdentifier.h in Headers */,
+				1F60963A25E786840018BB72 /* STTargetActionConnector.h in Headers */,
 				1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */,
 				1F9BD24325665748006D7476 /* MPWStConnectorTests.h in Headers */,
 				1FE37BCC1969612400C9A378 /* MPWVarScheme.h in Headers */,
@@ -3202,6 +3219,7 @@
 				1F5E507709B4B754000298D9 /* MPWEvaluator.m in Sources */,
 				1F7328912344C10000379386 /* MPWREPLViewPrinter.m in Sources */,
 				1F5E507809B4B754000298D9 /* MPWMethodCallBack.m in Sources */,
+				1F60963B25E786840018BB72 /* STTargetActionConnector.m in Sources */,
 				1F5E507909B4B754000298D9 /* MPWMethodHeader.m in Sources */,
 				1F5E507A09B4B754000298D9 /* MPWStTests.m in Sources */,
 				1F5E507B09B4B754000298D9 /* MPWObjCGenerator.m in Sources */,
@@ -3331,6 +3349,7 @@
 				1F89EBA22241A175000A82D6 /* MPWProgramTextView.m in Sources */,
 				1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */,
 				1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */,
+				1F60965025E788FC0018BB72 /* STUITests.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
@@ -3449,6 +3468,7 @@
 				1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */,
 				1FE37B771969610600C9A378 /* MPWBlockContext.m in Sources */,
 				1FE37BA01969610600C9A378 /* MPWMethodCallBack.m in Sources */,
+				1F60963C25E786840018BB72 /* STTargetActionConnector.m in Sources */,
 				1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */,
 				1FE37BD21969612500C9A378 /* MPWTreeNode.m in Sources */,
 				1F321C702133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */,

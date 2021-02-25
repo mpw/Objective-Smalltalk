@@ -29,14 +29,24 @@ idAccessor( lhs, setLhs )
         NSDictionary *leftPorts = [left ports];
         id source=leftPorts[@"OUT"];
         [connector setSource:source];
-        return connector;
+        if ( [connector isCompatible]) {
+            [connector connect];
+            return left;;
+        } else {
+            return connector;
+        }
     } else if ( [left isKindOfClass:[STMessageConnector class]]) {
         STMessageConnector *connector=(STMessageConnector*)left;
         right=[right defaultComponentInstance];
         NSDictionary *rightPorts = [right ports];
         id target=rightPorts[@"IN"];
         [connector setTarget:target];
-        return connector;
+        if ( [connector isCompatible]) {
+            [connector connect];
+            return [[connector source] target];
+        } else {
+            return connector;
+        }
     } else {
         left=[left defaultComponentInstance];
         right=[right defaultComponentInstance];

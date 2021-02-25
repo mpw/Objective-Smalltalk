@@ -9,12 +9,6 @@
 
 @implementation STMessageConnector
 
--(instancetype)initWithSelector:(SEL)newSelector
-{
-    self=[super init];
-    self.selector=newSelector;
-    return self;
-}
 
 -(BOOL)isCompatible
 {

@@ -17,8 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) id  protocol;
 @property (nonatomic,strong) STMessagePortDescriptor *source,*target;
 
--(instancetype)initWithSelector:(SEL)newSelector;
 -(BOOL)connect;
+-(BOOL)isCompatible;
 
 @end
 
