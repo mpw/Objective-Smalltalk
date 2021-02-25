@@ -6,7 +6,7 @@
 //
 
 #import "STMessageConnector.h"
-
+#import "STMessagePortDescriptor.h"
 @implementation STMessageConnector
 
 
@@ -29,8 +29,6 @@
 
 -(void)dealloc
 {
-    [_source release];
-    [_target release];
     [_protocol release];
     [super dealloc];
 }

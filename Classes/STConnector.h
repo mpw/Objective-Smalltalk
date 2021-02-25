@@ -8,9 +8,15 @@
 
 #import <ObjectiveSmalltalk/MPWExpression.h>
 
+@class STMessagePortDescriptor;
 
 @interface STConnector : MPWExpression {
 }
+
+@property (nonatomic,strong) STMessagePortDescriptor *source,*target;
+
+-(BOOL)connect;
+-(BOOL)isCompatible;
 
 
 @end
