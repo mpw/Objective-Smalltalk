@@ -10,7 +10,7 @@
 
 @class STMessagePortDescriptor;
 
-@interface STConnector : MPWExpression {
+@interface STConnector : NSObject {
 }
 
 @property (nonatomic,strong) STMessagePortDescriptor *source,*target;

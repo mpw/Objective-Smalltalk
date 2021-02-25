@@ -1,8 +1,8 @@
 /* MPWMessageExpression.h created by marcel on Tue 04-Jul-2000 */
 
-#import <ObjectiveSmalltalk/STConnector.h>
+#import <ObjectiveSmalltalk/MPWExpression.h>
 
-@interface MPWMessageExpression : STConnector
+@interface MPWMessageExpression : MPWExpression
 {
     MPWExpression*      receiver;
     SEL	                selector;
