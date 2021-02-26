@@ -50,8 +50,29 @@
 
     IDEXPECT( [b target], t,@"target set correctly");
     EXPECTTRUE( [b action] == @selector(buttonAction:),@"action set correctly");
+}
 
++(void)testCanSetTextFieldParams
+{
+    STTargetActionTestClass *tester=[STTargetActionTestClass new];
+    
+    
+    NSTextField *t=[NSTextField new];
+    t.drawsBackground=1;
+    t.selectable=1;
+    STCompiler *compiler=[self compiler];
+    [compiler bindValue:t toVariableNamed:@"t"];
+    [compiler bindValue:tester toVariableNamed:@"tester"];
+    EXPECTTRUE(t.drawsBackground, @"background drawing should be on");
+    [compiler evaluateScriptString:@"t setDrawsBackground:false. "];
+    
+    EXPECTFALSE(t.drawsBackground, @"background drawing should be off");
+    [compiler evaluateScriptString:@"t setDrawsBackground:true. "];
+    EXPECTTRUE(t.drawsBackground, @"background drawing should be on");
 
+    EXPECTTRUE(t.isSelectable, @"selectable should be on");
+    [compiler evaluateScriptString:@"t setSelectable:false. "];
+    EXPECTFALSE(t.isSelectable, @"selectable should be off");
 }
 
 +(NSArray*)testSelectors
@@ -59,6 +80,7 @@
     return @[
         @"testCanConnectControlToSpecificTargetViaTargetActionConnector",
         @"testConvenienceTargetAction",
+        @"testCanSetTextFieldParams",
     ];
 }
 @end
