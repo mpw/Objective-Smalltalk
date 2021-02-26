@@ -17,4 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface NSObject(targetAction)
+
+-(STTargetActionConnector*)actionFor:(SEL)message;
+
+@end
 NS_ASSUME_NONNULL_END

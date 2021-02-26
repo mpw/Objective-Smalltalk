@@ -43,6 +43,15 @@
     return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
 
+@end
 
+@implementation NSObject(targetAction)
+
+-(STTargetActionConnector*)actionFor:(SEL)message
+{
+    STTargetActionConnector *at=[[[STTargetActionConnector alloc] initWithSelector:message] autorelease];
+    at.target=[self defaultInputPort];
+    return at;
+}
 
 @end

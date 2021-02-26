@@ -24,6 +24,12 @@
     NSPoint numberDraggingStartingPoint;
 }
 
+-(void)insertTextAtCursor:someText
+{
+    [self insertText:someText];
+}
+
+
 -(void)setDefaultAttributes
 {
     [self setAutomaticQuoteSubstitutionEnabled:NO];
@@ -79,7 +85,7 @@
     b=[c blueComponent];
     
     NSString *colorString=[NSString stringWithFormat:@"#%x%x%x",(int)(r*255),(int)(g*255),(int)(b*255)];
-    [self insertText:colorString];
+    [self insertTextAtCursor:colorString];
     [self setSelectedRange:NSMakeRange(oldSelected.location, [colorString length])];
 }
 
@@ -336,12 +342,12 @@
     
     
     if ( [completions count]==1 && [[completions firstObject] isEqualToString:completionFor]) {
-        [self insertText:@" "];
+        [self insertTextAtCursor:@" "];
         completions=nil;
     }
     
     if ( [completions count]==1 && [[completions firstObject] isEqualToString:@" "]) {
-        [self insertText:@" "];
+        [self insertTextAtCursor:@" "];
         completions=nil;
     }
     
@@ -358,7 +364,7 @@
             [self insertCompletion:common forPartialWordRange:charRange movement:0 isFinal:YES];
         }
 
-//        [self insertText:[common substringFromIndex:charRange.length]];
+//        [self insertTextAtCursor:[common substringFromIndex:charRange.length]];
         return nil;
     }
     
@@ -543,8 +549,8 @@ static NSString *SliderItemIdentifier=@"com.metaobject.CodeDraw.Slider";
     [self setSelectedRange:NSMakeRange( currentSelection.location+currentSelection.length,0)];
     currentSelection=[self selectedRange];
     if ( resultText.length ) {
-        [self insertText:@" "];
-        [self insertText:resultText];
+        [self insertTextAtCursor:@" "];
+        [self insertTextAtCursor:resultText];
         [self setSelectedRange:NSMakeRange( currentSelection.location+1, resultText.length)];
     }
 }
