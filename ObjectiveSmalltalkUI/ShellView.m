@@ -20,6 +20,11 @@ static BOOL useMaxSize;
 
 /////////////////////////////// PRIVATE ////////////////////////////
 
+-(void)insertTextAtCursor:someText
+{
+    [self insertText:someText];
+}
+
 + (void) setUseMaxSize:(BOOL)shouldUseMaxSize
 {
   useMaxSize = shouldUseMaxSize;
@@ -28,7 +33,7 @@ static BOOL useMaxSize;
 - (void) replaceCurrentCommandWith:(NSString *)newCommand   // This method is used when the user browse into the command history
 {
   [self setSelectedRange:NSMakeRange(start,[[self string] length])];
-  [self insertText:newCommand];
+  [self insertTextAtCursor:newCommand];
   [self moveToEndOfDocument:self];
   [self scrollRangeToVisible:[self selectedRange]];
   lineEdited = NO; 
@@ -72,12 +77,12 @@ static BOOL useMaxSize;
 
     
     if ( [completions count]==1 && [[completions firstObject] isEqualToString:completionFor]) {
-        [self insertText:@" "];
+        [self insertTextAtCursor:@" "];
         completions=nil;
     }
     
     if ( [completions count]==1 && [[completions firstObject] isEqualToString:@" "]) {
-        [self insertText:@" "];
+        [self insertTextAtCursor:@" "];
         completions=nil;
     }
     
@@ -86,7 +91,7 @@ static BOOL useMaxSize;
         common=[common commonPrefixWithString:s options:NSLiteralSearch];
     }
     if ( [common length] > charRange.length) {
-        [self insertText:[common substringFromIndex:charRange.length]];
+        [self insertTextAtCursor:[common substringFromIndex:charRange.length]];
         return nil;
     }
     
@@ -130,7 +135,7 @@ static BOOL useMaxSize;
     [self setUsesFindPanel:YES];
 //    [self setFont:[NSFont userFixedPitchFontOfSize:-1]]; // -1 to get the default font size
     [self setSelectedRange:NSMakeRange([[self string] length],0)];
-    [super insertText:prompt];
+    [super insertTextAtCursor:prompt];
     start = [[self string] length];
     [self setDelegate:self];   // A ShellView is its own delegate! (see the section implementing delegate methods)
     maxSize = 900000;
@@ -148,11 +153,6 @@ static BOOL useMaxSize;
   return nil;
 }
 
-- (void)insertText:(id)aString
-{
-   [super insertText:aString];
-}
-
 - (void) notifyUser:(NSString *)notification
 {
   NSString *command = [[self string] substringFromIndex:start];
@@ -160,7 +160,7 @@ static BOOL useMaxSize;
   NSInteger delta = [prompt length] + [notification length] + 2;
   
   [self setSelectedRange:NSMakeRange(start,[[self string] length])];
-  [self insertText:[NSString stringWithFormat:@"\n%@\n%@%@", notification, prompt, command]];
+  [self insertTextAtCursor:[NSString stringWithFormat:@"\n%@\n%@%@", notification, prompt, command]];
 //  [self setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSize]] range:NSMakeRange(start, [notification length]+1)];
   start += delta;
   [self setSelectedRange:NSMakeRange(selectedRange.location+delta, selectedRange.length)]; 
@@ -408,7 +408,7 @@ static BOOL useMaxSize;
    }
   [history goToLast];
   [self moveToEndOfDocument:self];
-  [self insertText:@"\n"];
+  [self insertTextAtCursor:@"\n"];
     id expr=nil;
     id result=@"";
     @try {
@@ -423,7 +423,7 @@ static BOOL useMaxSize;
         [standardOut writeObject:result];
         [standardOut appendBytes:"\n" length:1];
     }
-  [self insertText:prompt];
+  [self insertTextAtCursor:prompt];
   [self scrollRangeToVisible:[self selectedRange]];
   start = [[self string] length];
   lineEdited = NO;
@@ -463,7 +463,7 @@ static BOOL useMaxSize;
       [self moveToEndOfDocument:self];
               
     if ([scanner scanUpToCharactersFromSet:separatorSet intoString:&subCommand])
-      [self insertText:subCommand];
+      [self insertTextAtCursor:subCommand];
             
     while (![scanner isAtEnd])
     { 
@@ -472,16 +472,16 @@ static BOOL useMaxSize;
       last_command_start = start;
       if ([subCommand length] > 0)  [history addStr:subCommand];
       [self moveToEndOfDocument:self];
-      [self insertText:@"\n"];
+      [self insertTextAtCursor:@"\n"];
       [self scrollRangeToVisible:[self selectedRange]];
       [commandHandler command:subCommand from:self]; // notify the command handler
       // NSLog(@"puting command : %@",subCommand);
-      [self insertText:prompt];
+      [self insertTextAtCursor:prompt];
       start = [[self string] length];
       lineEdited = NO;
       subCommand = @"";  
       [scanner scanUpToCharactersFromSet:separatorSet intoString:&subCommand];
-      if ([subCommand length] > 0)  [self insertText:subCommand];
+      if ([subCommand length] > 0)  [self insertTextAtCursor:subCommand];
       [self scrollRangeToVisible:[self selectedRange]];    
     } 
 } 
@@ -489,7 +489,7 @@ static BOOL useMaxSize;
 - (void)putText:(NSString *)text
 {
   [self moveToEndOfDocument:self];
-  [self insertText:text];
+  [self insertTextAtCursor:text];
   start = [[self string] length];
   [self scrollRangeToVisible:[self selectedRange]];
 }
