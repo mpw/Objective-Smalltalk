@@ -45,9 +45,34 @@
     STTargetActionTestClass *t=[STTargetActionTestClass new];
     [compiler bindValue:b toVariableNamed:@"b"];
     [compiler bindValue:t toVariableNamed:@"t"];
-
+    
     [compiler evaluateScriptString:@" b → (t actionFor: #buttonAction: )."];
+    IDEXPECT( [b target], t,@"target set correctly");
+    EXPECTTRUE( [b action] == @selector(buttonAction:),@"action set correctly");
+}
 
++(void)testConvenienceTargetActionViaPort
+{
+    STCompiler *compiler=[self compiler];
+    NSButton *b=[NSButton new];
+    STTargetActionTestClass *t=[STTargetActionTestClass new];
+    [compiler bindValue:b toVariableNamed:@"b"];
+    [compiler bindValue:t toVariableNamed:@"t"];
+    
+    [compiler evaluateScriptString:@" b → t portFor: #buttonAction:."];
+    IDEXPECT( [b target], t,@"target set correctly");
+    EXPECTTRUE( [b action] == @selector(buttonAction:),@"action set correctly");
+}
+
++(void)testConvenienceTargetActionViaPortSchemeForTarget
+{
+    STCompiler *compiler=[self compiler];
+    NSButton *b=[NSButton new];
+    STTargetActionTestClass *t=[STTargetActionTestClass new];
+    [compiler bindValue:b toVariableNamed:@"b"];
+    [compiler bindValue:t toVariableNamed:@"t"];
+    
+    [compiler evaluateScriptString:@" b → port:t/buttonAction: ."];
     IDEXPECT( [b target], t,@"target set correctly");
     EXPECTTRUE( [b action] == @selector(buttonAction:),@"action set correctly");
 }
@@ -82,7 +107,9 @@
     return @[
         @"testCanConnectControlToSpecificTargetViaTargetActionConnector",
         @"testConvenienceTargetAction",
+        @"testConvenienceTargetActionViaPort",
         @"testCanSetBooleanTextFieldParams",
+//        @"testConvenienceTargetActionViaPortSchemeForTarget",
     ];
 }
 @end

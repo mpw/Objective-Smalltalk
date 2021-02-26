@@ -23,6 +23,8 @@
 boolAccessor_h(sendsMessages, setSendsMessages)
 boolAccessor_h(isSettable, setIsSettable)
 
+@property (assign) SEL message;
+
 -(BOOL)receivesMessages;
 -(BOOL)connect:(STMessagePortDescriptor*)other;
 -(Protocol*)messageProtocol;
