@@ -96,12 +96,12 @@ idAccessor( _signature, setSignature )
 		double doubleVal;
 		long long longLongVal;
 		NSMethodSignature* sig=[self signatureForTarget:msgReceiver];
-//      NSLog(@"invoking: %@",NSStringFromSelector(selector));
+      NSLog(@"invoking: %@",NSStringFromSelector(selector));
 		if ( sig != nil ) {
 			int i;
 			invocation=[NSInvocation invocationWithMethodSignature:sig];
 			[invocation setSelector:selector];//
-//			NSLog(@" ## args count: %d, sig numberOfArguments-2:%d",argCount,[sig numberOfArguments]-2 );
+			NSLog(@" ## args count: %d, sig numberOfArguments-2:%d",argCount,[sig numberOfArguments]-2 );
             
             // FIXME:   when I add a block as a method to a class, this become the inequality now used
             //          should be equal (and used to check that) -> also: should raise if test fails
@@ -115,9 +115,9 @@ idAccessor( _signature, setSignature )
 					id arg=args[i];
 					void *argp=&arg;
 					const char *type=[sig getArgumentTypeAtIndex:invocationIndex];
-//					NSLog(@"## argtype[%d]=%p",i,type);
-//					NSLog(@"## argtype[%d]=%s",i,type);
-  //                  NSLog(@"## arg: %@",arg);
+					NSLog(@"## argtype[%d]=%p",i,type);
+					NSLog(@"## argtype[%d]=%s",i,type);
+                    NSLog(@"## arg: %@",arg);
                     if ( *type == 'r') {        //  CONST prefix
                         type++;
                     }
@@ -150,8 +150,10 @@ idAccessor( _signature, setSignature )
 							shortVal=[arg intValue];
 							argp=&shortVal;
 							break;
-						case 'c':
-						case 'C':
+                        case 'b':
+                        case 'B':
+                        case 'c':
+                        case 'C':
 							longLongVal=[arg longLongValue];
 							argp=&longLongVal;
 							break;
