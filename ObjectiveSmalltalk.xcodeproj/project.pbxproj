@@ -125,6 +125,8 @@
 		1F59A722202C7D7800BE06F6 /* win_xcb.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A71C202C7D7800BE06F6 /* win_xcb.m */; };
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F5D767B25E9838600DCC82F /* STTargetActionSenderPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */; };
+		1F5D767C25E9838600DCC82F /* STTargetActionSenderPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */; };
 		1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* STCompiler.h */; settings = {ATTRIBUTES = (Project, Public, ); }; };
 		1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
@@ -815,6 +817,8 @@
 		1F59A71B202C7D7700BE06F6 /* x11fs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = x11fs.m; sourceTree = "<group>"; };
 		1F59A71C202C7D7800BE06F6 /* win_xcb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = win_xcb.m; sourceTree = "<group>"; };
 		1F59A71D202C7D7800BE06F6 /* x11fs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x11fs.h; sourceTree = "<group>"; };
+		1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionSenderPort.h; sourceTree = "<group>"; };
+		1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionSenderPort.m; sourceTree = "<group>"; };
 		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
@@ -1651,6 +1655,8 @@
 				1FA859F51923731900F52396 /* Supporting Files */,
 				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
 				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
+				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
+				1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */,
 				1F60964D25E788FC0018BB72 /* STUITests.h */,
 				1F60964E25E788FC0018BB72 /* STUITests.m */,
 			);
@@ -2212,6 +2218,7 @@
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
 				1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */,
+				1F5D767B25E9838600DCC82F /* STTargetActionSenderPort.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3348,6 +3355,7 @@
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
 				1F85AC5625E7E87E00417154 /* STTargetActionConnector.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
+				1F5D767C25E9838600DCC82F /* STTargetActionSenderPort.m in Sources */,
 				1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
 			);

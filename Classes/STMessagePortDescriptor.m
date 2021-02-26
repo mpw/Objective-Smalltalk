@@ -32,6 +32,11 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     return self;
 }
 
+-(id)targetObject
+{
+    return [[self target] value];
+}
+
 
 -(BOOL)receivesMessages
 {
@@ -47,6 +52,14 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
     connector.protocol=[self messageProtocol];
     
     return [connector connect];
+}
+
+-(NSDictionary*)ports
+{
+    return @{
+        @"IN": self,
+        @"OUT": self,
+    };
 }
 
 

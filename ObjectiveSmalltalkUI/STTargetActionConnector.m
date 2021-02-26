@@ -6,6 +6,8 @@
 //
 
 #import "STTargetActionConnector.h"
+#import "STMessagePortDescriptor.h"
+#import "STTargetActionSenderPort.h"
 
 @implementation STTargetActionConnector
 
@@ -13,7 +15,7 @@
     return self.source != nil && self.target != nil;
 }
 -(BOOL)connect {
-    NSControl *theControl=[[[self source] target] target];
+    NSControl *theControl=[[self source] targetObject];
     id theTargetObject=[[[self target] target] target];
     [theControl setTarget:theTargetObject];
     [theControl setAction:self.message];
@@ -34,13 +36,23 @@
     return [NSString stringWithFormat:@"<%@:%p: source: %@ target: %@ message: %@>",self.class,self,self.source,self.target,NSStringFromSelector(self.message)];
 }
 
+-defaultOutputPort
+{
+    return self;
+}
+
+-defaultInputPort
+{
+    return self;
+}
+
 @end
 
 @implementation NSControl(ports)
 
 -defaultOutputPort
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+    return [[[STTargetActionSenderPort alloc] initWithControl:self] autorelease];
 }
 
 @end
@@ -52,6 +64,13 @@
     STTargetActionConnector *at=[[[STTargetActionConnector alloc] initWithSelector:message] autorelease];
     at.target=[self defaultInputPort];
     return at;
+}
+
+-(STMessagePortDescriptor*)portFor:(SEL)message
+{
+    STMessagePortDescriptor *port=[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:nil sends:NO];
+    port.message=message;
+    return port;
 }
 
 @end
