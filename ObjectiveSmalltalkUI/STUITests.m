@@ -52,27 +52,29 @@
     EXPECTTRUE( [b action] == @selector(buttonAction:),@"action set correctly");
 }
 
-+(void)testCanSetTextFieldParams
++(void)testCanSetBooleanTextFieldParams
 {
-    STTargetActionTestClass *tester=[STTargetActionTestClass new];
-    
-    
     NSTextField *t=[NSTextField new];
     t.drawsBackground=1;
     t.selectable=1;
     STCompiler *compiler=[self compiler];
     [compiler bindValue:t toVariableNamed:@"t"];
-    [compiler bindValue:tester toVariableNamed:@"tester"];
     EXPECTTRUE(t.drawsBackground, @"background drawing should be on");
+    IDEXPECT([compiler evaluateScriptString:@"t drawsBackground. "],@(true), @"background drawing should be on");
     [compiler evaluateScriptString:@"t setDrawsBackground:false. "];
-    
     EXPECTFALSE(t.drawsBackground, @"background drawing should be off");
+    IDEXPECT([compiler evaluateScriptString:@"t drawsBackground. "],@(false), @"background drawing should be off");
+    
+
     [compiler evaluateScriptString:@"t setDrawsBackground:true. "];
     EXPECTTRUE(t.drawsBackground, @"background drawing should be on");
+    IDEXPECT([compiler evaluateScriptString:@"t drawsBackground. "],@(true), @"background drawing should be on");
 
     EXPECTTRUE(t.isSelectable, @"selectable should be on");
     [compiler evaluateScriptString:@"t setSelectable:false. "];
     EXPECTFALSE(t.isSelectable, @"selectable should be off");
+    IDEXPECT([compiler evaluateScriptString:@"t isSelectable. "],@(false), @"selectable should be off");
+    
 }
 
 +(NSArray*)testSelectors
@@ -80,7 +82,29 @@
     return @[
         @"testCanConnectControlToSpecificTargetViaTargetActionConnector",
         @"testConvenienceTargetAction",
-        @"testCanSetTextFieldParams",
+        @"testCanSetBooleanTextFieldParams",
     ];
 }
+@end
+
+
+@implementation NSTextField(debug)
+
+-(void)dumpOn:(MPWByteStream*)aStream
+{
+    [aStream printFormat:@"<%s:%p: ",object_getClassName(self),self];
+    [aStream printFormat:@"frame: %@ ",NSStringFromRect(self.frame)];
+    [aStream printFormat:@"stringValue: %@ ",self.stringValue];
+    [aStream printFormat:@"textColor: %@ ",self.textColor];
+    [aStream printFormat:@"backGroundColor: %@ ",self.backgroundColor];
+    [aStream printFormat:@"drawsBackground: %d ",self.drawsBackground];
+    [aStream printFormat:@"isBordered: %d ",self.isBordered];
+    [aStream printFormat:@"isSelectable: %d ",self.isSelectable];
+    [aStream printFormat:@"isOpaque: %d",self.isOpaque];
+
+    [aStream printFormat:@">\n"];
+}
+
+
+
 @end

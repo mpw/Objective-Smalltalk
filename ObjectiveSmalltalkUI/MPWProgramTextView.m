@@ -69,11 +69,6 @@
     // Drawing code here.
 }
 
--(void)setTextColor:(NSColor *)textColor
-{
-    NSLog(@"setTextColor: %@",textColor);
-//    [super setTextColor:textColor];
-}
 
 -(void)changeColor:(nullable id)sender
 {
@@ -90,11 +85,6 @@
 }
 
 
-- (void)setTextColor:(NSColor *)color
-               range:(NSRange)range
-{
-    NSLog(@"textColor: %@ range: %@",color,NSStringFromRange(range));
-}
 
 - (NSString*)selectedText
 {
