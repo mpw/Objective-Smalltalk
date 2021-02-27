@@ -135,3 +135,24 @@
 
 
 @end
+
+
+@implementation NSControl(streaming)
+
+-defaultInputPort
+{
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+}
+
+
+-(void)writeObject:anObject
+{
+    self.objectValue = anObject;
+}
+
+-(void)appendBytes:(const void*)bytes length:(long)len
+{
+    self.stringValue = [NSString stringWithCString:bytes length:len];
+}
+
+@end
