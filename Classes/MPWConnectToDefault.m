@@ -124,6 +124,15 @@ idAccessor( lhs, setLhs )
 
 @end
 
+@implementation NSDictionary(ports)   
+
+-ports
+{
+    return self;
+}
+
+@end
+
 
 @implementation MPWWriteStream(connecting)
 

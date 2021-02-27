@@ -45,7 +45,9 @@
     STTargetActionConnector *connector=[[[STTargetActionConnector alloc] initWithSelector:other.message] autorelease];
     connector.source=(id)self;
     connector.target=other;
-    
+    if ( other.messageProtocol == @protocol(Streaming) ) {
+        connector.message = @selector(writeTarget:);
+    }
     return [connector connect];
 }
 
@@ -57,15 +59,27 @@
 
 @implementation STTargetActionSenderPort(testing) 
 
-+(void)someTest
++(void)testConnectTextFieldToStream
 {
-	EXPECTTRUE(false, @"implemented");
+    STCompiler *compiler=[STCompiler compiler];
+    NSTextField *textfield=[[NSTextField new] autorelease];
+    NSMutableString *result=[NSMutableString string];
+    MPWByteStream *stream=[MPWByteStream streamWithTarget:result];
+    [compiler bindValue:textfield toVariableNamed:@"textfield"];
+    [compiler bindValue:stream toVariableNamed:@"stream"];
+    [compiler evaluateScriptString:@"textfield → stream."];
+    EXPECTNOTNIL( textfield.target, @"textfield should now have a target");
+    [textfield setStringValue:@"test"];
+    IDEXPECT( result, @"", @"should be empty before sending action");
+    [textfield sendAction:textfield.action to:textfield.target];
+    IDEXPECT( result, @"test", @"now have the action");
+
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
+			@"testConnectTextFieldToStream",
 			];
 }
 
