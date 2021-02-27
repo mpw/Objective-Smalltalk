@@ -65,8 +65,8 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 
 -(NSString *)description{
     id theTarget=[[self target] target];
-    return [NSString stringWithFormat:@"<%@:%p: %@:%p key:%@>",
-            [self class],self,[theTarget class],theTarget,[[self target] name]];
+    return [NSString stringWithFormat:@"<%@:%p: target: %@:%p message: %@ key:%@>",
+            [self class],self,[theTarget class],theTarget,NSStringFromSelector(self.message),[[self target] name]];
 }
 
 @end
