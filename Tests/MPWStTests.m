@@ -1349,6 +1349,18 @@
     EXPECTTRUE([[compiler evaluateScriptString:@"c target target target = dict"] boolValue], @"did set the source via arrow");
 }
 
++(void)testConnectStreamToBinding
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme:d := MPWDictStore store. d:c := 'hello'."];
+    [compiler evaluateScriptString:@"r := ref:d:c."];
+    [compiler evaluateScriptString:@"filter up |{ ^object uppercaseString. }."];
+    [compiler evaluateScriptString:@"pipe ← (up → r)."];
+    [compiler evaluateScriptString:@"pipe writeObject:'upper'."];
+    IDEXPECT([compiler evaluateScriptString:@"d:c"], @"UPPER", @"");
+
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1491,6 +1503,7 @@
         @"testConnectingFromObjectToConnectorYieldsBoundConnector",
         @"testConnectingFromConnectorToObjectYieldsBoundConnector",
         @"testConnectViaConnectorUsingSyntax",
+        @"testConnectStreamToBinding",
         ];
 }
 
