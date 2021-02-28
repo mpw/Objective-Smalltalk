@@ -133,6 +133,9 @@
 		1F5D769225E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
 		1F5D76A525EA389200DCC82F /* STTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76A325EA389200DCC82F /* STTextField.h */; };
 		1F5D76A625EA389200DCC82F /* STTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76A425EA389200DCC82F /* STTextField.m */; };
+		1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */; };
+		1F5D76D125EBC9AF00DCC82F /* MPWSTTouchUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */; };
+		1F5D76D225EBC9AF00DCC82F /* MPWSTTouchUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */; };
 		1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* STCompiler.h */; settings = {ATTRIBUTES = (Project, Public, ); }; };
 		1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
@@ -829,6 +832,9 @@
 		1F5D768E25E98F6E00DCC82F /* STPortScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPortScheme.m; sourceTree = "<group>"; };
 		1F5D76A325EA389200DCC82F /* STTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTextField.h; sourceTree = "<group>"; };
 		1F5D76A425EA389200DCC82F /* STTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTextField.m; sourceTree = "<group>"; };
+		1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUIAppKitAdditions.m; sourceTree = "<group>"; };
+		1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSTTouchUITests.h; sourceTree = "<group>"; };
+		1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSTTouchUITests.m; sourceTree = "<group>"; };
 		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
@@ -1673,6 +1679,7 @@
 				1F5D76A425EA389200DCC82F /* STTextField.m */,
 				1F60964D25E788FC0018BB72 /* STUITests.h */,
 				1F60964E25E788FC0018BB72 /* STUITests.m */,
+				1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -1786,6 +1793,8 @@
 			children = (
 				1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */,
 				1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */,
+				1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */,
+				1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */,
 				1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */,
 				1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */,
 				1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */,
@@ -2270,6 +2279,7 @@
 			files = (
 				1FD6CA6325B8340B00639458 /* ObjectiveSmalltalkUI.h in Headers */,
 				1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */,
+				1F5D76D125EBC9AF00DCC82F /* MPWSTTouchUITests.h in Headers */,
 				1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */,
 				1F23ADBF25C00E3900F51B6F /* MPWFontStore.h in Headers */,
 				1FD6CA9825B8347D00639458 /* UIView+dictionary.h in Headers */,
@@ -3375,6 +3385,7 @@
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
 				1F5D767C25E9838600DCC82F /* STTargetActionSenderPort.m in Sources */,
 				1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */,
+				1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
 				1F5D76A625EA389200DCC82F /* STTextField.m in Sources */,
 			);
@@ -3417,6 +3428,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F5D76D225EBC9AF00DCC82F /* MPWSTTouchUITests.m in Sources */,
 				1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */,
 				1F23ADC025C00E3900F51B6F /* MPWFontStore.m in Sources */,
 				1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */,

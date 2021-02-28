@@ -77,4 +77,5 @@
 	MPWVarScheme,
 	"UIViewDictionaryInitializationTests",
 	SayYES,
+	MPWSTTouchUITests,
 )
