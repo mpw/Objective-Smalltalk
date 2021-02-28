@@ -150,9 +150,24 @@
     self.objectValue = anObject;
 }
 
+-(void)writeTarget:(NSControl*)source
+{
+    self.objectValue = [source objectValue];
+}
+
 -(void)appendBytes:(const void*)bytes length:(long)len
 {
     self.stringValue = [NSString stringWithCString:bytes length:len];
+}
+
+@end
+
+@implementation NSGridView(sizeandviews)
+
++gridViewWithSize:(NSSize)size views:views {
+    NSGridView *grid = [self gridViewWithViews:views];
+    [grid setFrameSize:size];
+    return grid;
 }
 
 @end
