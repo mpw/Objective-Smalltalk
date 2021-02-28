@@ -78,4 +78,5 @@
 	"UIViewDictionaryInitializationTests",
 	SayYES,
 	MPWSTTouchUITests,
+	"STTargetActionConnector",
 )

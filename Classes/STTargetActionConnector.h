@@ -9,6 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol TargetActionSource
+-(void)setTarget:aTarget action:(SEL)action;
+@end
+
 @interface STTargetActionConnector : STConnector
 
 @property (assign) SEL message;

@@ -7,6 +7,7 @@
 
 #import <AppKit/AppKit.h>
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+#import "STTargetActionSenderPort.h"
 
 
 
@@ -67,3 +68,54 @@
 
 @end
 
+
+@implementation NSControl(ports)
+
+-defaultOutputPort
+{
+    return [[[STTargetActionSenderPort alloc] initWithControl:self] autorelease];
+}
+
+-(void)setTarget:(id)target action:(SEL)action
+{
+    self.target=target;
+    self.action=action;
+}
+
+@end
+
+@interface TextFieldContinuity : NSObject
+
+@end
+
+@implementation TextFieldContinuity
+
+
++(void)controlTextDidChange:(NSNotification *)notification
+{
+    NSTextField *changedField = [notification object];
+    if (changedField.isContinuous) {
+        [changedField.target performSelector:changedField.action withObject:changedField];
+    }
+}
+
+
+
+@end
+
+@implementation NSTextField(continuous)
+
+
+-(void)setContinuous:(BOOL)continuous
+{
+    [super setContinuous:continuous];
+    if ( continuous) {
+        self.delegate = (id)[TextFieldContinuity class];
+    } else {
+        if ( self.delegate == [TextFieldContinuity class]) {
+            self.delegate=nil;
+        }
+    }
+}
+
+@end

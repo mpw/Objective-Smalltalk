@@ -15,10 +15,9 @@
     return self.source != nil && self.target != nil;
 }
 -(BOOL)connect {
-    NSControl *theControl=[[self source] targetObject];
+    id <TargetActionSource> theControl=[[self source] targetObject];
     id theTargetObject=[[[self target] target] target];
-    [theControl setTarget:theTargetObject];
-    [theControl setAction:self.message];
+    [theControl setTarget:theTargetObject action:self.message];
     return YES;
 }
 
@@ -48,15 +47,6 @@
 
 @end
 
-@implementation NSControl(ports)
-
--defaultOutputPort
-{
-    return [[[STTargetActionSenderPort alloc] initWithControl:self] autorelease];
-}
-
-@end
-
 @implementation NSObject(targetAction)
 
 -(STTargetActionConnector*)actionFor:(SEL)message
@@ -75,38 +65,3 @@
 
 @end
 
-@interface TextFieldContinuity : NSObject
-
-@end
-
-@implementation TextFieldContinuity
-
-
-+(void)controlTextDidChange:(NSNotification *)notification
-{
-    NSTextField *changedField = [notification object];
-    if (changedField.isContinuous) {
-        [changedField.target performSelector:changedField.action withObject:changedField];
-    }
-}
-
-
-
-@end
-
-@implementation NSTextField(continuous)
-
-
--(void)setContinuous:(BOOL)continuous
-{
-    [super setContinuous:continuous];
-    if ( continuous) {
-        self.delegate = (id)[TextFieldContinuity class];
-    } else {
-        if ( self.delegate == [TextFieldContinuity class]) {
-            self.delegate=nil;
-        }
-    }
-}
-
-@end

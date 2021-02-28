@@ -125,8 +125,6 @@
 		1F59A722202C7D7800BE06F6 /* win_xcb.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A71C202C7D7800BE06F6 /* win_xcb.m */; };
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F5D767B25E9838600DCC82F /* STTargetActionSenderPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */; };
-		1F5D767C25E9838600DCC82F /* STTargetActionSenderPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */; };
 		1F5D768F25E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769125E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
@@ -136,6 +134,15 @@
 		1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */; };
 		1F5D76D125EBC9AF00DCC82F /* MPWSTTouchUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */; };
 		1F5D76D225EBC9AF00DCC82F /* MPWSTTouchUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */; };
+		1F5D771725EBF33900DCC82F /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
+		1F5D772825EBF33C00DCC82F /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
+		1F5D774925EBF51F00DCC82F /* STTargetActionSenderPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */; };
+		1F5D775A25EBF52100DCC82F /* STTargetActionSenderPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */; };
+		1F5D777B25EBF52900DCC82F /* STTargetActionSenderPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F5D778C25EBF53500DCC82F /* STTargetActionSenderPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F5D779D25EBF53900DCC82F /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
+		1F5D77AE25EBF53C00DCC82F /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
+		1F5D77D025EBF5EA00DCC82F /* STUIKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */; };
 		1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* STCompiler.h */; settings = {ATTRIBUTES = (Project, Public, ); }; };
 		1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
@@ -268,7 +275,6 @@
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1F85AC5625E7E87E00417154 /* STTargetActionConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60963825E786840018BB72 /* STTargetActionConnector.m */; };
 		1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */; };
 		1F86CE1E203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE1C203338A8000F0B81 /* MPWSpotlightScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -835,6 +841,7 @@
 		1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUIAppKitAdditions.m; sourceTree = "<group>"; };
 		1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSTTouchUITests.h; sourceTree = "<group>"; };
 		1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSTTouchUITests.m; sourceTree = "<group>"; };
+		1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUIKitAdditions.m; sourceTree = "<group>"; };
 		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
@@ -1650,6 +1657,7 @@
 			isa = PBXGroup;
 			children = (
 				1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */,
+				1F7045ED22313E83005ED7FB /* MPWMethodBrowser.m */,
 				1FA85A181923739E00F52396 /* CLIView.h */,
 				1FA85A191923739E00F52396 /* CLIView.m */,
 				1FA85A241923746B00F52396 /* FSCommandHistory.h */,
@@ -1661,7 +1669,6 @@
 				1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */,
 				1F8E81D01924229B00821570 /* MPWDocumentScheme.m */,
 				1F7045EC22313E83005ED7FB /* MPWMethodBrowser.h */,
-				1F7045ED22313E83005ED7FB /* MPWMethodBrowser.m */,
 				1F7045EE22313E84005ED7FB /* MPWMethodBrowser.xib */,
 				1F89EB9F2241A175000A82D6 /* MPWProgramTextView.h */,
 				1F89EBA02241A175000A82D6 /* MPWProgramTextView.m */,
@@ -1671,10 +1678,6 @@
 				1FA85A1A1923739E00F52396 /* ShellView.h */,
 				1FA85A1B1923739E00F52396 /* ShellView.m */,
 				1FA859F51923731900F52396 /* Supporting Files */,
-				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
-				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
-				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
-				1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */,
 				1F5D76A325EA389200DCC82F /* STTextField.h */,
 				1F5D76A425EA389200DCC82F /* STTextField.m */,
 				1F60964D25E788FC0018BB72 /* STUITests.h */,
@@ -1803,6 +1806,7 @@
 				1FD6CA3825B830E600639458 /* UIView+dictionary.h */,
 				1FD6CA3925B830E600639458 /* UIView+dictionary.m */,
 				1FD6CA6225B8340B00639458 /* Info.plist */,
+				1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */,
 			);
 			path = ObjectiveSmalltalkTouchUI;
 			sourceTree = "<group>";
@@ -1885,6 +1889,10 @@
 		F5A74ABC00F0A61B015ADD82 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
+				1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */,
+				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
+				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
 				1FCD360508D5D9B10098DA56 /* MPWAbstractInterpretedMethod.h */,
 				1FCD360608D5D9B10098DA56 /* MPWAbstractInterpretedMethod.m */,
 				F5A74ADF00F0A95F015ADD82 /* MPWAssignmentExpression.h */,
@@ -2091,6 +2099,7 @@
 				1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */,
 				1F5E505509B4B754000298D9 /* MPWStatementList.h in Headers */,
 				1F50462D2118AEB400073E1E /* MPWPropertyPathComponent.h in Headers */,
+				1F5D777B25EBF52900DCC82F /* STTargetActionSenderPort.h in Headers */,
 				1F504627211885E900073E1E /* MPWPropertyPath.h in Headers */,
 				1F5E505609B4B754000298D9 /* MPWBlockExpression.h in Headers */,
 				1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */,
@@ -2133,6 +2142,7 @@
 				1F406E7A10F52CAC0054957A /* MPWScheme.h in Headers */,
 				1FB7D7F21E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */,
 				1F88E8AB138ADC1600199F03 /* MPWFileSchemeResolver.h in Headers */,
+				1F5D779D25EBF53900DCC82F /* STTargetActionConnector.h in Headers */,
 				1F88E8AF138ADC1600199F03 /* MPWURLSchemeResolver.h in Headers */,
 				1F321C6D2133F063001BE6CC /* MPWPropertyPathSetter.h in Headers */,
 				1F88E8DB138ADCCA00199F03 /* MPWResource.h in Headers */,
@@ -2243,7 +2253,6 @@
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
 				1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */,
-				1F5D767B25E9838600DCC82F /* STTargetActionSenderPort.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2360,6 +2369,7 @@
 				1FE37BAF1969610700C9A378 /* MPWRecursiveIdentifier.h in Headers */,
 				1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */,
 				1F9BD24325665748006D7476 /* MPWStConnectorTests.h in Headers */,
+				1F5D778C25EBF53500DCC82F /* STTargetActionSenderPort.h in Headers */,
 				1FE37BCC1969612400C9A378 /* MPWVarScheme.h in Headers */,
 				1FE37B931969610600C9A378 /* MPWInstanceVariable.h in Headers */,
 				1FE37BA11969610600C9A378 /* MPWMethodHeader.h in Headers */,
@@ -2367,6 +2377,7 @@
 				1FE37BD31969612500C9A378 /* MPWFileSchemeResolver.h in Headers */,
 				1FB7D7F31E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */,
 				1F8C938B24F573B400646461 /* MPWDataflowConstraintExpression.h in Headers */,
+				1F5D77AE25EBF53C00DCC82F /* STTargetActionConnector.h in Headers */,
 				1F321C6E2133F063001BE6CC /* MPWPropertyPathSetter.h in Headers */,
 				1FE37BA71969610700C9A378 /* MPWMethodType.h in Headers */,
 				1F3C6E701E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */,
@@ -3284,6 +3295,7 @@
 				1F321C6F2133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */,
 				1F88E8AC138ADC1600199F03 /* MPWFileSchemeResolver.m in Sources */,
 				1F88E8B0138ADC1600199F03 /* MPWURLSchemeResolver.m in Sources */,
+				1F5D772825EBF33C00DCC82F /* STTargetActionConnector.m in Sources */,
 				1F88E8B2138ADC1600199F03 /* MPWURLBinding.m in Sources */,
 				1F9CD1E31A2C94AE00578177 /* MPWCascadeExpression.m in Sources */,
 				1F88E8B4138ADC1600199F03 /* MPWEnvScheme.m in Sources */,
@@ -3305,6 +3317,7 @@
 				1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */,
 				1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
 				1F9BD24425665748006D7476 /* MPWStConnectorTests.m in Sources */,
+				1F5D775A25EBF52100DCC82F /* STTargetActionSenderPort.m in Sources */,
 				1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1F5501B315ADB8E200422A9E /* MPWComplexAssignment.m in Sources */,
@@ -3381,9 +3394,7 @@
 				1F60965025E788FC0018BB72 /* STUITests.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
-				1F85AC5625E7E87E00417154 /* STTargetActionConnector.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
-				1F5D767C25E9838600DCC82F /* STTargetActionSenderPort.m in Sources */,
 				1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */,
 				1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
@@ -3429,6 +3440,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F5D76D225EBC9AF00DCC82F /* MPWSTTouchUITests.m in Sources */,
+				1F5D77D025EBF5EA00DCC82F /* STUIKitAdditions.m in Sources */,
 				1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */,
 				1F23ADC025C00E3900F51B6F /* MPWFontStore.m in Sources */,
 				1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */,
@@ -3459,6 +3471,7 @@
 				1FD6CAE525BB026500639458 /* MPWGlobalVariableStore.m in Sources */,
 				1FE37BA61969610700C9A378 /* MPWMethodStore.m in Sources */,
 				1FE37B8A1969610600C9A378 /* MPWFastMessage.m in Sources */,
+				1F5D771725EBF33900DCC82F /* STTargetActionConnector.m in Sources */,
 				1F50462A211885E900073E1E /* MPWPropertyPath.m in Sources */,
 				1FE37BB41969610700C9A378 /* MPWScheme.m in Sources */,
 				1FE37BD81969612500C9A378 /* MPWURLSchemeResolver.m in Sources */,
@@ -3478,6 +3491,7 @@
 				1FE37B881969610600C9A378 /* MPWExpression.m in Sources */,
 				1FE37BE81969612600C9A378 /* MPWResourceScheme.m in Sources */,
 				1F7A21B91B779CDD00FF6C03 /* MPWDataflowConstraintExpression.m in Sources */,
+				1F5D774925EBF51F00DCC82F /* STTargetActionSenderPort.m in Sources */,
 				1FE37B6D1969610600C9A378 /* MPWLiteralExpression.m in Sources */,
 				1F575DA120BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
 				1FB7AE3324DB0F3000CCBE86 /* STBundle.m in Sources */,
@@ -5304,7 +5318,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -5354,7 +5368,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
