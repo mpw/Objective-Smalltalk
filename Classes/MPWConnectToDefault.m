@@ -133,6 +133,15 @@ idAccessor( lhs, setLhs )
 
 @end
 
+@implementation MPWBinding(connecting)
+
+
+-defaultInputPort
+{
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+}
+
+@end
 
 @implementation MPWWriteStream(connecting)
 

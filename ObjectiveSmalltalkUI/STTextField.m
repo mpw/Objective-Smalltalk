@@ -11,27 +11,27 @@
 
 -(void)setNeedsDisplay
 {
-    NSLog(@"setNeedsDisplay");
+//    NSLog(@"setNeedsDisplay");
     [super setNeedsDisplay];
 }
 
 -(void)setNeedsDisplayInRect:(NSRect)invalidRect
 {
-    NSLog(@"setNeedsDisplayInRect: %@",NSStringFromRect(invalidRect));
+//    NSLog(@"setNeedsDisplayInRect: %@",NSStringFromRect(invalidRect));
     [super setNeedsDisplayInRect:invalidRect];
 }
 
 -(void)setNeedsDisplay:(BOOL)needsDisplay
 {
-    NSLog(@"setNeedsDisplay: %d",needsDisplay);
+//    NSLog(@"setNeedsDisplay: %d",needsDisplay);
     [super setNeedsDisplay:needsDisplay];
 }
 
 -(void)setStringValue:(NSString *)stringValue
 {
-    NSLog(@"old: '%@' new: '%@' equal: %d",self.stringValue,stringValue,[self.stringValue isEqual:stringValue]);
+//    NSLog(@"old: '%@' new: '%@' equal: %d",self.stringValue,stringValue,[self.stringValue isEqual:stringValue]);
     [super setStringValue:stringValue];
-    NSLog(@"did set");
+//    NSLog(@"did set");
 }
 
 @end

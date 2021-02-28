@@ -646,7 +646,7 @@
     IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"hi",@"accessor ");
     IDEXPECT([testCompiler evaluateScriptString:@"var:testInstance/myIvar "],@"hi",@"accessor via pi syntax");
     [testCompiler evaluateScriptString:@"testInstance setMyIvar:'2nd value'. "];
-    IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"2nd value",@" set and get viaaccessor ");
+    IDEXPECT([testCompiler evaluateScriptString:@"testInstance myIvar."],@"2nd value",@" set and get via accessor ");
 }
 
 
