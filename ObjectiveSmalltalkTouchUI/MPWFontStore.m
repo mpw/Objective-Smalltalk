@@ -15,6 +15,26 @@
     NSDictionary *styles;
 }
 
+-(NSDictionary*)computeNameMap
+{
+    NSString *names=UIFont.familyNames;
+    NSMutableDictionary *theMap=[NSMutableDictionary dictionary];
+    for ( NSString *name in names ) {
+        if ( [name containsString:@" "]) {
+            NSString *mapped=[name stringByReplacingOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0,name.length)];
+            theMap[mapped]=name;
+        }
+    }
+    return theMap;
+}
+
+-(instancetype)init
+{
+    self=[super init];
+    self.nameMap = [self computeNameMap];
+    return self;
+}
+
 -(NSDictionary*)createStyles
 {
     NSMutableDictionary *constructionStyles=[NSMutableDictionary dictionary];
@@ -59,8 +79,15 @@ lazyAccessor(NSDictionary, styles, setStyles, createStyles)
                 return nil;
             }
         } else {
-            return [UIFont fontWithName:path[0] size:[path[1] floatValue]];
+            NSString *name=path[0];
+            NSString *mapped=self.nameMap[name];
+            if ( mapped ) {
+                name=mapped;
+            }
+            return [UIFont fontWithName:name size:[path[1] floatValue]];
         }
+    } else if ( [aReference isRoot] || path.count ==0 || (path.count == 1 && [path.firstObject isEqual:@"."] )) {
+        return UIFont.familyNames;
     }
     return nil;
 }

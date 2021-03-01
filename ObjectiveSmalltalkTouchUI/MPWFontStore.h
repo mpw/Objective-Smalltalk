@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWFontStore : MPWAbstractStore
 
+@property (nonatomic, strong) NSDictionary *nameMap;
+
 @end
 
 NS_ASSUME_NONNULL_END
