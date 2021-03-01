@@ -143,6 +143,7 @@
 		1F5D779D25EBF53900DCC82F /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
 		1F5D77AE25EBF53C00DCC82F /* STTargetActionConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60963725E786840018BB72 /* STTargetActionConnector.h */; };
 		1F5D77D025EBF5EA00DCC82F /* STUIKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */; };
+		1F5D781C25ECDE6600DCC82F /* libclang.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5D781B25ECDE6600DCC82F /* libclang.dylib */; };
 		1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC100F0A61B015ADD82 /* STCompiler.h */; settings = {ATTRIBUTES = (Project, Public, ); }; };
 		1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC200F0A61B015ADD82 /* MPWStScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74AC300F0A61B015ADD82 /* MPWMessageExpression.h */; };
@@ -556,7 +557,6 @@
 		1FE63E0C21061C0F0066B335 /* MPWClangImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE63E0A21061C0F0066B335 /* MPWClangImporter.h */; };
 		1FE63E0D21061C0F0066B335 /* MPWClangImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE63E0B21061C0F0066B335 /* MPWClangImporter.m */; };
 		1FE63E1A210620F60066B335 /* clang-c in Resources */ = {isa = PBXBuildFile; fileRef = 1FE63E19210620F60066B335 /* clang-c */; };
-		1FE63E1C210626B60066B335 /* libclang.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE63E1B210626B60066B335 /* libclang.dylib */; };
 		1FE7879624C0B440005ED5D4 /* MPWWindowsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */; };
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
@@ -842,6 +842,7 @@
 		1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSTTouchUITests.h; sourceTree = "<group>"; };
 		1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSTTouchUITests.m; sourceTree = "<group>"; };
 		1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUIKitAdditions.m; sourceTree = "<group>"; };
+		1F5D781B25ECDE6600DCC82F /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib; sourceTree = DEVELOPER_DIR; };
 		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
@@ -1313,7 +1314,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FE63E1C210626B60066B335 /* libclang.dylib in Frameworks */,
+				1F5D781C25ECDE6600DCC82F /* libclang.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1470,6 +1471,7 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F5D781B25ECDE6600DCC82F /* libclang.dylib */,
 				1F6FBE8D23040F5900025C80 /* libgmp.10.dylib */,
 				1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */,
 				1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */,
@@ -5578,8 +5580,11 @@
 				);
 				INFOPLIST_FILE = MPWCSourceKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Developer/CommandLineTools/usr/lib/";
-				LIBRARY_SEARCH_PATHS = /Library/Developer/CommandLineTools/usr/lib/;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Developer/CommandLineTools/usr/lib/ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/";
+				LIBRARY_SEARCH_PATHS = (
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/,
+					/Library/Developer/CommandLineTools/usr/lib/,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.MPWCSourceKit;
@@ -5626,8 +5631,11 @@
 				);
 				INFOPLIST_FILE = MPWCSourceKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Developer/CommandLineTools/usr/lib/";
-				LIBRARY_SEARCH_PATHS = /Library/Developer/CommandLineTools/usr/lib/;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Developer/CommandLineTools/usr/lib/ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/";
+				LIBRARY_SEARCH_PATHS = (
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/,
+					/Library/Developer/CommandLineTools/usr/lib/,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.MPWCSourceKit;

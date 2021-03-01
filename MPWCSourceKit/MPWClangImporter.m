@@ -42,12 +42,14 @@
 -(void)initializeTranslationUnit:(nullable NSString*)filename
 {
     const char *argv[]={
-//        "-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
-        "-F","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks", "-framework","UIKit", NULL};
+        "-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks","-framework","AppKit",
+//        "-F","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks", "-framework","UIKit",
+        NULL};
     int argc=2;
     const char *mainFile = "/tmp/hi.m";
 //    NSString *syntheticMainfile=[NSString stringWithFormat:@"#define nullable \n#define nonnull \n#import <Foundation/Foundation.h>\n"];
-    NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <UIKit/UIKit.h>\n"];
+//        NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <UIKit/UIKit.h>\n"];
+        NSString *syntheticMainfile=[NSString stringWithFormat:@"#import <AppKit/AppKit.h>\n"];
     struct CXUnsavedFile unsaved[] = {
         {mainFile, [syntheticMainfile UTF8String], [syntheticMainfile length]},
         {NULL, NULL, 0}};
