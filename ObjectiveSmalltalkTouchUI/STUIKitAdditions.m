@@ -96,6 +96,11 @@
     return @(self.value);
 }
 
+-(void)setValue:(float)value
+{
+    [self setValue:value animated:NO];
+}
+
 @end
 
 @interface UILabel(setValue) <Streaming>
@@ -132,6 +137,8 @@
 {
     return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
 }
+
+
 
 @end
 
