@@ -1,12 +1,12 @@
 //
 //  MPWColorStore.m
-//  ObjectiveSmalltalkTouchUI
+//  ObjectiveSmalltalkUI
 //
-//  Created by Marcel Weiher on 25.01.21.
+//  Created by Marcel Weiher on 07.03.21.
 //
 
 #import "MPWColorStore.h"
-@import UIKit;
+#import <AppKit/AppKit.h>
 
 @implementation MPWColorStore
 
@@ -15,22 +15,25 @@
     NSString* name=[aReference path];
     NSString *msg=[name stringByAppendingString:@"Color"];
     SEL sel=NSSelectorFromString(msg);
-    if ( sel && [UIColor respondsToSelector:sel]) {
-        return [UIColor performSelector:sel];
+    if ( sel && [NSColor respondsToSelector:sel]) {
+        return [NSColor performSelector:sel];
     }
     return nil;
 }
 
 @end
 
+
+#import <MPWFoundation/DebugMacros.h>
+
 @implementation MPWColorStore(testing)
 
 +(void)testBasicColors
 {
     MPWColorStore *store=[self store];
-    IDEXPECT(store[@"red"], [UIColor redColor],  @"red");
-    IDEXPECT(store[@"green"], [UIColor greenColor],  @"green");
-    IDEXPECT(store[@"white"], [UIColor whiteColor],  @"white");
+    IDEXPECT(store[@"red"], [NSColor redColor],  @"red");
+    IDEXPECT(store[@"green"], [NSColor greenColor],  @"green");
+    IDEXPECT(store[@"white"], [NSColor whiteColor],  @"white");
 }
 
 +(NSArray*)testSelectors

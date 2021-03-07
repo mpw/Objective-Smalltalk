@@ -10,3 +10,4 @@
 
 #import <ObjectiveSmalltalkUI/MPWMethodBrowser.h>
 #import <ObjectiveSmalltalkUI/MPWProgramTextView.h>
+#import <ObjectiveSmalltalkUI/MPWColorStore.h>
