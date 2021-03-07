@@ -79,4 +79,5 @@
 	SayYES,
 	MPWSTTouchUITests,
 	"STTargetActionConnector",
+	MPWColorStore,
 )
