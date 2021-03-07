@@ -34,4 +34,11 @@
 //    NSLog(@"did set");
 }
 
+-(void)setText:(NSString*)text{
+    self.stringValue=text;
+}
+
+-(NSString*)text {
+    return self.stringValue;
+}
 @end

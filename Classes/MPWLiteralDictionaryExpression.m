@@ -60,6 +60,10 @@
     for (int i=0;i<maxKeyVal;i++) {
         keys[i]=[keys[i] evaluateIn:aContext];
         values[i]=[values[i] evaluateIn:aContext];
+        if ( values[i]==nil) {
+            values[i]=[NSNull null];
+            [NSException raise:@"nil" format:@"in literal expression class %@ key:%@ value:%@",self.literalClassName,keys[i],values[i]];
+        }
     }
     NSDictionary *result=[dictClass dictionaryWithObjects:values forKeys:keys count:maxKeyVal];
     if ( keys != stackKeys) {

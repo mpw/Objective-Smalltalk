@@ -119,3 +119,14 @@
 }
 
 @end
+
+@implementation NSStackView(view)
+
+-(void)setViews:(NSArray<__kindof NSView *> * _Nonnull)views
+{
+    for (NSView *view in views) {
+        [self addArrangedSubview:view];
+    }
+}
+
+@end
