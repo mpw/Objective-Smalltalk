@@ -1,23 +1,27 @@
 //
 //  MPWFontStore.m
-//  ObjectiveSmalltalkTouchUI
+//  ObjectiveSmalltalkUI
 //
-//  Created by Marcel Weiher on 26.01.21.
+//  Created by Marcel Weiher on 07.03.21.
 //
 
 #import "MPWFontStore.h"
-#import <ObjectiveSmalltalk/MPWGlobalVariableStore.h>
+#import <AppKit/AppKit.h>
+#import "MPWGlobalVariableStore.h"
 
-@import UIKit;
+@interface MPWFontStore()
 
+@property (nonatomic,strong) NSDictionary *nameMap;
+
+@end
 
 @implementation MPWFontStore {
-    NSDictionary *styles;
+NSDictionary *styles;
 }
 
 -(NSDictionary*)computeNameMap
 {
-    NSString *names=UIFont.familyNames;
+    NSString *names=[[NSFontManager sharedFontManager] availableFontFamilies];
     NSMutableDictionary *theMap=[NSMutableDictionary dictionary];
     for ( NSString *name in names ) {
         if ( [name containsString:@" "]) {
@@ -31,7 +35,7 @@
 -(instancetype)init
 {
     self=[super init];
-    self.nameMap = [self computeNameMap];
+//    self.nameMap = [self computeNameMap];
     return self;
 }
 
@@ -55,7 +59,7 @@
     for ( NSString *styleName in shortNames) {
         NSString *capitalized = [[[styleName substringToIndex:1] uppercaseString] stringByAppendingString:[styleName substringFromIndex:1]];
         // Note:  -capitalizedString does not work here as it messes up internal capitalization
-        NSString *longName = [@"UIFontTextStyle" stringByAppendingString:capitalized];
+        NSString *longName = [@"NSFontTextStyle" stringByAppendingString:capitalized];
         NSString *value = [globals at:[globals referenceForPath:longName]];
         if ( styleName && value ) {
             constructionStyles[styleName]=value;
@@ -70,11 +74,12 @@ lazyAccessor(NSDictionary, styles, setStyles, createStyles)
 {
     NSArray<NSString*> *path=[aReference relativePathComponents];
     if ( path.count == 2 ) {
+        
         if ( [path[0] isEqual:@"style"]) {
             NSString *style=path[1];
             NSString *mappedStyle=[self styles][style];
             if ( mappedStyle) {
-                return [UIFont preferredFontForTextStyle:mappedStyle];
+                return [NSFont preferredFontForTextStyle:mappedStyle options:@{}];
             } else {
                 return nil;
             }
@@ -84,38 +89,38 @@ lazyAccessor(NSDictionary, styles, setStyles, createStyles)
             if ( mapped ) {
                 name=mapped;
             }
-            return [UIFont fontWithName:name size:[path[1] floatValue]];
+            return [NSFont fontWithName:name size:[path[1] floatValue]];
         }
     } else if ( [aReference isRoot] || path.count ==0 || (path.count == 1 && [path.firstObject isEqual:@"."] )) {
-        return UIFont.familyNames;
+        return [[NSFontManager sharedFontManager] availableFontFamilies];
     }
     return nil;
 }
 
-
 @end
 
 
-@implementation MPWFontStore(testing)
+#import <MPWFoundation/DebugMacros.h>
+
+@implementation MPWFontStore(testing) 
 
 +(void)testFontByName
 {
     MPWFontStore *fonts=[self store];
-    IDEXPECT( fonts[@"Helvetica/15"], [UIFont fontWithName:@"Helvetica" size:15], @"Helvetica 15pt");
+    IDEXPECT( fonts[@"Helvetica/15"], [NSFont fontWithName:@"Helvetica" size:15], @"Helvetica 15pt");
 }
 
 +(void)testFontByNameWithSpacesRemoved
 {
     MPWFontStore *fonts=[self store];
-    IDEXPECT( fonts[@"AlNile/23"], [UIFont fontWithName:@"Al Nile" size:23], @"Al Nile 23pt");
+    IDEXPECT( fonts[@"AlNile/23"], [NSFont fontWithName:@"Al Nile" size:23], @"Al Nile 23pt");
 }
 
 +(void)testSystemFont
 {
     MPWFontStore *fonts=[self store];
-    IDEXPECT( fonts[@"style/caption1"], [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1], @"caption font");
+    IDEXPECT( fonts[@"style/caption1"], [NSFont preferredFontForTextStyle:NSFontTextStyleCaption1 options:@{}], @"caption font");
 }
-
 
 
 +(NSArray*)testSelectors

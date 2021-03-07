@@ -18,7 +18,7 @@
     NSRect frameRect=NSZeroRect;
     id frameObject=dict[@"frame"];
     if ( frameObject ) {
-        frameRect=[frameObject rectValue];
+        frameRect=[[frameObject asRect] rectValue];
     }
     self=[self initWithFrame:frameRect];
     for ( NSString *key in [dict allKeys]) {

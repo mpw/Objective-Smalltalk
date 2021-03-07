@@ -80,4 +80,5 @@
 	MPWSTTouchUITests,
 	"STTargetActionConnector",
 	MPWColorStore,
+	MPWFontStore,
 )

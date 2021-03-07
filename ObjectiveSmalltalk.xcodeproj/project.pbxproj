@@ -326,6 +326,8 @@
 		1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
 		1FA749BD25F5508D001AA6A8 /* MPWColorStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA749BB25F5508D001AA6A8 /* MPWColorStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA749BE25F5508D001AA6A8 /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA749BC25F5508D001AA6A8 /* MPWColorStore.m */; };
+		1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA749DF25F55664001AA6A8 /* MPWFontStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FA749E225F55664001AA6A8 /* MPWFontStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA749E025F55664001AA6A8 /* MPWFontStore.m */; };
 		1FA79D57237B56830044D489 /* stapp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1FA79D56237B56830044D489 /* stapp.icns */; };
 		1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */; };
 		1FA859EC1922A13B00F52396 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
@@ -970,6 +972,8 @@
 		1FA741A50886DAFB00121867 /* MPWStTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStTests.m; sourceTree = "<group>"; };
 		1FA749BB25F5508D001AA6A8 /* MPWColorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWColorStore.h; sourceTree = "<group>"; };
 		1FA749BC25F5508D001AA6A8 /* MPWColorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWColorStore.m; sourceTree = "<group>"; };
+		1FA749DF25F55664001AA6A8 /* MPWFontStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFontStore.h; sourceTree = "<group>"; };
+		1FA749E025F55664001AA6A8 /* MPWFontStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFontStore.m; sourceTree = "<group>"; };
 		1FA79D56237B56830044D489 /* stapp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = stapp.icns; sourceTree = "<group>"; };
 		1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MPWExpression+autocomplete.m"; path = "../Stsh/Classes/MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
@@ -1672,6 +1676,8 @@
 				1F2D95EF225115CF00D025D8 /* MPWAppDelegate.m */,
 				1FA749BB25F5508D001AA6A8 /* MPWColorStore.h */,
 				1FA749BC25F5508D001AA6A8 /* MPWColorStore.m */,
+				1FA749DF25F55664001AA6A8 /* MPWFontStore.h */,
+				1FA749E025F55664001AA6A8 /* MPWFontStore.m */,
 				1F7045F222313EA2005ED7FB /* MPWClassMethodSwitchStore.h */,
 				1F7045F322313EA2005ED7FB /* MPWClassMethodSwitchStore.m */,
 				1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */,
@@ -2258,6 +2264,7 @@
 				1F7045EF22313E84005ED7FB /* MPWMethodBrowser.h in Headers */,
 				1F7045F422313EA2005ED7FB /* MPWClassMethodSwitchStore.h in Headers */,
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
+				1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
 				1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */,
@@ -3395,6 +3402,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F7045F522313EA2005ED7FB /* MPWClassMethodSwitchStore.m in Sources */,
+				1FA749E225F55664001AA6A8 /* MPWFontStore.m in Sources */,
 				1F7045F022313E84005ED7FB /* MPWMethodBrowser.m in Sources */,
 				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
 				1F89EBA22241A175000A82D6 /* MPWProgramTextView.m in Sources */,
