@@ -26,7 +26,7 @@
     }
     Class finalClass=[builder at:className];
     if (!finalClass) {
-        NSLog(@"builder %@ from context %@ did not deliver a class for name '%@'",builder,aContext,className);
+//        NSLog(@"builder %@ from context %@ did not deliver a class for name '%@'",builder,aContext,className);
     }
     return finalClass;
 }

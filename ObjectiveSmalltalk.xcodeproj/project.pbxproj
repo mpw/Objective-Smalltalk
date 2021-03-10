@@ -328,6 +328,7 @@
 		1FA749BE25F5508D001AA6A8 /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA749BC25F5508D001AA6A8 /* MPWColorStore.m */; };
 		1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA749DF25F55664001AA6A8 /* MPWFontStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA749E225F55664001AA6A8 /* MPWFontStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA749E025F55664001AA6A8 /* MPWFontStore.m */; };
+		1FA74A3625F7B888001AA6A8 /* ModelDidChangeNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA74A3525F7B888001AA6A8 /* ModelDidChangeNotification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA79D57237B56830044D489 /* stapp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1FA79D56237B56830044D489 /* stapp.icns */; };
 		1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */; };
 		1FA859EC1922A13B00F52396 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
@@ -974,6 +975,7 @@
 		1FA749BC25F5508D001AA6A8 /* MPWColorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWColorStore.m; sourceTree = "<group>"; };
 		1FA749DF25F55664001AA6A8 /* MPWFontStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFontStore.h; sourceTree = "<group>"; };
 		1FA749E025F55664001AA6A8 /* MPWFontStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFontStore.m; sourceTree = "<group>"; };
+		1FA74A3525F7B888001AA6A8 /* ModelDidChangeNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelDidChangeNotification.h; sourceTree = "<group>"; };
 		1FA79D56237B56830044D489 /* stapp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = stapp.icns; sourceTree = "<group>"; };
 		1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MPWExpression+autocomplete.m"; path = "../Stsh/Classes/MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
@@ -1697,6 +1699,7 @@
 				1F60964D25E788FC0018BB72 /* STUITests.h */,
 				1F60964E25E788FC0018BB72 /* STUITests.m */,
 				1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */,
+				1FA74A3525F7B888001AA6A8 /* ModelDidChangeNotification.h */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -2256,6 +2259,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA74A3625F7B888001AA6A8 /* ModelDidChangeNotification.h in Headers */,
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1F60964F25E788FC0018BB72 /* STUITests.h in Headers */,
 				1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */,

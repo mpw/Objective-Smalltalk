@@ -41,7 +41,7 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
             return [self evaluateFoundPropertyPath:def onTarget:target boundParams:pathParams additionalParams:parameters];
         }
     }
-    [NSException raise:@"undefined" format:@"undefined path: %@ for object: %@",ref,target];
+    [NSException raise:@"undefined" format:@"undefined path: '%@' for object: %@",ref,target];
     return nil;
 }
 
