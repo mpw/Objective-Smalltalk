@@ -7,12 +7,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import <MPWFoundation/MPWFoundation.h>
+#import "ModelDidChangeNotification.h"
 
+@protocol ModelDidChange;
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STTextField : NSTextField
+@interface STTextField : NSTextField<ModelDidChange>
 
-
+@property (nonatomic, strong)  MPWBinding *ref;
 
 @end
 

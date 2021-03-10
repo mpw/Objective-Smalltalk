@@ -48,17 +48,23 @@ idAccessor( lhs, setLhs )
         }
     } else {
         left=[left defaultComponentInstance];
-        right=[right defaultComponentInstance];
         NSDictionary *leftPorts = [left ports];
-        NSDictionary *rightPorts = [right ports];
-        
-        id target=rightPorts[@"IN"];
+        NSDictionary *rightPorts = nil;
         id source=leftPorts[@"OUT"];
+        id target=right;
+        if ( [right class] != [@protocol(NSObject) class]) {
+            right=[right defaultComponentInstance];
+            rightPorts = [right ports];
+            target=rightPorts[@"IN"];
+        } else {
+            target=right;
+            source=left;
+        }
         
         if ( [source  connect:target]) {
             return [source sendsMessages] ? left : right;
         } else {
-            NSLog(@"did not connect %@ to %@,ports: %@ -> %@",target,source,leftPorts,rightPorts);
+            NSLog(@"did not connect %@ to %@, lefports: %@ -> %@",target,source,leftPorts,rightPorts);
             return nil;
         }    }
     
@@ -185,3 +191,25 @@ idAccessor( lhs, setLhs )
 //
 
 @end
+
+
+@implementation MPWLoggingStore(connecting)
+
+-(BOOL)sendsMessages
+{
+    return YES;
+}
+
+-(BOOL)connect:other
+{
+    if ( [other class] == [@protocol(NSObject) class] ) {
+        MPWNotificationStream *s = [[[MPWNotificationStream alloc] initWithNotificationProtocol: other shouldPostOnMainThread:YES] autorelease];
+        self.log = s;
+        return YES;
+    } else {
+        return [super connect:other];
+    }
+}
+
+@end
+

@@ -9,29 +9,28 @@
 
 @implementation STTextField
 
--(void)setNeedsDisplay
+-(instancetype)initWithFrame:(NSRect)frameRect
 {
-//    NSLog(@"setNeedsDisplay");
-    [super setNeedsDisplay];
+    self=[super initWithFrame:frameRect];
+    [self installProtocolNotifications];
+    return self;
 }
 
--(void)setNeedsDisplayInRect:(NSRect)invalidRect
+-(BOOL)matchesRef:(id <MPWReferencing>)ref
 {
-//    NSLog(@"setNeedsDisplayInRect: %@",NSStringFromRect(invalidRect));
-    [super setNeedsDisplayInRect:invalidRect];
+    return YES;
 }
 
--(void)setNeedsDisplay:(BOOL)needsDisplay
+-(void)modelDidChange:(NSNotification*)notification
 {
-//    NSLog(@"setNeedsDisplay: %d",needsDisplay);
-    [super setNeedsDisplay:needsDisplay];
+    [self updateFromRef];
 }
 
--(void)setStringValue:(NSString *)stringValue
+-(void)updateFromRef
 {
-//    NSLog(@"old: '%@' new: '%@' equal: %d",self.stringValue,stringValue,[self.stringValue isEqual:stringValue]);
-    [super setStringValue:stringValue];
-//    NSLog(@"did set");
+    if ( self.ref ) {
+        [self setObjectValue:self.ref.value];
+    }
 }
 
 -(void)setText:(NSString*)text{
