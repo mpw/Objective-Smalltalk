@@ -20,7 +20,10 @@ objectAccessor( MPWIdentifier, nextIdentifer, setNextIdentifier )
     return identifier;
 }
 
-
+-(NSString*)path
+{
+    return self.nextIdentifer.path;
+}
 
 
 -(void)dealloc
