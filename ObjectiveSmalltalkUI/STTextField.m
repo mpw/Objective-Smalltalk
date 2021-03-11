@@ -28,7 +28,7 @@
 
 -(void)updateFromRef
 {
-    if ( self.ref ) {
+    if ( self.ref && !self.inProcessing) {
         [self setObjectValue:self.ref.value];
     }
 }

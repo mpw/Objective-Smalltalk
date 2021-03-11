@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STTextField : NSTextField<ModelDidChange>
 
 @property (nonatomic, strong)  MPWBinding *ref;
-
+@property (nonatomic, assign)  BOOL inProcessing;
+;
 @end
 
 NS_ASSUME_NONNULL_END
