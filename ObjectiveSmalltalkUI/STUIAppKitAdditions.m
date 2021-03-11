@@ -95,7 +95,19 @@
 {
     NSTextField *changedField = [notification object];
     if (changedField.isContinuous) {
-        [changedField.target performSelector:changedField.action withObject:changedField];
+        BOOL canProtect = [changedField respondsToSelector:@selector(setInProcessing:)];
+        if ( canProtect) {
+            [changedField setInProcessing:YES];
+        }
+        @try {
+            [changedField.target performSelector:changedField.action withObject:changedField];
+        } @catch ( id exception ) {
+            NSLog(@"%@:%@ exception delivering action %@ to target %@",[changedField className],changedField,NSStringFromSelector([changedField action]),[changedField target]);
+        } @finally {
+            if ( canProtect) {
+                [changedField setInProcessing:YES];
+            }
+        }
     }
 }
 
