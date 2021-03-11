@@ -417,13 +417,13 @@ idAccessor(solver, setSolver)
 			[thisIdentifier setNextIdentifier:nextIdentifier];
 			[nextIdentifier setSchemeName:nil];
 			identifierToAddNameTo=nextIdentifier;
-			NSLog(@"ref scheme");
+//			NSLog(@"ref scheme");
 			NSString *subsequentScheme;
 			nextToken=[self nextToken];
 			subsequentScheme=[nextToken stringValue];
-			NSLog(@"nextToken: %@",nextToken);
+//			NSLog(@"nextToken: %@",nextToken);
 			if ( [subsequentScheme isScheme] ) {
-				NSLog(@"ref token with suffix and new schme: %@",subsequentScheme);
+//				NSLog(@"ref token with suffix and new scheme: %@",subsequentScheme);
 				[nextIdentifier setSchemeName:[subsequentScheme substringToIndex:[subsequentScheme length]-1]];
 			} else {
 				//				NSLog(@"ref token without new schmeme");

@@ -13,18 +13,43 @@
 #import "STCompiler.h"
 #import "MPWPropertyPathGetter.h"
 #import "MPWPropertyPathSetter.h"
-
+#import "MPWPropertyPathDefinition.h"
 
 
 @implementation MPWClassDefinition
+
+-(NSArray*)propertyPathGetterDefinitions
+{
+    NSMutableArray *getters=[NSMutableArray array];
+    for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
+        if ( def.get ) {
+            [getters addObject:def];
+        }
+    }
+    return getters;
+}
+
+-(NSArray*)propertyPathSetterDefinitions
+{
+    NSMutableArray *setters=[NSMutableArray array];
+    for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
+        if ( def.set ) {
+            [setters addObject:def];
+        }
+    }
+    return setters;
+}
+
 
 -(NSArray*)generatedMethods
 {
     NSMutableArray *methods=[NSMutableArray array];
     
-    if ( self.propertyPathDefinitions.count) {
-        [methods addObject:[MPWPropertyPathGetter getterWithPropertyPathDefinitions:self.propertyPathDefinitions]];
-        [methods addObject:[MPWPropertyPathSetter getterWithPropertyPathDefinitions:self.propertyPathDefinitions]];
+    if ( self.propertyPathGetterDefinitions.count) {
+        [methods addObject:[MPWPropertyPathGetter getterWithPropertyPathDefinitions:self.propertyPathGetterDefinitions]];
+    }
+    if ( self.propertyPathSetterDefinitions.count) {
+        [methods addObject:[MPWPropertyPathSetter getterWithPropertyPathDefinitions:self.propertyPathSetterDefinitions]];
     }
     return methods;
 }

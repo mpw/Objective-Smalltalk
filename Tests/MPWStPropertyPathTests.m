@@ -154,6 +154,18 @@
     IDEXPECT(result1,@"was set correctly",@"result of property setters");
 }
 
++(void)testDefiningNoPropertyPathGettersAllowsSuperclassDefinitionToPrevail
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme PropertyTestClass9 : MPWMappingStore {  /propertyA { =| { 3. }}} "];
+    [compiler evaluateScriptString:@"scheme:d := MPWDictStore store."];
+    [compiler evaluateScriptString:@"scheme:m := PropertyTestClass9 storeWithSource: scheme:d."];
+    [compiler evaluateScriptString:@"d:a := 3."];
+    IDEXPECT( [compiler evaluateScriptString:@"m:a"],@(3),@"dict via mapping store subclass that doesn't define getter");
+
+
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -174,6 +186,8 @@
        @"testConstantPropertyPathGetterWorksWithPlainClass",
        @"testPropertyPathGetterWithArgsWorksWithPlainClass",
        @"testSimplePropertyPathSetterWorksWithPlainClass",
+       @"testDefiningNoPropertyPathGettersAllowsSuperclassDefinitionToPrevail",
+
 			];
 }
 

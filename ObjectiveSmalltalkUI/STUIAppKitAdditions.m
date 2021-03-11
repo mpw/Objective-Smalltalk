@@ -105,7 +105,7 @@
             NSLog(@"%@:%@ exception delivering action %@ to target %@",[changedField className],changedField,NSStringFromSelector([changedField action]),[changedField target]);
         } @finally {
             if ( canProtect) {
-                [changedField setInProcessing:YES];
+                [changedField setInProcessing:NO];
             }
         }
     }
