@@ -1361,10 +1361,17 @@
 
 }
 
++(void)testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths
+{
+    TESTEXPR( @"scheme:d := MPWDictStore store.  da := ref:d:a. db := ref:d:b.  db reference path.",
+             @"b");
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[
-		@"testLocalVariables",
+        @"testLocalVariables",
 		@"testThreePlusFour",
 		@"stringConcat",
 		@"nestedArgStringConcat",
@@ -1504,6 +1511,7 @@
         @"testConnectingFromConnectorToObjectYieldsBoundConnector",
         @"testConnectViaConnectorUsingSyntax",
         @"testConnectStreamToBinding",
+        @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         ];
 }
 
