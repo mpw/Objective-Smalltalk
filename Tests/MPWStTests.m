@@ -1367,6 +1367,18 @@
              @"b");
 }
 
++(void)testMappingStoreCanReferToSourceAsScheme
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme PropertyTestClass10 : MPWMappingStore {  /propertyA { |= {  source:a. }}} "];
+    [compiler evaluateScriptString:@"scheme:d := MPWDictStore store."];
+    [compiler evaluateScriptString:@"scheme:m := PropertyTestClass10 storeWithSource: scheme:d."];
+    [compiler evaluateScriptString:@"d:a := 3."];
+    IDEXPECT( [compiler evaluateScriptString:@"m:propertyA"],@(3),@"dict via mapping store subclass that doesn't define getter");
+    
+    
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1512,6 +1524,7 @@
         @"testConnectViaConnectorUsingSyntax",
         @"testConnectStreamToBinding",
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
+        @"testMappingStoreCanReferToSourceAsScheme",
         ];
 }
 

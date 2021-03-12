@@ -273,6 +273,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     return [self makeText:cur-pos];
 }
 
+
 -scanPossibleAssignment
 {
     const char *cur=pos;
@@ -363,6 +364,13 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
                     if ( partialStrings ) {
                         [partialStrings addObject:string];
                     }
+                    break;
+                }
+            } else if ( *cur=='\\'  ) {
+                if ( SCANINBOUNDS(cur+1) && cur[1] == 'n' ) {
+                    cur+=2;
+                    string=@"\n";
+                    UPDATEPOSITION(cur);
                     break;
                 }
             } else {
@@ -549,6 +557,15 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     EXPECTNIL([[scanner nextToken] realString],@"should only have one string");
 }
 
++(void)testNewlineEscape
+{
+    MPWStScanner *scanner=[self scannerWithString:@"'\\n'"];
+    NSString *scanned=[scanner nextToken];
+    IDEXPECT(scanned,@"\n", @"newline");
+    INTEXPECT( scanned.length,1,@"newline is a single char");
+   INTEXPECT([scanned characterAtIndex:0],10,@"newline, numeric");
+}
+
 +(NSArray*)testSelectors
 {
     return [NSArray arrayWithObjects:
@@ -561,6 +578,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"singleMinusString",
             @"testScanUTF8Name",
             @"testScanStringWithUnicodeQuotationMark",
+            @"testNewlineEscape",
         nil];
 }
 
