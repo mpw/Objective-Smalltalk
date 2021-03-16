@@ -29,7 +29,7 @@
 -(void)updateFromRef
 {
     if ( self.ref && !self.inProcessing) {
-        [self setObjectValue:self.ref.value];
+        self.objectValue = self.ref.value;
     }
 }
 
@@ -39,5 +39,19 @@
 
 -(NSString*)text {
     return self.stringValue;
+}
+
+-(void)updateToRef
+{
+    if (self.ref) {
+        self.ref.value = self.objectValue;
+    }
+}
+
+-(void)setBinding:(MPWBinding*)newBinding
+{
+    self.ref = newBinding;
+    self.target = self;
+    self.action = @selector(updateToRef);
 }
 @end

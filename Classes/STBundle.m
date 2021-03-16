@@ -59,6 +59,17 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [self storeForSubDir:@"Resources"];
 }
 
+-(BOOL)isPresentOnDisk
+{
+    MPWBinding *binding=[self binding];
+    @try {
+        BOOL exists = [binding isBound];
+        return exists;
+    } @catch ( NSException *exception ) {
+        return NO;
+    }
+}
+
 -(id <MPWReferencing>)resourceRef
 {
     NSString *path=[[self path] stringByAppendingPathComponent:@"Resources"];
@@ -197,6 +208,14 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     INTEXPECT( methodDict.count, 2, @"number of classes in methodDict");
 }
 
++(void)testExistsOnDisk
+{
+    STBundle *bundleThatExists=[self _testBundle];
+    EXPECTTRUE(bundleThatExists.isPresentOnDisk, @"isPresentOnDisk for one that exists");
+    STBundle *bundleThatDoesNotExist=[self bundleWithPath:@"/bizzarePath/thisshouldntexist.stb"];
+    EXPECTFALSE(bundleThatDoesNotExist.isPresentOnDisk, @"isPresentOnDisk for one that does not exist");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -208,6 +227,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
         @"testGetInfo",
         @"testGetInterpreter",
         @"testCompileSources",
+        @"testExistsOnDisk",
     ];
 }
 @end
