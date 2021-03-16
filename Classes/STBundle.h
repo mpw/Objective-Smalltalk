@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(id <MPWReferencing>)resourceRef;
 -(MPWWriteBackCache*)cachedResources;
 
+@property (readonly) BOOL isPresentOnDisk;
+
 @end
 
 NS_ASSUME_NONNULL_END
