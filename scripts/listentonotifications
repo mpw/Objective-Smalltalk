@@ -1,0 +1,6 @@
+#!env stsh
+name := 'com.metaobject.ViewBuilder-ios-playing'
+a := #MPWDistributedNotificationReceiver{ #notificationName:name }.
+a → stdout.
+a run.
+NSRunLoop mainRunLoop run.

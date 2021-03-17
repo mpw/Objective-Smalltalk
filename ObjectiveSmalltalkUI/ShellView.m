@@ -112,7 +112,7 @@ static BOOL useMaxSize;
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    return [self initWithFrame:frameRect prompt:@"> " historySize:20000 commandHandler:nil];
+    return [self initWithFrame:frameRect prompt:@"] " historySize:20000 commandHandler:nil];
 }
 
 - (NSUndoManager*)undoManager
@@ -135,7 +135,7 @@ static BOOL useMaxSize;
     [self setUsesFindPanel:YES];
 //    [self setFont:[NSFont userFixedPitchFontOfSize:-1]]; // -1 to get the default font size
     [self setSelectedRange:NSMakeRange([[self string] length],0)];
-    [super insertTextAtCursor:prompt];
+    [self insertTextAtCursor:prompt];
     start = [[self string] length];
     [self setDelegate:self];   // A ShellView is its own delegate! (see the section implementing delegate methods)
     maxSize = 900000;
