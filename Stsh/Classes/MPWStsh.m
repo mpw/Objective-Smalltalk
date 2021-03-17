@@ -126,7 +126,7 @@ intAccessor(completionLimit, setCompletionLimit)
         BOOL istty=isatty(0);
 //        NSLog(@"istty: %d",istty);
         if ( istty) {
-            [self setPrompt:@"> "];
+            [self setPrompt:@"] "];
         }
         [self setReadingFile:!istty];
         Stdout=[MPWByteStream Stdout];
@@ -158,7 +158,7 @@ intAccessor(completionLimit, setCompletionLimit)
 static const char * promptfn(EditLine *e) {
     MPWStsh* self = nil;
     el_get(e, EL_CLIENTDATA,&self);
-    const char *prompt="> ";
+    const char *prompt="] ";
     if ( self ) {
         prompt=[self getCStringPrompt];
     }
@@ -344,7 +344,7 @@ idAccessor( retval, setRetval )
     int level=1;
     
     while (  level > 0) {
-        [self setPrompt:[NSString stringWithFormat:@"%@> ",level>1 ? @"*":@""]];
+        [self setPrompt:[NSString stringWithFormat:@"%@] ",level>1 ? @"*":@""]];
         lineOfInput=el_gets(el,&count);
         if ( !lineOfInput) {
             level--;

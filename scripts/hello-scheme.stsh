@@ -1,0 +1,7 @@
+#!env stsh
+#-greet
+scheme greeter { 
+   /hi { |= { 'Hello World!'. }}
+}
+scheme:hi := greeter store.
+hi:hi
