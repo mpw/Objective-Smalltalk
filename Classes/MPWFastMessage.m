@@ -7,7 +7,8 @@
 //
 
 #import "MPWFastMessage.h"
-
+#import <objc/objc.h>
+#import <objc/message.h>
 
 @implementation MPWFastMessage
 
@@ -26,11 +27,7 @@
 }
 -sendTo:receiver withArguments:(id*)argbuf count:(int)argCount
 {
-	IMP4 imp = (IMP4)[receiver methodForSelector:selector];
-	if ( imp ) {
-		return imp( receiver, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3] );
-	}
-	return nil;
+    return ((IMP4)objc_msgSend)( receiver, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3] );
 }
 
 
