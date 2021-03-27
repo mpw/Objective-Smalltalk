@@ -45,6 +45,7 @@ idAccessor( _signature, setSignature )
 		typestring[i+1]=*[sig getArgumentTypeAtIndex:i+2];
 		if (typestring[i+1] != '@' ) {
 			allIds=NO;
+            break;
 		}
 	}
 	typestring[argCount+1]=0;
