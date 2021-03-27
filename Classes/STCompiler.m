@@ -771,7 +771,12 @@ idAccessor(solver, setSolver)
     id next;
     id prev=nil;
     while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]&& ![next isEqual:@"}"] && ![next isEqual:@"#"]) {
+        BOOL isSuper=NO;
         [self pushBack:next];
+        if ( [expr isEqual:@"super"]) {
+            expr=@"self";
+            isSuper=YES;
+        }
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         [expr setOffset:[scanner offset]];
         [expr setLen:1];

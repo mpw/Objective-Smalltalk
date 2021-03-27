@@ -47,7 +47,7 @@
 
 -evaluateScriptString:(NSString*)scriptString;
 
--sendMessage:(SEL)selector to:receiver withArguments:args;
+-sendMessage:(SEL)selector to:receiver withArguments:args supersendInside:(NSString*)className;
 -(MPWScheme*)schemeForName:schemeName;
 -localVars;
 

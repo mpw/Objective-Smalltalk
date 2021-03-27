@@ -1379,6 +1379,14 @@
     
 }
 
++(void)testSuperSend
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"class STSuperSendTesterBase { -result { 'base'. } }."];
+    [compiler evaluateScriptString:@"class STSuperSendTesterSub { -result { 'sub'. } -supersender { super result. }}."];
+    [compiler evaluateScriptString:@"a := STSuperSendTesterSub new.  a supersender."];
+//    IDEXPECT( [compiler evaluateScriptString:@"a result."],@"base",@"super send - if sent to self then result will be 'sub' instead");
+}
 
 +(NSArray*)testSelectors
 {
@@ -1525,6 +1533,7 @@
         @"testConnectStreamToBinding",
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         @"testMappingStoreCanReferToSourceAsScheme",
+        @"testSuperSend",
         ];
 }
 
