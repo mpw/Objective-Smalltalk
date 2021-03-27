@@ -49,8 +49,8 @@ idAccessor( _signature, setSignature )
 		}
 	}
 	typestring[argCount+1]=0;
-	if (  allIds ) {
-		message = [MPWFastMessage messageWithSelector:aSelector typestring:typestring];
+	if (  allIds  ) {
+        message = [MPWFastMessage messageWithSelector:aSelector typestring:typestring];
 	}
     return message;
 #else

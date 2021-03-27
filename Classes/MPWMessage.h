@@ -20,6 +20,8 @@
 
 -sendTo:aReceiver withArguments:(id*)args count:(int)argCount;
 
+@property (nonatomic,assign) BOOL isSuper;
+@property (nonatomic,assign) Class classToStart;
 
 
 @end

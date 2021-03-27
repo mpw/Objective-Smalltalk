@@ -60,6 +60,7 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
 {
     NSString* methodName = [[method methodHeader] methodName];
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
+    method.classOfMethod = classMirror.theClass;
     [methodCallback setMethod:method];
 //    NSLog(@"addMethod class %@ methodName: %@ callback: %@ method %@",[[self classMirror] name],methodName,methodCallback,method);
     if (  [self compiler] ) {
@@ -104,10 +105,11 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
 
 -methodWithHeaderString:header bodyString:body
 {
-    id method = [[[MPWScriptedMethod alloc] init] autorelease];
+    MPWScriptedMethod* method = [[[MPWScriptedMethod alloc] init] autorelease];
     [method setContext:[self compiler]];
     [method setScript:body];
     [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:header]];
+    method.classOfMethod = classMirror.theClass;
     return method;
 }
 

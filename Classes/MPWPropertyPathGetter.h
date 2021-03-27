@@ -15,5 +15,6 @@
 -(instancetype)initWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 
 @property (nonatomic,strong) NSArray<MPWPropertyPathDefinition*> *propertyPathDefs;
+@property (nonatomic,assign) Class classOfMethod;
 
 @end

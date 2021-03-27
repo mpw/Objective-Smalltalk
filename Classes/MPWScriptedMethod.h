@@ -21,6 +21,8 @@ objectAccessor_h( MPWExpression, methodBody, setMethodBody )
 objectAccessor_h( NSArray, localVars, setLocalVars )
 idAccessor_h( script, setScript )
 
+@property (nonatomic,assign) Class classOfMethod;
+
 
 @end
 
