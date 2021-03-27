@@ -311,7 +311,7 @@ idAccessor( localVars, setLocalVars )
 	return message;
 }
 
--sendMessage:(SEL)selector to:receiver withArguments:args
+-sendMessage:(SEL)selector to:receiver withArguments:args supersendInside:(NSString*)className
 {	
 	id nilValue = [NSNil nsNil];
 	id returnValue;
