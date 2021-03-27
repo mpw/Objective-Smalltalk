@@ -22,6 +22,7 @@
 #import <MPWFoundation/MPWGenericReference.h>
 #import "STProtocolScheme.h"
 #import "STPortScheme.h"
+#import "MPWFastSuperMessage.h"
 
 @implementation NSNumber(controlStructures)
 
@@ -311,14 +312,22 @@ idAccessor( localVars, setLocalVars )
 	return message;
 }
 
--sendMessage:(SEL)selector to:receiver withArguments:args supersendInside:(NSString*)className
+-sendMessage:(SEL)selector to:receiver withArguments:args supersend:(BOOL)isSuper
 {	
 	id nilValue = [NSNil nsNil];
 	id returnValue;
 	id evaluatedReceiver = [self evaluate:receiver];
 	id evaluatedArgs[[args count]+5];
 	[self evaluatedArgs:args into:evaluatedArgs];
-	id message = [self messageForSelector:selector initialReceiver:evaluatedReceiver];
+    id message =  nil;
+    if (isSuper){
+        MPWFastSuperMessage *supermsg = [MPWFastSuperMessage messageWithSelector:selector typestring:""];   // typestring isn't used
+        supermsg.superclassOfTarget = [self.contextClass superclass];
+        NSLog(@"contextClass: %@, superclassOfTarget: %@",self.contextClass,supermsg.superclassOfTarget);
+        message=supermsg;
+    } else {
+        message = [self messageForSelector:selector initialReceiver:evaluatedReceiver];
+    }
 	if ( evaluatedReceiver == nil && [nilValue respondsToSelector:selector]) {
 		evaluatedReceiver = nilValue;
 	}

@@ -61,7 +61,7 @@ scalarAccessor( char , returnType, setReturnType )
 {
 	id retval = nil;
     @try {
-        retval = [aContext sendMessage:selector to:receiver withArguments:args supersendInside:self.isSuper ? self.classOfMethod : nil];
+        retval = [aContext sendMessage:selector to:receiver withArguments:args supersend:self.isSuper];
     } @catch (id exception) {
         exception=[self handleOffsetsInException:exception];
         NSLog(@"exception sending message '%@': %@ offset: %@",NSStringFromSelector(selector) ,exception,[exception userInfo]);
@@ -104,7 +104,6 @@ scalarAccessor( char , returnType, setReturnType )
 {
     [receiver release];
     [args release];
-    [_classOfMethod release];
     [super dealloc];
 }
 

@@ -28,6 +28,7 @@
 -(MPWSchemeScheme*)createSchemes;
 
 @property (nonatomic, retain) id schemes;
+@property (nonatomic, assign) Class contextClass;
 
 -valueOfVariableNamed:aName;
 -(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;
@@ -47,7 +48,7 @@
 
 -evaluateScriptString:(NSString*)scriptString;
 
--sendMessage:(SEL)selector to:receiver withArguments:args supersendInside:(NSString*)className;
+-sendMessage:(SEL)selector to:receiver withArguments:args supersend:(BOOL)isSuper;
 -(MPWScheme*)schemeForName:schemeName;
 -localVars;
 

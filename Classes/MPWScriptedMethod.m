@@ -69,6 +69,10 @@ idAccessor( script, _setScript )
 //    NSLog(@"==== freshExecutionContextForRealLocalVars ===");
 
 	MPWEvaluator *evaluator = [[[STCompiler alloc] initWithParent:nil] autorelease];
+//    if ( self.classOfMethod == nil) {
+//        [NSException raise:@"nilcontextclass" format:@"classOfMethod is nil in scripted method"];
+//    }
+    [evaluator setContextClass:self.classOfMethod];
 //    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
     MPWVarScheme *newVarScheme=[MPWVarScheme store];

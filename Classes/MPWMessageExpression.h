@@ -23,7 +23,6 @@ objectAccessor_h( NSArray, args, setArgs )
 -(NSString*)messageNameForCompletion;
 
 @property (nonatomic, assign) BOOL isSuper;
-@property (nonatomic, strong) NSString *classOfMethod;
 
 
 @end

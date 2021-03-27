@@ -221,7 +221,8 @@ idAccessor( method, _setMethod )
 	MPWMethodCallBack* callback=[[[self alloc] init] autorelease];
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	SEL selector;
-	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+    MPWScriptedMethod* method = [[[MPWScriptedMethod alloc] init] autorelease];
+    method.classOfMethod = [__MPWMethodCallBackDummyTestClass class];
 //	[method setContext:target];
 	[callback setMethod:method];
 	[callback setName:@"xxxDummy"];
@@ -294,6 +295,7 @@ idAccessor( method, _setMethod )
 	id expectedReturn = @(45); // [target evaluateScript:@"45" onObject:target];
 	IMP0 function;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+    [method setClassOfMethod:[__MPWMethodCallBackDummyTestClass class]];
 //	[method setContext:target];
 	[method setScript:@"45"];
     [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:@"<int>answerToEverything"]];

@@ -773,11 +773,13 @@ idAccessor(solver, setSolver)
     while ( nil!=(next=[self nextToken]) && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@")"]&& ![next isEqual:@"]"]&& ![next isEqual:@"}"] && ![next isEqual:@"#"]) {
         BOOL isSuper=NO;
         [self pushBack:next];
-        if ( [expr isEqual:@"super"]) {
+        if ( [expr respondsToSelector:@selector(name)] && [[expr name] isEqual:@"super"]) {
             expr=@"self";
             isSuper=YES;
+            NSLog(@"isSuper");
         }
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
+        ((MPWMessageExpression*)expr).isSuper=isSuper;
         [expr setOffset:[scanner offset]];
         [expr setLen:1];
 //		NSLog(@"message expression with scanner: %@",scanner);
