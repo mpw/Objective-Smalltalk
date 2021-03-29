@@ -1382,12 +1382,9 @@
 +(void)testSuperSend
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"class STSuperSendTesterBase { -result { stdout println:'base'. 'base'. } }."];
-    [compiler evaluateScriptString:@"class STSuperSendTesterSub : STSuperSendTesterBase { -result { 'sub'. } -supersender { a := super result.  stdout println:'got result from super:',a. a. }}."];
+    [compiler evaluateScriptString:@"class STSuperSendTesterBase { -result { 'base'. } }."];
+    [compiler evaluateScriptString:@"class STSuperSendTesterSub : STSuperSendTesterBase { -result { 'sub'. } -supersender { super result. }}."];
     [compiler evaluateScriptString:@"a := STSuperSendTesterSub new. "];
-    [compiler evaluateScriptString:@"b := STSuperSendTesterBase new. "];
-    IDEXPECT( [compiler evaluateScriptString:@"b result."],@"base",@"");
-    IDEXPECT( [compiler evaluateScriptString:@"a result."],@"sub",@"");
     IDEXPECT( [compiler evaluateScriptString:@"a supersender."],@"base",@"super send - if sent to self then result will be 'sub' instead");
 }
 

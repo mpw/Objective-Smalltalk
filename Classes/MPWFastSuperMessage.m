@@ -15,9 +15,7 @@
     struct objc_super superSend={
         receiver, self.superclassOfTarget
     };
-    NSLog(@"will super send");
     id result = ((IMP4)objc_msgSendSuper)( (id)&superSend, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3] );
-    NSLog(@"did super send, result=%@",result);
     return result;
 }
 
