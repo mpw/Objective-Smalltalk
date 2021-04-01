@@ -92,7 +92,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSArray<NSString*>*)sourceNames
 {
-    return (NSArray<NSString*>*)[[[[[[self sourceDir] childrenOfReference:@"."] collect] path] collect] lastPathComponent];
+    return [[(NSArray<NSString*>*)[[[[[self sourceDir] at:@"."] contents] collect] path] collect] lastPathComponent];
 }
 
 -(NSDictionary*)readInfo
@@ -170,6 +170,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     STBundle *bundle=[self _testBundle];
     NSArray<NSString*> *names=[bundle sourceNames];
+    NSLog(@"names: %@",names);
     INTEXPECT(names.count, 2, @"number of source files");
     NSData *s1=[bundle sourceDir][names[0]];
     IDEXPECT(names[0], @"STBundleLoadedTestClass1.st", @"what is it?");
