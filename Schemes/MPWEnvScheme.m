@@ -78,10 +78,10 @@ extern char **environ;
 	}
 }
 
--(BOOL)isLeafReference:(id <MPWReferencing>)reference
+-(BOOL)hasChildren:(id <MPWReferencing>)reference
 {
     NSString *path=[reference path];
-    return !([path length]==0 || [path isEqual:@"/"]);
+    return ([path length]==0 || [path isEqual:@"/"]);
 }
 
 

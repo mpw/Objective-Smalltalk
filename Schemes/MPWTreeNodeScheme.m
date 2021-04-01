@@ -53,9 +53,9 @@ idAccessor( root, setRoot )
 }
 
 
--(BOOL)isLeafReference:(MPWGenericReference *)aReference
+-(BOOL)hasChildren:(MPWGenericReference *)aReference
 {
-    return ![[self nodeForReference:aReference] hasChildren];
+    return [[self nodeForReference:aReference] hasChildren];
 }
 
 -(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
