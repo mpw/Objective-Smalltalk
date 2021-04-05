@@ -10,4 +10,9 @@
 
 @implementation MPWDataflowConstraintExpression
 
+-(id)evaluateIn:(id)aContext
+{
+    @throw [NSException exceptionWithName:@"constraint" reason:@"Unidirectional constraints not implemented" userInfo:nil];
+}
+
 @end
