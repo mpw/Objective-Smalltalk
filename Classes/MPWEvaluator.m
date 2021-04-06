@@ -7,7 +7,7 @@
 //
 
 #import "MPWEvaluator.h"
-#import "MPWBinding.h"
+#import "MPWBindingLegacy.h"
 #import <MPWFoundation/MPWInterval.h>
 #import <MPWFoundation/NSNil.h>
 #import <MPWFoundation/MPWByteStream.h>

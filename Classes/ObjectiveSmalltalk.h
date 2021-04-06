@@ -13,7 +13,7 @@
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 #import <ObjectiveSmalltalk/MPWAssignmentExpression.h>
 #import <ObjectiveSmalltalk/MPWBidirectionalDataflowConstraintExpression.h>
-#import <ObjectiveSmalltalk/MPWBinding.h>
+#import <ObjectiveSmalltalk/MPWBindingLegacy.h>
 #import <ObjectiveSmalltalk/MPWBlockContext.h>
 #import <ObjectiveSmalltalk/MPWBlockExpression.h>
 #import <ObjectiveSmalltalk/MPWBundleScheme.h>

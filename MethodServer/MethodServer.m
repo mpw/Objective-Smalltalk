@@ -9,7 +9,7 @@
 #import "MethodServer.h"
 #import "STCompiler.h"
 #import "MPWMethodScheme.h"
-#import "MPWBinding.h"
+#import "MPWBindingLegacy.h"
 #import <ObjectiveHTTPD/MPWHTTPServer.h>
 
 @implementation MethodServer

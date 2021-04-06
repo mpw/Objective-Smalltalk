@@ -19,6 +19,10 @@
         if ( [rhs isKindOfClass:[MPWIdentifierExpression class]] ) {
             MPWIdentifierExpression *r=(MPWIdentifierExpression*)rhs;
             MPWBinding *b=[[r identifier] bindingWithContext:aContext];
+
+            // check/ensure that RHS binding has a notification mechanism
+            // check/ensure that LHS is hooked up to notification mechanism
+            
             [lhobject setBinding:b];
             return b;
         } else {

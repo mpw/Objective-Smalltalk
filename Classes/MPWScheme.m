@@ -7,7 +7,7 @@
 //
 
 #import "MPWScheme.h"
-#import "MPWBinding.h"
+#import "MPWBindingLegacy.h"
 #import "MPWIdentifier.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/NSNil.h>

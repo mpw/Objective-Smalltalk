@@ -984,12 +984,6 @@
 //    EXPECTTRUE(false, @"implemented");
 }
 
-
-+(void)testPipeEqualsCompilesButDoesSameAsAssignment
-{
-    [self testexpr:@"a |= 2.  a." expected:[NSNumber numberWithInt:2]];
-}
-
 +(void)testSimpleBindingsAreUniquedInCompile
 {
     STCompiler *compiler = [STCompiler compiler];
@@ -1492,7 +1486,6 @@
 //         @"testCompositionViaPipeDoesntBlockFurtherEval2",   FIXME, still buggy
             @"testCurlyBracesAllowedForBlocks",
             @"testDefineClassMethod",
-            @"testPipeEqualsCompilesButDoesSameAsAssignment",
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
             @"testParseMethodSyntaxOneArg",

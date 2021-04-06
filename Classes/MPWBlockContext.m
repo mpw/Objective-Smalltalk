@@ -11,7 +11,7 @@
 #import "MPWEvaluator.h"
 #import "STCompiler.h"
 #import <MPWFoundation/MPWMapFilter.h>
-#import "MPWBinding.h"
+#import "MPWBindingLegacy.h"
 #import "MPWMethodHeader.h"
 #import "MPWScriptedMethod.h"    // for stack-trace 
 
