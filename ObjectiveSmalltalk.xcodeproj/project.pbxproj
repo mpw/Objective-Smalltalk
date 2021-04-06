@@ -41,6 +41,8 @@
 		1F29D7FC21B42BE900AB14D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */; };
 		1F29D7FF21B42BE900AB14D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7FE21B42BE900AB14D8 /* main.m */; };
 		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
+		1F2B179A261C680D005D873F /* STViewScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B1798261C680D005D873F /* STViewScheme.h */; };
+		1F2B179B261C680D005D873F /* STViewScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B1799261C680D005D873F /* STViewScheme.m */; };
 		1F2D95D22250FCC500D025D8 /* STAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D12250FCC500D025D8 /* STAppDelegate.m */; };
 		1F2D95D52250FCC500D025D8 /* STDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2D95D42250FCC500D025D8 /* STDocument.m */; };
 		1F2D95D82250FCC500D025D8 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D95D62250FCC500D025D8 /* Document.xib */; };
@@ -765,6 +767,8 @@
 		1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClassesToTest.plist; sourceTree = "<group>"; };
 		1F29D80E21B4374600AB14D8 /* MPWTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D81121B4376600AB14D8 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F2B1798261C680D005D873F /* STViewScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STViewScheme.h; sourceTree = "<group>"; };
+		1F2B1799261C680D005D873F /* STViewScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STViewScheme.m; sourceTree = "<group>"; };
 		1F2D95CE2250FCC500D025D8 /* Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Smalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2D95D02250FCC500D025D8 /* STAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STAppDelegate.h; sourceTree = "<group>"; };
 		1F2D95D12250FCC500D025D8 /* STAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STAppDelegate.m; sourceTree = "<group>"; };
@@ -1678,6 +1682,8 @@
 				1F7045ED22313E83005ED7FB /* MPWMethodBrowser.m */,
 				1FA85A181923739E00F52396 /* CLIView.h */,
 				1FA85A191923739E00F52396 /* CLIView.m */,
+				1F2B1798261C680D005D873F /* STViewScheme.h */,
+				1F2B1799261C680D005D873F /* STViewScheme.m */,
 				1FA85A241923746B00F52396 /* FSCommandHistory.h */,
 				1FA85A251923746B00F52396 /* FSCommandHistory.m */,
 				1F2D95EE225115CF00D025D8 /* MPWAppDelegate.h */,
@@ -2279,6 +2285,7 @@
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
 				1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
+				1F2B179A261C680D005D873F /* STViewScheme.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
 				1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */,
 				1FA749BD25F5508D001AA6A8 /* MPWColorStore.h in Headers */,
@@ -2877,25 +2884,25 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				1F2D95CD2250FCC500D025D8 /* Smalltalk */,
 				1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */,
+				1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
+				1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */,
+				1FD6CA5E25B8340B00639458 /* ObjectiveSmalltalkTouchUI */,
+				1FAFD9741855BC5500EC5221 /* StshFramework */,
 				1F7E059F144B3E22008F349D /* MethodServer */,
-				1F7B75AE14629431002F38D1 /* SchemeFS */,
+				1FE63E0121061BE10066B335 /* MPWCSourceKit */,
 				1F084A0D16DCE6A200ED2517 /* ObjSTNative */,
 				1FC8F833181BF3A3003980D8 /* SchemeFUSE */,
 				1FBAAC15184BDC6400086047 /* stsh */,
-				1FAFD9741855BC5500EC5221 /* StshFramework */,
-				1FA859F11923731900F52396 /* ObjectiveSmalltalkUI */,
-				1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */,
 				1F81C05F19699AE00066DF43 /* MethodServerTouch */,
 				1F6810281E117A78006CE0D1 /* SqliteScheme */,
 				1F4348481E21676F002750C3 /* S3Scheme */,
 				1F59A70F202C7ADA00BE06F6 /* X11Scheme */,
-				1FE63E0121061BE10066B335 /* MPWCSourceKit */,
 				1F6C792A2187468D00071DAC /* ObjectiveSwift */,
+				1F7B75AE14629431002F38D1 /* SchemeFS */,
 				1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */,
-				1F2D95CD2250FCC500D025D8 /* Smalltalk */,
 				1F6FBE8423040F1A00025C80 /* ObjectiveArithmetic */,
-				1FD6CA5E25B8340B00639458 /* ObjectiveSmalltalkTouchUI */,
 			);
 		};
 /* End PBXProject section */
@@ -3423,6 +3430,7 @@
 				1F89EBA22241A175000A82D6 /* MPWProgramTextView.m in Sources */,
 				1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */,
 				1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */,
+				1F2B179B261C680D005D873F /* STViewScheme.m in Sources */,
 				1F60965025E788FC0018BB72 /* STUITests.m in Sources */,
 				1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */,
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
