@@ -10,7 +10,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/MPWGenericReference.h>
 #import "MPWIdentifier.h"
-#import "MPWBinding.h"
+#import "MPWBindingLegacy.h"
 #import "MPWVarScheme.h"
 
 @implementation MPWRelScheme

@@ -22,8 +22,21 @@
     }
     self=[self initWithFrame:frameRect];
     for ( NSString *key in [dict allKeys]) {
-        if ( ![key isEqualToString:@"frame"]) {
+        if ( ![key isEqualToString:@"frame"] && ![key isEqualToString:@"subviews"] ) {
             [self setValue:dict[key] forKey:key];
+        }
+    }
+    id subviews = dict[@"subviews"];
+    if ( subviews ) {
+        if ( [subviews isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *subviewDict=(NSDictionary*)subviews;
+            for ( NSString *name in subviewDict.allKeys) {
+                NSView *subview = subviewDict[name];
+                subview.accessibilityIdentifier=name;
+                [self addSubview:subview];
+            }
+        } else {
+            [self setSubviews:subviews];
         }
     }
     return self;
@@ -84,6 +97,14 @@
     EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
 }
 
++(void)testCanSpecifySubviewAsDict
+{
+    NSView *v=[STCompiler evaluate:@" #NSView{ #subviews:  #{  #transparent:   #NSView{ #alphaValue: 0.3 } } }"];
+    INTEXPECT( v.subviews.count, 1 ,@"number of subviews");
+    EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
+    IDEXPECT( v.subviews.firstObject.accessibilityIdentifier, @"transparent", @"name of subview" );
+}
+
 
 
 +testSelectors
@@ -94,6 +115,7 @@
              @"testCanSpecifyFrame",
              @"testCanSpecifyAdditionalValues",
              @"testCanSpecifySubviewAsArray",
+             @"testCanSpecifySubviewAsDict",
              ];
     
 }
