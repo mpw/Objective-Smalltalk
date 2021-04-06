@@ -7,7 +7,8 @@
 
 #import "UIView+dictionary.h"
 #import <MPWFoundation/MPWFoundation.h>
- 
+#import "STCompiler.h"
+
 @implementation UIView(dictionary)
 
 -(void)addSubviews:(NSArray *)views
@@ -30,7 +31,17 @@
             [self setValue:dict[key] forKey:key];
         }
     }
-    [self addSubviews:dict[@"views"]];
+    id subviews=dict[@"views"];
+    if ( [subviews isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *subviewDict=(NSDictionary*)subviews;
+        for ( NSString *name in subviewDict.allKeys) {
+            UIView *subview=subviewDict[name];
+            subview.accessibilityIdentifier=name;
+            [self addSubview:subview];
+        }
+    } else {
+        [self addSubviews:subviews];
+    }
     return self;
 }
 
@@ -71,10 +82,21 @@
 
 }
 
++(void)testNamedSubviews
+{
+    UIView *v=[STCompiler evaluate:@" #UIView{ #views:  #{  #transparent:   #UIView{ #frame: 0.3 } } }"];
+    INTEXPECT( v.subviews.count, 1 ,@"number of subviews");
+    EXPECTTRUE([v.subviews.firstObject isKindOfClass:[UIView class]], @"subview should be a view");
+    IDEXPECT( v.subviews.firstObject.accessibilityIdentifier, @"transparent", @"name of subview" );
+}
+
+
+
 +testSelectors
 {
     return @[
         @"testFrameRectMapping",
+        @"testNamedSubviews",
     ];
 }
 
