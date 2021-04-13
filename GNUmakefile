@@ -30,7 +30,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWIdentifier.m \
     Classes/MPWScheme.m \
     Classes/MPWExpression.m \
-    Classes/MPWBinding.m \
+    Classes/MPWBindingLegacy.m \
     Classes/MPWStScanner.m \
     Classes/MPWMessage.m \
     Classes/MPWMessage.m \
