@@ -1,6 +1,6 @@
 //
 //  MPWEvaluator.m
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 30/11/2004.
 //  Copyright 2004 Marcel Weiher. All rights reserved.

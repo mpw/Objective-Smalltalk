@@ -1,6 +1,6 @@
 //
 //  MPWVariableExpression.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by marcel on Mon Jul 02 2001.
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.

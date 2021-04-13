@@ -1,6 +1,6 @@
 //
 //  NSObjectScripting.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 25/01/2006.
 //  Copyright 2006 Marcel Weiher. All rights reserved.

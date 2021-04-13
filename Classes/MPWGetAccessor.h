@@ -1,6 +1,6 @@
 //
 //  MPWGetAccessor.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 21/07/2005.
 //  Copyright 2005 Marcel Weiher. All rights reserved.

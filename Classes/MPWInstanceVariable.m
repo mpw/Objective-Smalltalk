@@ -1,6 +1,6 @@
 //
 //  MPWInstanceVariable.m
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 20/07/2005.
 //  Copyright 2005 Marcel Weiher. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  MPWBundleScheme.m
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 5/28/11.
 //  Copyright 2012 Marcel Weiher. All rights reserved.
