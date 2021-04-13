@@ -111,7 +111,7 @@ libObjectiveSmalltalk_C_FILES = \
 
 LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base
 
-LDFLAGS += -L /home/gnustep/Build/obj
+LDFLAGS += -L /home/gnustep/Build/obj -L ~/Build/obj
 
 
 libObjectiveSmalltalk_INCLUDE_DIRS += -I.headers -I. -I../MPWFoundation/.headers/
