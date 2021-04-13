@@ -105,6 +105,10 @@
     IDEXPECT( v.subviews.firstObject.accessibilityIdentifier, @"transparent", @"name of subview" );
 }
 
++(void)testCanSpecifySeveralSubviewsAsDict
+{
+    NSView *v=[STCompiler evaluate:@" #NSView{ #subviews:  #{  #transparent:   #NSView{ #alphaValue: 0.3 }, #opaque:  #NSView{ #alphaValue: 1.0 } } }"];
+}
 
 
 +testSelectors
@@ -116,6 +120,7 @@
              @"testCanSpecifyAdditionalValues",
              @"testCanSpecifySubviewAsArray",
              @"testCanSpecifySubviewAsDict",
+             @"testCanSpecifySeveralSubviewsAsDict",
              ];
     
 }
