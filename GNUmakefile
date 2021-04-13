@@ -17,7 +17,7 @@ LIBRARY_NAME = libObjectiveSmalltalk
 CC = clang
 
 
-OBJCFLAGS += -g -Os -Wno-import -fobjc-runtime=gnustep-2  -fmodules -fmodules -fmodules-cache-path=/home/gnustep/Build/Modules 
+OBJCFLAGS += -g -Os -Wno-import -fobjc-runtime=gnustep-2  
 
 
 ObjectiveSmalltalk_HEADER_FILES = \
