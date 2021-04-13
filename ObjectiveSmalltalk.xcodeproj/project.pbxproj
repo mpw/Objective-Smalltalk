@@ -769,6 +769,7 @@
 		1F29D81121B4376600AB14D8 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2B1798261C680D005D873F /* STViewScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STViewScheme.h; sourceTree = "<group>"; };
 		1F2B1799261C680D005D873F /* STViewScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STViewScheme.m; sourceTree = "<group>"; };
+		1F2B17AC2625F23D005D873F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1F2D95CE2250FCC500D025D8 /* Smalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Smalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2D95D02250FCC500D025D8 /* STAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STAppDelegate.h; sourceTree = "<group>"; };
 		1F2D95D12250FCC500D025D8 /* STAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STAppDelegate.m; sourceTree = "<group>"; };
@@ -1882,6 +1883,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F2B17AC2625F23D005D873F /* README.md */,
 				1F9BD1DE2563B8F1006D7476 /* Tests */,
 				1FF556FF2456AFCF006B8E0F /* ObjectiveSmalltalk.map */,
 				1F04A53021D253DC00E19C3F /* GNUstep */,
