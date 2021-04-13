@@ -1,6 +1,6 @@
 //
 //  STMessagePortDescriptor.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 8/8/12.
 //

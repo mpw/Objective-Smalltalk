@@ -1,6 +1,6 @@
 //
 //  MPWTaggedFloat.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 7/18/12.
 //

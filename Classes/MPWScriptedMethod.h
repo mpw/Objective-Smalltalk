@@ -1,6 +1,6 @@
 //
 //  MPWScriptedMethod.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 12/09/2005.
 //  Copyright 2005 Marcel Weiher. All rights reserved.

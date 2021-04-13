@@ -1,6 +1,6 @@
 //
 //  MPWBlockFilterScheme.h
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 7/12/12.
 //

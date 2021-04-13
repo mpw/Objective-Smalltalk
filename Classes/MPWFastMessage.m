@@ -1,6 +1,6 @@
 //
 //  MPWFastMessage.m
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 9/9/06.
 //  Copyright 2006 Marcel Weiher. All rights reserved.

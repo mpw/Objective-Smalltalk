@@ -1,6 +1,6 @@
 //
 //  MPWMethodCallBack.m
-//  MPWTalk
+//  Arch-S
 //
 //  Created by Marcel Weiher on 22/04/2005.
 //  Copyright 2005 Marcel Weiher. All rights reserved.
