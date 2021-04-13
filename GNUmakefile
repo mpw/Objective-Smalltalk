@@ -74,7 +74,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWMethodCallBack.m \
     Classes/MPWResource.m \
     Classes/STCompiler.m \
-    Classes/MPWStTests.m \
     Classes/NSObjectScripting.m \
     Classes/MPWGetAccessor.m \
     Classes/MPWSetAccessor.m \
@@ -96,6 +95,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWTreeNodeScheme.m \
     Schemes/MPWTreeNode.m \
     Schemes/MPWBlockFilterScheme.m \
+    Tests/MPWStTests.m \
 
 
 
