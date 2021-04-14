@@ -134,7 +134,7 @@ after-clean ::
 
 
 test    : libObjectiveSmalltalk tester
-	LD_LIBRARY_PATH=~/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/obj/  ./TestObjectiveSmalltalk/TestObjectiveSmalltalk
+	LD_LIBRARY_PATH=~/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	clang -g -fobjc-runtime=gnustep-2 -I../MPWFoundation/.headers/ -I.headers -o TestObjectiveSmalltalk/TestObjectiveSmalltalk TestObjectiveSmalltalk/TestObjectiveSmalltalk.m -L~/Build/obj  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	clang -g -fobjc-runtime=gnustep-2 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L~/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
