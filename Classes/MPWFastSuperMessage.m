@@ -12,11 +12,17 @@
 
 -sendTo:receiver withArguments:(id*)argbuf count:(int)argCount
 {
+#ifndef GS_API_LATEST
     struct objc_super superSend={
         receiver, self.superclassOfTarget
     };
     id result = ((IMP4)objc_msgSendSuper)( (id)&superSend, selector, argbuf[0],argbuf[1],argbuf[2],argbuf[3] );
     return result;
+#else
+#warning super messaging not implemented in GNUstep
+	[NSException raise:@"notimplemeted" format:@"super messagigng not implemented in GNUstep"];
+	return nil;
+#endif
 }
 
 

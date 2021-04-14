@@ -17,7 +17,7 @@ LIBRARY_NAME = libObjectiveSmalltalk
 CC = clang
 
 
-OBJCFLAGS += -g -Os -Wno-import -fobjc-runtime=gnustep-2  
+OBJCFLAGS += -g -Os -Wno-import -fobjc-runtime=gnustep-1.9  
 
 
 ObjectiveSmalltalk_HEADER_FILES = \
@@ -47,6 +47,9 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWScriptedMethod.m \
     Classes/MPWMethodHeader.m \
     Classes/MPWLiteralExpression.m \
+    Classes/MPWComplexLiteralExpression.m \
+    Classes/MPWFastMessage.m \
+    Classes/MPWFastSuperMessage.m \
     Classes/MPWInstanceVariable.m \
     Classes/MPWLiteralArrayExpression.m \
     Classes/MPWPropertyPathComponent.m \
@@ -78,6 +81,8 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWGetAccessor.m \
     Classes/MPWSetAccessor.m \
     Classes/STBundle.m \
+    Classes/STMessageConnector.m \
+    Classes/STObjectTemplate.m \
     MPWCascadeExpression.m \
     Schemes/MPWRefScheme.m \
     Schemes/MPWClassScheme.m \
@@ -95,6 +100,8 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWTreeNodeScheme.m \
     Schemes/MPWTreeNode.m \
     Schemes/MPWBlockFilterScheme.m \
+    Schemes/STPortScheme.m \
+    Schemes/STProtocolScheme.m \
     Tests/MPWStTests.m \
 
 
@@ -134,7 +141,7 @@ after-clean ::
 
 
 test    : libObjectiveSmalltalk tester
-	LD_LIBRARY_PATH=~/GNUstep/Library/Libraries:/usr/local/lib:/home/gnustep/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
+	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:/home/pi/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	clang -g -fobjc-runtime=gnustep-2 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L~/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	clang -g -fobjc-runtime=gnustep-1.9 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L /home/pi/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
