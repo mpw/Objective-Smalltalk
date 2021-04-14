@@ -1410,7 +1410,9 @@
 		@"testRecursiveInterpret",
 		@"testSevenMinus4",
 		@"testScriptOnObjectKnowsSelf",
+#if !GS_API_LATEST
 		@"testAddingMethodToClass", 
+#endif
 		@"testNegativeLiteral",
 		@"testNegativeLiteralComputation",
         @"testCollectHOM",
@@ -1421,9 +1423,11 @@
 		@"testNSRangeViaSubarray",
 		@"testNSPointViaString",
 		@"testNSSizeViaString",
+#if !GS_API_LATEST
 		@"testAddMethodWithIntArg",
 		@"testAddMethodWithIntArgAndReturn",
 		@"testAddMethodWithIntArgViaMethodHeader",
+#endif
 		@"testAllClassesWithScripts",
 		@"testScriptNamesForClass",
 		@"testExternalDictForDefinedMethods",
@@ -1445,7 +1449,9 @@
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
         @"testParseNonSeqeuentialImplicitBlockArgs",
+#if !GS_API_LATEST
         @"testMethodVarsHaveLocalScope",
+#endif
         @"testToDo",
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testIntervalBlockCollect",
@@ -1463,8 +1469,10 @@
 		@"testRefSchemeAccessesBinding",
 		@"testRefSchemeWorksOnTopOfOtherScheme",
 		@"testDotAllowedInIdentifiers",
+#if !GS_API_LATEST
 		@"testMethodWithParameters",
 		@"testRedefiningMethod",
+#endif
 			@"testHttpArgWithLeadingZero",
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
@@ -1485,7 +1493,9 @@
             @"testCompositionViaPipeDoesntBlockFurtherEval",
 //         @"testCompositionViaPipeDoesntBlockFurtherEval2",   FIXME, still buggy
             @"testCurlyBracesAllowedForBlocks",
+#if !GS_API_LATEST
             @"testDefineClassMethod",
+#endif
             @"testSimpleBindingsAreUniquedInCompile",
             @"testComplexBindingsAreUniquedInCompile",
             @"testParseMethodSyntaxOneArg",
@@ -1497,13 +1507,16 @@
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
+#if !GS_API_LATEST
         @"testDefineClassMethodViaSyntax",
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
+#endif
         @"testProtocolDefSyntax", 
         @"testProtocolDefSyntaxWithMessages",
         @"testNestedVarExprWithPath",
+#if !GS_API_LATEST
         @"testNestedVarExprWithPathInMethod",
         @"testNestedVarExprWithPathInBlockInMethod",
         @"testSelfSchemeInSchemeDefintions",
@@ -1512,11 +1525,13 @@
         @"testSimpleFilterDefSyntax",
         @"testUseStReturnAsForward",
         @"testFilterDefWithNormalMethods",
+#endif
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",
         @"testCanInterpolateStringWithScheme",
         @"testReduceFactorial",
         @"testObjectTemplate",
+#if !GS_API_LATEST
         @"testConnectFiltersInRightOrderWorks",
         @"testConnectStoresInRightOrderWorks",
         @"testConnectViaConnectorManually",
@@ -1524,9 +1539,10 @@
         @"testConnectingFromConnectorToObjectYieldsBoundConnector",
         @"testConnectViaConnectorUsingSyntax",
         @"testConnectStreamToBinding",
-        @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         @"testMappingStoreCanReferToSourceAsScheme",
         @"testSuperSend",
+#endif
+        @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         ];
 }
 

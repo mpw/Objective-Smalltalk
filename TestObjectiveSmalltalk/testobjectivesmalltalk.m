@@ -40,9 +40,9 @@ static void runTests()
 				SEL testSel=NSSelectorFromString( testName );
 				@try {
 					tests++;
-//					NSLog(@"%@:%@ -- will test",className,testName);
+					NSLog(@"%@:%@ -- will test",className,testName);
 					[fixture performSelector:testSel];
-//					NSLog(@"%@:%@ -- success",className,testName);
+					NSLog(@"%@:%@ -- success",className,testName);
 					success++;
 				} @catch (id error)  {
 					NSLog(@"\033[91;31m%@:%@ == error %@\033[0m",className,testName,error);
