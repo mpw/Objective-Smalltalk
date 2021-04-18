@@ -70,6 +70,10 @@
 		1F321C6E2133F063001BE6CC /* MPWPropertyPathSetter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F321C6B2133F063001BE6CC /* MPWPropertyPathSetter.h */; };
 		1F321C6F2133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F321C6C2133F063001BE6CC /* MPWPropertyPathSetter.m */; };
 		1F321C702133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F321C6C2133F063001BE6CC /* MPWPropertyPathSetter.m */; };
+		1F35095B262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */; };
+		1F35095C262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */; };
+		1F35095D262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */; };
+		1F35095E262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */; };
 		1F3C6E691E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; };
 		1F3C6E6A1E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; };
 		1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
@@ -799,6 +803,8 @@
 		1F321C66213334F3001BE6CC /* MPWPropertyPathGetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathGetter.m; sourceTree = "<group>"; };
 		1F321C6B2133F063001BE6CC /* MPWPropertyPathSetter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWPropertyPathSetter.h; sourceTree = "<group>"; };
 		1F321C6C2133F063001BE6CC /* MPWPropertyPathSetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathSetter.m; sourceTree = "<group>"; };
+		1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSimpleDataflowConstraint.h; sourceTree = "<group>"; };
+		1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSimpleDataflowConstraint.m; sourceTree = "<group>"; };
 		1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralArrayExpression.h; sourceTree = "<group>"; };
 		1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralArrayExpression.m; sourceTree = "<group>"; };
 		1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralDictionaryExpression.h; sourceTree = "<group>"; };
@@ -2046,6 +2052,8 @@
 				F5A74ABD00F0A61B015ADD82 /* STCompiler.m */,
 				1FC661EE25D83BC700ED1BCB /* STObjectTemplate.h */,
 				1FC661EF25D83BC700ED1BCB /* STObjectTemplate.m */,
+				1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */,
+				1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2154,6 +2162,7 @@
 				1F8B855219AC72C700F8A107 /* MPWFileWatcher.h in Headers */,
 				1F5E505009B4B754000298D9 /* MPWAssignmentExpression.h in Headers */,
 				1FD0D42D1A935F8D006CA1D7 /* MPWClassMethodStore.h in Headers */,
+				1F35095B262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */,
 				1F5E505109B4B754000298D9 /* MPWExpression.h in Headers */,
 				1F5E505209B4B754000298D9 /* MPWIdentifierExpression.h in Headers */,
 				1F5E505409B4B754000298D9 /* MPWBindingLegacy.h in Headers */,
@@ -2426,6 +2435,7 @@
 				1FE37B9B1969610600C9A378 /* STMessagePortDescriptor.h in Headers */,
 				1FE37B9F1969610600C9A378 /* MPWMethodCallBack.h in Headers */,
 				1FE37BC31969610800C9A378 /* NSObjectScripting.h in Headers */,
+				1F35095C262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */,
 				1FFE3AD820B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */,
 				1F86CE1F203338A8000F0B81 /* MPWSpotlightScheme.h in Headers */,
 				1FE37BBB1969610700C9A378 /* STCompiler.h in Headers */,
@@ -3347,6 +3357,7 @@
 				1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */,
 				1F697AD825E267F700D015DB /* STProtocolScheme.m in Sources */,
 				1F73288D2344BEF300379386 /* MPWShellPrinter.m in Sources */,
+				1F35095D262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */,
 				1F222CA91394D817007AE2FB /* MPWScriptingBridgeBinding.m in Sources */,
 				1FDCCB39139A60FC00F5F273 /* MPWDefaultsScheme.m in Sources */,
 				1FA421461451F9F000F7A277 /* MPWMethodScheme.m in Sources */,
@@ -3541,6 +3552,7 @@
 				1FB7AE3324DB0F3000CCBE86 /* STBundle.m in Sources */,
 				1FE37BA21969610700C9A378 /* MPWMethodHeader.m in Sources */,
 				1FE37BC41969610800C9A378 /* NSObjectScripting.m in Sources */,
+				1F35095E262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */,
 				1FE37BE61969612600C9A378 /* MPWRelScheme.m in Sources */,
 				1FE37BDA1969612500C9A378 /* MPWURLBinding.m in Sources */,
 				1F321C6A213334F3001BE6CC /* MPWPropertyPathGetter.m in Sources */,
