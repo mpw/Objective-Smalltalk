@@ -7,7 +7,7 @@ programming.
 
 It is still experimental.
 
-Preliminary build instructions:
+Build instructions:
 ------------
 
 1.  Clone MPWFoundation
@@ -32,4 +32,4 @@ Raspberry Pi build instructions
 3. run  ./makeheaderdir in each of the project directories
 4. use make in each of the project directories to build (MPWFoundation first)
 
-
+Build is currently broken, method definition does not appear to work.

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)  MPWBinding *ref;
 @property (nonatomic, assign)  BOOL inProcessing;
-;
+
 @end
 
 NS_ASSUME_NONNULL_END
