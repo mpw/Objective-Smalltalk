@@ -13,6 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong)  MPWBinding *source,*target;
 
++(instancetype)constraintWithSource:source target:target;
+-(instancetype)initWithSource:source target:target;
+
+-(void)refDidChange:(id <MPWReferencing>)aRef;
+-(void)update;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
