@@ -55,12 +55,36 @@
     IDEXPECT( [compiler evaluateScriptString:@"a"],@5, @"did update");
 }
 
++(void)testConstraintCanBeAutomated
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme:l := MPWLoggingStore storeWithSource: MPWDictStore store."];
+    [compiler evaluateScriptString:@"l:a ← 3. l:b ← 5."];
+    [compiler evaluateScriptString:@"constraint := (l:a |= l:b)."];
+    [compiler evaluateScriptString:@"scheme:l setLog: constraint."];
+    [compiler evaluateScriptString:@"l:b := 42"];
+    IDEXPECT( [compiler evaluateScriptString:@"l:a"],@42, @"did update");
+}
+
++(void)testAutomatedConstraintCanBeDefaultScheme
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme:l := MPWLoggingStore storeWithSource: MPWDictStore store."];
+    [compiler evaluateScriptString:@"scheme:default := scheme:l."];
+    [compiler evaluateScriptString:@"a ← 3. b ← 5."];
+    [compiler evaluateScriptString:@"constraint := (a |= b)."];
+    [compiler evaluateScriptString:@"scheme:l setLog: constraint."];
+    [compiler evaluateScriptString:@"b := 42"];
+    IDEXPECT( [compiler evaluateScriptString:@"a"],@42, @"did update");
+}
+
 +testSelectors
 {
     return @[
         @"testExpressionReturnsDataflowConstraint",
         @"testConstraintIsUsable",
-        @"testConstraintIsUsable",
+        @"testConstraintCanBeAutomated",
+        @"testAutomatedConstraintCanBeDefaultScheme",
     ];
 }
 
