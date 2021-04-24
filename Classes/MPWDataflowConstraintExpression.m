@@ -23,7 +23,14 @@
         [lhs isKindOfClass:[MPWIdentifierExpression class]] ) {
         MPWBinding *lhb=[self bindingForIdentifier:lhs context:aContext];
         MPWBinding *rhb=[self bindingForIdentifier:(MPWIdentifierExpression*)rhs context:aContext];
-        return [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
+        STSimpleDataflowConstraint* constraint = [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
+        if ( [rhb respondsToSelector:@selector(store)]) {
+            MPWLoggingStore *sourceStore = [rhb store];
+            if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
+                [sourceStore setLog:constraint];
+            }
+        }
+        return constraint;
     } else {
         [NSException raise:@"typecheck" format:@"Both LHS and RHS of |= dataflow constraint must be identifiers"];
     }
@@ -61,7 +68,6 @@
     [compiler evaluateScriptString:@"scheme:l := MPWLoggingStore storeWithSource: MPWDictStore store."];
     [compiler evaluateScriptString:@"l:a ← 3. l:b ← 5."];
     [compiler evaluateScriptString:@"constraint := (l:a |= l:b)."];
-    [compiler evaluateScriptString:@"scheme:l setLog: constraint."];
     [compiler evaluateScriptString:@"l:b := 42"];
     IDEXPECT( [compiler evaluateScriptString:@"l:a"],@42, @"did update");
 }
@@ -73,7 +79,6 @@
     [compiler evaluateScriptString:@"scheme:default := scheme:l."];
     [compiler evaluateScriptString:@"a ← 3. b ← 5."];
     [compiler evaluateScriptString:@"constraint := (a |= b)."];
-    [compiler evaluateScriptString:@"scheme:l setLog: constraint."];
     [compiler evaluateScriptString:@"b := 42"];
     IDEXPECT( [compiler evaluateScriptString:@"a"],@42, @"did update");
 }
