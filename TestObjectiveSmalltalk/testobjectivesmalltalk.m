@@ -11,6 +11,7 @@ static void runTests()
 	int success=0;
 	int failure=0;
 	NSArray *classes=@[
+                       @"MPWStTests",
 //                       @"MPWIdentifier",
 //                       @"MPWStScanner",
 //                       @"MPWScheme",
@@ -24,7 +25,6 @@ static void runTests()
                        @"STCompiler",
 //                       @"MPWFilterDefinition",
                        @"MPWMethodHeader",
-                       @"MPWStTests",
 
 	];
 

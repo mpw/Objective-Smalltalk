@@ -17,7 +17,7 @@ LIBRARY_NAME = libstsh
 CC = clang
 
 
-OBJCFLAGS += -g -Os -Wno-import -fobjc-runtime=gnustep-1.9
+OBJCFLAGS += -g -Os -Wno-import 
 
 
 stsh_HEADER_FILES = \
@@ -70,4 +70,4 @@ after-clean ::
 
 
 stsh  : libstsh
-	clang -g -fblocks -fobjc-runtime=gnustep-1.9 -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd
+	clang -g -fblocks -fobjc-runtime=gnustep-2.9 -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd

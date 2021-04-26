@@ -23,7 +23,7 @@
 #
 # FIXME - macro names
 #
-  CONFIG_SYSTEM_INCL += -fobjc-runtime=gnustep  -fconstant-string-class=NSConstantString
+  CONFIG_SYSTEM_INCL += -fobjc-runtime=gnustep-2.1  -fconstant-string-class=NSConstantString
   CONFIG_SYSTEM_DEFS += 
 
   FND_LDFLAGS =
