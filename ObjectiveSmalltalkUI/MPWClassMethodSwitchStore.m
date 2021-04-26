@@ -13,6 +13,7 @@
 
 -(id<MPWReferencing>)mapReference:(id<MPWReferencing>)aReference
 {
+    aReference=[aReference asReference];
     NSArray *path=[aReference relativePathComponents];
     if ( path.count >= 1 && [path[0] isEqualToString:@"."] ){
         path=[path subarrayWithRange:NSMakeRange(1, path.count-1)];
