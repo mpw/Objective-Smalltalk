@@ -1385,6 +1385,9 @@
 +(NSArray*)testSelectors
 {
     return @[
+#if 1 // !GS_API_LATEST
+		@"testAddingMethodToClass", 
+#endif
         @"testLocalVariables",
 		@"testThreePlusFour",
 		@"stringConcat",
@@ -1410,9 +1413,6 @@
 		@"testRecursiveInterpret",
 		@"testSevenMinus4",
 		@"testScriptOnObjectKnowsSelf",
-#if !GS_API_LATEST
-		@"testAddingMethodToClass", 
-#endif
 		@"testNegativeLiteral",
 		@"testNegativeLiteralComputation",
         @"testCollectHOM",
