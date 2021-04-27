@@ -1385,9 +1385,7 @@
 +(NSArray*)testSelectors
 {
     return @[
-#if 1 // !GS_API_LATEST
 		@"testAddingMethodToClass", 
-#endif
         @"testLocalVariables",
 		@"testThreePlusFour",
 		@"stringConcat",
@@ -1423,7 +1421,7 @@
 		@"testNSRangeViaSubarray",
 		@"testNSPointViaString",
 		@"testNSSizeViaString",
-#if !GS_API_LATEST
+#if  1
 		@"testAddMethodWithIntArg",
 		@"testAddMethodWithIntArgAndReturn",
 		@"testAddMethodWithIntArgViaMethodHeader",
@@ -1507,7 +1505,7 @@
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
-#if !GS_API_LATEST
+#if 1 // !GS_API_LATEST
         @"testDefineClassMethodViaSyntax",
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",

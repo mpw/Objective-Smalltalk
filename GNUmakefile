@@ -67,6 +67,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWObjCGenerator.m \
     Classes/MPWPropertyPathDefinition.m \
     Classes/STConnector.m \
+    Classes/STSimpleDataflowConstraint.m \
     Classes/MPWMethodType.m \
     Classes/MPWPropertyPathGetter.m \
     Classes/MPWPropertyPathSetter.m \
