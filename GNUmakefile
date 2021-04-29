@@ -14,7 +14,6 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 
 LIBRARY_NAME = libObjectiveSmalltalk
-CC = clang
 
 
 OBJCFLAGS += -g -Os -Wno-import 
@@ -145,4 +144,4 @@ test    : libObjectiveSmalltalk tester
 	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:/home/pi/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	clang -g -fobjc-runtime=gnustep-2.1 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L /home/pi/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	$(CC) -g -fobjc-runtime=gnustep-2.1 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L /home/pi/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
