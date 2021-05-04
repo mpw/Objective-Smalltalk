@@ -263,8 +263,8 @@ objectAccessor( NSString, filename, setFilename )
 +testSelectors
 {
     return @[
-             @"testMultipleLineBlockExpression",
-             @"testDefineAndUseClass",
+//             @"testMultipleLineBlockExpression",
+//             @"testDefineAndUseClass",
               ];
 }
 

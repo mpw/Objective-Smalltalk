@@ -1075,6 +1075,12 @@
 		1FCEB7EB099C03ED00867A95 /* STConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConnector.m; sourceTree = "<group>"; };
 		1FD0D42B1A935F8D006CA1D7 /* MPWClassMethodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMethodStore.h; sourceTree = "<group>"; };
 		1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMethodStore.m; sourceTree = "<group>"; };
+		1FD236742641BC6C009C5E46 /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		1FD236752641BC6C009C5E46 /* stsh_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = stsh_main.m; sourceTree = "<group>"; };
+		1FD236762641BC6C009C5E46 /* MPWBCMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWBCMStore.m; sourceTree = "<group>"; };
+		1FD236782641BC6C009C5E46 /* MPWBCMStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWBCMStore.h; sourceTree = "<group>"; };
+		1FD236792641BC6C009C5E46 /* base.make */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = base.make; sourceTree = "<group>"; };
+		1FD2367A2641BC6C009C5E46 /* blink.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = blink.st; sourceTree = "<group>"; };
 		1FD2F6CF075227AC00547D6F /* MPWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWMessage.h; path = Classes/MPWMessage.h; sourceTree = SOURCE_ROOT; };
 		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = "<group>"; };
 		1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTaggedFloat.h; sourceTree = "<group>"; };
@@ -1827,6 +1833,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		1FD236732641BC6C009C5E46 /* raspi */ = {
+			isa = PBXGroup;
+			children = (
+				1FD236742641BC6C009C5E46 /* GNUmakefile */,
+				1FD236752641BC6C009C5E46 /* stsh_main.m */,
+				1FD236782641BC6C009C5E46 /* MPWBCMStore.h */,
+				1FD236762641BC6C009C5E46 /* MPWBCMStore.m */,
+				1FD236792641BC6C009C5E46 /* base.make */,
+				1FD2367A2641BC6C009C5E46 /* blink.st */,
+			);
+			path = raspi;
+			sourceTree = "<group>";
+		};
 		1FD6CA6025B8340B00639458 /* ObjectiveSmalltalkTouchUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1889,6 +1908,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1FD236732641BC6C009C5E46 /* raspi */,
 				1F2B17AC2625F23D005D873F /* README.md */,
 				1F9BD1DE2563B8F1006D7476 /* Tests */,
 				1FF556FF2456AFCF006B8E0F /* ObjectiveSmalltalk.map */,

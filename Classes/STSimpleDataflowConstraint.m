@@ -79,6 +79,8 @@ CONVENIENCEANDINIT( constraint, WithSource:source target:target)
     IDEXPECT(store[@"b"],@20, @"writes via logging store are tracked");
 }
 
+
+
 +(NSArray*)testSelectors
 {
    return @[
