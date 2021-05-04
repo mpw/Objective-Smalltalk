@@ -59,4 +59,4 @@ after-clean ::
 
 
 raspish  : libraspi
-	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/ -I../Stsh/ -I../../MPWFoundation/.headers/ -I../.headers/ -I.headers -o raspish stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lraspi -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd -
+	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/ -I../Stsh/ -I../../MPWFoundation/.headers/ -I../.headers/ -I.headers -o raspish stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lraspi -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd 
