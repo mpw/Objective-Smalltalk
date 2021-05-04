@@ -106,11 +106,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
 
 
 
-# Classes/MPWStTests.m \
-# Classes/STCompiler.m \
-
-
-
 libObjectiveSmalltalk_C_FILES = \
 
 
