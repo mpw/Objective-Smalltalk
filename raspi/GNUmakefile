@@ -19,26 +19,27 @@ LIBRARY_NAME = libraspi
 OBJCFLAGS += -g -Os -Wno-import 
 
 
-stsh_HEADER_FILES = \
+libraspi_HEADER_FILES = \
+	MPWBCMStore.h	\
+
+libraspi_HEADER_FILES_INSTALL_DIR = /stsh
 
 
-stsh_HEADER_FILES_INSTALL_DIR = /stsh
+libraspi_OBJC_FILES = \
+	MPWBCMStore.m	\
 
 
-libstsh_OBJC_FILES = \
-
-
-libstsh_C_FILES = \
+libraspi_C_FILES = \
 
 
 
 
-LIBRARIES_DEPEND_UPON += -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base
+LIBRARIES_DEPEND_UPON += -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -lbcm2835
 
 LDFLAGS += -L /home/gnustep/Build/obj -L/home/pi/Build/obj
 
 
-libstsh_INCLUDE_DIRS += -I.headers -I. -I../../MPWFoundation/.headers/ -I../.headers/
+libraspi_INCLUDE_DIRS += -I.headers -I. -I../../MPWFoundation/.headers/ -I../.headers/
 
 -include GNUmakefile.preamble
 include $(GNUSTEP_MAKEFILES)/library.make
@@ -58,4 +59,4 @@ after-clean ::
 
 
 raspish  : libraspi
-	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/ -I../Stsh/ -I../../MPWFoundation/.headers/ -I../.headers/ -I.headers -o raspish stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lraspi -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd
+	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/ -I../Stsh/ -I../../MPWFoundation/.headers/ -I../.headers/ -I.headers -o raspish stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lraspi -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd -
