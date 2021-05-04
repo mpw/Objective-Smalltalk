@@ -19,20 +19,24 @@
 
 -(id)evaluateIn:(id)aContext
 {
-    if ( [rhs isKindOfClass:[MPWIdentifierExpression class]] &&
-        [lhs isKindOfClass:[MPWIdentifierExpression class]] ) {
+    if ( [lhs isKindOfClass:[MPWIdentifierExpression class]] ) {
         MPWBinding *lhb=[self bindingForIdentifier:lhs context:aContext];
-        MPWBinding *rhb=[self bindingForIdentifier:(MPWIdentifierExpression*)rhs context:aContext];
-        STSimpleDataflowConstraint* constraint = [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
-        if ( [rhb respondsToSelector:@selector(store)]) {
-            MPWLoggingStore *sourceStore = [rhb store];
-            if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
-                [sourceStore setLog:constraint];
+        STSimpleDataflowConstraint* constraint=nil;
+        if ([rhs isKindOfClass:[MPWIdentifierExpression class]] )  {
+            MPWBinding *rhb=[self bindingForIdentifier:(MPWIdentifierExpression*)rhs context:aContext];
+            constraint = [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
+            if ( [rhb respondsToSelector:@selector(store)]) {
+                MPWLoggingStore *sourceStore = [rhb store];
+                if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
+                    [sourceStore setLog:constraint];
+                }
             }
+        } else  if ([rhs isKindOfClass:[MPWExpression class]] )  {
+            return nil;
         }
         return constraint;
-    } else {
-        [NSException raise:@"typecheck" format:@"Both LHS and RHS of |= dataflow constraint must be identifiers"];
+    }  else {
+        [NSException raise:@"typecheck" format:@"LHS of |= dataflow constraint must be identifier"];
     }
     return nil;
     
@@ -83,6 +87,20 @@
     IDEXPECT( [compiler evaluateScriptString:@"a"],@42, @"did update");
 }
 
++(void)testRHSCanBeExpression
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme:l := MPWLoggingStore storeWithSource: MPWDictStore store."];
+    [compiler evaluateScriptString:@"scheme:default := scheme:l."];
+    [compiler evaluateScriptString:@"a ← 3. b ← 5. c ← 7"];
+    [compiler evaluateScriptString:@"constraint := (a |= b+c)."];
+    [compiler evaluateScriptString:@"b := 42"];
+    IDEXPECT( [compiler evaluateScriptString:@"a"],@49, @"did update a when b changed");
+    [compiler evaluateScriptString:@"c := 1"];
+    IDEXPECT( [compiler evaluateScriptString:@"a"],@43, @"did update a when c changed");
+}
+
+
 +testSelectors
 {
     return @[
@@ -90,6 +108,7 @@
         @"testConstraintIsUsable",
         @"testConstraintCanBeAutomated",
         @"testAutomatedConstraintCanBeDefaultScheme",
+//        @"testRHSCanBeExpression",
     ];
 }
 
