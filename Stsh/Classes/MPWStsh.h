@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWObject.h>
 
-@class MPWByteStream,MPWEvaluator;
+@class MPWByteStream,MPWEvaluator,STCompiler;
 
 @interface MPWStsh : MPWObject {
     MPWByteStream  *Stdout,*Stdin,*Stderr;
@@ -23,11 +23,13 @@
 }
 +(void)runWithArgs:(NSArray*)args;
 +(void)runWithArgCount:(int)argc argStrings:(const char**)argv;
--evaluator;
+-initWithArgs:args;
+-(STCompiler*)evaluator;
 -retval;
 -(void)setRetval:newRetval;
+-(void)run;
 
-
+@property (nonatomic,strong) NSArray *args;
 
 @end
 

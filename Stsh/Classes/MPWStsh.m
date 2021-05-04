@@ -80,8 +80,20 @@ intAccessor(completionLimit, setCompletionLimit)
     @autoreleasepool {
         MPWStsh* sh;
         sh=[[[self alloc] initWithArgs:args] autorelease];
-        [sh setReadingFile:YES];
-        [sh executeFromFileName:commandName];
+        [sh run];
+    }
+}
+
+-(void)run
+{
+    if ( self.args.count == 0) {
+        [self runInteractiveLoop];
+    } else {
+        NSString *commandName=self.args.firstObject;
+        self.args = [self.args subarrayWithRange:NSMakeRange(1,[self.args count]-1)];
+        [[self evaluator] bindValue:self.args toVariableNamed:@"args"];
+        [self setReadingFile:YES];
+        [self executeFromFileName:commandName];
     }
 }
 
@@ -122,6 +134,9 @@ intAccessor(completionLimit, setCompletionLimit)
 -initWithArgs:args evaluator:newEvaluator
 {
     if ( self=[super init] ) {
+        self.args = args;
+        self.evaluator = newEvaluator;
+    
 //		NSLog(@"initWithArgs: %@",args);
         BOOL istty=isatty(0);
 //        NSLog(@"istty: %d",istty);
@@ -131,8 +146,6 @@ intAccessor(completionLimit, setCompletionLimit)
         [self setReadingFile:!istty];
         Stdout=[MPWByteStream Stdout];
         Stderr=[MPWByteStream Stderr];
-		[self setEvaluator:newEvaluator];
-		[[self evaluator] bindValue:args toVariableNamed:@"args"];
 		[[self evaluator] bindValue:self toVariableNamed:@"shell"];
         [self setCompletionLimit:120];
     }
