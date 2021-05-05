@@ -2,7 +2,14 @@
 #import "MPWBCMStore.h"
 #include <bcm2835.h>
 
+#define MINPIN 0
+#define MAXPIN 32
+
 @implementation MPWBCMStore 
+{
+	int modes[MAXPIN*2];
+}
+
 
 #define PIN RPI_GPIO_P1_11
 
@@ -10,17 +17,26 @@
 -(instancetype)init
 {
 	self=[super init];
-    if (!bcm2835_init())
+    if (!bcm2835_init()) {
       return nil;
- 
-    // Set the pin to be an output
-    bcm2835_gpio_fsel(PIN, BCM2835_GPIO_FSEL_OUTP);
+	} 
 	return self;
+}
+
+-(void)setMode:(int)mode ofPin:(int)pin
+{
+	if ( pin>=MINPIN && pin <MAXPIN) {
+		if( modes[pin] != mode ) {
+			bcm2835_gpio_fsel(pin, mode);
+			modes[pin]=mode;	
+		}
+	}
 }
 
 -(void)writePin:(int)pin value:(int)value
 {
-	if ( pin>=0 && pin <=31 ) {
+	if ( pin>=0 && pin < MAXPIN ) {
+		[self setMode:BCM2835_GPIO_FSEL_OUTP ofPin:pin];	
 		bcm2835_gpio_write(pin, value);
 	} else {
 		[NSException raise:@"pin out of range" format:@"pin %d out of range",pin];
@@ -39,6 +55,12 @@
         [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
 	}
 
+}
+
+-(void)dealloc
+{
+	bcm2835_close();
+	[super dealloc];
 }
 
 
