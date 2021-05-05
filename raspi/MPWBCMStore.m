@@ -18,14 +18,27 @@
 	return self;
 }
 
-
--(void)at:address put:value
+-(void)writePin:(int)pin value:(int)value
 {
-	if ([value intValue]) {
-		 bcm2835_gpio_write(PIN, HIGH);
+	if ( pin>=0 && pin <=31 ) {
+		bcm2835_gpio_write(pin, value);
 	} else {
-         bcm2835_gpio_write(PIN, LOW);
+		[NSException raise:@"pin out of range" format:@"pin %d out of range",pin];
 	}
+}
+
+
+-(void)at:(id <MPWReferencing>)address put:value
+{
+	NSArray<NSString*> *pathComponents=[address pathComponents];
+	if ( pathComponents.count == 1 ) {
+		int pinNumber = [pathComponents[0] intValue];
+		int pinValue = [value intValue] ? HIGH : LOW;
+		[self writePin:pinNumber value:pinValue];
+	} else {
+        [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
+	}
+
 }
 
 
