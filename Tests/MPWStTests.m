@@ -1421,11 +1421,9 @@
 		@"testNSRangeViaSubarray",
 		@"testNSPointViaString",
 		@"testNSSizeViaString",
-#if  1
 		@"testAddMethodWithIntArg",
 		@"testAddMethodWithIntArgAndReturn",
 		@"testAddMethodWithIntArgViaMethodHeader",
-#endif
 		@"testAllClassesWithScripts",
 		@"testScriptNamesForClass",
 		@"testExternalDictForDefinedMethods",
@@ -1447,7 +1445,7 @@
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
         @"testParseNonSeqeuentialImplicitBlockArgs",
-#if !GS_API_LATEST
+#if 1 // !GS_API_LATEST
         @"testMethodVarsHaveLocalScope",
 #endif
         @"testToDo",
@@ -1491,7 +1489,7 @@
             @"testCompositionViaPipeDoesntBlockFurtherEval",
 //         @"testCompositionViaPipeDoesntBlockFurtherEval2",   FIXME, still buggy
             @"testCurlyBracesAllowedForBlocks",
-#if !GS_API_LATEST
+#if 1 // !GS_API_LATEST
             @"testDefineClassMethod",
 #endif
             @"testSimpleBindingsAreUniquedInCompile",
@@ -1505,16 +1503,14 @@
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
-#if 1 // !GS_API_LATEST
         @"testDefineClassMethodViaSyntax",
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
-#endif
         @"testProtocolDefSyntax", 
         @"testProtocolDefSyntaxWithMessages",
         @"testNestedVarExprWithPath",
-#if !GS_API_LATEST
+#if 1 // !GS_API_LATEST
         @"testNestedVarExprWithPathInMethod",
         @"testNestedVarExprWithPathInBlockInMethod",
         @"testSelfSchemeInSchemeDefintions",
