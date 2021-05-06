@@ -23,6 +23,9 @@ static void runTests()
                        @"MPWMethodStore",
                        @"MPWMethodCallBack",
                        @"MPWPropertyPath",
+//                       @"MPWPropertyPathGetter",
+//                       @"MPWPropertyPathSetter",
+                       @"MPWPropertyPathComponent",
 //                       @"MPWFrameworkScheme",
                        @"MPWSchemeScheme",
 //                       @"MPWVarScheme",
@@ -49,11 +52,11 @@ static void runTests()
 					fprintf(stderr,"                  %s:%s",[className UTF8String],[testName UTF8String]);
 //					NSLog(@"%@:%@ -- will test",className,testName);
 					[fixture performSelector:testSel];
-					fprintf(stderr,"\r                                                                                                                            \r");
+					fprintf(stderr,"\r                                                                              \r");
 //					NSLog(@"%@:%@ -- success",className,testName);
 					success++;
 				} @catch (id error)  {
-					fprintf(stderr,"\r                                                                                                                            \r");
+					fprintf(stderr,"\r                                                                              \r");
 					[failures addObject:[NSString stringWithFormat:@"%@:%@ == error %@",className,testName,error]];
 				}
 			}
@@ -63,8 +66,9 @@ static void runTests()
 		}
 
 	}
-	printf("\033[91;3%dmtests: %d total,  %d successes %d failures\033[0m\n",failures.count > 0 ? 1:2,tests,success,failures.count);
+	printf("\n\033[91;3%dmtests: %d total,  %d successes %d failures\033[0m\n",failures.count > 0 ? 1:2,tests,success,failures.count);
 	if (failures.count) {
+		printf("\n");
 		for (NSString *failure in failures) {
 			printf("\033[91;31m%s\033[0m\n",[failure UTF8String]);
 		}

@@ -1525,7 +1525,7 @@
         @"testCanInterpolateStringWithScheme",
         @"testReduceFactorial",
         @"testObjectTemplate",
-#if !GS_API_LATEST
+#if 1 // !GS_API_LATEST
         @"testConnectFiltersInRightOrderWorks",
         @"testConnectStoresInRightOrderWorks",
         @"testConnectViaConnectorManually",
