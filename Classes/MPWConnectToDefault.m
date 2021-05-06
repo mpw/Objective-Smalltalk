@@ -52,7 +52,7 @@ idAccessor( lhs, setLhs )
         NSDictionary *rightPorts = nil;
         id source=leftPorts[@"OUT"];
         id target=right;
-        if ( [right class] != [@protocol(NSObject) class]) {
+        if ( object_getClass( right ) != object_getClass(@protocol(NSObject))) {
             right=[right defaultComponentInstance];
             rightPorts = [right ports];
             target=rightPorts[@"IN"];

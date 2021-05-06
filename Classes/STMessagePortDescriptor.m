@@ -24,7 +24,7 @@ objectAccessor(Protocol, messageProtocol, setMessageProtocol)
 //    NSLog(@"for %p target: %@ key: %@",self,aTarget,aKey);
     [self setTarget:[MPWPropertyBinding valueForName:aKey ? aKey : @"self"]];
     [self setIsSettable:aKey != nil];
-    [[self target] bindToTarget:aTarget];
+//    [[self target] bindToTarget:aTarget];
     [self setMessageProtocol:aProtocol];
     [self setSendsMessages:sends];
 
