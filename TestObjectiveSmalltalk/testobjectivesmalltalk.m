@@ -55,9 +55,11 @@ static void runTests()
 					fprintf(stderr,"\r                                                                              \r");
 //					NSLog(@"%@:%@ -- success",className,testName);
 					success++;
-				} @catch (id error)  {
+				} @catch (NSException *error)  {
 					fprintf(stderr,"\r                                                                              \r");
-					[failures addObject:[NSString stringWithFormat:@"%@:%@ == error %@",className,testName,error]];
+					NSString *name=[error name];
+					NSString *reason=[error reason];
+					[failures addObject:[NSString stringWithFormat:@"%@:%@: %@",className,testName,reason]];
 				}
 			}
 		} else {
