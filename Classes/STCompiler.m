@@ -1516,6 +1516,15 @@ idAccessor(solver, setSolver)
     }
 }
 
++(void)testParsingObjectLiteral
+{
+    
+    NSString *objectLiteral=@"#UILabel{ #text: 'Hi' }";
+    STCompiler *compiler=[self compiler];
+    MPWLiteralDictionaryExpression *literal=[compiler compile:objectLiteral];
+    IDEXPECT(literal.literalClassName, @"UILabel", @"parsed literal class name");
+}
+
 
 +(void)testParseSimpleLiteralDictWithSimplifiedStringKey
 {
@@ -1534,6 +1543,7 @@ idAccessor(solver, setSolver)
               @"testParsingMethodBodyPreservesSource",
               @"testParsingPartialNestedLiteralsDoesNotHang",
               @"testParseSimpleLiteralDictWithSimplifiedStringKey",
+              @"testParsingObjectLiteral",
               ];
 }
 
