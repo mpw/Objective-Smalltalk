@@ -92,6 +92,7 @@ idAccessor( _signature, setSignature )
 	if ( selector != (SEL)nil ) {
 //		char charVal;
 		int intVal;
+		long longVal;
 		short shortVal;
 		float floatVal;
 		double doubleVal;
@@ -145,6 +146,11 @@ idAccessor( _signature, setSignature )
 						case 'I':
 							intVal=[arg intValue];
 							argp=&intVal;
+							break;
+						case 'l':
+						case 'L':
+							longVal=[arg longValue];
+							argp=&longVal;
 							break;
 						case 's':
 						case 'S':
@@ -204,7 +210,7 @@ idAccessor( _signature, setSignature )
 							}
                                 }
 						default:
-//							NSLog(@"default conversion for arg: %@/%@ to %@",arg,[arg class],NSStringFromSelector(selector));
+							NSLog(@"default conversion for arg: %@/%@ to %@",arg,[arg class],NSStringFromSelector(selector));
 							if ( [arg respondsToSelector:@selector(objCType)] ) {
 								if ( !strcmp( type, [arg objCType] )) {
 									[arg getValue:buffer];
@@ -232,6 +238,7 @@ idAccessor( _signature, setSignature )
 {
 	id returnValue = nil;
 	int intVal;
+	long longVal;
 	short shortval;
 	float floatVal;
 	double doubleVal;
@@ -258,6 +265,11 @@ idAccessor( _signature, setSignature )
 			case 'I':
 				intVal=*(int*)returnBuffer;
 				returnValue=[NSNumber numberWithInt:intVal];
+				break;
+			case 'l':
+			case 'L':
+				longVal=*(long*)returnBuffer;
+				returnValue=[NSNumber numberWithLong:longVal];
 				break;
 			case 'q':
 			case 'Q':
@@ -402,8 +414,10 @@ idAccessor( _signature, setSignature )
 
 +(void)testPointReturn
 {
+	NSLog(@"===testPointReturn===");
     MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nspointTester)];
     id result = [msg sendTo:self withArguments:nil ];
+	NSLog(@"after testPointReturn");
     FLOATEXPECTTOLERANCE([result x], 3.12, 0.000001, @"x");
     FLOATEXPECTTOLERANCE([result y], 23.23, 0.000001, @"y");
 }
