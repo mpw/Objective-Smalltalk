@@ -12,7 +12,7 @@ static void runTests()
 	NSMutableArray *failures=[NSMutableArray array];
 	NSArray *classes=@[
                        @"MPWStTests",
-                       @"MSTSimpleDataflowConstraint",
+                       @"STSimpleDataflowConstraint",
 					   @"MPWScriptedMethod",
                        @"MPWIdentifier",
                        @"MPWStScanner",
