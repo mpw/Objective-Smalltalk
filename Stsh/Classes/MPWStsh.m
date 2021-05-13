@@ -124,11 +124,19 @@ intAccessor(completionLimit, setCompletionLimit)
 }
 
 
+-(void)runInRunLoop
+{
+    [[self async] runInteractiveLoop];
+    runLoop=[NSRunLoop currentRunLoop];
+    runLoopThread=[NSThread currentThread];
+    [[self evaluator] bindValue:runLoop toVariableNamed:@"runLoop"];
+    [runLoop run];
+}
+
 -(void)runAppKit
 {
-	[NSClassFromString(@"NSApplication") sharedApplication];
-	[[self async] runInteractiveLoop];
-	[[NSRunLoop currentRunLoop] run];
+    [NSClassFromString(@"NSApplication") sharedApplication];
+    [self runInRunLoop];
 }
 
 -initWithArgs:args evaluator:newEvaluator
@@ -263,11 +271,9 @@ static const char completionfun(EditLine *e, char ch) {
 
 -(void)cd:(NSString*)newDir
 {
-    long dirLen=[newDir length];
-    dirLen=MIN(dirLen,10000);
-    [newDir getCString:cwd maxLength:dirLen encoding:NSUTF8StringEncoding];
-    cwd[ dirLen ] = 0;
-    chdir(cwd);
+    @autoreleasepool {
+        chdir([newDir fileSystemRepresentation]);
+    }
 }
 
 -pwd
@@ -331,9 +337,41 @@ idAccessor( retval, setRetval )
     }
 }
 
--(void)runInteractiveLoop
+-(void)evaluateExpression:expr isAssignmnent:(BOOL)isAssignment
 {
     id result;
+    if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
+        result = [[self evaluator] executeShellExpression:expr];
+    } else {
+        result = [[self evaluator] evaluate:expr];
+    }
+    //                NSLog(@"result: %@/%@",[result class],result);
+    if ( result!=nil && [result isNotNil]) {
+        [[self evaluator] bindValue:result toVariableNamed:@"last" withScheme:@"var"];
+        
+        if ( [self echo] && !isAssignment ) {
+            //                       str_result = [[result description] cString];
+            //                       str_result = str_result ? str_result : "nil";
+            if ( !result ) {
+                result=@"nil";
+            }
+            fflush(stdout);
+            //                        [[[MPWByteStream Stderr] do] println:[result each]];
+            //                        NSLog(@"result: %@/%@",[result class],result);
+            MPWByteStream *myStdout=[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value];
+            
+            [myStdout writeObject:result];
+            [myStdout writeNewline];
+            
+            
+            //                       fprintf(stderr,"%s\n",str_result);
+            fflush(stderr);
+        }
+    }
+}
+
+-(void)runInteractiveLoop
+{
     EditLine *el;
     const char *lineOfInput;
     History *history_ptr;
@@ -404,36 +442,13 @@ idAccessor( retval, setRetval )
                 [currentInput setString:@""];
             }
             else {
-                    [currentInput setString:@""];
-                    if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
-                        result = [[self evaluator] executeShellExpression:expr];
-                    } else {
-                        result = [[self evaluator] evaluate:expr];
-                    }
-                    //				NSLog(@"result: %@/%@",[result class],result);
-                    if ( result!=nil && [result isNotNil]) {
-                        [[self evaluator] bindValue:result toVariableNamed:@"last" withScheme:@"var"];
-
-                        if ( [self echo] && !isAssignment ) {
-                            //                       str_result = [[result description] cString];
-                            //                       str_result = str_result ? str_result : "nil";
-                            if ( !result ) {
-                                result=@"nil";
-                            }
-                            fflush(stdout);
-                            //						[[[MPWByteStream Stderr] do] println:[result each]];
-                            //                        NSLog(@"result: %@/%@",[result class],result);
-                            MPWByteStream *myStdout=[[[self evaluator] bindingForLocalVariableNamed:@"stdout" ]  value];
-                            
-                            [myStdout writeObject:result];
-                            [myStdout writeNewline];
-
-                            
-                            //                       fprintf(stderr,"%s\n",str_result);
-                            fflush(stderr);
-                        }
-                    }
+                [currentInput setString:@""];
+                if ( runLoopThread){
+                    [[self syncOnThread:runLoopThread] evaluateExpression:expr isAssignmnent:isAssignment];
+                } else {
+                    [self evaluateExpression:expr isAssignmnent:isAssignment];
                 }
+            }
             
             NS_HANDLER
 
