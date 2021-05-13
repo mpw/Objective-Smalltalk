@@ -33,9 +33,9 @@ idAccessor(currentDocument, setCurrentDocument)
 
 -(void)keyWindowChangedAfterDelay
 {
-    NSLog(@"keyWindowChanged");
+//   NSLog(@"keyWindowChanged");
     id newCurrentDoc = [self externalCurrentDoc];
-    NSLog(@"newCurrentDoc: %@",newCurrentDoc);
+//    NSLog(@"newCurrentDoc: %@",newCurrentDoc);
     if ( newCurrentDoc) {
         [self setCurrentDocument:newCurrentDoc];
     }
@@ -49,10 +49,10 @@ idAccessor(currentDocument, setCurrentDocument)
 -currentDoc
 {
     id doc=[self externalCurrentDoc];
-    NSLog(@"external: %@",doc);
+//    NSLog(@"external: %@",doc);
     if (!doc) {
         doc=[self currentDocument];
-        NSLog(@"remembered: %@",doc);
+//        NSLog(@"remembered: %@",doc);
     }
     return doc;
 }
