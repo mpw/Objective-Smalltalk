@@ -31,6 +31,7 @@
 -(void)run;
 
 @property (nonatomic,strong) NSArray *args;
+@property (strong) NSException *lastException;
 
 @end
 

@@ -339,11 +339,17 @@ idAccessor( retval, setRetval )
 
 -(void)evaluateExpression:expr isAssignmnent:(BOOL)isAssignment
 {
-    id result;
-    if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
-        result = [[self evaluator] executeShellExpression:expr];
-    } else {
-        result = [[self evaluator] evaluate:expr];
+    id result=nil;
+    @try {
+        if ( [[self evaluator] respondsToSelector:@selector(executeShellExpression:)] )  {
+            result = [[self evaluator] executeShellExpression:expr];
+        } else {
+            result = [[self evaluator] evaluate:expr];
+        }
+    } @catch ( NSException *localException ) {
+        self.lastException=localException;
+        fflush(stdout);
+        return ;
     }
     //                NSLog(@"result: %@/%@",[result class],result);
     if ( result!=nil && [result isNotNil]) {
@@ -407,7 +413,6 @@ idAccessor( retval, setRetval )
  		if ( (lineOfInput[0]!='#') || (lineOfInput[1]=='(') ) {
 			id pool=[NSAutoreleasePool new];
             id expr = nil;
-			NS_DURING
             NSString* newString = [NSString stringWithUTF8String:lineOfInput];
             [currentInput appendString:newString];
             NSString *exprString=currentInput;
@@ -443,6 +448,7 @@ idAccessor( retval, setRetval )
             }
             else {
                 [currentInput setString:@""];
+                self.lastException=nil;
                 if ( runLoopThread){
                     [[self syncOnThread:runLoopThread] evaluateExpression:expr isAssignmnent:isAssignment];
                 } else {
@@ -450,15 +456,15 @@ idAccessor( retval, setRetval )
                 }
             }
             
-            NS_HANDLER
-
-            [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:localException];
-
-            id combinedStack=[localException combinedStackTrace];
-            if ( combinedStack) {
-                [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:combinedStack];
+            if ( self.lastException) {
+                [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:self.lastException];
+                
+                id combinedStack=[self.lastException combinedStackTrace];
+                if ( combinedStack) {
+                    [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:combinedStack];
+                }
             }
-            NS_ENDHANDLER
+            self.lastException=nil;
 			[pool release];
 		}
         if ( strlen(lineOfInput) > 1) {
