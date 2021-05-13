@@ -29,6 +29,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWIdentifier.m \
     Classes/MPWScheme.m \
     Classes/MPWExpression.m \
+    Stsh/Classes/MPWExpression+autocomplete.m \
     Classes/MPWBindingLegacy.m \
     Classes/MPWStScanner.m \
     Classes/MPWMessage.m \

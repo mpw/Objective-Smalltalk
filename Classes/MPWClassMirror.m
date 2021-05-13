@@ -184,7 +184,7 @@
 	return [self isSublcassOfClass: [potentialSuperclassMirror theClass]];
 }
 
--theSuperclass
+-(Class)theSuperclass
 {
 	return [[self class] superclassOfClass:[self theClass]];
 }
