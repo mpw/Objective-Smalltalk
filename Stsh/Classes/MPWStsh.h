@@ -15,11 +15,12 @@
     BOOL   readingFile;
     BOOL   echo;
 	MPWEvaluator*		_evaluator;
-    char   cwd[65536];
 	id		retval;
     NSString *prompt;
     char  cstrPrompt[200];
     int   completionLimit;
+    NSRunLoop *runLoop;
+    NSThread *runLoopThread;
 }
 +(void)runWithArgs:(NSArray*)args;
 +(void)runWithArgCount:(int)argc argStrings:(const char**)argv;
