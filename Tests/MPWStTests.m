@@ -1465,10 +1465,8 @@
 		@"testRefSchemeAccessesBinding",
 		@"testRefSchemeWorksOnTopOfOtherScheme",
 		@"testDotAllowedInIdentifiers",
-#if !GS_API_LATEST
 		@"testMethodWithParameters",
 		@"testRedefiningMethod",
-#endif
 			@"testHttpArgWithLeadingZero",
 			@"testStringToBinding",
 			@"testBinarySelectorPriorityOverKeyword",
