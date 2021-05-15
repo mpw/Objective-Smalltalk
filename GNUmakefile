@@ -114,7 +114,7 @@ libObjectiveSmalltalk_C_FILES = \
 
 LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base
 
-LDFLAGS += -L /home/gnustep/Build/obj -L ~/Build/obj
+LDFLAGS += -L ${HOME}/Build/obj -L ~/Build/obj
 
 
 libObjectiveSmalltalk_INCLUDE_DIRS += -I.headers -I. -I../MPWFoundation/.headers/
@@ -137,7 +137,7 @@ after-clean ::
 
 
 test    : libObjectiveSmalltalk tester
-	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:/home/pi/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
+	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:${HOME}/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	$(CC) -g -fobjc-runtime=gnustep-2.1 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L /home/pi/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	$(CC) -g -fobjc-runtime=gnustep-2.1 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
