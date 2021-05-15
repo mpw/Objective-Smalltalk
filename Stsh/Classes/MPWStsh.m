@@ -449,11 +449,19 @@ idAccessor( retval, setRetval )
             else {
                 [currentInput setString:@""];
                 self.lastException=nil;
-                if ( runLoopThread){
-                    [[self syncOnThread:runLoopThread] evaluateExpression:expr isAssignmnent:isAssignment];
-                } else {
-                    [self evaluateExpression:expr isAssignmnent:isAssignment];
-                }
+				@try {
+					if ( runLoopThread){
+						[[self syncOnThread:runLoopThread] evaluateExpression:expr isAssignmnent:isAssignment];
+					} else {
+						[self evaluateExpression:expr isAssignmnent:isAssignment];
+					}
+				} @catch ( NSException *e) {
+					if (!self.lastException) {
+						self.lastException=e;
+					} else {
+						NSLog(@"exception trying to eval: %@",e);
+					}
+				}
             }
             
             if ( self.lastException) {
