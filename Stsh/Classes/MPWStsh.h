@@ -6,9 +6,10 @@
 //  Copyright 2006 Marcel Weiher. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <MPWFoundation/MPWObject.h>
 
-@class MPWByteStream,MPWEvaluator,STCompiler;
+@class MPWByteStream,MPWEvaluator,STCompiler,NSRunLoop;
 
 @interface MPWStsh : MPWObject {
     MPWByteStream  *Stdout,*Stdin,*Stderr;
