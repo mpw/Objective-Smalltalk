@@ -72,6 +72,8 @@ intAccessor(completionLimit, setCompletionLimit)
 {
 	[self _setEvaluator:newEval];
 	[newEval bindValue:self toVariableNamed:@"shell"];
+    [newEval bindValue:[NSRunLoop currentRunLoop] toVariableNamed:@"runLoop"];
+
 }
  
 
@@ -129,7 +131,6 @@ intAccessor(completionLimit, setCompletionLimit)
     [[self async] runInteractiveLoop];
     runLoop=[NSRunLoop currentRunLoop];
     runLoopThread=[NSThread currentThread];
-    [[self evaluator] bindValue:runLoop toVariableNamed:@"runLoop"];
     [runLoop run];
 }
 
