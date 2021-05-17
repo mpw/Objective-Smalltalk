@@ -4,4 +4,4 @@ watcher := MPWFileChangesStream alloc initWithDirectoryPath: source path.
 copier := MPWRESTCopyStream streamWithSource:source asScheme target:target asScheme.
 watcher → #MPWPathMapper{ #prefix: source } → copier.
 watcher start.
-NSRunLoop currentRunLoop run.
+runLoop run.
