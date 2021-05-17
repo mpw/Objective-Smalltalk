@@ -46,7 +46,7 @@ libstsh_C_FILES = \
 
 LIBRARIES_DEPEND_UPON += -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base
 
-LDFLAGS += -L /home/gnustep/Build/obj -L/home/pi/Build/obj
+LDFLAGS += -L ${HOME}/Build/obj 
 
 
 libstsh_INCLUDE_DIRS += -I.headers -I. -I../../MPWFoundation/.headers/ -I../.headers/
@@ -69,4 +69,4 @@ after-clean ::
 
 
 stsh  : libstsh
-	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.9 -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd
+	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L ${HOME}/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd

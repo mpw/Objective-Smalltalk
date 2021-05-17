@@ -36,7 +36,7 @@ libraspi_C_FILES = \
 
 LIBRARIES_DEPEND_UPON += -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -lbcm2835
 
-LDFLAGS += -L /home/gnustep/Build/obj -L/home/pi/Build/obj
+LDFLAGS += -L ${HOME}/Build/obj 
 
 
 libraspi_INCLUDE_DIRS += -I.headers -I. -I../../MPWFoundation/.headers/ -I../.headers/
@@ -59,4 +59,4 @@ after-clean ::
 
 
 raspish  : libraspi
-	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/ -I../Stsh/ -I../../MPWFoundation/.headers/ -I../.headers/ -I.headers -o raspish stsh_main.m -L/home/pi/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lraspi -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd 
+	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/ -I../Stsh/ -I../../MPWFoundation/.headers/ -I../.headers/ -I.headers -o raspish stsh_main.m -L${HOME}/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lraspi -lstsh -lObjectiveSmalltalk  -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd 
