@@ -43,6 +43,30 @@
 	}
 }
 
+-(int)readPin:(int)pin 
+{
+	if ( pin>=0 && pin < MAXPIN ) {
+		[self setMode:BCM2835_GPIO_FSEL_INPT ofPin:pin];	
+		return bcm2835_gpio_lev(pin) ? YES : NO;
+	} else {
+		[NSException raise:@"pin out of range" format:@"pin %d out of range",pin];
+	}
+	return 0;
+}
+
+
+-(id)at:(id <MPWReferencing>)address 
+{
+	NSArray<NSString*> *pathComponents=[address pathComponents];
+	if ( pathComponents.count == 1 ) {
+		int pinNumber = [pathComponents[0] intValue];
+		return @([self readPin:pinNumber]);
+	} else {
+        [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
+	}
+	return nil;
+
+}
 
 -(void)at:(id <MPWReferencing>)address put:value
 {
