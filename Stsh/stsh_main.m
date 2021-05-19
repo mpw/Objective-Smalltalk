@@ -19,6 +19,7 @@ int main (int argc, const char *argv[])
         [args addObject:[NSString stringWithUTF8String:argv[i]]];
     }
     MPWStsh *stsh=[[[MPWStsh alloc] initWithArgs:args] autorelease];
+    [stsh setCommandName:[NSString stringWithUTF8String:argv[0]]];
     [stsh run];
     exit(0);       // insure the process exit status is 0
     return 0;      // ...and make main fit the ANSI spec.
