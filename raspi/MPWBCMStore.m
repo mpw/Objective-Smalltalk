@@ -1,5 +1,6 @@
 
 #import "MPWBCMStore.h"
+#import "MPWGPIOPin.h"
 #include <bcm2835.h>
 
 #define MINPIN 0
@@ -79,6 +80,11 @@
         [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
 	}
 
+}
+
+-(MPWBinding*)bindingForReference:aReference inContext:aContext
+{
+	return [MPWGPIOPin bindingWithReference:aReference inStore:self];
 }
 
 -(void)dealloc

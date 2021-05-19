@@ -27,6 +27,7 @@ libraspi_HEADER_FILES_INSTALL_DIR = /stsh
 
 libraspi_OBJC_FILES = \
 	MPWBCMStore.m	\
+	MPWGPIOPin.m	\
 
 
 libraspi_C_FILES = \
