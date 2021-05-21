@@ -2,4 +2,6 @@
 
 @interface MPWGPIOPin:MPWBinding
 
+@property (nonatomic, strong ) id <Streaming> target;
+
 @end
