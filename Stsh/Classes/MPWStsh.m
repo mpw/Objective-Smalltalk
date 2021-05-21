@@ -91,11 +91,11 @@ intAccessor(completionLimit, setCompletionLimit)
     if ( self.args.count == 0) {
         [self runInteractiveLoop];
     } else {
-        NSString *commandName=self.args.firstObject;
+        self.commandName=self.args.firstObject;
         self.args = [self.args subarrayWithRange:NSMakeRange(1,[self.args count]-1)];
         [[self evaluator] bindValue:self.args toVariableNamed:@"args"];
         [self setReadingFile:YES];
-        [self executeFromFileName:commandName];
+        [self executeFromFileName:self.commandName];
     }
 }
 
@@ -109,6 +109,8 @@ intAccessor(completionLimit, setCompletionLimit)
         }
     }
 }
+
+
 
 +(void)runWithArgCount:(int)argc argStrings:(const char**)argv
 {
@@ -157,6 +159,7 @@ intAccessor(completionLimit, setCompletionLimit)
         Stderr=[MPWByteStream Stderr];
 		[[self evaluator] bindValue:self toVariableNamed:@"shell"];
         [self setCompletionLimit:120];
+        self.history = [NSMutableArray array];
     }
     return self;
 }
@@ -481,6 +484,7 @@ idAccessor( retval, setRetval )
             strcpy( save, lineOfInput );
             history( history_ptr, &event, H_ENTER, save );
             count=1000;
+            [self.history addObject:[NSString stringWithUTF8String:lineOfInput]];
         }
     }
     fflush(stdout);
@@ -491,6 +495,12 @@ idAccessor( retval, setRetval )
     exit(0);
 }
 
+
+-(void)writeHistoryTo:(MPWByteStream*)stream
+{
+    [stream printf:@"#!env %s\n",self.commandName.UTF8String];
+    [[stream do] println:[self.history each]];
+}
 
 
 @end
