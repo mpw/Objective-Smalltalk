@@ -186,7 +186,7 @@ idAccessor( lhs, setLhs )
 
 //-defaultInputPort
 //{
-//    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"sink" protocol:@protocol(Streaming) sends:NO] autorelease];
+//    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"writeStream" protocol:@protocol(Streaming) sends:NO] autorelease];
 //}
 //
 
