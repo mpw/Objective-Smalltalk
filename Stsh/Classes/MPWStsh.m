@@ -495,13 +495,18 @@ idAccessor( retval, setRetval )
     exit(0);
 }
 
-
--(void)writeHistoryTo:(MPWByteStream*)stream
+-(void)writeHistoryOn:(MPWByteStream*)stream
 {
     [stream printf:@"#!env %s\n",self.commandName.UTF8String];
-    [[stream do] println:[self.history each]];
+    [[stream do] print:[self.history each]];
 }
 
+-(void)writeHistoryTo:(MPWFileBinding*)ref
+{
+    MPWByteStream *s=[ref writeStream];
+    [self writeHistoryOn:s];
+    [s close];
+}
 
 @end
 
