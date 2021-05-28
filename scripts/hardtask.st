@@ -25,10 +25,8 @@ scheme todo {
 }.
 
 todo := #todo{ #taskList: taskList }.
-jsonConverter := MPWJSONConverterStore storeWithSource:todo.
-jsonConverter setToJSONUp: true.
-jsonConverter setClass: class:Task.
-server := #MPWSchemeHttpServer{ #scheme: jsonConverter, #port: 8082 }.
+json := #MPWJSONConverterStore{ #source:todo, #toJSONUp: true, #class: class:Task }.
+server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
 shell runInteractiveLoop.
 
