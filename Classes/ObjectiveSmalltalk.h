@@ -46,7 +46,6 @@
 #import <ObjectiveSmalltalk/MPWProtocolDefinition.h>
 #import <ObjectiveSmalltalk/MPWRefScheme.h>
 #import <ObjectiveSmalltalk/MPWRelScheme.h>
-#import <ObjectiveSmalltalk/MPWResource.h>
 #import <ObjectiveSmalltalk/MPWResourceScheme.h>
 #import <ObjectiveSmalltalk/MPWScheme.h>
 #import <ObjectiveSmalltalk/MPWSchemeScheme.h>
