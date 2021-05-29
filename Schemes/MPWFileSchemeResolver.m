@@ -10,7 +10,6 @@
 #ifndef GS_API_LATEST
 #import "MPWFileWatcher.h"
 #endif
-#import "MPWResource.h"
 #import "MPWScheme.h"
 
 @implementation MPWFileSchemeResolver

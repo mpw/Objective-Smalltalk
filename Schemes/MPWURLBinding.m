@@ -7,7 +7,6 @@
 //
 
 #import "MPWURLBinding.h"
-#import "MPWResource.h"
 #import <MPWFoundation/MPWSocketStream.h>
 
 @interface SayYES : NSObject

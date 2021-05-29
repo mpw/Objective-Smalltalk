@@ -8,7 +8,6 @@
 
 #import "MPWURLSchemeResolver.h"
 #import "MPWURLBinding.h"
-#import "MPWResource.h"
 
 @interface MPWURLSchemeResolver ()
 
