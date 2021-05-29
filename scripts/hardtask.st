@@ -2,6 +2,7 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
+	var <int>  id.
 	var <bool> done.
 	var title.
 	-description { "Task: {this:title} done: {this:done}". }
@@ -13,13 +14,20 @@ class Task {
 	}
 }
 
-taskList ← #( #Task{ #title: 'Clean Room', #done: false }, #Task{ #title: 'Check Twitter', #done: true } ).
+taskList ← #( #Task{ #id: 1, #title: 'Clean Room', #done: false }, #Task{ #id: 2, #title: 'Check Twitter', #done: true } ).
 
 scheme todo {
 	var taskList.
 	/tasks { 
 		|= { 
 			this:taskList.
+		}
+	}
+	/task/:id {
+		|= {
+            id ← id intValue.
+			matches := this:taskList select:{ :aTask | aTask id = id. }.
+			matches firstObject.
 		}
 	}
 }.
