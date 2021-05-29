@@ -8,6 +8,7 @@ class Task {
 	-description { "Task: {this:title} done: {this:done}". }
 	-<void>writeOnJSONStream:aStream {
 		aStream writeDictionaryLikeObject:self withContentBlock:{ :writer |
+			writer writeInteger: this:id forKey:'id'.
 			writer writeString: this:title forKey:'title'.
 			writer writeInteger: this:done forKey:'done'.
 		}.
