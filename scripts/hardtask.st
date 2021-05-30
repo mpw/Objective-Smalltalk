@@ -2,7 +2,7 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
-	var <int>  id.
+	var id.
 	var <bool> done.
 	var title.
 	-description { "Task: {this:title} done: {this:done}". }
@@ -15,25 +15,39 @@ class Task {
 	}
 }
 
-taskList ← #( #Task{ #id: 1, #title: 'Clean Room', #done: false }, #Task{ #id: 2, #title: 'Check Twitter', #done: true } ).
+taskList ← #( #Task{ #id: '1', #title: 'Clean Room', #done: false }, #Task{ #id: '2', #title: 'Check Twitter', #done: true } ).
 
 scheme todo {
-	var taskList.
+	var taskDict.
+	var store.
+	-schemeNames {  #( 'store' ). }
+	-<void>setTaskList:aList {
+		this:taskDict := NSMutableDictionary dictionaryWithObjects: aList forKeys: aList collect id.
+		stdout println: this:taskDict.
+	}
 	/tasks { 
 		|= { 
-			this:taskList.
+			this:taskDict allValues.
 		}
 	}
 	/task/:id {
 		|= {
-            id ← id intValue.
-			matches := this:taskList select:{ :aTask | aTask id = id. }.
-			matches firstObject.
+			this:taskDict at:id .
 		}
+		=| {
+			this:taskDict at:id put:newValue.
+			self persist.
+		}
+	}
+	-<void>persist {
+		store:tasks := this:taskDict allValues.
 	}
 }.
 
-todo := #todo{ #taskList: taskList }.
+persistenceJSON := #MPWJSONConverterStore{ #toJSONUp: false, #class: class:Task }.
+persistenceFile := ref:file:/tmp/tasks/ asScheme.
+persistence := persistenceJSON → persistenceFile.
+todo := #todo{ #taskList: taskList, #store: persistence }.
 json := #MPWJSONConverterStore{  #toJSONUp: true, #class: class:Task }.
 json → todo.
 server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
