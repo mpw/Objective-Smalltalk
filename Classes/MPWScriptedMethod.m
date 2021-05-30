@@ -123,10 +123,12 @@ idAccessor( script, _setScript )
 	MPWEvaluator* executionContext = [self executionContext];
     [executionContext bindValue:self toVariableNamed:@"self"];
     [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
-    for ( NSString *schemeName in [target schemeNames]) {
-        id <MPWStorage> store=[target valueForKey:schemeName];
-        if ( store ) {
-            [[executionContext schemes] setSchemeHandler:store forSchemeName:schemeName];
+    if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
+        for ( NSString *schemeName in [target schemeNames]) {
+            id <MPWStorage> store=[target valueForKey:schemeName];
+            if ( store ) {
+                [[executionContext schemes] setSchemeHandler:store forSchemeName:schemeName];
+            }
         }
     }
 //    NSLog(@"evalute scripted method %@",[self header]);
