@@ -10,9 +10,9 @@
 
 
 @interface MPWRecursiveIdentifier : MPWIdentifier {
-	MPWIdentifier *nextIdentifer;
+	MPWIdentifier *nextIdentifier;
 }
 
-objectAccessor_h( MPWIdentifier, nextIdentifer, setNextIdentifier )
+objectAccessor_h( MPWIdentifier, nextIdentifier, setNextIdentifier )
 
 @end

@@ -954,8 +954,8 @@ idAccessor(solver, setSolver)
 {
     id result=[self parseExpression];
     MPWIdentifierExpression* selfReceiver=[[[MPWIdentifierExpression alloc] init] autorelease];
-    MPWIdentifier *selfIdentifer=[MPWIdentifier identifierWithName:@"self"];
-    [selfReceiver setIdentifier:selfIdentifer];
+    MPWIdentifier *selfIdentifier=[MPWIdentifier identifierWithName:@"self"];
+    [selfReceiver setIdentifier:selfIdentifier];
 
     MPWMessageExpression *forward=[[[MPWMessageExpression alloc] initWithReceiver:selfReceiver] autorelease];
     [forward setSelector:@selector(forward:)];
@@ -1489,7 +1489,7 @@ idAccessor(solver, setSolver)
 {
     STCompiler *compiler=[self compiler];
     MPWIdentifierExpression *expr=[compiler compile:@"doc:."];
-    EXPECTTRUE([expr isKindOfClass:[MPWIdentifierExpression class]], @"var:. parses to identifer expression");
+    EXPECTTRUE([expr isKindOfClass:[MPWIdentifierExpression class]], @"var:. parses to identifier expression");
     MPWIdentifier *identifier=[expr identifier];
     IDEXPECT([identifier schemeName], @"doc", @"scheme");
     IDEXPECT([identifier identifierName], @".", @"path");

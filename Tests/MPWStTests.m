@@ -833,8 +833,8 @@
 	NSString *testString = @"var://www.livescribe.com/cgi-bin/WebObjects/LDApp.woa/wa/flashXML?xml=0000C0A8011700003A9B943B0000012A1F327D6595DF6E07";
 	STCompiler *compiler=[[[STCompiler alloc] init] autorelease];
 	id compiled = [testString compileIn:compiler];
-	id identifer=[compiled identifier];
-	IDEXPECT( [identifer identifierName], @"//www.livescribe.com/cgi-bin/WebObjects/LDApp.woa/wa/flashXML?xml=0000C0A8011700003A9B943B0000012A1F327D6595DF6E07",@"identifier with leading zeros" );
+	id identifier=[compiled identifier];
+	IDEXPECT( [identifier identifierName], @"//www.livescribe.com/cgi-bin/WebObjects/LDApp.woa/wa/flashXML?xml=0000C0A8011700003A9B943B0000012A1F327D6595DF6E07",@"identifier with leading zeros" );
 }
 
 +(void)testStringToBinding
@@ -990,8 +990,8 @@
     MPWAssignmentExpression *e=[compiler compile:@"a:=a"];
     MPWIdentifierExpression *lhs=[e lhs];
     MPWIdentifierExpression *rhs=[e rhs];
-    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifer expression")
-    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifer expression")
+    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifier expression")
+    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifier expression")
     
     EXPECTTRUE( lhs == rhs, @"lhs should be identical to rhs");
     
@@ -1003,8 +1003,8 @@
     MPWAssignmentExpression *e=[compiler compile:@"var:a := var:a"];
     MPWIdentifierExpression *lhs=[e lhs];
     MPWIdentifierExpression *rhs=[e rhs];
-    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifer expression")
-    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifer expression")
+    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifier expression")
+    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifier expression")
     
     EXPECTTRUE( lhs == rhs, @"lhs should be identical to rhs");
     

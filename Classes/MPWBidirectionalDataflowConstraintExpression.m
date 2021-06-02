@@ -26,7 +26,7 @@
             [lhobject setBinding:b];
             return b;
         } else {
-            @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"RHS must be an identifer expression" userInfo:nil];
+            @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"RHS must be an identifier expression" userInfo:nil];
         }
     } else {
         @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"LHS can't be bound" userInfo:nil];
