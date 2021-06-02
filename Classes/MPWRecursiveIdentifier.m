@@ -11,24 +11,24 @@
 
 @implementation MPWRecursiveIdentifier
 
-objectAccessor( MPWIdentifier, nextIdentifer, setNextIdentifier )
+objectAccessor( MPWIdentifier, nextIdentifier, setNextIdentifier )
 
 -resolveRescursiveIdentifierWithContext:aContext
 {
     MPWRecursiveIdentifier *identifier=[super resolveRescursiveIdentifierWithContext:aContext];
-    [identifier setNextIdentifier:[self nextIdentifer]];
+    [identifier setNextIdentifier:[self nextIdentifier]];
     return identifier;
 }
 
 -(NSString*)path
 {
-    return self.nextIdentifer.path;
+    return self.nextIdentifier.path;
 }
 
 
 -(void)dealloc
 {
-	[nextIdentifer release];
+	[nextIdentifier release];
 	[super dealloc];
 }
 @end

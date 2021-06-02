@@ -17,10 +17,8 @@ class Task {
 
 taskList ← #( #Task{ #id: '1', #title: 'Clean Room', #done: false }, #Task{ #id: '2', #title: 'Check Twitter', #done: true } ).
 
-scheme todo {
+scheme todo : MPWMappingStore {
 	var taskDict.
-	var store.
-	-schemeNames {  #( 'store' ). }
 	-<void>setTaskList:aList {
 		this:taskDict := NSMutableDictionary dictionaryWithObjects: aList forKeys: aList collect id.
 		stdout println: this:taskDict.
@@ -40,16 +38,13 @@ scheme todo {
 		}
 	}
 	-<void>persist {
-		store:tasks := this:taskDict allValues.
+		source:tasks := this:taskDict allValues.
 	}
 }.
 
-persistenceJSON := #MPWJSONConverterStore{ #toJSONUp: false, #class: class:Task }.
-persistenceFile := ref:file:/tmp/tasks/ asScheme.
-persistence := persistenceJSON → persistenceFile.
-todo := #todo{ #taskList: taskList, #store: persistence }.
-json := #MPWJSONConverterStore{  #toJSONUp: true, #class: class:Task }.
-json → todo.
+todo := #todo{ #taskList: taskList }.
+json := #MPWJSONConverterStore{  #up: true, #class: class:Task }.
+json → todo → #MPWJSONConverterStore{  #class: class:Task } → ref:file:/tmp/tasks/ asScheme.
 server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
 shell runInteractiveLoop.

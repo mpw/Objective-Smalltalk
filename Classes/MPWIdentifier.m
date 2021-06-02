@@ -60,8 +60,8 @@
 			NSString *nested=[component substringWithRange:NSMakeRange(1, [component length]-2)];
 
 #if 0
-            MPWIdentifier *nestedIdentifer=[MPWIdentifier identifierWithName:nested];
-            evaluatedComponent=[aContext at:nestedIdentifer];
+            MPWIdentifier *nestedIdentifier=[MPWIdentifier identifierWithName:nested];
+            evaluatedComponent=[aContext at:nestedIdentifier];
 #else
             evaluatedComponent=[aContext evaluateScriptString:nested];
 #endif

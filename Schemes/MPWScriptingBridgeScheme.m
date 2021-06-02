@@ -45,9 +45,9 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
 //    }
 //}
 
--appForIdentifier:(NSString*)identifer
+-appForIdentifier:(NSString*)identifier
 {
-	id remoteApp = [[self bridges] objectForKey:identifer];
+	id remoteApp = [[self bridges] objectForKey:identifier];
 	if ( !remoteApp ){
         Class sbappclass=NSClassFromString(@"SBApplication");
         if (!sbappclass) {
@@ -55,10 +55,10 @@ objectAccessor( NSMutableDictionary, bridges, setBridges )
             return nil;
         }
 //        [self _addObjectCreationMethodToSBApplication];
-		remoteApp = [NSClassFromString(@"SBApplication") applicationWithBundleIdentifier:identifer];
+		remoteApp = [NSClassFromString(@"SBApplication") applicationWithBundleIdentifier:identifier];
         NSLog(@"remote app: %@",remoteApp);
 		if ( remoteApp ) {
-			[[self bridges] setObject:remoteApp forKey:identifer];
+			[[self bridges] setObject:remoteApp forKey:identifier];
 		}
 	}
 	return remoteApp;

@@ -16,10 +16,10 @@
 
 -bindingForReference:(MPWRecursiveIdentifier*)anIdentifier inContext:(MPWEvaluator*)aContext
 {
-    MPWIdentifier* nextIdentifer = [anIdentifier nextIdentifer];
-//    NSAssert1( [nextIdentifer scheme], @"nextIdentifer", nil );
-    MPWScheme *originalScheme=[aContext schemeForName:[nextIdentifer schemeName]];
-    id originalBinding = [originalScheme bindingWithIdentifier:nextIdentifer withContext:aContext];
+    MPWIdentifier* nextIdentifier = [anIdentifier nextIdentifier];
+//    NSAssert1( [nextIdentifier scheme], @"nextIdentifier", nil );
+    MPWScheme *originalScheme=[aContext schemeForName:[nextIdentifier schemeName]];
+    id originalBinding = [originalScheme bindingWithIdentifier:nextIdentifier withContext:aContext];
 //    NSLog(@"eval ref, original binding: %@",originalBinding);
     id binding = [MPWSelfContainedBinding bindingWithValue:originalBinding];
 //    NSLog(@"eval ref, ref binding: %@",binding);

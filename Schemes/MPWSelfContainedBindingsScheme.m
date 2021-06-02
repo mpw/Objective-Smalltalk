@@ -12,17 +12,17 @@
 @implementation MPWSelfContainedBindingsScheme
 
 
--evaluateIdentifier:anIdentifer withContext:aContext
+-evaluateIdentifier:anIdentifier withContext:aContext
 {
     static id nilClass = nil;
     if (!nilClass) {
         nilClass=[NSNil class];
     }
-    id value = [super evaluateIdentifier:anIdentifer withContext:aContext];
+    id value = [super evaluateIdentifier:anIdentifier withContext:aContext];
     if ( !value ) {
-        id binding=[self bindingWithIdentifier:anIdentifer withContext:aContext];
+        id binding=[self bindingWithIdentifier:anIdentifier withContext:aContext];
         if (!binding) {
-            value=[aContext valueForUndefinedVariableNamed:[anIdentifer path]];
+            value=[aContext valueForUndefinedVariableNamed:[anIdentifier path]];
         } else {
             value=[binding value];
         }

@@ -232,7 +232,7 @@
     IDEXPECT(content[1].key,@"folder/hello.txt",@"file in subfolder");
 }
 
-+(void)testListBucketsViaIdentifer
++(void)testListBucketsViaIdentifier
 {
     [self setupCredentials];
     STCompiler *interpreter = [self _testInterpreter];
@@ -242,7 +242,7 @@
 }
 
 
-+(void)testListBucketContentListViaIdentifer
++(void)testListBucketContentListViaIdentifier
 {
     [self setupCredentials];
     STCompiler *interpreter = [self _testInterpreter];
@@ -252,7 +252,7 @@
     IDEXPECT(content[1],@"folder/hello.txt",@"file in folder");
 }
 
-+(void)testGetBucketContentsViaIdentifer
++(void)testGetBucketContentsViaIdentifier
 {
     [self setupCredentials];
     STCompiler *interpreter = [self _testInterpreter];
@@ -260,7 +260,7 @@
     INTEXPECT(aliaspy.length, 11138, @"length");
 }
 
-+(void)testGetBucketFolderContentsViaIdentifer
++(void)testGetBucketFolderContentsViaIdentifier
 {
     [self setupCredentials];
     STCompiler *interpreter = [self _testInterpreter];
@@ -276,10 +276,10 @@
              @"testConfiguredWithLocalURL",
              @"testLocalS3ListBuckets",
              @"testLocalS3ListContentOfBucket",
-             @"testListBucketsViaIdentifer",
-             @"testListBucketContentListViaIdentifer",
-             @"testGetBucketContentsViaIdentifer",
-             @"testGetBucketFolderContentsViaIdentifer",
+             @"testListBucketsViaIdentifier",
+             @"testListBucketContentListViaIdentifier",
+             @"testGetBucketContentsViaIdentifier",
+             @"testGetBucketFolderContentsViaIdentifier",
              ];
 }
 
