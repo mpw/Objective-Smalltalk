@@ -38,8 +38,10 @@ typedef id (^ZeroArgBlock)(void);
     static int initialized=NO;
     if  ( !initialized) {
         Class blockClass=NSClassFromString(@"NSBlock");
-        IMP theImp=imp_implementationWithBlock( ^(id blockSelf, id argument){ ((OneArgBlock)blockSelf)(argument); } );
-        class_addMethod(blockClass, @selector(value:), theImp, "@@:@");
+        IMP oneArgImp=imp_implementationWithBlock( ^(id blockSelf, id argument){ ((OneArgBlock)blockSelf)(argument); } );
+        class_addMethod(blockClass, @selector(value:), oneArgImp, "@@:@");
+        IMP zeroArgImp=imp_implementationWithBlock( ^(id blockSelf){ ((ZeroArgBlock)blockSelf)(); } );
+        class_addMethod(blockClass, @selector(value), zeroArgImp, "@@:");
         initialized=YES;
     }
 }
