@@ -35,9 +35,6 @@ scheme todo : MPWMappingStore {
 	}
 }.
 
-s1 := MPWJSONWriter stream.
-s1 createEncoderMethodForClass: class:Task.
-
 todo := #todo{ #taskList: taskList }.
 json := #MPWJSONConverterStore{  #up: true, #class: class:Task }.
 json → todo → #MPWJSONConverterStore{  #class: class:Task } → ref:file:/tmp/tasks/ asScheme.
