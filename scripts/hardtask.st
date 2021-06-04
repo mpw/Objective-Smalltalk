@@ -6,13 +6,6 @@ class Task {
 	var <bool> done.
 	var title.
 	-description { "Task: {this:title} done: {this:done}". }
-	-<void>writeOnJSONStream:aStream {
-		aStream writeDictionaryLikeObject:self withContentBlock:{ :writer |
-			writer writeInteger: this:id forKey:'id'.
-			writer writeString: this:title forKey:'title'.
-			writer writeInteger: this:done forKey:'done'.
-		}.
-	}
 }
 
 taskList ← #( #Task{ #id: '1', #title: 'Clean Room', #done: false }, #Task{ #id: '2', #title: 'Check Twitter', #done: true } ).
@@ -41,6 +34,9 @@ scheme todo : MPWMappingStore {
 		source:tasks := this:taskDict allValues.
 	}
 }.
+
+s1 := MPWJSONWriter stream.
+s1 createEncoderMethodForClass: class:Task.
 
 todo := #todo{ #taskList: taskList }.
 json := #MPWJSONConverterStore{  #up: true, #class: class:Task }.
