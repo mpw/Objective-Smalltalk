@@ -25,13 +25,9 @@ class List : ToDoBase {
    -tasks { this:tasksRef value.  }
 }.
 
-
 dir ← dirRef asScheme. 
-json1 ← #TodoJSON{ #converterClass: Task }
-scheme:tasks ← json1 → dir.
-
-json2 ← #TodoJSON{ #converterClass: List }
-scheme:lists ← json2 → dir.
+scheme:tasks ← #TodoJSON{ #converterClass: Task } → dir.
+scheme:lists ← #TodoJSON{ #converterClass: List } → dir.
 
 
 lists:2 do: { :list | 
