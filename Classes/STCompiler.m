@@ -358,7 +358,11 @@ idAccessor(solver, setSolver)
             [self pushBack:token];
         }
     }
-//    NSLog(@"return literal dict: %@",dictLit);
+    token = [self nextToken];               // sometimes we haven't consumed to closing brace
+    if ( ![token isEqualToString:@"}"]) {
+        [self pushBack:token];
+    }
+//    NSLog(@"return literal dict: %@ scanner now: %@",dictLit,[self scanner]);
     return dictLit;
 }
 
@@ -905,9 +909,12 @@ idAccessor(solver, setSolver)
 //    NSLog(@"-parseExpressionInLiteral first: %@",first);
 	id second;
 	if ( [first isToken] && ![first isEqual:@"-"]  ) {
+//        NSLog(@"get first via objectifyScanned: %@",first);
 		first = [self objectifyScanned:first];
+//        NSLog(@"got first: %@",first);
+//        NSLog(@"fetch second");
 		second = [self nextToken];
-
+//        NSLog(@"second: %@",second);
 		if (  [self isAssignmentLikeToken:second]  ) {
 //			NSLog(@"assignmentLikeToken: %@",second);
 			return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];
@@ -1533,6 +1540,32 @@ idAccessor(solver, setSolver)
     IDEXPECT( result[@"a"], @(3), @"contents");
 }
 
++(void)testBasicConnectionExpressionIsParsed
+{
+    NSString *testProgram =@"source → stdout";
+    STCompiler *compiler=[self compiler];
+    [compiler evaluateScriptString:@"source ← #MPWFixedValueSource{}"];
+    id compiled = [compiler compile:testProgram];
+    NSLog(@"compiled for %@=%@",testProgram,compiled);
+    EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
+}
+
++(void)testParsingConnectedObjectLiterals
+{
+    // same as BasicConnectionExpression, but without the temporary
+    NSString *testProgram =@"#MPWFixedValueSource{  } -> stdout";
+
+    STCompiler *compiler=[self compiler];
+    id compiled = [compiler compile:testProgram];
+    NSLog(@"compiled for %@=%@",testProgram,compiled);
+    EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
+}
+
++(void)testObjectLiteralsCanBeUsedInSimpleArithmeticExpressions
+{
+    id result=[[self compiler] evaluateScriptString:@"#MPWInteger{ #intValue: 3 } +  #MPWInteger{ #intValue: 7 }"];
+    INTEXPECT( [result intValue], 10, @"result of add");
+}
 
 +testSelectors
 {
@@ -1543,7 +1576,10 @@ idAccessor(solver, setSolver)
               @"testParsingMethodBodyPreservesSource",
               @"testParsingPartialNestedLiteralsDoesNotHang",
               @"testParseSimpleLiteralDictWithSimplifiedStringKey",
+              @"testBasicConnectionExpressionIsParsed",
               @"testParsingObjectLiteral",
+              @"testParsingConnectedObjectLiterals",
+              @"testObjectLiteralsCanBeUsedInSimpleArithmeticExpressions",
               ];
 }
 
