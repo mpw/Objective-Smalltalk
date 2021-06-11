@@ -34,7 +34,7 @@ idAccessor( _signature, setSignature )
 +getFastMessageForSelector:(SEL)aSelector andSignature:(NSMethodSignature*)sig
 {
 #if 1
-	int argCount = [sig numberOfArguments]-2;
+	int argCount = (int)[sig numberOfArguments]-2;
 	char typestring[ argCount+2 ];
 	BOOL allIds;
 	int i;

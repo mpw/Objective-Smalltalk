@@ -280,7 +280,7 @@ idAccessor( method, _setMethod )
 	returnValue = (id)[target answerToEverything];
 	NSLog(@"returnValue: %@ expectedReturnAfterOverride: %@",returnValue,expectedReturnAfterOverride);
 	IDEXPECT( returnValue, expectedReturnAfterOverride, @"expected return after override");
-    NSAssert1( returnValue != initialReturn, @"original return value not same as override: %d",(int)returnValue);
+    NSAssert1( returnValue != initialReturn, @"original return value not same as override: %p",returnValue);
     [callback uninstall];
  	returnValue = (id)[target answerToEverything];
 	INTEXPECT( (NSInteger)returnValue, (NSInteger)initialReturn, @"uninstall of method should yield original result");

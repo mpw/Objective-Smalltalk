@@ -31,7 +31,7 @@
     } else {
         @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"LHS can't be bound" userInfo:nil];
     }
-    @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"Shouldn't get here" userInfo:nil];
+//    @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"Shouldn't get here" userInfo:nil];
 
 }
 
