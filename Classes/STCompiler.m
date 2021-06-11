@@ -12,7 +12,7 @@
 #import "MPWMethodStore.h"
 #import "MPWIdentifier.h"
 #import "MPWRecursiveIdentifier.h"
-#import "MPWURLSchemeResolver.h"
+//#import "MPWURLSchemeResolver.h"
 #import "MPWFileSchemeResolver.h"
 #import "MPWEnvScheme.h"
 #import "MPWBundleScheme.h"
