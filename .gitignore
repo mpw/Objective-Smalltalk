@@ -4,6 +4,7 @@ CVS
 ObjectiveSmalltalk.xcodeproj/xcuserdata/
 *.o
 *.dylib
+*.swp
 .headers
 TestObjectiveSmalltalk/testobjectivesmalltalk
 Stsh/stsh
