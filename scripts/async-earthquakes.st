@@ -12,7 +12,8 @@ class Quake {
 filter quaker |{
     values ← object componentsSeparatedByString:','.
 	quake ← Quake new.
-    var:quake/time ← values at:0.
+    scheme:q := ref:var:quake/ asScheme.
+    q:time ← values at:0.
     var:quake/latitude ← values at:1.
     var:quake/longitude ← values at:2.
     var:quake/magnitude ← values at:4.
