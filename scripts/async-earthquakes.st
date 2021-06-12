@@ -1,24 +1,12 @@
 #!env stsh
-ref := ref:https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv
-s ← ref stream.
-f ← MPWBytesToLines stream.
-class Quake {
-	var time.
-	var longitude.
-	var latitude.
-	var magnitude.
-	-description { "Quake: magnitude {this:magnitude} on {this:time} at {this:latitude} {this:longitude}" }
-}
-filter quaker |{
-    values ← object componentsSeparatedByString:','.
-	quake ← Quake new.
-    scheme:q := ref:var:quake/ asScheme.
-    q:time ← values at:0.
-    var:quake/latitude ← values at:1.
-    var:quake/longitude ← values at:2.
-    var:quake/magnitude ← values at:4.
-	^quake
+stream ← ref:https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv lines.
+stream do: { :theLine |
+    values ← theLine componentsSeparatedByString:','.
+    time ← values at:0.
+    latitude ← values at:1.
+    longitude ← values at:2.
+    magnitude ← values at:4.
+	magnitude. time. latitude. longitude.
+	stdout println:"Quake: magnitude {magnitude} on {time} at {latitude} {longitude}".
 }. 
-s → f → quaker → MPWPrintLiner → stdout.
-s run.
-shell runInteractiveLoop.
+stream awaitResultForSeconds:5.
