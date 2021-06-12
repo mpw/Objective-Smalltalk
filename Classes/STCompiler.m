@@ -780,7 +780,6 @@ idAccessor(solver, setSolver)
         if ( [expr respondsToSelector:@selector(name)] && [[expr name] isEqual:@"super"]) {
             expr=@"self";
             isSuper=YES;
-            NSLog(@"isSuper");
         }
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         ((MPWMessageExpression*)expr).isSuper=isSuper;

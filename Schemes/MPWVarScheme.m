@@ -102,7 +102,7 @@
 
 -(void)at:(id <MPWReferencing>)aReference put:anObject
 {
-    NSLog(@"NSObject at:%@ put:%@",aReference,anObject);
+//    NSLog(@"NSObject at:%@ put:%@",aReference,anObject);
     [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }
 
