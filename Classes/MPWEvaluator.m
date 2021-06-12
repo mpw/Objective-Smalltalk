@@ -216,6 +216,8 @@ idAccessor( localVars, setLocalVars )
 {
     MPWBinding *binding = [self makeLocalBindingNamed:variableName];
     [localVars setObject:binding forKey:variableName];
+    [self cacheBinding:binding forName:variableName];
+
     return binding;
 }
 

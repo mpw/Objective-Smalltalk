@@ -6,7 +6,6 @@ stream do: { :theLine |
     latitude ← values at:1.
     longitude ← values at:2.
     magnitude ← values at:4.
-	magnitude. time. latitude. longitude.
 	stdout println:"Quake: magnitude {magnitude} on {time} at {latitude} {longitude}".
 }. 
-stream awaitResultForSeconds:5.
+stream awaitResultForSeconds:20.
