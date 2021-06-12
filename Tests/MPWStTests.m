@@ -1256,6 +1256,26 @@
     IDEXPECT(result,@"hello world!",@"");
 }
 
++(void)testInterpolatedStringInBlockCapturedVar
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"b := 'world'."];
+    [compiler evaluateScriptString:@"block ← {  \"hello {b}!\"}."];
+    id result=[compiler evaluateScriptString:@"block value"];
+    IDEXPECT(result,@"hello world!",@"");
+}
+
++(void)testInterpolatedStringInBlockLocalVar
+{
+    STCompiler *compiler=[STCompiler compiler];
+//    [compiler evaluateScriptString:@"c ← ''."];
+    [compiler evaluateScriptString:@"block ← { :interpolationBlockParam |  stdout println:'==--=='. stdout println:'block param: ',interpolationBlockParam.  \"block hello {interpolationBlockParam}!\". }."];
+    [compiler evaluateScriptString:@"block value:'block world'"];
+    id result=[compiler evaluateScriptString:@"block value:'block world'"];
+    printf("--===---\n");
+    IDEXPECT(result,@"block hello block world!",@"");
+}
+
 +(void)testReduceFactorial
 {
     [self testexpr:@"(1 to: 5) reduce * 1" expected:@(120)];
@@ -1521,6 +1541,8 @@
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",
         @"testCanInterpolateStringWithScheme",
+        @"testInterpolatedStringInBlockCapturedVar",
+        @"testInterpolatedStringInBlockLocalVar",
         @"testReduceFactorial",
         @"testObjectTemplate",
 #if 1 // !GS_API_LATEST

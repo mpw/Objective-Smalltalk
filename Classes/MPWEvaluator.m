@@ -119,6 +119,8 @@ idAccessor( localVars, setLocalVars )
     return self;
 }
 
+-parent { return parent; }
+
 -init
 {
 	return [self initWithParent:nil];
@@ -142,13 +144,20 @@ idAccessor( localVars, setLocalVars )
 
 -at:aReference
 {
-//    NSLog(@"evaluator %@ objectForReferences: %@",self,aReference);
+//    NSLog(@"evaluator %@ at: %@",self,aReference);
     MPWScheme *s=[self schemeForName:[aReference schemeName]];
 //    NSLog(@"scheme: %@",s);
     id value = [s at:aReference];
 //    NSLog(@"value: %@",value);
     if (!value) {
-        value=[parent at:aReference];
+        MPWBinding *binding=[self cachedBindingForName:[aReference path]];
+        if ( binding) {
+            value=[binding value];
+        }
+        if (!value ) {
+//            NSLog(@"parent lookup of '%@",aReference);
+            value=[parent at:aReference];
+        }
     }
     return value;
 }
@@ -221,7 +230,7 @@ idAccessor( localVars, setLocalVars )
 //        NSLog(@"binding  %@ setValue",binding);
         [binding setValue:value];
     } else {            // the way it should be
-        [scheme at:[scheme referenceForPath:variableName] put:value ];      //  FIXME at:put:
+        [scheme at:[scheme referenceForPath:variableName] put:value ]; 
     }
 }
 
@@ -347,7 +356,7 @@ idAccessor( localVars, setLocalVars )
 
 -(BOOL)tryLocalMessageForUnboundSelectors
 {
-    return YES;
+    return NO;
 }
 
 -valueForUndefinedVariableNamed:aName

@@ -27,7 +27,9 @@ idAccessor(theLiteral, setTheLiteral)
 //            NSLog(@"==will interpolate===");
             result=[NSMutableString string];
             MPWByteStream *stream=[MPWByteStream streamWithTarget:result];
+            NSLog(@"interpolating string %@ with context: %@",theLiteral,aContext);
             [stream writeInterpolatedString:theLiteral withEnvironment:(MPWAbstractStore*)aContext];
+            NSLog(@"result: %@",result);
         } else {
             result=[s realString];
         }
