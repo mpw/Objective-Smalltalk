@@ -5,12 +5,12 @@ context loadFramework:'EventKit' .
 store := EKEventStore alloc  initWithAccessToEntityTypes: EKEntityTypeReminder.
 calendar := ((store calendarsForEntityType: EKEntityTypeReminder ) selectWhereValueForKey:'title' isEqual:calendarName) lastObject.
 
-reminders := args collect: [ :activityName | reminder := EKReminder reminderWithEventStore:store.  reminder setTitle:activityName. reminder. ].
+reminders := args collect: { :activityName | reminder := EKReminder reminderWithEventStore:store.  reminder setTitle:activityName. reminder. }.
 reminders do setCalendar:calendar.
 due := NSDate date.
 calr := NSCalendar currentCalendar.
 oneDayFromNowComponents := NSDateComponents new.
 var:oneDayFromNowComponents/day := 1.
-reminders do: [ :reminder |  reminder setStartDate:due.  reminder setDueDateComponents: (calr components:-1 fromDate:due).  due := calr dateByAddingComponents:oneDayFromNowComponents toDate:due options:0.  ].
+reminders do: { :reminder |  reminder setStartDate:due.  reminder setDueDateComponents: (calr components:-1 fromDate:due).  due := calr dateByAddingComponents:oneDayFromNowComponents toDate:due options:0.  }.
 store do saveReminder:reminders each commit:0 error:nil.
 store commit:nil.

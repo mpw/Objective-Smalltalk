@@ -1,6 +1,6 @@
 #!/usr/local/bin/stsh
 framework:ReactiveCocoa load.
-signal := ((RACSignal interval:1) startWith:NSDate date) map:[ :date | val := date stringValue. stdout println:val. val. ].
+signal := ((RACSignal interval:1) startWith:NSDate date) map:{ :date | val := date stringValue. stdout println:val. val. }.
 a :=  #{ #a : 2 }.
 trampoline := (RACSubscriptingAssignmentTrampoline alloc initWithTarget:a nilValue:nil).
 trampoline setObject:signal forKeyedSubscript:'b'.

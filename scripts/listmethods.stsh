@@ -3,10 +3,10 @@
 
 framework:Cocoa load.
 a := MPWClassMirror allUsefulClasses.
-a do: [  :aClassMirror |
+a do: {  :aClassMirror |
 	stdout println: aClassMirror name.
 	stdout println:'------'.
 	stdout do println: aClassMirror methodMirrors collect name each.
 	stdout println:''.
 	stdout println:''.
-].
+}.

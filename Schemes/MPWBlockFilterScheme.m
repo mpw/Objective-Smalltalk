@@ -62,7 +62,7 @@ idAccessor( valueFilter, setValueFilter)
 {
     id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:len := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:nil valueFilter:[ :value | value length stringValue.]."];
+    [compiler evaluateScriptString:@"scheme:len := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:nil valueFilter:{ :value | value length stringValue. }."];
     id result=[compiler evaluateScriptString:@"len:hi"];
     INTEXPECT([result intValue], 11, @"length of hello world");
 }
@@ -71,7 +71,7 @@ idAccessor( valueFilter, setValueFilter)
 {
     id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:nil."];
+    [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:{ :id | id,'.txt'.} valueFilter:nil."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
     IDEXPECT(result, @"Hello World", @"hello world");
 }
@@ -80,7 +80,7 @@ idAccessor( valueFilter, setValueFilter)
 {
     id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]."];
+    [compiler evaluateScriptString:@"scheme:txt := MPWBlockFilterScheme filterWithSource:scheme:base idFilter:{ :id | id,'.txt'.} valueFilter:{ :value | value length stringValue. }."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
     INTEXPECT([result intValue], 11, @"length of hello world");
 }
@@ -89,7 +89,7 @@ idAccessor( valueFilter, setValueFilter)
 {
     id compiler=[[STCompiler new] autorelease];
     [compiler evaluateScriptString:@"scheme:base := MPWTreeNodeScheme scheme.  base:/hi.txt := 'Hello World'."];
-    [compiler evaluateScriptString:@"scheme:txt := (MPWBlockFilterScheme filterWithSource:scheme:base idFilter:[:id | id,'.txt'.] valueFilter:[ :value | value length stringValue.]) cachedBy:MPWTreeNodeScheme scheme."];
+    [compiler evaluateScriptString:@"scheme:txt := (MPWBlockFilterScheme filterWithSource:scheme:base idFilter:{ :id | id,'.txt'.} valueFilter:{ :value | value length stringValue. }) cachedBy:MPWTreeNodeScheme scheme."];
     id result=[compiler evaluateScriptString:@"txt:hi"];
     INTEXPECT([result intValue], 11, @"length of hello world");
 }

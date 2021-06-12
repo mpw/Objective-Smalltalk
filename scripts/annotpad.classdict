@@ -39,25 +39,25 @@
    stdout println: self thumbsView subviews.
  
  viewsToRemove := NSMutableArray array.
-  self thumbsView subviews do: [ :aView |
-       aView filename = aFilename ifTrue: [
+  self thumbsView subviews do: { :aView |
+       aView filename = aFilename ifTrue: {
             viewsToRemove addObject: aView.
-       ].
-   ].
+       }.
+   }.
    aView := viewsToRemove objectAtIndex: 0.
    stdout println:'after checking views'.
 
 
            UIView animateWithDuration:0.4
-           animations: [ aView setAlpha: 0.0. ]
-           completion: [ aView removeFromSuperview. 
+           animations: { aView setAlpha: 0.0. }
+           completion: { aView removeFromSuperview. 
                                    UIView animateWithDuration: 0.2
-                                   animations: [ 
-        self thumbsView layoutSubviews. ]
-                                    completion: [ 3  ]. 
+                                   animations: { 
+        self thumbsView layoutSubviews. }
+                                    completion: { 3  }. 
      stdout := MPWByteStream  Stdout.
   stdout println: 'completion : ',aFilename.
-	 stdout println: self thumbsView subviews.].
+	 stdout println: self thumbsView subviews.}.
 
   NSFileManager defaultManager removeItemAtURL: (self urlForFile:aFilename) error: nil.
    (self thumbsView afterDelay: 0.3 ) setNeedsLayout.
@@ -92,18 +92,18 @@
 
 </string>
 			<key>getThumbnailForFile:filename</key>
-			<string>   self thumbs isNil ifTrue: [
+			<string>   self thumbs isNil ifTrue: {
         var:self/thumbs := NSCache alloc init autorelease.
-    ].
+    }.
     thumb := var:self/thumbs objectForKey:filename.
-    thumb isNil ifTrue: [
+    thumb isNil ifTrue: {
 	thumb := self readThumbnailForFile:filename.
-         thumb isNil ifTrue: [
+         thumb isNil ifTrue: {
                thumb := self renderThumbnailForFile: filename.
                self writeThumbnail: thumb forFile: filename.
-         ].
+         }.
          var:self/thumbs setObject:thumb forKey: filename.
-    ].
+    }.
     thumb.
 </string>
 			<key>readThumbnailForFile:filename</key>
@@ -127,9 +127,9 @@
 
    bitmap := (doc pageAtIndex:0 ) asBitmapScaledBy: baseScale .
    stdout println: bitmap. 
-   (scale &gt; 1.5)  ifTrue: [ 
+   (scale &gt; 1.5)  ifTrue: { 
       bitmap := UIImage imageWithCGImage: bitmap CGImage scale:scale orientation:0.
-   ].
+   }.
    bitmap.
 
    </string>
@@ -140,9 +140,9 @@
 			<string>   stdout := MPWByteStream Stdout.
 
    path := self thumbsDirectory , '/' , filename stringByDeletingPathExtension.
-   thumbnail scale &gt; 1.5 ifTrue: [
+   thumbnail scale &gt; 1.5 ifTrue: {
        path := path, '@2x'.
-  ].
+  }.
    path := path, '.png'.
    thumbnail pngRepresentation writeToFile: path atomically: 1.
    </string>
@@ -163,7 +163,7 @@
   documentWidth := self page mediaBox mpwSize x. 
   documentWidth := documentWidth * self myScale.
   xOffset := (width  - documentWidth  / 2).
-  xOffset &lt; 0 ifTrue: [ xOffset := 0 ].
+  xOffset &lt; 0 ifTrue: { xOffset := 0 }.
 xOffset  @ 0.
 </string>
 		</dict>
@@ -213,11 +213,11 @@ textField setSelectedTextRange:r.
 			<key>&lt;void&gt;didTap:recognizer</key>
 			<string>  stdout := MPWByteStream Stdout.
   stdout println:'tap on ThumbView'.
-  self delegate editing ifTrue: [
+  self delegate editing ifTrue: {
            self delegate deleteFile:self filename.
-  ] ifFalse: [
+  } ifFalse: {
 	  self delegate openFile:self filename.
-  ].
+  }.
 </string>
 			<key>&lt;void&gt;drawOnContext:aContext</key>
 			<string>  stdout := MPWByteStream Stdout.
@@ -237,10 +237,10 @@ textField setSelectedTextRange:r.
   image := self delegate thumbnailForFile: aFile.
   aContext translate: 10 : 20.
   aContext drawImage:image .
-  self delegate editing ifTrue: [ 
+  self delegate editing ifTrue: { 
        aContext setStrokeColor:  (aContext colorRed:1 green:0 blue:0 alpha:1.0) .
        ( aContext rect:( 0 @ 0 extent: image size ) ) stroke.
-   ].
+   }.
 
   aContext grestore.
 
@@ -259,14 +259,14 @@ textField setSelectedTextRange:r.
 y := 0 . 
 x := 30.
 
-self subviews do: [  :thumb  |
+self subviews do: {  :thumb  |
        thumb setFrame: (x @ y extent: self delegate thumbWidth @ self delegate thumbHeight ).
        x := x + self delegate thumbWidth.
-       x &gt;  (self bounds width - 20 ) ifTrue: [ 
+       x &gt;  (self bounds width - 20 ) ifTrue: { 
               y := y +  self delegate thumbHeight .
               x := 30.
-	].
-].
+	}.
+}.
 
 </string>
 			<key>&lt;void&gt;reloadData</key>
