@@ -3,7 +3,7 @@ framework:EGOS_Cocoa load.
 target := MPWByteStream fileName:'triangle.pdf'.
 c := MPWCGPDFContext pdfContextWithTarget:target size:595@842.
 
-c page:nil content:[ :c |
+c page:nil content:{ :c |
   c setFillColor:(c colorRed:1.0 green:0 blue:0 alpha:1.0).
   c translate:10.
   c moveto:0 :0.
@@ -11,6 +11,6 @@ c page:nil content:[ :c |
   c lineto:200 :400.
   c closepath.
   c fill.
-].
+}.
 c close.
 target close.

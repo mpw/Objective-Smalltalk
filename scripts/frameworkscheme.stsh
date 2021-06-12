@@ -2,7 +2,7 @@
 fwkscheme := MPWSequentialScheme scheme.
 fwkscheme addScheme: ref:file:/Library/Frameworks/ asScheme.
 fwkscheme addScheme: ref:file:/System/Library/Frameworks/ asScheme.
-#filter := MPWBlockFilterScheme filterWithSource:fwkscheme idFilter:[ :name | name, '.framework'. ]  valueFilter:[ :dir | stdout println:dir. dir. ].
-filter := MPWBlockFilterScheme filterWithSource:fwkscheme idFilter:[ :name | name, '.framework'.] valueFilter:[ :dir | dir.] .
+#filter := MPWBlockFilterScheme filterWithSource:fwkscheme idFilter:{ :name | name, '.framework'. ]  valueFilter:[ :dir | stdout println:dir. dir. }.
+filter := MPWBlockFilterScheme filterWithSource:fwkscheme idFilter:{ :name | name, '.framework'.} valueFilter:{ :dir | dir.} .
 scheme:framework := filter.
 shell runInteractiveLoop.

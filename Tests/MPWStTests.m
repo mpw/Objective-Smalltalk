@@ -218,32 +218,32 @@
 
 +(void)testIfTrueIfFalse
 {
-    [self testexpr:@"true ifTrue: [ 3 ] ifFalse: [ 4 ]." expected:[NSNumber numberWithInt:3]];
+    [self testexpr:@"true ifTrue: { 3. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:3]];
 }
 
 +(void)testIfTrueIfFalseWithExpressionValue
 {
-    [self testexpr:@"true ifTrue: [ 3+4 ] ifFalse: [ 4 ]." expected:[NSNumber numberWithInt:7]];
+    [self testexpr:@"true ifTrue: { 3+4. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:7]];
 }
 
 +(void)testIfTrueIfFalseWithExpressionCondition
 {
-    [self testexpr:@"('hello world' hasPrefix:'hello') ifTrue: [ 3+4 ] ifFalse: [ 4 ]." expected:[NSNumber numberWithInt:7]];
+    [self testexpr:@"('hello world' hasPrefix:'hello') ifTrue: { 3+4. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:7]];
 }
 
 +(void)testBasicWhileTrue
 {
-    [self testexpr:@"a:=2.[a<100] whileTrue:[a:=(2*a)]. a." expected:[NSNumber numberWithInt:128]];
+    [self testexpr:@"a:=2.{ a<100. } whileTrue:{ a:=(2*a). }. a." expected:[NSNumber numberWithInt:128]];
 }
 
 +(void)testWhileTrueWithLongerBlock
 {
-    [self testexpr:@"a:=2.b:=1. [a<100] whileTrue:[a:=(2*a). b:=(b+1)]. b." expected:[NSNumber numberWithInt:7]];
+    [self testexpr:@"a:=2.b:=1. { a<100. } whileTrue:{ a:=(2*a). b:=(b+1). }. b." expected:[NSNumber numberWithInt:7]];
 }
 
 +(void)testForLoop
 {
-    [self testexpr:@"a:=2. (1 to:10) do:[ :i | a:=(2*a).]. a." expected:[NSNumber numberWithInt:2048]];
+    [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a." expected:[NSNumber numberWithInt:2048]];
 }
 
 +(void)testRecursiveInterpret
@@ -543,7 +543,7 @@
 							  inExpression:@"a:=(c + b). b:=(d - a)."];
 	[evaluator _checkExpectedVariablesRead:[NSArray arrayWithObjects:@"b",nil] 
 								   written:[NSArray arrayWithObjects:@"a",nil]
-							  inExpression:@"(1 to:10) do:[a:=b]. "];
+							  inExpression:@"(1 to:10) do:{ a:=b. }. "];
 	
 }
 
@@ -735,7 +735,7 @@
 
 +(void)testToDo
 {
-	[self testexpr:@"a:=1. 1 to:10 do: [ :i | a:=(a+1) ]. a." expected:@"11"];
+	[self testexpr:@"a:=1. 1 to:10 do: { :i | a:=(a+1). }. a." expected:@"11"];
 }
 
 +(void)testBinarySelectorPrecedenceOverKeyword
@@ -745,12 +745,12 @@
 
 +(void)testIntervalBlockCollect
 {
-	[self testexpr:@"((1 to:3) collect:[ :i | i+2]) lastObject" expected:@"5"];
+	[self testexpr:@"((1 to:3) collect:{ :i | i+2. } ) lastObject" expected:@"5"];
 }
 
 +(void)testArrayBlockCollect
 {
-	TESTEXPR(@"( #( 1, 2, 7 ) collect:[ :i | i*2]) lastObject" ,@"14");
+	TESTEXPR(@"( #( 1, 2, 7 ) collect:{ :i | i*2. } ) lastObject" ,@"14");
 }
 
 +(void)testNegativeDecimalFractions

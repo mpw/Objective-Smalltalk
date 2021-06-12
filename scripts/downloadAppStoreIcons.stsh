@@ -5,9 +5,9 @@
 
     nonChars := NSCharacterSet letterCharacterSet invertedSet.
     str := '_'.
-    [ :self  |
+    { :self  |
        ((self componentsSeparatedByCharactersInSet:nonChars) componentsJoinedByString:str) lowercaseString.
-    ] installInClass: NSString  withMethodHeaderString:'slugString'.
+    } installInClass: NSString  withMethodHeaderString:'slugString'.
 
     mask := http://raw.githubusercontent.com/manbolo/appicon/master/maskInverted.png.
     appInfo := ref:http://itunes.apple.com/us/lookup  getWithArgs id: appId
@@ -16,10 +16,10 @@
     name := var:appInfo/results/0/trackCensoredName.
     icon := context evaluateScriptString: iconURL.
 
-    #(1024 512 120 114 60 57 ) do:[ :width  |
+    #(1024 512 120 114 60 57 ) do:{ :width  |
       c := MPWCGBitmapContext rgbBitmapContext: width @ width.
       c scale: width / icon pixelsWide.
-      c maskedBy:mask draw:[ :aContext | aContext drawImage:icon. ].
+      c maskedBy:mask draw:{ :aContext | aContext drawImage:icon. }.
       outname := name slugString ,'_', width stringValue, '_', width stringValue , '_.png'.
       file:{outname} := c image representationUsingType:4 properties:nil.
-    ].
+    }.

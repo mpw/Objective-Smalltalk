@@ -273,24 +273,24 @@ typedef id (^ZeroArgBlock)(void);
 
 +(void)testObjcBlocksWithNoArgsAreMapped
 {
-    IDEXPECT([STCompiler evaluate:@"a:=0. #( 1, 2, 3, 4 ) enumerateObjectsUsingBlock:[ a := a+1. ]. a."], [NSNumber numberWithInt:4], @"just counted the elements in an array using block enumeration");
+    IDEXPECT([STCompiler evaluate:@"a:=0. #( 1, 2, 3, 4 ) enumerateObjectsUsingBlock:{ a := a+1. }. a."], [NSNumber numberWithInt:4], @"just counted the elements in an array using block enumeration");
 }
 
 +(void)testObjcBlocksWithObjectArgsAreMapped
 {
-    IDEXPECT([STCompiler evaluate:@"a:=0. #( 1, 2, 3, 4 ) enumerateObjectsUsingBlock:[ :obj |  a := a+obj. ]. a."], [NSNumber numberWithInt:10], @"added the elements in an array using block enumeration");
+    IDEXPECT([STCompiler evaluate:@"a:=0. #( 1, 2, 3, 4 ) enumerateObjectsUsingBlock:{ :obj |  a := a+obj. }. a."], [NSNumber numberWithInt:10], @"added the elements in an array using block enumeration");
 }
 
 
 +(void)testBlockArgsDontMessWithEnclosingScope
 {
-    IDEXPECT([STCompiler evaluate:@"a:=3. block:=[:a| a+10]. block value:42. a."], [NSNumber numberWithInt:3], @"local var");
+    IDEXPECT([STCompiler evaluate:@"a:=3. block:={ :a| a+10. }. block value:42. a."], [NSNumber numberWithInt:3], @"local var");
 }
 typedef id  (^idBlock)(id arg );
 
 +(void)testSTBlockAsObjCBlock
 {
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[:a| a+10]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ :a| a+10. }"];
     IDEXPECT([stblock class],self, @"class");
     idBlock objcBlock=(idBlock)stblock;
     NSNumber *val=@(12);
@@ -303,7 +303,7 @@ typedef id  (^idBlock)(id arg );
 +(void)testCopiedSTBlockAsObjCBlock
 {
     idBlock copiedBlock=nil;
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[:a| a+10]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ :a| a+10. }"];
     IDEXPECT([stblock class],self, @"class");
     INTEXPECT([stblock retainCount], 1, @"retainCount");
         idBlock objcBlock=(idBlock)stblock;
@@ -323,7 +323,7 @@ typedef id  (^idBlock)(id arg );
 {
     idBlock copiedBlock=nil;
     @autoreleasepool {
-        MPWBlockContext *stblock = [STCompiler evaluate:@"[:a| a+10]"];
+        MPWBlockContext *stblock = [STCompiler evaluate:@"{ :a| a+10 .}"];
         IDEXPECT([stblock class],self, @"class");
         idBlock objcBlock=(idBlock)stblock;
         copiedBlock=[objcBlock retain];
@@ -339,7 +339,7 @@ typedef id  (^idBlock)(id arg );
 {
     idBlock copiedBlock=nil;
     @autoreleasepool {
-        MPWBlockContext *stblock = [STCompiler evaluate:@"[:a| a+10]"];
+        MPWBlockContext *stblock = [STCompiler evaluate:@"{ :a| a+10. }"];
         IDEXPECT([stblock class],self, @"class");
         INTEXPECT([stblock retainCount], 1, @"retainCount");
         idBlock objcBlock=(idBlock)stblock;
@@ -357,7 +357,7 @@ typedef id  (^idBlock)(id arg );
 
 +(void)testBlockInstalledAsMethod
 {
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[ 42 ]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ 42. }"];
     [stblock installInClass:[NSNumber class] withSignature:"@@:@" selector:@selector(theAnswer)];
     id theAnswer=[@(2) theAnswer];
     IDEXPECT(theAnswer, @(42), @"theAnswer");
@@ -365,7 +365,7 @@ typedef id  (^idBlock)(id arg );
 
 +(void)testBlockAsMethodWithSelfAsArg
 {
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[ :self | self + 42. ]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ :self | self + 42. }"];
     [stblock installInClass:[NSNumber class] withSignature:"@@:@" selector:@selector(answerPlus)];
     id theAnswer=[@(2) answerPlus];
     IDEXPECT(theAnswer, @(44), @"theAnswer");
@@ -374,7 +374,7 @@ typedef id  (^idBlock)(id arg );
 
 +(void)testBlockAsMethodWithArg
 {
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[ :self :arg | arg + 42. ]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ :self :arg | arg + 42. }"];
     [stblock installInClass:[NSNumber class] withSignature:"@@:@@" selector:@selector(answerPlus:)];
     id theAnswer=[@(2) answerPlus:@(10)];
     IDEXPECT(theAnswer, @(52), @"theAnswer");
@@ -382,7 +382,7 @@ typedef id  (^idBlock)(id arg );
 
 +(void)testBlockAsMethodWithIntReturn
 {
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[ 42 ]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ 42. }"];
     [stblock installInClass:[NSNumber class] withSignature:"i@:" selector:@selector(theIntAnswer)];
     NSLog(@"=== should convert to int");
     int theAnswer=[@(2) theIntAnswer];
@@ -391,7 +391,7 @@ typedef id  (^idBlock)(id arg );
 
 +(void)testBlockAsMethodWithMethodHeader
 {
-    MPWBlockContext *stblock = [STCompiler evaluate:@"[ :self :arg | self + 13 + (arg * 2)]"];
+    MPWBlockContext *stblock = [STCompiler evaluate:@"{ :self :arg | self + 13 + (arg * 2). }"];
     [stblock installInClass:[NSNumber class] withMethodHeaderString:@"<int>addThirtenAndArgToSelf:<int>anArg"];
 //    NSLog(@"=== should convert to int");
     int theAnswer=[@(2) addThirtenAndArgToSelf:7];

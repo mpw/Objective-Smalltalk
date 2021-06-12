@@ -516,7 +516,7 @@ idAccessor(solver, setSolver)
         object = [self parseExpression];
         closeParen=[self nextToken];
 		NSAssert1( [closeParen isEqual:@")"], @"'(' not followed by ')': '%@'",closeParen);
-    } else if ( [object isEqual:@"["] || [object isEqual:@"{"] ) {
+    } else if ( /* [object isEqual:@"["] || */ [object isEqual:@"{"] ) {
         object = [self parseBlockWithStart:object];
     } else if ( [object isEqual:@"-"] ) {
         object = [[self parseLiteral] negated];
@@ -561,20 +561,20 @@ idAccessor(solver, setSolver)
 	id statements;
 	id closeBrace;
 	id blockVariables;
-    NSString *endOfBlock=[startOfBlock isEqualToString:@"["] ? @"]" : @"}";
+    NSString *endOfBlock=@"}";
 //    NSLog(@"parseBlock");
 	blockVariables = [self parseBlockVariables];
 //	NSLog(@"block variables: %@",blockVariables);
 	statements = [self parseStatements];
 	closeBrace=[self nextToken];
-//	NSLog(@"done with block: %@",closeBrace);
+	NSLog(@"done with block: %@",closeBrace);
 //	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
 	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
 //    NSLog(@"closeBrace: %@",closeBrace);
     [expr setOffset:[scanner offset]];
     [expr setLen:1];
     if ( ![closeBrace isEqual:endOfBlock] ) {
-        NSString *s=[NSString stringWithFormat:@"block not closed by matching '%@'",endOfBlock];
+        NSString *s=[NSString stringWithFormat:@"block not closed by matching '%@' got '%@' instead",endOfBlock,closeBrace];
         PARSEERROR(s, expr);
     }
     return expr;
@@ -1472,15 +1472,15 @@ idAccessor(solver, setSolver)
     STCompiler *compiler=[self compiler];
     EXPECTTRUE([compiler isValidSyntax:@" 3+4 "], @"'3+4' valid syntax ");
     EXPECTFALSE([compiler isValidSyntax:@" 3+  "], @"'3+' not valid syntax ");
-    EXPECTFALSE([compiler isValidSyntax:@"42 [  "], @"'42 [ ' not valid syntax ");
+    EXPECTFALSE([compiler isValidSyntax:@"42 {  "], @"'42 { ' not valid syntax ");
     EXPECTFALSE([compiler isValidSyntax:@"42 (  "], @"'42 ( ' not valid syntax ");
 }
 
 +(void)testRightArrowDoesntGenerateMsgExpr
 {
     STCompiler *compiler=[self compiler];
-    id expr=[compiler compile:@"[ :a | a ] -> stdout"];
-    EXPECTFALSE([expr isKindOfClass:[MPWMessageExpression class]], @"'[ :a | a ] -> stdout' is msg expr");
+    id expr=[compiler compile:@"{ :a | a } -> stdout"];
+    EXPECTFALSE([expr isKindOfClass:[MPWMessageExpression class]], @"'{ :a | a } -> stdout' is msg expr");
 }
 
 +(void)testPipeSymbolForTemps

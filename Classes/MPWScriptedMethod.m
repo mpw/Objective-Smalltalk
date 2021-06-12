@@ -219,7 +219,7 @@ idAccessor( script, _setScript )
 	STCompiler* compiler = [STCompiler compiler];
 	id a=[[NSObject new] autorelease];
 	id result;
-	[compiler addScript:@"a:=nil. b:='2'. a isNil ifTrue:[ b:='335']. b." forClass:@"NSObject" methodHeaderString:@"xxxSimpleNilTestMethod"];
+	[compiler addScript:@"a:=nil. b:='2'. a isNil ifTrue:{ b:='335'. }. b." forClass:@"NSObject" methodHeaderString:@"xxxSimpleNilTestMethod"];
 	result = [a xxxSimpleNilTestMethod];
 	IDEXPECT( result, @"335", @"if nil is working");
 }
