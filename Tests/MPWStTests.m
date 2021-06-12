@@ -1269,10 +1269,8 @@
 {
     STCompiler *compiler=[STCompiler compiler];
 //    [compiler evaluateScriptString:@"c ← ''."];
-    [compiler evaluateScriptString:@"block ← { :interpolationBlockParam |  stdout println:'==--=='. stdout println:'block param: ',interpolationBlockParam.  \"block hello {interpolationBlockParam}!\". }."];
-    [compiler evaluateScriptString:@"block value:'block world'"];
+    [compiler evaluateScriptString:@"block ← { :interpolationBlockParam |  interpolationBlockParam.  \"block hello {interpolationBlockParam}!\". }."];    // FIXME: bindings cache must currently be seeded
     id result=[compiler evaluateScriptString:@"block value:'block world'"];
-    printf("--===---\n");
     IDEXPECT(result,@"block hello block world!",@"");
 }
 

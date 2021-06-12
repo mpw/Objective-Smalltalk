@@ -105,7 +105,7 @@
     }
     
     MPWIdentifier *evaluatedIdentifier = [self resolveRescursiveIdentifierWithContext:aContext];
-    NSLog(@"evaluatedScheme: %@ evaluatedIdentifier:  %@ context: %@",evaluatedScheme,evaluatedIdentifier,aContext);
+//    NSLog(@"evaluatedScheme: %@ evaluatedIdentifier:  %@ context: %@",evaluatedScheme,evaluatedIdentifier,aContext);
 	return [evaluatedScheme evaluateIdentifier:evaluatedIdentifier withContext:aContext];
 }
 
