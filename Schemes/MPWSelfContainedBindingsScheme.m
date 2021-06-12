@@ -18,18 +18,18 @@
     if (!nilClass) {
         nilClass=[NSNil class];
     }
-    NSLog(@"%@ evaluateIdentifier:%@ withContext: %@",[self className],anIdentifier,aContext);
+//    NSLog(@"%@ evaluateIdentifier:%@ withContext: %@",[self className],anIdentifier,aContext);
     id value = [super evaluateIdentifier:anIdentifier withContext:aContext];
-    NSLog(@"value: %@",value);
+//    NSLog(@"value: %@",value);
     if ( !value ) {
         id binding=[self bindingWithIdentifier:anIdentifier withContext:aContext];
-        NSLog(@"fallback binding: %@",binding);
+//        NSLog(@"fallback binding: %@",binding);
        if (!binding) {
-           NSLog(@"fetch value via undefinedVariableNamed:");
+//           NSLog(@"fetch value via undefinedVariableNamed:");
             value=[aContext valueForUndefinedVariableNamed:[anIdentifier path]];
         } else {
             value=[binding value];
-            NSLog(@"fallback binding value: %@",value);
+//            NSLog(@"fallback binding value: %@",value);
         }
     }
     if ( object_getClass( value) == nilClass ) {
