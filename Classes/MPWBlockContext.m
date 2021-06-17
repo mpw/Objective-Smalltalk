@@ -101,7 +101,7 @@ typedef id (^ZeroArgBlock)(void);
     for (int i=0;i<numArgs;i++) {
         MPWBinding *b=[aContext createLocalBindingForName:[formals objectAtIndex:i]];
         [b setValue:[args objectAtIndex:i]];
-//        [aContext bindValue:[args objectAtIndex:i] toVariableNamed:[formals objectAtIndex:i]];
+//        [aContext bindValue:[args objectAtIndex:i] toVariableNamed:[formals objectAtIndex:i] withScheme:@"var"];
     }
     
     @try {
@@ -416,6 +416,7 @@ typedef id  (^idBlock)(id arg );
             @"testBlockAsMethodWithArg",
             @"testBlockAsMethodWithIntReturn",
             @"testBlockAsMethodWithMethodHeader",
+//            @"testAnonymousBlockParamsWorkWith",
             ];
 }
 

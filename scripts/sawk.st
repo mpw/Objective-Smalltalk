@@ -1,8 +1,5 @@
 #!env stsh
-#-oawk:<ref>file
-file lines do:{ :line |
-	fields ← line componentsSeparatedByString:','.
-	{ 
-		stdout println:'Magnitude: ', $4.
-	} valueWithObjects:fields.
+#-sawk:<ref>file
+file awk: { :time :longitude :latitude :dummy :magnitude |
+	stdout println:"Magnitude: {magnitude} location: {latitude},{longitude} time: {time}".
 }.
