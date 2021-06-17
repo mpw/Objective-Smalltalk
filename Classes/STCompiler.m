@@ -567,7 +567,7 @@ idAccessor(solver, setSolver)
 //	NSLog(@"block variables: %@",blockVariables);
 	statements = [self parseStatements];
 	closeBrace=[self nextToken];
-	NSLog(@"done with block: %@",closeBrace);
+//	NSLog(@"done with block: %@",closeBrace);
 //	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
 	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
 //    NSLog(@"closeBrace: %@",closeBrace);
