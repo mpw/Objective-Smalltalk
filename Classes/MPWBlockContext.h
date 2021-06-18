@@ -18,5 +18,7 @@
 +blockContextWithBlock:aBlock context:aContext;
 -value;
 -value:anObject;
+-valueWithObjects:(NSArray*)args;
+
 -context;
 @end
