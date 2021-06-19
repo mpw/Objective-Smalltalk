@@ -6,7 +6,6 @@ block := { :time :latitude :longitude :depth :magnitude |
 awk ← STAWK stream.
 awk setBlock:block.
 awk setSeparator:','.
-stdout println:awk.
 lines := file lines.
 lines setFinalTarget:awk.
 lines run.

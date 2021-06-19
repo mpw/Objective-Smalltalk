@@ -1930,9 +1930,9 @@
 		F5A74ABC00F0A61B015ADD82 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
 				1FA1B39F267CFCB500F463ED /* STAWK.h */,
 				1FA1B3A0267CFCB500F463ED /* STAWK.m */,
+				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
 				1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */,
 				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
 				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
