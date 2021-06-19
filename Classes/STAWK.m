@@ -27,6 +27,32 @@
 @end
 
 
+@implementation MPWFileBinding(awk)
+
+-(void)withSeparator:(NSString*)separator awk:block
+{
+    id lines=[self lines];
+    STAWK *awk=[STAWK stream];
+    [lines setFinalTarget:awk];
+    awk.separator = separator;
+    awk.block = block;
+    [lines run];
+    [lines awaitResultForSeconds:10];
+}
+
+-(void)awk:block
+{
+    [self withSeparator:@" " awk:block];
+}
+
+-(void)csv:block
+{
+    [self withSeparator:@"," awk:block];
+}
+
+
+@end
+
 #import <MPWFoundation/DebugMacros.h>
 
 @implementation STAWK(testing) 
