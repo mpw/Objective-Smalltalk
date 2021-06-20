@@ -7,5 +7,5 @@ awk ← STAWK stream.
 awk setBlock:block.
 awk setSeparator:','.
 lines := file lines.
-lines setFinalTarget:awk.
+lines -> awk.
 lines run.
