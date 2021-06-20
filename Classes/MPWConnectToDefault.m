@@ -123,7 +123,7 @@ idAccessor( lhs, setLhs )
 
 -defaultOutputPort
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"finalTarget" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
 
 
@@ -169,7 +169,7 @@ idAccessor( lhs, setLhs )
 
 -defaultOutputPort
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"target" protocol:@protocol(Streaming) sends:YES] autorelease];
+    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:@"finalTarget" protocol:@protocol(Streaming) sends:YES] autorelease];
 }
 
 
