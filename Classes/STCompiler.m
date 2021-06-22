@@ -319,17 +319,20 @@ idAccessor(solver, setSolver)
     MPWLiteralDictionaryExpression *dictLit=[[MPWLiteralDictionaryExpression new] autorelease];
 //    NSLog(@"before pushback: %@",scanner);
     [self pushBack:token];
-//    NSLog(@"after pushback: %@",scanner);
+    NSLog(@"after pushback: %@",scanner);
     while ( token && ![token isEqual:@"}"]) {
-//        NSLog(@"parse key/val loop, key part, token:%@ scanner:%@",token,scanner);
+        NSLog(@"parse key/val loop, key part, token:%@ scanner:%@",token,scanner);
         id key=nil;
         if ( [token isEqual:@"#"]) {
             [self nextToken];
-            key=[self parseLiteral];
+            NSLog(@"skipped over token in key, scanner now: %@",scanner);
+            key=[[MPWLiteralExpression new] autorelease];
+            [key setTheLiteral:[self nextToken]];
+            NSLog(@"got key: %@ scanner now: %@",key,scanner);
         } else {
             key=[self parseExpressionInLiteral:YES];
         }
-//        NSLog(@"key:%@",key);
+        NSLog(@"key:%@",key);
         id literalValueOfKey=[key theLiteral];
 //        NSLog(@"literalValueOfKey: '%@'",literalValueOfKey);
         if ( [literalValueOfKey isKindOfClass:[NSString class]] ) {
@@ -346,9 +349,18 @@ idAccessor(solver, setSolver)
             }
         }
         token=[self nextToken];
-        [self pushBack:token];
-//        NSLog(@"will parse value with starting token: '%@'",token);
-        id value=[self parseExpressionInLiteral:YES];
+        NSLog(@"will parse value with starting token: '%@'",token);
+        id value = nil;
+        if ( [token isEqual:@"("]) {
+            value = [self parseExpressionInLiteral:NO];
+            NSString* closeParen=[self nextToken];
+            if ( ![closeParen isEqual:@")"] ) {
+                PARSEERROR(@"expression in literal value not followed by ')': '%@'", closeParen);
+            }
+        } else {
+            [self pushBack:token];
+            value=[self parseExpressionInLiteral:YES];
+        }
 //        NSLog(@"value: %@",[value theLiteral]);
         [dictLit addKey:key value:value];
         token=[self nextToken];
@@ -377,7 +389,7 @@ idAccessor(solver, setSolver)
     id next=[self nextToken];
     if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
         className=object;
-//        NSLog(@"got a class name: %@",className);
+        NSLog(@"got a class name: %@",className);
         object=next;
     } else {
         [self pushBack:next];
@@ -1566,6 +1578,13 @@ idAccessor(solver, setSolver)
     INTEXPECT( [result intValue], 10, @"result of add");
 }
 
++(void)testExpressionsInLiterals
+{
+    NSLog(@"\n\n\n==================  testExpressionsInLiterals =================\n\n\n");
+    id result=[[self compiler] evaluateScriptString:@"#MPWInteger{ #intValue:  ( 3+4 ) }"];
+    INTEXPECT( [result intValue], 7, @"result of add");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1579,7 +1598,8 @@ idAccessor(solver, setSolver)
               @"testParsingObjectLiteral",
               @"testParsingConnectedObjectLiterals",
               @"testObjectLiteralsCanBeUsedInSimpleArithmeticExpressions",
-              ];
+              @"testExpressionsInLiterals",
+    ];
 }
 
 @end
