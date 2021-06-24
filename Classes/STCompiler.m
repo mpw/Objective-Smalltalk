@@ -319,20 +319,20 @@ idAccessor(solver, setSolver)
     MPWLiteralDictionaryExpression *dictLit=[[MPWLiteralDictionaryExpression new] autorelease];
 //    NSLog(@"before pushback: %@",scanner);
     [self pushBack:token];
-    NSLog(@"after pushback: %@",scanner);
+//    NSLog(@"after pushback: %@",scanner);
     while ( token && ![token isEqual:@"}"]) {
-        NSLog(@"parse key/val loop, key part, token:%@ scanner:%@",token,scanner);
+//        NSLog(@"parse key/val loop, key part, token:%@ scanner:%@",token,scanner);
         id key=nil;
         if ( [token isEqual:@"#"]) {
             [self nextToken];
-            NSLog(@"skipped over token in key, scanner now: %@",scanner);
+//            NSLog(@"skipped over token in key, scanner now: %@",scanner);
             key=[[MPWLiteralExpression new] autorelease];
             [key setTheLiteral:[self nextToken]];
-            NSLog(@"got key: %@ scanner now: %@",key,scanner);
+//            NSLog(@"got key: %@ scanner now: %@",key,scanner);
         } else {
             key=[self parseExpressionInLiteral:YES];
         }
-        NSLog(@"key:%@",key);
+//        NSLog(@"key:%@",key);
         id literalValueOfKey=[key theLiteral];
 //        NSLog(@"literalValueOfKey: '%@'",literalValueOfKey);
         if ( [literalValueOfKey isKindOfClass:[NSString class]] ) {
@@ -349,7 +349,7 @@ idAccessor(solver, setSolver)
             }
         }
         token=[self nextToken];
-        NSLog(@"will parse value with starting token: '%@'",token);
+//        NSLog(@"will parse value with starting token: '%@'",token);
         id value = nil;
         if ( [token isEqual:@"("]) {
             value = [self parseExpressionInLiteral:NO];
@@ -389,7 +389,7 @@ idAccessor(solver, setSolver)
     id next=[self nextToken];
     if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
         className=object;
-        NSLog(@"got a class name: %@",className);
+//        NSLog(@"got a class name: %@",className);
         object=next;
     } else {
         [self pushBack:next];
