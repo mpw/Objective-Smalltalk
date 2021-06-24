@@ -150,6 +150,15 @@ idAccessor( content, setContent )
 	return [[self content] fileSystemPathForBasePath:[self path]];  // external ...
 }
 
+-(void)traverse:(id <Streaming>)target
+{
+    [target writeObject:[self path]];
+    for (id node in [self children]) {
+        [node traverse:target];
+    }
+}
+
+
 
 -(BOOL)isRoot
 {
