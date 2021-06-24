@@ -63,6 +63,11 @@ idAccessor( root, setRoot )
     return [[self nodeForPath:[aReference relativePathComponents]] children];
 }
 
+-(void)traverse:(id <Streaming>)target
+{
+    [[self root] traverse:target];
+}
+
 -(void)dealloc
 {
 	[root release];
@@ -126,7 +131,35 @@ idAccessor( root, setRoot )
     EXPECTFALSE([binding hasChildren], @"children of binding");
 }
 
++_testInterpreterWithNestedContent
+{
+    STCompiler *interpreter=[self _testInterpreterWithCMSScheme];
+    [interpreter evaluateScriptString:@"cms:/ := 'Hello World'"];
+    [interpreter evaluateScriptString:@"cms:hi := 'Hi there!'"];
+    [interpreter evaluateScriptString:@"cms:hi/answer := '42'"];
 
+    return interpreter;
+}
+
++(void)testNestedContent
+{
+    STCompiler *interpreter=[self _testInterpreterWithNestedContent];
+    IDEXPECT(([interpreter evaluateScriptString:@" site root content "]), @"Hello World", @"result of evaluating root");
+    IDEXPECT(([interpreter evaluateScriptString:@"cms:/hi"]), @"Hi there!", @"result of evaluating root");
+    IDEXPECT(([interpreter evaluateScriptString:@"cms:/hi/answer"]), @"42", @"result of evaluating root");
+}
+
++(void)testTraversal
+{
+    STCompiler *interpreter=[self _testInterpreterWithNestedContent];
+    NSMutableArray *allRefs=[NSMutableArray array];
+    [interpreter bindValue:allRefs toVariableNamed:@"allRefs"];
+    [interpreter evaluateScriptString:@"site traverse:allRefs."];
+    INTEXPECT( allRefs.count, 3,@"number of nodes");
+    IDEXPECT( [[allRefs firstObject] path], @"/", @"root");
+    IDEXPECT( [allRefs[1] path], @"/hi", @"/hi");
+    IDEXPECT( [allRefs[2] path], @"/hi/answer", @"/hi/answer");
+}
 
 +testSelectors
 {
@@ -135,6 +168,8 @@ idAccessor( root, setRoot )
             @"testWrite",
             @"testStripLeadingSlashesFromPathsInReadAndWrite",
             @"testLeafHasNoChildren",
+            @"testNestedContent",
+            @"testTraversal",
             nil];
 }
 
