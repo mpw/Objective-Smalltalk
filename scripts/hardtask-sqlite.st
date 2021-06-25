@@ -10,12 +10,6 @@ class Task {
 	+sqlForInsert {
 		'INSERT INTO tasks ( title, done ) VALUES (:title,:done)'.
 	}
-	-writeOn1:writer {
-		writer writeDictionaryLikeObject:self withContentBlock:{ :obj :writer |
-			writer writeObject: this:title forKey:'Title'.
-			writer writeInteger: this:done intValue forKey:'Completed'.
-		}.
-	}
 }
 
 
@@ -42,10 +36,6 @@ scheme todo : MPWMappingStore {
 			task writeOnJSONStream:writer.
 		}.
 		writer endArray.
-	}
-	-<void>setTaskList:aList {
-		this:taskDict := NSMutableDictionary dictionaryWithObjects: aList forKeys: aList collect id.
-		stdout println: this:taskDict.
 	}
 	/tasks { 
 		|= { 
