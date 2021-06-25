@@ -31,7 +31,7 @@ scheme todo : MPWMappingStore {
 	-<void>insertTasks {
 		self db open.
 		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
-		writer ← self db insert: (taskList at:0 ) class sqlForInsert.
+		writer ← self db insert: this:taskClass sqlForInsert.
 		writer writeObject:taskList.
 	}
 	  -objectsForQuery:query  {
