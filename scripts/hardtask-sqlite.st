@@ -6,7 +6,7 @@ framework:ObjectiveHTTPD load.
 class Task {
 	var <bool> done.
 	var title.
-	-description { "Task: {this:title} done: {this:done}". }
+	-description { "<Task: title: {this:title} done: {this:done}>". }
 	+sqlForInsert {
 		'INSERT INTO tasks ( title, done ) VALUES (:title,:done)'.
 	}
@@ -15,6 +15,7 @@ class Task {
 
 scheme todo : MPWMappingStore {
 	var db.
+	var taskClass.
 	-initWithRef:ref {
      	self setDb:(MPWStreamQLite alloc initWithPath:ref path).
 	}
@@ -37,32 +38,37 @@ scheme todo : MPWMappingStore {
 		}.
 		writer endArray.
 	}
+	  -objectsForQuery:query  {
+          builder := MPWObjectBuilder alloc initWithClass: this:taskClass.
+          self db setBuilder:builder.
+          self db query:query.
+          result := self db builder result.
+         stdout println:result.
+		 result.
+  }
 	/tasks { 
 		|= { 
-			this:taskDict allValues.
+    		self objectsForQuery: 'select * from tasks' class: Task.  
 		}
 	}
+
 	/task/:id {
 		|= {
-			this:taskDict at:id .
+			self objectsForQuery: "select * from tasks where rowid = {id}".
 		}
 		=| {
 			this:taskDict at:id put:newValue.
-			self persist.
 		}
-	}
-	-<void>persist {
-		source:tasks := this:taskDict allValues.
 	}
 }.
 
-todo := #todo{  #db: ( MPWStreamQLite alloc initWithPath:dbref path)  }.
+todo := #todo{  #db: ( MPWStreamQLite alloc initWithPath:dbref path), #taskClass: Task  }.
 json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
-json → todo → #MPWJSONConverterStore{  #converterClass: class:Task } → ref:file:/tmp/tasks/ asScheme.
+json → todo.
+scheme:todo ← todo.
 server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
+stdout println:'port: ', server port stringValue.
 todo createTable.
-
-
 todo insertTasks.
 shell runInteractiveLoop.
