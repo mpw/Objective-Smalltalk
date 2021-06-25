@@ -32,11 +32,7 @@ scheme todo : MPWMappingStore {
 		self db open.
 		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
 		writer ← self db insert: (taskList at:0 ) class sqlForInsert.
-		writer beginArray.
-		taskList do: { :task | 
-			task writeOnJSONStream:writer.
-		}.
-		writer endArray.
+		writer writeObject:taskList.
 	}
 	  -objectsForQuery:query  {
           builder := MPWObjectBuilder alloc initWithClass: this:taskClass.
