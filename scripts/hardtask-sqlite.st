@@ -4,14 +4,13 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
-	var id.
 	var <bool> done.
 	var title.
 	-description { "Task: {this:title} done: {this:done}". }
 	+sqlForInsert {
-		'INSERT INTO tasks ( Title, Completed ) VALUES (:Title,:Completed)'.
+		'INSERT INTO tasks ( title, done ) VALUES (:title,:done)'.
 	}
-	-writeOn:writer {
+	-writeOn1:writer {
 		writer writeDictionaryLikeObject:self withContentBlock:{ :obj :writer |
 			writer writeObject: this:title forKey:'Title'.
 			writer writeInteger: this:done intValue forKey:'Completed'.
@@ -27,7 +26,7 @@ scheme todo : MPWMappingStore {
 	}
 	var taskDict.
 	-tableCreationSQL {
-		'CREATE TABLE tasks ( [Title] NVARCHAR(220) NOT NULL, [Completed] INTEGER );'.
+		'CREATE TABLE tasks ( [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
 	}
 	-<void>createTable {
 		self db open.
@@ -36,11 +35,11 @@ scheme todo : MPWMappingStore {
 	}
 	-<void>insertTasks {
 		self db open.
-		taskList ← #( #Task{ #id: '1', #title: 'Clean Room', #done: false }, #Task{ #id: '2', #title: 'Check Twitter', #done: true } ).
+		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
 		writer ← self db insert: (taskList at:0 ) class sqlForInsert.
 		writer beginArray.
 		taskList do: { :task | 
-			task writeOn:writer.
+			task writeOnJSONStream:writer.
 		}.
 		writer endArray.
 	}
@@ -73,5 +72,7 @@ json → todo → #MPWJSONConverterStore{  #converterClass: class:Task } → ref
 server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
 todo createTable.
+
+
 todo insertTasks.
 shell runInteractiveLoop.
