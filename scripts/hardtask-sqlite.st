@@ -8,14 +8,14 @@ class Task {
 	var <bool> done.
 	var title.
 	-description { "Task: {this:title} done: {this:done}". }
-	-sqlForInsert {
+	+sqlForInsert {
 		'INSERT INTO tasks ( Title, Completed ) VALUES (:Title,:Completed)'.
 	}
 	-writeOn:writer {
-		writer beginDictionary.
-        writer writeObject: this:title forKey:'Title'.
-        writer writeInteger: this:done intValue forKey:'Completed'.
-		writer endDictionary.
+		writer writeDictionaryLikeObject:self withContentBlock:{ :obj :writer |
+			writer writeObject: this:title forKey:'Title'.
+			writer writeInteger: this:done intValue forKey:'Completed'.
+		}.
 	}
 }
 
@@ -37,7 +37,7 @@ scheme todo : MPWMappingStore {
 	-<void>insertTasks {
 		self db open.
 		taskList ← #( #Task{ #id: '1', #title: 'Clean Room', #done: false }, #Task{ #id: '2', #title: 'Check Twitter', #done: true } ).
-		writer ← self db insert: (taskList at:0 ) sqlForInsert.
+		writer ← self db insert: (taskList at:0 ) class sqlForInsert.
 		writer beginArray.
 		taskList do: { :task | 
 			task writeOn:writer.
