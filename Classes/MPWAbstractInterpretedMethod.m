@@ -45,7 +45,7 @@ idAccessor( methodType, setMethodType )
 
 #endif
 
--methodName
+-(NSString*)methodName
 {
 	return [[self methodHeader] methodName];
 }

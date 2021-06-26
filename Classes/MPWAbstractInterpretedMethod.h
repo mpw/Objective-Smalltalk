@@ -23,6 +23,6 @@ idAccessor_h( methodType, setMethodType )
 -evaluateOnObject:target parameters:(NSArray*)parameters;
 -(MPWMethodHeader*)header;
 -(NSArray*)formalParameters;
-
+-(NSString*)methodName;
 
 @end

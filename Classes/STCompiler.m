@@ -1557,7 +1557,6 @@ idAccessor(solver, setSolver)
     STCompiler *compiler=[self compiler];
     [compiler evaluateScriptString:@"source ← #MPWFixedValueSource{}"];
     id compiled = [compiler compile:testProgram];
-    NSLog(@"compiled for %@=%@",testProgram,compiled);
     EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
 }
 
@@ -1568,7 +1567,6 @@ idAccessor(solver, setSolver)
 
     STCompiler *compiler=[self compiler];
     id compiled = [compiler compile:testProgram];
-    NSLog(@"compiled for %@=%@",testProgram,compiled);
     EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
 }
 
@@ -1580,9 +1578,39 @@ idAccessor(solver, setSolver)
 
 +(void)testExpressionsInLiterals
 {
-    NSLog(@"\n\n\n==================  testExpressionsInLiterals =================\n\n\n");
     id result=[[self compiler] evaluateScriptString:@"#MPWInteger{ #intValue:  ( 3+4 ) }"];
     INTEXPECT( [result intValue], 7, @"result of add");
+}
+
++(void)testInstanceVarHasTypeInformation
+{
+    NSString *script=@"class Hi { var untyped. var <id> idtyped. var <int> inttyped. var <float> floattyped. } ";
+    MPWClassDefinition* classDef=[[self compiler] compile:script];
+    NSArray<MPWInstanceVariable*> *ivars=[classDef instanceVariableDescriptions];
+    INTEXPECT( ivars.count, 4, @"number of ivars");
+    IDEXPECT( ivars[0].type, @"id", @"untyped defaults to id");
+    IDEXPECT( ivars[0].objcType, @"@", @"untyped defaults to id");
+    IDEXPECT( ivars[1].type, @"id", @"id type");
+    IDEXPECT( ivars[1].objcType, @"@", @"id type");
+    IDEXPECT( ivars[2].type, @"int", @"int type");
+    IDEXPECT( ivars[2].objcType, @"i", @"int type");
+    IDEXPECT( ivars[3].type, @"float", @"float type");
+    IDEXPECT( ivars[3].objcType, @"f", @"float type");
+}
+
++(void)testInstanceVarsOfDefinedClassHaveTypeInformation
+{
+    NSString *script=@"class __STIvarTypeTestClass { var untyped. var <id> idtyped. var <int> inttyped. var <float> floattyped. } ";
+    Class classDef=[[self compiler] evaluateScriptString:script];
+    Ivar untyped = class_getInstanceVariable(classDef, "untyped");
+    IDEXPECT( @(ivar_getName(untyped)), @"untyped",@"name of 'untyped'");
+    IDEXPECT( @(ivar_getTypeEncoding(untyped)), @"@",@"type of 'untyped'");
+    Ivar idtyped = class_getInstanceVariable(classDef, "idtyped");
+    IDEXPECT( @(ivar_getName(idtyped)), @"idtyped",@"name of 'idtyped'");
+    IDEXPECT( @(ivar_getTypeEncoding(idtyped)), @"@",@"type of 'idtyped'");
+    Ivar inttyped = class_getInstanceVariable(classDef, "inttyped");
+    IDEXPECT( @(ivar_getName(inttyped)), @"inttyped",@"name of 'inttyped'");
+    IDEXPECT( @(ivar_getTypeEncoding(inttyped)), @"i",@"type of 'inttyped'");
 }
 
 +testSelectors
@@ -1599,6 +1627,8 @@ idAccessor(solver, setSolver)
               @"testParsingConnectedObjectLiterals",
               @"testObjectLiteralsCanBeUsedInSimpleArithmeticExpressions",
               @"testExpressionsInLiterals",
+              @"testInstanceVarHasTypeInformation",
+              @"testInstanceVarsOfDefinedClassHaveTypeInformation",
     ];
 }
 

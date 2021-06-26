@@ -21,5 +21,5 @@
 -(NSString*)type;
 -valueInContext:anObject;
 -(void)setValue:newValue inContext:anObject;
-
+-(NSString*)objcType;
 @end
