@@ -19,17 +19,14 @@ scheme todo : MPWMappingStore {
 	-initWithRef:ref {
      	self setDb:(MPWStreamQLite alloc initWithPath:ref path).
 	}
-	var taskDict.
 	-tableCreationSQL {
 		'CREATE TABLE tasks ( [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
 	}
 	-<void>createTable {
 		self db open.
-		stdout println: this:db.
 		self db query: self tableCreationSQL.
 	}
 	-<void>insertTasks {
-		self db open.
 		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
 		writer ← self db insert: this:taskClass sqlForInsert.
 		writer writeObject:taskList.
@@ -39,7 +36,6 @@ scheme todo : MPWMappingStore {
           self db setBuilder:builder.
           self db query:query.
           result := self db builder result.
-         stdout println:result.
 		 result.
   }
 	/tasks { 
@@ -52,13 +48,10 @@ scheme todo : MPWMappingStore {
 		|= {
 			self objectsForQuery: "select * from tasks where rowid = {id}".
 		}
-		=| {
-			this:taskDict at:id put:newValue.
-		}
 	}
 }.
-
-todo := #todo{  #db: ( MPWStreamQLite alloc initWithPath:dbref path), #taskClass: Task  }.
+MPWSQLiteWriter stream createEncoderMethodForClass: Task.
+todo := #todo{  #db: ( MPWStreamQLite open:dbref path), #taskClass: Task  }.
 json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
 json → todo.
 scheme:todo ← todo.
