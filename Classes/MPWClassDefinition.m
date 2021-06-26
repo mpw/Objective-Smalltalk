@@ -105,7 +105,7 @@
 {
     Class superclass=NSClassFromString([self superclassNameToUse]);
     if ( superclass ) {
-        [superclass createSubclassWithName:self.name instanceVariableArray:[self allIvarNames]];
+        [superclass createSubclassWithName:self.name instanceVariableArray:[self instanceVariableDescriptions]];
         [self generateAccessors];
     }
 }

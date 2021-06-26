@@ -46,6 +46,24 @@ longAccessor( offset, setOffset )
 	}
 }
 
+-typeStringForTypeName:aType
+{
+    if ( [aType isEqual:@"int"] ) {
+        return @"i";
+    } else    if ( [aType isEqual:@"float"] ) {
+        return @"f";
+    } else    if ( [aType isEqual:@"void"] ) {
+        return @"v";
+    } else {
+        return @"@";
+    }
+}
+
+-(NSString*)objcType
+{
+    return [self typeStringForTypeName:[self type]];
+}
+
 -(void)dealloc
 {
 	[name release];

@@ -4,7 +4,7 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
-	var id.
+	var <int> id.
 	var <bool> done.
 	var title.
 	-description { "<Task: title: {this:title} done: {this:done}>". }

@@ -32,11 +32,11 @@ void amIHereFunc( void )
 #if __OBJC2__ || ( MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5 )
 
 static BOOL CreateClassDefinition( const char * name, 
-								  Class super_class, NSArray *varNames  )
+								  Class super_class, NSArray *variables  )
 {
 	Class class=objc_allocateClassPair(super_class,  name, 0);
-	for (id varName in varNames) {
-		class_addIvar(class, [varName cStringUsingEncoding:NSASCIIStringEncoding], sizeof(id), log2(sizeof(id)), "@");
+	for (MPWInstanceVariable* ivar in variables) {
+		class_addIvar(class, [[ivar name] cStringUsingEncoding:NSASCIIStringEncoding], sizeof(id), log2(sizeof(id)), [[ivar objcType] UTF8String]);
 
 	}
 	objc_registerClassPair(class);
@@ -183,8 +183,13 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
 
 +(BOOL)createSubclassWithName:(NSString*)className instanceVariables:(NSString*)varsAsString
 {
-    NSArray *vars=[varsAsString componentsSeparatedByString:@" "];\
-    return [self createSubclassWithName:className instanceVariableArray:vars];
+    NSArray *varNames=[varsAsString componentsSeparatedByString:@" "];\
+    NSMutableArray *variableDefinitions=[NSMutableArray array];
+    for ( NSString *name in varNames ) {
+        MPWInstanceVariable *theVar=[[[MPWInstanceVariable alloc] initWithName:name offset:0 type:@"@"] autorelease];
+        [variableDefinitions addObject:theVar];
+    }
+    return [self createSubclassWithName:className instanceVariableArray:variableDefinitions];
 }
 
 #endif
