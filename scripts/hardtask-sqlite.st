@@ -4,6 +4,7 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
+	var id.
 	var <bool> done.
 	var title.
 	-description { "<Task: title: {this:title} done: {this:done}>". }
@@ -20,7 +21,7 @@ scheme todo : MPWMappingStore {
      	self setDb:(MPWStreamQLite alloc initWithPath:ref path).
 	}
 	-tableCreationSQL {
-		'CREATE TABLE tasks ( [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
+		'CREATE TABLE tasks ( [id] INTEGER PRIMARY KEY, [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
 	}
 	-<void>createTable {
 		self db open.
@@ -40,13 +41,13 @@ scheme todo : MPWMappingStore {
   }
 	/tasks { 
 		|= { 
-    		self objectsForQuery: 'select * from tasks' class: Task.  
+    		self objectsForQuery: 'select * from tasks'.  
 		}
 	}
 
 	/task/:id {
 		|= {
-			self objectsForQuery: "select * from tasks where rowid = {id}".
+			self objectsForQuery: "select * from tasks where id = {id}".
 		}
 	}
 }.
