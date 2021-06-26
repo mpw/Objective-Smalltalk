@@ -1295,7 +1295,7 @@ idAccessor(solver, setSolver)
         }
         NSMutableArray *methods=[NSMutableArray array];
         NSMutableArray *classMethods=[NSMutableArray array];
-        NSMutableArray *instanceVariables=[NSMutableArray array];
+        NSMutableArray<MPWInstanceVariable*> *instanceVariables=[NSMutableArray array];
         NSMutableArray *propertyDefinitions=[NSMutableArray array];
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
