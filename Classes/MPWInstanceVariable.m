@@ -31,6 +31,7 @@ longAccessor( offset, setOffset )
 {
 	id result=nil;
 	if ( anObject ) {
+//        NSLog(@"ivar %@ get value at offset: %ld",name,offset);
 		result= *pointerToVarInObject( anObject );
 	}
 	return result;
@@ -39,6 +40,7 @@ longAccessor( offset, setOffset )
 -(void)setValue:newValue inContext:anObject
 {
 	id *ptr = pointerToVarInObject( anObject );
+//   NSLog(@"ivar %@ set Value: %@ at offset: %ld",name,newValue,offset);
 	if ( anObject &&  *ptr != newValue ) {
 		[newValue retain];
 		[*ptr release];
@@ -46,10 +48,15 @@ longAccessor( offset, setOffset )
 	}
 }
 
--typeStringForTypeName:aType
+-typeStringForTypeName:(NSString*)aType
 {
+    if ( aType.length == 1)  {
+        return aType;
+    }
     if ( [aType isEqual:@"int"] ) {
         return @"i";
+    } else    if ( [aType isEqual:@"bool"] ) {
+        return @"l";
     } else    if ( [aType isEqual:@"float"] ) {
         return @"f";
     } else    if ( [aType isEqual:@"void"] ) {
