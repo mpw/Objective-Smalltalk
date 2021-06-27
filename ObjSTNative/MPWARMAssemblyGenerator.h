@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWARMAssemblyGenerator : MPWFilter
+@interface MPWARMAssemblyGenerator : MPWByteStream
 
 @end
 
