@@ -32,6 +32,8 @@
     [self directive:@"align" arg:@(alignment)];
 }
 
+//---- utilities
+
 -(void)outputRegister:(int)regno
 {
     if ( regno == SP ) {
@@ -42,26 +44,63 @@
 }
 
 
--(void)outputInstruction:(NSString*)instruction regNo:(int)regNo value:(long)value
+-(void)instruction:(NSString*)instruction regNo:(int)regNo value:(long)value
 {
     [self printFormat:@"\t%@\t",instruction];
     [self outputRegister:regNo];
     [self printf:@", #%ld\n",value];
 }
 
+-(void)instruction:(NSString*)instruction regNo:(int)destReg regNo:(int)sourceReg value:(long)value
+{
+    [self printFormat:@"\t%@\t",instruction];
+    [self outputRegister:destReg];
+    [self printf:@", "];
+    [self outputRegister:sourceReg];
+    [self printf:@", #%ld\n",value];
+}
+
+-(void)loadStore:(NSString*)instruction regNo:(int)destReg addressRegister:(int)sourceReg offset:(long)offset
+{
+    [self printFormat:@"\t%@\t",instruction];
+    [self outputRegister:destReg];
+    [self printf:@",["];
+    [self outputRegister:sourceReg];
+    if ( offset ) {
+        [self printf:@",#%ld",offset];
+    }
+    [self printf:@"]\n"];
+
+}
+
+-(void)instruction:(NSString*)instruction value:(long)value
+{
+    [self printFormat:@"\t%@\t",instruction];
+    [self printf:@"#%ld\n",value];
+}
+
+-(void)instruction:(NSString*)instruction
+{
+    [self printFormat:@"\t%@\t",instruction];
+
+}
+
+//---- specific instructions
+
+
 -(void)mov:(int)regNo value:(long)value
 {
-    [self outputInstruction:@"mov" regNo:regNo value:value];
+    [self instruction:@"mov" regNo:regNo value:value];
 }
 
 -(void)svc:(int)vector
 {
-    [self printFormat:@"\tsvc\t#%ld\n",vector];
+    [self instruction:@"svc" value:vector];
 }
 
 -(void)ret
 {
-    [self printf:@"\tret\n"];
+    [self instruction:@"ret"];
 }
 
 -(void)bl:(NSString*)address
@@ -79,6 +118,21 @@
 -(void)asciiz:(NSString*)str
 {
     [self printFormat:@"\t.asciz\t\"%@\"\n",str];
+}
+
+-(void)add:(int)destReg sourceReg:(int)sourceReg sourceValue:(int)constant
+{
+    [self instruction:@"add" regNo:destReg regNo:sourceReg value:constant];
+}
+
+-(void)sub:(int)destReg sourceReg:(int)sourceReg sourceValue:(int)constant
+{
+    [self instruction:@"sub" regNo:destReg regNo:sourceReg value:constant];
+}
+
+-(void)ldr:(int)destReg addressRegister:(int)sourceReg offset:(int)constant
+{
+    [self loadStore:@"ldr" regNo:destReg addressRegister:sourceReg offset:constant];
 }
 
 
@@ -110,11 +164,46 @@
     IDEXPECT( [[g target] stringValue], @"\tmov\tSP, #34\n",@"mov with SP");
 }
 
++(void)testGenerateSVC
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g svc:128];
+    IDEXPECT( [[g target] stringValue], @"\tsvc\t#128\n",@"svc");
+}
+
 +(void)testGenerateASCIZ
 {
     MPWARMAssemblyGenerator *g=[self stream];
     [g asciiz:@"Hello World"];
     IDEXPECT( [[g target] stringValue], @"\t.asciz\t\"Hello World\"\n",@"string");
+}
+
++(void)testGenerateAdd
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g add:1 sourceReg:2 sourceValue:12];
+    IDEXPECT( [[g target] stringValue], @"\tadd\tX1, X2, #12\n",@"add");
+}
+
++(void)testGenerateSub
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g sub:SP sourceReg:SP sourceValue:16];
+    IDEXPECT( [[g target] stringValue], @"\tsub\tSP, SP, #16\n",@"sub");
+}
+
++(void)testGenerateLdr
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g ldr:1 addressRegister:SP offset:16];
+    IDEXPECT( [[g target] stringValue], @"\tldr\tX1,[SP,#16]\n",@"ldr");
+}
+
++(void)testGenerateStr
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g ldr:1 addressRegister:SP offset:16];
+    IDEXPECT( [[g target] stringValue], @"\tldr\tX1,[SP,#16]\n",@"ldr");
 }
 
 +(NSArray*)testSelectors
@@ -123,7 +212,11 @@
        @"testGenerateLabel",
        @"testGenerateMove",
        @"testGenerateSPMove",
+       @"testGenerateSVC",
        @"testGenerateASCIZ",
+       @"testGenerateAdd",
+       @"testGenerateSub",
+       @"testGenerateLdr",
 			];
 }
 
