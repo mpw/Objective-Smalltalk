@@ -10,7 +10,7 @@
 	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	stur	x0, [x29, #-8]
+	str	x0, [x29, #-8]
 	str	x1, [sp, #16]
 	str	x2, [sp, #8]
 	str	x3, [sp]
