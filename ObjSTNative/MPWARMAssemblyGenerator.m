@@ -77,21 +77,6 @@
     
 }
 
--(void)loadStorePair:(NSString*)instruction regNo:(int)first second:(int)second addressRegister:(int)sourceReg offset:(long)offset
-{
-    [self printFormat:@"\t%@\t",instruction];
-    [self outputRegister:first];
-    [self printf:@","];
-    [self outputRegister:second];
-    [self printf:@",["];
-    [self outputRegister:sourceReg];
-    if ( offset ) {
-        [self printf:@",#%ld",offset];
-    }
-    [self printf:@"]\n"];
-    
-}
-
 -(void)instruction:(NSString*)instruction value:(long)value
 {
     [self printFormat:@"\t%@\t",instruction];
@@ -100,7 +85,7 @@
 
 -(void)instruction:(NSString*)instruction
 {
-    [self printFormat:@"\t%@\t",instruction];
+    [self printFormat:@"\t%@\n",instruction];
 
 }
 
@@ -159,14 +144,35 @@
     [self loadStore:@"str" regNo:destReg addressRegister:sourceReg offset:constant];
 }
 
--(void)ldp:(int)destReg second:(int)second addressRegister:(int)sourceReg offset:(int)constant
-{
-    [self loadStorePair:@"ldp" regNo:destReg second:second addressRegister:sourceReg offset:constant];
-}
-
 -(void)stp:(int)destReg second:(int)second addressRegister:(int)sourceReg offset:(int)constant
 {
-    [self loadStorePair:@"stp" regNo:destReg second:second addressRegister:sourceReg offset:constant];
+    [self printFormat:@"\tstp\t"];
+    [self outputRegister:destReg];
+    [self printf:@","];
+    [self outputRegister:second];
+    [self printf:@",["];
+    [self outputRegister:sourceReg];
+    if ( constant ) {
+        [self printf:@",#%d",constant];
+    }
+    [self printf:@"]\n"];
+    
+}
+
+-(void)ldp:(int)destReg second:(int)second addressRegister:(int)sourceReg offset:(int)constant
+{
+    [self printFormat:@"\tldp\t"];
+    [self outputRegister:destReg];
+    [self printf:@","];
+    [self outputRegister:second];
+    [self printf:@",["];
+    [self outputRegister:sourceReg];
+    [self printf:@"]"];
+    if ( constant ) {
+        [self printf:@", #%d",constant];
+    }
+    [self printf:@"\n"];
+
 }
 
 
@@ -244,14 +250,14 @@
 {
     MPWARMAssemblyGenerator *g=[self stream];
     [g ldp:1 second:2 addressRegister:SP offset:16];
-    IDEXPECT( [[g target] stringValue], @"\tldp\tX1,X2,[SP,#16]\n",@"ldp");
+    IDEXPECT( [[g target] stringValue], @"\tldp\tX1,X2,[SP], #16\n",@"ldp");
 }
 
 +(void)testGenerateStp
 {
     MPWARMAssemblyGenerator *g=[self stream];
-    [g stp:4 second:2 addressRegister:SP offset:24];
-    IDEXPECT( [[g target] stringValue], @"\tstp\tX4,X2,[SP,#24]\n",@"str");
+    [g stp:5 second:LR addressRegister:SP offset:-24];
+    IDEXPECT( [[g target] stringValue], @"\tstp\tX5,LR,[SP,#-24]\n",@"str");
 }
 
 +(NSArray*)testSelectors
