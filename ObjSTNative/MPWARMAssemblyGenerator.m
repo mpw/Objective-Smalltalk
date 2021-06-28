@@ -8,6 +8,8 @@
 #import "MPWARMAssemblyGenerator.h"
 
 #define SP   -1
+#define LR   30
+#define FP   29
 
 @implementation MPWARMAssemblyGenerator
 
@@ -38,7 +40,9 @@
 {
     if ( regno == SP ) {
         [self printf:@"SP"];
-    } else {
+    } else if ( regno == LR ) {
+        [self printf:@"LR"];
+    } else{
         [self printf:@"X%d",regno];
     }
 }
@@ -70,7 +74,22 @@
         [self printf:@",#%ld",offset];
     }
     [self printf:@"]\n"];
+    
+}
 
+-(void)loadStorePair:(NSString*)instruction regNo:(int)first second:(int)second addressRegister:(int)sourceReg offset:(long)offset
+{
+    [self printFormat:@"\t%@\t",instruction];
+    [self outputRegister:first];
+    [self printf:@","];
+    [self outputRegister:second];
+    [self printf:@",["];
+    [self outputRegister:sourceReg];
+    if ( offset ) {
+        [self printf:@",#%ld",offset];
+    }
+    [self printf:@"]\n"];
+    
 }
 
 -(void)instruction:(NSString*)instruction value:(long)value
@@ -133,6 +152,21 @@
 -(void)ldr:(int)destReg addressRegister:(int)sourceReg offset:(int)constant
 {
     [self loadStore:@"ldr" regNo:destReg addressRegister:sourceReg offset:constant];
+}
+
+-(void)str:(int)destReg addressRegister:(int)sourceReg offset:(int)constant
+{
+    [self loadStore:@"str" regNo:destReg addressRegister:sourceReg offset:constant];
+}
+
+-(void)ldp:(int)destReg second:(int)second addressRegister:(int)sourceReg offset:(int)constant
+{
+    [self loadStorePair:@"ldp" regNo:destReg second:second addressRegister:sourceReg offset:constant];
+}
+
+-(void)stp:(int)destReg second:(int)second addressRegister:(int)sourceReg offset:(int)constant
+{
+    [self loadStorePair:@"stp" regNo:destReg second:second addressRegister:sourceReg offset:constant];
 }
 
 
@@ -202,8 +236,22 @@
 +(void)testGenerateStr
 {
     MPWARMAssemblyGenerator *g=[self stream];
-    [g ldr:1 addressRegister:SP offset:16];
-    IDEXPECT( [[g target] stringValue], @"\tldr\tX1,[SP,#16]\n",@"ldr");
+    [g str:4 addressRegister:SP offset:24];
+    IDEXPECT( [[g target] stringValue], @"\tstr\tX4,[SP,#24]\n",@"str");
+}
+
++(void)testGenerateLdp
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g ldp:1 second:2 addressRegister:SP offset:16];
+    IDEXPECT( [[g target] stringValue], @"\tldp\tX1,X2,[SP,#16]\n",@"ldp");
+}
+
++(void)testGenerateStp
+{
+    MPWARMAssemblyGenerator *g=[self stream];
+    [g stp:4 second:2 addressRegister:SP offset:24];
+    IDEXPECT( [[g target] stringValue], @"\tstp\tX4,X2,[SP,#24]\n",@"str");
 }
 
 +(NSArray*)testSelectors
@@ -217,6 +265,9 @@
        @"testGenerateAdd",
        @"testGenerateSub",
        @"testGenerateLdr",
+       @"testGenerateStr",
+       @"testGenerateLdp",
+       @"testGenerateStp",
 			];
 }
 
