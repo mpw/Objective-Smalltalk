@@ -6,6 +6,8 @@ main ← '_main'.
 
 LR ← 30.
 SP ← -1.
+ZR ← -2.
+
 framework:ObjSTNative load
 arm := MPWARMAssemblyGenerator stream 
 arm global: main;
