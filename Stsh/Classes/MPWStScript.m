@@ -119,8 +119,8 @@ objectAccessor( NSString, filename, setFilename )
 	if ( [methodHeader numArguments] <= [args count] ) {
 		for (i=0;i<[methodHeader numArguments];i++ ) {
 			id arg=[args objectAtIndex:0];
-			id argName=[methodHeader argumentNameAtIndex:i];
-			id argType=[methodHeader argumentTypeAtIndex:i];
+			NSString* argName=[methodHeader argumentNameAtIndex:i];
+			NSString* argTypeName=[methodHeader argumentTypeNameAtIndex:i];
 
 			//--- 'args' always takes up the 'remaining' args
 			//--- but can appear at any point int the argument

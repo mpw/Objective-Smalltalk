@@ -8,13 +8,12 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWStScanner;
+@class MPWStScanner,STVariableDefinition,STTypeDescriptor;
 
 @interface MPWMethodHeader : MPWObject {
 	NSString	*methodName;
 	NSString	*returnTypeName;
-	NSMutableArray		*parameterNames;
-	NSMutableArray		*parameterTypes;
+	NSMutableArray		*parameterVars;
 	NSMutableArray		*methodKeyWords;
 
 }
@@ -30,11 +29,11 @@ objectAccessor_h( NSString , methodName, setMethodName )
 
 
 -(int)numArguments;
--argumentNameAtIndex:(int)anIndex;
--argumentTypeAtIndex:(int)anIndex;
+-(STVariableDefinition*)variableDefAtIndex:(int)anIndex;
+-(NSString*)argumentNameAtIndex:(int)anIndex;
+-(STTypeDescriptor*)argumentTypeAtIndex:(int)anIndex;
+-(NSString*)argumentTypeNameAtIndex:(int)anIndex;
 -(const char*)typeSignature;
--(NSArray*)parameterNames;
--(NSArray*)parameterTypes;
 -(SEL)selector;
 
 -typeStringForTypeName:aType;

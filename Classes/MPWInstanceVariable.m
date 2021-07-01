@@ -11,8 +11,6 @@
 
 @implementation MPWInstanceVariable
 
-objectAccessor( NSString, name, setName )
-objectAccessor( STTypeDescriptor, type, setType )
 longAccessor( offset, setOffset )
 
 -initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType
@@ -50,18 +48,16 @@ longAccessor( offset, setOffset )
 
 -(NSString*)typeName
 {
-    return [type name];
+    return [self.type name];
 }
 
 -(NSString*)objcType
 {
-    return [NSString stringWithFormat:@"%c",type.objcTypeCode];
+    return [NSString stringWithFormat:@"%c",self.type.objcTypeCode];
 }
 
 -(void)dealloc
 {
-	[name release];
-	[type release];
 	[super dealloc];
 }
 

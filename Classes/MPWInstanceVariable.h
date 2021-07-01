@@ -6,20 +6,16 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import <ObjectiveSmalltalk/STVariableDefinition.h>
 
 @class STTypeDescriptor;
 
-@interface MPWInstanceVariable : MPWObject {
-	NSString	        *name;
-    STTypeDescriptor	*type;
+@interface MPWInstanceVariable : STVariableDefinition {
 	long			    offset;
 }
 
 -initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType;
 -(long)offset;
--(NSString*)name;
--(NSString*)type;
 -valueInContext:anObject;
 -(void)setValue:newValue inContext:anObject;
 -(NSString*)objcType;
