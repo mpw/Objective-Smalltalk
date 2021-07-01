@@ -340,7 +340,7 @@
     IDEXPECT( [header methodName], @"lengthMultipliedBy5", @"method name");
     INTEXPECT( [header numArguments], 0, @"number of args");
     IDEXPECT( [header typeString], @"@@:", @"type string");
-    IDEXPECT( [header returnTypeName], @"id", @"return type");
+    IDEXPECT( [[header returnType] name], @"id", @"return type");
     EXPECTTRUE([[method methodBody] isKindOfClass:[MPWStatementList class]], @"body is a statement list.");
     MPWStatementList *statements=(MPWStatementList*)[method methodBody];
     INTEXPECT([[statements statements] count],1,@"number of statements");

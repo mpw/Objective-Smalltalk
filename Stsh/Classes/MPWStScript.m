@@ -87,7 +87,7 @@ objectAccessor( NSString, filename, setFilename )
 
 -(BOOL)hasDeclaredReturn
 {
-	return [self methodHeader]!= nil && ![[methodHeader returnTypeName] isEqual:@"void"];
+	return [self methodHeader]!= nil && ![[[header returnType] name] isEqual:@"void"];
 }
 
 -bindingForString:(NSString*)arg withContext:executionContext
