@@ -12,7 +12,7 @@
 
 @interface MPWMethodHeader : MPWObject {
 	NSString	*methodName;
-	NSString	*returnTypeName;
+    STTypeDescriptor	*returnType;
 	NSMutableArray		*parameterVars;
 	NSMutableArray		*methodKeyWords;
 
@@ -24,6 +24,7 @@ objectAccessor_h( NSString , methodName, setMethodName )
 -initWithString:(NSString*)aString;
 -initWithScanner:(MPWStScanner*)scanner;
 -(NSString*)returnTypeName;
+-(STTypeDescriptor*)returnType;
 -(NSString*)headerString;
 -typeString;
 
@@ -36,6 +37,5 @@ objectAccessor_h( NSString , methodName, setMethodName )
 -(const char*)typeSignature;
 -(SEL)selector;
 
--typeStringForTypeName:aType;
 
 @end

@@ -276,7 +276,7 @@ static NSString *typeCharToLLVMType( char typeChar ) {
     NSMutableArray *allMethodArguments=[NSMutableArray array];
     for ( int i=0;i<[header numArguments];i++) {
         NSLog(@"will get typchar for arg[%d]",i);
-        char typeChar =[[header typeStringForTypeName:[header argumentNameAtIndex:i]] characterAtIndex:0];
+        char typeChar =[[header argumentTypeAtIndex:i] objcTypeCode];
         NSLog(@"typeChar for arg[%d] = %c",i,typeChar);
         [allMethodArguments addObject:[NSString stringWithFormat:@"%@ %@",[assemblyGenerator typeToLLVMType:typeChar],[@"%" stringByAppendingString:[header argumentNameAtIndex:i]]]];
         NSLog(@"all args now: %@",allMethodArguments);

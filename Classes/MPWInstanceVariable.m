@@ -56,9 +56,5 @@ longAccessor( offset, setOffset )
     return [NSString stringWithFormat:@"%c",self.type.objcTypeCode];
 }
 
--(void)dealloc
-{
-	[super dealloc];
-}
 
 @end

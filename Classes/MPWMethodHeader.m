@@ -14,7 +14,7 @@
 @implementation MPWMethodHeader
 
 objectAccessor( NSString , methodName, setMethodName )
-objectAccessor( NSString , returnTypeName, setReturnTypeName )
+objectAccessor( STTypeDescriptor , returnType, setReturnType )
 objectAccessor(NSMutableArray , parameterVars, setParameterVars )
 objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
@@ -23,7 +23,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	self=[super init];
 	[self setParameterVars:[NSMutableArray array]];
 	[self setMethodKeyWords:[NSMutableArray array]];
-	[self setReturnTypeName:@"id"];
+    [self setReturnType:[STTypeDescriptor descritptorForObjcCode:'@']];
 	return self;
 }
 
@@ -31,6 +31,8 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 {
     return NSSelectorFromString([self methodName]);
 }
+
+
 
 -(void)addParameterName:(NSString*)name type:(NSString*)type keyWord:(NSString*)keyWord
 {
@@ -50,7 +52,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 -(NSArray*)parameterNames
 {
-    return [[[self parameterVars] collect] name];
+    return (NSArray*)[[[self parameterVars] collect] name];
 }
 
 -(STVariableDefinition*)variableDefAtIndex:(int)anIndex
@@ -73,19 +75,6 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
     return [[self argumentTypeAtIndex:anIndex] name];
 }
 
--typeStringForTypeName:aType
-{
-	if ( [aType isEqual:@"int"] ) {
-		return @"i";
-	} else	if ( [aType isEqual:@"float"] ) {
-		return @"f";
-	} else	if ( [aType isEqual:@"void"] ) {
-		return @"v";
-	} else {
-		return @"@";
-	}
-}
-
 -(const char*)typeSignature
 {
 	id sig = [self typeString];
@@ -97,9 +86,9 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 -typeString
 {
-	NSMutableString *str=[NSMutableString stringWithFormat:@"%@@:",[self typeStringForTypeName:[self returnTypeName]]];int i;
-	for (i=0;i<[self numArguments];i++ ){
-		[str appendString:[self typeStringForTypeName:[self argumentTypeNameAtIndex:i]]];
+	NSMutableString *str=[NSMutableString stringWithFormat:@"%c@:",[[self returnType] objcTypeCode]];
+	for (int i=0;i<[self numArguments];i++ ){
+        [str appendFormat:@"%c",[[self argumentTypeAtIndex:i] objcTypeCode]];
 	}
 	return str;
 }
@@ -161,7 +150,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
     id optionalReturnType;
     self = [self init];
     if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
-        [self setReturnTypeName:optionalReturnType];
+        [self setReturnType:[STTypeDescriptor descritptorForSTTypeName:optionalReturnType]];
     }
     while ( [self parseAKeyWordFromScanner:scanner] )  {
     }
@@ -179,8 +168,8 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(NSString*)headerString
 {
 	NSMutableString *headerString = [NSMutableString string];
-	if ( ![[self returnTypeName] isEqual:@"id"] ) {
-		[headerString appendFormat:@"<%@>",[self returnTypeName]];
+	if ( [[self returnType] objcTypeCode] != '@' ) {
+		[headerString appendFormat:@"<%@>",[[self returnType] name]];
 	}
 	if ( [parameterVars count] == 0 ) {
 		[headerString appendString:[self methodName]];
@@ -230,7 +219,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 -(void)dealloc
 {
 	[methodName release];
-	[returnTypeName release];
+	[returnType release];
 	[parameterVars release];
 	[methodKeyWords release];
 	[super dealloc];
@@ -246,7 +235,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	NSString *testMethodHeader = @"count";
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header methodName] , testMethodHeader ,@"method name" );
-	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
+	IDEXPECT( [[header returnType] name] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 0 , @"numArguments");
 }
 
@@ -256,14 +245,14 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	NSString *testMethodHeader = @"<int>count";
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header methodName] , @"count" ,@"method name" );
-	IDEXPECT( [header returnTypeName] , @"int", @"method return type" );
+	IDEXPECT( [[header returnType] name] , @"int", @"method return type" );
 	INTEXPECT( [header numArguments], 0 , @"numArguments");
 }
 
 +(void)testUnaryIntReturnTypedTypeString
 {
 	NSString *testMethodHeader = @"<int>count";
-	NSString *typeString=@"i@:";
+	NSString *typeString=@"l@:";
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header typeString] , typeString , @"method type string for int return" );
 }
@@ -273,7 +262,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	NSString *testMethodHeader = @"add:otherNumber";
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header methodName] , @"add:" ,@"method name" );
-	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
+	IDEXPECT( [[header returnType] name] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 1 , @"numArguments");
 	IDEXPECT( [header argumentNameAtIndex:0], @"otherNumber" , @"first argument name");
 	IDEXPECT( [header argumentTypeNameAtIndex:0], @"id" , @"first argument name");
@@ -284,7 +273,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	NSString *testMethodHeader = @"add:otherNumber to:firstNumber with:otherParameter";
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header methodName] , @"add:to:with:" ,@"method name" );
-	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
+	IDEXPECT( [[header returnType] name] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 3 , @"numArguments");
 	IDEXPECT( [header argumentNameAtIndex:0], @"otherNumber" , @"first argument name");
 	IDEXPECT( [header argumentTypeNameAtIndex:0], @"id" , @"first argument name");
@@ -309,7 +298,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	NSString *testMethodHeader = @"addInt:<int>anInteger";
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header methodName] , @"addInt:" ,@"method name" );
-	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
+	IDEXPECT( [[header returnType] name] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 1 , @"numArguments");
 	IDEXPECT( [header argumentNameAtIndex:0], @"anInteger" , @"first argument name");
 	IDEXPECT( [header argumentTypeNameAtIndex:0], @"int" , @"first argument name");
@@ -318,7 +307,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 +(void)testTypedKeywordTypeString
 {
 	NSString *testMethodHeader = @"addInt:<int>anInteger";
-	NSString *typeString=@"@@:i";
+	NSString *typeString=@"@@:l";
 	NSString *msgString=[NSString stringWithFormat:@"method typestring for %@",testMethodHeader];
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header typeString] , typeString , msgString);
@@ -327,7 +316,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 +(void)testTypedKeywordFloatTypeString
 {
 	NSString *testMethodHeader = @"addFloat:<float>aFloat";
-	NSString *typeString=@"@@:f";
+	NSString *typeString=@"@@:d";
 	NSString *msgString=[NSString stringWithFormat:@"method typestring for %@",testMethodHeader];
 	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
 	IDEXPECT( [header typeString] , typeString , msgString);
