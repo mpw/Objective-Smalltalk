@@ -8,11 +8,12 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
+@class STTypeDescriptor;
 
 @interface MPWInstanceVariable : MPWObject {
-	NSString	*name;
-	NSString	*type;
-	long			offset;
+	NSString	        *name;
+    STTypeDescriptor	*type;
+	long			    offset;
 }
 
 -initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType;

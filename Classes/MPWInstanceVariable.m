@@ -7,15 +7,15 @@
 //
 
 #import "MPWInstanceVariable.h"
-
+#import "STTypeDescriptor.h"
 
 @implementation MPWInstanceVariable
 
 objectAccessor( NSString, name, setName )
-objectAccessor( NSString, type, setType )
+objectAccessor( STTypeDescriptor, type, setType )
 longAccessor( offset, setOffset )
 
--initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType
+-initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType
 {
 	self=[super init];
 	[self setName:newName];
@@ -48,27 +48,14 @@ longAccessor( offset, setOffset )
 	}
 }
 
--typeStringForTypeName:(NSString*)aType
+-(NSString*)typeName
 {
-    if ( aType.length == 1)  {
-        return aType;
-    }
-    if ( [aType isEqual:@"int"] ) {
-        return @"i";
-    } else    if ( [aType isEqual:@"bool"] ) {
-        return @"l";
-    } else    if ( [aType isEqual:@"float"] ) {
-        return @"f";
-    } else    if ( [aType isEqual:@"void"] ) {
-        return @"v";
-    } else {
-        return @"@";
-    }
+    return [type name];
 }
 
 -(NSString*)objcType
 {
-    return [self typeStringForTypeName:[self type]];
+    return [NSString stringWithFormat:@"%c",type.objcTypeCode];
 }
 
 -(void)dealloc

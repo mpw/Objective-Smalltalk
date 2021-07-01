@@ -30,7 +30,7 @@
 #import "MPWLiteralExpression.h"
 #import "STObjectTemplate.h"
 #import "MPWLiteralDictionaryExpression.h"
-
+#import "STTypeDescriptor.h"
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
 -lengthMultipliedBy:aNumber;
@@ -576,8 +576,8 @@
 	IDEXPECT( [[variableDescriptions objectAtIndex:1] name], @"variable1", @"first varname" );
 	IDEXPECT( [[variableDescriptions objectAtIndex:2] name], @"variable2", @"2nd varname" );
 //	IDEXPECT( [[variableDescriptions objectAtIndex:0] type], @"@", @"isa type" );   '#' under Leopard, '@' under Tiger?
-	IDEXPECT( [(MPWInstanceVariable*)[variableDescriptions objectAtIndex:1] type], @"@", @"1st type" );
-	IDEXPECT( [(MPWInstanceVariable*)[variableDescriptions objectAtIndex:2] type], @"@", @"2nd type" );
+	IDEXPECT( [(MPWInstanceVariable*)[variableDescriptions objectAtIndex:1] objcType] , @"@", @"1st type" );
+	IDEXPECT( [(MPWInstanceVariable*)[variableDescriptions objectAtIndex:2] objcType], @"@", @"2nd type" );
 }
 
 +(void)testAccessingInstanceVariablesOfCreatedClass
@@ -618,11 +618,11 @@
     MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
-    IDEXPECT( [variableDescription type], @"id", @"type of ivar" );
+    IDEXPECT( [variableDescription typeName], @"id", @"type of ivar" );
     MPWInstanceVariable *ivar2 = [[classDef instanceVariableDescriptions] lastObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
-    IDEXPECT( [ivar2 type], @"id", @"type of ivar" );
+    IDEXPECT( [ivar2 typeName], @"id", @"type of ivar" );
 }
 
 +(void)testCreateSubclassWithInstanceVariablesUsingSyntax
@@ -635,11 +635,11 @@
     MPWInstanceVariable *variableDescription = variableDescriptions[1];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
-    IDEXPECT( [variableDescription type], @"@", @"type of ivar" );
+    IDEXPECT( [variableDescription objcType], @"@", @"type of ivar" );
     MPWInstanceVariable *ivar2 = [variableDescriptions lastObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
-    IDEXPECT( [ivar2 type], @"@", @"type of ivar" );
+    IDEXPECT( [ivar2 objcType], @"@", @"type of ivar" );
     STCompiler *testCompiler=[STCompiler compiler];
     [testCompiler evaluateScriptString:@"testInstance := __TestClassWithIVarsFromSyntax new.  "];
     [testCompiler evaluateScriptString:@"var:testInstance/myIvar := 'hi'. "];
@@ -663,7 +663,7 @@
 	MPWInstanceVariable* ivardef = [NSString ivarForName:@"isa"];
 	IDEXPECT( [ivardef name], @"isa" ,@"name of isa");
 //	IDEXPECT( [ivardef type], @"@" ,@"type of isa");
-	IDEXPECT( [ivardef type], @"#" ,@"type of isa");
+	IDEXPECT( [ivardef objcType], @"#" ,@"type of isa");
 	INTEXPECT( [ivardef offset], 0 ,@"offset of isa");
 
 }

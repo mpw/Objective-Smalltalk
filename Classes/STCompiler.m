@@ -37,6 +37,7 @@
 #import "MPWPropertyPathComponent.h"
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
+#import "STTypeDescriptor.h"
 
 @class MPWClassMethodStore;
 
@@ -1153,10 +1154,10 @@ idAccessor(solver, setSolver)
 {
     NSString *next=nil;
     if ( [(next=[self nextToken]) isEqualToString:@"var"]) {
-        NSString *type=@"id";
+        NSString *typeName=@"id";
         next = [self nextToken];
         if ( [next isEqualToString:@"<"]) {
-            type=[self nextToken];
+            typeName=[self nextToken];
             next=[self nextToken];
             if ( ![next isEqualToString:@">"]) {
                 PARSEERROR(@"> expected as close of instance variable definition", next);
@@ -1166,6 +1167,7 @@ idAccessor(solver, setSolver)
         }
         NSString *name=[self nextToken];
         next=[self nextToken];
+        STTypeDescriptor *type=[STTypeDescriptor descritptorForSTTypeName:typeName];
         return [[[MPWInstanceVariable alloc] initWithName:name offset:0 type:type] autorelease];
     } else {
         PARSEERROR(@"var expected in instance variable definition", next);
@@ -1588,14 +1590,14 @@ idAccessor(solver, setSolver)
     MPWClassDefinition* classDef=[[self compiler] compile:script];
     NSArray<MPWInstanceVariable*> *ivars=[classDef instanceVariableDescriptions];
     INTEXPECT( ivars.count, 4, @"number of ivars");
-    IDEXPECT( ivars[0].type, @"id", @"untyped defaults to id");
+    IDEXPECT( [ivars[0] typeName], @"id", @"untyped defaults to id");
     IDEXPECT( ivars[0].objcType, @"@", @"untyped defaults to id");
-    IDEXPECT( ivars[1].type, @"id", @"id type");
+    IDEXPECT( [ivars[1] typeName], @"id", @"id type");
     IDEXPECT( ivars[1].objcType, @"@", @"id type");
-    IDEXPECT( ivars[2].type, @"int", @"int type");
-    IDEXPECT( ivars[2].objcType, @"i", @"int type");
-    IDEXPECT( ivars[3].type, @"float", @"float type");
-    IDEXPECT( ivars[3].objcType, @"f", @"float type");
+    IDEXPECT( [ivars[2] typeName], @"int", @"int type");
+    IDEXPECT( ivars[2].objcType, @"l", @"int type");
+    IDEXPECT( [ivars[3] typeName], @"float", @"float type");
+    IDEXPECT( ivars[3].objcType, @"d", @"float type");
 }
 
 +(void)testInstanceVarsOfDefinedClassHaveTypeInformation
@@ -1607,10 +1609,10 @@ idAccessor(solver, setSolver)
     IDEXPECT( @(ivar_getTypeEncoding(untyped)), @"@",@"type of 'untyped'");
     Ivar idtyped = class_getInstanceVariable(classDef, "idtyped");
     IDEXPECT( @(ivar_getName(idtyped)), @"idtyped",@"name of 'idtyped'");
-    IDEXPECT( @(ivar_getTypeEncoding(idtyped)), @"@",@"type of 'idtyped'");
+    IDEXPECT( @(ivar_getTypeEncoding(idtyped)), @"@",@"objc type of 'idtyped'");
     Ivar inttyped = class_getInstanceVariable(classDef, "inttyped");
     IDEXPECT( @(ivar_getName(inttyped)), @"inttyped",@"name of 'inttyped'");
-    IDEXPECT( @(ivar_getTypeEncoding(inttyped)), @"i",@"type of 'inttyped'");
+    IDEXPECT( @(ivar_getTypeEncoding(inttyped)), @"l",@"objc type of 'inttyped'");
 }
 
 +testSelectors
