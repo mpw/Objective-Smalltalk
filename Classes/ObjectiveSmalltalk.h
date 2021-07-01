@@ -62,6 +62,7 @@
 #import <ObjectiveSmalltalk/MPWVarScheme.h>
 #import <ObjectiveSmalltalk/NSObjectScripting.h>
 #import <ObjectiveSmalltalk/STBundle.h>
+#import <ObjectiveSmalltalk/STVariableDefinition.h>
 
 
 #endif /* ObjectiveSmalltalk_h */

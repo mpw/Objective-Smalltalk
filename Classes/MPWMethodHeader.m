@@ -8,20 +8,20 @@
 
 #import "MPWMethodHeader.h"
 #import "MPWStScanner.h"
+#import "STVariableDefinition.h"
+#import "STTypeDescriptor.h"
 
 @implementation MPWMethodHeader
 
 objectAccessor( NSString , methodName, setMethodName )
 objectAccessor( NSString , returnTypeName, setReturnTypeName )
-objectAccessor(NSMutableArray , parameterNames, setParameterNames )
-objectAccessor(NSMutableArray , parameterTypes, setParameterTypes )
+objectAccessor(NSMutableArray , parameterVars, setParameterVars )
 objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 
 -init
 {
 	self=[super init];
-	[self setParameterNames:[NSMutableArray array]];
-	[self setParameterTypes:[NSMutableArray array]];
+	[self setParameterVars:[NSMutableArray array]];
 	[self setMethodKeyWords:[NSMutableArray array]];
 	[self setReturnTypeName:@"id"];
 	return self;
@@ -36,23 +36,41 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 {
 	[[self methodKeyWords] addObject:keyWord];
 	if ( name && type ) {
-		[(NSMutableArray*)[self parameterNames] addObject:name];
-		[(NSMutableArray*)[self parameterTypes] addObject:type];
+        STVariableDefinition *vardef=[[STVariableDefinition new] autorelease];
+        vardef.name = name;
+        vardef.type = [STTypeDescriptor descritptorForSTTypeName:type];
+        [[self parameterVars] addObject:vardef];
 	}
 }
 
 -(int)numArguments
 {
-	return (int)[[self parameterNames] count];
+	return (int)[[self parameterVars] count];
 }
 
--argumentNameAtIndex:(int)anIndex
+-(NSArray*)parameterNames
 {
-	return [[self parameterNames] objectAtIndex:anIndex];
+    return [[[self parameterVars] collect] name];
 }
--argumentTypeAtIndex:(int)anIndex
+
+-(STVariableDefinition*)variableDefAtIndex:(int)anIndex
 {
-	return [[self parameterTypes] objectAtIndex:anIndex];
+    return [[self parameterVars] objectAtIndex:anIndex];
+}
+
+-(NSString*)argumentNameAtIndex:(int)anIndex
+{
+    return [[self variableDefAtIndex:anIndex] name];
+}
+
+-(STTypeDescriptor*)argumentTypeAtIndex:(int)anIndex
+{
+    return [[self variableDefAtIndex:anIndex] type];
+}
+
+-(NSString*)argumentTypeNameAtIndex:(int)anIndex
+{
+    return [[self argumentTypeAtIndex:anIndex] name];
 }
 
 -typeStringForTypeName:aType
@@ -81,7 +99,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 {
 	NSMutableString *str=[NSMutableString stringWithFormat:@"%@@:",[self typeStringForTypeName:[self returnTypeName]]];int i;
 	for (i=0;i<[self numArguments];i++ ){
-		[str appendString:[self typeStringForTypeName:[self argumentTypeAtIndex:i]]];
+		[str appendString:[self typeStringForTypeName:[self argumentTypeNameAtIndex:i]]];
 	}
 	return str;
 }
@@ -164,15 +182,15 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	if ( ![[self returnTypeName] isEqual:@"id"] ) {
 		[headerString appendFormat:@"<%@>",[self returnTypeName]];
 	}
-	if ( [parameterNames count] == 0 ) {
+	if ( [parameterVars count] == 0 ) {
 		[headerString appendString:[self methodName]];
 	} else {
 		int i,max=(int)[[self methodKeyWords] count];
 		for (i=0;i<max;i++ ) {
 			[headerString appendString:[[self methodKeyWords] objectAtIndex:i]];
-			if ( i < [[self parameterNames] count] ) {
-				id typeName = [[self parameterTypes] objectAtIndex:i];
-				id parametername = [[self parameterNames] objectAtIndex:i];
+			if ( i < [[self parameterVars] count] ) {
+				id typeName = [[self argumentTypeAtIndex:i] name];
+				id parametername = [self argumentNameAtIndex:i];
 				if ( [typeName isEqual:@"id"] ) {
 					[headerString appendString:parametername];
 				} else {
@@ -213,8 +231,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 {
 	[methodName release];
 	[returnTypeName release];
-	[parameterNames release];
-	[parameterTypes release];
+	[parameterVars release];
 	[methodKeyWords release];
 	[super dealloc];
 }
@@ -259,7 +276,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 1 , @"numArguments");
 	IDEXPECT( [header argumentNameAtIndex:0], @"otherNumber" , @"first argument name");
-	IDEXPECT( [header argumentTypeAtIndex:0], @"id" , @"first argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:0], @"id" , @"first argument name");
 }
 
 +(void)testParseLongKeywordMethodHeader
@@ -270,11 +287,11 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 3 , @"numArguments");
 	IDEXPECT( [header argumentNameAtIndex:0], @"otherNumber" , @"first argument name");
-	IDEXPECT( [header argumentTypeAtIndex:0], @"id" , @"first argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:0], @"id" , @"first argument name");
 	IDEXPECT( [header argumentNameAtIndex:1], @"firstNumber" , @"2nd argument name");
-	IDEXPECT( [header argumentTypeAtIndex:1], @"id" , @"2nd argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:1], @"id" , @"2nd argument name");
 	IDEXPECT( [header argumentNameAtIndex:2], @"otherParameter" , @"third argument name");
-	IDEXPECT( [header argumentTypeAtIndex:2], @"id" , @"third argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:2], @"id" , @"third argument name");
 }
 
 +(void)testLongKeywordMethodHeaderTypeString
@@ -295,7 +312,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	IDEXPECT( [header returnTypeName] , @"id", @"method return type" );
 	INTEXPECT( [header numArguments], 1 , @"numArguments");
 	IDEXPECT( [header argumentNameAtIndex:0], @"anInteger" , @"first argument name");
-	IDEXPECT( [header argumentTypeAtIndex:0], @"int" , @"first argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:0], @"int" , @"first argument name");
 }
 
 +(void)testTypedKeywordTypeString

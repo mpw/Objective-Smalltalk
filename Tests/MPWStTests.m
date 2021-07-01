@@ -326,7 +326,7 @@
     INTEXPECT( [header numArguments], 1, @"number of args");
     IDEXPECT( [header argumentNameAtIndex:0], @"a", @"first arg");
     IDEXPECT( [header typeString], @"@@:@", @"type string");
-    IDEXPECT( [header argumentTypeAtIndex:0], @"id", @"arg type");
+    IDEXPECT( [header argumentTypeNameAtIndex:0], @"id", @"arg type");
     
 }
 
@@ -1057,8 +1057,9 @@
     MPWScriptedMethod *method=methods.firstObject;
     MPWMethodHeader *header=method.methodHeader;
     IDEXPECT( header.methodName, @"multiplyByNumber:", @"method name");
-    IDEXPECT( header.parameterNames, @[@"num"], @"param name");
-    IDEXPECT( [header parameterTypes], @[@"id"], @"param type");
+    INTEXPECT( header.numArguments, 1, @"number parameters name");
+    IDEXPECT( [header argumentNameAtIndex:0], @"num", @"param name");
+    IDEXPECT( [[header argumentTypeAtIndex:0] name], @"id", @"param type");
     IDEXPECT( [header typeString], @"@@:@", @"method typestring");
 }
 
