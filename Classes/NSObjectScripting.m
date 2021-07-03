@@ -140,8 +140,8 @@ static id ivarsByClassAndName=nil;
 
 +(void)generateAccessorsFor:(NSString*)varName
 {
-	id ivarDef = [self ivarForName:varName];
-    NSLog(@"generate accessors for %@ type name: %@ objc type: %@",varName,[ivarDef type],[ivarDef objcType]);
+    MPWInstanceVariable* ivarDef = [self ivarForName:varName];
+    NSLog(@"generate accessors for var name '%@', type name: '%@' objc type: %@",varName,[[ivarDef type] name],[ivarDef objcType]);
 	id getAccessor = [MPWGetAccessor accessorForInstanceVariable:ivarDef];
     NSLog(@"getAcccessor header: %@",[getAccessor methodHeader]);
 	id setAccessor = [MPWSetAccessor accessorForInstanceVariable:ivarDef];

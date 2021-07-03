@@ -87,7 +87,8 @@ objectAccessor( NSString, filename, setFilename )
 
 -(BOOL)hasDeclaredReturn
 {
-	return [self methodHeader]!= nil && ![[[header returnType] name] isEqual:@"void"];
+    MPWMethodHeader *header=[self methodHeader];
+	return header!= nil && ![[[header returnType] name] isEqual:@"void"];
 }
 
 -bindingForString:(NSString*)arg withContext:executionContext
@@ -127,9 +128,9 @@ objectAccessor( NSString, filename, setFilename )
 			//--- list.
 			
 			if ( ![argName isEqual:@"args"] ) {
-				if ( [argType isEqual:@"int"] ) {
+				if ( [argTypeName isEqual:@"int"] ) {
 					arg=[NSNumber numberWithInt:[arg intValue]];
-				} else if ([argType isEqual:@"ref"] ) {
+				} else if ([argTypeName isEqual:@"ref"] ) {
                     arg=[self bindingForString:arg withContext:executionContext];
                 }
 				[[executionContext evaluator] bindValue:arg toVariableNamed:argName];

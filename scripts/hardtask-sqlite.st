@@ -6,7 +6,7 @@ framework:ObjectiveHTTPD load.
 class Task {
 	var <int> id.
 	var <bool> done.
-	var title.
+	var <NSString> title.
 	-description { "<Task: title: {this:title} done: {this:done}>". }
 	+sqlForInsert {
 		'INSERT INTO tasks ( title, done ) VALUES (:title,:done)'.
