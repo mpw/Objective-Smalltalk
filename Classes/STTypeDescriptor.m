@@ -29,8 +29,16 @@ static NSDictionary *typesBySTName;
 
 +(instancetype)descritptorForSTTypeName:(NSString*)typeName
 {
-    return typesBySTName[typeName];
+    STTypeDescriptor *td = typesBySTName[typeName];
+    if ( !td ) {
+        td=[[STTypeDescriptor new] autorelease];
+        td.objcTypeCode='@';
+        td.name=typeName;
+        td.cName=[typeName stringByAppendingString:@"*"];
+    }
+    return td;
 }
+
 
 static STTypeDescriptorStruct definedTypes[]={
     { '@', "id", "id" },
@@ -61,7 +69,7 @@ static STTypeDescriptorStruct definedTypes[]={
         descriptor.cName=@(definedTypes[i].cName);
         typesByObjCCode[definedTypes[i].objcTypeCode]=descriptor;
     }
-    unsigned char sttypes[]="@ldv";
+    unsigned char sttypes[]="@ldvB";
     NSMutableDictionary *st2type=[NSMutableDictionary dictionary];
     for (int i=0;sttypes[i];i++) {
         STTypeDescriptor *t=typesByObjCCode[sttypes[i]];
@@ -95,11 +103,21 @@ static STTypeDescriptorStruct definedTypes[]={
     INTEXPECT( idDescriptor.objcTypeCode, 'l', @"type code");
 }
 
++(void)testUnknownTypeNamesAreObjects
+{
+    STTypeDescriptor *idDescriptor=[self descritptorForSTTypeName:@"NSString"];
+    
+    IDEXPECT( idDescriptor.name, @"NSString", @"stName");
+    IDEXPECT( idDescriptor.cName, @"NSString*", @"cName");
+    INTEXPECT( idDescriptor.objcTypeCode, '@', @"type code");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
        @"testKnowsAboutID",
        @"testMapsSTIntNameToLong",
+       @"testUnknownTypeNamesAreObjects",
 			];
 }
 
