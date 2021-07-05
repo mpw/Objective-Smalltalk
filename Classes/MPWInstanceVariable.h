@@ -14,7 +14,7 @@
 	long			    offset;
 }
 
--initWithName:(NSString*)newName offset:(int)newOffset type:(NSString*)newType;
+-(instancetype)initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType;
 -(long)offset;
 -valueInContext:anObject;
 -(void)setValue:newValue inContext:anObject;

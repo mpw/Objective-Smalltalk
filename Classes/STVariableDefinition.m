@@ -9,6 +9,14 @@
 
 @implementation STVariableDefinition
 
+-initWithName:(NSString*)newName type:(STTypeDescriptor*)newType
+{
+    self=[super init];
+    [self setName:newName];
+    [self setType:newType];
+    return self;
+}
+
 -(void)dealloc
 {
     [_name release];

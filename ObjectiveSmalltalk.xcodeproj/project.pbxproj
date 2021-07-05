@@ -42,8 +42,8 @@
 		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
 		1F2B179A261C680D005D873F /* STViewScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B1798261C680D005D873F /* STViewScheme.h */; };
 		1F2B179B261C680D005D873F /* STViewScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B1799261C680D005D873F /* STViewScheme.m */; };
-		1F2B664F268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B664D268CCC6A00DE4416 /* STTypeDescriptor.h */; };
-		1F2B6650268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B664D268CCC6A00DE4416 /* STTypeDescriptor.h */; };
+		1F2B664F268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B664D268CCC6A00DE4416 /* STTypeDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F2B6650268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B664D268CCC6A00DE4416 /* STTypeDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2B6651268CCC6A00DE4416 /* STTypeDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B664E268CCC6A00DE4416 /* STTypeDescriptor.m */; };
 		1F2B6652268CCC6A00DE4416 /* STTypeDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B664E268CCC6A00DE4416 /* STTypeDescriptor.m */; };
 		1F2B665B268E3E2C00DE4416 /* STVariableDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B6659268E3E2C00DE4416 /* STVariableDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
