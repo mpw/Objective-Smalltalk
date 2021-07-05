@@ -13,12 +13,10 @@
 
 longAccessor( offset, setOffset )
 
--initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType
+-(instancetype)initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType
 {
-	self=[super init];
-	[self setName:newName];
+	self=[super initWithName:newName type:(STTypeDescriptor*)newType];
 	[self setOffset:newOffset];
-	[self setType:newType];
 	return self;
 }
 

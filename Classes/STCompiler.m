@@ -999,6 +999,11 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"var"]) {
+        //        NSLog(@"found a variable definition");
+        [self pushBack:next];
+        id result = [self parseLocalVariableDefinition];
+        return result;
     } else if ( [next isEqual:@"object"]) {
         //        NSLog(@"found a class definition");
         return [self parseObjectTemplate];
@@ -1149,8 +1154,7 @@ idAccessor(solver, setSolver)
     return [self parseClassDefinition];
 }
 
-
--(MPWInstanceVariable *)parseInstanceVariableDefinition
+-(MPWInstanceVariable *)parseVariableDefinition:(Class)variableDefClass
 {
     NSString *next=nil;
     if ( [(next=[self nextToken]) isEqualToString:@"var"]) {
@@ -1166,13 +1170,23 @@ idAccessor(solver, setSolver)
             [self pushBack:next];
         }
         NSString *name=[self nextToken];
-        next=[self nextToken];
+//        next=[self nextToken];   // skip over ".", but that's actually needed
         STTypeDescriptor *type=[STTypeDescriptor descritptorForSTTypeName:typeName];
-        return [[[MPWInstanceVariable alloc] initWithName:name offset:0 type:type] autorelease];
+        return [[[variableDefClass alloc] initWithName:name type:type] autorelease];
     } else {
         PARSEERROR(@"var expected in instance variable definition", next);
         return nil;
     }
+}
+
+-(MPWInstanceVariable *)parseInstanceVariableDefinition
+{
+    return [self parseVariableDefinition:[MPWInstanceVariable class]];
+}
+
+-(STVariableDefinition*)parseLocalVariableDefinition
+{
+    return [self parseVariableDefinition:[STVariableDefinition class]];
 }
 
 -(MPWPropertyPathDefinition *)parsePropertyPathDefinition
@@ -1590,13 +1604,13 @@ idAccessor(solver, setSolver)
     MPWClassDefinition* classDef=[[self compiler] compile:script];
     NSArray<MPWInstanceVariable*> *ivars=[classDef instanceVariableDescriptions];
     INTEXPECT( ivars.count, 4, @"number of ivars");
-    IDEXPECT( [ivars[0] typeName], @"id", @"untyped defaults to id");
+    IDEXPECT( ivars[0].type.name, @"id", @"untyped defaults to id");
     IDEXPECT( ivars[0].objcType, @"@", @"untyped defaults to id");
-    IDEXPECT( [ivars[1] typeName], @"id", @"id type");
+    IDEXPECT( ivars[1].type.name, @"id", @"id type");
     IDEXPECT( ivars[1].objcType, @"@", @"id type");
-    IDEXPECT( [ivars[2] typeName], @"int", @"int type");
+    IDEXPECT( ivars[2].type.name, @"int", @"int type");
     IDEXPECT( ivars[2].objcType, @"l", @"int type");
-    IDEXPECT( [ivars[3] typeName], @"float", @"float type");
+    IDEXPECT( ivars[3].type.name, @"float", @"float type");
     IDEXPECT( ivars[3].objcType, @"d", @"float type");
 }
 
@@ -1615,6 +1629,18 @@ idAccessor(solver, setSolver)
     IDEXPECT( @(ivar_getTypeEncoding(inttyped)), @"l",@"objc type of 'inttyped'");
 }
 
++(void)testLocalVariableDeclarationParses
+{
+    id result=[[self compiler] compile:@"class Hi { -hi { var hi. 3+4. } }"];
+    EXPECTNOTNIL(result, @"parse result");
+}
+
++(void)testLocalVariableDeclarationEvaluates
+{
+    NSNumber* result=[[self compiler] evaluateScriptString:@"class Hi { -hi { var hi. 5+4. } }. Hi new hi."];
+    INTEXPECT(result.intValue,9, @"result of 5+4, variable declation doesn't do anything");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1631,6 +1657,8 @@ idAccessor(solver, setSolver)
               @"testExpressionsInLiterals",
               @"testInstanceVarHasTypeInformation",
               @"testInstanceVarsOfDefinedClassHaveTypeInformation",
+              @"testLocalVariableDeclarationParses",
+              @"testLocalVariableDeclarationEvaluates",
     ];
 }
 
