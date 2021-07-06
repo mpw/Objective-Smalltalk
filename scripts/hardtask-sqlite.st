@@ -31,11 +31,9 @@ class SQLTable {
 	}
     -createSQL {
 		columnDefs ← this:theClass sqlForCreateTable.
-		sql ← "CREATE TABLE {this:name}  {columnDefs}".
-		sql.
+		"CREATE TABLE {this:name}  {columnDefs}".
 	}
 	-<void>create {
-		stdout println:'create'.
 		self db query: self createSQL.
 	}
 	-objectsForQuery:query {
@@ -44,6 +42,12 @@ class SQLTable {
           self db query:query.
           result := self db builder result.
 		 result.
+	}
+	-select {
+		self objectsForQuery: "select * from {this:name}".
+	}
+	-selectWhere:query {
+		self objectsForQuery: "select * from {this:name} where {query}".
 	}
 }.
 
@@ -68,17 +72,16 @@ scheme todo : MPWMappingStore {
 	}
 	/tasks { 
 		|= { 
-    		this:tasksTable objectsForQuery: 'select * from tasks'.  
+    		this:tasksTable select.
 		}
 	}
 
 	/task/:id {
 		|= {
-			this:tasksTable objectsForQuery: "select * from tasks where id = {id}".
+			this:tasksTable selectWhere: "id = {id}".
 		}
 	}
 }.
-stdout println:'start'.
 MPWSQLiteWriter stream createEncoderMethodForClass: Task.
 todo := todo alloc initWithRef:dbref.
 json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
