@@ -9,10 +9,10 @@ class Task {
 	var <NSString> title.
 	-description { "<Task: title: {this:title} done: {this:done}>". }
 	+sqlForInsert {
-		'INSERT INTO tasks ( title, done ) VALUES (:title,:done)'.
+		'( title, done ) VALUES (:title,:done)'.
 	}
 	+sqlForCreateTable {
-		'CREATE TABLE tasks ( [id] INTEGER PRIMARY KEY, [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
+		'( [id] INTEGER PRIMARY KEY, [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
 	}
 }.
 
@@ -20,12 +20,23 @@ class Task {
 class SQLTable {
 	var theClass.
 	var db.
+	var name.
+	-insertSQL {
+		theInsert ← this:theClass sqlForInsert.
+		"INSERT INTO {this:name}  {theInsert}".
+	}
 	-<void>insert:array {
-		writer ← self db insert: this:theClass sqlForInsert.
+		writer ← self db insert: self insertSQL.
 		writer writeObject:array.
 	}
+    -createSQL {
+		columnDefs ← this:theClass sqlForCreateTable.
+		sql ← "CREATE TABLE {this:name}  {columnDefs}".
+		sql.
+	}
 	-<void>create {
-		self db query: this:theClass sqlForCreateTable.
+		stdout println:'create'.
+		self db query: self createSQL.
 	}
 	-objectsForQuery:query {
           builder := MPWObjectBuilder alloc initWithClass: this:theClass.
@@ -43,7 +54,7 @@ scheme todo : MPWMappingStore {
 	-initWithRef:ref {
 		db := (MPWStreamQLite alloc initWithPath:ref path).
      	self setDb:db.
-		taskTable := #SQLTable{ #db: db , #theClass: Task  }.
+		taskTable := #SQLTable{ #db: db , #theClass: Task, #name: 'tasks'  }.
 		self setTasksTable:taskTable.
 		self.
 	}
