@@ -16,7 +16,6 @@ class Task {
 	}
 }.
 
-stdout println:'will define SQLTable'.
 
 class SQLTable {
 	var theClass.
@@ -44,9 +43,7 @@ scheme todo : MPWMappingStore {
 	-initWithRef:ref {
 		db := (MPWStreamQLite alloc initWithPath:ref path).
      	self setDb:db.
-		stdout println:'got db'.
 		taskTable := #SQLTable{ #db: db , #theClass: Task  }.
-		stdout println:'got table'.
 		self setTasksTable:taskTable.
 		self.
 	}
