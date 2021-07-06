@@ -1637,7 +1637,7 @@ idAccessor(solver, setSolver)
 
 +(void)testLocalVariableDeclarationEvaluates
 {
-    NSNumber* result=[[self compiler] evaluateScriptString:@"class Hi { -hi { var hi. 5+4. } }. Hi new hi."];
+    NSNumber* result=[[self compiler] evaluateScriptString:@"class Hi { -hi { var <int> hi. 5+4. } }. Hi new hi."];
     INTEXPECT(result.intValue,9, @"result of 5+4, variable declation doesn't do anything");
 }
 
