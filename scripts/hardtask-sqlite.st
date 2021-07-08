@@ -11,43 +11,8 @@ class Task {
 	+sqlForInsert {
 		'( title, done ) VALUES (:title,:done)'.
 	}
-	+sqlForCreateTable {
+	+sqlForCreate {
 		'( [id] INTEGER PRIMARY KEY, [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
-	}
-}.
-
-
-class SQLTable {
-	var theClass.
-	var db.
-	var name.
-	-insertSQL {
-		theInsert ← this:theClass sqlForInsert.
-		"INSERT INTO {this:name}  {theInsert}".
-	}
-	-<void>insert:array {
-		writer ← self db insert: self insertSQL.
-		writer writeObject:array.
-	}
-    -createSQL {
-		columnDefs ← this:theClass sqlForCreateTable.
-		"CREATE TABLE {this:name}  {columnDefs}".
-	}
-	-<void>create {
-		self db query: self createSQL.
-	}
-	-objectsForQuery:query {
-          builder := MPWObjectBuilder alloc initWithClass: this:theClass.
-          self db setBuilder:builder.
-          self db query:query.
-          result := self db builder result.
-		 result.
-	}
-	-select {
-		self objectsForQuery: "select * from {this:name}".
-	}
-	-selectWhere:query {
-		self objectsForQuery: "select * from {this:name} where {query}".
 	}
 }.
 
@@ -56,14 +21,12 @@ scheme todo : MPWMappingStore {
 	var db.
 	var tasksTable.
 	-initWithRef:ref {
-		db := (MPWStreamQLite alloc initWithPath:ref path).
-     	self setDb:db.
-		taskTable := #SQLTable{ #db: db , #theClass: Task, #name: 'tasks'  }.
-		self setTasksTable:taskTable.
+		this:db := (MPWStreamQLite alloc initWithPath:ref path).
+		this:tasksTable :=  #MPWSQLTable{ #db: this:db , #tableClass: Task, #name: 'tasks'  }.
+		this:db open.
 		self.
 	}
 	-<void>createTable {
-		self db open.
 		this:tasksTable create.
 	}
 	-<void>insertTasks {
