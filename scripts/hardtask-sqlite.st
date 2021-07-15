@@ -3,21 +3,23 @@
 #
 framework:ObjectiveHTTPD load.
 
+
 class Task {
 	var <int> id.
 	var <bool> done.
 	var <NSString> title.
 	-description { "<Task: title: {this:title} done: {this:done}>". }
-	+sqlForInsert {
-		'( title, done ) VALUES (:title,:done)'.
+	+sqlInsertKeys {
+		#( 'title', 'done' ).
 	}
 	+sqlForCreate {
 		'( [id] INTEGER PRIMARY KEY, [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
 	}
 }.
 
+stdout println:'top'.
 
-scheme todo : MPWMappingStore {
+scheme todo : MPWAbstractStore {
 	var db.
 	var tasksTable.
 	-initWithRef:ref {
