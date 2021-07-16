@@ -19,4 +19,6 @@
 -valueInContext:anObject;
 -(void)setValue:newValue inContext:anObject;
 -(NSString*)objcType;
+-(NSString*)typeName;  // should probably deprecate
+
 @end
