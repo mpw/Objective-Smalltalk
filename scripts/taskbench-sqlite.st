@@ -30,6 +30,7 @@ scheme todo : MPWAbstractStore {
 	}
 	-<void>createTable {
 		this:tasksTable create.
+	    this:tasksTable := this:db tables at:'tasks'.
 	}
 	-<void>insertTasks {
 		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
@@ -54,7 +55,7 @@ scheme todo : MPWAbstractStore {
 		}
 	}
 }.
-MPWSQLiteWriter stream createEncoderMethodForClass: Task.
+MPWSQLTable stream createEncoderMethodForClass: Task.
 todo := todo alloc initWithRef:dbref.
 json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
 json → todo.
