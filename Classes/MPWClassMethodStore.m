@@ -42,6 +42,7 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
 {
     MPWMethodCallBack *methodCallback = [[self methodCallbacks] objectForKey:name];
     if ( methodCallback == nil ) {
+//        NSLog(@"allocating callback in callbackForName: '%@'",name);
         methodCallback = [[MPWMethodCallBack alloc] init];
         [[self methodCallbacks] setObject:methodCallback forKey:name];
     }
