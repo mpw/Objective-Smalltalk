@@ -15,7 +15,6 @@
     STTypeDescriptor	*returnType;
 	NSMutableArray		*parameterVars;
 	NSMutableArray		*methodKeyWords;
-
 }
 
 objectAccessor_h( NSString , methodName, setMethodName )

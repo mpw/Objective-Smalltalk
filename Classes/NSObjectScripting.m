@@ -145,6 +145,7 @@ static id ivarsByClassAndName=nil;
 	id getAccessor = [MPWGetAccessor accessorForInstanceVariable:ivarDef];
 //    NSLog(@"getAcccessor header: %@",[getAccessor methodHeader]);
 	id setAccessor = [MPWSetAccessor accessorForInstanceVariable:ivarDef];
+//    NSLog(@"install accessors: %@",varName);
 	[getAccessor installInClass:self];
 	[setAccessor installInClass:self];
 }

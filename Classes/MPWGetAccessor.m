@@ -9,6 +9,7 @@
 #import "MPWGetAccessor.h"
 #import "MPWInstanceVariable.h"
 #import "MPWMethodHeader.h"
+#import "MPWMethodCallBack.h"
 
 @implementation MPWGetAccessor
 
@@ -46,5 +47,20 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
 {
 	return [ivarDef valueInContext:target];
 }
+
+#ifndef __clang_analyzer__
+// This leaks because we are installing into the runtime, can't remove after
+
+-(void)installInClass:(Class)aClass
+{
+//    NSLog(@"'%@' installInClass: %@",[self methodName],aClass);
+    id callback=[[MPWMethodCallBack alloc] init];
+    [callback setMethod:self];
+    [callback installInClass:aClass];
+}
+
+#endif
+
+
 
 @end

@@ -50,6 +50,7 @@ typedef id (^ZeroArgBlock)(void);
 {
 	self=[super init];
 	[self setBlock:aBlock];
+    numParams=(int)[[self formalParameters] count];
 	[self setContext:aContext];
 	return self;
 }

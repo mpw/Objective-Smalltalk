@@ -32,6 +32,7 @@ boolAccessor(installed, setInstalled)
 //idAccessor( context, setContext )
 idAccessor( method, _setMethod )
 
+
 -script
 {
 	return [(MPWScriptedMethod*)[self method] script];
@@ -95,6 +96,7 @@ idAccessor( method, _setMethod )
 {
 	[self _setMethod:aMethod];
 	[self setName:[aMethod methodName]];
+    numParams=[[self formalParameters] count];
 }
 
 -methodForTarget:aTarget

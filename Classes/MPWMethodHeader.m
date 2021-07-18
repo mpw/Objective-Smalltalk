@@ -12,11 +12,14 @@
 #import "STTypeDescriptor.h"
 
 @implementation MPWMethodHeader
-
+{
+    NSArray *parameterNames;
+}
 objectAccessor( NSString , methodName, setMethodName )
 objectAccessor( STTypeDescriptor , returnType, setReturnType )
 objectAccessor(NSMutableArray , parameterVars, setParameterVars )
 objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
+lazyAccessor(NSArray, parameterNames, setParameterNames, computeParameterNames)
 
 -init
 {
@@ -50,7 +53,7 @@ objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
 	return (int)[[self parameterVars] count];
 }
 
--(NSArray*)parameterNames
+-(NSArray*)computeParameterNames
 {
     return (NSArray*)[[[self parameterVars] collect] name];
 }
