@@ -96,7 +96,7 @@ idAccessor( method, _setMethod )
 {
 	[self _setMethod:aMethod];
 	[self setName:[aMethod methodName]];
-    numParams=[[self formalParameters] count];
+    numParams=(int)[[self formalParameters] count];
 }
 
 -methodForTarget:aTarget

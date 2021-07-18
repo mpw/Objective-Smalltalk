@@ -48,15 +48,21 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
 	return [ivarDef valueInContext:target];
 }
 
+#define pointerToVarInObject( anObject ,offset)  ((id*)(((char*)anObject) + offset))
+
 #ifndef __clang_analyzer__
 // This leaks because we are installing into the runtime, can't remove after
 
 -(void)installInClass:(Class)aClass
 {
-//    NSLog(@"'%@' installInClass: %@",[self methodName],aClass);
-    id callback=[[MPWMethodCallBack alloc] init];
-    [callback setMethod:self];
-    [callback installInClass:aClass];
+    SEL aSelector=NSSelectorFromString([self declarationString]);
+    int ivarOffset = (int)[ivarDef offset];
+    id (^getterBlock)(id object) = ^id(id object) {
+        return *pointerToVarInObject(object,ivarOffset);
+    };
+    IMP getterImp=imp_implementationWithBlock(getterBlock);
+    class_addMethod(aClass, aSelector, getterImp, "@@:" );
+
 }
 
 #endif
