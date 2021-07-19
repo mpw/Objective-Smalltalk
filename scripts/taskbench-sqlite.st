@@ -1,23 +1,16 @@
 #!env stsh
-#-hardtask:<ref>dbref
+#-taskbench:<ref>dbref
 #
-framework:ObjectiveHTTPD load.
-
 
 class Task {
 	var <int> id.
 	var <bool> done.
 	var <NSString> title.
 	-description { "<Task: title: {this:title} done: {this:done}>". }
-	+sqlInsertKeys {
-		#( 'title', 'done' ).
-	}
 	+sqlForCreate {
-		'( [id] INTEGER PRIMARY KEY, [title] NVARCHAR(220) NOT NULL, [done] INTEGER );'.
+		'( [id] INTEGER PRIMARY KEY, [title] VARCHAR(220) NOT NULL, [done] INTEGER );'.
 	}
 }.
-
-stdout println:'top'.
 
 scheme todo : MPWAbstractStore {
 	var db.
@@ -32,34 +25,36 @@ scheme todo : MPWAbstractStore {
 		this:tasksTable create.
 	    this:tasksTable := this:db tables at:'tasks'.
 	}
-	-<void>insertTasks {
-		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
-		stdout println: 'will create large taskList'.
-		1 to:18 do: { 
-			taskList := taskList arrayByAddingObjectsFromArray: taskList.
+	-createTaskListToInsert:<int>log10ofSize {
+		baseList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
+	    taskList ← NSMutableArray array.	
+		1 to:5 do: {
+			taskList addObjectsFromArray: baseList.	
 		}.
+		1 to: log10ofSize - 1 do: { 
+			nextTen := NSMutableArray array.
+			1 to: 10 do: {
+	            nextTen addObjectsFromArray: taskList.
+			}.
+			taskList := nextTen.
+		}.
+		taskList.
+	}
+	-<void>insertTasks {
+	    taskList := self createTaskListToInsert:6.
 		stdout println: taskList count.
 		1 to:10 do: {
 			this:tasksTable insert:taskList.
 		}.
 	}
-	/tasks { 
-		|= { 
-    		this:tasksTable select.
-		}
-	}
-
-	/task/:id {
-		|= {
-			this:tasksTable selectWhere: "id = {id}".
-		}
-	}
 }.
 MPWSQLTable stream createEncoderMethodForClass: Task.
 todo := todo alloc initWithRef:dbref.
-json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
-json → todo.
-scheme:todo ← todo.
 todo createTable.
 todo db enableWAL.
-todo insertTasks.
+todo db query:'PRAGMA journal_mode = OFF;'.
+todo db query:'PRAGMA synchronous = 0;'.
+todo db query:'PRAGMA cache_size = 1000000;;'
+todo db query:'PRAGMA locking_mode = EXCLUSIVE;'.
+todo db query:'PRAGMA temp_store = MEMORY;'.
+shell runInteractiveLoop.
