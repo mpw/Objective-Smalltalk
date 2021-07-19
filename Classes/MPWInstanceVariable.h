@@ -14,6 +14,8 @@
 	long			    offset;
 }
 
+@property (assign, nonatomic, readonly) unsigned char objcTypeCode;
+
 -(instancetype)initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType;
 -(long)offset;
 -valueInContext:anObject;

@@ -48,7 +48,7 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
 	return [ivarDef valueInContext:target];
 }
 
-#define pointerToVarInObject( anObject ,offset)  ((id*)(((char*)anObject) + offset))
+#define pointerToVarInObject( type, anObject ,offset)  ((type*)(((char*)anObject) + offset))
 
 #ifndef __clang_analyzer__
 // This leaks because we are installing into the runtime, can't remove after
@@ -56,12 +56,33 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
 -(void)installInClass:(Class)aClass
 {
     SEL aSelector=NSSelectorFromString([self declarationString]);
+    const char *typeCode=NULL;
     int ivarOffset = (int)[ivarDef offset];
-    id (^getterBlock)(id object) = ^id(id object) {
-        return *pointerToVarInObject(object,ivarOffset);
-    };
-    IMP getterImp=imp_implementationWithBlock(getterBlock);
-    class_addMethod(aClass, aSelector, getterImp, "@@:" );
+    IMP getterImp=NULL;
+    switch ( ivarDef.objcTypeCode ) {
+        case 'd':
+        case '@':
+            typeCode = "@@:";
+            id (^objectGetterBlock)(id object) = ^id(id object) {
+                return *pointerToVarInObject(id,object,ivarOffset);
+            };
+            getterImp=imp_implementationWithBlock(objectGetterBlock);
+            break;
+        case 'i':
+        case 'l':
+            typeCode = "l@:";
+            long (^intGetterBlock)(id object) = ^long(id object) {
+                return *pointerToVarInObject(long,object,ivarOffset);
+            };
+            getterImp=imp_implementationWithBlock(intGetterBlock);
+            break;
+        default:
+            [NSException raise:@"invalidtype" format:@"Don't know how to genereate get accessor for type '%c'",ivarDef.objcTypeCode];
+            break;
+    }
+    if ( getterImp && typeCode ) {
+        class_addMethod(aClass, aSelector, getterImp, typeCode );
+    }
 
 }
 
