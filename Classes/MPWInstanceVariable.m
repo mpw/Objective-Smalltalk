@@ -36,12 +36,24 @@ longAccessor( offset, setOffset )
 -(void)setValue:newValue inContext:anObject
 {
 	id *ptr = pointerToVarInObject( anObject );
+    switch (self.objcTypeCode) {
+        case '@':
+            if ( anObject &&  *ptr != newValue ) {
+                [newValue retain];
+                [*ptr release];
+                *ptr = newValue;
+            }
+            break;
+        case 'i':
+        case 'l':
+        case 'b':
+        case 'B':
+            *(int*)ptr = [newValue integerValue];
+            break;
+
+    }
 //   NSLog(@"ivar %@ set Value: %@ at offset: %ld",name,newValue,offset);
-	if ( anObject &&  *ptr != newValue ) {
-		[newValue retain];
-		[*ptr release];
-		*ptr = newValue;
-	}
+
 }
 
 -(NSString*)typeName
@@ -51,9 +63,13 @@ longAccessor( offset, setOffset )
 
 -(NSString*)objcType
 {
-    return [NSString stringWithFormat:@"%c",self.type.objcTypeCode];
+    return [NSString stringWithFormat:@"%c",self.objcTypeCode];
 }
 
+-(unsigned char)objcTypeCode
+{
+    return self.type.objcTypeCode;
+}
 
 @end
 

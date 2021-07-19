@@ -32,7 +32,7 @@
 	[ivarDef setValue:value inContext:target];
 	return value;
 }
-#define pointerToVarInObject( anObject ,offset)  ((id*)(((char*)anObject) + offset))
+#define pointerToVarInObject( type, anObject ,offset)  ((type*)(((char*)anObject) + offset))
 
 #ifndef __clang_analyzer__
 // This leaks because we are installing into the runtime, can't remove after
@@ -40,9 +40,46 @@
 -(void)installInClass:(Class)aClass
 {
     SEL aSelector=NSSelectorFromString([self objcMessageName]);
+    const char *typeCode=NULL;
+    int ivarOffset = (int)[ivarDef offset];
+    IMP getterImp=NULL;
+    switch ( ivarDef.objcTypeCode ) {
+        case 'd':
+        case '@':
+            typeCode = "v@:@";
+            void (^objectSetterBlock)(id object,id arg) = ^void(id object,id arg) {
+                id *p=pointerToVarInObject(id,object,ivarOffset);
+                if ( *p != arg ) {
+                    [*p release];
+                    [arg retain];
+                    *p=arg;
+                }
+            };
+            getterImp=imp_implementationWithBlock(objectSetterBlock);
+            break;
+        case 'i':
+        case 'l':
+            typeCode = "v@:l";
+            void (^intSetterBlock)(id object,long arg) = ^void(id object,long arg) {
+                *pointerToVarInObject(long,object,ivarOffset)=arg;
+            };
+            getterImp=imp_implementationWithBlock(intSetterBlock);
+            break;
+        default:
+            [NSException raise:@"invalidtype" format:@"Don't know how to genereate get accessor for type '%c'",ivarDef.objcTypeCode];
+            break;
+    }
+    if ( getterImp && typeCode ) {
+        class_addMethod(aClass, aSelector, getterImp, typeCode );
+    }
+    
+}
+-(void)installInClass_old:(Class)aClass
+{
+    SEL aSelector=NSSelectorFromString([self objcMessageName]);
     int ivarOffset = (int)[ivarDef offset];
     void (^setterBlock)(id object,id arg) = ^void(id object,id arg) {
-        id *p=pointerToVarInObject(object,ivarOffset);
+        id *p=pointerToVarInObject(id,object,ivarOffset);
         if ( *p != arg ) {
             [*p release];
             [arg retain];
