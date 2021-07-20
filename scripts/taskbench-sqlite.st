@@ -57,4 +57,4 @@ todo db query:'PRAGMA synchronous = 0;'.
 todo db query:'PRAGMA cache_size = 1000000;;'
 todo db query:'PRAGMA locking_mode = EXCLUSIVE;'.
 todo db query:'PRAGMA temp_store = MEMORY;'.
-shell runInteractiveLoop.
+todo insertTasks.
