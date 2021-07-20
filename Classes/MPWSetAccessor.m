@@ -59,6 +59,7 @@
             break;
         case 'i':
         case 'l':
+        case 'B':
             typeCode = "v@:l";
             void (^intSetterBlock)(id object,long arg) = ^void(id object,long arg) {
                 *pointerToVarInObject(long,object,ivarOffset)=arg;
@@ -66,7 +67,7 @@
             getterImp=imp_implementationWithBlock(intSetterBlock);
             break;
         default:
-            [NSException raise:@"invalidtype" format:@"Don't know how to genereate get accessor for type '%c'",ivarDef.objcTypeCode];
+            [NSException raise:@"invalidtype" format:@"Don't know how to genereate set accessor for type '%c'",ivarDef.objcTypeCode];
             break;
     }
     if ( getterImp && typeCode ) {

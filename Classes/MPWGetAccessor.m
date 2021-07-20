@@ -70,6 +70,7 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
             break;
         case 'i':
         case 'l':
+        case 'B':
             typeCode = "l@:";
             long (^intGetterBlock)(id object) = ^long(id object) {
                 return *pointerToVarInObject(long,object,ivarOffset);
