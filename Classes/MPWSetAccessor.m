@@ -67,28 +67,12 @@
             getterImp=imp_implementationWithBlock(intSetterBlock);
             break;
         default:
-            [NSException raise:@"invalidtype" format:@"Don't know how to genereate set accessor for type '%c'",ivarDef.objcTypeCode];
+            [NSException raise:@"invalidtype" format:@"Don't know how to generate set accessor for type '%c'",ivarDef.objcTypeCode];
             break;
     }
     if ( getterImp && typeCode ) {
         class_addMethod(aClass, aSelector, getterImp, typeCode );
     }
-    
-}
--(void)installInClass_old:(Class)aClass
-{
-    SEL aSelector=NSSelectorFromString([self objcMessageName]);
-    int ivarOffset = (int)[ivarDef offset];
-    void (^setterBlock)(id object,id arg) = ^void(id object,id arg) {
-        id *p=pointerToVarInObject(id,object,ivarOffset);
-        if ( *p != arg ) {
-            [*p release];
-            [arg retain];
-            *p=arg;
-        }
-    };
-    IMP getterImp=imp_implementationWithBlock(setterBlock);
-    class_addMethod(aClass, aSelector, getterImp, "@@:@" );
     
 }
 

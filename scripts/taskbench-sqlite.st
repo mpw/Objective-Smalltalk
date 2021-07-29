@@ -1,5 +1,5 @@
 #!env stsh
-#-taskbench:<ref>dbref
+#-<void>taskbench:<ref>dbref
 #
 
 class Task {
@@ -23,6 +23,7 @@ scheme todo : MPWAbstractStore {
 	}
 	-<void>createTable {
 		this:tasksTable create.
+		this:db query:'create index indx_title on tasks (title);'.
 	    this:tasksTable := this:db tables at:'tasks'.
 	}
 	-createTaskListToInsert:<int>log10ofSize {
@@ -42,7 +43,6 @@ scheme todo : MPWAbstractStore {
 	}
 	-<void>insertTasks {
 	    taskList := self createTaskListToInsert:6.
-		stdout println: taskList count.
 		1 to:10 do: {
 			this:tasksTable insert:taskList.
 		}.
@@ -50,11 +50,12 @@ scheme todo : MPWAbstractStore {
 }.
 MPWSQLTable stream createEncoderMethodForClass: Task.
 todo := todo alloc initWithRef:dbref.
-todo createTable.
-todo db enableWAL.
+#todo db enableWAL.
 todo db query:'PRAGMA journal_mode = OFF;'.
 todo db query:'PRAGMA synchronous = 0;'.
 todo db query:'PRAGMA cache_size = 1000000;;'
-todo db query:'PRAGMA locking_mode = EXCLUSIVE;'.
+#todo db query:'PRAGMA locking_mode = EXCLUSIVE;'.
 todo db query:'PRAGMA temp_store = MEMORY;'.
+todo createTable.
 todo insertTasks.
+todo db close.

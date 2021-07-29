@@ -261,7 +261,7 @@ idAccessor(solver, setSolver)
 }
 
 
--parseLiteralArray
+-parseLiteralArray:(NSString*)closeArrayToken
 {
 //    NSLog(@"parseLiteralArray");
     NSMutableArray *array=[NSMutableArray array];
@@ -269,7 +269,7 @@ idAccessor(solver, setSolver)
     do {
         token=[self nextToken];
 //        NSLog(@"parseLiteralArray, token=%@",token);
-        if ( token && !([token isToken] && [token isEqual:@")"]) ) {
+        if ( token && !([token isToken] && [token isEqual:closeArrayToken]) ) {
 //           NSLog(@"inside if token etc.");
             id object=nil;
             if ( [token isEqual:@"#"]) {
@@ -291,7 +291,7 @@ idAccessor(solver, setSolver)
             if ( [token isEqualToString:@","] ) {
 //                NSLog(@"comma, continue with loop");
                 continue;
-            } else if ( [token isEqualToString:@")"] ) {
+            } else if ( [token isEqualToString:closeArrayToken] ) {
 //                NSLog(@"closing bracket, exit loop");
                 break;
             } else {
@@ -301,7 +301,7 @@ idAccessor(solver, setSolver)
             break;
         }
     } while ( YES );
-    if ( [token isEqual:@")"] ) {
+    if ( [token isEqual:closeArrayToken] ) {
 //        NSLog(@"OK Array found: %@",array);
         MPWLiteralArrayExpression *e=[[MPWLiteralArrayExpression new] autorelease];
         e.objects=array;
@@ -388,7 +388,7 @@ idAccessor(solver, setSolver)
     MPWLiteralExpression *e=nil;
     NSString *className=nil;
     id next=[self nextToken];
-    if ( [next isEqual:@"("]  || [next  isEqual:@"{"]) {
+    if ( [next isEqual:@"("]  ||[next isEqual:@"["]  || [next  isEqual:@"{"]) {
         className=object;
 //        NSLog(@"got a class name: %@",className);
         object=next;
@@ -396,7 +396,9 @@ idAccessor(solver, setSolver)
         [self pushBack:next];
     }
     if ( [object isEqual:@"("] ) {
-        e = [self parseLiteralArray];
+        e = [self parseLiteralArray:@")"];
+    } else if ( [object isEqual:@"["] ) {
+        e = [self parseLiteralArray:@"]"];
     } else if ( [object isEqual:@"{"] ) {
         e = [self parseLiteralDict];
     } else {
@@ -522,8 +524,10 @@ idAccessor(solver, setSolver)
 -objectifyScanned:object
 {
 //	NSLog(@"objectifyScanned: %@",object);
-    if ( [object isEqual:@"#"] ) {
+    if ( [object isEqual:@"#"]  ) {
         object = [self parseLiteral];
+    } else if ( [object isEqual:@"["] ) {
+        object = [self parseLiteralArray:@"]"];
     } else if ( [object isEqual:@"("] ) {
         id closeParen;
         object = [self parseExpression];
@@ -1641,6 +1645,19 @@ idAccessor(solver, setSolver)
     INTEXPECT(result.intValue,9, @"result of 5+4, variable declation doesn't do anything");
 }
 
++(void)testLiteralArraysCanHaveSquareBrackets
+{
+    NSArray* result=[[self compiler] evaluateScriptString:@" [ 1,6,2,'hello']"] ;
+    IDEXPECT( result, (@[@(1),@(6),@(2),@"hello"]), @"literal array with square brackets");
+}
+
++(void)testSquareBracketLiteralArraysCanHaveCustomClasses
+{
+    NSMutableArray* result=[[self compiler] evaluateScriptString:@" #NSMutableArray[ 1,6,2,'hello']"] ;
+    result[2]=@"World";
+    IDEXPECT( result, (@[@(1),@(6),@"World",@"hello"]), @"literal array with square brackets");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1659,6 +1676,7 @@ idAccessor(solver, setSolver)
               @"testInstanceVarsOfDefinedClassHaveTypeInformation",
               @"testLocalVariableDeclarationParses",
               @"testLocalVariableDeclarationEvaluates",
+              @"testSquareBracketLiteralArraysCanHaveCustomClasses",
     ];
 }
 

@@ -2,23 +2,34 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
-	var id.
+	var <int> id.
 	var <bool> done.
 	var title.
+
 	-description { "Task: {this:title} done: {this:done}". }
 }
 
-taskList ← #( #Task{ #id: '1', #title: 'Clean Room', #done: false }, #Task{ #id: '2', #title: 'Check Twitter', #done: true } ).
+taskList ← #( #Task{ #id: 1, #title: 'Clean Room', #done: false }, #Task{ #id: 2, #title: 'Check Twitter', #done: true } ).
 
 scheme todo : MPWMappingStore {
 	var taskDict.
-	-<void>setTaskList:aList {
-		this:taskDict := NSMutableDictionary dictionaryWithObjects: aList forKeys: aList collect id.
-		stdout println: this:taskDict.
+	var taskList.
+	-<void>setNewTaskList:aList {
+		1 to:1 do: { 
+			aList := aList arrayByAddingObjectsFromArray:aList.
+		}.
+		d := NSMutableDictionary dictionary.
+		i := 0.
+		aList do: { :task |
+			task setId:i.  i := i+1.
+			d at: task id stringValue put: task.
+		}.
+		this:taskDict := d.
+		this:taskList := aList.
 	}
 	/tasks { 
 		|= { 
-			this:taskDict allValues.
+			this:taskList.
 		}
 	}
 	/task/:id {
@@ -31,14 +42,16 @@ scheme todo : MPWMappingStore {
 		}
 	}
 	-<void>persist {
-		source:tasks := this:taskDict allValues.
+		source:tasks := this:taskList.
 	}
 }.
 
-todo := #todo{ #taskList: taskList }.
-json := #MPWJSONConverterStore{  #up: true, #class: class:Task }.
-json → todo → #MPWJSONConverterStore{  #class: class:Task } → ref:file:/tmp/tasks/ asScheme.
+todo := #todo{ #newTaskList: taskList }.
+json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
+json → todo → #MPWJSONConverterStore{  #converterClass: class:Task } → ref:file:/tmp/tasks/ asScheme.
 server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
+stdout println:'number of tasks: ', todo taskList count stringValue.
+stdout println:'port: ', server port stringValue.
 shell runInteractiveLoop.
 

@@ -66,7 +66,7 @@ objectAccessor( NSString, filename, setFilename )
 //	id scanner=[[[MPWScanner alloc] initWithData:[self data]] autorelease];
 	__block BOOL inComments=YES;
 	NSString *commentPrefix=@"#";
-	 NSString *literalArrayPrefix=@"#(";
+	NSString *literalArrayPrefix=@"#(";
 	NSMutableArray *scriptLines=[NSMutableArray array];
     NSString *scriptString=[[[NSString alloc] initWithData:[self data] encoding:NSUTF8StringEncoding] autorelease];
     [scriptString  enumerateLinesUsingBlock:^(NSString *exprString, BOOL *stop) {
