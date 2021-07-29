@@ -947,7 +947,20 @@ idAccessor(solver, setSolver)
         first = [first negated];
         second = [self nextToken];
     }
-    if (second )  {		//	potential message expression
+    if ( [second isEqual:@"["]) {
+        MPWExpression* indexExpr=[self parseExpression];
+        id closeBrace=[self nextToken];
+        if ( [closeBrace isEqual:@"]"]) {
+            MPWMessageExpression *expr=[[MPWMessageExpression new] autorelease];
+            [expr setReceiver:first];
+            [expr setSelector:@selector(at:)];
+            [expr setArgs:@[ indexExpr ]];
+            first=expr;
+        } else {
+            PARSEERROR(@"indexExpression not closed by ']'", closeBrace);
+        }
+
+    } else if (second )  {		//	potential message expression
 //		NSLog(@"potential message expression got first %@ second %@",first,second);
 //		first = [self objectifyScanned:first];
         [self pushBack:second];
@@ -1658,6 +1671,12 @@ idAccessor(solver, setSolver)
     IDEXPECT( result, (@[@(1),@(6),@"World",@"hello"]), @"literal array with square brackets");
 }
 
++(void)testCanAccessArraysWithSquareBrackets
+{
+    NSNumber* result=[[self compiler] evaluateScriptString:@"a := [ 1,6,2,'hello']. a[1]."] ;
+    IDEXPECT( result, @(6), @"literal array with square brackets");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1677,6 +1696,7 @@ idAccessor(solver, setSolver)
               @"testLocalVariableDeclarationParses",
               @"testLocalVariableDeclarationEvaluates",
               @"testSquareBracketLiteralArraysCanHaveCustomClasses",
+              @"testCanAccessArraysWithSquareBrackets",
     ];
 }
 
