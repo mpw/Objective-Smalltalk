@@ -1,5 +1,5 @@
 #!env stsh
-#-hardtask:<ref>dbref
+#-<void>hardtask:<ref>dbref
 #
 framework:ObjectiveHTTPD load.
 
@@ -28,6 +28,7 @@ scheme todo : MPWAbstractStore {
 	-<void>createTable {
 		this:tasksTable create.
 	    this:tasksTable := this:db tables at:'tasks'.
+		this:tasksTable createEncoderMethodForClass: Task.
 	}
 	-<void>insertTasks {
 		taskList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
@@ -45,14 +46,13 @@ scheme todo : MPWAbstractStore {
 		}
 	}
 }.
-MPWSQLTable stream createEncoderMethodForClass: Task.
 todo := todo alloc initWithRef:dbref.
 json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
 json → todo.
-scheme:todo ← todo.
 server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
 stdout println:'port: ', server port stringValue.
 todo createTable.
 todo insertTasks.
 shell runInteractiveLoop.
+todo db close.

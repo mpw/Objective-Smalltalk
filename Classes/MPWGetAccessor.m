@@ -78,7 +78,7 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
             getterImp=imp_implementationWithBlock(intGetterBlock);
             break;
         default:
-            [NSException raise:@"invalidtype" format:@"Don't know how to genereate get accessor for type '%c'",ivarDef.objcTypeCode];
+            [NSException raise:@"invalidtype" format:@"Don't know how to generate get accessor for type '%c'",ivarDef.objcTypeCode];
             break;
     }
     if ( getterImp && typeCode ) {
