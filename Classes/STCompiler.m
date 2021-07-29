@@ -38,6 +38,7 @@
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 #import "STTypeDescriptor.h"
+#import "STSubscriptExpression.h"
 
 @class MPWClassMethodStore;
 
@@ -951,10 +952,9 @@ idAccessor(solver, setSolver)
         MPWExpression* indexExpr=[self parseExpression];
         id closeBrace=[self nextToken];
         if ( [closeBrace isEqual:@"]"]) {
-            MPWMessageExpression *expr=[[MPWMessageExpression new] autorelease];
-            [expr setReceiver:first];
-            [expr setSelector:@selector(at:)];
-            [expr setArgs:@[ indexExpr ]];
+            STSubscriptExpression *expr=[[STSubscriptExpression new] autorelease];
+            expr.receiver=first;
+            expr.subscript=indexExpr;
             first=expr;
         } else {
             PARSEERROR(@"indexExpression not closed by ']'", closeBrace);
