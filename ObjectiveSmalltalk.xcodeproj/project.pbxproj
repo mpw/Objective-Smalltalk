@@ -27,6 +27,10 @@
 		1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */; };
 		1F22E0211A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
 		1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
+		1F22EC8226B321DE00087E8D /* STSubscriptExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */; };
+		1F22EC8326B321DE00087E8D /* STSubscriptExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */; };
+		1F22EC8426B321DE00087E8D /* STSubscriptExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */; };
+		1F22EC8526B321DE00087E8D /* STSubscriptExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */; };
 		1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F23AD7825BF345700F51B6F /* MPWUIImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */; };
 		1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -749,6 +753,8 @@
 		1F22D86413916E0400D99DAB /* varname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = varname.txt; sourceTree = "<group>"; };
 		1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWBoxerUnboxer+MPWBoxingAdditions.h"; sourceTree = "<group>"; };
 		1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPWBoxerUnboxer+MPWBoxingAdditions.m"; sourceTree = "<group>"; };
+		1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSubscriptExpression.h; sourceTree = "<group>"; };
+		1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSubscriptExpression.m; sourceTree = "<group>"; };
 		1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPWUIImageStore.h; path = ../../../Projects/BookLightning/MPWUIImageStore.h; sourceTree = "<group>"; };
 		1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MPWUIImageStore.m; path = ../../../Projects/BookLightning/MPWUIImageStore.m; sourceTree = "<group>"; };
 		1F23AD9925BF45AE00F51B6F /* MPWColorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWColorStore.h; sourceTree = "<group>"; };
@@ -2069,6 +2075,8 @@
 				1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */,
 				F5A74AC100F0A61B015ADD82 /* STCompiler.h */,
 				F5A74ABD00F0A61B015ADD82 /* STCompiler.m */,
+				1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */,
+				1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */,
 				1FC661EE25D83BC700ED1BCB /* STObjectTemplate.h */,
 				1FC661EF25D83BC700ED1BCB /* STObjectTemplate.m */,
 				1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */,
@@ -2228,6 +2236,7 @@
 				1F3C6E6F1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */,
 				1F406E5810F527180054957A /* MPWIdentifier.h in Headers */,
 				1F406EBE10F5354C0054957A /* MPWRecursiveIdentifier.h in Headers */,
+				1F22EC8226B321DE00087E8D /* STSubscriptExpression.h in Headers */,
 				1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */,
 				1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */,
 				1F2B665B268E3E2C00DE4416 /* STVariableDefinition.h in Headers */,
@@ -2444,6 +2453,7 @@
 				1FE37BD31969612500C9A378 /* MPWFileSchemeResolver.h in Headers */,
 				1FB7D7F31E9E5ACC008E5D8E /* MPWClassDefinition.h in Headers */,
 				1F8C938B24F573B400646461 /* MPWDataflowConstraintExpression.h in Headers */,
+				1F22EC8326B321DE00087E8D /* STSubscriptExpression.h in Headers */,
 				1F5D77AE25EBF53C00DCC82F /* STTargetActionConnector.h in Headers */,
 				1F321C6E2133F063001BE6CC /* MPWPropertyPathSetter.h in Headers */,
 				1FE37BA71969610700C9A378 /* MPWMethodType.h in Headers */,
@@ -3345,6 +3355,7 @@
 				1F8B855519AC72C700F8A107 /* MPWFileWatcher.m in Sources */,
 				1FFC563B1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m in Sources */,
 				1F5E508409B4B754000298D9 /* STConnector.m in Sources */,
+				1F22EC8426B321DE00087E8D /* STSubscriptExpression.m in Sources */,
 				1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */,
 				1FD6CAE425BB026500639458 /* MPWGlobalVariableStore.m in Sources */,
 				1F22C8CB0BC8DCD2003BC673 /* MPWBridgeReader.m in Sources */,
@@ -3568,6 +3579,7 @@
 				1F575DA120BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
 				1FB7AE3324DB0F3000CCBE86 /* STBundle.m in Sources */,
 				1FE37BA21969610700C9A378 /* MPWMethodHeader.m in Sources */,
+				1F22EC8526B321DE00087E8D /* STSubscriptExpression.m in Sources */,
 				1FE37BC41969610800C9A378 /* NSObjectScripting.m in Sources */,
 				1F35095E262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */,
 				1FA1B3A4267CFCB500F463ED /* STAWK.m in Sources */,
