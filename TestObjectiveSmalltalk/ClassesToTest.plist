@@ -12,7 +12,6 @@
 	MPWClassMirror,
 	"MPWClassMirrorSubclassForTesting",
 	MPWClassScheme,
-	MPWComplexAssignment,
 	MPWConnectToDefault,
 	MPWConnector,
 	"MPWDataflowConstraintExpression",

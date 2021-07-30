@@ -58,6 +58,13 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 	[variablesRead addObject:[self identifier]];
 }
 
+-evaluateAssignmentOf:value in:aContext
+{
+    [aContext bindValue:value toVariableNamed:[[self identifier] evaluatedIdentifierNameInContext:aContext] withScheme:[self scheme]];
+    return value;
+
+}
+
 -description
 {
 	return [NSString stringWithFormat:@"<%@:%p: scheme: %@ name: %@>",[self class],self,[[self identifier] schemeName],[[self identifier] identifierName]];

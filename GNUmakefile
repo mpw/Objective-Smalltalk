@@ -61,7 +61,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWLiteralDictionaryExpression.m \
     Classes/MPWConnectToDefault.m \
     Classes/MPWClassDefinition.m \
-    Classes/MPWComplexAssignment.m \
     Classes/MPWPropertyPath.m \
     Classes/MPWMethodStore.m \
     Classes/MPWObjCGenerator.m \
