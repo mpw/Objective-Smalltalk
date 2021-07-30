@@ -16,9 +16,11 @@
 @implementation STSubscriptExpression
 {
     MPWMessageExpression *getter;
+    MPWMessageExpression *setter;
 }
 
 lazyAccessor(MPWMessageExpression, getter, setGetter, computeGetter)
+lazyAccessor(MPWMessageExpression, setter, setSetter, computeSetter)
 
 -(MPWMessageExpression*)computeGetter
 {
@@ -27,6 +29,23 @@ lazyAccessor(MPWMessageExpression, getter, setGetter, computeGetter)
     expr.receiver=self.receiver;
     expr.args=@[ self.subscript];
     return expr;
+}
+
+-(MPWMessageExpression*)computeSetter
+{
+    MPWMessageExpression *expr=[[MPWMessageExpression new] autorelease];
+    expr.selector=@selector(at:put:);
+    expr.receiver=self.receiver;
+    expr.args=[[@[ self.subscript, @"placeholder"] mutableCopy] autorelease];
+    return expr;
+}
+
+-evaluateAssignmentOf:value in:aContext
+{
+    MPWMessageExpression *s=[self setter];
+    s.args=@[ setter.args.firstObject, value];
+    [s evaluateIn:aContext];
+    return value;
 }
 
 -(id)evaluateIn:(id)aContext

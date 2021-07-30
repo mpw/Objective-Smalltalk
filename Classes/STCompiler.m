@@ -5,7 +5,6 @@
 #import "MPWMessageExpression.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
-#import "MPWComplexAssignment.h"
 #import "MPWStatementList.h"
 #import "MPWBlockExpression.h"
 #import <MPWFoundation/MPWInterval.h>
@@ -93,8 +92,8 @@ idAccessor(solver, setSolver)
     [self defineConnectorClass:[MPWDataflowConstraintExpression class] forConnectorSymbol:@"|="];
     [self defineConnectorClass:[MPWBidirectionalDataflowConstraintExpression class] forConnectorSymbol:@"=|="];
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u21e6"];
-	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"\u2190"];
-	[self defineConnectorClass:[MPWComplexAssignment class] forConnectorSymbol:@"<-"];
+	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u2190"];
+	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"<-"];
 	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"->"];
 	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"\u21e8"];
 	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"\u2192"];
@@ -959,8 +958,12 @@ idAccessor(solver, setSolver)
         } else {
             PARSEERROR(@"indexExpression not closed by ']'", closeBrace);
         }
-
-    } else if (second )  {		//	potential message expression
+        second = [self nextToken];
+        if ([self isAssignmentLikeToken:second] ) {
+            return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];
+        }
+    }
+    if (second )  {		//	potential message expression
 //		NSLog(@"potential message expression got first %@ second %@",first,second);
 //		first = [self objectifyScanned:first];
         [self pushBack:second];
@@ -1674,7 +1677,13 @@ idAccessor(solver, setSolver)
 +(void)testCanAccessArraysWithSquareBrackets
 {
     NSNumber* result=[[self compiler] evaluateScriptString:@"a := [ 1,6,2,'hello']. a[1]."] ;
-    IDEXPECT( result, @(6), @"literal array with square brackets");
+    IDEXPECT( result, @(6), @"square-bracket array access");
+}
+
++(void)testArrayAccessDoesNotStopEvaluation
+{
+    NSNumber* result=[[self compiler] evaluateScriptString:@"a := [ 1,6,2,'hello']. a[1]+10."] ;
+    IDEXPECT( result, @(16), @"square-bracket array access as start of expression");
 }
 
 +testSelectors
@@ -1697,6 +1706,7 @@ idAccessor(solver, setSolver)
               @"testLocalVariableDeclarationEvaluates",
               @"testSquareBracketLiteralArraysCanHaveCustomClasses",
               @"testCanAccessArraysWithSquareBrackets",
+              @"testArrayAccessDoesNotStopEvaluation",
     ];
 }
 
