@@ -75,7 +75,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWClassMethodStore.m \
     Classes/STMessagePortDescriptor.m \
     Classes/MPWMethodCallBack.m \
-    Classes/MPWResource.m \
     Classes/STCompiler.m \
     Classes/NSObjectScripting.m \
     Classes/MPWGetAccessor.m \
@@ -83,6 +82,9 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STBundle.m \
     Classes/STMessageConnector.m \
     Classes/STObjectTemplate.m \
+    Classes/STSubscriptExpression.m \
+    Classes/STVariableDefinition.m \
+    Classes/STTypeDescriptor.m \
     MPWCascadeExpression.m \
     Schemes/MPWRefScheme.m \
     Schemes/MPWClassScheme.m \
@@ -94,7 +96,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWBundleScheme.m \
     Schemes/MPWFileSchemeResolver.m \
     Schemes/MPWDefaultsScheme.m \
-    Schemes/MPWURLSchemeResolver.m \
     Schemes/MPWEnvScheme.m \
     Schemes/MPWRelScheme.m \
     Schemes/MPWTreeNodeScheme.m \
@@ -111,7 +112,7 @@ libObjectiveSmalltalk_C_FILES = \
 
 
 
-LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base
+LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base -lgnustep-corebase
 
 LDFLAGS += -L ${HOME}/Build/obj -L ~/Build/obj
 
@@ -123,7 +124,7 @@ include $(GNUSTEP_MAKEFILES)/library.make
 -include GNUmakefile.postamble
 
 before-all ::
-	
+
 #	@$(MKDIRS) $(libMPWFoundation_HEADER_FILES_DIR)
 #	cp *.h $(libMPWFoundation_HEADER_FILES_DIR)
 #	cp Collections.subproj/*.h $(libMPWFoundation_HEADER_FILES_DIR)
@@ -139,4 +140,4 @@ test    : libObjectiveSmalltalk tester
 	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:${HOME}/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	$(CC) -g -fobjc-runtime=gnustep-2.1 -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	$(CC) -g -fobjc-runtime=gnustep-2.1 -fblocks -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
