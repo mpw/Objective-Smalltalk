@@ -37,6 +37,8 @@
 		1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */; };
 		1F23ADBF25C00E3900F51B6F /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */; };
 		1F23ADC025C00E3900F51B6F /* MPWFontStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */; };
+		1F2924D726D69C380070A458 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2924D626D69C380070A458 /* MPWFoundation.framework */; };
+		1F2924DA26D8EC430070A458 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
 		1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */; };
 		1F29D7F421B42BE600AB14D8 /* TestObjectiveSmalltalkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F321B42BE600AB14D8 /* TestObjectiveSmalltalkController.m */; };
 		1F29D7F721B42BE600AB14D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7F521B42BE600AB14D8 /* Main.storyboard */; };
@@ -598,6 +600,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F2924DC26D8EC430070A458 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FE37B4C19695FA600C9A378;
+			remoteInfo = ObjectiveSmalltalkTouch;
+		};
 		1F29D80921B42E1600AB14D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -758,6 +767,7 @@
 		1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFontStore.h; sourceTree = "<group>"; };
 		1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFontStore.m; sourceTree = "<group>"; };
 		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1F2924D626D69C380070A458 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestObjectiveSmalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D7EF21B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestObjectiveSmalltalkAppDelegate.h; sourceTree = "<group>"; };
 		1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestObjectiveSmalltalkAppDelegate.m; sourceTree = "<group>"; };
@@ -1331,6 +1341,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F2924DA26D8EC430070A458 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1F2924D726D69C380070A458 /* MPWFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1499,6 +1511,7 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F2924D626D69C380070A458 /* MPWFoundation.framework */,
 				1F5D781B25ECDE6600DCC82F /* libclang.dylib */,
 				1F6FBE8D23040F5900025C80 /* libgmp.10.dylib */,
 				1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */,
@@ -2790,6 +2803,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1F2924DD26D8EC430070A458 /* PBXTargetDependency */,
 			);
 			name = ObjectiveSmalltalkTouchUI;
 			productName = ObjectiveSmalltalkTouchUI;
@@ -3629,6 +3643,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1F2924DD26D8EC430070A458 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */;
+			targetProxy = 1F2924DC26D8EC430070A458 /* PBXContainerItemProxy */;
+		};
 		1F29D80A21B42E1600AB14D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */;

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) MPWExpression *receiver;
 @property (nonatomic,strong) MPWExpression *subscript;
 
+-evaluateAssignmentOf:value in:aContext;
+
 
 @end
 

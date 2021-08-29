@@ -22,7 +22,7 @@ scheme todo : MPWMappingStore {
 		i := 0.
 		aList do: { :task |
 			task setId:i.  i := i+1.
-			d at: task id stringValue put: task.
+			d[task id stringValue] := task.
 		}.
 		this:taskDict := d.
 		this:taskList := aList.

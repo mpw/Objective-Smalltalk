@@ -10,6 +10,8 @@
 
 @class MPWIdentifier;
 
+
+
 @interface MPWIdentifierExpression : MPWExpression {
 	id	evaluationEnvironment;
 	MPWIdentifier*  identifier;
@@ -19,6 +21,8 @@
 //idAccessor_h( scheme, setScheme )
 idAccessor_h( evaluationEnvironment, setEvaluationEnvironment )
 objectAccessor_h( MPWIdentifier, identifier, setIdentifier )
+-evaluateAssignmentOf:value in:aContext;
+
 -scheme;
 -name;
 
