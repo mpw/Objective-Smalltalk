@@ -55,7 +55,7 @@
                     *p=arg;
                 }
             };
-            getterImp=imp_implementationWithBlock(objectSetterBlock);
+            getterImp=imp_implementationWithBlock([objectSetterBlock copy]);
             break;
         case 'i':
         case 'l':
@@ -64,7 +64,7 @@
             void (^intSetterBlock)(id object,long arg) = ^void(id object,long arg) {
                 *pointerToVarInObject(long,object,ivarOffset)=arg;
             };
-            getterImp=imp_implementationWithBlock(intSetterBlock);
+            getterImp=imp_implementationWithBlock([intSetterBlock copy]);
             break;
         default:
             [NSException raise:@"invalidtype" format:@"Don't know how to generate set accessor for type '%c'",ivarDef.objcTypeCode];

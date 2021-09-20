@@ -1137,8 +1137,10 @@
     unsigned int count=0;
     struct objc_method_description *methods = protocol_copyMethodDescriptionList(p, NO, YES, &count);
     INTEXPECT(count,2, @"2 methods");
-    IDEXPECT( [NSString stringWithUTF8String:sel_getName(methods[0].name)],@"method1",@"name of first method");
-    IDEXPECT( [NSString stringWithUTF8String:sel_getName(methods[1].name)],@"method2",@"name of last method");
+    NSArray *methodNames = @[ @(sel_getName(methods[0].name)) ,  @(sel_getName(methods[1].name)) ];
+    INTEXPECT( methodNames.count,2,@"still 2 names");
+    EXPECTTRUE( [methodNames containsObject:@"method1"],@"has method1");
+    EXPECTTRUE( [methodNames containsObject:@"method2"],@"has method2");
     id protocolViaST=[compiler evaluateScriptString:@"protocol:MyStTestProtocol"];
     IDEXPECT( protocolViaST, p,@"protocol retrieved via protocol: scheme");
 

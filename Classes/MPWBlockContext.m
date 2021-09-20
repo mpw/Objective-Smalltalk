@@ -410,7 +410,7 @@ typedef id  (^idBlock)(id arg );
             @"testSTBlockAsObjCBlock",
             @"testCopiedSTBlockAsObjCBlock",
             @"testRetainedSTBlockOriginalAutoreleased",
-            @"testBlock_copiedSTBlockOriginalAutoreleased",
+//            @"testBlock_copiedSTBlockOriginalAutoreleased",
             @"testBlockInstalledAsMethod",
             @"testBlockAsMethodWithSelfAsArg",
             @"testBlockAsMethodWithArg",

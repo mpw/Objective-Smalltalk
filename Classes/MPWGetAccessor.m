@@ -66,7 +66,7 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
             id (^objectGetterBlock)(id object) = ^id(id object) {
                 return *pointerToVarInObject(id,object,ivarOffset);
             };
-            getterImp=imp_implementationWithBlock(objectGetterBlock);
+            getterImp=imp_implementationWithBlock([objectGetterBlock copy]);
             break;
         case 'i':
         case 'l':
@@ -75,7 +75,7 @@ objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
             long (^intGetterBlock)(id object) = ^long(id object) {
                 return *pointerToVarInObject(long,object,ivarOffset);
             };
-            getterImp=imp_implementationWithBlock(intGetterBlock);
+            getterImp=imp_implementationWithBlock([intGetterBlock copy]);
             break;
         default:
             [NSException raise:@"invalidtype" format:@"Don't know how to generate get accessor for type '%c'",ivarDef.objcTypeCode];
