@@ -12,8 +12,6 @@
 }
 
 
-#define PIN RPI_GPIO_P1_11
-
 
 -(instancetype)init
 {
@@ -55,31 +53,26 @@
 	return 0;
 }
 
+-(int)pinForAddress:(id <MPWReferencing>)address
+{
+    NSArray<NSString*> *pathComponents=[address pathComponents];
+    if ( pathComponents.count == 1 ) {
+        int pinNumber = [pathComponents[0] intValue];
+        return pinNumber;
+    } else {
+        [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
+    }
+}
 
 -(id)at:(id <MPWReferencing>)address 
 {
-	NSArray<NSString*> *pathComponents=[address pathComponents];
-	if ( pathComponents.count == 1 ) {
-		int pinNumber = [pathComponents[0] intValue];
-		return @([self readPin:pinNumber]);
-	} else {
-        [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
-	}
-	return nil;
-
+    return @([self readPin:[self pinForAddress:address]]);
 }
 
 -(void)at:(id <MPWReferencing>)address put:value
 {
-	NSArray<NSString*> *pathComponents=[address pathComponents];
-	if ( pathComponents.count == 1 ) {
-		int pinNumber = [pathComponents[0] intValue];
-		int pinValue = [value intValue] ? HIGH : LOW;
-		[self writePin:pinNumber value:pinValue];
-	} else {
-        [NSException raise:@"incorrect pin address" format:@"%@",pathComponents];
-	}
-
+    int pinValue = [value intValue] ? HIGH : LOW;
+    [self writePin:[self pinForAddress:address] value:pinValue];
 }
 
 -(MPWBinding*)bindingForReference:aReference inContext:aContext
