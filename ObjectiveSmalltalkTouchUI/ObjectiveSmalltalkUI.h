@@ -18,3 +18,4 @@ FOUNDATION_EXPORT const unsigned char ObjectiveSmalltalkTouchUIVersionString[];
 
 #import <ObjectiveSmalltalkTouch/UIView+dictionary.h>
 #import <ObjectiveSmalltalkTouch/MPWUIImageStore.h>
+#import <ObjectiveSmalltalkTouch/UIViewBuilderSmalltalkViewController.h>

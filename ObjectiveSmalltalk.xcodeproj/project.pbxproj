@@ -134,6 +134,12 @@
 		1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
 		1F575DA120BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
 		1F575DA220BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
+		1F586CB327253A280078F9BC /* UIViewBuilderSmalltalkViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F586CB127253A280078F9BC /* UIViewBuilderSmalltalkViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F586CB427253A280078F9BC /* UIViewBuilderSmalltalkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F586CB227253A280078F9BC /* UIViewBuilderSmalltalkViewController.m */; };
+		1F586CB627253B0C0078F9BC /* ViewBuilderPreviewNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F586CB527253B0C0078F9BC /* ViewBuilderPreviewNotification.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F586CB927253BF60078F9BC /* UIKitEnums.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F586CB827253BF60078F9BC /* UIKitEnums.json */; };
+		1F586CBA27253D960078F9BC /* ViewBuilderPreviewNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F586CB527253B0C0078F9BC /* ViewBuilderPreviewNotification.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F586CBC27255F530078F9BC /* UIKitInit.st in Resources */ = {isa = PBXBuildFile; fileRef = 1F586CBB27255F530078F9BC /* UIKitInit.st */; };
 		1F59A714202C7ADA00BE06F6 /* X11Scheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A712202C7ADA00BE06F6 /* X11Scheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A71E202C7D7800BE06F6 /* win_xcb.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A718202C7D7600BE06F6 /* win_xcb.h */; };
 		1F59A71F202C7D7800BE06F6 /* win_oper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A719202C7D7600BE06F6 /* win_oper.m */; };
@@ -856,6 +862,11 @@
 		1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockFilterScheme.m; sourceTree = "<group>"; };
 		1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSelfContainedBindingsScheme.h; sourceTree = "<group>"; };
 		1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSelfContainedBindingsScheme.m; sourceTree = "<group>"; };
+		1F586CB127253A280078F9BC /* UIViewBuilderSmalltalkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewBuilderSmalltalkViewController.h; sourceTree = "<group>"; };
+		1F586CB227253A280078F9BC /* UIViewBuilderSmalltalkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewBuilderSmalltalkViewController.m; sourceTree = "<group>"; };
+		1F586CB527253B0C0078F9BC /* ViewBuilderPreviewNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewBuilderPreviewNotification.h; sourceTree = "<group>"; };
+		1F586CB827253BF60078F9BC /* UIKitEnums.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = UIKitEnums.json; sourceTree = "<group>"; };
+		1F586CBB27255F530078F9BC /* UIKitInit.st */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIKitInit.st; sourceTree = "<group>"; };
 		1F59A710202C7ADA00BE06F6 /* X11Scheme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = X11Scheme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F59A712202C7ADA00BE06F6 /* X11Scheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = X11Scheme.h; sourceTree = "<group>"; };
 		1F59A713202C7ADA00BE06F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1568,6 +1579,15 @@
 			path = S3Scheme;
 			sourceTree = "<group>";
 		};
+		1F586CB727253BE60078F9BC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1F586CBB27255F530078F9BC /* UIKitInit.st */,
+				1F586CB827253BF60078F9BC /* UIKitEnums.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		1F59A711202C7ADA00BE06F6 /* X11Scheme */ = {
 			isa = PBXGroup;
 			children = (
@@ -1857,6 +1877,7 @@
 		1FD6CA6025B8340B00639458 /* ObjectiveSmalltalkTouchUI */ = {
 			isa = PBXGroup;
 			children = (
+				1F586CB727253BE60078F9BC /* Resources */,
 				1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */,
 				1F23AD7625BF345700F51B6F /* MPWUIImageStore.m */,
 				1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */,
@@ -1868,6 +1889,8 @@
 				1FD6CA6125B8340B00639458 /* ObjectiveSmalltalkUI.h */,
 				1FD6CA3825B830E600639458 /* UIView+dictionary.h */,
 				1FD6CA3925B830E600639458 /* UIView+dictionary.m */,
+				1F586CB127253A280078F9BC /* UIViewBuilderSmalltalkViewController.h */,
+				1F586CB227253A280078F9BC /* UIViewBuilderSmalltalkViewController.m */,
 				1FD6CA6225B8340B00639458 /* Info.plist */,
 				1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */,
 			);
@@ -1954,6 +1977,7 @@
 		F5A74ABC00F0A61B015ADD82 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1F586CB527253B0C0078F9BC /* ViewBuilderPreviewNotification.h */,
 				1FA1B39F267CFCB500F463ED /* STAWK.h */,
 				1FA1B3A0267CFCB500F463ED /* STAWK.m */,
 				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
@@ -2198,6 +2222,7 @@
 				1FD0D42D1A935F8D006CA1D7 /* MPWClassMethodStore.h in Headers */,
 				1F35095B262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */,
 				1F5E505109B4B754000298D9 /* MPWExpression.h in Headers */,
+				1F586CB627253B0C0078F9BC /* ViewBuilderPreviewNotification.h in Headers */,
 				1F5E505209B4B754000298D9 /* MPWIdentifierExpression.h in Headers */,
 				1F5E505409B4B754000298D9 /* MPWBindingLegacy.h in Headers */,
 				1F5E505909B4B754000298D9 /* MPWEvaluator.h in Headers */,
@@ -2369,6 +2394,7 @@
 				1F23AD9B25BF45AE00F51B6F /* MPWColorStore.h in Headers */,
 				1F5D76D125EBC9AF00DCC82F /* MPWSTTouchUITests.h in Headers */,
 				1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */,
+				1F586CB327253A280078F9BC /* UIViewBuilderSmalltalkViewController.h in Headers */,
 				1F23ADBF25C00E3900F51B6F /* MPWFontStore.h in Headers */,
 				1FD6CA9825B8347D00639458 /* UIView+dictionary.h in Headers */,
 			);
@@ -2424,6 +2450,7 @@
 				1FE37BB91969610700C9A378 /* MPWStatementList.h in Headers */,
 				1FE37B871969610600C9A378 /* MPWExpression.h in Headers */,
 				1FE37BBD1969610800C9A378 /* MPWStScanner.h in Headers */,
+				1F586CBA27253D960078F9BC /* ViewBuilderPreviewNotification.h in Headers */,
 				1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */,
 				1FE37B841969610600C9A378 /* MPWEvaluable.h in Headers */,
 				1FE37BFF1969612800C9A378 /* MPWFrameworkScheme.h in Headers */,
@@ -3089,6 +3116,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F586CB927253BF60078F9BC /* UIKitEnums.json in Resources */,
+				1F586CBC27255F530078F9BC /* UIKitInit.st in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3525,6 +3554,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F586CB427253A280078F9BC /* UIViewBuilderSmalltalkViewController.m in Sources */,
 				1F5D76D225EBC9AF00DCC82F /* MPWSTTouchUITests.m in Sources */,
 				1F5D77D025EBF5EA00DCC82F /* STUIKitAdditions.m in Sources */,
 				1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */,
@@ -5166,7 +5196,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "StshFramework-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = StshFramework;
@@ -5214,7 +5244,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "StshFramework-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = StshFramework;
 				WRAPPER_EXTENSION = framework;
@@ -5258,7 +5288,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/ /Library/Frameworks/ @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -5297,7 +5326,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/ /Library/Frameworks/ @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -5346,7 +5374,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SchemeFUSE/SchemeFUSE-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5394,7 +5422,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "SchemeFUSE/SchemeFUSE-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;

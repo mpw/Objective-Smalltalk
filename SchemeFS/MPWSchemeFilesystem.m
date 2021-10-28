@@ -15,6 +15,16 @@
 static NSString *helloStr = @"Hello Brave New World!\n";
 static NSString *helloPath = @"/hello.txt";
 
+@implementation MPWBinding(childNames)
+
+-childNames
+{
+    return [[[[[self children] collect] reference] collect] path];
+}
+
+@end
+
+
 @implementation MPWSchemeFilesystem
 
 objectAccessor(MPWScheme, scheme, setScheme)
@@ -42,9 +52,15 @@ objectAccessor(MPWScheme, scheme, setScheme)
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
+    path = [path lastPathComponent];
     NSLog(@"get file: %@",path);
 //    return [@"hello world!" asData];
-   return  [[[[self scheme] bindingForName:path inContext:nil] value] asData];
+    NSString *value = [[self scheme] get:path];
+    NSLog(@"scheme: %@ Value: %@",[self scheme],value);
+    NSData *data=[value asData];
+    NSLog(@"Data: %@",data);
+    return data;
+//   return  [[[[self scheme] bindingForName:path inContext:nil] value] asData];
 }
 
 #pragma optional Custom Icon
