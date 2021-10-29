@@ -11,7 +11,7 @@
 @class MPWScheme;
 
 @interface MPWSchemeFilesystem : NSObject
-{
-    MPWScheme *scheme;
-}
+
+@property (nonatomic,strong) MPWScheme *scheme,*extensionIcons,*fileIcons;
+
 @end

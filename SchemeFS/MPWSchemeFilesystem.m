@@ -27,7 +27,6 @@ static NSString *helloPath = @"/hello.txt";
 
 @implementation MPWSchemeFilesystem
 
-objectAccessor(MPWScheme, scheme, setScheme)
 
 -(id)initWithScheme:newScheme
 {
@@ -43,24 +42,11 @@ objectAccessor(MPWScheme, scheme, setScheme)
 }
 
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path error:(NSError **)error {
-    NSLog(@"get directory: %@",path);
-    //    return [NSArray arrayWithObject:@"hello.txt"];
-    id v = [[[self scheme] bindingForName:path inContext:nil] childNames];
-    NSLog(@"children: %@",v);
-    NSLog(@"class %@, value: %@",[v class],v);
-    return v;
+    return [[[self scheme] bindingForName:path inContext:nil] childNames];
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
-    path = [path lastPathComponent];
-    NSLog(@"get file: %@",path);
-//    return [@"hello world!" asData];
-    NSString *value = [[self scheme] get:path];
-    NSLog(@"scheme: %@ Value: %@",[self scheme],value);
-    NSData *data=[value asData];
-    NSLog(@"Data: %@",data);
-    return data;
-//   return  [[[[self scheme] bindingForName:path inContext:nil] value] asData];
+    return [[[self scheme] get:[path lastPathComponent]] asData];
 }
 
 #pragma optional Custom Icon
@@ -69,7 +55,7 @@ objectAccessor(MPWScheme, scheme, setScheme)
 
 - (NSDictionary *)finderAttributesAtPath:(NSString *)path 
                                    error:(NSError **)error {
-    NSLog(@"get finder attributes: %@",path);
+//    NSLog(@"get finder attributes: %@",path);
     if ([path isEqualToString:helloPath]) {
         NSNumber* finderFlags = [NSNumber numberWithLong:kHasCustomIcon];
         return [NSDictionary dictionaryWithObject:finderFlags
@@ -95,7 +81,7 @@ objectAccessor(MPWScheme, scheme, setScheme)
 
 - (NSDictionary *)resourceAttributesAtPath:(NSString *)path
                                      error:(NSError **)error {
-    NSLog(@"get resource attrs: %@",path);
+//    NSLog(@"get resource attrs: %@",path);
     if ([path isEqualToString:helloPath]) {
         NSString *file = [[NSBundle mainBundle] pathForResource:@"hellodoc" ofType:@"icns"];
         return [NSDictionary dictionaryWithObject:[NSData dataWithContentsOfFile:file]

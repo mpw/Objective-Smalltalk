@@ -11,3 +11,5 @@ fs mountAtPath:'/Volumes/SchemeFS' withOptions:#[].
 
 shell runInteractiveLoop
 
+fs unmount.
+stdout println:'unmounted'.
