@@ -15,6 +15,13 @@
 static NSString *helloStr = @"Hello Brave New World!\n";
 static NSString *helloPath = @"/hello.txt";
 
+@interface MPWSchemeFilesystem()
+
+@property (nonatomic,strong) GMUserFileSystem *filesystem;
+
+@end
+
+
 @implementation MPWBinding(childNames)
 
 -childNames
@@ -32,6 +39,7 @@ static NSString *helloPath = @"/hello.txt";
 {
     self = [super init];
     [self setScheme:newScheme];
+    self.filesystem = [[[GMUserFileSystem alloc] initWithDelegate:self isThreadSafe:NO] autorelease];
     return self;
 }
 
@@ -88,6 +96,22 @@ static NSString *helloPath = @"/hello.txt";
                                            forKey:kGMUserFileSystemCustomIconDataKey];
     }
     return nil;
+}
+
+-(void)unmount {
+    [_filesystem unmount];
+}
+
+-(void)mountAtPath:(NSString*)mountPath
+{
+    [self.filesystem mountAtPath:mountPath withOptions:@[]];
+}
+
+-(void)dealloc
+{
+    [_filesystem release];
+    [_scheme release];
+    [super dealloc];
 }
 
 @end

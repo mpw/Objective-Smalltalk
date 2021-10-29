@@ -2,11 +2,9 @@
 framework:SchemeFUSE load.
 
 theScheme := scheme:env .
-#theScheme := ref:env:/ asScheme.
  
-fs1 := MPWSchemeFilesystem alloc initWithScheme: theScheme.
-fs := GMUserFileSystem alloc initWithDelegate:fs1 isThreadSafe:1.
-fs mountAtPath:'/Volumes/SchemeFS' withOptions:#[].
+fs := MPWSchemeFilesystem alloc initWithScheme: theScheme.
+fs mountAtPath:'/Volumes/SchemeFS'.
 
 
 shell runInteractiveLoop
