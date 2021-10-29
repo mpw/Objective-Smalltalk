@@ -492,7 +492,7 @@ idAccessor( retval, setRetval )
     if ( ![self readingFile]) {
         fprintf(stderr,"\nBye!\n");
     }
-    exit(0);
+//    exit(0);
 }
 
 -(void)writeHistoryOn:(MPWByteStream*)stream
