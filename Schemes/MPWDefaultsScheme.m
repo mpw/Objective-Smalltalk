@@ -10,13 +10,22 @@
 
 @implementation MPWDefaultsScheme
 
+-(NSArray<MPWReferencing>*)childrenOfReference:(id <MPWReferencing>)aReference
+{
+    return [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys];
+}
 
+-(BOOL)hasChildren:(id <MPWReferencing>)aReference
+{
+    NSString *path=[aReference path];
+
+    return ( [path length]==0 || [path isEqualToString:@"."]|| [path isEqualToString:@"/"]);
+}
 
 -at:aReference
 {
-    NSString *path=[aReference path];
-    if ( [path length]==0 || [path isEqualToString:@"."]) {
-        return [self listForNames:[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]];
+    if ( [self hasChildren:aReference]) {
+        return [self listForName:[self childrenOfReference:aReference]];
     }
 	return [[NSUserDefaults standardUserDefaults] objectForKey:[[aReference path] lastPathComponent]];
 }

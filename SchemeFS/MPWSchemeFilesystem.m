@@ -12,7 +12,6 @@
 #import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 #import <MPWFoundation/MPWFoundation.h>
 
-static NSString *helloStr = @"Hello Brave New World!\n";
 static NSString *helloPath = @"/hello.txt";
 
 @interface MPWSchemeFilesystem()
@@ -50,11 +49,24 @@ static NSString *helloPath = @"/hello.txt";
 }
 
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path error:(NSError **)error {
-    return [[[self scheme] bindingForName:path inContext:nil] childNames];
+//    NSLog(@"dir: %@",path);
+    id names = nil;
+    @try {
+        names = [[self scheme] childrenOfReference:path];
+    } @catch (id e) {
+        
+    }
+//    NSLog(@"dir contents: %@",names);
+    return names;
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
-    return [[[self scheme] get:[path lastPathComponent]] asData];
+//    NSLog(@"contents of %@: '%@'",path,[[self scheme] get:[path lastPathComponent]]);
+    @try {
+        return [[[self scheme] get:[path lastPathComponent]] asData];
+    } @catch ( id e) {
+        return nil;
+    }
 }
 
 #pragma optional Custom Icon
@@ -63,20 +75,21 @@ static NSString *helloPath = @"/hello.txt";
 
 - (NSDictionary *)finderAttributesAtPath:(NSString *)path 
                                    error:(NSError **)error {
-//    NSLog(@"get finder attributes: %@",path);
-    if ([path isEqualToString:helloPath]) {
-        NSNumber* finderFlags = [NSNumber numberWithLong:kHasCustomIcon];
-        return [NSDictionary dictionaryWithObject:finderFlags
-                                           forKey:kGMUserFileSystemFinderFlagsKey];
-    }
+//    if ([path isEqualToString:helloPath]) {
+//        NSNumber* finderFlags = [NSNumber numberWithLong:kHasCustomIcon];
+//        return [NSDictionary dictionaryWithObject:finderFlags
+//                                           forKey:kGMUserFileSystemFinderFlagsKey];
+//    }
     return nil;
 }
 
 - (NSDictionary *)attributesOfItemAtPath:(NSString *)path
                                 userData:(id)userData
                                    error:(NSError **)error {
-    id v = [[self scheme] bindingForName:path inContext:nil];
-    if ( [v hasChildren] ) {
+//    NSLog(@"attributesOfItemAtPath: %@",path);
+    id binding = [[self scheme] bindingForName:path inContext:nil];
+//    NSLog(@"binding: %@ hasChildren: %d",binding,[binding hasChildren]);
+    if ( [binding hasChildren] ) {
         return [NSDictionary dictionaryWithObject:NSFileTypeDirectory forKey:NSFileType];
     } else {
         return  @{NSFileType: NSFileTypeRegular,
@@ -90,11 +103,11 @@ static NSString *helloPath = @"/hello.txt";
 - (NSDictionary *)resourceAttributesAtPath:(NSString *)path
                                      error:(NSError **)error {
 //    NSLog(@"get resource attrs: %@",path);
-    if ([path isEqualToString:helloPath]) {
-        NSString *file = [[NSBundle mainBundle] pathForResource:@"hellodoc" ofType:@"icns"];
-        return [NSDictionary dictionaryWithObject:[NSData dataWithContentsOfFile:file]
-                                           forKey:kGMUserFileSystemCustomIconDataKey];
-    }
+//    if ([path isEqualToString:helloPath]) {
+//        NSString *file = [[NSBundle mainBundle] pathForResource:@"hellodoc" ofType:@"icns"];
+//        return [NSDictionary dictionaryWithObject:[NSData dataWithContentsOfFile:file]
+//                                           forKey:kGMUserFileSystemCustomIconDataKey];
+//    }
     return nil;
 }
 
@@ -102,9 +115,9 @@ static NSString *helloPath = @"/hello.txt";
     [_filesystem unmount];
 }
 
--(void)mountAtPath:(NSString*)mountPath
+-(void)mountAt:(NSString*)mountPath
 {
-    [self.filesystem mountAtPath:mountPath withOptions:@[]];
+    [self.filesystem mountAtPath:[mountPath path] withOptions:@[@"direct_io"]];
 }
 
 -(void)dealloc
@@ -112,6 +125,18 @@ static NSString *helloPath = @"/hello.txt";
     [_filesystem release];
     [_scheme release];
     [super dealloc];
+}
+
+@end
+
+
+@implementation MPWAbstractStore(mounting)
+
+-(MPWSchemeFilesystem*)mountAt:(NSString*)mountPath
+{
+    MPWSchemeFilesystem *fs=[[[MPWSchemeFilesystem alloc] initWithScheme:self] autorelease];
+    [fs mountAt:mountPath];
+    return fs;
 }
 
 @end

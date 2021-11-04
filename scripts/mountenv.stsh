@@ -1,13 +1,9 @@
-#!/usr/local/bin/stsh
+#!env stsh
 framework:SchemeFUSE load.
 
-theScheme := scheme:env .
- 
-fs := MPWSchemeFilesystem alloc initWithScheme: theScheme.
-fs mountAtPath:'/Volumes/SchemeFS'.
-
+scheme:txt := #MPWExtensionMapper{ #extension: 'txt' , #source: scheme:env  }.
+fs := scheme:txt mountAt: ref:/Volumes/SchemeFS.
 
 shell runInteractiveLoop
 
 fs unmount.
-stdout println:'unmounted'.

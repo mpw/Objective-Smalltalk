@@ -34,7 +34,9 @@ idAccessor( root, setRoot )
 
 -(id)at:(MPWGenericReference*)aReference
 {
-    return [[self nodeForReference:aReference] content];
+    MPWTreeNode *node = [self nodeForReference:aReference];
+    id content = [node content];
+    return content;
 }
 
 -(void)at:aReference put:newValue 
@@ -47,11 +49,6 @@ idAccessor( root, setRoot )
     [node setContent:newValue];
 }
 
--get:(NSString*)uriString parameters:uriParameters
-{
-    return [root nodeForPathComponent:uriString];
-}
-
 
 -(BOOL)hasChildren:(MPWGenericReference *)aReference
 {
@@ -60,7 +57,7 @@ idAccessor( root, setRoot )
 
 -(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
 {
-    return [[self nodeForPath:[aReference relativePathComponents]] children];
+    return [[[[[[self nodeForPath:[aReference relativePathComponents]] children] collect] path] collect] lastPathComponent];
 }
 
 -(void)traverse:(id <Streaming>)target
