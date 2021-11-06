@@ -20,21 +20,34 @@
 -(id)evaluateIn:(id)aContext
 {
     if ( [lhs isKindOfClass:[MPWIdentifierExpression class]] ) {
-        MPWBinding *lhb=[self bindingForIdentifier:lhs context:aContext];
-        STSimpleDataflowConstraint* constraint=nil;
-        if ([rhs isKindOfClass:[MPWIdentifierExpression class]] )  {
-            MPWBinding *rhb=[self bindingForIdentifier:(MPWIdentifierExpression*)rhs context:aContext];
-            constraint = [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
-            if ( [rhb respondsToSelector:@selector(store)]) {
-                MPWLoggingStore *sourceStore = [rhb store];
-                if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
-                    [sourceStore setLog:constraint];
-                }
+        id lhsValue = [lhs evaluateIn:aContext];
+        if ( [lhsValue conformsToProtocol:@protocol(MPWStorage)]) {
+            id rhsValue = [lhs evaluateIn:aContext];
+            if ([rhs isKindOfClass:[MPWIdentifierExpression class]] && [rhsValue conformsToProtocol:@protocol(MPWStorage)])  {
+                MPWRESTCopyStream *copier = [[MPWRESTCopyStream alloc] initWithSource:rhsValue target:lhsValue];
+                MPWLoggingStore *logger = [rhsValue logger];
+                [logger setLog:copier];
+                return logger;
+            } else {
+                [NSException raise:@"typecheck" format:@"|= constraints with stores must have store on both sides"];
             }
-        } else  if ([rhs isKindOfClass:[MPWExpression class]] )  {
-            return nil;
+        } else {
+            MPWBinding *lhb=[self bindingForIdentifier:lhs context:aContext];
+            STSimpleDataflowConstraint* constraint=nil;
+            if ([rhs isKindOfClass:[MPWIdentifierExpression class]] )  {
+                MPWBinding *rhb=[self bindingForIdentifier:(MPWIdentifierExpression*)rhs context:aContext];
+                constraint = [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
+                if ( [rhb respondsToSelector:@selector(store)]) {
+                    MPWLoggingStore *sourceStore = [rhb store];
+                    if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
+                        [sourceStore setLog:constraint];
+                    }
+                }
+            } else  if ([rhs isKindOfClass:[MPWExpression class]] )  {
+                return nil;
+            }
+            return constraint;
         }
-        return constraint;
     }  else {
         [NSException raise:@"typecheck" format:@"LHS of |= dataflow constraint must be identifier"];
     }
@@ -69,7 +82,7 @@
 +(void)testConstraintCanBeAutomated
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"scheme:l := MPWLoggingStore storeWithSource: MPWDictStore store."];
+    [compiler evaluateScriptString:@"scheme:l := #{} logger."];
     [compiler evaluateScriptString:@"l:a ← 3. l:b ← 5."];
     [compiler evaluateScriptString:@"constraint := (l:a |= l:b)."];
     [compiler evaluateScriptString:@"l:b := 42"];
@@ -100,6 +113,21 @@
     IDEXPECT( [compiler evaluateScriptString:@"a"],@43, @"did update a when c changed");
 }
 
++(void)testCanConstrainEntireSchemes
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme:source := MPWDictStore store logger."];
+    [compiler evaluateScriptString:@"scheme:target := #{}."];
+    [compiler evaluateScriptString:@"source:a ← 3. source:b ← 5."];
+    [compiler evaluateScriptString:@"target:a ← 12. target:b ← 14."];
+    [compiler evaluateScriptString:@"scheme:constrained := scheme:target |= scheme:source."];
+    [compiler evaluateScriptString:@"scheme:source := scheme:constrained."];
+    [compiler evaluateScriptString:@"source:a := 42"];
+    IDEXPECT( [compiler evaluateScriptString:@"target:a"],@42, @"a in source target");
+    [compiler evaluateScriptString:@"source:b := 1"];
+    IDEXPECT( [compiler evaluateScriptString:@"target:b"],@1, @"did update b in target");
+}
+
 
 +testSelectors
 {
@@ -108,6 +136,7 @@
         @"testConstraintIsUsable",
         @"testConstraintCanBeAutomated",
         @"testAutomatedConstraintCanBeDefaultScheme",
+        @"testCanConstrainEntireSchemes",
 //        @"testRHSCanBeExpression",
     ];
 }
