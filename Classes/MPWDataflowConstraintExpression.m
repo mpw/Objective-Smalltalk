@@ -117,7 +117,7 @@
 {
     STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"scheme:source := MPWDictStore store logger."];
-    [compiler evaluateScriptString:@"scheme:target := #{}."];
+    [compiler evaluateScriptString:@"scheme:target := MPWDictStore store."];
     [compiler evaluateScriptString:@"source:a ← 3. source:b ← 5."];
     [compiler evaluateScriptString:@"target:a ← 12. target:b ← 14."];
     [compiler evaluateScriptString:@"scheme:constrained := scheme:target |= scheme:source."];
