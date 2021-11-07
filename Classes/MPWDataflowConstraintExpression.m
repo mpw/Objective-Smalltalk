@@ -30,6 +30,9 @@
     STSimpleDataflowConstraint* constraint=nil;
     MPWBinding *sourceBinding=[[self identifier] bindingWithContext:aContext];
     MPWBinding *targetBinding=[[target identifier] bindingWithContext:aContext];
+    if ( [[sourceBinding value] conformsToProtocol:@protocol(MPWStorage) ]) {
+        return [[sourceBinding value] syncToTarget:[targetBinding value]];
+    }
     constraint = [STSimpleDataflowConstraint constraintWithSource:sourceBinding target:targetBinding];
     if ( [sourceBinding respondsToSelector:@selector(store)]) {
         MPWLoggingStore *sourceStore = [sourceBinding store];
@@ -46,6 +49,7 @@
 
 -(STSimpleDataflowConstraint*)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
 {
+     [NSException raise:@"unsupported" format:@"Constraints on expressions not supperted yet"];
     return nil;
 }
 
@@ -58,17 +62,7 @@
 -(id)evaluateIn:(id)aContext
 {
     if ( [lhs isKindOfClass:[MPWIdentifierExpression class]] ) {
-        id lhsValue = [lhs evaluateIn:aContext];
-        if ( [lhsValue conformsToProtocol:@protocol(MPWStorage)]) {
-            id rhsValue = [lhs evaluateIn:aContext];
-            if ([rhs isKindOfClass:[MPWIdentifierExpression class]] && [rhsValue conformsToProtocol:@protocol(MPWStorage)])  {
-                return [rhsValue syncToTarget:lhsValue];
-            } else {
-                [NSException raise:@"typecheck" format:@"|= constraints with stores must have store on both sides"];
-            }
-        } else {
-            return [rhs syncToTarget:lhs inContext:aContext];
-        }
+        return [rhs syncToTarget:lhs inContext:aContext];
     }  else {
         [NSException raise:@"typecheck" format:@"LHS of |= dataflow constraint must be identifier"];
     }
