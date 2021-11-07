@@ -10,12 +10,50 @@
 #import "STSimpleDataflowConstraint.h"
 #import "MPWIdentifierExpression.h"
 
+@implementation MPWAbstractStore(constraintCreation)
+
+-(MPWLoggingStore*)syncToTarget:(id <MPWStorage>)target
+{
+    MPWRESTCopyStream *copier = [[MPWRESTCopyStream alloc] initWithSource:self target:target];
+    MPWLoggingStore *logger = [self logger];
+    [logger setLog:copier];
+    return logger;
+}
+
+@end
+
+@implementation MPWIdentifierExpression(constraintCreation)
+
+
+-(STSimpleDataflowConstraint*)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
+{
+    STSimpleDataflowConstraint* constraint=nil;
+    MPWBinding *sourceBinding=[[self identifier] bindingWithContext:aContext];
+    MPWBinding *targetBinding=[[target identifier] bindingWithContext:aContext];
+    constraint = [STSimpleDataflowConstraint constraintWithSource:sourceBinding target:targetBinding];
+    if ( [sourceBinding respondsToSelector:@selector(store)]) {
+        MPWLoggingStore *sourceStore = [sourceBinding store];
+        if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
+            [sourceStore setLog:constraint];
+        }
+    }
+    return constraint;
+}
+
+@end
+
+@implementation MPWExpression(constraintCreation)
+
+-(STSimpleDataflowConstraint*)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
+{
+    return nil;
+}
+
+@end
+
+
 @implementation MPWDataflowConstraintExpression
 
--(MPWBinding*)bindingForIdentifier:(MPWIdentifierExpression*)expr context:aContext
-{
-    return [[expr identifier] bindingWithContext:aContext];
-}
 
 -(id)evaluateIn:(id)aContext
 {
@@ -24,29 +62,12 @@
         if ( [lhsValue conformsToProtocol:@protocol(MPWStorage)]) {
             id rhsValue = [lhs evaluateIn:aContext];
             if ([rhs isKindOfClass:[MPWIdentifierExpression class]] && [rhsValue conformsToProtocol:@protocol(MPWStorage)])  {
-                MPWRESTCopyStream *copier = [[MPWRESTCopyStream alloc] initWithSource:rhsValue target:lhsValue];
-                MPWLoggingStore *logger = [rhsValue logger];
-                [logger setLog:copier];
-                return logger;
+                return [rhsValue syncToTarget:lhsValue];
             } else {
                 [NSException raise:@"typecheck" format:@"|= constraints with stores must have store on both sides"];
             }
         } else {
-            MPWBinding *lhb=[self bindingForIdentifier:lhs context:aContext];
-            STSimpleDataflowConstraint* constraint=nil;
-            if ([rhs isKindOfClass:[MPWIdentifierExpression class]] )  {
-                MPWBinding *rhb=[self bindingForIdentifier:(MPWIdentifierExpression*)rhs context:aContext];
-                constraint = [STSimpleDataflowConstraint constraintWithSource:rhb target:lhb];
-                if ( [rhb respondsToSelector:@selector(store)]) {
-                    MPWLoggingStore *sourceStore = [rhb store];
-                    if ( [sourceStore isKindOfClass:[MPWLoggingStore class]]) {
-                        [sourceStore setLog:constraint];
-                    }
-                }
-            } else  if ([rhs isKindOfClass:[MPWExpression class]] )  {
-                return nil;
-            }
-            return constraint;
+            return [rhs syncToTarget:lhs inContext:aContext];
         }
     }  else {
         [NSException raise:@"typecheck" format:@"LHS of |= dataflow constraint must be identifier"];
@@ -113,7 +134,7 @@
     IDEXPECT( [compiler evaluateScriptString:@"a"],@43, @"did update a when c changed");
 }
 
-+(void)testCanConstrainEntireSchemes
++(void)testCanConstrainEntireStores
 {
     STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"scheme:source := MPWDictStore store logger."];
@@ -136,7 +157,7 @@
         @"testConstraintIsUsable",
         @"testConstraintCanBeAutomated",
         @"testAutomatedConstraintCanBeDefaultScheme",
-        @"testCanConstrainEntireSchemes",
+        @"testCanConstrainEntireStores",
 //        @"testRHSCanBeExpression",
     ];
 }
