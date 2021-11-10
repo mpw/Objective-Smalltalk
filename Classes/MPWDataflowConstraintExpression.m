@@ -25,7 +25,7 @@
 @implementation MPWIdentifierExpression(constraintCreation)
 
 
--(STSimpleDataflowConstraint*)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
+-(id)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
 {
     STSimpleDataflowConstraint* constraint=nil;
     MPWBinding *sourceBinding=[[self identifier] bindingWithContext:aContext];

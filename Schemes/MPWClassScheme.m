@@ -62,10 +62,13 @@
 //        NSLog(@"bindings: %@",bindings);
 //        return bindings;
 //    }
-    return [[self collect] referenceForMirror:[[self allClassMirrors] each]];
+    return [[[self collect] referenceForMirror:[[self allClassMirrors] each]] subarrayWithRange:NSMakeRange(0,100)];
 }
 
-
+-(BOOL)hasChildren:(id<MPWReferencing>)aReference
+{
+    return [self childrenOfReference:aReference] > 0;
+}
 
 
 @end

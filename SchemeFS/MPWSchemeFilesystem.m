@@ -49,21 +49,23 @@ static NSString *helloPath = @"/hello.txt";
 }
 
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path error:(NSError **)error {
-//    NSLog(@"dir: %@",path);
+    NSLog(@"dir: %@",path);
     id names = nil;
     @try {
         names = [[self scheme] childrenOfReference:path];
+        names = [[names collect] stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+//        names = [[names collect] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
     } @catch (id e) {
         
     }
-//    NSLog(@"dir contents: %@",names);
+    NSLog(@"dir contents: %@",names);
     return names;
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
-//    NSLog(@"contents of %@: '%@'",path,[[self scheme] get:[path lastPathComponent]]);
+    NSLog(@"contents of %@: '%@'",path,[[self scheme] get:[path lastPathComponent]]);
     @try {
-        return [[[self scheme] get:[path lastPathComponent]] asData];
+        return [[[self scheme] at:path] asData];
     } @catch ( id e) {
         return nil;
     }
@@ -87,11 +89,12 @@ static NSString *helloPath = @"/hello.txt";
                                 userData:(id)userData
                                    error:(NSError **)error {
 //    NSLog(@"attributesOfItemAtPath: %@",path);
-    id binding = [[self scheme] bindingForName:path inContext:nil];
 //    NSLog(@"binding: %@ hasChildren: %d",binding,[binding hasChildren]);
-    if ( [binding hasChildren] ) {
+    if ( [[self scheme] hasChildren:path] ) {
+        NSLog(@"%@ is directory",path);
         return [NSDictionary dictionaryWithObject:NSFileTypeDirectory forKey:NSFileType];
     } else {
+        NSLog(@"%@ is file ",path);
         return  @{NSFileType: NSFileTypeRegular,
                   NSFilePosixPermissions: @(4*8*8)
                   } ;
@@ -102,7 +105,7 @@ static NSString *helloPath = @"/hello.txt";
 
 - (NSDictionary *)resourceAttributesAtPath:(NSString *)path
                                      error:(NSError **)error {
-//    NSLog(@"get resource attrs: %@",path);
+//        NSLog(@"get resource attrs: %@",path);
 //    if ([path isEqualToString:helloPath]) {
 //        NSString *file = [[NSBundle mainBundle] pathForResource:@"hellodoc" ofType:@"icns"];
 //        return [NSDictionary dictionaryWithObject:[NSData dataWithContentsOfFile:file]
