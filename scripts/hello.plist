@@ -1,0 +1,17 @@
+{
+	"a" = 2;
+	"b" = {
+		"hello" = "world";
+		"dict" = {
+			"another" = "level";
+			"more" = "contentlevel";
+			"anotherdir" = {
+				"even" = "more";
+				"andyet" = "stillmore";
+				"nested" = {
+					"hi" = "there";
+				};
+			};
+		};
+	};
+}

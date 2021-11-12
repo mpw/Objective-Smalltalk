@@ -63,7 +63,7 @@ static NSString *helloPath = @"/hello.txt";
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
-    NSLog(@"contents of %@: '%@'",path,[[self scheme] get:[path lastPathComponent]]);
+    NSLog(@"contents of %@: '%@'",path,[[self scheme] at:path]);
     @try {
         return [[[self scheme] at:path] asData];
     } @catch ( id e) {
