@@ -248,10 +248,10 @@
 		1F697AD725E267F700D015DB /* STProtocolScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F697AD425E267F700D015DB /* STProtocolScheme.h */; };
 		1F697AD825E267F700D015DB /* STProtocolScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F697AD525E267F700D015DB /* STProtocolScheme.m */; };
 		1F697AD925E267F700D015DB /* STProtocolScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F697AD525E267F700D015DB /* STProtocolScheme.m */; };
+		1F6B03D3274E7BFE004E61A7 /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F6B03D2274E7BFE004E61A7 /* libgmp.10.dylib */; };
 		1F6C792F2187468D00071DAC /* ObjectiveSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6C792D2187468D00071DAC /* ObjectiveSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F6C7934218746DA00071DAC /* StSwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6C7933218746DA00071DAC /* StSwiftBridge.swift */; };
 		1F6FBE8923040F1B00025C80 /* ObjectiveArithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6FBE8723040F1B00025C80 /* ObjectiveArithmetic.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F6FBE8E23040F5900025C80 /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F6FBE8D23040F5900025C80 /* libgmp.10.dylib */; };
 		1F6FBE9223040FD500025C80 /* MPWBigInteger.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6FBE9023040FD500025C80 /* MPWBigInteger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F6FBE9323040FD500025C80 /* MPWBigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6FBE9123040FD500025C80 /* MPWBigInteger.m */; };
 		1F6FBE942304106A00025C80 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -914,6 +914,7 @@
 		1F697A7F25E15D1600D015DB /* STMessageConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMessageConnector.m; sourceTree = "<group>"; };
 		1F697AD425E267F700D015DB /* STProtocolScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProtocolScheme.h; sourceTree = "<group>"; };
 		1F697AD525E267F700D015DB /* STProtocolScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProtocolScheme.m; sourceTree = "<group>"; };
+		1F6B03D2274E7BFE004E61A7 /* libgmp.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmp.10.dylib; path = ../../../../../usr/local/lib/libgmp.10.dylib; sourceTree = "<group>"; };
 		1F6C792B2187468D00071DAC /* ObjectiveSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F6C792D2187468D00071DAC /* ObjectiveSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSwift.h; sourceTree = "<group>"; };
 		1F6C792E2187468D00071DAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1268,7 +1269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F6FBE942304106A00025C80 /* MPWFoundation.framework in Frameworks */,
-				1F6FBE8E23040F5900025C80 /* libgmp.10.dylib in Frameworks */,
+				1F6B03D3274E7BFE004E61A7 /* libgmp.10.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1522,6 +1523,7 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F6B03D2274E7BFE004E61A7 /* libgmp.10.dylib */,
 				1F2924D626D69C380070A458 /* MPWFoundation.framework */,
 				1F5D781B25ECDE6600DCC82F /* libclang.dylib */,
 				1F6FBE8D23040F5900025C80 /* libgmp.10.dylib */,
@@ -3257,7 +3259,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 		1FB7D7F61E9F496F008E5D8E /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4632,7 +4634,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/gmp/6.1.2_2/lib,
+					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -4681,7 +4683,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/gmp/6.1.2_2/lib,
+					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
