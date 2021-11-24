@@ -1,4 +1,0 @@
-#!/usr/local/bin/stsh
-#-<void>scurl:<ref>urlref
-fileComponent := urlref url path lastPathComponent.
-file:{fileComponent} := urlref value.
