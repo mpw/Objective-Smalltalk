@@ -125,9 +125,9 @@ controller := #ASCPresentationViewController{
         #ASCBulletSlide{ 
              #title: 'Objective-S in a nutshell',
              #bullets: #( 
-               'architecture-oriented',
+               'Architecture-oriented',
                'Smalltalk-inspired (generalised)',
-               'embeddable framework',
+               'Embeddable framework',
                'VM-less, Objective-C, interpreter, (native ompiler)',
              )
         } ,
@@ -136,7 +136,8 @@ controller := #ASCPresentationViewController{
              #title: 'Fahrplan',
              #bullets: #( 
                'Inspiration (top-down + bottom up)',
-               'Why software archtiecture?',
+               'Why software architecture?',
+               'Objective-S overview',
                'Demos',
               )
         } ,
@@ -146,8 +147,8 @@ controller := #ASCPresentationViewController{
              #bullets: #( 
                 '...for what it does – Alan Kay',
                 'MS Office: 400 MLOC',
-                'Wunderlist: 180K',
-                 'Eric Schmidt inviting the GMail team',
+                'Wunderlist: 180 KLOX',
+                'You''re gonna need a larger room',
            )
         } ,
         #ASCBulletSlide{ 
@@ -155,10 +156,88 @@ controller := #ASCPresentationViewController{
              #bullets: #( 
                 'General Purpose or ALGOrithmic Languages?',
                 'Chatty: Software = Algorithms + Data Structures + Architecture',
-                '',
-                'Eric Schmidt inviting the GMail team',
+                'Languages are mismatched with GUI programming',
              )
         } ,
+
+      #ASCChapterSlide { 
+               #text: 'Why Software Architecture?',
+               #subtitle: 'Objective-S',
+         }  ,
+        #ASCBulletSlide{ 
+             #title: 'OO',
+             #bullets: #( 
+                '"I didn''t have C++ in mind"',
+                '"Much the same applies to Smalltalk"',
+                'We can build, but we cannot express',
+                'The program is a meta-description',
+             )
+        } ,
+
+        #ASCBulletSlide{ 
+             #title: 'Architecture',
+             #bullets: #( 
+                'ma',
+                'We need lots of different kind of glue',
+                'Procedures are the Assembly Language of Module Interconnect',
+                'Architectural Description Languages',
+                'Why only describe?',
+             )
+        } ,
+        #ASCBulletSlide{ 
+             #title: 'Better architecture comes with friction ',
+             #bullets: #( 
+                'In-Process REST (BBC)',
+                'Polymorphic Write Streams',
+                'Storage Combinators',
+             )
+        } ,
+
+      #ASCChapterSlide { 
+               #text: 'Overview',
+               #subtitle: 'Objective-S',
+         }  ,
+
+        #ASCBulletSlide{ 
+             #title: 'Ovreview',
+             #bullets: #( 
+                'Smalltalk with syntax (changes)',
+                'Polymorphic Identifiers',
+                'Storage Combinators',
+                'Complex object literals',
+                'Polymorphic Write Streams',
+                'Higher Order Messaging',
+             )
+        } ,
+        #ASCBulletSlide{ 
+             #title: 'Smalltalk changes',
+             #bullets: #( 
+                'Full file syntax',
+                'Curly braces',
+                'Message chaining with pipe',
+             )
+        } ,
+
+      #ASCChapterSlide { 
+               #text: 'Demo',
+               #subtitle: 'Objective-S basics',
+         }  ,
+
+        #ASCBulletSlide{ 
+             #title: 'Polymorphic Identifers',
+             #bullets: #( 
+                'Identifiers are URIs',
+                'Resolved dynamically',
+                'Parameterized',
+             )
+        } ,
+
+      #ASCChapterSlide { 
+               #text: 'Demo',
+               #subtitle: 'Polymorphic Identiifers',
+         }  ,
+
+
  
     #ImageSlide{ 
                #text: 'Async Writer' ,
