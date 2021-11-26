@@ -1,88 +1,5 @@
-framework:Slides3D load.  
+framework:Slides3D load.    
 
-class ProgramVsSystem : ASCSlide {
-   var code.
-   var system.
-   var problem.
-   var tools.
-   var shapeGroup.
-
-   -<void>setupSlideWithPresentationViewController:controller {
-       self textManager setTitle:'Static Program Text vs. Dynamic Execution'.
-       self textManager addBullet:'FORTRAN' atLevel:0.
-       shapeGroup := SCNNode node.
-       self setShapeGroup:shapeGroup.
-       self rootNode addChildNode:shapeGroup.
-       boxer := ASCBoxMaker new.
-       boxer setP: ( -8 @ 0.2 ).
-       boxer setColor: (NSColor colorWithDeviceRed:105 / 255.0 green:145.0 / 255.0 blue:14.0 / 255.0 alpha:1 ).  
-       boxer setPosition: 0@0 .
-       boxer setHeight:120. 
-       boxer setYHeight:1.5. 
-       boxer setPadding:10. 
-       code :=  boxer box:'Code' width:160.
-       self setCode:code.
-       boxer setPadding:20. 
-
-       system := boxer  box:'System' width:160 color:(NSColor blueColor).
-       self setSystem:system.
-
-       problem := boxer box:'Problem' width:160 color:(NSColor redColor).
-       self setProblem: problem.
-
-       shapeGroup do addChildNode: #( code, system, problem ) each.
- 
-   }
-
-   -<int>numberOfSteps {  8. }
- 
-   -<void>presentStepIndex:<int>index withPresentionViewController:controller {
-         index = 0 ifTrue:{ 
-            SCNTransaction setAnimationDuration:1.5.
-         }.
-         index = 1 ifTrue:{ 
-            SCNTransaction begin.
-            self textManager addBullet:'Non-Computation' atLevel:0.
-            self problem setXYPosition: -3.0  @ 0.20 .
-            SCNTransaction commit.
-         }.
-           index = 2 ifTrue:{ 
-            SCNTransaction begin.
-            self textManager addBullet:'OOP' atLevel:0.
-            self system setXYPosition: -3.0 @ 0.20 .
-            SCNTransaction commit.
-         }.
-       index = 3 ifTrue:{
-            SCNTransaction begin.
-            self textManager addBullet:'Ruby' atLevel:0.
-            self code setXYPosition: -14.0  @ 0.20 .
-            SCNTransaction commit.
-         }.
-       index = 4 ifTrue:{
-            SCNTransaction begin.
-            self code setXYPosition: -8.0  @ 0.20 .
-            SCNTransaction commit.
-         }.
-       index = 5 ifTrue:{
-            SCNTransaction begin.
-            self textManager addBullet:'FP' atLevel:0.
-            self system setXYPosition: -8.0  @ 0.20 .
-            SCNTransaction commit.
-         }.
-         index = 6 ifTrue:{
-            SCNTransaction begin.
-            self system setXYPosition: -3.0  @ 0.20 .
-            SCNTransaction commit.
-         }.
-         index = 7 ifTrue:{
-            SCNTransaction begin.
-            self textManager addBullet:'Objective-Smalltalk' atLevel:0.
-            self code setXYPosition: -3.0  @ 0.20 .
-            SCNTransaction commit.
-         }.
-   }
-}
-         
     
     
 class ImageSlide : ASCSlide { 
@@ -111,8 +28,8 @@ class ImageSlide : ASCSlide {
      }
 }
 
+   
   
-
 controller := #ASCPresentationViewController{
     #Name: 'UKSTUG Demo'.
     #Slides: #(
@@ -138,7 +55,7 @@ controller := #ASCPresentationViewController{
                'Inspiration (top-down + bottom up)',
                'Why software architecture?',
                'Objective-S overview',
-               'Demos',
+               'Examples',
               )
         } ,
 
@@ -147,7 +64,7 @@ controller := #ASCPresentationViewController{
              #bullets: #( 
                 '...for what it does – Alan Kay',
                 'MS Office: 400 MLOC',
-                'Wunderlist: 180 KLOX',
+                'Wunderlist: 180 KLOC',
                 'You''re gonna need a larger room',
            )
         } ,
@@ -165,7 +82,7 @@ controller := #ASCPresentationViewController{
                #subtitle: 'Objective-S',
          }  ,
         #ASCBulletSlide{ 
-             #title: 'OO',
+             #title: 'Why not (just) OO?',
              #bullets: #( 
                 '"I didn''t have C++ in mind"',
                 '"Much the same applies to Smalltalk"',
@@ -185,11 +102,21 @@ controller := #ASCPresentationViewController{
              )
         } ,
         #ASCBulletSlide{ 
+             #title: 'Brief intro to Software Architecture',
+             #bullets: #( 
+                'Components, connectors, systems',
+                'Components have ports',
+                'Connectors have roles',
+                'Styles are classes of systems',
+                'component.port → role.connector.role → port.component',
+             )
+        } ,
+        #ASCBulletSlide{ 
              #title: 'Better architecture comes with friction ',
              #bullets: #( 
                 'In-Process REST (BBC)',
                 'Polymorphic Write Streams',
-                'Storage Combinators',
+                'Storage Combinators at Wunderlist',
              )
         } ,
 
@@ -199,46 +126,17 @@ controller := #ASCPresentationViewController{
          }  ,
 
         #ASCBulletSlide{ 
-             #title: 'Ovreview',
+             #title: 'Objective-S Overview',
              #bullets: #( 
                 'Smalltalk with syntax (changes)',
+                'Complex object literals',
                 'Polymorphic Identifiers',
                 'Storage Combinators',
-                'Complex object literals',
                 'Polymorphic Write Streams',
-                'Higher Order Messaging',
-             )
-        } ,
-        #ASCBulletSlide{ 
-             #title: 'Smalltalk changes',
-             #bullets: #( 
-                'Full file syntax',
-                'Curly braces',
-                'Message chaining with pipe',
+                '→',
              )
         } ,
 
-      #ASCChapterSlide { 
-               #text: 'Demo',
-               #subtitle: 'Objective-S basics',
-         }  ,
-
-        #ASCBulletSlide{ 
-             #title: 'Polymorphic Identifers',
-             #bullets: #( 
-                'Identifiers are URIs',
-                'Resolved dynamically',
-                'Parameterized',
-             )
-        } ,
-
-      #ASCChapterSlide { 
-               #text: 'Demo',
-               #subtitle: 'Polymorphic Identiifers',
-         }  ,
-
-
- 
     #ImageSlide{ 
                #text: 'Async Writer' ,
                #imageURL: '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/async-writer.png' ,
@@ -246,13 +144,66 @@ controller := #ASCPresentationViewController{
                #imageScale: 0.6 ,
          }  , 
  
-       )
+
+        #ASCBulletSlide{ 
+             #title: 'Demo: Objective-S basics',
+             #bullets: #( 
+                'Full file syntax',
+                'Curly braces',
+                'Message chaining with pipe',
+             )
+        } ,
+
+        #ASCBulletSlide{ 
+             #title: 'Demo: Polymorphic Identifers',
+             #bullets: #( 
+                'Identifiers are URIs',
+                'Filesystem and http',
+                'Resolved dynamically',
+                'Parameterized',
+                'ref:',
+             )
+        } ,
+
+
+        #ASCBulletSlide{ 
+             #title: 'Storage Combinators',
+             #bullets: #( 
+                'HTTP server',
+                'FUSE',
+             )
+        } ,
+
+
+        #ASCBulletSlide{ 
+             #title: 'Polymorphic Write Streams',
+             #bullets: #( 
+                'HTTP server',
+
+                'FUSE',
+             )
+        } ,
+
+     #ASCChapterSlide { 
+               #text: 'Examples',
+               #subtitle: 'Objective-S',
+         }  ,
+
+        #ASCBulletSlide{ 
+             #title: 'Examples',
+             #bullets: #( 
+                'Browsers',
+                'Tasks backend',
+                'SiteBuilder',
+                'ViewBuilder',
+             )
+        } ,
+
+
+
+        )
 }.
                          
  
-controller view openInWindow:'Objective-SmallTalk (UKSTUG 2021)'.  
-
-controller     
+controller view openInWindow:'Objective-SmallTalk (UKSTUG 2021)'.    <NSWindow: 0x11b638190>
     
-
-controller goToSlideAtIndex:0    

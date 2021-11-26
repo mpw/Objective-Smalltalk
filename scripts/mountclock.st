@@ -3,6 +3,7 @@ framework:SchemeFUSE load.
 
 scheme clock {
 	/date {  |= {
+		stdout println:'checking the date!'.
 		#NSDate{} stringValue lf.
 	} }
 	-childrenOfReference:aRef  {
@@ -13,16 +14,8 @@ scheme clock {
 	}
 }.
 
-scheme TxtExtension : MPWMappingStore {
-    -reverseMapReference:aReference {
-        aReference path stringByAppendingPathExtension:'txt'.
-    }
-    -mapReference:aReference {
-        aReference path stringByDeletingPathExtension.
-    }
-}.
 
-scheme:txt := TxtExtension storeWithSource: clock store.
+scheme:txt := #MPWExtensionMapper{ #extension: 'txt' , #source: (clock store) }
 
 
 fs := scheme:txt  mountAt: '/Volumes/clock'.

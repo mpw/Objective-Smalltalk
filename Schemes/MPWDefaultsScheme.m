@@ -25,7 +25,7 @@
 -at:aReference
 {
     if ( [self hasChildren:aReference]) {
-        return [self listForName:[self childrenOfReference:aReference]];
+        return [self listForNames:[self childrenOfReference:aReference]];
     }
 	return [[NSUserDefaults standardUserDefaults] objectForKey:[[aReference path] lastPathComponent]];
 }

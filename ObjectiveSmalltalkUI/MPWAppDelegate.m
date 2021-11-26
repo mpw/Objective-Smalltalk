@@ -39,6 +39,7 @@
     self=[super init];
     self.compiler = [STCompiler compiler];
     [self.compiler bindValue:self toVariableNamed:@"delegate"];
+    [self.compiler bindValue:self.compiler toVariableNamed:@"smalltalk"];
     [self.compiler evaluateScriptString:@"scheme:doc := MPWDocumentScheme scheme."];
     [self loadSmalltalkMethods];
     return self;

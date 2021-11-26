@@ -1,7 +1,0 @@
-#!/usr/local/bin/stsh
-framework:ObjectiveHTTPD load.
-
-(ref:file:{env:HOME}/Sites -> (MPWCopyOnWriteScheme memoryCache) -> (MPWSchemeHttpServer serverOnPort:8082)) start:nil.
-
-shell runInteractiveLoop.
-

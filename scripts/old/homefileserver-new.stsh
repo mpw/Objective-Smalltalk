@@ -1,0 +1,7 @@
+#!/usr/local/bin/stsh
+framework:ObjectiveHTTPD load.
+
+((MPWSchemeHttpServer serverOnPort:8082) -> ref:file:{env:HOME}/Sites) start:nil.
+
+shell runInteractiveLoop.
+

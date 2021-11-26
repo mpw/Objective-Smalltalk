@@ -2,7 +2,7 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
-	var <int> id.
+	var id.
 	var <bool> done.
 	var title.
 
@@ -15,9 +15,6 @@ scheme todo : MPWMappingStore {
 	var taskDict.
 	var taskList.
 	-<void>setNewTaskList:aList {
-		1 to:1 do: { 
-			aList := aList arrayByAddingObjectsFromArray:aList.
-		}.
 		d := NSMutableDictionary dictionary.
 		i := 0.
 		aList do: { :task |
@@ -26,6 +23,7 @@ scheme todo : MPWMappingStore {
 		}.
 		this:taskDict := d.
 		this:taskList := aList.
+		stdout println: this:taskDict.
 	}
 	/tasks { 
 		|= { 

@@ -16,6 +16,7 @@ object Body : #Label{
 object Image : #UIImageView {
         #contentMode: c:UIViewContentModeScaleAspectFit
 }.
+
 object Title : #Label{
         #font: font:style/largeTitle ,
         #textColor: color:white

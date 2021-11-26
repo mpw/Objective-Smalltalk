@@ -3,7 +3,7 @@
 framework:ObjectiveHTTPD load.
 httpserver := (MPWSchemeHttpServer serverOnPort:8081).
 
-server := dir ⇨ (MPWCopyOnWriteScheme memoryCache) ⇨ httpserver.
+server := dir ⇨ (MPWCachingStore memoryStore) ⇨ httpserver.
 server start:nil.
 
 shell runInteractiveLoop.
