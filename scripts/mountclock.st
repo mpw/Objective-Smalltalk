@@ -2,10 +2,9 @@
 framework:SchemeFUSE load.
 
 scheme clock {
-	/date {  |= {
-		stdout println:'checking the date!'.
+    /date {  |= {
 		#NSDate{} stringValue lf.
-	} }
+	} } 
 	-childrenOfReference:aRef  {
 		#[ 'date' ].
 	}

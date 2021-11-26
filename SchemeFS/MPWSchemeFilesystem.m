@@ -49,6 +49,9 @@ static NSString *helloPath = @"/hello.txt";
 }
 
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path error:(NSError **)error {
+    while ( path.length > 1 && [path hasPrefix:@"/"]) {
+        path=[path substringFromIndex:1];
+    }
     NSLog(@"dir: %@",path);
     id names = nil;
     @try {
@@ -63,6 +66,9 @@ static NSString *helloPath = @"/hello.txt";
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
+    while ( path.length > 1 && [path hasPrefix:@"/"]) {
+        path=[path substringFromIndex:1];
+    }
     NSLog(@"contents of %@: '%@'",path,[[self scheme] at:path]);
     @try {
         return [[[self scheme] at:path] asData];
@@ -90,6 +96,9 @@ static NSString *helloPath = @"/hello.txt";
                                    error:(NSError **)error {
 //    NSLog(@"attributesOfItemAtPath: %@",path);
 //    NSLog(@"binding: %@ hasChildren: %d",binding,[binding hasChildren]);
+    while ( path.length > 1 && [path hasPrefix:@"/"]) {
+        path=[path substringFromIndex:1];
+    }
     if ( [[self scheme] hasChildren:path] ) {
         NSLog(@"%@ is directory",path);
         return [NSDictionary dictionaryWithObject:NSFileTypeDirectory forKey:NSFileType];
