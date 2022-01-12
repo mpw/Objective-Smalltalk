@@ -28,7 +28,7 @@ Raspberry Pi build instructions
 -------------
 
 1. Install GNUstep, I used a [build script](https://github.com/plaurent/gnustep-build).
-2. Clone both project as above.
+2. Clone both projects as above.
 3. run  ./makeheaderdir in each of the project directories
 4. use make in each of the project directories to build (MPWFoundation first)
 
