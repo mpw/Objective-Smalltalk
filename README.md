@@ -22,6 +22,7 @@ Build instructions:
 
 4.  Build the 'stsh' scheme 
 
+Example scripts are in the scripts directory.
 
 
 Raspberry Pi build instructions
@@ -31,6 +32,12 @@ Raspberry Pi build instructions
 2. Clone both projects as above.
 3. run  ./makeheaderdir in each of the project directories
 4. use make in each of the project directories to build (MPWFoundation first)
+5. Navigate to the raspi directory in ObjectiveSmalltalk
+6. run   make raspish  
+
+The raspish is pre-configured/-linked to know about GPIO pins.
+
+
 
 
 These should also work for other Linux systems. For example, the
