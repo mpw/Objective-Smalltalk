@@ -32,4 +32,6 @@ Raspberry Pi build instructions
 3. run  ./makeheaderdir in each of the project directories
 4. use make in each of the project directories to build (MPWFoundation first)
 
-Build is currently broken, method definition does not appear to work.
+
+These might/should also work for other Linux systems, the [Objective-S website](http://objective.st) is served by Objective-S on Linux.
+
