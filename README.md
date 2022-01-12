@@ -33,5 +33,7 @@ Raspberry Pi build instructions
 4. use make in each of the project directories to build (MPWFoundation first)
 
 
-These might/should also work for other Linux systems, the [Objective-S website](http://objective.st) is served by Objective-S on Linux.
+These should also work for other Linux systems. For exmaple, the
+[Objective-S website](http://objective.st) is served by Objective-S
+on Digital Ocean Droplet with Ubuntu.
 
