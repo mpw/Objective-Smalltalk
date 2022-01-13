@@ -263,6 +263,8 @@
 		1F7045F722313F4B005ED7FB /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859FB1923731900F52396 /* ObjectiveSmalltalkUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F7045FB2231417E005ED7FB /* classdef-method-browser-scheme.stsh in Resources */ = {isa = PBXBuildFile; fileRef = 1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */; };
+		1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F70BE55278E11DB002398CC /* MPWCPUSimulator.h */; };
+		1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F70BE56278E11DB002398CC /* MPWCPUSimulator.m */; };
 		1F73288A2344B0D300379386 /* STImage.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7328892344B0D200379386 /* STImage.icns */; };
 		1F73288D2344BEF300379386 /* MPWShellPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */; };
 		1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -936,6 +938,8 @@
 		1F7045F322313EA2005ED7FB /* MPWClassMethodSwitchStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMethodSwitchStore.m; sourceTree = "<group>"; };
 		1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "classdef-method-browser-scheme.stsh"; sourceTree = "<group>"; };
+		1F70BE55278E11DB002398CC /* MPWCPUSimulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCPUSimulator.h; sourceTree = "<group>"; };
+		1F70BE56278E11DB002398CC /* MPWCPUSimulator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWCPUSimulator.m; sourceTree = "<group>"; };
 		1F7328892344B0D200379386 /* STImage.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = STImage.icns; sourceTree = "<group>"; };
 		1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWREPLViewPrinter.h; sourceTree = "<group>"; };
 		1F73288F2344C10000379386 /* MPWREPLViewPrinter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWREPLViewPrinter.m; sourceTree = "<group>"; };
@@ -1409,6 +1413,8 @@
 				1F605134187590E5004B6AED /* MPWInternalCodeGenerator.mm */,
 				1F7A350E18B3570F0009E97D /* MPWStNativeCompiler.h */,
 				1F7A350F18B3570F0009E97D /* MPWStNativeCompiler.m */,
+				1F70BE55278E11DB002398CC /* MPWCPUSimulator.h */,
+				1F70BE56278E11DB002398CC /* MPWCPUSimulator.m */,
 			);
 			path = ObjSTNative;
 			sourceTree = "<group>";
@@ -2161,6 +2167,7 @@
 				1FD9602A257A194700C3F90A /* MPWARMAssemblyGenerator.h in Headers */,
 				1FC2EEF6186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.h in Headers */,
 				1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */,
+				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F7A351018B3570F0009E97D /* MPWStNativeCompiler.h in Headers */,
 				1F605135187590E5004B6AED /* MPWInternalCodeGenerator.h in Headers */,
@@ -3300,6 +3307,7 @@
 				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1FD9602B257A194700C3F90A /* MPWARMAssemblyGenerator.m in Sources */,
 				1F7A351118B3570F0009E97D /* MPWStNativeCompiler.m in Sources */,
+				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 				1FC2EEF7186CEAB300B3D06F /* MPWLLVMAssemblyGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
