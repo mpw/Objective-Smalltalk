@@ -1,0 +1,13 @@
+<html>
+<body>
+Here is some text.<p>
+
+<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+  <!-- have a button POST a click via AJAX -->
+  <button hx-get="/clicked" hx-swap="outerHTML">
+    Click Me
+  </button>
+<p>
+Here is more text.<p>
+</body>
+</html>

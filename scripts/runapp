@@ -1,0 +1,15 @@
+#!env stsh
+#note: this is a work in progress that will currently hang without visibly running the app
+framework:MPWSketching load.
+stdout println:'Hello'.
+app := NSApplication sharedApplication.
+stdout println:'app: ', app description.
+bundle := NSBundle bundleWithPath:'/Users/marcel/programming/Build/Release/CodeDraw.app'
+stdout println:'bundle: ', bundle description.
+loadResult := bundle loadNibNamed:'MainMenu' owner:app topLevelObjects:nil.
+stdout println:'nib:', loadResult.
+stdout println:app.
+stdout println:app delegate.
+stdout println:app mainMenu.
+stdout println:'About to run the app.  This currently hangs without a visible effect'.
+app run.
