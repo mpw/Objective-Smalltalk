@@ -1,9 +1,9 @@
 #!env stsh
 #-<void>scpto:host as:user
 framework:ObjectiveSSH load.
-writer := SCPWriter new.
-writer setHost:host.
-writer setUser:user.
-scheme:sftp := writer.
+session := SSHConnection new.
+session setHost:host.
+session setUser:user.
+scheme:sftp := session store.
 stdout println:'sftp:/ '.
 shell runInteractiveLoop.
