@@ -81,6 +81,7 @@ idAccessor( _schemes, setSchemes )
     [schemes setSchemeHandler:classScheme forSchemeName:@"builder"];
     [schemes setSchemeHandler:portScheme forSchemeName:@"port"];
     [schemes setSchemeHandler:[STProtocolScheme store] forSchemeName:@"protocol"];
+    [schemes setSchemeHandler:[MPWSFTPStore store] forSchemeName:@"sftp"];
     [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
 	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
 	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
