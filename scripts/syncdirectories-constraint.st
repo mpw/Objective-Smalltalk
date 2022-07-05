@@ -1,8 +1,8 @@
 #!env stsh
-#-sync:<ref>source to:<ref>target
-sourceScheme ← source asScheme.
-targetScheme ← target asScheme.
+#-sync:<ref>sourceRef to:<ref>targetRef
+source ← sourceRef asScheme.
+target ← targetRef asScheme.
 
-targetScheme |= sourceScheme.
+target |= source.
 
 runLoop run.

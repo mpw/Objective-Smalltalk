@@ -1,0 +1,1 @@
+#MPWFileBrowser{ #store: (ref:file:/Users/marcel/programming asScheme)  } openInWindow:'Plist'  .    <NSWindow: 0x130f4f380>

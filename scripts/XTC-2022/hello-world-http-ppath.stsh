@@ -1,0 +1,8 @@
+#!/usr/local/bin/stsh
+framework:ObjectiveHTTPD load.
+
+scheme SiteMap {
+  /hello { |= { 'Hello World!'. } }
+}.
+SiteMap serveOnPort:8090.
+shell runInteractiveLoop.
