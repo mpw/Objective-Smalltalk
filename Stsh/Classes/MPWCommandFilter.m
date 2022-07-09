@@ -134,7 +134,7 @@ idAccessor( scanner ,setScanner )
 				[scanner addData:data];
 			}
 		} else {
-            [self forward:[data stringValue]];
+            [self forward:data];
 		}
 	} else {
 		eofReached=YES;
@@ -210,7 +210,7 @@ idAccessor( scanner ,setScanner )
 	[echo close];
 	result = [echo target];
 	INTEXPECT( [result count], 1, @"echo should return exactly one result");
-	IDEXPECT( [result lastObject], @"Hello World!\n", @"result of running echo command" );
+	IDEXPECT( [[result lastObject] stringValue], @"Hello World!\n", @"result of running echo command" );
 }
 
 +(void)testSimpleFilter
@@ -223,7 +223,7 @@ idAccessor( scanner ,setScanner )
 	[wc close];
 	wcresult=[wc target];
 	INTEXPECT( [wcresult count], 1, @"wc should return exactly one line of result ");
-	IDEXPECT( [wcresult lastObject], @"       3       8      46\n", @"result of running wc command" );
+	IDEXPECT( [[wcresult lastObject] stringValue], @"       3       8      46\n", @"result of running wc command" );
 }
 
 +(void)testSimplePipe
