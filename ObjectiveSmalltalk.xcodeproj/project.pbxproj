@@ -592,6 +592,8 @@
 		1FF142381B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
 		1FF1423B1B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */; };
 		1FF556FE2456AF84006B8E0F /* ObjectiveSmalltalk.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FF57C0A2880626B0080A2F8 /* MPWHost.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF57C082880626B0080A2F8 /* MPWHost.m */; };
+		1FF57C0B2880626B0080A2F8 /* MPWHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF57C092880626B0080A2F8 /* MPWHost.h */; };
 		1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1156,6 +1158,8 @@
 		1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBidirectionalDataflowConstraintExpression.m; sourceTree = "<group>"; };
 		1FF556FD2456AF84006B8E0F /* ObjectiveSmalltalk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveSmalltalk.h; sourceTree = "<group>"; };
 		1FF556FF2456AFCF006B8E0F /* ObjectiveSmalltalk.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = ObjectiveSmalltalk.map; sourceTree = "<group>"; };
+		1FF57C082880626B0080A2F8 /* MPWHost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWHost.m; sourceTree = "<group>"; };
+		1FF57C092880626B0080A2F8 /* MPWHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWHost.h; sourceTree = "<group>"; };
 		1FF6AC23075256C500A306C8 /* MPWBindingLegacy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWBindingLegacy.h; path = Classes/MPWBindingLegacy.h; sourceTree = SOURCE_ROOT; };
 		1FF6AC24075256C500A306C8 /* MPWBindingLegacy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBindingLegacy.m; sourceTree = "<group>"; };
 		1FF6AC690752648B00A306C8 /* MPWStatementList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWStatementList.h; path = Classes/MPWStatementList.h; sourceTree = SOURCE_ROOT; };
@@ -1799,6 +1803,8 @@
 		1FBAABFB184BDC0D00086047 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1FF57C092880626B0080A2F8 /* MPWHost.h */,
+				1FF57C082880626B0080A2F8 /* MPWHost.m */,
 				1F2F8DC6192E28AA00A5D1B5 /* MPWShellPrinter.h */,
 				1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */,
 				1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */,
@@ -2375,6 +2381,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FAB448919031343009EEE6D /* MPWExternalCommand.h in Headers */,
+				1FF57C0B2880626B0080A2F8 /* MPWHost.h in Headers */,
 				1FAB448819031343009EEE6D /* MPWEchoCommand.h in Headers */,
 				1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */,
 				1FAB448B19031343009EEE6D /* MPWAbstractShellCommand.h in Headers */,
@@ -3540,6 +3547,7 @@
 				1FAFD97D1855BC5500EC5221 /* MPWShellProcess.m in Sources */,
 				1FAFD97E1855BC5500EC5221 /* MPWAbstractShellCommand.m in Sources */,
 				1FAFD97F1855BC5500EC5221 /* MPWCommandFilter.m in Sources */,
+				1FF57C0A2880626B0080A2F8 /* MPWHost.m in Sources */,
 				1FAFD9801855BC5500EC5221 /* MPWStsh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
