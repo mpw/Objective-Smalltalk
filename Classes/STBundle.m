@@ -135,10 +135,21 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return subDict;
 }
 
--(void)writeToURL:(NSURL*)url
+-(void)writeToStore:(id <MPWStorage>)target
 {
-    
+    [target mkdirAt:@""];
+    [target mkdirAt:@"Sources"];
+    [self methodDict];
+    id sourceScheme=[[target bindingForReference:[target referenceForPath:@"Sources"] inContext:nil] asScheme];
+    [[self.interpreter methodStore] fileoutToStore:sourceScheme];
+    [target mkdirAt:@"Resources"];
+    id <MPWStorage,MPWHierarchicalStorage> resourceTarget=[[target bindingForReference:[target referenceForPath:@"Resources"] inContext:nil] asScheme];
+    NSArray *children=[[self resources] childrenOfReference:@""];
+    for ( id child in children ) {
+        [resourceTarget at:child put:[[self resources] at:child]];
+    }
 }
+
 
 
 -(void)save
@@ -150,8 +161,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     NSURL *sourcesDir=[NSURL URLWithString:@"Sources" relativeToURL:self.url];
     [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
     
-    MPWMethodStore *store=[self.interpreter methodStore];
-    [store fileoutToStore:self.sourceDir];
+    [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
 }
 
 @end
