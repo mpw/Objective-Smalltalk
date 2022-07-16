@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSDictionary*)methodDict;
 -(id <MPWReferencing>)resourceRef;
 -(MPWWriteBackCache*)cachedResources;
+-(void)save;
+
 
 @property (readonly) BOOL isPresentOnDisk;
 

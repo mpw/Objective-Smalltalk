@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 -(id <MPWStorage>)store;
+-(id <MPWStorage>)http;
 -(void)run:(NSString*)command outputTo:(NSObject <Streaming>*)output;
 -(NSData*)run:(NSString*)command;
 

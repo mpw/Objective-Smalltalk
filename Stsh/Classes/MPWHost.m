@@ -53,6 +53,24 @@ objectAccessor_h(SSHConnection, connection, setConnection)
     return nil;
 }
 
+-(id<MPWStorage>)httpBased:(NSString*)scheme port:(int)port
+{
+    MPWURLSchemeResolver* baseStore=[MPWURLSchemeResolver store];
+    MPWURLReference *baseRef=[[[MPWURLReference alloc] initWithPathComponents:@[@"/"] host:self.name scheme:scheme] autorelease];
+    baseRef.port = port;
+    return [baseStore relativeStoreAt:baseRef];
+}
+
+
+-(id<MPWStorage>)http
+{
+    return [self httpBased:@"http" port:80];
+}
+
+-(id<MPWStorage>)https
+{
+    return [self httpBased:@"https" port:0 ];
+}
 
 
 @end
@@ -77,7 +95,13 @@ objectAccessor_h(SSHConnection, connection, setConnection)
 
 -(void)run:(NSString*)command outputTo:(NSObject <Streaming>*)output
 {
-    MPWShellProcess *process=[[[MPWShellProcess alloc] initWithName:command arguments:nil] autorelease];
+    NSArray *splitCommand = [command componentsSeparatedByString:@" "];
+    command=splitCommand.firstObject;
+    NSArray *args=nil;
+    if ( splitCommand.count > 1 ) {
+        args=[splitCommand subarrayWithRange:NSMakeRange(1,splitCommand.count-1)];
+    }
+    MPWShellProcess *process=[[[MPWShellProcess alloc] initWithName:command arguments:args] autorelease];
     [process runWithTarget:output];
 }
 
@@ -132,6 +156,7 @@ lazyAccessor(SSHConnection, connection, setConnection, createConnection)
 {
     return [[self connection] store];
 }
+
 
 -(void)run:(NSString*)command outputTo:(NSObject <Streaming>*)output
 {

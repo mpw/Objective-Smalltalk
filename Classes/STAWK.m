@@ -24,6 +24,11 @@
     [self.block valueWithObjects:fields];
 }
 
+-(void)writeData:(NSData *)d
+{
+    [self writeString:[d stringValue]];
+}
+
 @end
 
 

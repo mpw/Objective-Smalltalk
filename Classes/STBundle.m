@@ -8,6 +8,7 @@
 #import "STBundle.h"
 #import "STCompiler.h"
 #import "MPWSchemeScheme.h"
+#import "MPWMethodStore.h"
 
 @interface STBundle()
 
@@ -47,6 +48,11 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(NSString*)path
 {
     return [self.binding path];
+}
+
+-(NSURL*)url
+{
+    return [NSURL fileURLWithPath:self.path];
 }
 
 -(id <MPWHierarchicalStorage>)storeForSubDir:(NSString*)subdir
@@ -127,6 +133,25 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
     NSDictionary *subDict=[compiler externalScriptDict];
     return subDict;
+}
+
+-(void)writeToURL:(NSURL*)url
+{
+    
+}
+
+
+-(void)save
+{
+    NSError *outError=nil;
+    [self.cachedResources flush];
+    NSFileManager *fm=[NSFileManager defaultManager];
+    [fm createDirectoryAtURL:self.url withIntermediateDirectories:YES attributes:nil error:&outError];
+    NSURL *sourcesDir=[NSURL URLWithString:@"Sources" relativeToURL:self.url];
+    [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
+    
+    MPWMethodStore *store=[self.interpreter methodStore];
+    [store fileoutToStore:self.sourceDir];
 }
 
 @end
