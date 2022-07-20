@@ -31,7 +31,7 @@ lazyAccessor(STCompiler, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary, methodDict, setMethodDict, methodDictForSourceFiles)
 lazyAccessor(MPWWriteBackCache, cachedResources, setCachedResources, createResources)
 
-CONVENIENCEANDINIT( binding, WithBinding:newBinding )
+CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 {
     self=[super init];
     self.binding=newBinding;
@@ -137,16 +137,17 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(void)writeToStore:(id <MPWStorage>)target
 {
+    [self methodDict];
     [target mkdirAt:@""];
     [target mkdirAt:@"Sources"];
-    [self methodDict];
-    id sourceScheme=[[target bindingForReference:[target referenceForPath:@"Sources"] inContext:nil] asScheme];
-    [[self.interpreter methodStore] fileoutToStore:sourceScheme];
+    [[self.interpreter methodStore] fileoutToStore:[target relativeStoreAt:@"Sources"]];
     [target mkdirAt:@"Resources"];
-    id <MPWStorage,MPWHierarchicalStorage> resourceTarget=[[target bindingForReference:[target referenceForPath:@"Resources"] inContext:nil] asScheme];
+    id <MPWStorage> resourceTarget=[target relativeStoreAt:@"Resources"];
+    target[@"Info.json"] = [self storeForSubDir:@"."][@"Info.json"];
     NSArray *children=[[self resources] childrenOfReference:@""];
+    id <MPWStorage> resourceSource=[self resources];
     for ( id child in children ) {
-        [resourceTarget at:child put:[[self resources] at:child]];
+        resourceTarget[child] = resourceSource[child];
     }
 }
 
