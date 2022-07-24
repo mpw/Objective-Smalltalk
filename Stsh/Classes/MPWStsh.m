@@ -12,7 +12,7 @@
 #include <readline/history.h>
 #include <unistd.h>
 
-#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+//#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import <ObjectiveSmalltalk/MPWStScanner.h>
 #import "MPWShellCompiler.h"
 #import "MPWStScript.h"
@@ -525,23 +525,23 @@ idAccessor( retval, setRetval )
 
 @end
 
-
-@implementation MPWIdentifierExpression(executeInShell)
-
--executeInShell:aShell
-{
-    if ( aShell ) {
-        id level1result;
-//        NSLog(@"%@ executeInShell: %@",self,aShell);
-        level1result = [self evaluateIn:aShell];
-//        NSLog(@"level1result: %@ executeInShell:",level1result);
-        return [level1result executeInShell:aShell];
-    } else {
-        return self;
-    }
-}
-
-@end
+//
+//@implementation MPWIdentifierExpression(executeInShell)
+//
+//-executeInShell:aShell
+//{
+//    if ( aShell ) {
+//        id level1result;
+////        NSLog(@"%@ executeInShell: %@",self,aShell);
+//        level1result = [self evaluateIn:aShell];
+////        NSLog(@"level1result: %@ executeInShell:",level1result);
+//        return [level1result executeInShell:aShell];
+//    } else {
+//        return self;
+//    }
+//}
+//
+//@end
 
 
 @implementation NSString(shellAdditions)

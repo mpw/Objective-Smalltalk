@@ -20,6 +20,8 @@
 #import "MPWStsh.h"
 #import "MPWShellPrinter.h"
 #import <MPWFoundation/MPWFDStreamSource.h>
+#import "MPWCommandStore.h"
+#import <ObjectiveSmalltalk/MPWSchemeScheme.h>
 
 @implementation MPWShellCompiler
 
@@ -71,6 +73,13 @@
 	while ( nextCommand = [commandEnumerator nextObject] ) {
 		[self addExternalCommand:nextCommand];
 	}
+}
+
+-(MPWSchemeScheme*)createSchemes
+{
+    MPWSchemeScheme *schemes=[super createSchemes];
+    [schemes setSchemeHandler:[MPWCommandStore store] forSchemeName:@"cmd"];
+    return schemes;
 }
 
 -init

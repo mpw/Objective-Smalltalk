@@ -29,5 +29,6 @@
 
 boolAccessor_h( doLines , setDoLines )
 
+@property (nonatomic,strong ) NSArray *arguments;
 
 @end
