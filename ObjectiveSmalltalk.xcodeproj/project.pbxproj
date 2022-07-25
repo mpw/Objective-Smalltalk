@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1F00D791258A2331007C1F68 /* stapp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F00D790258A2331007C1F68 /* stapp.png */; };
+		1F02B9A1288EC6C30023588A /* MPWCommandBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F02B99F288EC6C30023588A /* MPWCommandBinding.h */; };
+		1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */; };
 		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
 		1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1816DCE6A200ED2517 /* ObjSTNative.m */; };
 		1F084A2016DCE6E600ED2517 /* MPWCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A1E16DCE6E600ED2517 /* MPWCodeGenerator.h */; };
@@ -738,6 +740,8 @@
 
 /* Begin PBXFileReference section */
 		1F00D790258A2331007C1F68 /* stapp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stapp.png; sourceTree = "<group>"; };
+		1F02B99F288EC6C30023588A /* MPWCommandBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCommandBinding.h; sourceTree = "<group>"; };
+		1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWCommandBinding.m; sourceTree = "<group>"; };
 		1F04A53121D253F300E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
 		1F04A53221D25A1800E19C3F /* testobjectivesmalltalk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = testobjectivesmalltalk.m; path = TestObjectiveSmalltalk/testobjectivesmalltalk.m; sourceTree = "<group>"; };
 		1F04A53421D25AEB00E19C3F /* makeheaderdir */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = makeheaderdir; sourceTree = "<group>"; };
@@ -1836,6 +1840,8 @@
 				1FBAAC43184BDF6A00086047 /* MPWUpcaseFilter.m */,
 				1FFA1B61288D3EDC0095A876 /* MPWCommandStore.h */,
 				1FFA1B62288D3EDC0095A876 /* MPWCommandStore.m */,
+				1F02B99F288EC6C30023588A /* MPWCommandBinding.h */,
+				1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2393,6 +2399,7 @@
 				1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */,
 				1FAB448B19031343009EEE6D /* MPWAbstractShellCommand.h in Headers */,
 				1FAB448D19031343009EEE6D /* MPWShellProcess.h in Headers */,
+				1F02B9A1288EC6C30023588A /* MPWCommandBinding.h in Headers */,
 				1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */,
 				1FAB448A19031343009EEE6D /* MPWObjectPipeCommand.h in Headers */,
 				1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */,
@@ -3546,6 +3553,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFA1B64288D3EDC0095A876 /* MPWCommandStore.m in Sources */,
+				1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */,
 				1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */,
 				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
 				1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */,

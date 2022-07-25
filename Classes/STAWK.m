@@ -21,7 +21,15 @@
 -(void)writeString:(NSString*)aString
 {
     NSArray *fields=[aString componentsSeparatedByString:self.separator];
-    [self.block valueWithObjects:fields];
+    NSMutableArray *whitespaceCoalescedFields=[NSMutableArray array];
+    NSString *last=nil;
+    for (NSString *field in fields) {
+        if ( field.length) {
+            [whitespaceCoalescedFields addObject:field];
+        }
+        last=field;
+    }
+    [self.block valueWithObjects:whitespaceCoalescedFields];
 }
 
 -(void)writeData:(NSData *)d
@@ -32,7 +40,7 @@
 @end
 
 
-@implementation MPWFileBinding(awk)
+@implementation MPWStreamableBinding(awk)
 
 -(void)withSeparator:(NSString*)separator awk:block
 {

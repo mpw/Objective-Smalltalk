@@ -138,7 +138,7 @@ objectAccessor( NSTask, task, setTask )
 	id filter=[self wrappedAsMPWStream];
 	[filter setTarget:newTarget];
 //	[filter runProcess];
-	[filter flush];
+	[filter run];
 	return [filter target];
 #if 0
 	id commandFilter = [[[MPWCommandFilter 

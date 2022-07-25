@@ -110,6 +110,16 @@ idAccessor( scanner ,setScanner )
 	return [self result];
 }
 
+-(void)awaitResultForSeconds:(NSTimeInterval)seconds
+{
+    
+}
+ 
+-(void)run
+{
+    [self runProcess];
+}
+
 -(BOOL)isDataAvailableFromCommand
 {
 	return [[self processStdout] isDataAvailable];
