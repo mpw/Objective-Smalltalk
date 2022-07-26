@@ -114,7 +114,12 @@ idAccessor( scanner ,setScanner )
 {
     
 }
- 
+
+-value
+{
+    return [self runProcess];
+}
+
 -(void)run
 {
     [self runProcess];

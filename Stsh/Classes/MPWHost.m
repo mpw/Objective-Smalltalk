@@ -8,6 +8,7 @@
 #import "MPWHost.h"
 #import <ObjectiveSSH/SSHConnection.h>
 #import "MPWShellProcess.h"
+#import "MPWCommandStore.h"
 
 @interface MPWRemoteHost : MPWHost
 {
@@ -19,6 +20,7 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *user;
 objectAccessor_h(SSHConnection, connection, setConnection)
+idAccessor_h( commandStore, setCommandStore)
 @end
 
 @interface MPWLocalHost : MPWHost
@@ -28,6 +30,9 @@ objectAccessor_h(SSHConnection, connection, setConnection)
 
 
 @implementation MPWHost
+{
+    MPWCommandStore *commandStore;
+}
 
 +(instancetype)localhost
 {
@@ -72,6 +77,14 @@ objectAccessor_h(SSHConnection, connection, setConnection)
     return [self httpBased:@"https" port:0 ];
 }
 
+-(id<MPWStorage>)createCommandStore
+{
+    return nil;
+}
+
+
+lazyAccessor(MPWCommandStore, commandStore, setCommandStore, createCommandStore)
+
 
 @end
 
@@ -111,6 +124,11 @@ objectAccessor_h(SSHConnection, connection, setConnection)
     MPWByteStream *s=[MPWByteStream stream];
     [self run:command outputTo:s];
     return [s byteTarget];
+}
+
+-(id<MPWStorage>)commandStore
+{
+    return [MPWCommandStore store];
 }
 
 
@@ -155,6 +173,11 @@ lazyAccessor(SSHConnection, connection, setConnection, createConnection)
 -(id<MPWStorage>)store
 {
     return [[self connection] store];
+}
+
+-(id<MPWStorage>)createCommandStore
+{
+    return [[[NSClassFromString(@"SSHCommandStore") alloc] initWithConnection:self.connection] autorelease];
 }
 
 
