@@ -53,13 +53,6 @@ boolAccessor( returnsLines, setReturnsLines )
     return [self runWithArgs:[NSArray array]];
 }
 
--executeInShell:aShell
-{
-//	NSLog(@"run shell command: %@",self);
-    return [self runProcess];
-}
-
-
 
 -run:firstArg
 {

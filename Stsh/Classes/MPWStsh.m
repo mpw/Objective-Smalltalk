@@ -510,39 +510,6 @@ idAccessor( retval, setRetval )
 
 @end
 
-@implementation NSObject(executeInShell)
-
--executeInShell:aShell
-{
-//    NSLog(@"===");
-    NSObject* result = [self evaluateIn:aShell];
-//	NSLog(@"result of initial eval: %s, may no run process",object_getClassName(result));
-	if ( /* [result isKindOfClass:[NSObject class]] && */ [result respondsToSelector:@selector(runProcess)] ) {
-		result = [(MPWAbstractShellCommand*)result runProcess];
-	}
-	return result;
-}
-
-@end
-
-//
-//@implementation MPWIdentifierExpression(executeInShell)
-//
-//-executeInShell:aShell
-//{
-//    if ( aShell ) {
-//        id level1result;
-////        NSLog(@"%@ executeInShell: %@",self,aShell);
-//        level1result = [self evaluateIn:aShell];
-////        NSLog(@"level1result: %@ executeInShell:",level1result);
-//        return [level1result executeInShell:aShell];
-//    } else {
-//        return self;
-//    }
-//}
-//
-//@end
-
 
 @implementation NSString(shellAdditions)
 

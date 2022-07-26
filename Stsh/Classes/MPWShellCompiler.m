@@ -103,7 +103,7 @@
 
 -executeShellExpression:compiledExpression
 {
-    return [compiledExpression executeInShell:self];
+    return [compiledExpression evaluateIn:self];
 }
 
 @end

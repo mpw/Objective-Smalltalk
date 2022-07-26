@@ -38,9 +38,3 @@
 
 @end
 
-
-@interface NSObject(executeInShell)
-
--executeInShell:aShell;
-
-@end

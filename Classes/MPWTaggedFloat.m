@@ -69,10 +69,6 @@ static inline float floatValue( id ptr )
     return [NSMethodSignature signatureWithObjCTypes:"@@:@"];
 }
 
--executeInShell:aShell
-{
-    return self;
-}
 
 -retain
 {

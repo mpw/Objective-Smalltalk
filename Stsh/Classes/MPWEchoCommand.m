@@ -42,12 +42,6 @@ idAccessor( toEcho, setToEcho )
 	return self;
 }
 
--executeInShell:aShell
-{
-//	NSLog(@"executeInShell");
-    return [self runProcess];
-}
-
 
 
 @end
