@@ -1,4 +1,5 @@
 #!env st
 #-ls
-scheme:docker := MPWUnixDomainHTTPStore alloc initWithSocketPath: '/var/run/docker.sock'
+dockerbase := MPWUnixDomainHTTPStore alloc initWithSocketPath: '/var/run/docker.sock'
+scheme:docker := MPWJSONConverterStore -> dockerbase.
 docker:/containers/json

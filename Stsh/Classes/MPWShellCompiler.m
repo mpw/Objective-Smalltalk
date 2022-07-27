@@ -78,7 +78,7 @@
 -(MPWSchemeScheme*)createSchemes
 {
     MPWSchemeScheme *schemes=[super createSchemes];
-    [schemes setSchemeHandler:[MPWCommandStore store] forSchemeName:@"cmd"];
+    [schemes setSchemeHandler:[MPWCommandStore store] forSchemeName:@"sh"];
     return schemes;
 }
 
