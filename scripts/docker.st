@@ -1,4 +1,5 @@
 #!env st
-#-ls
+#-countdockerimages
 scheme:docker := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore.
-docker:/containers/json
+stdout println:'example: docker:/images/json count'.
+shell runInteractiveLoop.
