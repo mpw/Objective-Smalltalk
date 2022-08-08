@@ -73,6 +73,10 @@ intAccessor(completionLimit, setCompletionLimit)
 	[self _setEvaluator:newEval];
 	[newEval bindValue:self toVariableNamed:@"shell"];
     [newEval bindValue:[NSRunLoop currentRunLoop] toVariableNamed:@"runLoop"];
+    Class cliApp=NSClassFromString(@"CLIApp");
+    if ( cliApp ) {
+        [newEval bindValue:[cliApp sharedApplication] toVariableNamed:@"app"];
+    }
 
 }
  
