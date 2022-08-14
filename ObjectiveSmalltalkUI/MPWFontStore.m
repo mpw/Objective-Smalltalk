@@ -68,7 +68,7 @@ NSDictionary *styles;
     return [constructionStyles copy];
 }
 
-lazyAccessor(NSDictionary, styles, setStyles, createStyles)
+lazyAccessor(NSDictionary*, styles, setStyles, createStyles)
 
 -(id)at:(id<MPWReferencing>)aReference
 {

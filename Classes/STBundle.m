@@ -26,10 +26,10 @@
     MPWWriteBackCache *cachedResources;
 }
 
-lazyAccessor(NSDictionary, info, setInfo, readInfo)
-lazyAccessor(STCompiler, interpreter, setInterpreter, createInterpreter)
-lazyAccessor(NSDictionary, methodDict, setMethodDict, methodDictForSourceFiles)
-lazyAccessor(MPWWriteBackCache, cachedResources, setCachedResources, createResources)
+lazyAccessor(NSDictionary*, info, setInfo, readInfo)
+lazyAccessor(STCompiler*, interpreter, setInterpreter, createInterpreter)
+lazyAccessor(NSDictionary*, methodDict, setMethodDict, methodDictForSourceFiles)
+lazyAccessor(MPWWriteBackCache*, cachedResources, setCachedResources, createResources)
 
 CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 {

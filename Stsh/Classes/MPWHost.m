@@ -6,20 +6,19 @@
 //
 
 #import "MPWHost.h"
-#import <ObjectiveSSH/SSHConnection.h>
 #import "MPWShellProcess.h"
 #import "MPWCommandStore.h"
 
 @interface MPWRemoteHost : MPWHost
 {
-    SSHConnection *connection;
+    id<SSHConnection> connection;
 }
 
 -(instancetype)initWithName:(NSString*)name user:(NSString*)user;
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *user;
-objectAccessor_h(SSHConnection*, connection, setConnection)
+objectAccessor_h(id<SSHConnection>, connection, setConnection)
 idAccessor_h( commandStore, setCommandStore)
 @end
 
@@ -83,7 +82,7 @@ idAccessor_h( commandStore, setCommandStore)
 }
 
 
-lazyAccessor(MPWCommandStore, commandStore, setCommandStore, createCommandStore)
+lazyAccessor(MPWCommandStore*, commandStore, setCommandStore, createCommandStore)
 
 
 @end
@@ -156,19 +155,19 @@ lazyAccessor(MPWCommandStore, commandStore, setCommandStore, createCommandStore)
 }
 
 
--(SSHConnection*)createConnection
+-(id <SSHConnection>)createConnection
 {
     if (![self loadSSHFramework]) {
         NSLog(@"framework not loaded");
         return nil;
     }
-    SSHConnection *s=[[[NSClassFromString(@"SSHConnection") alloc] init] autorelease];
+    id <SSHConnection> s=[[[NSClassFromString(@"SSHConnection") alloc] init] autorelease];
     s.host = self.name;
     s.user = self.user;
     return s;
 }
 
-lazyAccessor(SSHConnection, connection, setConnection, createConnection)
+lazyAccessor(id <SSHConnection>, connection, setConnection, createConnection)
 
 -(id<MPWStorage>)store
 {

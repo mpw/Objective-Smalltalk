@@ -316,9 +316,9 @@ idAccessor( script, _setScript )
 
 @implementation NSException(scriptStackTrace)
 
-dictAccessor(NSMutableArray, scriptStackTrace, setScriptStackTrace, (NSMutableDictionary*)[self userInfo])
+dictAccessor(NSMutableArray*, scriptStackTrace, setScriptStackTrace, (NSMutableDictionary*)[self userInfo])
 
-dictAccessor(NSMutableArray, combinedStackTrace, setCombinedStackTrace, (NSMutableDictionary*)[self userInfo])
+dictAccessor(NSMutableArray*, combinedStackTrace, setCombinedStackTrace, (NSMutableDictionary*)[self userInfo])
 
 -(void)cullTrace:(NSMutableArray*)trace replacingOriginal:original withFrame:frame
 {

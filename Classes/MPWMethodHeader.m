@@ -19,7 +19,7 @@ objectAccessor(NSString*, methodName, setMethodName )
 objectAccessor(STTypeDescriptor*, returnType, setReturnType )
 objectAccessor(NSMutableArray*, parameterVars, setParameterVars )
 objectAccessor(NSMutableArray*, methodKeyWords, setMethodKeyWords )
-lazyAccessor(NSArray, parameterNames, setParameterNames, computeParameterNames)
+lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 
 -init
 {

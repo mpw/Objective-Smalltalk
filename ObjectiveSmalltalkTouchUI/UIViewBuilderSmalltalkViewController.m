@@ -51,7 +51,7 @@
     return self;
 }
 
-lazyAccessor( MPWByteStream, consoleStream, setConsoleStream, createConsoleStream)
+lazyAccessor( MPWByteStream*, consoleStream, setConsoleStream, createConsoleStream)
 
 -(MPWByteStream*)createConsoleStream
 {

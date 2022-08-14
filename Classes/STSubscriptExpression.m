@@ -19,8 +19,8 @@
     MPWMessageExpression *setter;
 }
 
-lazyAccessor(MPWMessageExpression, getter, setGetter, computeGetter)
-lazyAccessor(MPWMessageExpression, setter, setSetter, computeSetter)
+lazyAccessor(MPWMessageExpression*, getter, setGetter, computeGetter)
+lazyAccessor(MPWMessageExpression*, setter, setSetter, computeSetter)
 
 -(MPWMessageExpression*)computeGetter
 {
