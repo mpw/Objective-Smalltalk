@@ -43,8 +43,8 @@
 
 
 
-objectAccessor( NSFileHandle, processStdin, setProcessStdin )
-objectAccessor( NSFileHandle, processStdout, setProcessStdout )
+objectAccessor(NSFileHandle*, processStdin, setProcessStdin )
+objectAccessor(NSFileHandle*, processStdout, setProcessStdout )
 idAccessor(  shellProcess, setShellProcess )
 boolAccessor( isTarget, setIsTarget )
 boolAccessor( doLines, setDoLines )

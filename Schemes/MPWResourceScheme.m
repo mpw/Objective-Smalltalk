@@ -11,7 +11,7 @@
 
 @implementation MPWResourceScheme
 
-objectAccessor( MPWScheme, underlyingScheme, setUnderlyingScheme )
+objectAccessor(MPWScheme*, underlyingScheme, setUnderlyingScheme )
 
 
 

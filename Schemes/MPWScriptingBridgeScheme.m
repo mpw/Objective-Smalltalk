@@ -18,7 +18,7 @@
 
 @implementation MPWScriptingBridgeScheme
 
-objectAccessor( NSMutableDictionary, bridges, setBridges )
+objectAccessor(NSMutableDictionary*, bridges, setBridges )
 
 -init
 {

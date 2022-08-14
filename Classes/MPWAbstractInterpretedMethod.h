@@ -16,7 +16,7 @@
 	id					methodType;
 }
 
-objectAccessor_h( MPWMethodHeader, methodHeader, setMethodHeader )
+objectAccessor_h(MPWMethodHeader*, methodHeader, setMethodHeader )
 idAccessor_h( context, setContext )
 idAccessor_h( methodType, setMethodType )
 

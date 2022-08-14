@@ -12,7 +12,7 @@
 
 @implementation MPWDocumentScheme
 
-objectAccessor(NSMutableSet, _referencedDocuments, setReferencedDocuments)
+objectAccessor(NSMutableSet*, _referencedDocuments, setReferencedDocuments)
 idAccessor(currentDocument, setCurrentDocument)
 
 -(void)clearRefs

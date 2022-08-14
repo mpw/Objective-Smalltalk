@@ -15,8 +15,8 @@
     NSString *objcType;
 }
 
-objectAccessor_h(NSString, symbol, setSymbol)
-objectAccessor_h(NSString, name, setName)
-objectAccessor_h(NSString, objcType, setObjcType)
+objectAccessor_h(NSString*, symbol, setSymbol)
+objectAccessor_h(NSString*, name, setName)
+objectAccessor_h(NSString*, objcType, setObjcType)
 
 @end

@@ -13,7 +13,7 @@
 
 @implementation MPWIdentifierExpression
 
-objectAccessor( MPWIdentifier, identifier, setIdentifier )
+objectAccessor(MPWIdentifier*, identifier, setIdentifier )
 idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 
 -scheme

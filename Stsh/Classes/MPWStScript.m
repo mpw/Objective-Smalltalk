@@ -41,7 +41,7 @@
 idAccessor( data, setData )
 idAccessor( methodHeader , setMethodHeader )
 idAccessor( script, setScript )
-objectAccessor( NSString, filename, setFilename )
+objectAccessor(NSString*, filename, setFilename )
 
 +scriptWithContentsOfFile:(NSString*)filename
 {

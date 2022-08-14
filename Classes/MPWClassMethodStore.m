@@ -15,8 +15,8 @@
 
 @implementation MPWClassMethodStore
 
-objectAccessor( MPWClassMirror, classMirror, setClassMirror )
-objectAccessor( NSMutableDictionary, methodCallbacks, setMethodCallbacks )
+objectAccessor(MPWClassMirror*, classMirror, setClassMirror )
+objectAccessor(NSMutableDictionary*, methodCallbacks, setMethodCallbacks )
 scalarAccessor( STCompiler *, compiler, setCompiler)
 
 -(Class)theClass

@@ -13,7 +13,7 @@
 
 @implementation MPWStName
 
-objectAccessor(NSString, realString, setRealString)
+objectAccessor(NSString*, realString, setRealString)
 
 -initWithString:(NSString*)newString
 {

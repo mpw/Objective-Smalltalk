@@ -20,8 +20,8 @@
 @implementation MPWMethodStore
 
 
-objectAccessor(NSMutableDictionary, classes, setClasses)
-objectAccessor(NSMutableDictionary, metaClasses, setMetaClasses)
+objectAccessor(NSMutableDictionary*, classes, setClasses)
+objectAccessor(NSMutableDictionary*, metaClasses, setMetaClasses)
 idAccessor( typeDict, setTypeDict )
 scalarAccessor( id , compiler , setCompiler )
 

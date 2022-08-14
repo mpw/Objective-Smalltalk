@@ -11,8 +11,8 @@
 
 @implementation MPWMethodType
 
-objectAccessor( NSString, typeName, setTypeName )
-objectAccessor( NSString, methodClassName, setMethodClassName )
+objectAccessor(NSString*, typeName, setTypeName )
+objectAccessor(NSString*, methodClassName, setMethodClassName )
 
 -initWithName:(NSString*)name className:(NSString*)className
 {

@@ -17,7 +17,7 @@
 	NSMutableArray		*methodKeyWords;
 }
 
-objectAccessor_h( NSString , methodName, setMethodName )
+objectAccessor_h(NSString*, methodName, setMethodName )
 
 +methodHeaderWithString:(NSString*)aString;
 -initWithString:(NSString*)aString;

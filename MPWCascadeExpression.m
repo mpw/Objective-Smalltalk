@@ -10,7 +10,7 @@
 
 @implementation MPWCascadeExpression
 
-objectAccessor(NSMutableArray, messageExpressions, setMessageExpressions)
+objectAccessor(NSMutableArray*, messageExpressions, setMessageExpressions)
 
 
 -(instancetype)init

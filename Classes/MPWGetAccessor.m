@@ -13,7 +13,7 @@
 
 @implementation MPWGetAccessor
 
-objectAccessor( MPWInstanceVariable, ivarDef, _setIvarDef )
+objectAccessor(MPWInstanceVariable*, ivarDef, _setIvarDef )
 
 
 -declarationString

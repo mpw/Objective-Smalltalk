@@ -16,7 +16,7 @@ scalarAccessor_h( SEL, selector, setSelector )
 scalarAccessor_h( const char*, argtypes, setArgtypes )
 scalarAccessor_h( char , returnType, setReturnType )
 
-objectAccessor_h( NSArray, args, setArgs )
+objectAccessor_h(NSArray*, args, setArgs )
 -initWithReceiver:newReceiver;
 
 -(NSString*)messageName;

@@ -15,10 +15,10 @@
 {
     NSArray *parameterNames;
 }
-objectAccessor( NSString , methodName, setMethodName )
-objectAccessor( STTypeDescriptor , returnType, setReturnType )
-objectAccessor(NSMutableArray , parameterVars, setParameterVars )
-objectAccessor(NSMutableArray , methodKeyWords, setMethodKeyWords )
+objectAccessor(NSString*, methodName, setMethodName )
+objectAccessor(STTypeDescriptor*, returnType, setReturnType )
+objectAccessor(NSMutableArray*, parameterVars, setParameterVars )
+objectAccessor(NSMutableArray*, methodKeyWords, setMethodKeyWords )
 lazyAccessor(NSArray, parameterNames, setParameterNames, computeParameterNames)
 
 -init

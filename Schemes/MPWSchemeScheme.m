@@ -14,7 +14,7 @@
 
 @implementation MPWSchemeScheme
 
-objectAccessor( NSMutableDictionary, _schemes, setSchemes )
+objectAccessor(NSMutableDictionary*, _schemes, setSchemes )
 
 -(NSDictionary*)schemes { return [self _schemes]; }
 

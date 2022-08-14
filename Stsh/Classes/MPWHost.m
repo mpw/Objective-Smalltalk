@@ -19,7 +19,7 @@
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *user;
-objectAccessor_h(SSHConnection, connection, setConnection)
+objectAccessor_h(SSHConnection*, connection, setConnection)
 idAccessor_h( commandStore, setCommandStore)
 @end
 

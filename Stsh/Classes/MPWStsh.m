@@ -47,7 +47,7 @@
 boolAccessor( readingFile, _setReadingFile )
 boolAccessor( echo, setEcho )
 idAccessor( _evaluator, _setEvaluator )
-objectAccessor(NSString, prompt, _setPrompt)
+objectAccessor(NSString*, prompt, _setPrompt)
 intAccessor(completionLimit, setCompletionLimit)
 
 

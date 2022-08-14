@@ -13,10 +13,10 @@
 
 @implementation STMessagePortDescriptor
 
-objectAccessor(MPWPropertyBinding, target, setTarget)
+objectAccessor(MPWPropertyBinding*, target, setTarget)
 boolAccessor(sendsMessages, setSendsMessages)
 boolAccessor(isSettable, setIsSettable)
-objectAccessor(Protocol, messageProtocol, setMessageProtocol)
+objectAccessor(Protocol*, messageProtocol, setMessageProtocol)
 
 -initWithTarget:aTarget key:aKey protocol:aProtocol sends:(BOOL)sends
 {

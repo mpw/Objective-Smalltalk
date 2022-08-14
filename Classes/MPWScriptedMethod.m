@@ -23,8 +23,8 @@
 @implementation MPWScriptedMethod
 
 
-objectAccessor( MPWExpression, methodBody, setMethodBody )
-objectAccessor( NSArray, localVars, setLocalVars )
+objectAccessor(MPWExpression*, methodBody, setMethodBody )
+objectAccessor(NSArray*, localVars, setLocalVars )
 idAccessor( script, _setScript )
 //idAccessor( _contextClass, setContextClass )
 

@@ -31,7 +31,7 @@
 
 idAccessor( receiver, setReceiver )
 scalarAccessor( SEL, selector, setSelector )
-objectAccessor( NSArray, args, setArgs )
+objectAccessor(NSArray*, args, setArgs )
 scalarAccessor( const char*, _argtypes, setArgtypes )
 scalarAccessor( char , returnType, setReturnType )
 

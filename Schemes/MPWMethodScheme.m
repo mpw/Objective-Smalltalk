@@ -15,8 +15,8 @@
 @implementation MPWMethodScheme
 
 
-objectAccessor( STCompiler , interpreter, setInterpreter )
-objectAccessor(NSMutableArray, exceptions, setExceptions)
+objectAccessor(STCompiler*, interpreter, setInterpreter )
+objectAccessor(NSMutableArray*, exceptions, setExceptions)
 
 -initWithInterpreter:anInterpreter
 {

@@ -16,7 +16,7 @@
 
 @implementation MPWBundleScheme
 
-objectAccessor( NSBundle, bundle ,setBundle )
+objectAccessor(NSBundle*, bundle ,setBundle )
 
 +schemeWithBundle:(NSBundle*)aBundle
 {

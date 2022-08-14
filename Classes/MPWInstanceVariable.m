@@ -48,7 +48,7 @@ longAccessor( offset, setOffset )
         case 'l':
         case 'b':
         case 'B':
-            *(int*)ptr = [newValue integerValue];
+            *(int*)ptr = (int)[newValue integerValue];
             break;
 
     }

@@ -11,9 +11,9 @@
 @implementation MPWMethodDescriptor
 
 
-objectAccessor(NSString, symbol, setSymbol)
-objectAccessor(NSString, name, setName)
-objectAccessor(NSString, objcType, setObjcType)
+objectAccessor(NSString*, symbol, setSymbol)
+objectAccessor(NSString*, name, setName)
+objectAccessor(NSString*, objcType, setObjcType)
 
 -(void)dealloc
 {

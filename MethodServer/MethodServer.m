@@ -14,10 +14,10 @@
 
 @implementation MethodServer
 
-objectAccessor(STCompiler, interpreter, setInterpreter)
-objectAccessor(NSString, methodDictName, setMethodDictName)
-objectAccessor(NSString, projectDir, setProjectDir)
-objectAccessor(NSString, uniqueID, setUniqueID)
+objectAccessor(STCompiler*, interpreter, setInterpreter)
+objectAccessor(NSString*, methodDictName, setMethodDictName)
+objectAccessor(NSString*, projectDir, setProjectDir)
+objectAccessor(NSString*, uniqueID, setUniqueID)
 
 - (id)initWithMethodDictName:(NSString*)newName
 {

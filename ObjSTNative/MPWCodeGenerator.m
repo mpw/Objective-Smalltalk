@@ -52,8 +52,8 @@
 
 @implementation MPWCodeGenerator
 
-objectAccessor(MPWLLVMAssemblyGenerator, assemblyGenerator, setAssemblyGenerator )
-objectAccessor(NSMutableDictionary, stringMap, setStringMap )
+objectAccessor(MPWLLVMAssemblyGenerator*, assemblyGenerator, setAssemblyGenerator )
+objectAccessor(NSMutableDictionary*, stringMap, setStringMap )
 
 +(instancetype)codegen
 {

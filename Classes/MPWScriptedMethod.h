@@ -17,8 +17,8 @@
 	id					contextClass;
 }
 
-objectAccessor_h( MPWExpression, methodBody, setMethodBody )
-objectAccessor_h( NSArray, localVars, setLocalVars )
+objectAccessor_h(MPWExpression*, methodBody, setMethodBody )
+objectAccessor_h(NSArray*, localVars, setLocalVars )
 idAccessor_h( script, setScript )
 
 @property (nonatomic,assign) Class classOfMethod;
@@ -30,7 +30,7 @@ idAccessor_h( script, setScript )
 
 -(NSMutableArray*)scriptStackTrace;
 
-objectAccessor_h( NSMutableArray, combinedStackTrace, setCombinedStackTrace)
+objectAccessor_h(NSMutableArray*, combinedStackTrace, setCombinedStackTrace)
 //-(NSMutableArray*)combinedStackTrace;
 //-(void)setCombined
 -(void)addCombinedFrame:(NSString*)frame frameToReplace:original previousTrace:previousTrace;

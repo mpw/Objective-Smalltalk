@@ -13,6 +13,6 @@
 	MPWIdentifier *nextIdentifier;
 }
 
-objectAccessor_h( MPWIdentifier, nextIdentifier, setNextIdentifier )
+objectAccessor_h(MPWIdentifier*, nextIdentifier, setNextIdentifier )
 
 @end

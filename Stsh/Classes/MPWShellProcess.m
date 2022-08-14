@@ -41,9 +41,9 @@ boolAccessor( doLines , setDoLines )
 	return fullPath;
 }
 
-objectAccessor( NSString, name, setName )
-objectAccessor( NSMutableArray, arguments, setArguments )
-objectAccessor( NSTask, task, setTask )
+objectAccessor(NSString*, name, setName )
+objectAccessor(NSMutableArray*, arguments, setArguments )
+objectAccessor(NSTask*, task, setTask )
 
 +processWithName:(NSString*)aName
 {

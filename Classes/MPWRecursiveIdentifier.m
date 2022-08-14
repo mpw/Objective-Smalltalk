@@ -11,7 +11,7 @@
 
 @implementation MPWRecursiveIdentifier
 
-objectAccessor( MPWIdentifier, nextIdentifier, setNextIdentifier )
+objectAccessor(MPWIdentifier*, nextIdentifier, setNextIdentifier )
 
 -resolveRescursiveIdentifierWithContext:aContext
 {

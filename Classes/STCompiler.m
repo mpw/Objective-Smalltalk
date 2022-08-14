@@ -75,9 +75,9 @@
 @implementation STCompiler
 
 
-objectAccessor( NSMutableDictionary, symbolTable, setSymbolTable)
-objectAccessor( MPWStScanner, scanner, setScanner )
-objectAccessor( MPWMethodStore, methodStore, setMethodStore )
+objectAccessor(NSMutableDictionary*, symbolTable, setSymbolTable)
+objectAccessor(MPWStScanner*, scanner, setScanner )
+objectAccessor(MPWMethodStore*, methodStore, setMethodStore )
 idAccessor( connectorMap, setConnectorMap );
 idAccessor(solver, setSolver)
 

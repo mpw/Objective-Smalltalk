@@ -10,9 +10,9 @@
 
 @implementation MPWLLVMAssemblyGenerator
 
-objectAccessor(NSMutableDictionary, selectorReferences, setSelectorReferences)
+objectAccessor(NSMutableDictionary*, selectorReferences, setSelectorReferences)
 
-objectAccessor(NSString, nsnumberclassref, setNSnumberclassref)
+objectAccessor(NSString*, nsnumberclassref, setNSnumberclassref)
 
 -(id)initWithTarget:(id)aTarget
 {
