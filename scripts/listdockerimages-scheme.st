@@ -9,7 +9,7 @@ scheme Docker {
       self.
    }
    -schemeNames {
-      #[ 'source' ].
+      [ 'source' ].
    }
    /image/:id/name { |= {
 	dict := source:/images/{id}/json.
