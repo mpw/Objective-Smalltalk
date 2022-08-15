@@ -9,16 +9,13 @@ scheme Docker {
       self.
    }
    /images { |= {
-	this:source at:'images/json'.
+	this:source at:'/images/json'.
     }
    }
 }.
 
-base := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore.
-
+#base := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore.
+base := ref:file:/var/run/docker.sock asUnixSocketStore.
 scheme:docker := Docker alloc initWithBase:base.
-scheme:ds := base.
-a := ds:images/json.
-stdout println: a.
-
-stdout println:a class.
+stdout println: scheme:docker source.
+docker:images.
