@@ -75,6 +75,7 @@ idAccessor( script, _setScript )
     [evaluator setContextClass:self.classOfMethod];
 //    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
+    [newSchemes setSchemeHandler:newSchemes forSchemeName:@"scheme"];
     MPWVarScheme *newVarScheme=[MPWVarScheme store];
     [newVarScheme setContext:evaluator];
     [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"var"];
@@ -120,20 +121,25 @@ idAccessor( script, _setScript )
 -evaluateOnObject:target parameters:(NSArray*)parameters
 {
 	id returnVal=nil;
+    id compiledMethod = [self compiledScript];
 	MPWEvaluator* executionContext = [self executionContext];
+//    NSLog(@"compiledExecutionContext: %@ schemes: %@",[self compiledInExecutionContext],[[self compiledInExecutionContext] schemes]);
     [executionContext bindValue:self toVariableNamed:@"self"];
     [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
     if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
+//        NSLog(@"for %@, getting schemeNames: %@",[[self methodHeader] methodName],[target schemeNames]);
         for ( NSString *schemeName in [target schemeNames]) {
+//            NSLog(@"install: %@",schemeName);
             id <MPWStorage> store=[target valueForKey:schemeName];
+//            NSLog(@"install scheme: %@ in executionContext %p schemes: %p",store,executionContext,[executionContext schemes]);
             if ( store ) {
                 [[executionContext schemes] setSchemeHandler:store forSchemeName:schemeName];
             }
         }
     }
+//    NSLog(@"context %p/%@ schemes: %@",executionContext,[executionContext class],[executionContext schemes]);
 //    NSLog(@"evalute scripted method %@",[self header]);
 //    NSLog(@"methodBody %@",[self methodBody]);
-	id compiledMethod = [self compiledScript];
 //	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
     @autoreleasepool {
 

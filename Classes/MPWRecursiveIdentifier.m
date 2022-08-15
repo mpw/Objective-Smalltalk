@@ -25,6 +25,12 @@ objectAccessor(MPWIdentifier*, nextIdentifier, setNextIdentifier )
     return self.nextIdentifier.path;
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: schemeName: %@ identifierName: %@ nextIdentifier: %@>",
+            [self class],self,[self schemeName],[self identifierName],[self nextIdentifier]];
+}
+
 
 -(void)dealloc
 {

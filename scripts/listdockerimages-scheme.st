@@ -8,20 +8,19 @@ scheme Docker {
       this:source := (MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore).
       self.
    }
+   -schemeNames {
+      #[ 'source' ].
+   }
    /image/:id/name { |= {
-	dict := this:source at:"/images/{id}/json".
+	dict := source:/images/{id}/json.
 	name := dict at:'RepoTags' | firstObject.
 	name isNotNil ifTrue:{ name.} ifFalse:{ ''. }.
     }
    }
-   /imagesRaw { |= {
-	this:source at:'/images/json'.
-    }
-   }
    /images { |= {
-	json := this:source at:'/images/json'.
-	ids := json collect at:'Id'.
-	ids collect: { :id |
+	json := source:/images/json.
+	json collect: { :dict |
+	   id := dict['Id'].
 	   self:image/{id}/name.
 	}.
     }

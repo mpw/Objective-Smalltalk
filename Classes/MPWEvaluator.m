@@ -65,7 +65,14 @@
 
 @implementation MPWEvaluator
 
-idAccessor( _schemes, setSchemes )
+idAccessor( _schemes, _setSchemes )
+
+
+-(void)setSchemes:(id)schemes
+{
+//    NSLog(@"%p/%@ setSchemes:%p (old %p)",self,[self class],schemes,_schemes);
+    [self _setSchemes:schemes];
+}
 
 -(MPWSchemeScheme*)createSchemes
 {
@@ -135,6 +142,7 @@ idAccessor( localVars, setLocalVars )
 
 -evaluate:expr
 {
+//    NSLog(@"%@ evaluateIn: %p/%@ scheme scheme: %p",expr,self,[self class],[self schemes]);
     return [expr evaluateIn:self];
 }
 
