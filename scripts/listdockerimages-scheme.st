@@ -11,7 +11,7 @@ scheme Docker {
    /image/:id/name { |= {
 	dict := this:source at:"/images/{id}/json".
 	name := dict at:'RepoTags' | firstObject.
-	name.
+	name isNotNil ifTrue:{ name.} ifFalse:{ ''. }.
     }
    }
    /images { |= {
@@ -24,7 +24,7 @@ base := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore
 #base := ref:file:/var/run/docker.sock asUnixSocketStore.
 scheme:docker := Docker alloc initWithBase:base.
 imgJson := docker:images.
-stdout println:imgJson.
+#stdout println:imgJson.
 ids := imgJson collect at:'Id'.
 stdout println:ids.
 names := ids collect:{ :theId |
