@@ -1,6 +1,7 @@
 #!env st
 #-<void>ls
 
+
 scheme Docker {
    var source.
    -initWithBase:newbase {
@@ -13,8 +14,16 @@ scheme Docker {
 	name isNotNil ifTrue:{ name.} ifFalse:{ ''. }.
     }
    }
-   /images { |= {
+   /imagesRaw { |= {
 	this:source at:'/images/json'.
+    }
+   }
+   /images { |= {
+	json := this:source at:'/images/json'.
+	ids := json collect at:'Id'.
+	ids collect: { :id |
+	   self:image/{id}/name.
+	}.
     }
    }
 }.
@@ -22,11 +31,4 @@ scheme Docker {
 base := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore.
 #base := ref:file:/var/run/docker.sock asUnixSocketStore.
 scheme:docker := Docker alloc initWithBase:base.
-imgJson := docker:images.
-ids := imgJson collect at:'Id'.
-names := ids collect:{ :theId |
-	aName := docker:image/{theId}/name.
-	aName.
-}.
-names := names select:{ $0 length > 0. }.
-stdout do println:names each.
+stdout do println: docker:images each.
