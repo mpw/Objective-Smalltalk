@@ -4,8 +4,8 @@
 
 scheme Docker {
    var source.
-   -initWithBase:newbase {
-      this:source := newbase.
+   -init {
+      this:source := (MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore).
       self.
    }
    /image/:id/name { |= {
@@ -28,7 +28,5 @@ scheme Docker {
    }
 }.
 
-base := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore.
-#base := ref:file:/var/run/docker.sock asUnixSocketStore.
-scheme:docker := Docker alloc initWithBase:base.
+scheme:docker := Docker new.
 stdout do println: docker:images each.
