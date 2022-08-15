@@ -1,7 +1,6 @@
 #!env st
-#-ls
+#-<void>ls
 
-stdout println:'top'.
 scheme Docker {
    var source.
    -initWithBase:newbase {
@@ -24,12 +23,10 @@ base := MPWJSONConverterStore -> ref:file:/var/run/docker.sock asUnixSocketStore
 #base := ref:file:/var/run/docker.sock asUnixSocketStore.
 scheme:docker := Docker alloc initWithBase:base.
 imgJson := docker:images.
-#stdout println:imgJson.
 ids := imgJson collect at:'Id'.
-stdout println:ids.
 names := ids collect:{ :theId |
 	aName := docker:image/{theId}/name.
-	stdout println:aName.
 	aName.
 }.
-stdout println:names.
+names := names select:{ $0 length > 0. }.
+stdout do println:names each.
