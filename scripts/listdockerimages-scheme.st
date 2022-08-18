@@ -1,7 +1,6 @@
 #!env st
 #-<void>ls
 
-
 scheme Docker {
    var source.
    -init {
@@ -12,9 +11,12 @@ scheme Docker {
       [ 'source' ].
    }
    /image/:id/name { |= {
-	dict := source:/images/{id}/json.
-	name := dict at:'RepoTags' | firstObject.
-	name isNotNil ifTrue:{ name.} ifFalse:{ ''. }.
+	dict:= self:image/{id}/json.
+	dict['RepoTags'] firstObject.
+    }
+   }
+   /image/:id { |= {
+	source:/images/{id}/json.
     }
    }
    /images { |= {
@@ -29,3 +31,4 @@ scheme Docker {
 
 scheme:docker := Docker new.
 stdout do println: docker:images each.
+shell runInteractiveLoop.
