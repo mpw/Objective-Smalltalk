@@ -1,18 +1,25 @@
 #!env stui
 
 class Delegate {
-  var items.
-  -<int>numberOfRowsInTableView:aTableView {  items count. }
-  -<double>tableView:aTableView heightOfRow:<int>row {  20. }
+   var items.
+   -<int>numberOfRowsInTableView:aTableView { 
+	 this:items count.
+   }
+   -tableView:t objectValueForTableColumn:c row:<int>row {
+	this:items at:row.
+   }
+   -<double>tableView:aTableView heightOfRow:<int>row {  20.0. }
   -tableView:aTableView viewForTableColumn:c row:<int>row {
-     NSTextField labelWithString: items[row].
+     NSTextField labelWithString:'hi'.
   }
+
+
 }.
 
 delegate ← Delegate new.
 delegate setItems: #[ 'First', 'Second' ].
 
-tableview ← #NSTableView{  #frame:(10@45 extent:380@550), #delegate: delegate }.
+tableview ← #NSTableView{  #frame:(10@45 extent:380@550), #dataSource: delegate }.
 column ← #NSTableColumn{ #width: 200  }
 tableview addTableColumn: column.
 sv ← #NSScrollView{ #frame:(10@45 extent:380@550), #documentView: tableview  }.
