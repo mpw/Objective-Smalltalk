@@ -6,22 +6,26 @@ class Delegate {
 	 this:items count.
    }
    -tableView:t objectValueForTableColumn:c row:<int>row {
-	this:items at:row.
+	this:items at:row | at:c identifier.
    }
    -<double>tableView:aTableView heightOfRow:<int>row {  20.0. }
-  -tableView:aTableView viewForTableColumn:c row:<int>row {
+  -_disabled_tableView:aTableView viewForTableColumn:c row:<int>row {
      NSTextField labelWithString:'hi'.
   }
 
 
 }.
 
-delegate ← Delegate new.
-delegate setItems: #[ 'First', 'Second' ].
+items := #[ #{ #first: 'Marcel', #last: 'Weiher' }, #{ #first: 'Peter', #last: 'Alexander' }].
+delegate ← #Delegate{ #items: items }.
+
 
 tableview ← #NSTableView{  #frame:(10@45 extent:380@550), #dataSource: delegate }.
-column ← #NSTableColumn{ #width: 200  }
-tableview addTableColumn: column.
+columns := items firstObject allKeys collect: { :key | 
+	 #NSTableColumn{ #width: 150, #identifier: key }.
+}.
+stdout println: columns.
+tableview do addTableColumn: columns each.
 sv ← #NSScrollView{ #frame:(10@45 extent:380@550), #documentView: tableview  }.
 window ← #NSWindow{ #frame:(300@700 extent:400@605),#title:'table', #views:#[sv]}.
 app runFromCLI:window.
