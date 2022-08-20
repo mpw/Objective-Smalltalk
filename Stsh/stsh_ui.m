@@ -45,9 +45,6 @@ int main (int argc, const char *argv[])
 
 -(void)evaluateReturnValue:value
 {
-    if ( [value isKindOfClass:[NSView class]]) {
-        value = [value openInWindow:@"CLI"];
-    }
     [self.app runFromCLI:value];
 }
 
