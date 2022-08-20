@@ -196,7 +196,7 @@ objectAccessor(NSString*, filename, setFilename )
 	}
 	if ( [self hasDeclaredReturn] ) {
 //        NSLog(@"declared return: %@",[executionContext retval]);
-		[[[MPWByteStream Stdout] do] println:[[executionContext retval] each]];
+        [executionContext evaluateReturnValue:[executionContext retval]];
 //		[executionContext setRetval:nil];
 //    } else {
 //        NSLog(@"no declared return");

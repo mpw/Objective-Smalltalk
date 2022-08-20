@@ -1,5 +1,5 @@
 #!env stui
-
+#-table
 class Delegate {
    var items.
    -<int>numberOfRowsInTableView:aTableView { 
@@ -19,13 +19,9 @@ class Delegate {
 items := #[ #{ #first: 'Marcel', #last: 'Weiher' }, #{ #first: 'Peter', #last: 'Alexander' }].
 delegate ← #Delegate{ #items: items }.
 
-
-tableview ← #NSTableView{  #frame:(10@45 extent:380@550), #dataSource: delegate }.
+tableview ← #NSTableView{  #dataSource: delegate }.
 columns := items firstObject allKeys collect: { :key | 
 	 #NSTableColumn{ #width: 150, #identifier: key }.
 }.
-stdout println: columns.
 tableview do addTableColumn: columns each.
-sv ← #NSScrollView{ #frame:(10@45 extent:380@550), #documentView: tableview  }.
-window ← #NSWindow{ #frame:(300@700 extent:400@605),#title:'table', #views:#[sv]}.
-app runFromCLI:window.
+tableview inScrollView: (200@400 extent: 500@600).

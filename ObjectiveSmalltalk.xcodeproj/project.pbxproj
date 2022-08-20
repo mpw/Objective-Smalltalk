@@ -85,6 +85,7 @@
 		1F321C6E2133F063001BE6CC /* MPWPropertyPathSetter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F321C6B2133F063001BE6CC /* MPWPropertyPathSetter.h */; };
 		1F321C6F2133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F321C6C2133F063001BE6CC /* MPWPropertyPathSetter.m */; };
 		1F321C702133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F321C6C2133F063001BE6CC /* MPWPropertyPathSetter.m */; };
+		1F34669C28B0CFC1003257CB /* stsh_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F34669B28B0CFC1003257CB /* stsh_ui.m */; };
 		1F35095B262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */; };
 		1F35095C262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */; };
 		1F35095D262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */; };
@@ -307,7 +308,6 @@
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
-		1F854E6928A11B7B0085034C /* stsh_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC19184BDC6400086047 /* stsh_main.m */; };
 		1F854E6B28A11B7B0085034C /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1F854E6C28A11B7B0085034C /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F854E6D28A11B7B0085034C /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
@@ -870,6 +870,7 @@
 		1F321C66213334F3001BE6CC /* MPWPropertyPathGetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathGetter.m; sourceTree = "<group>"; };
 		1F321C6B2133F063001BE6CC /* MPWPropertyPathSetter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWPropertyPathSetter.h; sourceTree = "<group>"; };
 		1F321C6C2133F063001BE6CC /* MPWPropertyPathSetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathSetter.m; sourceTree = "<group>"; };
+		1F34669B28B0CFC1003257CB /* stsh_ui.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = stsh_ui.m; path = Stsh/stsh_ui.m; sourceTree = SOURCE_ROOT; };
 		1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSimpleDataflowConstraint.h; sourceTree = "<group>"; };
 		1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSimpleDataflowConstraint.m; sourceTree = "<group>"; };
 		1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralArrayExpression.h; sourceTree = "<group>"; };
@@ -1903,6 +1904,7 @@
 				1FBAAC19184BDC6400086047 /* stsh_main.m */,
 				1FBAAC1D184BDC6400086047 /* stsh.1 */,
 				1FBAAC1B184BDC6400086047 /* Supporting Files */,
+				1F34669B28B0CFC1003257CB /* stsh_ui.m */,
 			);
 			name = stsh;
 			path = ../stsh;
@@ -3598,7 +3600,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F854E6928A11B7B0085034C /* stsh_main.m in Sources */,
+				1F34669C28B0CFC1003257CB /* stsh_ui.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
