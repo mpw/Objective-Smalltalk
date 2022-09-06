@@ -60,6 +60,12 @@
     [self appendWord32:0x8b010000];
 }
 
+-(void)generateSub
+{
+    // hard coded:  X0 = X0 - X1
+    [self appendWord32:0xcb010000];
+}
+
 
 @end
 
@@ -95,7 +101,21 @@ typedef long (*IMPINTINT)(long, long);
     EXPECTTRUE(true, @"before call")
     long result=addfn(3,4);
     EXPECTTRUE(true, @"got here");
-    INTEXPECT(result,7,@"3+4");    
+    INTEXPECT(result,7,@"3+4");
+}
+
++(void)testGenerateSub
+{
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [g generateSub];
+    [g generateReturn];
+    NSData *code=[g generatedCode];
+    INTEXPECT(code.length,8,@"length of generated code");
+    IMPINTINT addfn=(IMPINTINT)[code bytes];
+    EXPECTTRUE(true, @"before call")
+    long result=addfn(40,2);
+    EXPECTTRUE(true, @"got here");
+    INTEXPECT(result,38,@"40-2");
 }
 
 
@@ -105,6 +125,7 @@ typedef long (*IMPINTINT)(long, long);
    return @[
        @"testGenerateReturn",
        @"testGenerateAdd",
+       @"testGenerateSub",
 			];
 }
 
