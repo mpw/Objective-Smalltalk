@@ -50,13 +50,16 @@
 -(void)generateReturn
 {
     // x10x 0110 x10x xxxx xxxx xxnn nnnx xxxx  -  ret Rn
+    // 1101 0110 0101 1111 0000 0011 1100 0000  -  ret Rn
     [self appendWord32:0xd65f03c0];
 }
 
--(void)makeExecutable
+-(void)generateAdd
 {
-
+    // hard coded:  X0 = X0 + X1
+    [self appendWord32:0x8b010000];
 }
+
 
 @end
 
@@ -73,9 +76,26 @@
     NSData *code=[g generatedCode];
     INTEXPECT(code.length,4,@"length of generated code");
     IMP fn=(IMP)[code bytes];
-    EXPECTTRUE(true, @"before call")
+    EXPECTTRUE(true, @"before call");
     fn();
-    EXPECTTRUE(true, @"got here")
+    EXPECTTRUE(true, @"got here");
+}
+
+typedef long (*IMPINTINT)(long, long);
+
+
++(void)testGenerateAdd
+{
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [g generateAdd];
+    [g generateReturn];
+    NSData *code=[g generatedCode];
+    INTEXPECT(code.length,8,@"length of generated code");
+    IMPINTINT addfn=(IMPINTINT)[code bytes];
+    EXPECTTRUE(true, @"before call")
+    long result=addfn(3,4);
+    EXPECTTRUE(true, @"got here");
+    INTEXPECT(result,7,@"3+4");    
 }
 
 
@@ -83,7 +103,8 @@
 +(NSArray*)testSelectors
 {
    return @[
-			@"testGenerateReturn",
+       @"testGenerateReturn",
+       @"testGenerateAdd",
 			];
 }
 
