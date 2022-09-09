@@ -134,15 +134,20 @@
     struct segment_command_64 *segment=[reader segment];
     INTEXPECT( segment->nsects, 2, @"number of sections");
     INTEXPECT( segment->cmdsize, sizeof(struct segment_command_64)+2*sizeof(struct section_64),@"correct size");
+    INTEXPECT( segment->fileoff, 392, @"segment offset");
+    INTEXPECT( segment->filesize, 64, @"segment size");
     NSString *segmentName = @(segment->segname);
     IDEXPECT( segmentName, @"", @"segment name");
-    struct section_64 *first_section = ((void*)segment) + sizeof *segment;
-    NSString *sect1Name = @(first_section->sectname);
+    struct section_64 *text_section = ((void*)segment) + sizeof *segment;
+    NSString *sect1Name = @(text_section->sectname);
     IDEXPECT( sect1Name, @"__text", @"section 1 name");
-
-    struct section_64 *second_section = ((void*)first_section) + sizeof *first_section;
-    NSString *sect2Name = @(second_section->sectname);
+    INTEXPECT( text_section->offset, 392,@"text section offset");
+    INTEXPECT( text_section->size, 32,@"text section size");
+    struct section_64 *unwind_section = ((void*)text_section) + sizeof *text_section;
+    NSString *sect2Name = @(unwind_section->sectname);
     IDEXPECT( sect2Name, @"__compact_unwind__LD", @"section 2 name");
+    INTEXPECT( unwind_section->offset, 424,@"unwind section offset");
+    INTEXPECT( unwind_section->size, 32,@"unwind section size");
 }
 
 
