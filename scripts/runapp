@@ -10,5 +10,5 @@ stdout println:'nib:', loadResult.
 stdout println:app.
 stdout println:app delegate.
 stdout println:app mainMenu.
-stdout println:'About to run the app.  This currently hangs without a visible effect'.
-app runFromCLI:nil.
+stdout println:'About to run the app.  This currently is a bit strange'.
+app runFromCLI: #NSTextField{ }.
