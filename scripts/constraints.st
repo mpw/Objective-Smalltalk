@@ -1,4 +1,4 @@
-#!env stsh
+#!env st
 scheme:l := MPWLoggingStore storeWithSource: MPWDictStore store.
 scheme:default := scheme:l.
 a ← 3. b ← 5.
