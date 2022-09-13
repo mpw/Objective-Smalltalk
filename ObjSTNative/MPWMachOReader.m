@@ -88,7 +88,21 @@
     return nil;
 }
 
-
+-(NSArray<NSString*>*)stringTable
+{
+    NSMutableArray *strings = [NSMutableArray array];
+    struct symtab_command *symtab=[self symtab];
+    char *str = [self.data bytes] + symtab->stroff +1;
+    char *end = str + symtab->strsize;
+    while ( str < end ) {
+        NSString *entry = @(str);
+        if (entry.length) {
+            [strings addObject:@(str)];
+        }
+        str += strlen(str)+1;
+    }
+    return strings;
+}
 
 @end
 
@@ -171,7 +185,7 @@ typedef struct {
     long address;
 } symtab_entry;
 
-+(void)testReadSymtabAndStringTable
++(void)testReadSymtab
 {
     MPWMachOReader *reader=[self readerForAdd];
     struct symtab_command *symtab=[reader symtab];
@@ -184,13 +198,6 @@ typedef struct {
     INTEXPECT( ((symtab->stroff - symtab->symoff)), (sizeof(struct nlist) * 2),@"string table size");
 
     
-    char *str1 = [reader.data bytes] + symtab->stroff +1;
-    IDEXPECT(@(str1), @"_add",@"first string table entry");
-    char *str2=str1 + strlen(str1)+1;
-    IDEXPECT(@(str2), @"ltmp1",@"second string table entry");
-    char *str3=str2 + strlen(str2)+1;
-    IDEXPECT(@(str3), @"ltmp0",@"third string table entry");
-
     
     char *firstbyte = [reader.data bytes] + symtab->symoff;
     symtab_entry *entries = (symtab_entry*)firstbyte;
@@ -202,6 +209,14 @@ typedef struct {
     
 }
 
++(void)testReadStringTable
+{
+    MPWMachOReader *reader=[self readerForAdd];
+    NSArray *strings = [reader stringTable];
+    NSArray *expectedStrings=@[ @"_add",@"ltmp1",@"ltmp0" ];
+    IDEXPECT( strings, expectedStrings, @"string table")
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -209,7 +224,8 @@ typedef struct {
        @"testFiletype",
        @"testLoadCommands",
        @"testReadSegment",
-       @"testReadSymtabAndStringTable",
+       @"testReadSymtab",
+       @"testReadStringTable",
 			];
 }
 
