@@ -7,6 +7,7 @@
 
 #import "MPWMachOReader.h"
 #import <mach-o/loader.h>
+#import <nlist.h>
 
 @interface MPWMachOReader()
 
@@ -67,13 +68,26 @@
     const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
     for (int i=0, max=[self numLoadCommands]; i<max; i++) {
         if ( cur->cmd == LC_SEGMENT_64) {
-            struct segment_command_64 *segment=(struct segment_command_64 *)cur;
-            return segment;
-//            return [self.data subdataWithRange:NSMakeRange( segment->fileoff, segment->filesize)];
+            return (struct segment_command_64 *)cur;
         }
+        cur = ((void*)cur)+cur->cmdsize;
     }
     @throw [NSException exceptionWithName:@"nosegment" reason:@"No segment found" userInfo:nil];
 }
+
+-(struct symtab_command*)symtab
+{
+    const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
+    for (int i=0, max=[self numLoadCommands]; i<max; i++) {
+        if ( cur->cmd == LC_SYMTAB) {
+            return (struct symtab_command *)cur;
+        }
+        cur = ((void*)cur)+cur->cmdsize;
+    }
+    @throw [NSException exceptionWithName:@"nosymtab" reason:@"No symtab found" userInfo:nil];
+    return nil;
+}
+
 
 
 @end
@@ -150,6 +164,43 @@
     INTEXPECT( unwind_section->size, 32,@"unwind section size");
 }
 
+typedef struct {
+    int string_offset;
+    char a,b;
+    short pad;
+    long address;
+} symtab_entry;
+
++(void)testReadSymtabAndStringTable
+{
+    MPWMachOReader *reader=[self readerForAdd];
+    struct symtab_command *symtab=[reader symtab];
+    EXPECTNOTNIL(symtab,@"have a symtab");
+    INTEXPECT(symtab->nsyms,3,@"number of symbols");
+    INTEXPECT(symtab->symoff,464,@"symtab offset");
+    INTEXPECT(symtab->stroff,512,@"string table offset");
+    INTEXPECT(symtab->strsize,24,@"string table size");
+    
+    INTEXPECT( ((symtab->stroff - symtab->symoff)), (sizeof(struct nlist) * 2),@"string table size");
+
+    
+    char *str1 = [reader.data bytes] + symtab->stroff +1;
+    IDEXPECT(@(str1), @"_add",@"first string table entry");
+    char *str2=str1 + strlen(str1)+1;
+    IDEXPECT(@(str2), @"ltmp1",@"second string table entry");
+    char *str3=str2 + strlen(str2)+1;
+    IDEXPECT(@(str3), @"ltmp0",@"third string table entry");
+
+    
+    char *firstbyte = [reader.data bytes] + symtab->symoff;
+    symtab_entry *entries = (symtab_entry*)firstbyte;
+    INTEXPECT( entries[0].string_offset, 12, @"offset into string table of first symtab entry ");
+    INTEXPECT( entries[1].string_offset, 6, @"offset into string table of second symtab entry ");
+    INTEXPECT( entries[2].string_offset, 1, @"offset into string table of third symtab entry ");
+
+    
+    
+}
 
 +(NSArray*)testSelectors
 {
@@ -158,6 +209,7 @@
        @"testFiletype",
        @"testLoadCommands",
        @"testReadSegment",
+       @"testReadSymtabAndStringTable",
 			];
 }
 
