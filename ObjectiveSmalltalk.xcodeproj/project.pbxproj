@@ -655,6 +655,27 @@
 			remoteGlobalIDString = 1FA859F11923731900F52396;
 			remoteInfo = ObjectiveSmalltalkUI;
 		};
+		1F3755DB28CF9088006198CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1FB439B31B5D47E200EF9026;
+			remoteInfo = DrawingContext;
+		};
+		1F3755DD28CF9088006198CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1FB439BD1B5D47E200EF9026;
+			remoteInfo = DrawingContextTests;
+		};
+		1F3755DF28CF9088006198CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F702DEF1B60F082001CD2B5;
+			remoteInfo = DrawingContextiOS;
+		};
 		1F81C07319699AE10066DF43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -883,6 +904,7 @@
 		1F3466F328CB114E003257CB /* add.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = add.macho; sourceTree = "<group>"; };
 		1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSimpleDataflowConstraint.h; sourceTree = "<group>"; };
 		1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSimpleDataflowConstraint.m; sourceTree = "<group>"; };
+		1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawingContext.xcodeproj; path = ../DrawingContext/DrawingContext.xcodeproj; sourceTree = "<group>"; };
 		1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralArrayExpression.h; sourceTree = "<group>"; };
 		1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralArrayExpression.m; sourceTree = "<group>"; };
 		1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralDictionaryExpression.h; sourceTree = "<group>"; };
@@ -1661,6 +1683,16 @@
 			path = TestResources;
 			sourceTree = "<group>";
 		};
+		1F3755D628CF9088006198CF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F3755DC28CF9088006198CF /* DrawingContext.framework */,
+				1F3755DE28CF9088006198CF /* DrawingContextTests.xctest */,
+				1F3755E028CF9088006198CF /* DrawingContext.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1F43484A1E21676F002750C3 /* S3Scheme */ = {
 			isa = PBXGroup;
 			children = (
@@ -2039,6 +2071,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */,
 				1FD236732641BC6C009C5E46 /* raspi */,
 				1F2B17AC2625F23D005D873F /* README.md */,
 				1F9BD1DE2563B8F1006D7476 /* Tests */,
@@ -3080,6 +3113,12 @@
 			mainGroup = F5A74ABB00F0A61B015ADD82 /* MPWTalk */;
 			productRefGroup = F5A74ACE00F0A61B015ADD82 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1F3755D628CF9088006198CF /* Products */;
+					ProjectRef = 1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1F2D95CD2250FCC500D025D8 /* Smalltalk */,
@@ -3105,6 +3144,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1F3755DC28CF9088006198CF /* DrawingContext.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DrawingContext.framework;
+			remoteRef = 1F3755DB28CF9088006198CF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F3755DE28CF9088006198CF /* DrawingContextTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DrawingContextTests.xctest;
+			remoteRef = 1F3755DD28CF9088006198CF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F3755E028CF9088006198CF /* DrawingContext.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DrawingContext.framework;
+			remoteRef = 1F3755DF28CF9088006198CF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1F084A0C16DCE6A200ED2517 /* Resources */ = {
