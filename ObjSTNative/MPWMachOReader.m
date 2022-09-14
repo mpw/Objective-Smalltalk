@@ -111,7 +111,7 @@
 
 typedef struct {
     int string_offset;
-    char a,b;
+    unsigned char type,b;
     short pad;
     long address;
 } symtab_entry;
@@ -135,6 +135,11 @@ typedef struct {
 -(long)symbolOffsetAt:(int)which
 {
     return [self entryAt:which]->address;
+}
+
+-(bool)isSymbolGlobalAt:(int)which
+{
+    return ([self entryAt:which]->type & N_EXT) != 0;
 }
 
 @end
@@ -227,9 +232,9 @@ typedef struct {
     INTEXPECT([reader symbolOffsetAt:1],32,@"ltmp1 symbol offset")
     INTEXPECT([reader symbolOffsetAt:2],0,@"_add symbol offset")
     
-//    INTEXPECT([reader symbolTypeAt:0],0,@"ltmp0 symbol type")
-//    INTEXPECT([reader symbolTypeAt:1],32,@"ltmp1 symbol type")
-//    INTEXPECT([reader symbolTypeAt:2],0,@"_add symbol type")
+    EXPECTFALSE([reader isSymbolGlobalAt:0],@"ltmp0 local")
+    EXPECTFALSE([reader isSymbolGlobalAt:1],@"ltmp1 local")
+    EXPECTTRUE([reader isSymbolGlobalAt:2],@"_add global")
     
     INTEXPECT(symtab->symoff,464,@"symtab offset");
     INTEXPECT(symtab->stroff,512,@"string table offset");
