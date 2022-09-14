@@ -116,21 +116,25 @@ typedef struct {
     long address;
 } symtab_entry;
 
--(NSString*)symbolNameAt:(int)which
+-(symtab_entry*)entryAt:(int)which
 {
     struct symtab_command *symtab=[self symtab];
     char *firstbyte = [self.data bytes] + symtab->symoff;
     symtab_entry *entries = (symtab_entry*)firstbyte;
+    return entries + which;
+}
+
+-(NSString*)symbolNameAt:(int)which
+{
+    struct symtab_command *symtab=[self symtab];
+    symtab_entry *entry=[self entryAt:which];
     char *firststr = [self.data bytes] + symtab->stroff;
-    return @(firststr + entries[which].string_offset);
+    return @(firststr + entry->string_offset);
 }
 
 -(long)symbolOffsetAt:(int)which
 {
-    struct symtab_command *symtab=[self symtab];
-    char *firstbyte = [self.data bytes] + symtab->symoff;
-    symtab_entry *entries = (symtab_entry*)firstbyte;
-    return entries[which].address;
+    return [self entryAt:which]->address;
 }
 
 @end
