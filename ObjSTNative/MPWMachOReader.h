@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWMachOReader : NSObject
 
+-(instancetype)initWithData:(NSData*)machodata;
+-(BOOL)isHeaderValid;
+
 @end
 
 NS_ASSUME_NONNULL_END

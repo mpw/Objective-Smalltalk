@@ -35,21 +35,34 @@
 
 -(BOOL)isHeaderValid
 {
+    
     struct mach_header_64 *header=[self header];
-    return header->magic == MH_MAGIC_64;
+    return (self.data.length >= sizeof *header) &&
+            (header->magic == MH_MAGIC_64);
 }
 
--(uint32_t)filetype
+
+-(int)cputype
+{
+    return [self header]->cputype;
+}
+
+-(int)cpusubtype
+{
+    return [self header]->cpusubtype;
+}
+
+-(int)filetype
 {
     return [self header]->filetype;
 }
 
--(uint32_t)numLoadCommands
+-(int)numLoadCommands
 {
     return [self header]->ncmds;
 }
 
--(uint32_t)sizeOfLoadCommands
+-(int)sizeOfLoadCommands
 {
     return [self header]->sizeofcmds;
 }
@@ -171,6 +184,13 @@ typedef struct {
     INTEXPECT([reader filetype], MH_OBJECT, @"should be an object file");
 }
 
++(void)testCPUType
+{
+    MPWMachOReader *reader=[self readerForAdd];
+    INTEXPECT([reader cputype], CPU_TYPE_ARM64, @"should be ARM");
+    INTEXPECT([reader cpusubtype], 0, @"subytep");
+}
+
 +(void)testLoadCommands
 {
     MPWMachOReader *reader=[self readerForAdd];
@@ -255,6 +275,7 @@ typedef struct {
    return @[
        @"testCanIdentifyHeader",
        @"testFiletype",
+       @"testCPUType",
        @"testLoadCommands",
        @"testReadSegment",
        @"testReadSymtab",
