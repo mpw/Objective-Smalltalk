@@ -104,6 +104,35 @@
     return strings;
 }
 
+-(int)numSymbols
+{
+    return [self symtab]->nsyms;
+}
+
+typedef struct {
+    int string_offset;
+    char a,b;
+    short pad;
+    long address;
+} symtab_entry;
+
+-(NSString*)symbolNameAt:(int)which
+{
+    struct symtab_command *symtab=[self symtab];
+    char *firstbyte = [self.data bytes] + symtab->symoff;
+    symtab_entry *entries = (symtab_entry*)firstbyte;
+    char *firststr = [self.data bytes] + symtab->stroff;
+    return @(firststr + entries[which].string_offset);
+}
+
+-(long)symbolOffsetAt:(int)which
+{
+    struct symtab_command *symtab=[self symtab];
+    char *firstbyte = [self.data bytes] + symtab->symoff;
+    symtab_entry *entries = (symtab_entry*)firstbyte;
+    return entries[which].address;
+}
+
 @end
 
 
@@ -178,35 +207,30 @@
     INTEXPECT( unwind_section->size, 32,@"unwind section size");
 }
 
-typedef struct {
-    int string_offset;
-    char a,b;
-    short pad;
-    long address;
-} symtab_entry;
 
 +(void)testReadSymtab
 {
     MPWMachOReader *reader=[self readerForAdd];
     struct symtab_command *symtab=[reader symtab];
     EXPECTNOTNIL(symtab,@"have a symtab");
-    INTEXPECT(symtab->nsyms,3,@"number of symbols");
+    
+    INTEXPECT([reader numSymbols],3,@"number of symbols");
+    IDEXPECT([reader symbolNameAt:0],@"ltmp0",@"first symbol")
+    IDEXPECT([reader symbolNameAt:1],@"ltmp1",@"2nd symbol")
+    IDEXPECT([reader symbolNameAt:2],@"_add",@"3rd symbol")
+    
+    INTEXPECT([reader symbolOffsetAt:0],0,@"ltmp0 symbol offset")
+    INTEXPECT([reader symbolOffsetAt:1],32,@"ltmp1 symbol offset")
+    INTEXPECT([reader symbolOffsetAt:2],0,@"_add symbol offset")
+    
+//    INTEXPECT([reader symbolTypeAt:0],0,@"ltmp0 symbol type")
+//    INTEXPECT([reader symbolTypeAt:1],32,@"ltmp1 symbol type")
+//    INTEXPECT([reader symbolTypeAt:2],0,@"_add symbol type")
+    
     INTEXPECT(symtab->symoff,464,@"symtab offset");
     INTEXPECT(symtab->stroff,512,@"string table offset");
     INTEXPECT(symtab->strsize,24,@"string table size");
-    
-    INTEXPECT( ((symtab->stroff - symtab->symoff)), (sizeof(struct nlist) * 2),@"string table size");
 
-    
-    
-    char *firstbyte = [reader.data bytes] + symtab->symoff;
-    symtab_entry *entries = (symtab_entry*)firstbyte;
-    INTEXPECT( entries[0].string_offset, 12, @"offset into string table of first symtab entry ");
-    INTEXPECT( entries[1].string_offset, 6, @"offset into string table of second symtab entry ");
-    INTEXPECT( entries[2].string_offset, 1, @"offset into string table of third symtab entry ");
-
-    
-    
 }
 
 +(void)testReadStringTable
