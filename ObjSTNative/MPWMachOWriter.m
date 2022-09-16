@@ -57,7 +57,7 @@
 
 -(int)numSymbols
 {
-    return self.globalSymbols.count;
+    return (int)self.globalSymbols.count;
 }
 
 -(int)symbolTableSize
@@ -69,6 +69,22 @@
 {
     return [self symbolTableOffset] + [self symbolTableSize];
 }
+
+-(int)segmentCommandSize
+{
+    return sizeof(struct segment_command_64) + sizeof(struct section_64);
+}
+
+-(void)writeSegmentLoadCommand
+{
+    struct segment_command_64 segment={};
+    struct section_64 textSection={};
+    segment.cmd = LC_SEGMENT_64;
+    segment.cmdsize = [self segmentCommandSize];
+    [self appendBytes:&segment length:sizeof segment];
+    [self appendBytes:&textSection length:sizeof textSection];
+}
+
 
 -(void)writeSymbolTableLoadCommand
 {
@@ -93,9 +109,17 @@
     if ( !offset ) {
         offset=(int)[self.stringTableWriter length];
         [self.stringTableWriter writeObject:theString];
+        [self.stringTableWriter appendBytes:"" length:1];
         self.stringTableOffsets[theString]=@(offset);
     }
     return offset;
+}
+
+-(void)generateStringTable
+{
+    for (NSString* symbol in self.globalSymbols.allKeys) {
+        [self stringTableOffsetOfString:symbol];
+    }
 }
 
 -(void)writeSymbolTable
@@ -117,6 +141,19 @@
 -(NSData*)data
 {
     return (NSData*)self.target;
+}
+
+-(void)writeFile
+{
+    self.numLoadCommands = 2;
+    self.loadCommandSize = sizeof(struct symtab_command) + [self segmentCommandSize];
+//    self.loadCommandSize += sizeof(struct section_64);
+    [self writeHeader];
+    [self generateStringTable];
+    [self writeSegmentLoadCommand];
+    [self writeSymbolTableLoadCommand];
+    [self writeSymbolTable];
+    [self writeStringTable];
 }
 
 @end
@@ -144,19 +181,14 @@
 {
     MPWMachOWriter *writer = [self stream];
     writer.globalSymbols = @{ @"_add": @(10) };
-    writer.numLoadCommands = 1;
-    writer.loadCommandSize = sizeof(struct symtab_command);
-    [writer writeHeader];
-    [writer writeSymbolTableLoadCommand];
-    [writer writeSymbolTable];
-    [writer writeStringTable];
-    
+    [writer writeFile];
+
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
 
     EXPECTTRUE([reader isHeaderValid],@"valid header");
-    INTEXPECT([reader numLoadCommands],1,@"number of load commands");
+    INTEXPECT([reader numLoadCommands],2,@"number of load commands");
     INTEXPECT([reader numSymbols],1,@"number of symbols");
     NSArray *strings = [reader stringTable];
     EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
@@ -169,7 +201,7 @@
 {
     MPWMachOWriter *writer = [self stream];
     INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"offset");
-    INTEXPECT( [writer stringTableOffsetOfString:@"_sub"],5,@"offset");
+    INTEXPECT( [writer stringTableOffsetOfString:@"_sub"],6,@"offset");
     INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"repeat");
 }
 
