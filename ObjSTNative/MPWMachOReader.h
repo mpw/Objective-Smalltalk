@@ -13,6 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithData:(NSData*)machodata;
 -(BOOL)isHeaderValid;
+-(int)filetype;
+-(int)cputype;
+-(int)numLoadCommands;
+-(NSArray<NSString*>*)stringTable;
+-(int)numSymbols;
 
 @end
 
