@@ -55,14 +55,36 @@
     return self.loadCommandSize + sizeof(struct mach_header_64);
 }
 
+-(int)numSymbols
+{
+    return self.globalSymbols.count;
+}
+
+-(int)symbolTableSize
+{
+    return [self numSymbols] * sizeof(symtab_entry);
+}
+
+-(int)stringTableOffset
+{
+    return [self symbolTableOffset] + [self symbolTableSize];
+}
+
 -(void)writeSymbolTableLoadCommand
 {
     struct symtab_command symtab={};
     symtab.cmd = LC_SYMTAB;
     symtab.cmdsize = sizeof symtab;
-    symtab.nsyms = (int)self.globalSymbols.count;
+    symtab.nsyms = [self numSymbols];
     symtab.symoff = [self symbolTableOffset];
+    symtab.stroff = [self stringTableOffset];
+    symtab.strsize = (int)[self.stringTableWriter length];
     [self appendBytes:&symtab length:sizeof symtab];
+}
+
+-(void)writeStringTable
+{
+    [self writeData:[self.stringTableWriter target]];
 }
 
 -(int)stringTableOffsetOfString:(NSString*)theString
@@ -127,7 +149,7 @@
     [writer writeHeader];
     [writer writeSymbolTableLoadCommand];
     [writer writeSymbolTable];
-
+    [writer writeStringTable];
     
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
@@ -138,8 +160,9 @@
     INTEXPECT([reader numSymbols],1,@"number of symbols");
     NSArray *strings = [reader stringTable];
     EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
-//    INTEXPECT([reader symbolOffsetAt:0],10,@"offset of _add");
-//    IDEXPECT( strings, (@[@"_add"]), @"string table");
+    IDEXPECT([reader symbolNameAt:0],@"_add",@"first symbol _add is global");
+    INTEXPECT([reader symbolOffsetAt:0],10,@"offset of _add");
+    IDEXPECT( strings, (@[@"_add"]), @"string table");
 }
 
 +(void)testCanWriteStringsToStringTable
