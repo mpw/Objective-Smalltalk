@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSArray<NSString*>*)stringTable;
 -(int)numSymbols;
 
+-(NSString*)symbolNameAt:(int)which;
+-(long)symbolOffsetAt:(int)which;
+-(bool)isSymbolGlobalAt:(int)which;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

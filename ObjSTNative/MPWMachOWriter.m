@@ -9,6 +9,8 @@
 
 #import "MPWMachOWriter.h"
 #import <mach-o/loader.h>
+#import <nlist.h>
+#import "SymtabEntry.h"
 
 @interface MPWMachOWriter()
 
@@ -16,6 +18,8 @@
 @property (nonatomic, assign) int cputype;
 @property (nonatomic, assign) int filetype;
 @property (nonatomic, assign) int loadCommandSize;
+@property (nonatomic, strong) NSMutableDictionary *stringTableOffsets;
+@property (nonatomic, strong) MPWByteStream *stringTableWriter;
 
 @end
 
@@ -27,6 +31,9 @@
     self=[super initWithTarget:aTarget];
     self.cputype = CPU_TYPE_ARM64;
     self.filetype = MH_OBJECT;
+    self.stringTableWriter = [MPWByteStream stream];
+    [self.stringTableWriter appendBytes:"" length:1];
+    self.stringTableOffsets=[NSMutableDictionary dictionary];
     return self;
 }
 
@@ -40,16 +47,42 @@
     header.ncmds = self.numLoadCommands;
     header.sizeofcmds = self.loadCommandSize;
     [self appendBytes:&header length:sizeof header];
+
 }
 
--(void)writeSymboltableLoadCommand
+-(int)symbolTableOffset
+{
+    return self.loadCommandSize;
+}
+
+-(void)writeSymbolTableLoadCommand
 {
     struct symtab_command symtab={};
     symtab.cmd = LC_SYMTAB;
     symtab.cmdsize = sizeof symtab;
-    symtab.nsyms = self.globalSymbols.count;
+    symtab.nsyms = (int)self.globalSymbols.count;
+    symtab.symoff = [self symbolTableOffset];
     [self appendBytes:&symtab length:sizeof symtab];
-    
+}
+
+-(int)stringTableOffsetOfString:(NSString*)theString
+{
+    int offset = [self.stringTableOffsets[theString] intValue];
+    if ( !offset ) {
+        offset=[self.stringTableWriter length];
+        [self.stringTableWriter writeObject:theString];
+        self.stringTableOffsets[theString]=@(offset);
+    }
+    return offset;
+}
+
+-(void)writeSymbolTable
+{
+    for (NSString* symbol in self.globalSymbols.allKeys) {
+        symtab_entry entry={};
+        entry.type = N_EXT;
+        
+    }
 }
 
 
@@ -82,26 +115,40 @@
 +(void)testCanWriteGlobalSymboltable
 {
     MPWMachOWriter *writer = [self stream];
-    NSData *macho=[writer data];
     writer.globalSymbols = @{ @"_add": @(10) };
     writer.numLoadCommands = 1;
     writer.loadCommandSize = sizeof(struct symtab_command);
     [writer writeHeader];
-    [writer writeSymboltableLoadCommand];
+    [writer writeSymbolTableLoadCommand];
+    [writer writeSymbolTable];
+
     
+    NSData *macho=[writer data];
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
 
     EXPECTTRUE([reader isHeaderValid],@"valid header");
     INTEXPECT([reader numLoadCommands],1,@"number of load commands");
     INTEXPECT([reader numSymbols],1,@"number of symbols");
+    NSArray *strings = [reader stringTable];
+//    EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
+//    IDEXPECT( strings, (@[@"_add"]), @"string table");
+}
+
++(void)testCanWriteStringsToStringTable
+{
+    MPWMachOWriter *writer = [self stream];
+    INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"offset");
+    INTEXPECT( [writer stringTableOffsetOfString:@"_sub"],5,@"offset");
+    INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"repeat");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
        @"testCanWriteHeader",
+       @"testCanWriteStringsToStringTable",
        @"testCanWriteGlobalSymboltable",
-			];
+		];
 }
 
 @end

@@ -8,6 +8,7 @@
 #import "MPWMachOReader.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
+#import "SymtabEntry.h"
 
 @interface MPWMachOReader()
 
@@ -121,13 +122,6 @@
 {
     return [self symtab]->nsyms;
 }
-
-typedef struct {
-    int string_offset;
-    unsigned char type,b;
-    short pad;
-    long address;
-} symtab_entry;
 
 -(symtab_entry*)entryAt:(int)which
 {
