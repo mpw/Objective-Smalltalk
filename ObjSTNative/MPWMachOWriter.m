@@ -52,7 +52,7 @@
 
 -(int)symbolTableOffset
 {
-    return self.loadCommandSize;
+    return self.loadCommandSize + sizeof(struct mach_header_64);
 }
 
 -(void)writeSymbolTableLoadCommand
@@ -69,7 +69,7 @@
 {
     int offset = [self.stringTableOffsets[theString] intValue];
     if ( !offset ) {
-        offset=[self.stringTableWriter length];
+        offset=(int)[self.stringTableWriter length];
         [self.stringTableWriter writeObject:theString];
         self.stringTableOffsets[theString]=@(offset);
     }
@@ -78,10 +78,16 @@
 
 -(void)writeSymbolTable
 {
-    for (NSString* symbol in self.globalSymbols.allKeys) {
+    NSAssert2(self.length == [self symbolTableOffset], @"Actual symbol table offset %d does not match computed %d", self.length,[self symbolTableOffset]);
+    NSLog(@"offset before writing symbol table:%ld",self.length);
+    NSDictionary *symbols=self.globalSymbols;
+    for (NSString* symbol in symbols.allKeys) {
         symtab_entry entry={};
-        entry.type = N_EXT;
-        
+        entry.type = 0x0f;
+        entry.string_offset=[self stringTableOffsetOfString:symbol];
+        entry.address = [symbols[symbol] longValue];
+        NSLog(@"offset[%@]=%ld",symbol,entry.address);
+        [self appendBytes:&entry length:sizeof entry];
     }
 }
 
@@ -124,13 +130,15 @@
 
     
     NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
 
     EXPECTTRUE([reader isHeaderValid],@"valid header");
     INTEXPECT([reader numLoadCommands],1,@"number of load commands");
     INTEXPECT([reader numSymbols],1,@"number of symbols");
     NSArray *strings = [reader stringTable];
-//    EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
+    EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
+//    INTEXPECT([reader symbolOffsetAt:0],10,@"offset of _add");
 //    IDEXPECT( strings, (@[@"_add"]), @"string table");
 }
 
