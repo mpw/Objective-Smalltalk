@@ -52,7 +52,7 @@
 
 -(int)symbolTableOffset
 {
-    return self.loadCommandSize + sizeof(struct mach_header_64);
+    return self.loadCommandSize + sizeof(struct mach_header_64) + [self textSectionSize];
 }
 
 -(int)numSymbols
@@ -63,6 +63,11 @@
 -(int)symbolTableSize
 {
     return [self numSymbols] * sizeof(symtab_entry);
+}
+
+-(int)textSectionSize
+{
+    return self.textSection.length;
 }
 
 -(int)stringTableOffset
@@ -98,9 +103,14 @@
     [self appendBytes:&symtab length:sizeof symtab];
 }
 
+-(void)writeTextSection
+{
+     [self writeData:self.textSection];
+}
+
 -(void)writeStringTable
 {
-    [self writeData:[self.stringTableWriter target]];
+    [self writeData:(NSData*)[self.stringTableWriter target]];
 }
 
 -(int)stringTableOffsetOfString:(NSString*)theString
@@ -152,6 +162,7 @@
     [self generateStringTable];
     [self writeSegmentLoadCommand];
     [self writeSymbolTableLoadCommand];
+    [self writeTextSection];
     [self writeSymbolTable];
     [self writeStringTable];
 }
@@ -181,6 +192,8 @@
 {
     MPWMachOWriter *writer = [self stream];
     writer.globalSymbols = @{ @"_add": @(10) };
+    writer.textSection = [@"1234" asData];
+    
     [writer writeFile];
 
     NSData *macho=[writer data];
