@@ -91,6 +91,15 @@
     struct section_64 textSection={};
     segment.cmd = LC_SEGMENT_64;
     segment.cmdsize = [self segmentCommandSize];
+    segment.nsects = 1;
+    segment.fileoff=[self textSectionOffset];
+    segment.filesize=[self textSectionSize];
+    
+    strcpy( textSection.sectname, "__text");
+    strcpy( textSection.segname, "__TEXT");
+    textSection.offset = [self textSectionOffset];
+    textSection.size = [self textSectionSize];
+    
     [self appendBytes:&segment length:sizeof segment];
     [self appendBytes:&textSection length:sizeof textSection];
 }
@@ -198,7 +207,8 @@
 {
     MPWMachOWriter *writer = [self stream];
     writer.globalSymbols = @{ @"_add": @(10) };
-    writer.textSection = [self frameworkResource:@"add" category:@"aarch64"];
+    NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
+    writer.textSection = machineCode;
     INTEXPECT(writer.textSection.length,8,@"bytes in text section");
  
     [writer writeFile];
@@ -217,6 +227,7 @@
     IDEXPECT( strings.lastObject, @"_add", @"last string in string table");
     INTEXPECT( strings.count, 1, @"number of strings");
     IDEXPECT( strings, (@[@"_add"]), @"string table");
+    IDEXPECT( [reader textSection],machineCode, @"machine code from text section");
 }
 
 +(void)testCanWriteStringsToStringTable
