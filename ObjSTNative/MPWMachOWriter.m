@@ -50,9 +50,14 @@
 
 }
 
+-(int)textSectionOffset
+{
+    return self.loadCommandSize + sizeof(struct mach_header_64);
+}
+
 -(int)symbolTableOffset
 {
-    return self.loadCommandSize + sizeof(struct mach_header_64) + [self textSectionSize];
+    return [self textSectionOffset] + [self textSectionSize];
 }
 
 -(int)numSymbols
@@ -67,7 +72,7 @@
 
 -(int)textSectionSize
 {
-    return self.textSection.length;
+    return (int)self.textSection.length;
 }
 
 -(int)stringTableOffset
@@ -105,6 +110,7 @@
 
 -(void)writeTextSection
 {
+    NSAssert2(self.length == [self textSectionOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
      [self writeData:self.textSection];
 }
 
@@ -134,7 +140,7 @@
 
 -(void)writeSymbolTable
 {
-    NSAssert2(self.length == [self symbolTableOffset], @"Actual symbol table offset %d does not match computed %d", self.length,[self symbolTableOffset]);
+    NSAssert2(self.length == [self symbolTableOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
     NSLog(@"offset before writing symbol table:%ld",self.length);
     NSDictionary *symbols=self.globalSymbols;
     for (NSString* symbol in symbols.allKeys) {
@@ -192,8 +198,9 @@
 {
     MPWMachOWriter *writer = [self stream];
     writer.globalSymbols = @{ @"_add": @(10) };
-    writer.textSection = [@"1234" asData];
-    
+    writer.textSection = [self frameworkResource:@"add" category:@"aarch64"];
+    INTEXPECT(writer.textSection.length,8,@"bytes in text section");
+ 
     [writer writeFile];
 
     NSData *macho=[writer data];
@@ -207,6 +214,8 @@
     EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
     IDEXPECT([reader symbolNameAt:0],@"_add",@"first symbol _add is global");
     INTEXPECT([reader symbolOffsetAt:0],10,@"offset of _add");
+    IDEXPECT( strings.lastObject, @"_add", @"last string in string table");
+    INTEXPECT( strings.count, 1, @"number of strings");
     IDEXPECT( strings, (@[@"_add"]), @"string table");
 }
 

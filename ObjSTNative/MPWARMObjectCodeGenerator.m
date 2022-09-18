@@ -12,10 +12,6 @@
 
 @implementation MPWARMObjectCodeGenerator
 
--defaultTarget
-{
-        
-}
 
 
 -(NSData*)generatedCode

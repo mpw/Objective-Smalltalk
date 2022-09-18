@@ -89,6 +89,18 @@
     @throw [NSException exceptionWithName:@"nosegment" reason:@"No segment found" userInfo:nil];
 }
 
+-(NSData*)textSection
+{
+    struct segment_command_64 *segment=[self segment];
+    struct section_64 *sections=(struct section_64*)(segment + 1);
+    for (int i=0; i < segment->nsects;i++) {
+        if ( !strncmp(sections[i].sectname, "__text", 6) ) {
+            return [self.data subdataWithRange:NSMakeRange(sections[i].offset,sections[i].size)];
+        }
+    }
+    return nil;
+}
+
 -(struct symtab_command*)symtab
 {
     const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
@@ -106,8 +118,8 @@
 {
     NSMutableArray *strings = [NSMutableArray array];
     struct symtab_command *symtab=[self symtab];
-    char *str = [self.data bytes] + symtab->stroff +1;
-    char *end = str + symtab->strsize;
+    const char *str = [self.data bytes] + symtab->stroff +1;
+    const char *end = str + symtab->strsize;
     while ( str < end ) {
         NSString *entry = @(str);
         if (entry.length) {
@@ -123,10 +135,11 @@
     return [self symtab]->nsyms;
 }
 
+
 -(symtab_entry*)entryAt:(int)which
 {
     struct symtab_command *symtab=[self symtab];
-    char *firstbyte = [self.data bytes] + symtab->symoff;
+    const char *firstbyte = [self.data bytes] + symtab->symoff;
     symtab_entry *entries = (symtab_entry*)firstbyte;
     return entries + which;
 }
@@ -228,6 +241,13 @@
     IDEXPECT( sect2Name, @"__compact_unwind__LD", @"section 2 name");
     INTEXPECT( unwind_section->offset, 424,@"unwind section offset");
     INTEXPECT( unwind_section->size, 32,@"unwind section size");
+    NSData *textSection=[reader textSection];
+    INTEXPECT(textSection.length,32,@"length of text section");
+    const unsigned char *machineCode=[textSection bytes];
+    const unsigned char expectedMachineCode[]={ 0xff, 0x43,0x00,0xd1, 0xe0, 0x0f, 0x00,0xb9 };
+    for (int i=0; i<sizeof expectedMachineCode;i++ ) {
+        INTEXPECT(machineCode[i],expectedMachineCode[i],@"machine code");
+    }
 }
 
 

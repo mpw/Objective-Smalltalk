@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)symbolNameAt:(int)which;
 -(long)symbolOffsetAt:(int)which;
 -(bool)isSymbolGlobalAt:(int)which;
-
+-(NSData*)textSection;
 
 @end
 
