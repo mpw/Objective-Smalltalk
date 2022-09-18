@@ -94,7 +94,7 @@
     segment.nsects = 1;
     segment.fileoff=[self textSectionOffset];
     segment.filesize=[self textSectionSize];
-    
+    segment.vmsize = 8;
     strcpy( textSection.sectname, "__text");
     strcpy( textSection.segname, "__TEXT");
     textSection.offset = [self textSectionOffset];
@@ -155,6 +155,7 @@
     for (NSString* symbol in symbols.allKeys) {
         symtab_entry entry={};
         entry.type = 0x0f;
+        entry.section = 1;
         entry.string_offset=[self stringTableOffsetOfString:symbol];
         entry.address = [symbols[symbol] longValue];
         NSLog(@"offset[%@]=%ld",symbol,entry.address);
@@ -210,13 +211,13 @@
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     writer.textSection = machineCode;
     INTEXPECT(writer.textSection.length,8,@"bytes in text section");
- 
+    
     [writer writeFile];
-
+    
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
-
+    
     EXPECTTRUE([reader isHeaderValid],@"valid header");
     INTEXPECT([reader numLoadCommands],2,@"number of load commands");
     INTEXPECT([reader numSymbols],1,@"number of symbols");
@@ -238,12 +239,25 @@
     INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"repeat");
 }
 
++(void)testWriteLinkableAddFunction
+{
+    MPWMachOWriter *writer = [self stream];
+    writer.globalSymbols = @{ @"_add": @(0) };
+    NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
+    writer.textSection = machineCode;
+    [writer writeFile];
+    NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/add.o" atomically:YES];
+    
+}
+
 +(NSArray*)testSelectors
 {
    return @[
        @"testCanWriteHeader",
        @"testCanWriteStringsToStringTable",
        @"testCanWriteGlobalSymboltable",
+       @"testWriteLinkableAddFunction",
 		];
 }
 

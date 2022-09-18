@@ -10,7 +10,7 @@
 
 typedef struct {
     int string_offset;
-    unsigned char type,b;
+    unsigned char type,section;
     short pad;
     long address;
 } symtab_entry;
