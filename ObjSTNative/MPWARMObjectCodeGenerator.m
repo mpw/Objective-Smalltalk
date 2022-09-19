@@ -36,7 +36,7 @@
 
 -(IMP)code
 {
-    return [[self target] bytes];
+    return [(NSData*)[self target] bytes];
 }
 
 -(void)appendWord32:(unsigned int)word

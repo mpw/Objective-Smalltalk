@@ -95,11 +95,14 @@
     segment.fileoff=[self textSectionOffset];
     segment.filesize=[self textSectionSize];
     segment.vmsize = 8;
+    segment.initprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
+    segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
+
     strcpy( textSection.sectname, "__text");
     strcpy( textSection.segname, "__TEXT");
     textSection.offset = [self textSectionOffset];
     textSection.size = [self textSectionSize];
-    
+    textSection.flags = S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS;
     [self appendBytes:&segment length:sizeof segment];
     [self appendBytes:&textSection length:sizeof textSection];
 }

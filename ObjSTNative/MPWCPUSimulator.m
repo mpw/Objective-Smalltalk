@@ -39,7 +39,7 @@ typedef enum  {
         unsigned int a = (instruction >> 26) & 31;
         unsigned int b = (instruction >> 20) & 31;
         unsigned int c = instruction & 65535;
-        int cvalue=c;
+        long cvalue=c;
         if ( opcode < ADDI ) {
             if ( c >= 0 && c <= PC) {
                 cvalue=R[c];
