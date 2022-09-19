@@ -150,15 +150,13 @@
 -(void)writeSymbolTable
 {
     NSAssert2(self.length == [self symbolTableOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
-    NSLog(@"offset before writing symbol table:%ld",self.length);
     NSDictionary *symbols=self.globalSymbols;
     for (NSString* symbol in symbols.allKeys) {
         symtab_entry entry={};
         entry.type = 0x0f;
-        entry.section = 1;
+        entry.section = 1;      // TEXT section
         entry.string_offset=[self stringTableOffsetOfString:symbol];
         entry.address = [symbols[symbol] longValue];
-        NSLog(@"offset[%@]=%ld",symbol,entry.address);
         [self appendBytes:&entry length:sizeof entry];
     }
 }

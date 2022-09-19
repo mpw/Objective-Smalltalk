@@ -120,7 +120,7 @@
     struct symtab_command *symtab=[self symtab];
     const char *str = [self.data bytes] + symtab->stroff +1;
     const char *end = str + symtab->strsize;
-    while ( str < end ) {
+    while ( str < end - 1 ) {
         NSString *entry = @(str);
         if (entry.length) {
             [strings addObject:@(str)];
@@ -148,7 +148,7 @@
 {
     struct symtab_command *symtab=[self symtab];
     symtab_entry *entry=[self entryAt:which];
-    char *firststr = [self.data bytes] + symtab->stroff;
+    const char *firststr = [self.data bytes] + symtab->stroff;
     return @(firststr + entry->string_offset);
 }
 
