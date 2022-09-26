@@ -63,6 +63,16 @@
     [self generateOp:0x8b dest:destReg source1:source1Reg source2:source2Reg];
 }
 
+-(void)generateAddDest:(int)destReg source:(int)sourceReg immediate:(int)immediateValue
+{
+    unsigned int base = 0x91000000;
+    base |= destReg & 31;
+    base |= (sourceReg & 31) << 5;
+    base |= (immediateValue & 4095) << 10;
+    [self appendWord32:base];
+//    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
+}
+
 -(void)generateSubDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg
 {
     [self generateOp:0xcb dest:destReg source1:source1Reg source2:source2Reg];
@@ -75,7 +85,27 @@
 
 -(void)loadRegister:(int)destReg fromAdressInRegister:(int)sourceReg1
 {
-    [self appendWord32:0xf9400000];
+    unsigned int baseword=0xf9400000;
+    baseword |= destReg & 31;
+    baseword |= (sourceReg1 & 31) << 5;
+    [self appendWord32:baseword];
+}
+
+-(void)loadRegister:(int)destReg fromAddress:(void*)addressp
+{
+    long address = (long)addressp;
+    long pc = (long)[(NSData*)[self target] bytes] + [self length];
+    long pcpage = pc >> 12;
+    long addresspage = address >> 12;
+    long pagediff = addresspage - pcpage;
+    int page_offset = address & 4095;
+    int hibits = (int)(pagediff >> 2);
+    int lobits = pagediff & 3;
+    unsigned int adrp_base = 0x90000000;
+    unsigned int adrp = adrp_base | (destReg & 31) | (hibits << 5 ) | (lobits << 29);
+    [self appendWord32:adrp];
+    [self generateAddDest:destReg source:destReg immediate:page_offset];
+    [self loadRegister:destReg fromAdressInRegister:destReg];
 }
 
 
@@ -89,6 +119,8 @@
 
 typedef long (*IMPINTINT)(long, long);
 typedef long (*IMPPTR)(long*);
+typedef long (*IMPPTRPTR)(long*,long*);
+typedef long (*VOIDPTR)(void);
 
 +(NSData*)codeFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
 {
@@ -102,7 +134,6 @@ typedef long (*IMPPTR)(long*);
 {
     NSData *d=[self codeFor:block];
     return (IMPINTINT)[d bytes];
-
 }
 
 +(void)testGenerateReturn
@@ -125,6 +156,16 @@ typedef long (*IMPPTR)(long*);
     INTEXPECT(code.length,8,@"length of generated code");
     IMPINTINT addfn=(IMPINTINT)[code bytes];
     long result=addfn(3,4);
+    INTEXPECT(result,7,@"3+4");
+}
+
++(void)testGenerateImmediateAdd
+{
+    NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateAddDest:0 source:0 immediate:4];
+    }];
+    IMPINTINT addfn=(IMPINTINT)[code bytes];
+    long result=addfn(3,0);
     INTEXPECT(result,7,@"3+4");
 }
 
@@ -165,18 +206,51 @@ typedef long (*IMPPTR)(long*);
     INTEXPECT(result,numberToLoad,@"should have loaded the number");
 }
 
++(void)testGenerateSubtractPointedAtLongs
+{
+    IMPPTRPTR subptrfn = (IMPPTRPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen loadRegister:1 fromAdressInRegister:1];
+        [gen loadRegister:0 fromAdressInRegister:0];
+        [gen generateSubDest:0 source1:0 source2:1];
+    }];
+    long firstNumber = 45;
+    long secondNumber = 3;
+    long result = subptrfn(&firstNumber,&secondNumber);
+    INTEXPECT(result,42,@"45-3");
+}
 
++(void)testAddImmediate
+{
+    
+}
+
++(void)testGenerateCodeWithEmbeddedPointer
+{
+    long myData[2]={};
+    long *dataptr = myData;
+    VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen loadRegister:0 fromAddress:dataptr];
+        
+    }];
+    INTEXPECT(loadFromPtr(),0,@"0");
+    myData[0]=20;
+    INTEXPECT(loadFromPtr(),20,@"20");
+    myData[0]=42;
+    INTEXPECT(loadFromPtr(),42,@"42");
+}
 
 +(NSArray*)testSelectors
 {
    return @[
        @"testGenerateReturn",
        @"testGenerateAdd",
+       @"testGenerateImmediateAdd",
        @"testGenerateSub",
        @"testGenerateMul",
        @"testGenerateSubReverseOrder",
        @"testGenerateDereferencePointerPassedIn",
-//       @"testGenerateSubtractPointedAtLongs",
+       @"testGenerateSubtractPointedAtLongs",
+       @"testGenerateCodeWithEmbeddedPointer",
 			];
 }
 

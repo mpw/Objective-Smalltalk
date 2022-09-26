@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWJittableData : NSObject
 
 -(instancetype)initWithCapacity:(long)initialCapacity;
--(unsigned const char*)bytes;
--(unsigned char*)mutableBytes;
+-(const void*)bytes;
+-(void*)mutableBytes;
 -(void)appendBytes:(const void*)newBytes length:(long)newLength;
 -(long)length;
 -(long)capacity;

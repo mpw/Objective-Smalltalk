@@ -31,12 +31,12 @@
     return self;
 }
 
--(unsigned const char*)bytes
+-(const void*)bytes
 {
     return bytes;
 }
 
--(unsigned char*)mutableBytes
+-(void*)mutableBytes
 {
     return bytes;
 }
@@ -54,13 +54,17 @@
 -(void)makeExecutable
 {
     int retcode = mprotect(bytes, capacity, PROT_READ|PROT_EXEC);
-    NSLog(@"return of mprotect to make executable: %d errno: %d",retcode,errno);
+    if (retcode != 0) {
+        NSLog(@"return of mprotect to make executable: %d errno: %d",retcode,errno);
+    }
 }
 
 -(void)makeWritable
 {
     int retcode = mprotect(bytes, capacity, PROT_READ|PROT_WRITE);
-    NSLog(@"return of mprotect to make writable: %d errno: %d",retcode,errno);
+    if (retcode != 0) {
+        NSLog(@"return of mprotect to make writable: %d errno: %d",retcode,errno);
+    }
 }
 
 -(long)length
