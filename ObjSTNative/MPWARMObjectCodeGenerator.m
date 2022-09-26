@@ -9,34 +9,19 @@
 //  
 
 #import "MPWARMObjectCodeGenerator.h"
+#import "MPWJittableData.h"
 
 @implementation MPWARMObjectCodeGenerator
 
-
++(id)defaultTarget
+{
+    return [[[MPWJittableData alloc] initWithCapacity:16384] autorelease];
+}
 
 -(NSData*)generatedCode
 {
-    long targetLen=16384;
-    NSData *written=[self target];
-    char *executableBytes=mmap(NULL, 16384, PROT_WRITE|PROT_READ, MAP_ANON|MAP_PRIVATE, 0, 0);
-    if (  executableBytes != MAP_FAILED && written ) {
-        NSLog(@"executableBytes: %p",executableBytes);
-        long length = written.length;
-        long toCopy = MIN(length,targetLen);
-        NSLog(@"length=%ld, source=%p target=%p",toCopy,written.bytes,executableBytes);
-        memcpy(executableBytes, written.bytes, MIN(length,targetLen));
-        int retcode = mprotect(executableBytes, targetLen, PROT_READ|PROT_EXEC);
-        NSLog(@"return of mprotect: %d errno: %d",retcode,errno);
-        return [[NSData dataWithBytesNoCopy:executableBytes length:toCopy] retain];
-    } else {
-        NSLog(@"mmap failed: %s",strerror(errno));
-        return nil;
-    }
-}
-
--(IMP)code
-{
-    return [(NSData*)[self target] bytes];
+    [(MPWJittableData*)[self target] makeExecutable];
+    return (NSData*)[self target];
 }
 
 -(void)appendWord32:(unsigned int)word
@@ -51,6 +36,7 @@
     [self appendWord32:0xd65f03c0];
 }
 
+
 -(void)generateOp:(int)opcode op2:(int)op2 dest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg
 {
     unsigned int instr = opcode << 24;
@@ -59,6 +45,11 @@
     instr |= (source1Reg & 31) << 5;
     instr |= (source2Reg & 31) << 16;
     [self appendWord32:instr];
+}
+
+-(long)currentOffset
+{
+    return [self length];
 }
 
 -(void)generateOp:(int)opcode dest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg
@@ -80,6 +71,7 @@
 {
     [self generateOp:0x9b op2:0x7c dest:destReg source1:source1Reg source2:source2Reg];
 }
+
 
 
 @end

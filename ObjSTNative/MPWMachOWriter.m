@@ -10,6 +10,8 @@
 #import "MPWMachOWriter.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
+#import <mach-o/reloc.h>
+
 #import "SymtabEntry.h"
 
 @interface MPWMachOWriter()
@@ -55,9 +57,25 @@
     return self.loadCommandSize + sizeof(struct mach_header_64);
 }
 
--(int)symbolTableOffset
+-(int)relocationEntriessOffset
 {
     return [self textSectionOffset] + [self textSectionSize];
+}
+
+-(int)numRelocationEntries
+{
+    return 0;
+}
+
+-(int)relocationEntriesSize
+{
+    return [self numRelocationEntries] * sizeof(struct relocation_info);
+}
+
+
+-(int)symbolTableOffset
+{
+    return [self relocationEntriessOffset] + [self relocationEntriesSize];
 }
 
 -(int)numSymbols
@@ -84,6 +102,7 @@
 {
     return sizeof(struct segment_command_64) + sizeof(struct section_64);
 }
+
 
 -(void)writeSegmentLoadCommand
 {

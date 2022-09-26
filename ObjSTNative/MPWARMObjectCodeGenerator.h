@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWARMObjectCodeGenerator : MPWByteStream
 
+@property (nonatomic, strong)  NSDictionary *symbolOffsets;
+
 @end
 
 NS_ASSUME_NONNULL_END

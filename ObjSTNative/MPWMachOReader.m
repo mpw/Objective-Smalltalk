@@ -8,6 +8,7 @@
 #import "MPWMachOReader.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
+#import <mach-o/reloc.h>
 #import "SymtabEntry.h"
 
 @interface MPWMachOReader()
@@ -77,41 +78,53 @@
     return *cur;
 }
 
--(struct segment_command_64*)segment
+-(const struct load_command*)loadCommandOfType:(int)commandType
 {
     const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
     for (int i=0, max=[self numLoadCommands]; i<max; i++) {
-        if ( cur->cmd == LC_SEGMENT_64) {
-            return (struct segment_command_64 *)cur;
+        if ( cur->cmd == commandType) {
+            return cur;
         }
         cur = ((void*)cur)+cur->cmdsize;
     }
-    @throw [NSException exceptionWithName:@"nosegment" reason:@"No segment found" userInfo:nil];
+    @throw [NSException exceptionWithName:@"noloadcommand" reason:@"Load Command not found" userInfo:nil];
+    return nil;
 }
 
--(NSData*)textSection
+-(struct segment_command_64*)segment
+{
+    return (struct segment_command_64*)[self loadCommandOfType:LC_SEGMENT_64];
+}
+
+-(struct section_64*)textSectionHeader
 {
     struct segment_command_64 *segment=[self segment];
     struct section_64 *sections=(struct section_64*)(segment + 1);
     for (int i=0; i < segment->nsects;i++) {
         if ( !strncmp(sections[i].sectname, "__text", 6) ) {
-            return [self.data subdataWithRange:NSMakeRange(sections[i].offset,sections[i].size)];
+            return sections+i;
         }
+    }
+    return nil;
+}
+
+-(NSData*)textSection
+{
+    struct section_64 *textSection=[self textSectionHeader];
+    if (textSection) {
+        return [self.data subdataWithRange:NSMakeRange(textSection->offset,textSection->size)];
     }
     return nil;
 }
 
 -(struct symtab_command*)symtab
 {
-    const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
-    for (int i=0, max=[self numLoadCommands]; i<max; i++) {
-        if ( cur->cmd == LC_SYMTAB) {
-            return (struct symtab_command *)cur;
-        }
-        cur = ((void*)cur)+cur->cmdsize;
-    }
-    @throw [NSException exceptionWithName:@"nosymtab" reason:@"No symtab found" userInfo:nil];
-    return nil;
+    return (struct symtab_command*)[self loadCommandOfType:LC_SYMTAB];
+}
+
+-(struct dysymtab_command*)dsymtab
+{
+    return (struct dysymtab_command*)[self loadCommandOfType:LC_DYSYMTAB];
 }
 
 -(NSArray<NSString*>*)stringTable
@@ -162,6 +175,29 @@
     return ([self entryAt:which]->type & N_EXT) != 0;
 }
 
+-(bool)isSymbolUndefined:(int)which
+{
+    symtab_entry *entry = [self entryAt:which];
+    
+    return (entry->section) == 0 && (entry->type & N_EXT);
+}
+
+-(int)numRelocEntries
+{
+    return [self textSectionHeader]->nreloc;
+}
+
+-(int)relocEntryOffset
+{
+    return [self textSectionHeader]->reloff;
+}
+
+-(struct relocation_info)relocEntryAt:(int)i
+{
+    const struct relocation_info *reloc=[self.data bytes] + [self relocEntryOffset];
+    return reloc[i];
+}
+
 @end
 
 
@@ -169,11 +205,21 @@
 
 @implementation MPWMachOReader(testing) 
 
-+(instancetype)readerForAdd
++(instancetype)readerForTestfile:(NSString*)name
 {
-    NSData *addmacho=[self frameworkResource:@"add" category:@"macho"];
+    NSData *addmacho=[self frameworkResource:name category:@"macho"];
     MPWMachOReader *reader=[[[self alloc] initWithData:addmacho] autorelease];
     return reader;
+}
+
++(instancetype)readerForAdd
+{
+    return [self readerForTestfile:@"add"];
+}
+
++(instancetype)readerForExternalFunction
+{
+    return [self readerForTestfile:@"call-external-fn"];
 }
 
 +(void)testCanIdentifyHeader
@@ -284,6 +330,27 @@
     IDEXPECT( strings, expectedStrings, @"string table")
 }
 
++(void)testReadMachOWithExternalSymbols
+{
+    MPWMachOReader *reader=[self readerForExternalFunction];
+    INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
+    IDEXPECT( [reader symbolNameAt:2],@"_fn",@"defined function");
+    EXPECTFALSE( [reader isSymbolUndefined:2],@"_add should not be undefined");
+    IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
+    EXPECTTRUE( [reader isSymbolUndefined:3],@"_other should be undefined");
+    INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
+    INTEXPECT([reader numRelocEntries],1,@"number of undefined symbol reloc entries");
+    INTEXPECT([reader relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
+    struct relocation_info reloc=[reader relocEntryAt:0];
+    
+    INTEXPECT(reloc.r_symbolnum,3,@"symbol number" );
+    IDEXPECT([reader symbolNameAt:reloc.r_symbolnum],@"_other",@"external symbol");
+    INTEXPECT(reloc.r_address,8,@"address");
+    INTEXPECT(reloc.r_extern,1,@"extern");
+}
+
+
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -294,6 +361,7 @@
        @"testReadSegment",
        @"testReadSymtab",
        @"testReadStringTable",
+       @"testReadMachOWithExternalSymbols",
 			];
 }
 
