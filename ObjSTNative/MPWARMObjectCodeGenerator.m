@@ -10,6 +10,7 @@
 
 #import "MPWARMObjectCodeGenerator.h"
 #import "MPWJittableData.h"
+#import <objc/message.h>
 
 @implementation MPWARMObjectCodeGenerator
 
@@ -72,6 +73,10 @@
     [self generateOp:0x9b op2:0x7c dest:destReg source1:source1Reg source2:source2Reg];
 }
 
+-(void)loadRegister:(int)destReg fromAdressInRegister:(int)sourceReg1
+{
+    [self appendWord32:0xf9400000];
+}
 
 
 @end
@@ -83,6 +88,7 @@
 @implementation MPWARMObjectCodeGenerator(testing) 
 
 typedef long (*IMPINTINT)(long, long);
+typedef long (*IMPPTR)(long*);
 
 +(NSData*)codeFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
 {
@@ -149,6 +155,16 @@ typedef long (*IMPINTINT)(long, long);
     INTEXPECT(result,37,@"40-3");
 }
 
++(void)testGenerateDereferencePointerPassedIn
+{
+    IMPPTR loadfn = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen loadRegister:0 fromAdressInRegister:0];
+    }];
+    long numberToLoad = 43267;
+    long result = loadfn(&numberToLoad);
+    INTEXPECT(result,numberToLoad,@"should have loaded the number");
+}
+
 
 
 +(NSArray*)testSelectors
@@ -159,6 +175,8 @@ typedef long (*IMPINTINT)(long, long);
        @"testGenerateSub",
        @"testGenerateMul",
        @"testGenerateSubReverseOrder",
+       @"testGenerateDereferencePointerPassedIn",
+//       @"testGenerateSubtractPointedAtLongs",
 			];
 }
 
