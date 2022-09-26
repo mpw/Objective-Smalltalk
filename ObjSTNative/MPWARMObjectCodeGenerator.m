@@ -108,6 +108,35 @@
     [self loadRegister:destReg fromAdressInRegister:destReg];
 }
 
+-(void)generateBranchAndLinkWithRegister:(int)theRegister
+{
+    [self appendWord32:0xd63f0000 | ((theRegister & 31) << 5)];
+}
+
+-(void)generateBranchWithRegister:(int)theRegister
+{
+    [self appendWord32:0xd61f0000 | ((theRegister & 31) << 5)];
+}
+
+-(void)generateSaveLinkRegisterAndFramePtr
+{
+    [self appendWord32:0xa9bd7bfd];     // stp    x29, x30, [sp, #-0x30]!
+}
+
+-(void)generateRestoreLinkRegisterAndFramePtr
+{
+    [self appendWord32:0xa8c37bfd];
+}
+
+-(void)generateCreateReturnAddressProtectionHash
+{
+    [self appendWord32:0xd503237f];
+}
+
+-(void)generateCheckReturnAddressProtectionHash
+{
+    [self appendWord32:0xd50323ff];
+}
 
 @end
 
@@ -239,6 +268,54 @@ typedef long (*VOIDPTR)(void);
     INTEXPECT(loadFromPtr(),42,@"42");
 }
 
+static BOOL iWasCalled=NO;
+static void callme() {
+    iWasCalled=YES;
+}
+
++(void)testGenerateBranchToPointerPassedAsArg
+{
+    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateBranchWithRegister:0];
+        
+    }];
+    iWasCalled=NO;
+    EXPECTFALSE(iWasCalled, @"not called");
+    callPassedFun( (long*)callme  );
+    EXPECTTRUE(iWasCalled, @"called");
+}
+
++(void)testGenerateCallToPointerPassedAsArg
+{
+    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateSaveLinkRegisterAndFramePtr];
+        [gen generateBranchAndLinkWithRegister:0];
+        [gen generateRestoreLinkRegisterAndFramePtr];
+        
+    }];
+    iWasCalled=NO;
+    EXPECTFALSE(iWasCalled, @"not called");
+    callPassedFun( (long*)callme  );
+    EXPECTTRUE(iWasCalled, @"called");
+}
+
+
+
++(void)testCanGenerateReturnAddressProtection
+{
+    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateCreateReturnAddressProtectionHash];
+        [gen generateSaveLinkRegisterAndFramePtr];
+        [gen generateBranchAndLinkWithRegister:0];
+        [gen generateRestoreLinkRegisterAndFramePtr];
+        [gen generateCheckReturnAddressProtectionHash];
+    }];
+    iWasCalled=NO;
+    EXPECTFALSE(iWasCalled, @"not called");
+    callPassedFun( (long*)callme  );
+    EXPECTTRUE(iWasCalled, @"called");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -251,6 +328,9 @@ typedef long (*VOIDPTR)(void);
        @"testGenerateDereferencePointerPassedIn",
        @"testGenerateSubtractPointedAtLongs",
        @"testGenerateCodeWithEmbeddedPointer",
+       @"testGenerateBranchToPointerPassedAsArg",
+       @"testGenerateCallToPointerPassedAsArg",
+       @"testCanGenerateReturnAddressProtection",
 			];
 }
 
