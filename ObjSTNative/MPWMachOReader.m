@@ -9,6 +9,7 @@
 #import <mach-o/loader.h>
 #import <nlist.h>
 #import <mach-o/reloc.h>
+#import <mach-o/arm64/reloc.h>
 #import "SymtabEntry.h"
 
 @interface MPWMachOReader()
@@ -210,6 +211,14 @@
     return reloc.r_address;
 }
 
+-(int)typeOfRelocEntryAt:(int)i
+{
+    struct relocation_info reloc=[self relocEntryAt:0];
+    return reloc.r_type;
+}
+
+
+
 -(bool)isExternalRelocEntryAt:(int)i
 {
     struct relocation_info reloc=[self relocEntryAt:0];
@@ -359,7 +368,7 @@
     INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
     INTEXPECT([reader numRelocEntries],1,@"number of undefined symbol reloc entries");
     INTEXPECT([reader relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
-    
+    INTEXPECT([reader typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
     IDEXPECT([reader nameOfRelocEntryAt:0],@"_other",@"external symbol");
     INTEXPECT([reader offsetOfRelocEntryAt:0],8,@"address");
     EXPECTTRUE([reader isExternalRelocEntryAt:0],@"external");

@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)nameOfRelocEntryAt:(int)i;
 -(long)offsetOfRelocEntryAt:(int)i;
 -(bool)isExternalRelocEntryAt:(int)i;
+-(int)typeOfRelocEntryAt:(int)i;
 
 
 -(NSData*)textSection;

@@ -11,7 +11,7 @@
 #import <mach-o/loader.h>
 #import <nlist.h>
 #import <mach-o/reloc.h>
-
+#import <mach-o/arm64/reloc.h>
 #import "SymtabEntry.h"
 
 @interface MPWMachOWriter()
@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
 @property (nonatomic, strong) NSDictionary *externalSymbols;
-@property (nonatomic, strong) NSDictionary *relocationEntries;
+@property (nonatomic, strong) NSMutableDictionary *relocationEntries;
 
 
 
@@ -60,6 +60,7 @@
         [self.stringTableWriter appendBytes:"" length:1];
         self.stringTableOffsets=[NSMutableDictionary dictionary];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
+        self.relocationEntries=[NSMutableDictionary dictionary];
 
         symtabCapacity = 10;
         [self growSymtab];
@@ -92,7 +93,7 @@
 
 -(int)numRelocationEntries
 {
-    return self.relocationEntries.count;
+    return (int)self.relocationEntries.count;
 }
 
 -(int)relocationEntriesSize
@@ -211,34 +212,41 @@
         r.r_symbolnum = [self.globalSymbolOffsets[key] intValue];
         r.r_address = [relocations[key] intValue];
         r.r_extern = 1;
-        r.r_length=1;
+        r.r_length=2;
         r.r_pcrel=1;
+        r.r_type=ARM64_RELOC_BRANCH26;
         [self appendBytes:&r length:sizeof r];
     }
 }
 
--(void)addGlobalSymbols:(NSDictionary*)symbols
+-(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset
 {
-    for (NSString* symbol in symbols.allKeys) {
-        if ( self.globalSymbolOffsets[symbol] == nil ) {
-            self.globalSymbolOffsets[symbol]=@(symtabCount);
-            symtab_entry entry={};
-            entry.type = 0x0f;
-            entry.section = 1;      // TEXT section
-            entry.string_offset=[self stringTableOffsetOfString:symbol];
-            entry.address = [symbols[symbol] longValue];
-            if ( symtabCount >= symtabCapacity ) {
-                [self growSymtab];
-            }
-            symtab[symtabCount++]=entry;
+    if ( self.globalSymbolOffsets[symbol] == nil ) {
+        self.globalSymbolOffsets[symbol]=@(symtabCount);
+        symtab_entry entry={};
+        entry.type = 0x0f;
+        entry.section = 1;      // TEXT section
+        entry.string_offset=[self stringTableOffsetOfString:symbol];
+        entry.address = offset;
+        if ( symtabCount >= symtabCapacity ) {
+            [self growSymtab];
         }
+        symtab[symtabCount++]=entry;
     }
 }
 
--(void)addRelocationEntries:(NSDictionary*)dict
+
+-(void)addGlobalSymbols:(NSDictionary*)symbols
 {
-    [self addGlobalSymbols:dict];
-    self.relocationEntries=dict;
+    for (NSString* symbol in symbols.allKeys) {
+        [self addGlobalSymbol:symbol atOffset:[symbols[symbol] intValue]];
+    }
+}
+
+-(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
+{
+    [self addGlobalSymbol:symbol atOffset:offset];
+    self.relocationEntries[symbol] = @(offset);
 }
 
 -(void)writeSymbolTable
@@ -333,7 +341,7 @@
 +(void)testWriteLinkableAddFunction
 {
     MPWMachOWriter *writer = [self stream];
-    [writer addGlobalSymbols:@{ @"_add": @(10) }];
+    [writer addGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     writer.textSection = machineCode;
     [writer writeFile];
@@ -345,7 +353,7 @@
 +(void)testWriteFunctionWithRelocationEntries
 {
     MPWMachOWriter *writer = [self stream];
-    [writer addRelocationEntries:@{ @"_other": @(12)}];
+    [writer addRelocationEntryForSymbol:@"_other" atOffset:12];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     writer.textSection = machineCode;
     [writer writeFile];
@@ -357,6 +365,8 @@
     INTEXPECT([reader relocEntryOffset],216,@"offset of undefined symbol reloc entries");
     IDEXPECT( [reader nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [reader offsetOfRelocEntryAt:0],12,@"address");
+    INTEXPECT([reader typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
+
 }
 
 +(NSArray*)testSelectors
