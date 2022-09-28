@@ -198,6 +198,24 @@
     return reloc[i];
 }
 
+-(NSString*)nameOfRelocEntryAt:(int)i
+{
+    struct relocation_info reloc=[self relocEntryAt:0];
+    return [self symbolNameAt:reloc.r_symbolnum];
+}
+
+-(long)offsetOfRelocEntryAt:(int)i
+{
+    struct relocation_info reloc=[self relocEntryAt:0];
+    return reloc.r_address;
+}
+
+-(bool)isExternalRelocEntryAt:(int)i
+{
+    struct relocation_info reloc=[self relocEntryAt:0];
+    return reloc.r_extern != 0;
+}
+
 @end
 
 
@@ -341,12 +359,10 @@
     INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
     INTEXPECT([reader numRelocEntries],1,@"number of undefined symbol reloc entries");
     INTEXPECT([reader relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
-    struct relocation_info reloc=[reader relocEntryAt:0];
     
-    INTEXPECT(reloc.r_symbolnum,3,@"symbol number" );
-    IDEXPECT([reader symbolNameAt:reloc.r_symbolnum],@"_other",@"external symbol");
-    INTEXPECT(reloc.r_address,8,@"address");
-    INTEXPECT(reloc.r_extern,1,@"extern");
+    IDEXPECT([reader nameOfRelocEntryAt:0],@"_other",@"external symbol");
+    INTEXPECT([reader offsetOfRelocEntryAt:0],8,@"address");
+    EXPECTTRUE([reader isExternalRelocEntryAt:0],@"external");
 }
 
 

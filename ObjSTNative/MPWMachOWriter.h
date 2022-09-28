@@ -11,8 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWMachOWriter : MPWByteStream
 
-@property (nonatomic, strong) NSDictionary *globalSymbols;
-@property (nonatomic, strong) NSDictionary *externalSymbols;
 @property (nonatomic, strong) NSData *textSection;
 
 @end
