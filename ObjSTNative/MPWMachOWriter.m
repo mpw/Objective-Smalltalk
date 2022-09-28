@@ -220,17 +220,25 @@
 -(void)addGlobalSymbols:(NSDictionary*)symbols
 {
     for (NSString* symbol in symbols.allKeys) {
-        self.globalSymbolOffsets[symbol]=@(symtabCount);
-        symtab_entry entry={};
-        entry.type = 0x0f;
-        entry.section = 1;      // TEXT section
-        entry.string_offset=[self stringTableOffsetOfString:symbol];
-        entry.address = [symbols[symbol] longValue];
-        if ( symtabCount >= symtabCapacity ) {
-            [self growSymtab];
+        if ( self.globalSymbolOffsets[symbol] == nil ) {
+            self.globalSymbolOffsets[symbol]=@(symtabCount);
+            symtab_entry entry={};
+            entry.type = 0x0f;
+            entry.section = 1;      // TEXT section
+            entry.string_offset=[self stringTableOffsetOfString:symbol];
+            entry.address = [symbols[symbol] longValue];
+            if ( symtabCount >= symtabCapacity ) {
+                [self growSymtab];
+            }
+            symtab[symtabCount++]=entry;
         }
-        symtab[symtabCount++]=entry;
     }
+}
+
+-(void)addRelocationEntries:(NSDictionary*)dict
+{
+    [self addGlobalSymbols:dict];
+    self.relocationEntries=dict;
 }
 
 -(void)writeSymbolTable
@@ -337,7 +345,7 @@
 +(void)testWriteFunctionWithRelocationEntries
 {
     MPWMachOWriter *writer = [self stream];
-    writer.relocationEntries = @{ @"_other": @(12)};
+    [writer addRelocationEntries:@{ @"_other": @(12)}];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     writer.textSection = machineCode;
     [writer writeFile];
@@ -347,7 +355,8 @@
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([reader numRelocEntries],1,@"number of undefined symbol reloc entries");
     INTEXPECT([reader relocEntryOffset],216,@"offset of undefined symbol reloc entries");
-//    IDEXPECT( [reader nameOfRelocEntryAt:0],@"_other",@"name");
+    IDEXPECT( [reader nameOfRelocEntryAt:0],@"_other",@"name");
+    INTEXPECT( [reader offsetOfRelocEntryAt:0],12,@"address");
 }
 
 +(NSArray*)testSelectors
