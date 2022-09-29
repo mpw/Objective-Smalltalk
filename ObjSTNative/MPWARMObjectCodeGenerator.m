@@ -108,6 +108,12 @@
     [self loadRegister:destReg fromAdressInRegister:destReg];
 }
 
+-(void)generateBranchAndLinkWithOffset:(int)offset
+{
+    
+    [self appendWord32:0x94000000 | (offset  >> 2)];
+}
+
 -(void)generateBranchAndLinkWithRegister:(int)theRegister
 {
     [self appendWord32:0xd63f0000 | ((theRegister & 31) << 5)];
@@ -143,6 +149,7 @@
 
 
 #import <MPWFoundation/DebugMacros.h>
+#import "MPWMachOWriter.h"
 
 @implementation MPWARMObjectCodeGenerator(testing) 
 
@@ -300,7 +307,7 @@ static void callme() {
 }
 
 
-
+ 
 +(void)testCanGenerateReturnAddressProtection
 {
     IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
@@ -314,6 +321,22 @@ static void callme() {
     EXPECTFALSE(iWasCalled, @"not called");
     callPassedFun( (long*)callme  );
     EXPECTTRUE(iWasCalled, @"called");
+}
+
++(void)testGenerateMachOWithCallToExternalFunction
+{
+    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [writer addGlobalSymbol:@"_theFunction" atOffset:0];
+    [g generateSaveLinkRegisterAndFramePtr];
+    [writer addRelocationEntryForSymbol:@"_other" atOffset:(int)[g length]];
+    [g generateBranchAndLinkWithOffset:0];
+    [g generateRestoreLinkRegisterAndFramePtr];
+    [g generateReturn];
+    writer.textSection = (NSData*)[g target];
+    [writer writeFile];
+    NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
 }
 
 +(NSArray*)testSelectors
@@ -331,6 +354,7 @@ static void callme() {
        @"testGenerateBranchToPointerPassedAsArg",
        @"testGenerateCallToPointerPassedAsArg",
        @"testCanGenerateReturnAddressProtection",
+       @"testGenerateMachOWithCallToExternalFunction",
 			];
 }
 

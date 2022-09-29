@@ -221,13 +221,13 @@
     [self appendBytes:relocations length:relocCount * sizeof(struct relocation_info)];
 }
 
--(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset
+-(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
 {
     if ( self.globalSymbolOffsets[symbol] == nil ) {
         self.globalSymbolOffsets[symbol]=@(symtabCount);
         symtab_entry entry={};
-        entry.type = 0x0f;
-        entry.section = 1;      // TEXT section
+        entry.type = theType;
+        entry.section = theSection;      // TEXT section
         entry.string_offset=[self stringTableOffsetOfString:symbol];
         entry.address = offset;
         if ( symtabCount >= symtabCapacity ) {
@@ -237,11 +237,15 @@
     }
 }
 
+-(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset
+{
+    [self addGlobalSymbol:symbol atOffset:offset type:0xf section:1];
+}
 
 -(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
 {
     struct relocation_info r={};
-    [self addGlobalSymbol:symbol atOffset:offset];
+    [self addGlobalSymbol:symbol atOffset:0 type:0 section:0];
     r.r_symbolnum = [self.globalSymbolOffsets[symbol] intValue];
     r.r_address = offset;
     r.r_extern = 1;
