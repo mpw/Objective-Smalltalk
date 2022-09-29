@@ -157,7 +157,7 @@
     segment.nsects = 1;
     segment.fileoff=[self textSectionOffset];
     segment.filesize=[self textSectionSize];
-    segment.vmsize = 8;
+    segment.vmsize = [self textSectionSize];
     segment.initprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
 
