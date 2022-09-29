@@ -339,6 +339,22 @@ static void callme() {
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
 }
 
++(void)testGenerateMachOWithMessageSend
+{
+    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [writer addGlobalSymbol:@"_lengthOfString" atOffset:0];
+    [g generateSaveLinkRegisterAndFramePtr];
+    [writer addRelocationEntryForSymbol:@"_objc_msgSend$length" atOffset:(int)[g length]];
+    [g generateBranchAndLinkWithOffset:0];
+    [g generateRestoreLinkRegisterAndFramePtr];
+    [g generateReturn];
+    writer.textSection = (NSData*)[g target];
+    [writer writeFile];
+    NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -355,6 +371,7 @@ static void callme() {
        @"testGenerateCallToPointerPassedAsArg",
        @"testCanGenerateReturnAddressProtection",
        @"testGenerateMachOWithCallToExternalFunction",
+       @"testGenerateMachOWithMessageSend",
 			];
 }
 

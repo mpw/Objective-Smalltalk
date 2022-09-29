@@ -15,4 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol SymbolWriter
+
+@end
+
+
 NS_ASSUME_NONNULL_END
