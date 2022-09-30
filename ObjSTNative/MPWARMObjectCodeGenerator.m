@@ -165,13 +165,23 @@
     [self.symbolWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length]];
 }
 
--(void)generateFunctionNamed:(NSString*)name body:(void(^)(MPWARMObjectCodeGenerator* gen))block
+-(void)generateStartOfFunctionNamed:(NSString*)name
 {
     [self addGlobalSymbol:name];
     [self generateSaveLinkRegisterAndFramePtr];
-    block(self);
+}
+
+-(void)generateEndOfFunction
+{
     [self generateRestoreLinkRegisterAndFramePtr];
     [self generateReturn];
+}
+
+-(void)generateFunctionNamed:(NSString*)name body:(void(^)(MPWARMObjectCodeGenerator* gen))block
+{
+    [self generateStartOfFunctionNamed:name];
+    block(self);
+    [self generateEndOfFunction];
 }
 
 
@@ -359,7 +369,6 @@ static void callme() {
     [g generateFunctionNamed:@"_theFunction" body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateCallToExternalFunctionNamed:@"_other"];
     }];
-    [g addGlobalSymbol:@"_theFunction"];
     writer.textSection = (NSData*)[g target];
     [writer writeFile];
     NSData *macho=[writer data];

@@ -31,9 +31,14 @@
     }
 }
 
+-(const void*)bytes
+{
+    return [[self data] bytes];
+}
+
 -(struct mach_header_64*)header
 {
-    return (struct mach_header_64*)[[self data] bytes];
+    return (struct mach_header_64*)[self bytes];
 }
 
 -(BOOL)isHeaderValid
@@ -97,16 +102,43 @@
     return (struct segment_command_64*)[self loadCommandOfType:LC_SEGMENT_64];
 }
 
--(struct section_64*)textSectionHeader
+-(int)numSections
+{
+    return [self segment]->nsects;
+}
+
+-(struct section_64*)sectionHeaderWithName:(const char*)name
 {
     struct segment_command_64 *segment=[self segment];
+    long len=strlen(name);
+    len=MIN(len,16);
     struct section_64 *sections=(struct section_64*)(segment + 1);
     for (int i=0; i < segment->nsects;i++) {
-        if ( !strncmp(sections[i].sectname, "__text", 6) ) {
+        if ( !strncmp(sections[i].sectname, name, len ) ) {
             return sections+i;
         }
     }
     return nil;
+}
+
+-(struct section_64*)textSectionHeader
+{
+    return [self sectionHeaderWithName:"__text"];
+}
+
+-(struct section_64*)objcClassNameSectionHeader
+{
+    return [self sectionHeaderWithName:"__objc_classname"];
+}
+
+-(NSString*)objcClassName
+{
+    struct section_64 *classSect=[self objcClassNameSectionHeader];
+    NSString *name=nil;
+    if ( classSect ) {
+        name=[NSString stringWithUTF8String:[self bytes] + classSect->offset];
+    }
+    return name;
 }
 
 -(NSData*)textSection
@@ -249,6 +281,11 @@
     return [self readerForTestfile:@"call-external-fn"];
 }
 
++(instancetype)readerForObjectiveCClass
+{
+    return [self readerForTestfile:@"class-with-method"];
+}
+
 +(void)testCanIdentifyHeader
 {
     MPWMachOReader *reader=[self readerForAdd];
@@ -361,6 +398,7 @@
 {
     MPWMachOReader *reader=[self readerForExternalFunction];
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
+    INTEXPECT( reader.numSections, 2 , @"load commands");
     IDEXPECT( [reader symbolNameAt:2],@"_fn",@"defined function");
     EXPECTFALSE( [reader isSymbolUndefined:2],@"_add should not be undefined");
     IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
@@ -374,6 +412,14 @@
     EXPECTTRUE([reader isExternalRelocEntryAt:0],@"external");
 }
 
++(void)testReadObjectiveCSections
+{
+    MPWMachOReader *reader=[self readerForObjectiveCClass];
+    INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
+    INTEXPECT( reader.numSections, 9 , @"sections");
+    IDEXPECT( [reader objcClassName], @"Hi", @"Objective-C classname");
+    
+}
 
 
 +(NSArray*)testSelectors
@@ -387,6 +433,7 @@
        @"testReadSymtab",
        @"testReadStringTable",
        @"testReadMachOWithExternalSymbols",
+       @"testReadObjectiveCSections",
 			];
 }
 
