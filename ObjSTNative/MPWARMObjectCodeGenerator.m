@@ -110,8 +110,19 @@
 
 -(void)generateBranchAndLinkWithOffset:(int)offset
 {
-    
     [self appendWord32:0x94000000 | (offset  >> 2)];
+}
+
+-(void)generateCallToExternalFunctionNamed:(NSString*)name
+{
+    [self addRelocationEntryForSymbol:name];
+    [self generateBranchAndLinkWithOffset:0];
+}
+
+-(void)generateMessageSendToSelector:(NSString*)selector
+{
+    NSString *functionName=[@"_objc_msgSend$" stringByAppendingString:selector];
+    [self generateCallToExternalFunctionNamed:functionName];
 }
 
 -(void)generateBranchAndLinkWithRegister:(int)theRegister
@@ -144,12 +155,34 @@
     [self appendWord32:0xd50323ff];
 }
 
+-(void)addGlobalSymbol:(NSString*)symbol
+{
+    [self.symbolWriter addGlobalSymbol:symbol atOffset:(int)[self length]];
+}
+
+-(void)addRelocationEntryForSymbol:(NSString*)symbol
+{
+    [self.symbolWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length]];
+}
+
+-(void)generateFunctionNamed:(NSString*)name body:(void(^)(MPWARMObjectCodeGenerator* gen))block
+{
+    [self addGlobalSymbol:name];
+    [self generateSaveLinkRegisterAndFramePtr];
+    block(self);
+    [self generateRestoreLinkRegisterAndFramePtr];
+    [self generateReturn];
+}
+
+
+
 @end
 
 
 
 #import <MPWFoundation/DebugMacros.h>
 #import "MPWMachOWriter.h"
+#import "MPWMachOReader.h"
 
 @implementation MPWARMObjectCodeGenerator(testing) 
 
@@ -255,11 +288,6 @@ typedef long (*VOIDPTR)(void);
     INTEXPECT(result,42,@"45-3");
 }
 
-+(void)testAddImmediate
-{
-    
-}
-
 +(void)testGenerateCodeWithEmbeddedPointer
 {
     long myData[2]={};
@@ -327,32 +355,35 @@ static void callme() {
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
     MPWARMObjectCodeGenerator *g=[self stream];
-    [writer addGlobalSymbol:@"_theFunction" atOffset:0];
-    [g generateSaveLinkRegisterAndFramePtr];
-    [writer addRelocationEntryForSymbol:@"_other" atOffset:(int)[g length]];
-    [g generateBranchAndLinkWithOffset:0];
-    [g generateRestoreLinkRegisterAndFramePtr];
-    [g generateReturn];
+    g.symbolWriter = writer;
+    [g generateFunctionNamed:@"_theFunction" body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateCallToExternalFunctionNamed:@"_other"];
+    }];
+    [g addGlobalSymbol:@"_theFunction"];
     writer.textSection = (NSData*)[g target];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
+    MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    INTEXPECT( [reader offsetOfRelocEntryAt:0], 4,@"location of call to _other");
+    IDEXPECT( [reader nameOfRelocEntryAt:0], @"_other",@"name of call to _other");
 }
 
 +(void)testGenerateMachOWithMessageSend
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
     MPWARMObjectCodeGenerator *g=[self stream];
-    [writer addGlobalSymbol:@"_lengthOfString" atOffset:0];
-    [g generateSaveLinkRegisterAndFramePtr];
-    [writer addRelocationEntryForSymbol:@"_objc_msgSend$length" atOffset:(int)[g length]];
-    [g generateBranchAndLinkWithOffset:0];
-    [g generateRestoreLinkRegisterAndFramePtr];
-    [g generateReturn];
+    g.symbolWriter = writer;
+    [g generateFunctionNamed:@"_lengthOfString" body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateMessageSendToSelector:@"length"];
+    }];
     writer.textSection = (NSData*)[g target];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
+    MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    INTEXPECT( [reader offsetOfRelocEntryAt:0], 4,@"location of call to _other");
+    IDEXPECT( [reader nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
 }
 
 +(NSArray*)testSelectors

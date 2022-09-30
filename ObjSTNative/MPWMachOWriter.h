@@ -6,15 +6,14 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
+#import "MPWARMObjectCodeGenerator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWMachOWriter : MPWByteStream
+@interface MPWMachOWriter : MPWByteStream <SymbolWriter>
 
 @property (nonatomic, strong) NSData *textSection;
 
--(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
--(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset;
 -(void)writeFile;
 -(NSData*)data;
 
