@@ -342,9 +342,6 @@
 		1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9CA28E1E58600671748 /* MPWJittableData.h */; };
 		1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AE9CB28E1E58600671748 /* MPWJittableData.m */; };
 		1F9AE9D228E71F9700671748 /* class-with-method.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9D128E71F9700671748 /* class-with-method.macho */; };
-		1F9AE9D528E81D7B00671748 /* MPWMachSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9D328E81D7B00671748 /* MPWMachSegment.h */; };
-		1F9AE9D628E81D7B00671748 /* MPWMachSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AE9D428E81D7B00671748 /* MPWMachSegment.m */; };
-		1F9AE9D828E81FB600671748 /* add.textsegmentlc in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9D728E81FB600671748 /* add.textsegmentlc */; };
 		1F9BD1CB2562D6F9006D7476 /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F9BD1CC2562D6F9006D7476 /* MPWFoundationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F9BD22C2566505F006D7476 /* MPWStPropertyPathTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9BD22A2566505F006D7476 /* MPWStPropertyPathTests.h */; };
@@ -1076,9 +1073,6 @@
 		1F9AE9CA28E1E58600671748 /* MPWJittableData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWJittableData.h; sourceTree = "<group>"; };
 		1F9AE9CB28E1E58600671748 /* MPWJittableData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWJittableData.m; sourceTree = "<group>"; };
 		1F9AE9D128E71F9700671748 /* class-with-method.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "class-with-method.macho"; sourceTree = "<group>"; };
-		1F9AE9D328E81D7B00671748 /* MPWMachSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachSegment.h; sourceTree = "<group>"; };
-		1F9AE9D428E81D7B00671748 /* MPWMachSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachSegment.m; sourceTree = "<group>"; };
-		1F9AE9D728E81FB600671748 /* add.textsegmentlc */ = {isa = PBXFileReference; lastKnownFileType = file; path = add.textsegmentlc; sourceTree = "<group>"; };
 		1F9BD22A2566505F006D7476 /* MPWStPropertyPathTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWStPropertyPathTests.h; sourceTree = "<group>"; };
 		1F9BD22B2566505F006D7476 /* MPWStPropertyPathTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWStPropertyPathTests.m; sourceTree = "<group>"; };
 		1F9BD24025665748006D7476 /* MPWStConnectorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWStConnectorTests.h; sourceTree = "<group>"; };
@@ -1676,7 +1670,6 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
-				1F9AE9D728E81FB600671748 /* add.textsegmentlc */,
 				1F9AE9D128E71F9700671748 /* class-with-method.macho */,
 				1F9AE9C628D9F22A00671748 /* call-external-fn.macho */,
 				1F9AE9C428D75BC300671748 /* add.aarch64 */,
@@ -2073,8 +2066,6 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
-				1F9AE9D328E81D7B00671748 /* MPWMachSegment.h */,
-				1F9AE9D428E81D7B00671748 /* MPWMachSegment.m */,
 				1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */,
 				1FD236732641BC6C009C5E46 /* raspi */,
 				1F2B17AC2625F23D005D873F /* README.md */,
@@ -2300,7 +2291,6 @@
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */,
-				1F9AE9D528E81D7B00671748 /* MPWMachSegment.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3180,7 +3170,6 @@
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
 				1F9AE9C728D9F22A00671748 /* call-external-fn.macho in Resources */,
-				1F9AE9D828E81FB600671748 /* add.textsegmentlc in Resources */,
 				1F3466F428CB114E003257CB /* add.macho in Resources */,
 				1F9AE9C528D75BC300671748 /* add.aarch64 in Resources */,
 			);
@@ -3494,7 +3483,6 @@
 				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
-				1F9AE9D628E81D7B00671748 /* MPWMachSegment.m in Sources */,
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */,
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,
