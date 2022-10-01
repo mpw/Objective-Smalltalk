@@ -97,6 +97,24 @@
     return nil;
 }
 
+-(const struct load_command*)segmentWithName:(const char*)segmentName
+{
+    int namelen=strlen(segmentName);
+    namelen = MIN(namelen,16);
+    const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
+    for (int i=0, max=[self numLoadCommands]; i<max; i++) {
+        if ( cur->cmd == LC_SEGMENT_64) {
+            struct segment_command_64* segment = (struct segment_command_64*)cur;
+            if ( !strncmp( segmentName, segment->segname, namelen ) ) {
+                return cur;
+            }
+        }
+        cur = ((void*)cur)+cur->cmdsize;
+    }
+    @throw [NSException exceptionWithName:@"noloadcommand" reason:@"Load Command not found" userInfo:nil];
+    return nil;
+}
+
 -(struct segment_command_64*)segment
 {
     return (struct segment_command_64*)[self loadCommandOfType:LC_SEGMENT_64];
@@ -335,6 +353,8 @@
 {
     MPWMachOReader *reader=[self readerForAdd];
     struct segment_command_64 *segment=[reader segment];
+    NSData *segmentLoadData=[NSData dataWithBytes:segment length:segment->filesize];
+    [segmentLoadData writeToFile:@"/tmp/add.textsegmentlc" atomically:YES];
     INTEXPECT( segment->nsects, 2, @"number of sections");
     INTEXPECT( segment->cmdsize, sizeof(struct segment_command_64)+2*sizeof(struct section_64),@"correct size");
     INTEXPECT( segment->fileoff, 392, @"segment offset");
