@@ -342,6 +342,8 @@
 		1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AE9CB28E1E58600671748 /* MPWJittableData.m */; };
 		1F9AE9DF28E825C600671748 /* class-with-method.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9DD28E825C600671748 /* class-with-method.macho */; };
 		1F9AE9E028E825C600671748 /* call-external-fn.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9DE28E825C600671748 /* call-external-fn.macho */; };
+		1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9E128EC696200671748 /* MPWMachOSection.h */; };
+		1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AE9E228EC696200671748 /* MPWMachOSection.m */; };
 		1F9BD1CB2562D6F9006D7476 /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F9BD1CC2562D6F9006D7476 /* MPWFoundationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F9BD22C2566505F006D7476 /* MPWStPropertyPathTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9BD22A2566505F006D7476 /* MPWStPropertyPathTests.h */; };
@@ -1073,6 +1075,8 @@
 		1F9AE9CB28E1E58600671748 /* MPWJittableData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWJittableData.m; sourceTree = "<group>"; };
 		1F9AE9DD28E825C600671748 /* class-with-method.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "class-with-method.macho"; sourceTree = "<group>"; };
 		1F9AE9DE28E825C600671748 /* call-external-fn.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "call-external-fn.macho"; sourceTree = "<group>"; };
+		1F9AE9E128EC696200671748 /* MPWMachOSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOSection.h; sourceTree = "<group>"; };
+		1F9AE9E228EC696200671748 /* MPWMachOSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOSection.m; sourceTree = "<group>"; };
 		1F9BD22A2566505F006D7476 /* MPWStPropertyPathTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWStPropertyPathTests.h; sourceTree = "<group>"; };
 		1F9BD22B2566505F006D7476 /* MPWStPropertyPathTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWStPropertyPathTests.m; sourceTree = "<group>"; };
 		1F9BD24025665748006D7476 /* MPWStConnectorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWStConnectorTests.h; sourceTree = "<group>"; };
@@ -1501,9 +1505,11 @@
 				1F084A1116DCE6A200ED2517 /* Supporting Files */,
 				1F70BE55278E11DB002398CC /* MPWCPUSimulator.h */,
 				1F70BE56278E11DB002398CC /* MPWCPUSimulator.m */,
-				1F3466EE28CB10F7003257CB /* MPWMachOReader.h */,
 				1F9AE9C028D4957A00671748 /* SymtabEntry.h */,
+				1F3466EE28CB10F7003257CB /* MPWMachOReader.h */,
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
+				1F9AE9E128EC696200671748 /* MPWMachOSection.h */,
+				1F9AE9E228EC696200671748 /* MPWMachOSection.m */,
 				1F04243A28D1D09B00486831 /* MPWMachOWriter.h */,
 				1F04243B28D1D09B00486831 /* MPWMachOWriter.m */,
 			);
@@ -2285,6 +2291,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
@@ -3485,6 +3492,7 @@
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */,
+				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 			);

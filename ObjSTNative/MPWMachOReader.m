@@ -11,6 +11,7 @@
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
 #import "SymtabEntry.h"
+#import "MPWMachOSection.h"
 
 @interface MPWMachOReader()
 
@@ -126,6 +127,11 @@
     return [self sectionHeaderWithName:"__text"];
 }
 
+-(MPWMachOSection*)textSection
+{
+    
+}
+
 -(struct section_64*)objcClassNameSectionHeader
 {
     return [self sectionHeaderWithName:"__objc_classname"];
@@ -141,7 +147,7 @@
     return name;
 }
 
--(NSData*)textSection
+-(NSData*)textSectionData
 {
     struct section_64 *textSection=[self textSectionHeader];
     if (textSection) {
@@ -351,7 +357,7 @@
     IDEXPECT( sect2Name, @"__compact_unwind__LD", @"section 2 name");
     INTEXPECT( unwind_section->offset, 424,@"unwind section offset");
     INTEXPECT( unwind_section->size, 32,@"unwind section size");
-    NSData *textSection=[reader textSection];
+    NSData *textSection=[reader textSectionData];
     INTEXPECT(textSection.length,32,@"length of text section");
     const unsigned char *machineCode=[textSection bytes];
     const unsigned char expectedMachineCode[]={ 0xff, 0x43,0x00,0xd1, 0xe0, 0x0f, 0x00,0xb9 };
