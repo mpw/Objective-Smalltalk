@@ -129,7 +129,7 @@
 
 -(MPWMachOSection*)textSection
 {
-    return [[[MPWMachOSection alloc] initWithSectionHeader:[self textSectionHeader] inMacho:[self data]] autorelease];
+    return [[[MPWMachOSection alloc] initWithSectionHeader:[self textSectionHeader] inMacho:self] autorelease];
 }
 
 -(struct section_64*)objcClassNameSectionHeader
@@ -217,47 +217,7 @@
     return (entry->section) == 0 && (entry->type & N_EXT);
 }
 
--(int)numRelocEntries
-{
-    return [self textSectionHeader]->nreloc;
-}
 
--(int)relocEntryOffset
-{
-    return [self textSectionHeader]->reloff;
-}
-
--(struct relocation_info)relocEntryAt:(int)i
-{
-    const struct relocation_info *reloc=[self.data bytes] + [self relocEntryOffset];
-    return reloc[i];
-}
-
--(NSString*)nameOfRelocEntryAt:(int)i
-{
-    struct relocation_info reloc=[self relocEntryAt:0];
-    return [self symbolNameAt:reloc.r_symbolnum];
-}
-
--(long)offsetOfRelocEntryAt:(int)i
-{
-    struct relocation_info reloc=[self relocEntryAt:0];
-    return reloc.r_address;
-}
-
--(int)typeOfRelocEntryAt:(int)i
-{
-    struct relocation_info reloc=[self relocEntryAt:0];
-    return reloc.r_type;
-}
-
-
-
--(bool)isExternalRelocEntryAt:(int)i
-{
-    struct relocation_info reloc=[self relocEntryAt:0];
-    return reloc.r_extern != 0;
-}
 
 @end
 
@@ -406,12 +366,12 @@
     IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
     EXPECTTRUE( [reader isSymbolUndefined:3],@"_other should be undefined");
     INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
-    INTEXPECT([reader numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([reader relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
-    INTEXPECT([reader typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
-    IDEXPECT([reader nameOfRelocEntryAt:0],@"_other",@"external symbol");
-    INTEXPECT([reader offsetOfRelocEntryAt:0],8,@"address");
-    EXPECTTRUE([reader isExternalRelocEntryAt:0],@"external");
+    INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
+    IDEXPECT([[reader textSection] nameOfRelocEntryAt:0],@"_other",@"external symbol");
+    INTEXPECT([[reader textSection] offsetOfRelocEntryAt:0],8,@"address");
+    EXPECTTRUE([[reader textSection] isExternalRelocEntryAt:0],@"external");
 }
 
 +(void)testReadObjectiveCSections

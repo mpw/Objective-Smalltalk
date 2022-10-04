@@ -14,6 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(NSData*)bytes;
 -(NSData*)sectionData;
 
+-(NSString*)nameOfRelocEntryAt:(int)i;
+-(long)offsetOfRelocEntryAt:(int)i;
+-(bool)isExternalRelocEntryAt:(int)i;
+-(int)typeOfRelocEntryAt:(int)i;
+-(int)numRelocEntries;
+-(int)relocEntryOffset;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,7 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWMachOSection;
+
 @interface MPWMachOReader : NSObject
+
+@property (readonly) NSData *data;
+
 
 -(instancetype)initWithData:(NSData*)machodata;
 -(BOOL)isHeaderValid;
@@ -18,20 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)numLoadCommands;
 -(NSArray<NSString*>*)stringTable;
 -(int)numSymbols;
--(int)numRelocEntries;
--(int)relocEntryOffset;
 
 -(NSString*)symbolNameAt:(int)which;
 -(long)symbolOffsetAt:(int)which;
 -(bool)isSymbolGlobalAt:(int)which;
 
--(NSString*)nameOfRelocEntryAt:(int)i;
--(long)offsetOfRelocEntryAt:(int)i;
--(bool)isExternalRelocEntryAt:(int)i;
--(int)typeOfRelocEntryAt:(int)i;
 
-
--(NSData*)textSection;
+-(MPWMachOSection*)textSection;
+-(NSData*)textSectionData;
 
 
 @end

@@ -13,6 +13,7 @@
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
 #import "SymtabEntry.h"
+#import "MPWMachOSection.h"
 
 @interface MPWMachOWriter()
 
@@ -370,11 +371,11 @@
     [macho writeToFile:@"/tmp/reloc.o" atomically:YES];
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT([reader numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([reader relocEntryOffset],216,@"offset of undefined symbol reloc entries");
-    IDEXPECT( [reader nameOfRelocEntryAt:0],@"_other",@"name");
-    INTEXPECT( [reader offsetOfRelocEntryAt:0],12,@"address");
-    INTEXPECT([reader typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
+    INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],216,@"offset of undefined symbol reloc entries");
+    IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
+    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
 
 }
 

@@ -374,8 +374,8 @@ static void callme() {
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( [reader offsetOfRelocEntryAt:0], 4,@"location of call to _other");
-    IDEXPECT( [reader nameOfRelocEntryAt:0], @"_other",@"name of call to _other");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 4,@"location of call to _other");
+    IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_other",@"name of call to _other");
 }
 
 +(void)testGenerateMachOWithMessageSend
@@ -391,8 +391,8 @@ static void callme() {
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( [reader offsetOfRelocEntryAt:0], 4,@"location of call to _other");
-    IDEXPECT( [reader nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 4,@"location of call to _other");
+    IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
 }
 
 +(NSArray*)testSelectors
