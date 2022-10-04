@@ -129,7 +129,7 @@
 
 -(MPWMachOSection*)textSection
 {
-    
+    return [[[MPWMachOSection alloc] initWithSectionHeader:[self textSectionHeader] inMacho:[self data]] autorelease];
 }
 
 -(struct section_64*)objcClassNameSectionHeader
@@ -149,11 +149,7 @@
 
 -(NSData*)textSectionData
 {
-    struct section_64 *textSection=[self textSectionHeader];
-    if (textSection) {
-        return [self.data subdataWithRange:NSMakeRange(textSection->offset,textSection->size)];
-    }
-    return nil;
+    return [[self textSection] sectionData];
 }
 
 -(struct symtab_command*)symtab

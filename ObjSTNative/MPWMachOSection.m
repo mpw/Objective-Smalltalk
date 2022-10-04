@@ -29,6 +29,13 @@
     return self;
 }
 
+-(NSData*)sectionData
+{
+    return [self.machoData subdataWithRange:NSMakeRange(sectionHeader->offset,sectionHeader->size)];
+}
+
+
+
 -(void)dealloc
 {
     [_machoData release];

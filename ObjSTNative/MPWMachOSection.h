@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWMachOSection : NSObject
 
 -(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(NSData*)bytes;
+-(NSData*)sectionData;
 
 @end
 
