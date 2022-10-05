@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWMachOReader : NSObject
 
 @property (readonly) NSData *data;
+@property (readonly) int numSections;
 
 
 -(instancetype)initWithData:(NSData*)machodata;
@@ -30,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 -(MPWMachOSection*)textSection;
--(NSData*)textSectionData;
+-(MPWMachOSection*)objcClassNameSection;
 
 
 @end

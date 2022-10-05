@@ -122,34 +122,19 @@
     return nil;
 }
 
--(struct section_64*)textSectionHeader
+-(MPWMachOSection*)sectionWithName:(const char*)name
 {
-    return [self sectionHeaderWithName:"__text"];
+    return [[[MPWMachOSection alloc] initWithSectionHeader:[self sectionHeaderWithName:name] inMacho:self] autorelease];
 }
 
 -(MPWMachOSection*)textSection
 {
-    return [[[MPWMachOSection alloc] initWithSectionHeader:[self textSectionHeader] inMacho:self] autorelease];
+    return [self sectionWithName:"__text"];
 }
 
--(struct section_64*)objcClassNameSectionHeader
+-(MPWMachOSection*)objcClassNameSection
 {
-    return [self sectionHeaderWithName:"__objc_classname"];
-}
-
--(NSString*)objcClassName
-{
-    struct section_64 *classSect=[self objcClassNameSectionHeader];
-    NSString *name=nil;
-    if ( classSect ) {
-        name=[NSString stringWithUTF8String:[self bytes] + classSect->offset];
-    }
-    return name;
-}
-
--(NSData*)textSectionData
-{
-    return [[self textSection] sectionData];
+    return [self sectionWithName:"__objc_classname"];
 }
 
 -(struct symtab_command*)symtab
@@ -243,11 +228,6 @@
     return [self readerForTestfile:@"call-external-fn"];
 }
 
-+(instancetype)readerForObjectiveCClass
-{
-    return [self readerForTestfile:@"class-with-method"];
-}
-
 +(void)testCanIdentifyHeader
 {
     MPWMachOReader *reader=[self readerForAdd];
@@ -313,7 +293,7 @@
     IDEXPECT( sect2Name, @"__compact_unwind__LD", @"section 2 name");
     INTEXPECT( unwind_section->offset, 424,@"unwind section offset");
     INTEXPECT( unwind_section->size, 32,@"unwind section size");
-    NSData *textSection=[reader textSectionData];
+    NSData *textSection=[[reader textSection] sectionData];
     INTEXPECT(textSection.length,32,@"length of text section");
     const unsigned char *machineCode=[textSection bytes];
     const unsigned char expectedMachineCode[]={ 0xff, 0x43,0x00,0xd1, 0xe0, 0x0f, 0x00,0xb9 };
@@ -374,15 +354,6 @@
     EXPECTTRUE([[reader textSection] isExternalRelocEntryAt:0],@"external");
 }
 
-+(void)testReadObjectiveCSections
-{
-    MPWMachOReader *reader=[self readerForObjectiveCClass];
-    INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
-    INTEXPECT( reader.numSections, 9 , @"sections");
-    IDEXPECT( [reader objcClassName], @"Hi", @"Objective-C classname");
-    
-}
-
 
 +(NSArray*)testSelectors
 {
@@ -395,7 +366,6 @@
        @"testReadSymtab",
        @"testReadStringTable",
        @"testReadMachOWithExternalSymbols",
-       @"testReadObjectiveCSections",
 			];
 }
 

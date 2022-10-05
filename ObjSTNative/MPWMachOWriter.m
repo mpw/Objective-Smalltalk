@@ -337,7 +337,7 @@
     IDEXPECT( strings.lastObject, @"_add", @"last string in string table");
     INTEXPECT( strings.count, 1, @"number of strings");
     IDEXPECT( strings, (@[@"_add"]), @"string table");
-    IDEXPECT( [reader textSectionData],machineCode, @"machine code from text section");
+    IDEXPECT( [[reader textSection] sectionData],machineCode, @"machine code from text section");
 }
 
 +(void)testCanWriteStringsToStringTable

@@ -33,9 +33,19 @@
     return self;
 }
 
+-(const void*)bytes
+{
+    return self.machoData.bytes;
+}
+
 -(NSData*)sectionData
 {
     return [self.machoData subdataWithRange:NSMakeRange(sectionHeader->offset,sectionHeader->size)];
+}
+
+-(NSString*)objcClassName
+{
+    return [NSString stringWithUTF8String:[self bytes] + sectionHeader->offset];
 }
 
 -(int)numRelocEntries
@@ -91,18 +101,32 @@
 
 
 #import <MPWFoundation/DebugMacros.h>
+#import "MPWMachOReader.h"
 
 @implementation MPWMachOSection(testing) 
 
-+(void)someTest
++(MPWMachOReader*)readerForTestFile:(NSString*)name
 {
-	EXPECTTRUE(false, @"implemented");
+    NSData *addmacho=[self frameworkResource:name category:@"macho"];
+    MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:addmacho] autorelease];
+    return reader;
 }
+
++(void)testReadObjectiveCSections
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"class-with-method"];
+    INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
+    INTEXPECT( reader.numSections, 9 , @"sections");
+    MPWMachOSection *section=[reader objcClassNameSection];
+    IDEXPECT( [section objcClassName], @"Hi", @"Objective-C classname");
+    
+}
+
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
+			@"testReadObjectiveCSections",
 			];
 }
 

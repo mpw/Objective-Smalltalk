@@ -9,10 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWMachOReader;
+
 @interface MPWMachOSection : NSObject
 
--(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(NSData*)bytes;
--(NSData*)sectionData;
+-(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(MPWMachOReader*)newReader;
 
 -(NSString*)nameOfRelocEntryAt:(int)i;
 -(long)offsetOfRelocEntryAt:(int)i;
@@ -20,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)typeOfRelocEntryAt:(int)i;
 -(int)numRelocEntries;
 -(int)relocEntryOffset;
+
+
+-(NSData*)sectionData;
+-(NSString*)objcClassName;
 
 
 @end
