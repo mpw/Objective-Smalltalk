@@ -103,6 +103,16 @@
     return (struct segment_command_64*)[self loadCommandOfType:LC_SEGMENT_64];
 }
 
+-(long)segmentOffset
+{
+    return [self segment]->fileoff;
+}
+
+-(const void*)segmentBytes
+{
+    return [self bytes] + [self segmentOffset];
+}
+
 -(int)numSections
 {
     return [self segment]->nsects;
@@ -122,14 +132,27 @@
     return nil;
 }
 
+-(MPWMachOSection*)sectionWithSectionHeader:(struct section_64*)header
+{
+    return [[[MPWMachOSection alloc] initWithSectionHeader:header inMacho:self] autorelease];
+}
+
 -(MPWMachOSection*)sectionWithName:(const char*)name
 {
-    return [[[MPWMachOSection alloc] initWithSectionHeader:[self sectionHeaderWithName:name] inMacho:self] autorelease];
+    return [self sectionWithSectionHeader:[self sectionHeaderWithName:name]];
 }
 
 -(MPWMachOSection*)textSection
 {
     return [self sectionWithName:"__text"];
+}
+
+-(MPWMachOSection*)sectionAtIndex:(int)sectionIndex
+{
+    struct segment_command_64 *segment=[self segment];
+    struct section_64 *sections=(struct section_64*)(segment + 1);
+    NSAssert(sectionIndex >=0 && sectionIndex < segment->nsects, @"section index out of range");
+    return [self sectionWithSectionHeader:sections+sectionIndex];
 }
 
 -(MPWMachOSection*)objcClassNameSection
@@ -190,6 +213,12 @@
     return @(firststr + entry->string_offset);
 }
 
+-(int)sectionForSymbolAt:(int)which
+{
+    symtab_entry *entry=[self entryAt:which];
+    return entry->section;
+}
+
 -(long)symbolOffsetAt:(int)which
 {
     return [self entryAt:which]->address;
@@ -198,6 +227,17 @@
 -(bool)isSymbolGlobalAt:(int)which
 {
     return ([self entryAt:which]->type & N_EXT) != 0;
+}
+
+-(int)indexOfSymbolNamed:(NSString*)symbol
+{
+    struct symtab_command *symtab=[self symtab];
+    for (int i=0; i< symtab->nsyms;i++) {
+        if ( [[self symbolNameAt:i] isEqual:symbol]) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 -(bool)isSymbolUndefined:(int)which
@@ -305,6 +345,8 @@
     for (int i=0; i<sizeof expectedMachineCode;i++ ) {
         INTEXPECT(machineCode[i],expectedMachineCode[i],@"machine code");
     }
+    INTEXPECT([reader segmentOffset],392,@"segment offset");
+    
 }
 
 
@@ -315,10 +357,14 @@
     EXPECTNOTNIL(symtab,@"have a symtab");
     
     INTEXPECT([reader numSymbols],3,@"number of symbols");
-    IDEXPECT([reader symbolNameAt:0],@"ltmp0",@"first symbol")
-    IDEXPECT([reader symbolNameAt:1],@"ltmp1",@"2nd symbol")
-    IDEXPECT([reader symbolNameAt:2],@"_add",@"3rd symbol")
+    IDEXPECT([reader symbolNameAt:0],@"ltmp0",@"first symbol");
+    IDEXPECT([reader symbolNameAt:1],@"ltmp1",@"2nd symbol");
+    IDEXPECT([reader symbolNameAt:2],@"_add",@"3rd symbol");
     
+    INTEXPECT([reader indexOfSymbolNamed:@"_add"],2,@"index of _add in table");
+    INTEXPECT([reader indexOfSymbolNamed:@"_not_there"],-1,@"index of non-existent entry");
+    INTEXPECT([reader indexOfSymbolNamed:@"ltmp1"],1,@"index of non-existent entry");
+
     INTEXPECT([reader symbolOffsetAt:0],0,@"ltmp0 symbol offset")
     INTEXPECT([reader symbolOffsetAt:1],32,@"ltmp1 symbol offset")
     INTEXPECT([reader symbolOffsetAt:2],0,@"_add symbol offset")

@@ -22,17 +22,25 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)filetype;
 -(int)cputype;
 -(int)numLoadCommands;
+
+-(long)segmentOffset;
+-(const void*)segmentBytes;
+
+
 -(NSArray<NSString*>*)stringTable;
 -(int)numSymbols;
 
 -(NSString*)symbolNameAt:(int)which;
 -(long)symbolOffsetAt:(int)which;
+-(int)sectionForSymbolAt:(int)which;
 -(bool)isSymbolGlobalAt:(int)which;
+-(int)indexOfSymbolNamed:(NSString*)symbol;
 
 
 -(MPWMachOSection*)textSection;
 -(MPWMachOSection*)objcClassNameSection;
 -(MPWMachOSection*)objcClassReadOnlySection;
+-(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
 
 
 @end

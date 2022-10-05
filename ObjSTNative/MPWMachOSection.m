@@ -34,19 +34,36 @@
     return self;
 }
 
+-(NSString*)sectionName
+{
+    return @(sectionHeader->sectname);
+}
+
+-(NSString*)segmentName
+{
+    return @(sectionHeader->segname);
+}
+
 -(const void*)bytes
 {
-    return self.machoData.bytes;
+    return self.sectionData.bytes;
 }
+
+-(const void*)segmentBytes
+{
+    return [self.reader segmentBytes];
+}
+
 
 -(NSData*)sectionData
 {
     return [self.machoData subdataWithRange:NSMakeRange(sectionHeader->offset,sectionHeader->size)];
 }
 
--(NSString*)objcClassName
+-(NSArray<NSString*>*)objcClassNames
 {
-    return [NSString stringWithUTF8String:[self bytes] + sectionHeader->offset];
+    NSString *base=[NSString stringWithCString:[self.reader bytes] + sectionHeader->offset length:sectionHeader->size-1];
+    return [base componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithRange:NSMakeRange(0, 1)]];
 }
 
 -(int)numRelocEntries
@@ -83,12 +100,45 @@
     return reloc.r_type;
 }
 
-
-
 -(bool)isExternalRelocEntryAt:(int)i
 {
     struct relocation_info reloc=[self relocEntryAt:0];
     return reloc.r_extern != 0;
+}
+
+static NSString* classSymbolForClass( NSString *className ) {
+    return [@"_OBJC_CLASS_$_" stringByAppendingString:className];
+}
+
+static NSString* readOnlyPartOfClassSymbolForClass( NSString *className ) {
+    return [@"__OBJC_CLASS_RO_$_" stringByAppendingString:className];
+}
+
+static NSString* metaClassSymbolForClass( NSString *className ) {
+    return [@"_OBJC_METACLASS_$_" stringByAppendingString:className];
+}
+
+-(int)classSymbolOffset:(NSString*)className
+{
+    return [self.reader indexOfSymbolNamed:classSymbolForClass(className)];
+}
+
+-(int)readOnlyClassSymbolOffset:(NSString*)className
+{
+    return [self.reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(className)];
+}
+
+-(long)readOnlyClassStructOffset:(NSString*)className
+{
+    return [self.reader symbolOffsetAt:[self readOnlyClassSymbolOffset:className]];
+}
+
+-(const Mach_O_Class_RO*)readOnlyClassStruct:(NSString*)className
+{
+    int sectionIndex = [self.reader sectionForSymbolAt:[self readOnlyClassSymbolOffset:className]];
+    MPWMachOSection *readOnlyClassSection = [self.reader sectionAtIndex:sectionIndex];
+    IDEXPECT( [readOnlyClassSection sectionName],@"__objc_data",@"section name");
+    return [readOnlyClassSection segmentBytes] + [self readOnlyClassStructOffset:className];
 }
 
 
@@ -113,13 +163,63 @@
     return reader;
 }
 
-+(void)testReadObjectiveCSections
++(void)testSectionName
+{
+    MPWMachOReader *reader = [self readerForTestFile:@"class-with-method"];
+    MPWMachOSection *textSection = [reader textSection];
+    IDEXPECT([textSection sectionName],@"__text",@"text section section name");
+    IDEXPECT([textSection segmentName],@"__TEXT",@"text section segment name");
+    
+    MPWMachOSection *objcConstantSection = [reader objcClassReadOnlySection];
+    IDEXPECT([objcConstantSection sectionName],@"__objc_const",@"text section section name");
+    IDEXPECT([objcConstantSection segmentName],@"__DATA",@"text section segment name");
+    
+}
+
++(void)testReadObjectiveCName
 {
     MPWMachOReader *reader=[self readerForTestFile:@"class-with-method"];
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
     INTEXPECT( reader.numSections, 9 , @"sections");
     MPWMachOSection *section=[reader objcClassNameSection];
-    IDEXPECT( [section objcClassName], @"Hi", @"Objective-C classname");
+    INTEXPECT( [section objcClassNames].count, 1, @"Objective-C classname");
+    IDEXPECT( [section objcClassNames].firstObject, @"Hi", @"Objective-C classname");
+}
+
++(void)testReadObjectiveCNames
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
+    INTEXPECT( reader.numSections, 9 , @"sections");
+    MPWMachOSection *section=[reader objcClassNameSection];
+    INTEXPECT( [section objcClassNames].count, 2, @"Objective-C classname");
+    NSString *firstClassName = [section objcClassNames].firstObject;
+    NSString *secondClassName = [section objcClassNames].lastObject;
+    IDEXPECT( firstClassName, @"FirstClass", @"Objective-C classname");
+    IDEXPECT( secondClassName, @"SecondClass", @"Objective-C classname");
+    int firstClassSymbolOffset = [section classSymbolOffset:firstClassName];
+    int firstClassReadOnlySymbolOffset = [reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(@"FirstClass")];
+    int firstMetaClassSymbolOffset = [reader indexOfSymbolNamed:metaClassSymbolForClass(@"FirstClass")];
+    INTEXPECT( firstClassSymbolOffset,28,@"symbol table entry of FirstClass");
+    INTEXPECT( firstMetaClassSymbolOffset,30,@"symbol table entry of FirstClass's metaclass");
+    INTEXPECT( firstClassReadOnlySymbolOffset,15,@"symbol table entry of FirstClass's RO class part");
+    int sectionIndex = [reader sectionForSymbolAt:firstClassReadOnlySymbolOffset];
+    INTEXPECT( sectionIndex,3,@"section that class RO part is in");
+    MPWMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
+    IDEXPECT([readOnlyClassSection sectionName],@"__objc_data",@"text section section name");
+    IDEXPECT([readOnlyClassSection segmentName],@"__DATA",@"text section segment name");
+
+    
+    
+    long offsetOfFirstClassReadOnlyStruct = [section readOnlyClassStructOffset:firstClassName];
+    INTEXPECT( offsetOfFirstClassReadOnlyStruct,256, @"offset of FirstClass RO");
+    INTEXPECT( [reader indexOfSymbolNamed:classSymbolForClass(@"SecondClass")],29,@"symbol table entry of SecondClass");
+    INTEXPECT( [reader symbolOffsetAt:29],672, @"offset of SecondClass");
+    
+    const Mach_O_Class_RO *firstClassReadOnlyParts = [section readOnlyClassStruct:firstClassName];
+    INTEXPECT(firstClassReadOnlyParts->instanceSize ,8, @"size of FirstClass instances" );
+    INTEXPECT(firstClassReadOnlyParts->instanceStart ,8, @"size of FirstClass instances" );
+
 }
 
 static int sizeOfClass( int numMethods ) {
@@ -145,7 +245,9 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
 +(NSArray*)testSelectors
 {
    return @[
-       @"testReadObjectiveCSections",
+       @"testSectionName",
+       @"testReadObjectiveCName",
+       @"testReadObjectiveCNames",
        @"testSizeOfClassStructsInMacho",
 			];
 }
