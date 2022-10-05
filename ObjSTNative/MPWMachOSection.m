@@ -196,33 +196,6 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     NSString *secondClassName = [section objcClassNames].lastObject;
     IDEXPECT( firstClassName, @"FirstClass", @"Objective-C classname");
     IDEXPECT( secondClassName, @"SecondClass", @"Objective-C classname");
-    int firstClassSymbolOffset = [section classSymbolOffset:firstClassName];
-    int firstClassReadOnlySymbolOffset = [reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(@"FirstClass",NO)];
-    int firstMetaClassSymbolOffset = [reader indexOfSymbolNamed:metaClassSymbolForClass(@"FirstClass")];
-    INTEXPECT( firstClassSymbolOffset,28,@"symbol table entry of FirstClass");
-    INTEXPECT( firstMetaClassSymbolOffset,30,@"symbol table entry of FirstClass's metaclass");
-    INTEXPECT( firstClassReadOnlySymbolOffset,15,@"symbol table entry of FirstClass's RO class part");
-    int sectionIndex = [reader sectionForSymbolAt:firstClassReadOnlySymbolOffset];
-    INTEXPECT( sectionIndex,3,@"section that class RO part is in");
-    MPWMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
-    IDEXPECT([readOnlyClassSection sectionName],@"__objc_data",@"text section section name");
-    IDEXPECT([readOnlyClassSection segmentName],@"__DATA",@"text section segment name");
-
-    
-    
-    long offsetOfFirstClassReadOnlyStruct = [section readOnlyClassStructOffset:firstClassName metaclass:NO];
-    INTEXPECT( offsetOfFirstClassReadOnlyStruct,256, @"offset of FirstClass RO");
-    INTEXPECT( [reader indexOfSymbolNamed:classSymbolForClass(@"SecondClass")],29,@"symbol table entry of SecondClass");
-    INTEXPECT( [reader symbolOffsetAt:29],672, @"offset of SecondClass");
-    
-    const Mach_O_Class_RO *firstClassReadOnlyParts = [section readOnlyClassStruct:firstClassName metaclass:NO];
-    INTEXPECT(firstClassReadOnlyParts->instanceSize ,8, @"size of FirstClass instances" );
-    INTEXPECT(firstClassReadOnlyParts->instanceStart ,8, @"size of FirstClass instances" );
-    
-    const Mach_O_Class_RO *firstMetaClassReadOnlyParts = [section readOnlyClassStruct:firstClassName metaclass:YES];
-    INTEXPECT(firstMetaClassReadOnlyParts->instanceSize ,40, @"size of FirstClass instances" );
-    INTEXPECT(firstMetaClassReadOnlyParts->instanceStart ,40, @"size of FirstClass instances" );
-    
 }
 
 static int sizeOfClass( int numMethods ) {
@@ -245,6 +218,47 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
               sizeOfClassAndMetaClass(3,0)+sizeOfClassAndMetaClass(1,0)  , @"size of RO class part for two clases, one with 3 instance methods, other with 1 instance method, not class methods");
 }
 
++(void)testReadObjectiveC_ClassStructs
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    MPWMachOSection *section=[reader objcClassNameSection];
+    NSString *firstClassName = [section objcClassNames].firstObject;
+//    NSString *secondClassName = [section objcClassNames].lastObject;
+
+    int firstClassSymbolOffset = [section classSymbolOffset:firstClassName];
+    int firstClassReadOnlySymbolOffset = [reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(@"FirstClass",NO)];
+    int firstMetaClassSymbolOffset = [reader indexOfSymbolNamed:metaClassSymbolForClass(@"FirstClass")];
+    INTEXPECT( firstClassSymbolOffset,28,@"symbol table entry of FirstClass");
+    INTEXPECT( firstMetaClassSymbolOffset,30,@"symbol table entry of FirstClass's metaclass");
+    INTEXPECT( firstClassReadOnlySymbolOffset,15,@"symbol table entry of FirstClass's RO class part");
+    int sectionIndex = [reader sectionForSymbolAt:firstClassReadOnlySymbolOffset];
+    INTEXPECT( sectionIndex,3,@"section that class RO part is in");
+    MPWMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
+    IDEXPECT([readOnlyClassSection sectionName],@"__objc_data",@"text section section name");
+    IDEXPECT([readOnlyClassSection segmentName],@"__DATA",@"text section segment name");
+    
+    
+    
+    long offsetOfFirstClassReadOnlyStruct = [section readOnlyClassStructOffset:firstClassName metaclass:NO];
+    INTEXPECT( offsetOfFirstClassReadOnlyStruct,256, @"offset of FirstClass RO");
+    INTEXPECT( [reader indexOfSymbolNamed:classSymbolForClass(@"SecondClass")],29,@"symbol table entry of SecondClass");
+    INTEXPECT( [reader symbolOffsetAt:29],672, @"offset of SecondClass");
+    
+    const Mach_O_Class_RO *firstClassReadOnlyParts = [section readOnlyClassStruct:firstClassName metaclass:NO];
+    INTEXPECT(firstClassReadOnlyParts->instanceSize ,8, @"size of FirstClass instances" );
+    INTEXPECT(firstClassReadOnlyParts->instanceStart ,8, @"size of FirstClass instances" );
+    
+    const Mach_O_Class_RO *firstMetaClassReadOnlyParts = [section readOnlyClassStruct:firstClassName metaclass:YES];
+    INTEXPECT(firstMetaClassReadOnlyParts->instanceSize ,40, @"size of FirstClass instances" );
+    INTEXPECT(firstMetaClassReadOnlyParts->instanceStart ,40, @"size of FirstClass instances" );
+}
+
++(void)testReadObjectiveC_MethodTable
+{
+    
+}
+
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -252,6 +266,8 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
        @"testReadObjectiveCName",
        @"testReadObjectiveCNames",
        @"testSizeOfClassStructsInMacho",
+       @"testReadObjectiveC_ClassStructs",
+       @"testReadObjectiveC_MethodTable",
 			];
 }
 
