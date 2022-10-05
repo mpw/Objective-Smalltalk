@@ -110,8 +110,8 @@ static NSString* classSymbolForClass( NSString *className ) {
     return [@"_OBJC_CLASS_$_" stringByAppendingString:className];
 }
 
-static NSString* readOnlyPartOfClassSymbolForClass( NSString *className ) {
-    return [@"__OBJC_CLASS_RO_$_" stringByAppendingString:className];
+static NSString* readOnlyPartOfClassSymbolForClass( NSString *className , BOOL metaclass) {
+    return [(metaclass ?  @"__OBJC_METACLASS_RO_$_": @"__OBJC_CLASS_RO_$_")  stringByAppendingString:className];
 }
 
 static NSString* metaClassSymbolForClass( NSString *className ) {
@@ -123,22 +123,21 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     return [self.reader indexOfSymbolNamed:classSymbolForClass(className)];
 }
 
--(int)readOnlyClassSymbolOffset:(NSString*)className
+-(int)readOnlyClassSymbolOffset:(NSString*)className metaclass:(BOOL)metaclass
 {
-    return [self.reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(className)];
+    return [self.reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(className,metaclass)];
 }
 
--(long)readOnlyClassStructOffset:(NSString*)className
+-(long)readOnlyClassStructOffset:(NSString*)className metaclass:(BOOL)metaclass
 {
-    return [self.reader symbolOffsetAt:[self readOnlyClassSymbolOffset:className]];
+    return [self.reader symbolOffsetAt:[self readOnlyClassSymbolOffset:className metaclass:metaclass]];
 }
 
--(const Mach_O_Class_RO*)readOnlyClassStruct:(NSString*)className
+-(const Mach_O_Class_RO*)readOnlyClassStruct:(NSString*)className metaclass:(BOOL)metaclass
 {
-    int sectionIndex = [self.reader sectionForSymbolAt:[self readOnlyClassSymbolOffset:className]];
+    int sectionIndex = [self.reader sectionForSymbolAt:[self readOnlyClassSymbolOffset:className metaclass:metaclass]];
     MPWMachOSection *readOnlyClassSection = [self.reader sectionAtIndex:sectionIndex];
-    IDEXPECT( [readOnlyClassSection sectionName],@"__objc_data",@"section name");
-    return [readOnlyClassSection segmentBytes] + [self readOnlyClassStructOffset:className];
+    return [readOnlyClassSection segmentBytes] + [self readOnlyClassStructOffset:className metaclass:metaclass];
 }
 
 
@@ -198,7 +197,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     IDEXPECT( firstClassName, @"FirstClass", @"Objective-C classname");
     IDEXPECT( secondClassName, @"SecondClass", @"Objective-C classname");
     int firstClassSymbolOffset = [section classSymbolOffset:firstClassName];
-    int firstClassReadOnlySymbolOffset = [reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(@"FirstClass")];
+    int firstClassReadOnlySymbolOffset = [reader indexOfSymbolNamed:readOnlyPartOfClassSymbolForClass(@"FirstClass",NO)];
     int firstMetaClassSymbolOffset = [reader indexOfSymbolNamed:metaClassSymbolForClass(@"FirstClass")];
     INTEXPECT( firstClassSymbolOffset,28,@"symbol table entry of FirstClass");
     INTEXPECT( firstMetaClassSymbolOffset,30,@"symbol table entry of FirstClass's metaclass");
@@ -211,15 +210,19 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
 
     
     
-    long offsetOfFirstClassReadOnlyStruct = [section readOnlyClassStructOffset:firstClassName];
+    long offsetOfFirstClassReadOnlyStruct = [section readOnlyClassStructOffset:firstClassName metaclass:NO];
     INTEXPECT( offsetOfFirstClassReadOnlyStruct,256, @"offset of FirstClass RO");
     INTEXPECT( [reader indexOfSymbolNamed:classSymbolForClass(@"SecondClass")],29,@"symbol table entry of SecondClass");
     INTEXPECT( [reader symbolOffsetAt:29],672, @"offset of SecondClass");
     
-    const Mach_O_Class_RO *firstClassReadOnlyParts = [section readOnlyClassStruct:firstClassName];
+    const Mach_O_Class_RO *firstClassReadOnlyParts = [section readOnlyClassStruct:firstClassName metaclass:NO];
     INTEXPECT(firstClassReadOnlyParts->instanceSize ,8, @"size of FirstClass instances" );
     INTEXPECT(firstClassReadOnlyParts->instanceStart ,8, @"size of FirstClass instances" );
-
+    
+    const Mach_O_Class_RO *firstMetaClassReadOnlyParts = [section readOnlyClassStruct:firstClassName metaclass:YES];
+    INTEXPECT(firstMetaClassReadOnlyParts->instanceSize ,40, @"size of FirstClass instances" );
+    INTEXPECT(firstMetaClassReadOnlyParts->instanceStart ,40, @"size of FirstClass instances" );
+    
 }
 
 static int sizeOfClass( int numMethods ) {
