@@ -12,7 +12,7 @@
 #import <nlist.h>
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
-#import "SymtabEntry.h"
+#import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
 
 @interface MPWMachOWriter()

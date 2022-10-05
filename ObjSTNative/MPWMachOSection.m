@@ -9,6 +9,7 @@
 #import <mach-o/loader.h>
 #import <mach-o/reloc.h>
 #import "MPWMachOReader.h"
+#import "Mach_O_Structs.h"
 
 @interface MPWMachOSection()
 
@@ -119,14 +120,33 @@
     INTEXPECT( reader.numSections, 9 , @"sections");
     MPWMachOSection *section=[reader objcClassNameSection];
     IDEXPECT( [section objcClassName], @"Hi", @"Objective-C classname");
-    
 }
 
+static int sizeOfClass( int numMethods ) {
+    return sizeof(Mach_O_Class_RO) + numMethods * sizeof(MethodEntry) + (numMethods>0 ? sizeof(BaseMethods):0);
+}
+
+static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
+    return sizeOfClass(instanceMethods) + sizeOfClass(classMethods);
+}
+
++(void)testSizeOfClassStructsInMacho
+{
+    INTEXPECT( sizeof(Mach_O_Class_RO), 72, @"size of read-only part of class (in Mach-O)");
+    MPWMachOReader *oneClassOneMethodReader=[self readerForTestFile:@"class-with-method"];
+    MPWMachOSection *readOnlyClassSectionOneClass = [oneClassOneMethodReader objcClassReadOnlySection];
+    INTEXPECT( readOnlyClassSectionOneClass.sectionData.length , sizeOfClassAndMetaClass(1,0), @"size of RO class part");
+    MPWMachOReader *twoClassReader=[self readerForTestFile:@"two-classes"];
+    MPWMachOSection *readOnlyClassSectionTwoClasses = [twoClassReader objcClassReadOnlySection];
+    INTEXPECT( readOnlyClassSectionTwoClasses.sectionData.length ,
+              sizeOfClassAndMetaClass(3,0)+sizeOfClassAndMetaClass(1,0)  , @"size of RO class part for two clases, one with 3 instance methods, other with 1 instance method, not class methods");
+}
 
 +(NSArray*)testSelectors
 {
    return @[
-			@"testReadObjectiveCSections",
+       @"testReadObjectiveCSections",
+       @"testSizeOfClassStructsInMacho",
 			];
 }
 

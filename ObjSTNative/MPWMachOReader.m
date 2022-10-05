@@ -10,7 +10,7 @@
 #import <nlist.h>
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
-#import "SymtabEntry.h"
+#import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
 
 @interface MPWMachOReader()
@@ -135,6 +135,11 @@
 -(MPWMachOSection*)objcClassNameSection
 {
     return [self sectionWithName:"__objc_classname"];
+}
+
+-(MPWMachOSection*)objcClassReadOnlySection
+{
+    return [self sectionWithName:"__objc_const"];
 }
 
 -(struct symtab_command*)symtab
