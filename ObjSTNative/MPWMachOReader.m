@@ -151,8 +151,8 @@
 {
     struct segment_command_64 *segment=[self segment];
     struct section_64 *sections=(struct section_64*)(segment + 1);
-    NSAssert(sectionIndex >=0 && sectionIndex < segment->nsects, @"section index out of range");
-    return [self sectionWithSectionHeader:sections+sectionIndex];
+    NSAssert(sectionIndex >=1 && sectionIndex <= segment->nsects, @"section index out of range");
+    return [self sectionWithSectionHeader:sections+sectionIndex-1];
 }
 
 -(MPWMachOSection*)objcClassNameSection
@@ -164,6 +164,14 @@
 {
     return [self sectionWithName:"__objc_const"];
 }
+
+-(MPWMachOSection*)objcClassListSection
+{
+    return [self sectionWithName:"__objc_classlist"];
+}
+
+
+
 
 -(struct symtab_command*)symtab
 {

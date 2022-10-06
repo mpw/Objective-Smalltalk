@@ -36,12 +36,16 @@
 
 -(NSString*)sectionName
 {
-    return @(sectionHeader->sectname);
+    char name[32]={};
+    memcpy( name,sectionHeader->sectname,sizeof sectionHeader->sectname);
+    return @(name);
 }
 
 -(NSString*)segmentName
 {
-    return @(sectionHeader->segname);
+    char name[32]={};
+    memcpy( name,sectionHeader->segname,sizeof sectionHeader->segname);
+    return @(name);
 }
 
 -(const void*)bytes
@@ -82,27 +86,32 @@
     return reloc[i];
 }
 
+-(int)symbolNumberOfRelocEntryAt:(int)i
+{
+    struct relocation_info reloc=[self relocEntryAt:i];
+    return reloc.r_symbolnum;
+}
+
 -(NSString*)nameOfRelocEntryAt:(int)i
 {
-    struct relocation_info reloc=[self relocEntryAt:0];
-    return [self.reader symbolNameAt:reloc.r_symbolnum];
+    return [self.reader symbolNameAt:[self symbolNumberOfRelocEntryAt:i]];
 }
 
 -(long)offsetOfRelocEntryAt:(int)i
 {
-    struct relocation_info reloc=[self relocEntryAt:0];
+    struct relocation_info reloc=[self relocEntryAt:i];
     return reloc.r_address;
 }
 
 -(int)typeOfRelocEntryAt:(int)i
 {
-    struct relocation_info reloc=[self relocEntryAt:0];
+    struct relocation_info reloc=[self relocEntryAt:i];
     return reloc.r_type;
 }
 
 -(bool)isExternalRelocEntryAt:(int)i
 {
-    struct relocation_info reloc=[self relocEntryAt:0];
+    struct relocation_info reloc=[self relocEntryAt:i];
     return reloc.r_extern != 0;
 }
 
@@ -234,7 +243,7 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
     int sectionIndex = [reader sectionForSymbolAt:firstClassReadOnlySymbolOffset];
     INTEXPECT( sectionIndex,3,@"section that class RO part is in");
     MPWMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
-    IDEXPECT([readOnlyClassSection sectionName],@"__objc_data",@"text section section name");
+    IDEXPECT([readOnlyClassSection sectionName],@"__objc_const",@"section of ObjC read only parts of class");
     IDEXPECT([readOnlyClassSection segmentName],@"__DATA",@"text section segment name");
     
     
@@ -253,9 +262,23 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
     INTEXPECT(firstMetaClassReadOnlyParts->instanceStart ,40, @"size of FirstClass instances" );
 }
 
-+(void)testReadObjectiveC_MethodTable
++(void)testReadObjectiveC_ClassList
 {
-    
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    MPWMachOSection *section=[reader objcClassListSection];
+    IDEXPECT( [section sectionName],@"__objc_classlist",@"it is the class list");
+    IDEXPECT( [section segmentName],@"__DATA",@"segment of class list");
+    INTEXPECT( [section numRelocEntries],2,@"two classes");
+    INTEXPECT( [section sectionData].length, 16, @"two pointers worth of data");
+    IDEXPECT( [section nameOfRelocEntryAt:0],@"_OBJC_CLASS_$_SecondClass",@"first pointer points to");
+    IDEXPECT( [section nameOfRelocEntryAt:1],@"_OBJC_CLASS_$_FirstClass",@"second pointer points to");
+    int firstSymbolEntryIndex = [section symbolNumberOfRelocEntryAt:0];
+//    int secondSymbolEntryIndex = [section symbolNumberOfRelocEntryAt:1];
+    int sectionIndex = [section.reader sectionForSymbolAt:firstSymbolEntryIndex];
+    INTEXPECT( sectionIndex,4, @"should point to objc data");
+    MPWMachOSection *targetSection1=[section.reader sectionAtIndex:sectionIndex];
+    IDEXPECT( [targetSection1 sectionName], @"__objc_data" , @"objc data?? ");
+//    IDEXPECT( [targetSection2 sectionName], @"__objc_methname" , @"objc data?? ");
 }
 
 
@@ -267,7 +290,7 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
        @"testReadObjectiveCNames",
        @"testSizeOfClassStructsInMacho",
        @"testReadObjectiveC_ClassStructs",
-       @"testReadObjectiveC_MethodTable",
+       @"testReadObjectiveC_ClassList",
 			];
 }
 

@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWMachOSection*)textSection;
 -(MPWMachOSection*)objcClassNameSection;
 -(MPWMachOSection*)objcClassReadOnlySection;
+-(MPWMachOSection*)objcClassListSection;
 -(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
 
 
