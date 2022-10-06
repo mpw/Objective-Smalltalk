@@ -40,6 +40,7 @@ typedef struct Mach_O_Class {
     struct Mach_O_Class *isa;
     struct Mach_O_Class *superclass;
     void *cache,*vtable;
+    Mach_O_Class_RO *data;
 } Mach_O_Class;
 
 

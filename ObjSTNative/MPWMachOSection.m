@@ -58,13 +58,17 @@
     return [self.reader segmentBytes];
 }
 
+-(long)offset
+{
+    return sectionHeader->offset;
+}
 
 -(NSData*)sectionData
 {
     return [self.machoData subdataWithRange:NSMakeRange(sectionHeader->offset,sectionHeader->size)];
 }
 
--(NSArray<NSString*>*)objcClassNames
+-(NSArray<NSString*>*)strings
 {
     NSString *base=[NSString stringWithCString:[self.reader bytes] + sectionHeader->offset length:sectionHeader->size-1];
     return [base componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithRange:NSMakeRange(0, 1)]];
@@ -190,8 +194,8 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
     INTEXPECT( reader.numSections, 9 , @"sections");
     MPWMachOSection *section=[reader objcClassNameSection];
-    INTEXPECT( [section objcClassNames].count, 1, @"Objective-C classname");
-    IDEXPECT( [section objcClassNames].firstObject, @"Hi", @"Objective-C classname");
+    INTEXPECT( [section strings].count, 1, @"Objective-C classname");
+    IDEXPECT( [section strings].firstObject, @"Hi", @"Objective-C classname");
 }
 
 +(void)testReadObjectiveCNames
@@ -200,9 +204,9 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
     INTEXPECT( reader.numSections, 9 , @"sections");
     MPWMachOSection *section=[reader objcClassNameSection];
-    INTEXPECT( [section objcClassNames].count, 2, @"Objective-C classname");
-    NSString *firstClassName = [section objcClassNames].firstObject;
-    NSString *secondClassName = [section objcClassNames].lastObject;
+    INTEXPECT( [section strings].count, 2, @"Objective-C classname");
+    NSString *firstClassName = [section strings].firstObject;
+    NSString *secondClassName = [section strings].lastObject;
     IDEXPECT( firstClassName, @"FirstClass", @"Objective-C classname");
     IDEXPECT( secondClassName, @"SecondClass", @"Objective-C classname");
 }
@@ -231,7 +235,7 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
 {
     MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
     MPWMachOSection *section=[reader objcClassNameSection];
-    NSString *firstClassName = [section objcClassNames].firstObject;
+    NSString *firstClassName = [section strings].firstObject;
 //    NSString *secondClassName = [section objcClassNames].lastObject;
 
     int firstClassSymbolOffset = [section classSymbolOffset:firstClassName];
@@ -245,7 +249,6 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
     MPWMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
     IDEXPECT([readOnlyClassSection sectionName],@"__objc_const",@"section of ObjC read only parts of class");
     IDEXPECT([readOnlyClassSection segmentName],@"__DATA",@"text section segment name");
-    
     
     
     long offsetOfFirstClassReadOnlyStruct = [section readOnlyClassStructOffset:firstClassName metaclass:NO];
@@ -262,6 +265,23 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
     INTEXPECT(firstMetaClassReadOnlyParts->instanceStart ,40, @"size of FirstClass instances" );
 }
 
++(void)testRelocationEntriesInObjectiveCDataSection
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    MPWMachOSection *objcDataSection=[reader objcDataSection];
+    for (int i=0;i<[objcDataSection numRelocEntries];i++) {
+        NSLog(@"reloc entry[%d] offset = %ld name = %@",i,[objcDataSection offsetOfRelocEntryAt:i],[objcDataSection nameOfRelocEntryAt:i]);
+        //        if ([objcDataSection offsetOfRelocEntryAt:i]==offsetOfConstantPartWithinClass) {
+        //            NSLog(@"=== found reloc entry at %d",i);
+    }
+}
+
+
+static int offsetOfReadOnlyPointerFromBaseClass() {
+    Mach_O_Class c;
+    return (void*)&c.data - (void*)&c;
+}
+
 +(void)testReadObjectiveC_ClassList
 {
     MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
@@ -273,14 +293,42 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
     IDEXPECT( [section nameOfRelocEntryAt:0],@"_OBJC_CLASS_$_SecondClass",@"first pointer points to");
     IDEXPECT( [section nameOfRelocEntryAt:1],@"_OBJC_CLASS_$_FirstClass",@"second pointer points to");
     int firstSymbolEntryIndex = [section symbolNumberOfRelocEntryAt:0];
-//    int secondSymbolEntryIndex = [section symbolNumberOfRelocEntryAt:1];
     int sectionIndex = [section.reader sectionForSymbolAt:firstSymbolEntryIndex];
     INTEXPECT( sectionIndex,4, @"should point to objc data");
     MPWMachOSection *targetSection1=[section.reader sectionAtIndex:sectionIndex];
+    long offsetOfClass = [section.reader symbolOffsetAt:firstSymbolEntryIndex] - ([targetSection1 offset] - [reader segmentOffset]);
+    long offsetOfConstantPartWithinClass = offsetOfClass + offsetOfReadOnlyPointerFromBaseClass();
+    INTEXPECT( offsetOfClass, 0x78 , @"offset of class");
+//    INTEXPECT( offsetOfConstantPartWithinClass, 0x2c0 , @"offset of pointer to readonly part");
+//    NSLog(@"offset")
+    int entry=-1;
+    for (int i=0;i<[targetSection1 numRelocEntries];i++) {
+        if ([targetSection1 offsetOfRelocEntryAt:i]==offsetOfConstantPartWithinClass) {
+            entry=[targetSection1 symbolNumberOfRelocEntryAt:i];
+            break;
+        }
+    }
+    INTEXPECT(entry,23,@"symtab entry");
+    IDEXPECT([reader symbolNameAt:entry], @"__OBJC_CLASS_RO_$_SecondClass",@"ref to RO paart");
     IDEXPECT( [targetSection1 sectionName], @"__objc_data" , @"objc data?? ");
-//    IDEXPECT( [targetSection2 sectionName], @"__objc_methname" , @"objc data?? ");
 }
 
++(void)testReadObjectiveC_MethodNameList
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    MPWMachOSection *section=[reader objcMethodNamesSection];
+    NSArray<NSString*>* methodNames=[section strings];
+    INTEXPECT( methodNames.count, 4, @"Objective-C method names");
+    IDEXPECT(methodNames[0],@"components:splitInto:",@"first method" );
+    IDEXPECT(methodNames[1],@"hi",@"second method" );
+    IDEXPECT(methodNames[2],@"there",@"third method" );
+    IDEXPECT(methodNames[3],@"more",@"fourth method" );
+}
+
++(void)testReadObjectiveC_MethodListForClass
+{
+    
+}
 
 +(NSArray*)testSelectors
 {
@@ -291,6 +339,8 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
        @"testSizeOfClassStructsInMacho",
        @"testReadObjectiveC_ClassStructs",
        @"testReadObjectiveC_ClassList",
+       @"testReadObjectiveC_MethodNameList",
+       @"testReadObjectiveC_MethodListForClass",
 			];
 }
 

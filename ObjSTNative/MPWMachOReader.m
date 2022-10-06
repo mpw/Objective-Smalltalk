@@ -165,9 +165,19 @@
     return [self sectionWithName:"__objc_const"];
 }
 
+-(MPWMachOSection*)objcDataSection
+{
+    return [self sectionWithName:"__objc_data"];
+}
+
 -(MPWMachOSection*)objcClassListSection
 {
     return [self sectionWithName:"__objc_classlist"];
+}
+
+-(MPWMachOSection*)objcMethodNamesSection
+{
+    return [self sectionWithName:"__objc_methname"];
 }
 
 
