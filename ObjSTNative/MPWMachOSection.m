@@ -392,6 +392,11 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     int relocEntryForMethodTable = [objcConstSection indexOfRelocationEntryAtOffset:methodTablePointerOffset];
     INTEXPECT(relocEntryForMethodTable, 0, @"relocEntry for method table");
     IDEXPECT([objcConstSection nameOfRelocEntryAt:0],@"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method table name");
+//    long offsetOfMethodTable = [objcConstSection offsetOfRelocEntryAt:0];
+    const BaseMethods *methods = [objcConstSection bytes] + [objcConstSection offsetInTargetSectionForRelocEntryAt:0];
+
+    INTEXPECT( methods->count, 3 ,@"number of methods");
+    INTEXPECT( methods->entrysize, 24, @"entry size");
     
 }
 
