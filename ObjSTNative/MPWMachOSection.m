@@ -401,9 +401,16 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     const MethodEntry *firstMethodEntry = &(methods->methods[0]);
     long relativeOffset = (void*)firstMethodEntry - (void*)methods;
     long offsetOfMethodEntry = relativeOffset + [objcConstSection offsetInTargetSectionForRelocEntryAt:0];
-    int relocationEntryForFirstMethodEntry = [objcConstSection indexOfRelocationEntryAtOffset:offsetOfMethodEntry];
-    INTEXPECT( relocationEntryForFirstMethodEntry, 10, @"relocation entry index");
-    IDEXPECT( [objcConstSection nameOfRelocEntryAt:relocationEntryForFirstMethodEntry],@"l_OBJC_METH_VAR_NAME_.2",@"");
+    int relocationEntryForFirstMethodName = [objcConstSection indexOfRelocationEntryAtOffset:offsetOfMethodEntry];
+    INTEXPECT( relocationEntryForFirstMethodName, 10, @"relocation entry index");
+    IDEXPECT( [objcConstSection nameOfRelocEntryAt:relocationEntryForFirstMethodName],@"l_OBJC_METH_VAR_NAME_.2",@"");
+    int relocationEntryForFirstMethodType = [objcConstSection indexOfRelocationEntryAtOffset:offsetOfMethodEntry+8];
+    INTEXPECT( relocationEntryForFirstMethodType, 9, @"relocation entry index");
+    IDEXPECT( [objcConstSection nameOfRelocEntryAt:relocationEntryForFirstMethodType],@"l_OBJC_METH_VAR_TYPE_.3",@"");
+    int relocationEntryForFirstMethodCode = [objcConstSection indexOfRelocationEntryAtOffset:offsetOfMethodEntry+16];
+    INTEXPECT( relocationEntryForFirstMethodCode, 8, @"relocation entry index");
+    IDEXPECT( [objcConstSection nameOfRelocEntryAt:relocationEntryForFirstMethodCode],@"-[SecondClass hi]",@"");
+
 }
 
 +(NSArray*)testSelectors
