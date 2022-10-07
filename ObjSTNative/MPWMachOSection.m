@@ -393,11 +393,17 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     INTEXPECT(relocEntryForMethodTable, 0, @"relocEntry for method table");
     IDEXPECT([objcConstSection nameOfRelocEntryAt:0],@"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method table name");
 //    long offsetOfMethodTable = [objcConstSection offsetOfRelocEntryAt:0];
-    const BaseMethods *methods = [objcConstSection bytes] + [objcConstSection offsetInTargetSectionForRelocEntryAt:0];
+    long offsetOfMethodsTable = [objcConstSection offsetInTargetSectionForRelocEntryAt:0];
+    const BaseMethods *methods = [objcConstSection bytes] + offsetOfMethodsTable;
 
     INTEXPECT( methods->count, 3 ,@"number of methods");
     INTEXPECT( methods->entrysize, 24, @"entry size");
-    
+    const MethodEntry *firstMethodEntry = &(methods->methods[0]);
+    long relativeOffset = (void*)firstMethodEntry - (void*)methods;
+    long offsetOfMethodEntry = relativeOffset + [objcConstSection offsetInTargetSectionForRelocEntryAt:0];
+    int relocationEntryForFirstMethodEntry = [objcConstSection indexOfRelocationEntryAtOffset:offsetOfMethodEntry];
+    INTEXPECT( relocationEntryForFirstMethodEntry, 10, @"relocation entry index");
+    IDEXPECT( [objcConstSection nameOfRelocEntryAt:relocationEntryForFirstMethodEntry],@"l_OBJC_METH_VAR_NAME_.2",@"");
 }
 
 +(NSArray*)testSelectors
