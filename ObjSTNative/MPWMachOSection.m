@@ -153,6 +153,48 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     return [readOnlyClassSection segmentBytes] + [self readOnlyClassStructOffset:className metaclass:metaclass];
 }
 
+-(int)indexOfRelocationEntryAtOffset:(long)offset
+{
+    int entry=-1;
+    for (int i=0;i<[self numRelocEntries];i++) {
+        if ([self offsetOfRelocEntryAt:i]==offset) {
+            entry=i;
+            break;
+        }
+    }
+    return entry;
+}
+
+-(int)indexOfSymboltableEntryAtOffset:(long)offset
+{
+    int entry=-1;
+    int relocEntryOffset = [self indexOfRelocationEntryAtOffset:offset];
+    if ( relocEntryOffset >= 0 ) {
+        entry = [self symbolNumberOfRelocEntryAt:relocEntryOffset];
+    }
+    return entry;
+}
+
+-(MPWMachOSection*)sectionForRelocEntryAt:(int)which
+{
+    int symbolIndex = [self symbolNumberOfRelocEntryAt:which];
+    int sectionIndex = [self.reader sectionForSymbolAt:symbolIndex];
+    return [self.reader sectionAtIndex:sectionIndex];
+//    INTEXPECT( sectionIndex,4, @"should point to objc data");
+    //    MPWMachOSection *targetSection1=[section.reader sectionAtIndex:sectionIndex];
+}
+
+-(long)shiftedOffsetForBaseSymbolOffset:(long)baseOffset
+{
+    return baseOffset - ([self offset] - [self.reader segmentOffset]);
+}
+
+-(long)offsetInTargetSectionForRelocEntryAt:(int)which
+{
+    MPWMachOSection *targetSection = [self sectionForRelocEntryAt:which];
+    int symbolEntryIndex = [self symbolNumberOfRelocEntryAt:which];
+    return [targetSection shiftedOffsetForBaseSymbolOffset:[self.reader symbolOffsetAt:symbolEntryIndex]];
+}
 
 -(void)dealloc
 {
@@ -282,7 +324,12 @@ static int offsetOfReadOnlyPointerFromBaseClass() {
     return (void*)&c.data - (void*)&c;
 }
 
-+(void)testReadObjectiveC_ClassList
+static int offsetOfMethodListPointerFromBaseClassRO() {
+    Mach_O_Class_RO c;
+    return (void*)&c.methods - (void*)&c;
+}
+
++(void)testReadObjectiveClassDefinitionsViaClassList
 {
     MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
     MPWMachOSection *section=[reader objcClassListSection];
@@ -292,25 +339,24 @@ static int offsetOfReadOnlyPointerFromBaseClass() {
     INTEXPECT( [section sectionData].length, 16, @"two pointers worth of data");
     IDEXPECT( [section nameOfRelocEntryAt:0],@"_OBJC_CLASS_$_SecondClass",@"first pointer points to");
     IDEXPECT( [section nameOfRelocEntryAt:1],@"_OBJC_CLASS_$_FirstClass",@"second pointer points to");
-    int firstSymbolEntryIndex = [section symbolNumberOfRelocEntryAt:0];
-    int sectionIndex = [section.reader sectionForSymbolAt:firstSymbolEntryIndex];
-    INTEXPECT( sectionIndex,4, @"should point to objc data");
-    MPWMachOSection *targetSection1=[section.reader sectionAtIndex:sectionIndex];
-    long offsetOfClass = [section.reader symbolOffsetAt:firstSymbolEntryIndex] - ([targetSection1 offset] - [reader segmentOffset]);
-    long offsetOfConstantPartWithinClass = offsetOfClass + offsetOfReadOnlyPointerFromBaseClass();
-    INTEXPECT( offsetOfClass, 0x78 , @"offset of class");
-//    INTEXPECT( offsetOfConstantPartWithinClass, 0x2c0 , @"offset of pointer to readonly part");
-//    NSLog(@"offset")
-    int entry=-1;
-    for (int i=0;i<[targetSection1 numRelocEntries];i++) {
-        if ([targetSection1 offsetOfRelocEntryAt:i]==offsetOfConstantPartWithinClass) {
-            entry=[targetSection1 symbolNumberOfRelocEntryAt:i];
-            break;
-        }
-    }
+    
+    MPWMachOSection *targetSection1=[section sectionForRelocEntryAt:0];
+    long offsetOfSecondClass = [section offsetInTargetSectionForRelocEntryAt:0];
+    long offsetOfSecondConstantPartWithinClass = offsetOfSecondClass + offsetOfReadOnlyPointerFromBaseClass();
+    INTEXPECT( offsetOfSecondClass, 0x78 , @"offset of class");
+    
+    int entry = [targetSection1 indexOfSymboltableEntryAtOffset:offsetOfSecondConstantPartWithinClass];
     INTEXPECT(entry,23,@"symtab entry");
     IDEXPECT([reader symbolNameAt:entry], @"__OBJC_CLASS_RO_$_SecondClass",@"ref to RO paart");
     IDEXPECT( [targetSection1 sectionName], @"__objc_data" , @"objc data?? ");
+    
+    
+    long offsetConstantPartWithinFirstClass = [section offsetInTargetSectionForRelocEntryAt:1] + offsetOfReadOnlyPointerFromBaseClass();
+    INTEXPECT( offsetConstantPartWithinFirstClass, 0x48 , @"offset of class");
+    int entry2 = [targetSection1 indexOfSymboltableEntryAtOffset:offsetConstantPartWithinFirstClass];
+    IDEXPECT([reader symbolNameAt:entry2], @"__OBJC_CLASS_RO_$_FirstClass",@"ref to RO paart");
+
+
 }
 
 +(void)testReadObjectiveC_MethodNameList
@@ -327,6 +373,25 @@ static int offsetOfReadOnlyPointerFromBaseClass() {
 
 +(void)testReadObjectiveC_MethodListForClass
 {
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    MPWMachOSection *section=[reader objcClassListSection];
+    MPWMachOSection *objcDataSection=[section sectionForRelocEntryAt:0];
+    long offsetOfSecondConstantPartWithinClass = [section offsetInTargetSectionForRelocEntryAt:0] + offsetOfReadOnlyPointerFromBaseClass();
+    
+    int entry = [objcDataSection indexOfSymboltableEntryAtOffset:offsetOfSecondConstantPartWithinClass];
+    INTEXPECT(entry,23,@"symtab entry");
+  
+    MPWMachOSection *objcConstSection=[reader sectionAtIndex:[reader sectionForSymbolAt:entry]];
+    IDEXPECT( [objcConstSection sectionName], @"__objc_const" , @"objc const");
+    long roClassOffset=[reader symbolOffsetAt:entry];
+    INTEXPECT(roClassOffset, 0x1e0 , @"offset of RO-part of SecondClass");
+    long actualOffset = [objcConstSection shiftedOffsetForBaseSymbolOffset:roClassOffset];
+    const Mach_O_Class_RO *ro_class = [objcConstSection bytes] + actualOffset;
+    INTEXPECT( ro_class->instanceSize, 8, @"size");
+    long methodTablePointerOffset = actualOffset + offsetOfMethodListPointerFromBaseClassRO();
+    int relocEntryForMethodTable = [objcConstSection indexOfRelocationEntryAtOffset:methodTablePointerOffset];
+    INTEXPECT(relocEntryForMethodTable, 0, @"relocEntry for method table");
+    IDEXPECT([objcConstSection nameOfRelocEntryAt:0],@"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method table name");
     
 }
 
@@ -338,7 +403,7 @@ static int offsetOfReadOnlyPointerFromBaseClass() {
        @"testReadObjectiveCNames",
        @"testSizeOfClassStructsInMacho",
        @"testReadObjectiveC_ClassStructs",
-       @"testReadObjectiveC_ClassList",
+       @"testReadObjectiveClassDefinitionsViaClassList",
        @"testReadObjectiveC_MethodNameList",
        @"testReadObjectiveC_MethodListForClass",
 			];
