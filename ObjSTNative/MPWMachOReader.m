@@ -274,7 +274,7 @@
 
 @implementation MPWMachOReader(testing) 
 
-+(instancetype)readerForTestfile:(NSString*)name
++(instancetype)readerForTestFile:(NSString*)name
 {
     NSData *addmacho=[self frameworkResource:name category:@"macho"];
     MPWMachOReader *reader=[[[self alloc] initWithData:addmacho] autorelease];
@@ -283,12 +283,12 @@
 
 +(instancetype)readerForAdd
 {
-    return [self readerForTestfile:@"add"];
+    return [self readerForTestFile:@"add"];
 }
 
 +(instancetype)readerForExternalFunction
 {
-    return [self readerForTestfile:@"call-external-fn"];
+    return [self readerForTestFile:@"call-external-fn"];
 }
 
 +(void)testCanIdentifyHeader

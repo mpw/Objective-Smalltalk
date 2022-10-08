@@ -355,8 +355,6 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     INTEXPECT( offsetConstantPartWithinFirstClass, 0x48 , @"offset of class");
     int entry2 = [targetSection1 indexOfSymboltableEntryAtOffset:offsetConstantPartWithinFirstClass];
     IDEXPECT([reader symbolNameAt:entry2], @"__OBJC_CLASS_RO_$_FirstClass",@"ref to RO paart");
-
-
 }
 
 +(void)testReadObjectiveC_MethodNameList
