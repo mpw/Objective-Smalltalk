@@ -30,6 +30,21 @@
     return [self.section offsetOfRelocEntryAt:self.relocEntryIndex];
 }
 
+-(long)targetOffset:(long)relativeOffset
+{
+    return [self.section offsetInTargetSectionForRelocEntryAt:self.relocEntryIndex] + relativeOffset;
+}
+
+-(long)targetOffset
+{
+    return [self targetOffset:0];
+}
+
+-(int)indexOfSymtabEntryAtRelativeOffset:(long)relativeOffset
+{
+    return [self.targetSection indexOfSymboltableEntryAtOffset:[self targetOffset:relativeOffset]];
+}
+
 -(void)dealloc
 {
     [_section release];
@@ -40,6 +55,12 @@
 {
     return [self.section nameOfRelocEntryAt:self.relocEntryIndex];
 }
+
+-(MPWMachOSection*)targetSection
+{
+    return [self.section sectionForRelocEntryAt:self.relocEntryIndex];
+}
+
 
 @end
 

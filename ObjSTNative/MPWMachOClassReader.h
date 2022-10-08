@@ -9,7 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWMachOReader,MPWMachOPointer;
+
 @interface MPWMachOClassReader : NSObject
+
+-(instancetype)initWithReader:(MPWMachOReader*)reader;
+-(NSArray<MPWMachOPointer*>*)classes;
 
 @end
 

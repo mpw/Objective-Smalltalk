@@ -41,7 +41,6 @@
     return [self.classListSection numRelocEntries];
 }
 
-
 @end
 
 

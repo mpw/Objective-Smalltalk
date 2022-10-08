@@ -14,7 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWMachOPointer : NSObject
 
 -(instancetype)initWithSection:(MPWMachOSection*)section relocEntryIndex:(int)relocEntryIndex;
-
+-(MPWMachOSection*)targetSection;
+-(long)targetOffset:(long)relativeOffset;
+-(long)targetOffset;
+-(int)indexOfSymtabEntryAtRelativeOffset:(long)relativeOffset;
 
 @property (readonly) MPWMachOSection *section;
 @property (readonly) long offset;
