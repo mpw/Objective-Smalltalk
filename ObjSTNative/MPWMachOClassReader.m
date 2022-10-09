@@ -8,7 +8,7 @@
 #import "MPWMachOClassReader.h"
 #import "MPWMachOReader.h"
 #import "MPWMachOSection.h"
-#import "MPWMachOPointer.h"
+#import "MPWMachORelocationPointer.h"
 
 @interface MPWMachOClassReader()
 
@@ -27,11 +27,11 @@
     return self;
 }
 
--(NSArray<MPWMachOPointer*>*)classes
+-(NSArray<MPWMachORelocationPointer*>*)classes
 {
     NSMutableArray *classes = [NSMutableArray array];
     for (int i=0;i<[self numberOfClasses];i++) {
-        [classes addObject:[[[MPWMachOPointer alloc] initWithSection:self.classListSection relocEntryIndex:i] autorelease]];;
+        [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:self.classListSection relocEntryIndex:i] autorelease]];;
     }
     return classes;
 }
@@ -65,10 +65,10 @@
 +(void)testGetClassPointers
 {
     MPWMachOClassReader *reader=[MPWMachOClassReader readerForTestFile:@"two-classes"];
-    NSArray<MPWMachOPointer*> *classPointers = [reader classes];
+    NSArray<MPWMachORelocationPointer*> *classPointers = [reader classes];
     INTEXPECT( classPointers.count, 2, @"number of classes");
-    IDEXPECT( classPointers[0].name, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
-    IDEXPECT( classPointers[1].name, @"_OBJC_CLASS_$_FirstClass",@"Last class in list");
+    IDEXPECT( classPointers[0].targetName, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
+    IDEXPECT( classPointers[1].targetName, @"_OBJC_CLASS_$_FirstClass",@"Last class in list");
 
 }
 

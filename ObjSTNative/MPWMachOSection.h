@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(bool)isExternalRelocEntryAt:(int)i;
 -(int)typeOfRelocEntryAt:(int)i;
 -(long)offsetInTargetSectionForRelocEntryAt:(int)which;
+-(int)indexOfRelocationEntryAtOffset:(long)offset;
 -(int)indexOfSymboltableEntryAtOffset:(long)offset;
 -(int)numRelocEntries;
 -(int)relocEntryOffset;
@@ -27,7 +28,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 -(NSData*)sectionData;
+-(const void*)bytes;
+-(const void*)segmentBytes;
+
 -(NSString*)objcClassName;
+-(NSString*)sectionName;
+-(NSString*)segmentName;
 
 
 @end

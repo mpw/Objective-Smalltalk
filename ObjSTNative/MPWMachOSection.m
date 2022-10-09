@@ -11,7 +11,8 @@
 #import "MPWMachOReader.h"
 #import "Mach_O_Structs.h"
 #import "MPWMachOClassReader.h"
-#import "MPWMachOPointer.h"
+#import "MPWMachORelocationPointer.h"
+#import "MPWMachOInSectionPointer.h"
 
 @interface MPWMachOSection()
 
@@ -371,26 +372,20 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     IDEXPECT(methodNames[3],@"more",@"fourth method" );
 }
 
+
 +(void)testReadObjectiveC_MethodListForClass
 {
     MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOClassReader *classReader=[[[MPWMachOClassReader alloc] initWithReader:reader] autorelease];
-    NSArray<MPWMachOPointer*> *classes=[classReader classes];
-
-    MPWMachOPointer *firstClass = classes[0];
+    MPWMachOSection *section=[reader objcClassListSection];
+    MPWMachOSection *objcDataSection=[section sectionForRelocEntryAt:0];
+    long offsetOfSecondConstantPartWithinClass = [section offsetInTargetSectionForRelocEntryAt:0] + offsetOfReadOnlyPointerFromBaseClass();
     
-    MPWMachOSection *objcDataSection=[firstClass targetSection];
-    long offsetOfSecondConstantPartWithinClass = [firstClass targetOffset];
-    INTEXPECT(offsetOfSecondConstantPartWithinClass,120,@"offset of of ptr" );
-    offsetOfSecondConstantPartWithinClass += offsetOfReadOnlyPointerFromBaseClass();
+    int entry = [objcDataSection indexOfSymboltableEntryAtOffset:offsetOfSecondConstantPartWithinClass];
+    INTEXPECT(entry,23,@"symtab entry");
     
-//    int symtabEntryIndex = [objcDataSection indexOfSymboltableEntryAtOffset:offsetOfSecondConstantPartWithinClass];
-    int symtabEntryIndex = [firstClass indexOfSymtabEntryAtRelativeOffset:offsetOfReadOnlyPointerFromBaseClass()];
-    INTEXPECT(symtabEntryIndex,23,@"symtab entry");
-  
-    MPWMachOSection *objcConstSection=[reader sectionAtIndex:[reader sectionForSymbolAt:symtabEntryIndex]];
+    MPWMachOSection *objcConstSection=[reader sectionAtIndex:[reader sectionForSymbolAt:entry]];
     IDEXPECT( [objcConstSection sectionName], @"__objc_const" , @"objc const");
-    long roClassOffset=[reader symbolOffsetAt:symtabEntryIndex];
+    long roClassOffset=[reader symbolOffsetAt:entry];
     INTEXPECT(roClassOffset, 0x1e0 , @"offset of RO-part of SecondClass");
     long actualOffset = [objcConstSection shiftedOffsetForBaseSymbolOffset:roClassOffset];
     const Mach_O_Class_RO *ro_class = [objcConstSection bytes] + actualOffset;
@@ -399,10 +394,10 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     int relocEntryForMethodTable = [objcConstSection indexOfRelocationEntryAtOffset:methodTablePointerOffset];
     INTEXPECT(relocEntryForMethodTable, 0, @"relocEntry for method table");
     IDEXPECT([objcConstSection nameOfRelocEntryAt:0],@"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method table name");
-//    long offsetOfMethodTable = [objcConstSection offsetOfRelocEntryAt:0];
+    //    long offsetOfMethodTable = [objcConstSection offsetOfRelocEntryAt:0];
     long offsetOfMethodsTable = [objcConstSection offsetInTargetSectionForRelocEntryAt:0];
     const BaseMethods *methods = [objcConstSection bytes] + offsetOfMethodsTable;
-
+    
     INTEXPECT( methods->count, 3 ,@"number of methods");
     INTEXPECT( methods->entrysize, 24, @"entry size");
     const MethodEntry *firstMethodEntry = &(methods->methods[0]);
@@ -417,7 +412,25 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     int relocationEntryForFirstMethodCode = [objcConstSection indexOfRelocationEntryAtOffset:offsetOfMethodEntry+16];
     INTEXPECT( relocationEntryForFirstMethodCode, 8, @"relocation entry index");
     IDEXPECT( [objcConstSection nameOfRelocEntryAt:relocationEntryForFirstMethodCode],@"-[SecondClass hi]",@"");
+    
+}
 
+
++(void)testReadObjectiveC_MethodListForClass_Pointers
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    MPWMachOClassReader *classReader=[[[MPWMachOClassReader alloc] initWithReader:reader] autorelease];
+    MPWMachORelocationPointer *class1ptr=[[classReader classes] firstObject];
+    INTEXPECT( class1ptr.offset, 0,@"source offset");
+    IDEXPECT( class1ptr.targetName, @"_OBJC_CLASS_$_SecondClass",@"target name");
+    INTEXPECT( class1ptr.targetOffset, 0x78,@"target offset");
+    IDEXPECT( class1ptr.targetSection.sectionName , @"__objc_data",@"target section name");
+    MPWMachOInSectionPointer *class1 = class1ptr.targetPointer;
+    INTEXPECT( class1.offset, 0x78,@"target offset");
+    IDEXPECT( class1.section.sectionName, @"__objc_data",@"target offset");
+    MPWMachOInSectionPointer *class1_ro_ptr_local = [class1 pointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
+    MPWMachORelocationPointer *class1_ro_ptr = [class1_ro_ptr_local relocationPointer];
+    IDEXPECT( class1_ro_ptr.targetName, @"__OBJC_CLASS_RO_$_SecondClass",@"");
 }
 
 +(NSArray*)testSelectors
@@ -431,6 +444,7 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
        @"testReadObjectiveClassDefinitionsViaClassList",
        @"testReadObjectiveC_MethodNameList",
        @"testReadObjectiveC_MethodListForClass",
+       @"testReadObjectiveC_MethodListForClass_Pointers",
 			];
 }
 
