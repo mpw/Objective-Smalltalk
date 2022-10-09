@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWMachOSection*)objcMethodNamesSection;
 -(MPWMachOSection*)objcDataSection;
 -(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
--(NSArray<MPWMachORelocationPointer*>*)classes;
+-(NSArray<MPWMachORelocationPointer*>*)classPointers;
 
 
 @end

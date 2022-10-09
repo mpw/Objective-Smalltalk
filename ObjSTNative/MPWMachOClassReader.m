@@ -9,15 +9,29 @@
 #import "MPWMachOReader.h"
 #import "MPWMachOSection.h"
 #import "MPWMachORelocationPointer.h"
+#import "MPWMachOInSectionPointer.h"
+#import "Mach_O_Structs.h"
 
 @interface MPWMachOClassReader()
 
-//@property (nonatomic, strong) MPWMachOReader *reader;
 @property (nonatomic, strong) MPWMachORelocationPointer *basePointer;
+
 @end
 
 
 @implementation MPWMachOClassReader
+
+
+static int offsetOfReadOnlyPointerFromBaseClass() {
+    Mach_O_Class c;
+    return (void*)&c.data - (void*)&c;
+}
+
+static int offsetOfMethodListPointerFromBaseClassRO() {
+    Mach_O_Class_RO c;
+    return (void*)&c.methods - (void*)&c;
+}
+
 
 -(instancetype)initWithPointer:(MPWMachORelocationPointer*)basePointer
 {
@@ -26,6 +40,77 @@
     return self;
 }
 
+-(NSString*)classSymbolName
+{
+    return self.basePointer.targetName;
+}
+
+-(MPWMachORelocationPointer*)readOnlyPartRelocationPointer
+{
+    return [[self.basePointer targetPointer] relocationPointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
+}
+
+-(MPWMachOInSectionPointer*)readOnlyPartSectionPointer
+{
+    return self.readOnlyPartRelocationPointer.targetPointer;
+}
+
+-(NSString*)readOnlyPartSymbolName
+{
+    return self.readOnlyPartRelocationPointer.targetName;
+}
+
+-(MPWMachORelocationPointer*)methodListRelocationPointer
+{
+    return [[self readOnlyPartSectionPointer] relocationPointerAtOffset:offsetOfMethodListPointerFromBaseClassRO()] ;
+}
+
+-(int)instanceSize
+{
+    const Mach_O_Class_RO *c = [self.readOnlyPartSectionPointer bytes];
+    return c->instanceSize;
+}
+
+
+-(NSString*)methodListSymbolName
+{
+    return self.methodListRelocationPointer.targetName;
+}
+
+-(MPWMachOInSectionPointer*)methodListPointer
+{
+    return self.methodListRelocationPointer.targetPointer;
+}
+
+-(const BaseMethods*)methodList
+{
+    return [self.methodListPointer bytes];
+}
+
+-(int)numberOfMethods
+{
+    return [self methodList]->count;
+}
+
+-(int)methodEntrySize
+{
+    return [self methodList]->entrysize;
+}
+
+-(MPWMachORelocationPointer*)methodNameAt:(int)methodIndex
+{
+    return [self.methodListPointer relocationPointerAtOffset:sizeof(BaseMethods) + (sizeof(MethodEntry)*methodIndex)+0];
+}
+
+-(MPWMachORelocationPointer*)methodTypesAt:(int)methodIndex
+{
+    return [self.methodListPointer relocationPointerAtOffset:sizeof(BaseMethods) + (sizeof(MethodEntry)*methodIndex)+8];
+}
+
+-(MPWMachORelocationPointer*)methodCodeAt:(int)methodIndex
+{
+    return [self.methodListPointer relocationPointerAtOffset:sizeof(BaseMethods) + (sizeof(MethodEntry)*methodIndex)+16];
+}
 
 @end
 
@@ -36,14 +121,29 @@
 
 +(instancetype)readerForTestFile:(NSString*)testfile
 {
-    MPWMachOReader *machoReader=[MPWMachOReader readerForTestFile:@"two-classes"];
-    MPWMachOClassReader *classreader = [[[self alloc] initWithReader:machoReader] autorelease];
+    MPWMachOReader *machoReader=[MPWMachOReader readerForTestFile:testfile];
+    MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
     return classreader;
+}
+
++(void)testReadClass
+{
+    MPWMachOClassReader *reader=[self readerForTestFile:@"two-classes"];
+    IDEXPECT( reader.classSymbolName, @"_OBJC_CLASS_$_SecondClass",@"class symbol");
+    IDEXPECT( reader.readOnlyPartSymbolName, @"__OBJC_CLASS_RO_$_SecondClass",@"read only part symbol");
+    INTEXPECT( reader.instanceSize, 8, @"instance size of class");
+    IDEXPECT( reader.methodListSymbolName, @"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method list symbol");
+    INTEXPECT( reader.numberOfMethods, 3,@"number of methods");
+    INTEXPECT( reader.methodEntrySize, 24,@"method entry size");
+    IDEXPECT( [[reader methodNameAt:0] targetName], @"l_OBJC_METH_VAR_NAME_.2",@"first method name symbol name");
+    IDEXPECT( [[reader methodTypesAt:0] targetName], @"l_OBJC_METH_VAR_TYPE_.3",@"first method type encoding symbol name");
+    IDEXPECT( [[reader methodCodeAt:0] targetName], @"-[SecondClass hi]",@"first method code symbol name");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
+       @"testReadClass"
 			];
 }
 
