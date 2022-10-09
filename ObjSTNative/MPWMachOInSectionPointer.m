@@ -54,6 +54,11 @@
     return [[self pointerAtOffset:offset] relocationPointer];
 }
 
+-(instancetype)targetPointerAtOffset:(long)relativeOffset
+{
+    return [[self relocationPointerAtOffset:relativeOffset] targetPointer];
+}
+
 
 -(void)dealloc
 {

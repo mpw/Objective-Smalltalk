@@ -428,12 +428,16 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     MPWMachOInSectionPointer *class1 = class1ptr.targetPointer;
     INTEXPECT( class1.offset, 0x78,@"target offset");
     IDEXPECT( class1.section.sectionName, @"__objc_data",@"target offset");
-    MPWMachOInSectionPointer *class1_ro_ptr_local = [class1 pointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
-    MPWMachORelocationPointer *class1_ro_ptr = [class1_ro_ptr_local relocationPointer];
+    MPWMachORelocationPointer *class1_ro_ptr = [class1 relocationPointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
     IDEXPECT( class1_ro_ptr.targetName, @"__OBJC_CLASS_RO_$_SecondClass",@"");
-    MPWMachOInSectionPointer *ro_class1m = [class1_ro_ptr targetPointer];
+    MPWMachOInSectionPointer *ro_class1m = [class1 targetPointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
     const Mach_O_Class_RO *ro_class_p = [ro_class1m bytes];
     INTEXPECT( ro_class_p->instanceSize, 8, @"size");
+    MPWMachORelocationPointer *methodTablePointer = [ro_class1m relocationPointerAtOffset:offsetOfMethodListPointerFromBaseClassRO()];
+    IDEXPECT( methodTablePointer.targetName, @"__OBJC_$_INSTANCE_METHODS_SecondClass",@"");
+    const BaseMethods *methods = [[methodTablePointer targetPointer] bytes];
+    INTEXPECT( methods->count, 3 ,@"number of methods");
+    INTEXPECT( methods->entrysize, 24, @"entry size");
 }
 
 +(NSArray*)testSelectors
