@@ -28,7 +28,7 @@
 
 -(const void*)bytes
 {
-    return [self.section segmentBytes] + self.offset;
+    return [self.section bytes] + self.offset;
 }
 
 -(BOOL)hasRelocEntry
@@ -49,6 +49,10 @@
     return nil;
 }
 
+-(MPWMachORelocationPointer*)relocationPointerAtOffset:(long)offset
+{
+    return [[self pointerAtOffset:offset] relocationPointer];
+}
 
 
 -(void)dealloc

@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)hasRelocEntry;
 -(instancetype)pointerAtOffset:(long)relativeOffset;
 -(MPWMachORelocationPointer*)relocationPointer;
+-(MPWMachORelocationPointer*)relocationPointerAtOffset:(long)offset;
 
 
 @end

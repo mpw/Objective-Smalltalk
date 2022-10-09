@@ -431,6 +431,9 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     MPWMachOInSectionPointer *class1_ro_ptr_local = [class1 pointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
     MPWMachORelocationPointer *class1_ro_ptr = [class1_ro_ptr_local relocationPointer];
     IDEXPECT( class1_ro_ptr.targetName, @"__OBJC_CLASS_RO_$_SecondClass",@"");
+    MPWMachOInSectionPointer *ro_class1m = [class1_ro_ptr targetPointer];
+    const Mach_O_Class_RO *ro_class_p = [ro_class1m bytes];
+    INTEXPECT( ro_class_p->instanceSize, 8, @"size");
 }
 
 +(NSArray*)testSelectors
