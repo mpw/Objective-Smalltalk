@@ -419,8 +419,8 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
 +(void)testReadObjectiveC_MethodListForClass_Pointers
 {
     MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOClassReader *classReader=[[[MPWMachOClassReader alloc] initWithReader:reader] autorelease];
-    MPWMachORelocationPointer *class1ptr=[[classReader classes] firstObject];
+//    MPWMachOClassReader *classReader=[[[MPWMachOClassReader alloc] initWithReader:reader] autorelease];
+    MPWMachORelocationPointer *class1ptr=[[reader classPointers] firstObject];
     INTEXPECT( class1ptr.offset, 0,@"source offset");
     IDEXPECT( class1ptr.targetName, @"_OBJC_CLASS_$_SecondClass",@"target name");
     INTEXPECT( class1ptr.targetOffset, 0x78,@"target offset");

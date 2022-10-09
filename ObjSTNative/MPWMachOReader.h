@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOSection;
+@class MPWMachOSection,MPWMachORelocationPointer;
 
 @interface MPWMachOReader : NSObject
 
@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWMachOSection*)objcMethodNamesSection;
 -(MPWMachOSection*)objcDataSection;
 -(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
+-(NSArray<MPWMachORelocationPointer*>*)classes;
 
 
 @end

@@ -12,6 +12,7 @@
 #import <mach-o/arm64/reloc.h>
 #import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
+#import "MPWMachORelocationPointer.h"
 
 @interface MPWMachOReader()
 
@@ -178,6 +179,22 @@
 -(MPWMachOSection*)objcMethodNamesSection
 {
     return [self sectionWithName:"__objc_methname"];
+}
+
+-(int)numberOfClasses
+{
+    return [self.objcClassListSection numRelocEntries];
+}
+
+
+-(NSArray<MPWMachORelocationPointer*>*)classPointers
+{
+    MPWMachOSection *classListSection=self.objcClassListSection;
+    NSMutableArray *classes = [NSMutableArray array];
+    for (int i=0;i<[self numberOfClasses];i++) {
+        [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:classListSection relocEntryIndex:i] autorelease]];;
+    }
+    return classes;
 }
 
 
@@ -423,6 +440,16 @@
     EXPECTTRUE([[reader textSection] isExternalRelocEntryAt:0],@"external");
 }
 
++(void)testGetClassPointers
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    NSArray<MPWMachORelocationPointer*> *classPointers = [reader classPointers];
+    INTEXPECT( classPointers.count, 2, @"number of classes");
+    IDEXPECT( classPointers[0].targetName, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
+    IDEXPECT( classPointers[1].targetName, @"_OBJC_CLASS_$_FirstClass",@"Last class in list");
+    
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -435,6 +462,7 @@
        @"testReadSymtab",
        @"testReadStringTable",
        @"testReadMachOWithExternalSymbols",
+       @"testGetClassPointers",
 			];
 }
 

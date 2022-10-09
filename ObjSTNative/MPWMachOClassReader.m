@@ -12,34 +12,20 @@
 
 @interface MPWMachOClassReader()
 
-@property (nonatomic, strong) MPWMachOReader *reader;
-@property (nonatomic, strong) MPWMachOSection *classListSection;
+//@property (nonatomic, strong) MPWMachOReader *reader;
+@property (nonatomic, strong) MPWMachORelocationPointer *basePointer;
 @end
 
 
 @implementation MPWMachOClassReader
 
--(instancetype)initWithReader:(MPWMachOReader*)reader
+-(instancetype)initWithPointer:(MPWMachORelocationPointer*)basePointer
 {
     self=[super init];
-    self.reader = reader;
-    self.classListSection = [reader objcClassListSection];
+    self.basePointer = basePointer;
     return self;
 }
 
--(NSArray<MPWMachORelocationPointer*>*)classes
-{
-    NSMutableArray *classes = [NSMutableArray array];
-    for (int i=0;i<[self numberOfClasses];i++) {
-        [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:self.classListSection relocEntryIndex:i] autorelease]];;
-    }
-    return classes;
-}
-
--(int)numberOfClasses
-{
-    return [self.classListSection numRelocEntries];
-}
 
 @end
 
@@ -55,28 +41,9 @@
     return classreader;
 }
 
-
-+(void)testNumberOfClasses
-{
-    MPWMachOClassReader *reader=[MPWMachOClassReader readerForTestFile:@"two-classes"];
-    INTEXPECT( reader.numberOfClasses, 2, @"number of classes");
-}
-
-+(void)testGetClassPointers
-{
-    MPWMachOClassReader *reader=[MPWMachOClassReader readerForTestFile:@"two-classes"];
-    NSArray<MPWMachORelocationPointer*> *classPointers = [reader classes];
-    INTEXPECT( classPointers.count, 2, @"number of classes");
-    IDEXPECT( classPointers[0].targetName, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
-    IDEXPECT( classPointers[1].targetName, @"_OBJC_CLASS_$_FirstClass",@"Last class in list");
-
-}
-
 +(NSArray*)testSelectors
 {
    return @[
-       @"testNumberOfClasses",
-       @"testGetClassPointers",
 			];
 }
 
