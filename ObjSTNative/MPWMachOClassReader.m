@@ -45,6 +45,16 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     return self.basePointer.targetName;
 }
 
+-(MPWMachORelocationPointer*)metaclassPointer
+{
+    return [[self.basePointer targetPointer] relocationPointerAtOffset:0];
+}
+
+-(instancetype)metaclassReader
+{
+    return [[[[self class] alloc] initWithPointer:[self metaclassPointer]] autorelease];
+}
+
 -(MPWMachORelocationPointer*)readOnlyPartRelocationPointer
 {
     return [[self.basePointer targetPointer] relocationPointerAtOffset:offsetOfReadOnlyPointerFromBaseClass()];
@@ -69,6 +79,12 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
 {
     const Mach_O_Class_RO *c = [self.readOnlyPartSectionPointer bytes];
     return c->instanceSize;
+}
+
+-(int)flags
+{
+    const Mach_O_Class_RO *c = [self.readOnlyPartSectionPointer bytes];
+    return c->flags;
 }
 
 
@@ -131,6 +147,7 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     MPWMachOClassReader *reader=[self readerForTestFile:@"two-classes"];
     IDEXPECT( reader.classSymbolName, @"_OBJC_CLASS_$_SecondClass",@"class symbol");
     IDEXPECT( reader.readOnlyPartSymbolName, @"__OBJC_CLASS_RO_$_SecondClass",@"read only part symbol");
+    INTEXPECT( reader.flags, 0, @"flags for class");
     INTEXPECT( reader.instanceSize, 8, @"instance size of class");
     IDEXPECT( reader.methodListSymbolName, @"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method list symbol");
     INTEXPECT( reader.numberOfMethods, 3,@"number of methods");
@@ -138,12 +155,34 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     IDEXPECT( [[reader methodNameAt:0] targetName], @"l_OBJC_METH_VAR_NAME_.2",@"first method name symbol name");
     IDEXPECT( [[reader methodTypesAt:0] targetName], @"l_OBJC_METH_VAR_TYPE_.3",@"first method type encoding symbol name");
     IDEXPECT( [[reader methodCodeAt:0] targetName], @"-[SecondClass hi]",@"first method code symbol name");
+    IDEXPECT( [[reader methodNameAt:1] targetName], @"l_OBJC_METH_VAR_NAME_.4",@"second method name symbol name");
+    IDEXPECT( [[reader methodTypesAt:1] targetName], @"l_OBJC_METH_VAR_TYPE_.3",@"second method type encoding symbol name");
+    IDEXPECT( [[reader methodCodeAt:1] targetName], @"-[SecondClass there]",@"second method code symbol name");    
 }
+
++(void)testReadMetaClass
+{
+    MPWMachOClassReader *baseReader=[self readerForTestFile:@"two-classes"];
+    MPWMachORelocationPointer *metaclassPointer = [baseReader metaclassPointer];
+    IDEXPECT(metaclassPointer.targetName, @"_OBJC_METACLASS_$_SecondClass",@"meta class symbol name");
+    
+    
+    MPWMachOClassReader *reader = [baseReader metaclassReader];
+    IDEXPECT( reader.classSymbolName, @"_OBJC_METACLASS_$_SecondClass",@"class symbol");
+    IDEXPECT( reader.readOnlyPartSymbolName, @"__OBJC_METACLASS_RO_$_SecondClass",@"read only part symbol");
+    INTEXPECT( reader.flags, 1, @"flags for metaclass");
+    INTEXPECT( reader.instanceSize, 40, @"size of class object");
+    EXPECTNIL( reader.methodListSymbolName,@"no class methods");
+    
+}
+
+
 
 +(NSArray*)testSelectors
 {
    return @[
-       @"testReadClass"
+       @"testReadClass",
+       @"testReadMetaClass"
 			];
 }
 
