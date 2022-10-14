@@ -6,8 +6,6 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
-@interface ObjSTNative : NSObject
-
-@end
+#import <ObjSTNative/MPWByteStreamWithSymbols.h>

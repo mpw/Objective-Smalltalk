@@ -5,21 +5,13 @@
 //  Created by Marcel Weiher on 04.09.22.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import <ObjSTNative/MPWByteStreamWithSymbols.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SymbolWriter
 
--(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
--(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset;
+@interface MPWARMObjectCodeGenerator : MPWByteStreamWithSymbols
 
-@end
-
-@interface MPWARMObjectCodeGenerator : MPWByteStream
-
-@property (nonatomic, strong)  NSDictionary *symbolOffsets;
-@property (nonatomic, nullable, strong) id <SymbolWriter> symbolWriter;
 @end
 
 

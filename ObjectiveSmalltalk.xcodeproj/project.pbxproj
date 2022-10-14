@@ -13,7 +13,6 @@
 		1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F04243A28D1D09B00486831 /* MPWMachOWriter.h */; };
 		1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F04243B28D1D09B00486831 /* MPWMachOWriter.m */; };
 		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
-		1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F084A1816DCE6A200ED2517 /* ObjSTNative.m */; };
 		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
 		1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* MPWStsh.h */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
@@ -483,6 +482,8 @@
 		1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE94C28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m */; };
 		1FDDE95128F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE94F28F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h */; };
 		1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */; };
+		1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE95328F98682002A4AA4 /* MPWByteStreamWithSymbols.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */; };
 		1FE37B6A1969610600C9A378 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -825,7 +826,6 @@
 		1F084A1416DCE6A200ED2517 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1F084A1616DCE6A200ED2517 /* ObjSTNative-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjSTNative-Prefix.pch"; sourceTree = "<group>"; };
 		1F084A1716DCE6A200ED2517 /* ObjSTNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjSTNative.h; sourceTree = "<group>"; };
-		1F084A1816DCE6A200ED2517 /* ObjSTNative.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = ObjSTNative.m; sourceTree = "<group>"; };
 		1F084A2316DCFB3300ED2517 /* llvmincludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llvmincludes.h; sourceTree = "<group>"; };
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
@@ -1224,6 +1224,8 @@
 		1FDDE94C28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachORelocationPointer.m; sourceTree = "<group>"; };
 		1FDDE94F28F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOInSectionPointer.h; sourceTree = "<group>"; };
 		1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOInSectionPointer.m; sourceTree = "<group>"; };
+		1FDDE95328F98682002A4AA4 /* MPWByteStreamWithSymbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWByteStreamWithSymbols.h; sourceTree = "<group>"; };
+		1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWByteStreamWithSymbols.m; sourceTree = "<group>"; };
 		1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodCallBack.h; sourceTree = "<group>"; };
 		1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodCallBack.m; sourceTree = "<group>"; };
 		1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1507,6 +1509,8 @@
 				1F3466F228CB112E003257CB /* TestResources */,
 				1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */,
 				1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */,
+				1FDDE95328F98682002A4AA4 /* MPWByteStreamWithSymbols.h */,
+				1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */,
 				1F3466EA28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h */,
 				1F3466EB28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m */,
 				1F9AE9CA28E1E58600671748 /* MPWJittableData.h */,
@@ -1515,7 +1519,6 @@
 				1F81D90816DEBA7E00408D41 /* llvm.xcconfig */,
 				1F084A2316DCFB3300ED2517 /* llvmincludes.h */,
 				1F084A1716DCE6A200ED2517 /* ObjSTNative.h */,
-				1F084A1816DCE6A200ED2517 /* ObjSTNative.m */,
 				1F084A1116DCE6A200ED2517 /* Supporting Files */,
 				1F70BE55278E11DB002398CC /* MPWCPUSimulator.h */,
 				1F70BE56278E11DB002398CC /* MPWCPUSimulator.m */,
@@ -2321,6 +2324,7 @@
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
+				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
 				1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
 			);
@@ -3512,7 +3516,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F084A1916DCE6A200ED2517 /* ObjSTNative.m in Sources */,
 				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
@@ -3522,6 +3525,7 @@
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
+				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

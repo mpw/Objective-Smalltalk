@@ -155,16 +155,6 @@
     [self appendWord32:0xd50323ff];
 }
 
--(void)addGlobalSymbol:(NSString*)symbol
-{
-    [self.symbolWriter addGlobalSymbol:symbol atOffset:(int)[self length]];
-}
-
--(void)addRelocationEntryForSymbol:(NSString*)symbol
-{
-    [self.symbolWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length]];
-}
-
 -(void)generateStartOfFunctionNamed:(NSString*)name
 {
     [self addGlobalSymbol:name];
