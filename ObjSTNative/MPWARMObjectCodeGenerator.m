@@ -359,7 +359,7 @@ static void callme() {
     [g generateFunctionNamed:@"_theFunction" body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateCallToExternalFunctionNamed:@"_other"];
     }];
-    writer.textSection = (NSData*)[g target];
+    [writer addTextSectionData:(NSData*)[g target]];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
@@ -376,7 +376,7 @@ static void callme() {
     [g generateFunctionNamed:@"_lengthOfString" body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateMessageSendToSelector:@"length"];
     }];
-    writer.textSection = (NSData*)[g target];
+    [writer addTextSectionData:(NSData*)[g target]];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];

@@ -484,6 +484,8 @@
 		1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */; };
 		1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE95328F98682002A4AA4 /* MPWByteStreamWithSymbols.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */; };
+		1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */; };
+		1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95828F98CE4002A4AA4 /* MPWMachOSectionWriter.m */; };
 		1FE37B6A1969610600C9A378 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1226,6 +1228,8 @@
 		1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOInSectionPointer.m; sourceTree = "<group>"; };
 		1FDDE95328F98682002A4AA4 /* MPWByteStreamWithSymbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWByteStreamWithSymbols.h; sourceTree = "<group>"; };
 		1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWByteStreamWithSymbols.m; sourceTree = "<group>"; };
+		1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOSectionWriter.h; sourceTree = "<group>"; };
+		1FDDE95828F98CE4002A4AA4 /* MPWMachOSectionWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOSectionWriter.m; sourceTree = "<group>"; };
 		1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodCallBack.h; sourceTree = "<group>"; };
 		1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodCallBack.m; sourceTree = "<group>"; };
 		1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1535,6 +1539,8 @@
 				1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */,
 				1F04243A28D1D09B00486831 /* MPWMachOWriter.h */,
 				1F04243B28D1D09B00486831 /* MPWMachOWriter.m */,
+				1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */,
+				1FDDE95828F98CE4002A4AA4 /* MPWMachOSectionWriter.m */,
 			);
 			path = ObjSTNative;
 			sourceTree = "<group>";
@@ -2324,6 +2330,7 @@
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
+				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
 				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
 				1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
@@ -3520,6 +3527,7 @@
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */,
+				1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */,
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
 				1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */,
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,

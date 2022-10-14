@@ -14,6 +14,7 @@
 #import <mach-o/arm64/reloc.h>
 #import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
+#import "MPWMachOSectionWriter.h"
 
 @interface MPWMachOWriter()
 
@@ -26,6 +27,9 @@
 
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
 @property (nonatomic, strong) NSDictionary *externalSymbols;
+
+@property (nonatomic, strong) MPWMachOSectionWriter *textSectionWriter;
+
 //@property (nonatomic, strong) NSMutableDictionary *relocationEntries;
 
 
@@ -75,11 +79,14 @@
         [self.stringTableWriter appendBytes:"" length:1];
         self.stringTableOffsets=[NSMutableDictionary dictionary];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
+        self.textSectionWriter=[MPWMachOSectionWriter stream];
 
         symtabCapacity = 10;
         [self growSymtab];
         relocCapacity = 10;
         [self growRelocations];
+        
+        
     }
     return self;
 }
@@ -135,7 +142,7 @@
 
 -(int)textSectionSize
 {
-    return (int)self.textSection.length;
+    return (int)self.textSectionWriter.length;
 }
 
 -(int)stringTableOffset
@@ -152,7 +159,6 @@
 -(void)writeSegmentLoadCommand
 {
     struct segment_command_64 segment={};
-    struct section_64 textSection={};
     segment.cmd = LC_SEGMENT_64;
     segment.cmdsize = [self segmentCommandSize];
     segment.nsects = 1;
@@ -161,16 +167,9 @@
     segment.vmsize = [self textSectionSize];
     segment.initprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
-
-    strcpy( textSection.sectname, "__text");
-    strcpy( textSection.segname, "__TEXT");
-    textSection.offset = [self textSectionOffset];
-    textSection.size = [self textSectionSize];
-    textSection.flags = S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS;
-    textSection.nreloc = [self numRelocationEntries];
-    textSection.reloff = [self relocationEntriessOffset];
     [self appendBytes:&segment length:sizeof segment];
-    [self appendBytes:&textSection length:sizeof textSection];
+
+    [self.textSectionWriter writeSectionLoadCommandOnWriter:self offset:[self textSectionOffset]];
 }
 
 
@@ -186,10 +185,18 @@
     [self appendBytes:&symtab length:sizeof symtab];
 }
 
+-(void)addTextSectionData:(NSData*)data
+{
+    [self.textSectionWriter writeData:data];
+}
+
 -(void)writeTextSection
 {
     NSAssert2(self.length == [self textSectionOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
-     [self writeData:self.textSection];
+    NSLog(@"write %ld bytes length now %ld",self.textSectionWriter.length,self.length);
+    [self writeData:[self.textSectionWriter data]];
+    NSLog(@"after writing %ld bytes length now %ld",self.textSectionWriter.length,self.length);
+//     [self writeData:self.textSection];
 }
 
 -(void)writeStringTable
@@ -318,8 +325,8 @@
     MPWMachOWriter *writer = [self stream];
     [writer addGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
-    writer.textSection = machineCode;
-    INTEXPECT(writer.textSection.length,8,@"bytes in text section");
+    [writer addTextSectionData: machineCode];
+    INTEXPECT(writer.textSectionSize,8,@"bytes in text section");
     
     [writer writeFile];
     
@@ -353,7 +360,7 @@
     MPWMachOWriter *writer = [self stream];
     [writer addGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
-    writer.textSection = machineCode;
+    [writer addTextSectionData:machineCode];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/add.o" atomically:YES];
@@ -365,7 +372,7 @@
     MPWMachOWriter *writer = [self stream];
     [writer addRelocationEntryForSymbol:@"_other" atOffset:12];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
-    writer.textSection = machineCode;
+    [writer addTextSectionData:machineCode];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/reloc.o" atomically:YES];
