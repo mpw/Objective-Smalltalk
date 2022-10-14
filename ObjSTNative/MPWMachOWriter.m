@@ -22,6 +22,7 @@
 @property (nonatomic, assign) int cputype;
 @property (nonatomic, assign) int filetype;
 @property (nonatomic, assign) int loadCommandSize;
+@property (nonatomic, assign) long totalSegmentSize;
 @property (nonatomic, strong) NSMutableDictionary *stringTableOffsets;
 @property (nonatomic, strong) MPWByteStream *stringTableWriter;
 
@@ -42,9 +43,6 @@
     symtab_entry *symtab;
     int symtabCount;
     int symtabCapacity;
-    struct relocation_info *relocations;
-    int relocCount;
-    int relocCapacity;
 }
 
 -(NSArray<MPWMachOSectionWriter*>*)sectionWriters
@@ -63,17 +61,6 @@
     symtab = newSymtab;
 }
 
--(void)growRelocations
-{
-    relocCapacity *= 2;
-    struct relocation_info *newReloc = calloc( relocCapacity , sizeof(struct relocation_info));
-    if ( relocations ) {
-        memcpy( newReloc, relocations, relocCount * sizeof(struct relocation_info));
-        free(relocations);
-    }
-    relocations = newReloc;
-}
-
 -(instancetype)initWithTarget:(id)aTarget
 {
     self=[super initWithTarget:aTarget];
@@ -88,8 +75,6 @@
 
         symtabCapacity = 10;
         [self growSymtab];
-        relocCapacity = 10;
-        [self growRelocations];
         
         
     }
@@ -109,30 +94,14 @@
 
 }
 
--(int)textSectionOffset
+-(int)segmentOffset
 {
     return self.loadCommandSize + sizeof(struct mach_header_64);
 }
 
--(int)relocationEntriessOffset
-{
-    return [self textSectionOffset] + [self textSectionSize];
-}
-
--(int)numRelocationEntries
-{
-    return relocCount;
-}
-
--(int)relocationEntriesSize
-{
-    return [self numRelocationEntries] * sizeof(struct relocation_info);
-}
-
-
 -(int)symbolTableOffset
 {
-    return [self relocationEntriessOffset] + [self relocationEntriesSize];
+    return [self segmentOffset] + self.totalSegmentSize;
 }
 
 -(int)numSymbols
@@ -163,15 +132,15 @@
 
 -(void)writeSegmentLoadCommand
 {
-    long segmentOffset = [self textSectionOffset];
+    long segmentOffset = [self segmentOffset];
     long sectionOffset = segmentOffset;
     long segmentSize = 0;
     for ( MPWMachOSectionWriter *writer in [self sectionWriters]) {
         writer.offset = sectionOffset;
-        segmentSize += writer.length;
-        sectionOffset += writer.length;
+        segmentSize += writer.totalSize;
+        sectionOffset += writer.totalSize;
     }
-
+    self.totalSegmentSize = segmentSize;
     
     struct segment_command_64 segment={};
     segment.cmd = LC_SEGMENT_64;
@@ -207,11 +176,13 @@
     [self.textSectionWriter writeData:data];
 }
 
--(void)writeTextSection
+-(void)writeSections
 {
-    NSAssert2(self.length == [self textSectionOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
+    NSAssert2(self.length == [self segmentOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
     NSLog(@"write %ld bytes length now %ld",self.textSectionWriter.length,self.length);
-    [self writeData:[self.textSectionWriter data]];
+    for ( MPWMachOSectionWriter *sectionWriter in [self sectionWriters]) {
+        [sectionWriter writeSectionDataOn:self];
+    }
     NSLog(@"after writing %ld bytes length now %ld",self.textSectionWriter.length,self.length);
 //     [self writeData:self.textSection];
 }
@@ -240,15 +211,12 @@
     }
 }
 
-
--(void)writeRelocationEntries
+-(int)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
 {
-    [self appendBytes:relocations length:relocCount * sizeof(struct relocation_info)];
-}
-
--(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
-{
-    if ( self.globalSymbolOffsets[symbol] == nil ) {
+    int entryIndex = 0;
+    NSNumber *offsetEntry = self.globalSymbolOffsets[symbol];
+    if ( offsetEntry == nil ) {
+        entryIndex = symtabCount;
         self.globalSymbolOffsets[symbol]=@(symtabCount);
         symtab_entry entry={};
         entry.type = theType;
@@ -259,28 +227,16 @@
             [self growSymtab];
         }
         symtab[symtabCount++]=entry;
+
+    } else {
+        entryIndex = [offsetEntry intValue];
     }
+    return entryIndex;
 }
 
--(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset
+-(int)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset
 {
-    [self addGlobalSymbol:symbol atOffset:offset type:0xf section:1];
-}
-
--(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
-{
-    struct relocation_info r={};
-    [self addGlobalSymbol:symbol atOffset:0 type:0 section:0];
-    r.r_symbolnum = [self.globalSymbolOffsets[symbol] intValue];
-    r.r_address = offset;
-    r.r_extern = 1;
-    r.r_length=2;
-    r.r_pcrel=1;
-    r.r_type=ARM64_RELOC_BRANCH26;
-    if ( relocCount >= relocCapacity ) {
-        [self growRelocations];
-    }
-    relocations[relocCount++]=r;
+    return [self addGlobalSymbol:symbol atOffset:offset type:0xf section:1];
 }
 
 -(void)writeSymbolTable
@@ -304,8 +260,7 @@
     [self generateStringTable];
     [self writeSegmentLoadCommand];
     [self writeSymbolTableLoadCommand];
-    [self writeTextSection];
-    [self writeRelocationEntries];
+    [self writeSections];
     [self writeSymbolTable];
     [self writeStringTable];
 }
@@ -387,7 +342,8 @@
 +(void)testWriteFunctionWithRelocationEntries
 {
     MPWMachOWriter *writer = [self stream];
-    [writer addRelocationEntryForSymbol:@"_other" atOffset:12];
+    
+    [writer.textSectionWriter addRelocationEntryForSymbol:@"_other" atOffset:12];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData:machineCode];
     [writer writeFile];

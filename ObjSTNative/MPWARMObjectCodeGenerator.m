@@ -11,6 +11,7 @@
 #import "MPWARMObjectCodeGenerator.h"
 #import "MPWJittableData.h"
 #import <objc/message.h>
+#import "MPWMachOSectionWriter.h"
 
 @implementation MPWARMObjectCodeGenerator
 
@@ -356,6 +357,7 @@ static void callme() {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
     MPWARMObjectCodeGenerator *g=[self stream];
     g.symbolWriter = writer;
+    g.relocationWriter = writer.textSectionWriter;
     [g generateFunctionNamed:@"_theFunction" body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateCallToExternalFunctionNamed:@"_other"];
     }];
@@ -373,6 +375,7 @@ static void callme() {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
     MPWARMObjectCodeGenerator *g=[self stream];
     g.symbolWriter = writer;
+    g.relocationWriter = writer.textSectionWriter;
     [g generateFunctionNamed:@"_lengthOfString" body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateMessageSendToSelector:@"length"];
     }];

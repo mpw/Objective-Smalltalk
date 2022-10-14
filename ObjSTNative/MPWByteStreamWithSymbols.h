@@ -11,14 +11,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SymbolWriter
 
--(void)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
+-(int)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
+
+@end
+
+@protocol RelocationWriter
+
 -(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset;
 
 @end
 
-
 @interface MPWByteStreamWithSymbols : MPWByteStream
 
+@property (nonatomic, nullable, strong) id <RelocationWriter> relocationWriter;
 @property (nonatomic, nullable, strong) id <SymbolWriter> symbolWriter;
 
 -(void)addGlobalSymbol:(NSString*)symbol;

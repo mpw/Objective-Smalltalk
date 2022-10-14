@@ -10,12 +10,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MPWMachOWriter;
+@protocol SymbolWriter;
 
-@interface MPWMachOSectionWriter : MPWByteStream
+@interface MPWMachOSectionWriter : MPWByteStream 
 
 @property (nonatomic, assign) long offset;
+@property (nonatomic, weak) id <SymbolWriter> symbolWriter;
 
 -(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer;
+-(void)writeSectionDataOn:(MPWMachOWriter*)writer;
+
+-(long)totalSize;
 
 @end
 
