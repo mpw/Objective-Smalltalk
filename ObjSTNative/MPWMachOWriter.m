@@ -72,7 +72,7 @@
         self.stringTableOffsets=[NSMutableDictionary dictionary];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
         self.textSectionWriter=[MPWMachOSectionWriter stream];
-
+        self.textSectionWriter.symbolWriter = self;
         symtabCapacity = 10;
         [self growSymtab];
         
