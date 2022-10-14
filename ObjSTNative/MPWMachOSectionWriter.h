@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWMachOSectionWriter : MPWByteStream
 
--(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer offset:(long)offset;
+@property (nonatomic, assign) long offset;
+
+-(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer;
 
 @end
 

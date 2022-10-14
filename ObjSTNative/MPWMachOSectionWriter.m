@@ -12,12 +12,12 @@
 @implementation MPWMachOSectionWriter
 
 
--(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer offset:(long)offset
+-(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer
 {
     struct section_64 textSection={};
     strcpy( textSection.sectname, "__text");
     strcpy( textSection.segname, "__TEXT");
-    textSection.offset = offset;
+    textSection.offset = self.offset;
     textSection.size = self.length;
     textSection.flags = S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS;
     textSection.nreloc = [writer numRelocationEntries];
@@ -28,7 +28,7 @@
 
 -(NSData*)data
 {
-    return [self target];
+    return (NSData*)[self target];
 }
 
 @end

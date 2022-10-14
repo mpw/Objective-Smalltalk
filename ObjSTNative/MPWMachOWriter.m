@@ -47,6 +47,11 @@
     int relocCapacity;
 }
 
+-(NSArray<MPWMachOSectionWriter*>*)sectionWriters
+{
+    return @[ self.textSectionWriter];
+}
+
 -(void)growSymtab
 {
     symtabCapacity *= 2;
@@ -158,18 +163,30 @@
 
 -(void)writeSegmentLoadCommand
 {
+    long segmentOffset = [self textSectionOffset];
+    long sectionOffset = segmentOffset;
+    long segmentSize = 0;
+    for ( MPWMachOSectionWriter *writer in [self sectionWriters]) {
+        writer.offset = sectionOffset;
+        segmentSize += writer.length;
+        sectionOffset += writer.length;
+    }
+
+    
     struct segment_command_64 segment={};
     segment.cmd = LC_SEGMENT_64;
     segment.cmdsize = [self segmentCommandSize];
-    segment.nsects = 1;
-    segment.fileoff=[self textSectionOffset];
-    segment.filesize=[self textSectionSize];
-    segment.vmsize = [self textSectionSize];
+    segment.nsects = [self sectionWriters].count;
+    segment.fileoff=segmentOffset;
+    segment.filesize=segmentSize;
+    segment.vmsize = segmentSize;
     segment.initprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     [self appendBytes:&segment length:sizeof segment];
 
-    [self.textSectionWriter writeSectionLoadCommandOnWriter:self offset:[self textSectionOffset]];
+    for ( MPWMachOSectionWriter *writer in [self sectionWriters]) {
+        [writer writeSectionLoadCommandOnWriter:self];
+    }
 }
 
 
