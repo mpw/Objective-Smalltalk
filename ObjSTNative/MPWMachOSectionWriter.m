@@ -25,6 +25,8 @@
     if ( self ) {
         relocCapacity = 10;
         [self growRelocations];
+        self.segname=@"__TEXT";
+        self.sectname=@"__text";
     }
     return self;
 }
@@ -46,11 +48,11 @@
 -(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer
 {
     struct section_64 textSection={};
-    strcpy( textSection.sectname, "__text");
-    strcpy( textSection.segname, "__TEXT");
+    strncpy( textSection.segname, [self.segname UTF8String] ,15); // "__text"
+    strncpy( textSection.sectname, [self.sectname UTF8String] ,15 ); // "__TEXT"
     textSection.offset = (int)self.offset;
     textSection.size = self.length;
-    textSection.flags = S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS;
+    textSection.flags = self.flags; //;
     textSection.nreloc = [self numRelocationEntries];
     textSection.reloff = (int)(self.offset + [self sectionDataSize]);
     [writer appendBytes:&textSection length:sizeof textSection];

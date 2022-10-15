@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) long offset;
 @property (nonatomic) long sectionNumber;
 @property (nonatomic, weak) id <SymbolWriter> symbolWriter;
+@property (nonatomic, strong) NSString *segname;
+@property (nonatomic, strong) NSString *sectname;
+@property (nonatomic, assign) int flags;
 
 -(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer;
 -(void)writeSectionDataOn:(MPWMachOWriter*)writer;

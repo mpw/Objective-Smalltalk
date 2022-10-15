@@ -56,6 +56,19 @@
     [self.sectionWriters addObject:newWriter];
 }
 
+-(MPWMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags
+{
+    if (!self.sectionWriters) {
+        self.sectionWriters = [NSMutableArray array];
+    }
+    MPWMachOSectionWriter *writer=[MPWMachOSectionWriter stream];
+    writer.segname = segname;
+    writer.sectname = sectname;
+    writer.flags = flags;
+    [self addSectionWriter:writer];
+    return writer;
+}
+
 -(void)growSymtab
 {
     symtabCapacity *= 2;
@@ -77,9 +90,7 @@
         [self.stringTableWriter appendBytes:"" length:1];
         self.stringTableOffsets=[NSMutableDictionary dictionary];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
-        self.textSectionWriter=[MPWMachOSectionWriter stream];
-        self.sectionWriters = [NSMutableArray array];
-        [self addSectionWriter:self.textSectionWriter];
+        self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
         symtabCapacity = 10;
         [self growSymtab];
         
