@@ -91,6 +91,7 @@
         self.stringTableOffsets=[NSMutableDictionary dictionary];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
+        [self addSectionWriterWithSegName:@"__DATA" sectName:@"_objectclasslist" flags:0];
         symtabCapacity = 10;
         [self growSymtab];
         
@@ -132,11 +133,6 @@
     return [self numSymbols] * sizeof(symtab_entry);
 }
 
--(int)textSectionSize
-{
-    return (int)self.textSectionWriter.length;
-}
-
 -(int)stringTableOffset
 {
     return [self symbolTableOffset] + [self symbolTableSize];
@@ -144,7 +140,7 @@
 
 -(int)segmentCommandSize
 {
-    return sizeof(struct segment_command_64) + sizeof(struct section_64);
+    return sizeof(struct segment_command_64) + (self.sectionWriters.count * sizeof(struct section_64));
 }
 
 
@@ -371,7 +367,7 @@
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([[reader textSection] relocEntryOffset],216,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],296,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
