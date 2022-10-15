@@ -48,11 +48,11 @@
     struct section_64 textSection={};
     strcpy( textSection.sectname, "__text");
     strcpy( textSection.segname, "__TEXT");
-    textSection.offset = self.offset;
+    textSection.offset = (int)self.offset;
     textSection.size = self.length;
     textSection.flags = S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS;
     textSection.nreloc = [self numRelocationEntries];
-    textSection.reloff = self.offset + [self sectionDataSize];
+    textSection.reloff = (int)(self.offset + [self sectionDataSize]);
     [writer appendBytes:&textSection length:sizeof textSection];
 
 }
