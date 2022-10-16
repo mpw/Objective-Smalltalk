@@ -135,7 +135,7 @@
 
 -(MPWMachOSection*)sectionWithSectionHeader:(struct section_64*)header
 {
-    return [[[MPWMachOSection alloc] initWithSectionHeader:header inMacho:self] autorelease];
+    return header ? [[[MPWMachOSection alloc] initWithSectionHeader:header inMacho:self] autorelease] : nil;
 }
 
 -(MPWMachOSection*)sectionWithName:(const char*)name

@@ -29,7 +29,7 @@
 -(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(MPWMachOReader*)newReader
 {
     self=[super init];
-    if ( self ) {
+    if ( self  && headerptr ) {
         sectionHeader=headerptr;
         self.machoData = newReader.data;
         self.reader = newReader;

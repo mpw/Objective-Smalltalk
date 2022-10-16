@@ -305,6 +305,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 #import "MPWMachOReader.h"
+#import "MPWMachOClassReader.h"
 
 @implementation MPWMachOWriter(testing) 
 
@@ -385,8 +386,25 @@
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
-
 }
+
++(void)testWriteClass
+{
+    MPWMachOWriter *writer = [self stream];
+ 
+    [writer writeFile];
+    NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/class.o" atomically:YES];
+
+    
+    MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    
+    NSArray *classptrs = machoReader.classPointers;
+//    INTEXPECT( classptrs.count, 1,@"number of classes");
+//    MPWMachORelocationPointer *classptr = classptrs.firstObject;
+//    MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -396,6 +414,7 @@
        @"testCanWriteGlobalSymboltable",
 //       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
+       @"testWriteClass",
 		];
 }
 
