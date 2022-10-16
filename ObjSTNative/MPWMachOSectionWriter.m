@@ -48,8 +48,8 @@
 -(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer
 {
     struct section_64 textSection={};
-    strncpy( textSection.segname, [self.segname UTF8String] ,15); // "__text"
-    strncpy( textSection.sectname, [self.sectname UTF8String] ,15 ); // "__TEXT"
+    strncpy( textSection.segname, [self.segname UTF8String] ,16); // "__text"
+    strncpy( textSection.sectname, [self.sectname UTF8String] ,16 ); // "__TEXT"
     textSection.offset = (int)self.offset;
     textSection.size = self.length;
     textSection.flags = self.flags; //;
@@ -64,7 +64,7 @@
 {
     struct relocation_info r={};
     r.r_symbolnum = [self.symbolWriter addGlobalSymbol:symbol atOffset:0 type:0 section:0];
-    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
+//    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;
     r.r_length=2;

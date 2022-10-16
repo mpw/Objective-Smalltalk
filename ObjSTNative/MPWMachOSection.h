@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)numRelocEntries;
 -(int)relocEntryOffset;
 -(MPWMachOSection*)sectionForRelocEntryAt:(int)which;
+-(NSArray<NSString*>*)strings;
 
 
 -(NSData*)sectionData;

@@ -204,13 +204,11 @@
 
 -(void)writeSections
 {
-    NSLog(@"sections to write: %@",self.sectionWriters);
+//    NSLog(@"sections to write: %@",self.activeSectionWriters);
     NSAssert2(self.length == [self segmentOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
     NSLog(@"write %ld bytes length now %ld",self.textSectionWriter.length,self.length);
-    for ( MPWMachOSectionWriter *sectionWriter in [self sectionWriters]) {
-        if ( sectionWriter.isActive ) {
-            [sectionWriter writeSectionDataOn:self];
-        }
+    for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+        [sectionWriter writeSectionDataOn:self];
     }
     NSLog(@"after writing %ld bytes length now %ld",self.textSectionWriter.length,self.length);
 //     [self writeData:self.textSection];
@@ -392,14 +390,25 @@
 {
     MPWMachOWriter *writer = [self stream];
  
+    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
+    [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
+    [classNameWriter writeString:@"TestClass"];
+    [classNameWriter appendBytes:"" length:1];
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/class.o" atomically:YES];
 
     
     MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    
-    NSArray *classptrs = machoReader.classPointers;
+    INTEXPECT( machoReader.numSections, 3,@"number of sections");
+    for (int i=1;i<machoReader.numSections;i++) {
+        MPWMachOSection *s=[machoReader sectionAtIndex:i];
+        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
+    }
+//    NSArray *classptrs = machoReader.classPointers;
+    MPWMachOSection *classnameSection=[machoReader objcClassNameSection];
+    EXPECTNOTNIL(classnameSection, @"have a class name section");
+    INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
 //    INTEXPECT( classptrs.count, 1,@"number of classes");
 //    MPWMachORelocationPointer *classptr = classptrs.firstObject;
 //    MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
