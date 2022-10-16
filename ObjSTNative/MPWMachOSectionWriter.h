@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)writeSectionDataOn:(MPWMachOWriter*)writer;
 
 -(long)totalSize;
+-(BOOL)isActive;
 
 @end
 

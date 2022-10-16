@@ -49,11 +49,22 @@
 
 -(void)addSectionWriter:(MPWMachOSectionWriter*)newWriter
 {
-    int sectionNumber = self.sectionWriters.count + 1;
+    int sectionNumber = (int)self.sectionWriters.count + 1;
     newWriter.sectionNumber = sectionNumber;
     newWriter.symbolWriter = self;
 
     [self.sectionWriters addObject:newWriter];
+}
+
+-(NSArray<MPWMachOSectionWriter*>*)activeSectionWriters
+{
+    NSMutableArray *active=[NSMutableArray array];
+    for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+        if ( writer.isActive) {
+            [active addObject:writer];
+        }
+    }
+    return active;
 }
 
 -(MPWMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags
@@ -123,6 +134,7 @@
     return [self segmentOffset] + self.totalSegmentSize;
 }
 
+
 -(int)numSymbols
 {
     return symtabCount;
@@ -140,16 +152,16 @@
 
 -(int)segmentCommandSize
 {
-    return sizeof(struct segment_command_64) + (self.sectionWriters.count * sizeof(struct section_64));
+    return sizeof(struct segment_command_64) + ([self activeSectionWriters].count * sizeof(struct section_64));
 }
-
 
 -(void)writeSegmentLoadCommand
 {
     long segmentOffset = [self segmentOffset];
+    NSArray *writers = [self activeSectionWriters];
     long sectionOffset = segmentOffset;
     long segmentSize = 0;
-    for ( MPWMachOSectionWriter *writer in [self sectionWriters]) {
+    for ( MPWMachOSectionWriter *writer in writers) {
         writer.offset = sectionOffset;
         segmentSize += writer.totalSize;
         sectionOffset += writer.totalSize;
@@ -167,7 +179,7 @@
     segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     [self appendBytes:&segment length:sizeof segment];
 
-    for ( MPWMachOSectionWriter *writer in [self sectionWriters]) {
+    for ( MPWMachOSectionWriter *writer in writers) {
         [writer writeSectionLoadCommandOnWriter:self];
     }
 }
@@ -196,7 +208,9 @@
     NSAssert2(self.length == [self segmentOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
     NSLog(@"write %ld bytes length now %ld",self.textSectionWriter.length,self.length);
     for ( MPWMachOSectionWriter *sectionWriter in [self sectionWriters]) {
-        [sectionWriter writeSectionDataOn:self];
+        if ( sectionWriter.isActive ) {
+            [sectionWriter writeSectionDataOn:self];
+        }
     }
     NSLog(@"after writing %ld bytes length now %ld",self.textSectionWriter.length,self.length);
 //     [self writeData:self.textSection];
@@ -367,7 +381,7 @@
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([[reader textSection] relocEntryOffset],296,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],216,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");

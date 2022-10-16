@@ -92,6 +92,11 @@
     return [self data].length;
 }
 
+-(BOOL)isActive
+{
+    return [self data].length > 0;
+}
+
 -(long)totalSize
 {
     return [self sectionDataSize] + [self relocationEntriesSize];
