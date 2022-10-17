@@ -9,9 +9,9 @@
 
 @implementation MPWByteStreamWithSymbols
 
--(void)addGlobalSymbol:(NSString*)symbol
+-(void)declareGlobalSymbol:(NSString*)symbol
 {
-    [self.symbolWriter addGlobalSymbol:symbol atOffset:(int)[self length]];
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length]];
 }
 
 -(void)addRelocationEntryForSymbol:(NSString*)symbol

@@ -59,11 +59,17 @@
 
 }
 
+-(void)declareGlobalSymbol:(NSString*)symbol
+{
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0 section:self.sectionNumber];
+}
+
+
 
 -(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
 {
     struct relocation_info r={};
-    r.r_symbolnum = [self.symbolWriter addGlobalSymbol:symbol atOffset:0 type:0 section:0];
+    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0 section:self.sectionNumber];
 //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;

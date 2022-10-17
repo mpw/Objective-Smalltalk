@@ -238,7 +238,7 @@
     }
 }
 
--(int)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
 {
     int entryIndex = 0;
     NSNumber *offsetEntry = self.globalSymbolOffsets[symbol];
@@ -261,9 +261,9 @@
     return entryIndex;
 }
 
--(int)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset
 {
-    return [self addGlobalSymbol:symbol atOffset:offset type:0xf section:1];
+    return [self declareGlobalSymbol:symbol atOffset:offset type:0xf section:1];
 }
 
 -(void)writeSymbolTable
@@ -323,7 +323,7 @@
 +(void)testCanWriteGlobalSymboltable
 {
     MPWMachOWriter *writer = [self stream];
-    [writer addGlobalSymbol:@"_add" atOffset:10];
+    [writer declareGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData: machineCode];
 //    INTEXPECT(writer.textSectionSize,8,@"bytes in text section");
@@ -358,7 +358,7 @@
 +(void)testWriteLinkableAddFunction
 {
     MPWMachOWriter *writer = [self stream];
-    [writer addGlobalSymbol:@"_add" atOffset:10];
+    [writer declareGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData:machineCode];
     [writer writeFile];
@@ -392,6 +392,7 @@
  
     MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
+    [classNameWriter declareGlobalSymbol:@"_TestClass_name"];
     [classNameWriter writeString:@"TestClass"];
     [classNameWriter appendBytes:"" length:1];
     [writer writeFile];
@@ -401,14 +402,20 @@
     
     MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT( machoReader.numSections, 3,@"number of sections");
-    for (int i=1;i<machoReader.numSections;i++) {
-        MPWMachOSection *s=[machoReader sectionAtIndex:i];
-        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
-    }
+//    for (int i=1;i<machoReader.numSections;i++) {
+//        MPWMachOSection *s=[machoReader sectionAtIndex:i];
+//        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
+//    }
 //    NSArray *classptrs = machoReader.classPointers;
-    MPWMachOSection *classnameSection=[machoReader objcClassNameSection];
+    int classNameSymbolEntry = [machoReader indexOfSymbolNamed:@"_TestClass_name"];
+    INTEXPECT(classNameSymbolEntry,0,@"symtab entry");
+    
+    MPWMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]-1];
     EXPECTNOTNIL(classnameSection, @"have a class name section");
+    IDEXPECT(classnameSection.sectionName,@"__objc_classname",@"");
     INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
+    IDEXPECT( [classnameSection strings].firstObject, @"TestClass", @"Objective-C classname");
+    
 //    INTEXPECT( classptrs.count, 1,@"number of classes");
 //    MPWMachORelocationPointer *classptr = classptrs.firstObject;
 //    MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];

@@ -158,7 +158,7 @@
 
 -(void)generateStartOfFunctionNamed:(NSString*)name
 {
-    [self addGlobalSymbol:name];
+    [self declareGlobalSymbol:name];
     [self generateSaveLinkRegisterAndFramePtr];
 }
 

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SymbolWriter
 
--(int)addGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
 
 @end
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) id <RelocationWriter> relocationWriter;
 @property (nonatomic, nullable, strong) id <SymbolWriter> symbolWriter;
 
--(void)addGlobalSymbol:(NSString*)symbol;
+-(void)declareGlobalSymbol:(NSString*)symbol;
 -(void)addRelocationEntryForSymbol:(NSString*)symbol;
 
 @end
