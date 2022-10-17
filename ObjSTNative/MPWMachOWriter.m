@@ -49,7 +49,7 @@
 
 -(void)addSectionWriter:(MPWMachOSectionWriter*)newWriter
 {
-    int sectionNumber = (int)self.sectionWriters.count + 1;
+    int sectionNumber = (int)self.sectionWriters.count;
     newWriter.sectionNumber = sectionNumber;
     newWriter.symbolWriter = self;
 
@@ -410,7 +410,7 @@
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:@"_TestClass_name"];
     INTEXPECT(classNameSymbolEntry,0,@"symtab entry");
     
-    MPWMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]-1];
+    MPWMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]];
     EXPECTNOTNIL(classnameSection, @"have a class name section");
     IDEXPECT(classnameSection.sectionName,@"__objc_classname",@"");
     INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
