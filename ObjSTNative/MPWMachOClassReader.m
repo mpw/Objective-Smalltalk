@@ -100,12 +100,7 @@ static int offsetOfClassNamePointerFromBaseClassRO() {
 
 -(NSString*)nameOfClass
 {
-    MPWMachORelocationPointer *cname=[self classNameRelocationPointer];
-    MPWMachOSection *classnameSection=[cname targetSection];
-    NSData *data=[classnameSection sectionData];
-    long offset = [cname targetOffset];
-    NSString *s=[NSString stringWithUTF8String:data.bytes+offset];
-    return s;
+    return [NSString stringWithUTF8String:[[[self classNameRelocationPointer] targetPointer] bytes]];
 }
 
 

@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer;
 -(void)writeSectionDataOn:(MPWMachOWriter*)writer;
 
+-(void)declareGlobalSymbol:(NSString*)symbol;
+
 -(long)totalSize;
 -(BOOL)isActive;
 

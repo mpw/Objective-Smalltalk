@@ -304,6 +304,8 @@
 #import <MPWFoundation/DebugMacros.h>
 #import "MPWMachOReader.h"
 #import "MPWMachOClassReader.h"
+#import "Mach_O_Structs.h"
+#import "MPWMachORelocationPointer.h"
 
 @implementation MPWMachOWriter(testing) 
 
@@ -389,32 +391,91 @@
 +(void)testWriteClass
 {
     MPWMachOWriter *writer = [self stream];
- 
-    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
+    NSString *testclassNameSymbolName=@"_TestClass_name";
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
-    [classNameWriter declareGlobalSymbol:@"_TestClass_name"];
-    [classNameWriter writeString:@"TestClass"];
-    [classNameWriter appendBytes:"" length:1];
+
+    //  class name goes in its own section
+    
+    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
+    [classNameWriter declareGlobalSymbol:testclassNameSymbolName];
+    [classNameWriter writeNullTerminatedString:@"TestClass"];
+    
+    // RO Part
+    
+    MPWMachOSectionWriter *classROWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
+    NSString *roClassPartSymbol = @"__OBJC_CLASS_RO_TestClass";
+    Mach_O_Class_RO roClassPart={};
+    long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
+
+    [classROWriter addRelocationEntryForSymbol:testclassNameSymbolName atOffset:classROWriter.length + name_ptr_offset];
+    roClassPart.instanceSize = 8;
+    [classROWriter declareGlobalSymbol:roClassPartSymbol];
+    [classROWriter appendBytes:&roClassPart length:sizeof roClassPart];
+    
+    // RW Part
+    
+    MPWMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
+    NSString *classPartSymbol = @"__OBJC_CLASS_TestClass";
+    Mach_O_Class classInfo={};
+    long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
+    [classDataWriter declareGlobalSymbol:classPartSymbol];
+    [classDataWriter addRelocationEntryForSymbol:roClassPartSymbol atOffset:classDataWriter.length + ro_ptr_offset];
+    [classDataWriter appendBytes:&classInfo length:sizeof classInfo];
+    
+    // link RW to RO part
+    
+    
+
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/class.o" atomically:YES];
 
     
     MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( machoReader.numSections, 3,@"number of sections");
+    INTEXPECT( machoReader.numSections, 5,@"number of sections");
 //    for (int i=1;i<machoReader.numSections;i++) {
 //        MPWMachOSection *s=[machoReader sectionAtIndex:i];
 //        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
 //    }
 //    NSArray *classptrs = machoReader.classPointers;
-    int classNameSymbolEntry = [machoReader indexOfSymbolNamed:@"_TestClass_name"];
+    int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
     INTEXPECT(classNameSymbolEntry,0,@"symtab entry");
+    
+    //  read classname
     
     MPWMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]];
     EXPECTNOTNIL(classnameSection, @"have a class name section");
     IDEXPECT(classnameSection.sectionName,@"__objc_classname",@"");
     INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
     IDEXPECT( [classnameSection strings].firstObject, @"TestClass", @"Objective-C classname");
+
+    // read RO part
+    
+    int roClassSmbolIndex=[machoReader indexOfSymbolNamed:roClassPartSymbol];
+    INTEXPECT(roClassSmbolIndex, 1,@"symbol index");
+    
+    MPWMachOSection *roClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:roClassSmbolIndex]];
+    const struct Mach_O_Class_RO *roClassPartCheck=[roClassPartSection bytes];
+    EXPECTNOTNIL(roClassPartSection, @"objc const section");
+    EXPECTNOTNIL(roClassPartCheck, @"objc const section data");
+    INTEXPECT( roClassPartCheck->instanceSize, 8, @"instance size");
+    
+    //  read classname via RO part
+    
+    MPWMachORelocationPointer *classNamePtr = [[[MPWMachORelocationPointer alloc] initWithSection:roClassPartSection relocEntryIndex:0] autorelease];
+    IDEXPECT( [classNamePtr targetName],@"_TestClass_name",@"");
+
+    // FIXME:  this gets the wrong offset, almost certainly because the relocation type is hard-coded to
+    //         ARM PC-relative somewhere.
+    //         so of course the other stuff also doesn't work
+//    INTEXPECT( [classNamePtr targetOffset],0,@"target offset");   // currently returns -8
+//    NSString *className=[NSString stringWithUTF8String:[[classNamePtr targetPointer] bytes]];
+//    IDEXPECT( className,@"TestClass",@"");
+
+    
+    
+    
+    // read data part (and find)
     
 //    INTEXPECT( classptrs.count, 1,@"number of classes");
 //    MPWMachORelocationPointer *classptr = classptrs.firstObject;
