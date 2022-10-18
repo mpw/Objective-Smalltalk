@@ -362,7 +362,9 @@ static void callme() {
         [g generateCallToExternalFunctionNamed:@"_other"];
     }];
     [writer addTextSectionData:(NSData*)[g target]];
+    NSLog(@"before write file");
     [writer writeFile];
+    NSLog(@"after write file");
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];

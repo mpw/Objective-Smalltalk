@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *segname;
 @property (nonatomic, strong) NSString *sectname;
 @property (nonatomic, assign) int flags;
+@property (nonatomic, assign) int relocationType;
 
 -(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer;
 -(void)writeSectionDataOn:(MPWMachOWriter*)writer;

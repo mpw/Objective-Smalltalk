@@ -27,6 +27,7 @@
         [self growRelocations];
         self.segname=@"__TEXT";
         self.sectname=@"__text";
+        self.relocationType = GENERIC_RELOC_VANILLA;
     }
     return self;
 }
@@ -61,7 +62,7 @@
 
 -(void)declareGlobalSymbol:(NSString*)symbol
 {
-    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0 section:self.sectionNumber];
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xe section:self.sectionNumber];
 }
 
 
@@ -70,13 +71,13 @@
 {
     struct relocation_info r={};
     // FIXME:  this should not declare, it should retrieve + verify that the symbol already exists
-    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0 section:self.sectionNumber];
+    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0xe section:self.sectionNumber];
 //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;
     r.r_length=2;
-    r.r_pcrel=1;
-    r.r_type=ARM64_RELOC_BRANCH26;
+    r.r_pcrel=0;
+    r.r_type=self.relocationType;
     if ( relocCount >= relocCapacity ) {
         [self growRelocations];
     }
