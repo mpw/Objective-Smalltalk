@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithPointer:(MPWMachORelocationPointer*)basePointer;
 
+-(int)instanceSize;
+-(int)flags;
+-(NSString*)nameOfClass;
+
 @end
 
 NS_ASSUME_NONNULL_END
