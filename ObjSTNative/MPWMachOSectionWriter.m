@@ -51,6 +51,7 @@
     struct section_64 textSection={};
     strncpy( textSection.segname, [self.segname UTF8String] ,16); // "__text"
     strncpy( textSection.sectname, [self.sectname UTF8String] ,16 ); // "__TEXT"
+    textSection.addr = self.address;
     textSection.offset = (int)self.offset;
     textSection.size = self.length;
     textSection.flags = self.flags; //;

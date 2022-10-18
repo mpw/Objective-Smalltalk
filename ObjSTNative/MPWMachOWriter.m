@@ -162,16 +162,16 @@
     int sectionNumberRemap[numSections];
     int segmentToSectionOfffset[numSections];
     int offsets[[self activeSectionWriters].count ];
-    NSArray<MPWMachOSectionWriter*> *activeWriters=[self activeSectionWriters];
+    NSArray<MPWMachOSectionWriter*> *activeWriters=[self sectionWriters];
     
-    for (int i=0,max=activeWriters.count;i<max;i++) {
-        sectionNumberRemap[activeWriters[i].sectionNumber]=i;
-    }
+//    for (int i=0,max=activeWriters.count;i<max;i++) {
+//        sectionNumberRemap[activeWriters[i].sectionNumber]=i;
+//    }
     
     for (int i=0;i<symtabCount;i++) {
         NSLog(@"before: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
-        symtab[i].section=sectionNumberRemap[symtab[i].section];
-        symtab[i].address += activeWriters[symtab[i].section].offset - [self segmentOffset];
+//        symtab[i].section=sectionNumberRemap[symtab[i].section];
+        symtab[i].address += activeWriters[symtab[i].section].address;
         NSLog(@"after: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
    }
 }
@@ -180,16 +180,17 @@
 {
     long segmentOffset = [self segmentOffset];
     NSArray *writers = [self activeSectionWriters];
-    long sectionOffset = segmentOffset;
+    long sectionOffset = 0;
     long segmentSize = 0;
     for ( MPWMachOSectionWriter *writer in writers) {
-        writer.offset = sectionOffset;
+        writer.offset = sectionOffset + segmentOffset;
+        writer.address = sectionOffset;
         segmentSize += writer.totalSize;
         sectionOffset += writer.totalSize;
     }
     self.totalSegmentSize = segmentSize;
     
-//    [self adjustSymtabEntries];
+    [self adjustSymtabEntries];
     
     struct segment_command_64 segment={};
     segment.cmd = LC_SEGMENT_64;
@@ -491,16 +492,10 @@
     MPWMachORelocationPointer *classNamePtr = [[[MPWMachORelocationPointer alloc] initWithSection:roClassPartSection relocEntryIndex:0] autorelease];
     IDEXPECT( [classNamePtr targetName],@"_TestClass_name",@"");
 
-    // FIXME:   this gets the wrong offset, probably due to offset being generated relative to the section, whereas it looks like it needs to be
-    //          relative to the segment.   At least that's what I discovered when reading (and applied a correction for it)
-    //          if true, fixing it is non-trivial, as correction has to be applied after I know what the offset of the section is (?)
-    //          So maybe have to adjust the symtab entries just before emitting
-    //          Also:  section numbers won't be correct if I do not emit some sections, as section numbers are assigned on creation
-    //          So probably also need to do some fixup of that
     INTEXPECT( [[classNamePtr section] typeOfRelocEntryAt:0],0,@"");
-//    INTEXPECT( [classNamePtr targetOffset],8,@"target offset");   // currently returns -8
+    INTEXPECT( [classNamePtr targetOffset],0,@"target offset");   // currently returns -8
     NSString *className = [NSString stringWithUTF8String:[[classNamePtr targetPointer] bytes]];
-//    IDEXPECT( className,@"TestClass",@"");
+    IDEXPECT( className,@"TestClass",@"");
 
     
     
@@ -521,7 +516,7 @@
        @"testCanWriteGlobalSymboltable",
 //       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
-//       @"testWriteClass",
+       @"testWriteClass",
 		];
 }
 

@@ -56,11 +56,6 @@
     return self.sectionData.bytes;
 }
 
-//-(const void*)segmentBytes
-//{
-//    return [self.reader segmentBytes];
-//}
-
 -(long)offset
 {
     return sectionHeader->offset;
@@ -189,7 +184,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
 
 -(long)shiftedOffsetForBaseSymbolOffset:(long)baseOffset
 {
-    return baseOffset - ([self offset] - [self.reader segmentOffset]);
+    return baseOffset - sectionHeader->addr;
 }
 
 -(long)offsetInTargetSectionForRelocEntryAt:(int)which
