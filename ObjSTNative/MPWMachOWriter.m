@@ -414,7 +414,7 @@
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
 }
 
-+(void)testWriteClass
++(void)testWriteClassPartsAndReadPartsManually
 {
     MPWMachOWriter *writer = [self stream];
     NSString *testclassNameSymbolName=@"_TestClass_name";
@@ -521,9 +521,6 @@
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,8,@"instance size");
     
-//    INTEXPECT( classptrs.count, 1,@"number of classes");
-//    MPWMachORelocationPointer *classptr = classptrs.firstObject;
-//    MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
 }
 
 
@@ -535,7 +532,7 @@
        @"testCanWriteGlobalSymboltable",
 //       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
-       @"testWriteClass",
+       @"testWriteClassPartsAndReadPartsManually",
 		];
 }
 

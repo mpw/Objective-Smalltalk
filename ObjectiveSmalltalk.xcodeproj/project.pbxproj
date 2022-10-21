@@ -486,6 +486,8 @@
 		1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */; };
 		1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */; };
 		1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95828F98CE4002A4AA4 /* MPWMachOSectionWriter.m */; };
+		1FDDE95D29029887002A4AA4 /* MPWMachOClassWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE95B29029887002A4AA4 /* MPWMachOClassWriter.h */; };
+		1FDDE95E29029887002A4AA4 /* MPWMachOClassWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95C29029887002A4AA4 /* MPWMachOClassWriter.m */; };
 		1FE37B6A1969610600C9A378 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1230,6 +1232,8 @@
 		1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWByteStreamWithSymbols.m; sourceTree = "<group>"; };
 		1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOSectionWriter.h; sourceTree = "<group>"; };
 		1FDDE95828F98CE4002A4AA4 /* MPWMachOSectionWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOSectionWriter.m; sourceTree = "<group>"; };
+		1FDDE95B29029887002A4AA4 /* MPWMachOClassWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOClassWriter.h; sourceTree = "<group>"; };
+		1FDDE95C29029887002A4AA4 /* MPWMachOClassWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOClassWriter.m; sourceTree = "<group>"; };
 		1FDEC4380819614E00225DFB /* MPWMethodCallBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodCallBack.h; sourceTree = "<group>"; };
 		1FDEC4390819614E00225DFB /* MPWMethodCallBack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodCallBack.m; sourceTree = "<group>"; };
 		1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1539,6 +1543,8 @@
 				1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */,
 				1F04243A28D1D09B00486831 /* MPWMachOWriter.h */,
 				1F04243B28D1D09B00486831 /* MPWMachOWriter.m */,
+				1FDDE95B29029887002A4AA4 /* MPWMachOClassWriter.h */,
+				1FDDE95C29029887002A4AA4 /* MPWMachOClassWriter.m */,
 				1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */,
 				1FDDE95828F98CE4002A4AA4 /* MPWMachOSectionWriter.m */,
 			);
@@ -2321,6 +2327,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FDDE95D29029887002A4AA4 /* MPWMachOClassWriter.h in Headers */,
 				1FDDE95128F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h in Headers */,
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
@@ -3532,6 +3539,7 @@
 				1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */,
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,
+				1FDDE95E29029887002A4AA4 /* MPWMachOClassWriter.m in Sources */,
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
