@@ -14,6 +14,7 @@
 
 @property (nonatomic,strong) MPWMachOWriter* writer;
 @property (nonatomic,strong) NSString* nameOfClass;
+@property (nonatomic,strong) NSString* nameOfSuperClass;
 @property (nonatomic,assign) int instanceSize;
 
 @end
@@ -41,7 +42,12 @@
 
 -(NSString*)classPartSymbol
 {
-    return [NSString stringWithFormat:@"_OBJC_CLASS_%@",self.nameOfClass];
+    return [NSString stringWithFormat:@"_OBJC_CLASS_$_%@",self.nameOfClass];
+}
+
+-(NSString*)superclassSymbolName
+{
+    return [NSString stringWithFormat:@"_OBJC_CLASS_$_%@",self.nameOfSuperClass];
 }
 
 
@@ -76,8 +82,11 @@
     NSString *classPartSymbol = [self classPartSymbol];
     Mach_O_Class classInfo={};
     long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
+    long superclass_ptr_offset = ((void*)&classInfo.superclass) - ((void*)&classInfo);
     [classDataWriter declareGlobalSymbol:classPartSymbol];
     [classDataWriter addRelocationEntryForSymbol:roClassPartSymbol atOffset:classDataWriter.length + ro_ptr_offset];
+    [writer declareExternalSymbol:[self superclassSymbolName]];
+    [classDataWriter addRelocationEntryForSymbol:[self superclassSymbolName] atOffset:classDataWriter.length + superclass_ptr_offset];
     [classDataWriter appendBytes:&classInfo length:sizeof classInfo];
     
     // Pointers
@@ -88,6 +97,8 @@
     [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:0];
     [classListWriter appendBytes:zerobytes length:8];
 
+    
+    
 }
 
 @end
@@ -117,7 +128,7 @@
     
     
     MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
-    INTEXPECT( machoReader.numSections, 6,@"number of sections");
+    INTEXPECT( machoReader.numSections, 5,@"number of sections");
     
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
     INTEXPECT(classNameSymbolEntry,0,@"symtab entry");
@@ -167,6 +178,7 @@
     
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
     classWriter.nameOfClass = @"AnotherTestClass";
+    classWriter.nameOfSuperClass = @"NSObject";
     classWriter.instanceSize = 24;
     
     [classWriter writeClass];
@@ -178,7 +190,9 @@
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"AnotherTestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
-//    IDEXPECT(reader.superclassPointer.targetName,@"",@"");
+    IDEXPECT(reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"");
+    INTEXPECT(reader.superclassPointer.targetSectionIndex ,0,@"");
+//    INTEXPECT(reader.superclassPointer.type ,1,@"");
 }
 
 +(NSArray*)testSelectors

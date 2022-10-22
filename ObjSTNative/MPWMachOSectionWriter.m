@@ -63,7 +63,7 @@
 
 -(void)declareGlobalSymbol:(NSString*)symbol
 {
-    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xe section:self.sectionNumber];
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xf section:self.sectionNumber];
 }
 
 
@@ -72,7 +72,7 @@
 {
     struct relocation_info r={};
     // FIXME:  this should not declare, it should retrieve + verify that the symbol already exists
-    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0xe section:self.sectionNumber];
+    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0xf section:self.sectionNumber];
 //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)writeFile;
 -(NSData*)data;
+-(int)declareExternalSymbol:(NSString*)symbol;
 
 
 

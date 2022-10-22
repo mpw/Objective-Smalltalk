@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) MPWMachOSection *section;
 @property (readonly) long offset;
 @property (readonly) NSString *targetName;
+@property (readonly) int targetSectionIndex;
 
 @end
 

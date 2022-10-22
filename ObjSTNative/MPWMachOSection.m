@@ -173,12 +173,16 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     return entry;
 }
 
--(MPWMachOSection*)sectionForRelocEntryAt:(int)which
+-(int)sectionIndexForRelocEntryAt:(int)which
 {
     int symbolIndex = [self symbolNumberOfRelocEntryAt:which];
-    int sectionIndex = [self.reader sectionForSymbolAt:symbolIndex];
-    return [self.reader sectionAtIndex:sectionIndex];
-//    INTEXPECT( sectionIndex,4, @"should point to objc data");
+    return [self.reader sectionForSymbolAt:symbolIndex];
+}
+
+-(MPWMachOSection*)sectionForRelocEntryAt:(int)which
+{
+    return [self.reader sectionAtIndex:[self sectionIndexForRelocEntryAt:which]];
+    //    INTEXPECT( sectionIndex,4, @"should point to objc data");
     //    MPWMachOSection *targetSection1=[section.reader sectionAtIndex:sectionIndex];
 }
 

@@ -195,7 +195,7 @@
     struct segment_command_64 segment={};
     segment.cmd = LC_SEGMENT_64;
     segment.cmdsize = [self segmentCommandSize];
-    segment.nsects = [self sectionWriters].count;
+    segment.nsects = [self activeSectionWriters].count;
     segment.fileoff=segmentOffset;
     segment.filesize=segmentSize;
     segment.vmsize = segmentSize;
@@ -290,6 +290,11 @@
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset
 {
     return [self declareGlobalSymbol:symbol atOffset:offset type:0xf section:1];
+}
+
+-(int)declareExternalSymbol:(NSString*)symbol
+{
+    return [self declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
 }
 
 -(void)writeSymbolTable
@@ -445,7 +450,7 @@
     // RW Part
     
     MPWMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
-    NSString *classPartSymbol = @"__OBJC_CLASS_TestClass";
+    NSString *classPartSymbol = @"__OBJC_CLASS_$_TestClass";
     Mach_O_Class classInfo={};
     long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
     [classDataWriter declareGlobalSymbol:classPartSymbol];
@@ -467,7 +472,7 @@
 
     
     MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( machoReader.numSections, 6,@"number of sections");
+    INTEXPECT( machoReader.numSections, 5,@"number of sections");
 //    for (int i=1;i<machoReader.numSections;i++) {
 //        MPWMachOSection *s=[machoReader sectionAtIndex:i];
 //        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
@@ -519,7 +524,7 @@
     NSArray <MPWMachORelocationPointer*>* classPtrs = [machoReader classPointers];
     INTEXPECT( classPtrs.count, 1, @"number of classes defined");
     MPWMachORelocationPointer *firstClassPtr=classPtrs.firstObject;
-    IDEXPECT(firstClassPtr.targetName,@"__OBJC_CLASS_TestClass",@"");
+    IDEXPECT(firstClassPtr.targetName,@"__OBJC_CLASS_$_TestClass",@"");
     
     MPWMachOClassReader *reader=[[[MPWMachOClassReader alloc] initWithPointer:firstClassPtr] autorelease];
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");

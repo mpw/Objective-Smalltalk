@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)flags;
 -(NSString*)nameOfClass;
 
+-(MPWMachORelocationPointer*)superclassPointer;
+
 @end
 
 NS_ASSUME_NONNULL_END

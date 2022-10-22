@@ -47,6 +47,11 @@
     return [self.section sectionForRelocEntryAt:self.relocEntryIndex];
 }
 
+-(MPWMachOSection*)targetSectionIndex
+{
+    return [self.section sectionIndexForRelocEntryAt:self.relocEntryIndex];
+}
+
 
 -(MPWMachOInSectionPointer*)targetPointer
 {
