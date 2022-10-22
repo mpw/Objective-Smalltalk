@@ -230,11 +230,11 @@
 {
 //    NSLog(@"sections to write: %@",self.activeSectionWriters);
     NSAssert2(self.length == [self segmentOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
-    NSLog(@"write %ld bytes length now %ld",self.textSectionWriter.length,self.length);
     for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         [sectionWriter writeSectionDataOn:self];
+        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
     }
-    NSLog(@"after writing %ld bytes length now %ld",self.textSectionWriter.length,self.length);
 //     [self writeData:self.textSection];
 }
 

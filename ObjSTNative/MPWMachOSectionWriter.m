@@ -98,7 +98,7 @@
 
 -(int)padding
 {
-    return ([self data].length + 7) / 8 * 8;
+    return 8-([self data].length & 7);
 }
 
 -(long)sectionDataSize
@@ -143,15 +143,17 @@
 
 @implementation MPWMachOSectionWriter(testing) 
 
-+(void)someTest
++(void)testPadding
 {
-	EXPECTTRUE(false, @"implemented");
+    MPWMachOSectionWriter *writer=[self stream];
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],7,@"padding after 1 byte");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
+       @"testPadding",
 			];
 }
 
