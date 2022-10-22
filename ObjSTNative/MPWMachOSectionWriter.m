@@ -96,15 +96,21 @@
     return [self numRelocationEntries] * sizeof(struct relocation_info);
 }
 
+-(int)padding
+{
+    return ([self data].length + 7) / 8 * 8;
+}
+
 -(long)sectionDataSize
 {
-    return [self data].length;
+    return [self data].length + [self padding];
 }
 
 -(BOOL)isActive
 {
     return [self data].length > 0;
 }
+
 
 -(long)totalSize
 {
@@ -121,9 +127,12 @@
     return (NSData*)[self target];
 }
 
+
 -(void)writeSectionDataOn:(MPWMachOWriter*)writer
 {
+    const char padding[8]={ 0,0,0,0,0,0,0,0};
     [writer writeData:[self data]];
+    [writer appendBytes:padding length:[self padding]];
     [self writeRelocationEntriesOn:writer];
 }
 

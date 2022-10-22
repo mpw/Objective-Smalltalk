@@ -169,10 +169,10 @@
 //    }
     
     for (int i=0;i<symtabCount;i++) {
-        NSLog(@"before: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
+//        NSLog(@"before: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
 //        symtab[i].section=sectionNumberRemap[symtab[i].section];
         symtab[i].address += activeWriters[symtab[i].section].address;
-        NSLog(@"after: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
+//        NSLog(@"after: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
    }
 }
 
@@ -268,13 +268,13 @@
     NSNumber *offsetEntry = self.globalSymbolOffsets[symbol];
     if ( offsetEntry == nil ) {
         entryIndex = symtabCount;
-        NSLog(@"symtab[%d]=%@",symtabCount,symbol);
+//        NSLog(@"symtab[%d]=%@",symtabCount,symbol);
         self.globalSymbolOffsets[symbol]=@(symtabCount);
         symtab_entry entry={};
         entry.type = theType;
         entry.section = theSection;
         entry.string_offset=[self stringTableOffsetOfString:symbol];
-        NSLog(@"for symbol %@ offset is %d",symbol,offset);
+//        NSLog(@"for symbol %@ offset is %d",symbol,offset);
         entry.address = offset;
         if ( symtabCount >= symtabCapacity ) {
             [self growSymtab];
@@ -417,7 +417,7 @@
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([[reader textSection] relocEntryOffset],216,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],224,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");

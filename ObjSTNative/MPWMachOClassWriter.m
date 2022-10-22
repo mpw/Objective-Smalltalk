@@ -65,29 +65,32 @@
     return [NSString stringWithFormat:@"_OBJC_METACLASS_$_%@",self.nameOfSuperClass];
 }
 
--(void)writeROPartOnSection:(MPWMachOSectionWriter*)classROWriter symbolName:(NSString*)roClassPartSymbol symbolNameOfClassName:(NSString*)symbolNameOfName instanceSize:(int)instanceSize
+-(void)writeROPartOnSection:(MPWMachOSectionWriter*)classROWriter symbolName:(NSString*)roClassPartSymbol symbolNameOfClassName:(NSString*)symbolNameOfName instanceSize:(int)instanceSize flags:(int)flags
 {
     Mach_O_Class_RO roClassPart={};
     long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
-    
+    bzero(&roClassPart, sizeof roClassPart);
+    roClassPart.flags=flags;
+    NSLog(@"offset of RO Part for %@: %ld",roClassPartSymbol,[classROWriter length]);
+    [classROWriter declareGlobalSymbol:roClassPartSymbol];
     [classROWriter addRelocationEntryForSymbol:symbolNameOfName atOffset:classROWriter.length + name_ptr_offset];
     roClassPart.instanceSize = instanceSize;
-    [classROWriter declareGlobalSymbol:roClassPartSymbol];
     [classROWriter appendBytes:&roClassPart length:sizeof roClassPart];
 }
 
--(void)writeRWPartOnSection:(MPWMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol
+-(void)writeRWPartOnSection:(MPWMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:(NSString*)superclassSymbol
 {
     Mach_O_Class classInfo={};
     long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
     long meta_ptr_offset = ((void*)&classInfo.isa) - ((void*)&classInfo);
     long superclass_ptr_offset = ((void*)&classInfo.superclass) - ((void*)&classInfo);
+
     [classWriter declareGlobalSymbol:classPartSymbol];
     [classWriter addRelocationEntryForSymbol:roClassPartSymbol atOffset:classWriter.length + ro_ptr_offset];
     [classWriter addRelocationEntryForSymbol:metaclassSymbol atOffset:classWriter.length + meta_ptr_offset];
 
-    [self.writer declareExternalSymbol:[self superclassSymbolName]];
-    [classWriter addRelocationEntryForSymbol:[self superclassSymbolName] atOffset:classWriter.length + superclass_ptr_offset];
+    [self.writer declareExternalSymbol:superclassSymbol];
+    [classWriter addRelocationEntryForSymbol:superclassSymbol atOffset:classWriter.length + superclass_ptr_offset];
     [classWriter appendBytes:&classInfo length:sizeof classInfo];
 }
 
@@ -109,12 +112,12 @@
     
     NSString *roClassPartSymbol = [self roClassPartSymbol];
     MPWMachOSectionWriter *classROWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
-    [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize];
+    [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize flags:0] ;
 
     // RO Metaclass Part
 
     NSString *metaROSymbol = [self roMetaClassPartSymbol];
-    [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:40];
+    [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:40 flags:1];
 
     
     
@@ -123,9 +126,14 @@
     MPWMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
     NSString *classPartSymbol = [self classPartSymbol];
     NSString *metaclassSymbol = [self metaclassSymbolName];
+    NSString *superclassSymbol = [self superclassSymbolName];
+    NSString *superclassMetaclassSymbol = [self superclassMetaclassSymbolName];
+    [self.writer declareExternalSymbol:superclassSymbol];
+    [self.writer declareExternalSymbol:superclassMetaclassSymbol];
+
     
-    [self writeRWPartOnSection:classDataWriter symbolName:metaclassSymbol roPartSymbol:metaROSymbol metaclassSymbol:[self superclassMetaclassSymbolName]];
-    [self writeRWPartOnSection:classDataWriter symbolName:classPartSymbol roPartSymbol:roClassPartSymbol metaclassSymbol:metaclassSymbol];
+    [self writeRWPartOnSection:classDataWriter symbolName:metaclassSymbol roPartSymbol:metaROSymbol metaclassSymbol:superclassMetaclassSymbol superclassSymbol:superclassMetaclassSymbol];
+    [self writeRWPartOnSection:classDataWriter symbolName:classPartSymbol roPartSymbol:roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:superclassSymbol];
 
     
     // Pointers
@@ -229,7 +237,7 @@
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"AnotherTestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
-    IDEXPECT(reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"");
+    IDEXPECT(reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"superclass pointer");
     INTEXPECT(reader.superclassPointer.targetSectionIndex ,0,@"");
     
     MPWMachOClassReader *metaclassReader=[reader metaclassReader];
