@@ -178,7 +178,7 @@
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"AnotherTestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
-    
+//    IDEXPECT(reader.superclassPointer.targetName,@"",@"");
 }
 
 +(NSArray*)testSelectors

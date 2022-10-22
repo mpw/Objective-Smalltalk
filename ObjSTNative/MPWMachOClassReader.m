@@ -55,6 +55,12 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
     return [[self.basePointer targetPointer] relocationPointerAtOffset:0];
 }
 
+-(MPWMachORelocationPointer*)superclassPointer
+{
+    return [[self.basePointer targetPointer] relocationPointerAtOffset:8];
+}
+
+
 -(instancetype)metaclassReader
 {
     return [[[[self class] alloc] initWithPointer:[self metaclassPointer]] autorelease];
@@ -173,6 +179,9 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
     INTEXPECT( reader.flags, 0, @"flags for class");
     INTEXPECT( reader.instanceSize, 8, @"instance size of class");
     IDEXPECT( reader.methodListSymbolName, @"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method list symbol");
+    IDEXPECT( reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"name of symbol pointing to superclass NSObject");
+    
+    
     INTEXPECT( reader.numberOfMethods, 3,@"number of methods");
     INTEXPECT( reader.methodEntrySize, 24,@"method entry size");
     IDEXPECT( [[reader methodNameAt:0] targetName], @"l_OBJC_METH_VAR_NAME_.2",@"first method name symbol name");
