@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithPointer:(MPWMachORelocationPointer*)basePointer;
 +(instancetype)readerWithPointer:(MPWMachORelocationPointer*)basePointer;
+-(instancetype)metaclassReader;
 
 -(int)instanceSize;
 -(int)flags;

@@ -41,7 +41,11 @@ static int offsetOfClassNamePointerFromBaseClassRO() {
 CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 {
     self=[super init];
-    self.basePointer = basePointer;
+    if ( basePointer ) {
+        self.basePointer = basePointer;
+    } else {
+        self=nil;
+    }
     return self;
 }
 
