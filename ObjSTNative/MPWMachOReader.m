@@ -13,6 +13,7 @@
 #import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
 #import "MPWMachORelocationPointer.h"
+#import "MPWMachOClassReader.h"
 
 @interface MPWMachOReader()
 
@@ -22,7 +23,8 @@
 
 @implementation MPWMachOReader
 
--(instancetype)initWithData:(NSData*)machodata
+
+CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 {
     if ( machodata ) {
         self=[super init];
@@ -197,7 +199,10 @@
     return classes;
 }
 
-
+-(NSArray<MPWMachOClassReader*>*)classReaders
+{
+    return [[MPWMachOClassReader collect] readerWithPointer:[[self classPointers] each] ];
+}
 
 
 -(struct symtab_command*)symtab

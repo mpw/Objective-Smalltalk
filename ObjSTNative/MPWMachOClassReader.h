@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWMachOClassReader : NSObject
 
 -(instancetype)initWithPointer:(MPWMachORelocationPointer*)basePointer;
++(instancetype)readerWithPointer:(MPWMachORelocationPointer*)basePointer;
 
 -(int)instanceSize;
 -(int)flags;

@@ -301,7 +301,11 @@
 
 -(NSData*)data
 {
-    return (NSData*)self.target;
+    NSData *data = (NSData*)self.target;
+    if ( data.length == 0 ) {
+        [self writeFile];
+    }
+    return data;
 }
 
 -(void)writeFile

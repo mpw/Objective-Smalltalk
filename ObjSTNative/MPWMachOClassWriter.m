@@ -110,13 +110,13 @@
     
     NSString *testclassNameSymbolName = [classWriter classNameSymbolName];
     classWriter.instanceSize = 8;
+
     [classWriter writeClass];
-    [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/class_via_writer.o" atomically:YES];
     
     
-    MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
     INTEXPECT( machoReader.numSections, 6,@"number of sections");
     
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
@@ -167,17 +167,15 @@
     
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
     classWriter.nameOfClass = @"AnotherTestClass";
-    
-    NSString *testclassNameSymbolName = [classWriter classNameSymbolName];
     classWriter.instanceSize = 24;
+    
     [classWriter writeClass];
-    [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/class2_via_writer.o" atomically:YES];
     
     
-    MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease]; 
-    MPWMachOClassReader *reader=[[[MPWMachOClassReader alloc] initWithPointer:[machoReader classPointers].firstObject] autorelease];
+    MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
+    MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"AnotherTestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
     

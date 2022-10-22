@@ -38,7 +38,7 @@ static int offsetOfClassNamePointerFromBaseClassRO() {
 }
 
 
--(instancetype)initWithPointer:(MPWMachORelocationPointer*)basePointer
+CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 {
     self=[super init];
     self.basePointer = basePointer;
