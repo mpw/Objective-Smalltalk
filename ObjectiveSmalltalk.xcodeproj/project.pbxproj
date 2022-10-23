@@ -1080,6 +1080,7 @@
 		1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFileWatcher.m; sourceTree = "<group>"; };
 		1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDocumentScheme.h; sourceTree = "<group>"; };
 		1F8E81D01924229B00821570 /* MPWDocumentScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDocumentScheme.m; sourceTree = "<group>"; };
+		1F99D23829055D77009F0CE8 /* use_testclass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_testclass.m; sourceTree = "<group>"; };
 		1F9AE9C028D4957A00671748 /* Mach_O_Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mach_O_Structs.h; sourceTree = "<group>"; };
 		1F9AE9C428D75BC300671748 /* add.aarch64 */ = {isa = PBXFileReference; lastKnownFileType = file; path = add.aarch64; sourceTree = "<group>"; };
 		1F9AE9CA28E1E58600671748 /* MPWJittableData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWJittableData.h; sourceTree = "<group>"; };
@@ -1711,6 +1712,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F99D23829055D77009F0CE8 /* use_testclass.m */,
 				1F9AE9E528ED76BD00671748 /* two-classes.macho */,
 				1F9AE9DE28E825C600671748 /* call-external-fn.macho */,
 				1F9AE9DD28E825C600671748 /* class-with-method.macho */,
