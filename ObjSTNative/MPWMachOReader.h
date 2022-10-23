@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)numLoadCommands;
 
 -(long)segmentOffset;
+-(long)segmentSize;
 -(const void*)segmentBytes;
 
 
@@ -48,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSArray<MPWMachORelocationPointer*>*)classPointers;
 -(NSArray<MPWMachOClassReader*>*)classReaders;
 
+
+-(void)dumpRelocationsOn:(MPWByteStream*)s;
 
 @end
 

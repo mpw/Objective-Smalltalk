@@ -28,6 +28,7 @@
         self.segname=@"__TEXT";
         self.sectname=@"__text";
         self.relocationType = GENERIC_RELOC_VANILLA;
+        self.relocationLength = 3;
     }
     return self;
 }
@@ -75,7 +76,7 @@
 //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;
-    r.r_length=2;
+    r.r_length=3;
     r.r_pcrel=0;
     r.r_type=self.relocationType;
     if ( relocCount >= relocCapacity ) {
@@ -97,7 +98,9 @@
 
 -(int)padding
 {
-    return 8-([self data].length & 7);
+    long len = [self data].length;
+    int remainder = (int)(len & 7);
+    return remainder == 0 ? 0 : (8-remainder);
 }
 
 -(long)sectionDataSize
@@ -149,10 +152,23 @@
 +(void)testComputePadding
 {
     MPWMachOSectionWriter *writer=[self stream];
+    INTEXPECT( [writer padding],0,@"padding after 0 bytes");
     [writer appendBytes:"" length:1];
     INTEXPECT( [writer padding],7,@"padding after 1 byte");
     [writer appendBytes:"" length:1];
     INTEXPECT( [writer padding],6,@"padding after 2 bytes");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],5,@"padding after 3 bytes");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],4,@"padding after 4 bytes");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],3,@"padding after 5 bytes");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],2,@"padding after 6 bytes");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],1,@"padding after 7 bytes");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],0,@"padding after 8 bytes");
 }
 
 +(NSArray*)testSelectors

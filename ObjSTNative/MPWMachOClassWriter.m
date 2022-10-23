@@ -68,7 +68,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
     bzero(&roClassPart, sizeof roClassPart);
     roClassPart.flags=flags;
-    NSLog(@"offset of RO Part for %@: %ld",roClassPartSymbol,[classROWriter length]);
+//    NSLog(@"offset of RO Part for %@: %ld",roClassPartSymbol,[classROWriter length]);
     [classROWriter declareGlobalSymbol:roClassPartSymbol];
     [classROWriter addRelocationEntryForSymbol:symbolNameOfName atOffset:classROWriter.length + name_ptr_offset];
     roClassPart.instanceSize = instanceSize;
@@ -231,6 +231,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     
     MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
+    NSLog(@"relocations for class2_via_writer.o:");
+    [machoReader dumpRelocationsOn:[MPWByteStream Stderr]];
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"AnotherTestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");

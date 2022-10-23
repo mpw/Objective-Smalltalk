@@ -103,6 +103,7 @@
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
         self.textSectionWriter.relocationType=ARM64_RELOC_BRANCH26;
+        self.textSectionWriter.relocationLength=2;
         [self addSectionWriterWithSegName:@"__DATA" sectName:@"_objectclasslist" flags:0];
         symtabCapacity = 10;
         [self growSymtab];
@@ -121,6 +122,7 @@
     header.filetype = self.filetype;
     header.ncmds = self.numLoadCommands;
     header.sizeofcmds = self.loadCommandSize;
+    header.flags = MH_SUBSECTIONS_VIA_SYMBOLS;
     [self appendBytes:&header length:sizeof header];
 
 }
@@ -191,7 +193,8 @@
         segmentSize += writer.sectionDataSize;
         sectionOffset += writer.sectionDataSize;
     }
-    
+    long sectionDataSize = segmentSize;
+//    NSLog(@"segmentSize just data: %ld",segmentSize);
     long relocOffset = sectionOffset;
     for ( MPWMachOSectionWriter *writer in writers) {
         writer.relocationEntryOffset = relocOffset + segmentOffset;
@@ -199,7 +202,8 @@
         relocOffset += writer.relocEntrySize;
     }
     self.totalSegmentSize = segmentSize;
-    
+//    NSLog(@"segmentSize including relocation entries: %ld",segmentSize);
+
     [self adjustSymtabEntries];
     
     struct segment_command_64 segment={};
@@ -207,8 +211,8 @@
     segment.cmdsize = [self segmentCommandSize];
     segment.nsects = [self activeSectionWriters].count;
     segment.fileoff=segmentOffset;
-    segment.filesize=segmentSize;
-    segment.vmsize = segmentSize;
+    segment.filesize=sectionDataSize;
+    segment.vmsize = sectionDataSize;
     segment.initprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     [self appendBytes:&segment length:sizeof segment];
@@ -241,14 +245,15 @@
 //    NSLog(@"sections to write: %@",self.activeSectionWriters);
     NSAssert2(self.length == [self segmentOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
     for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
-        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
+//        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         [sectionWriter writeSectionDataOn:self];
-        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
+//        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
     }
     for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
-        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
+//        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
+        NSAssert2(self.length == sectionWriter.relocationEntryOffset , @"relocation entry offset %ld does not match computed %d", (long)self.length,sectionWriter.relocationEntryOffset);
         [sectionWriter writeRelocationEntriesOn:self];
-        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
+//        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
     }
 //     [self writeData:self.textSection];
 }
@@ -434,7 +439,7 @@
     
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([[reader textSection] relocEntryOffset],224,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],216,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
@@ -560,10 +565,27 @@
     MPWMachOSection *firstSection = [reader sectionAtIndex:3];
     MPWMachOSection *lastSection = [reader sectionAtIndex:reader.numSections];
     int firstRelocationOffset = [firstSection relocEntryOffset];
-//    INTEXPECT(firstRelocationOffset,712,@"");
+    //    INTEXPECT(firstRelocationOffset,712,@"");
     int lastDataOffset = lastSection.offset;
-//    INTEXPECT(lastDataOffset,864,@"");
+    //    INTEXPECT(lastDataOffset,864,@"");
     EXPECTTRUE(firstRelocationOffset > lastDataOffset, @"all relocation entries should be after all data in segment");
+}
+
++(void)testSegmentSizeIsOnlyDataNotRelocEntries
+{
+    MPWMachOWriter *writer = [self stream];
+    MPWMachOClassWriter *classwriter=[MPWMachOClassWriter writerWithWriter:writer];
+    classwriter.nameOfClass = @"TestClass";
+    classwriter.nameOfSuperClass = @"NSObject";
+    [classwriter writeClass];
+    NSData *d=[writer data];
+    [d writeToFile:@"/tmp/segment_size.macho" atomically:YES];
+    MPWMachOReader *reader=[MPWMachOReader readerWithData:d];
+    long sectionSize = 0;
+    for (int i=1;i<=reader.numSections;i++) {
+        sectionSize += ((([reader sectionAtIndex:i].size) + 7) / 8) * 8;
+    }
+    INTEXPECT( sectionSize, reader.segmentSize , @"segment size ");
 }
 
 
@@ -576,7 +598,8 @@
 //       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
        @"testWriteClassPartsAndReadPartsManually",
-       @"testRelocationEntriesComeAfterAllSegmentData"
+       @"testRelocationEntriesComeAfterAllSegmentData",
+       @"testSegmentSizeIsOnlyDataNotRelocEntries",
 		];
 }
 

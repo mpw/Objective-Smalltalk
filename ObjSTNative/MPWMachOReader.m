@@ -111,6 +111,11 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return [self segment]->fileoff;
 }
 
+-(long)segmentSize
+{
+    return [self segment]->filesize;
+}
+
 -(const void*)segmentBytes
 {
     return [self bytes] + [self segmentOffset];
@@ -148,6 +153,13 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 -(MPWMachOSection*)textSection
 {
     return [self sectionWithName:"__text"];
+}
+
+-(void)dumpRelocationsOn:(MPWByteStream*)s
+{
+    for (int i=1;i<[self numSections];i++) {
+        [[self sectionAtIndex:i] dumpRelocationsOn:s];
+    }
 }
 
 -(MPWMachOSection*)sectionAtIndex:(int)sectionIndex
@@ -452,6 +464,8 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     INTEXPECT( classPointers.count, 2, @"number of classes");
     IDEXPECT( classPointers[0].targetName, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
     IDEXPECT( classPointers[1].targetName, @"_OBJC_CLASS_$_FirstClass",@"Last class in list");
+    NSLog(@"will dump relocations in two-clases.macho:");
+    [reader dumpRelocationsOn:[MPWByteStream Stderr]];
     
 }
 

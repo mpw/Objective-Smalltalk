@@ -61,6 +61,23 @@
     return sectionHeader->offset;
 }
 
+-(long)size
+{
+    return sectionHeader->size;
+}
+
+-(void)dumpRelocationsOn:(MPWByteStream*)s
+{
+    const struct relocation_info *reloc=[self.machoData bytes] + [self relocEntryOffset];
+    if ( sectionHeader->nreloc ) {
+        [s printFormat:@"relocations for %@ %@:\n",[self segmentName],[self sectionName]];
+        for (int i=0;i<sectionHeader->nreloc;i++) {
+            [s printf:@"reloc[%d] address=%lx pc-rel: %d type: %d length=%d \n",i,reloc[i].r_address,reloc[i].r_pcrel,reloc[i].r_type,reloc[i].r_length];
+        }
+        [s writeNewline];
+    }
+}
+
 -(NSData*)sectionData
 {
     return [self.machoData subdataWithRange:NSMakeRange(sectionHeader->offset,sectionHeader->size)];
