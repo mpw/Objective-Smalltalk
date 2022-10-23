@@ -182,11 +182,21 @@
     NSArray *writers = [self activeSectionWriters];
     long sectionOffset = 0;
     long segmentSize = 0;
+    
+    //--- compute section data offsets
+    
     for ( MPWMachOSectionWriter *writer in writers) {
         writer.offset = sectionOffset + segmentOffset;
         writer.address = sectionOffset;
-        segmentSize += writer.totalSize;
-        sectionOffset += writer.totalSize;
+        segmentSize += writer.sectionDataSize;
+        sectionOffset += writer.sectionDataSize;
+    }
+    
+    long relocOffset = sectionOffset;
+    for ( MPWMachOSectionWriter *writer in writers) {
+        writer.relocationEntryOffset = relocOffset + segmentOffset;
+        segmentSize += writer.relocEntrySize;
+        relocOffset += writer.relocEntrySize;
     }
     self.totalSegmentSize = segmentSize;
     
@@ -233,6 +243,10 @@
     for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
         NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         [sectionWriter writeSectionDataOn:self];
+        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
+    }
+    for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         [sectionWriter writeRelocationEntriesOn:self];
         NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
     }
@@ -340,6 +354,8 @@
 #import <MPWFoundation/DebugMacros.h>
 #import "MPWMachOReader.h"
 #import "MPWMachOClassReader.h"
+#import "MPWMachOSection.h"
+#import "MPWMachOClassWriter.h"
 #import "Mach_O_Structs.h"
 #import "MPWMachORelocationPointer.h"
 
@@ -364,12 +380,12 @@
     [writer declareGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData: machineCode];
-//    INTEXPECT(writer.textSectionSize,8,@"bytes in text section");
+    //    INTEXPECT(writer.textSectionSize,8,@"bytes in text section");
     
     [writer writeFile];
     
     NSData *macho=[writer data];
-//    [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
+    //    [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     
     EXPECTTRUE([reader isHeaderValid],@"valid header");
@@ -415,7 +431,7 @@
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/reloc.o" atomically:YES];
-
+    
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
     INTEXPECT([[reader textSection] relocEntryOffset],224,@"offset of undefined symbol reloc entries");
@@ -429,7 +445,7 @@
     MPWMachOWriter *writer = [self stream];
     NSString *testclassNameSymbolName=@"_TestClass_name";
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
-
+    
     //  class name goes in its own section
     
     MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
@@ -442,7 +458,7 @@
     NSString *roClassPartSymbol = @"__OBJC_CLASS_RO_TestClass";
     Mach_O_Class_RO roClassPart={};
     long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
-
+    
     [classROWriter addRelocationEntryForSymbol:testclassNameSymbolName atOffset:classROWriter.length + name_ptr_offset];
     roClassPart.instanceSize = 8;
     [classROWriter declareGlobalSymbol:roClassPartSymbol];
@@ -465,20 +481,20 @@
     memset(zerobytes,0,80);
     [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:0];
     [classListWriter appendBytes:zerobytes length:8];
-
-
+    
+    
     [writer writeFile];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/class.o" atomically:YES];
-
+    
     
     MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT( machoReader.numSections, 5,@"number of sections");
-//    for (int i=1;i<machoReader.numSections;i++) {
-//        MPWMachOSection *s=[machoReader sectionAtIndex:i];
-//        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
-//    }
-//    NSArray *classptrs = machoReader.classPointers;
+    //    for (int i=1;i<machoReader.numSections;i++) {
+    //        MPWMachOSection *s=[machoReader sectionAtIndex:i];
+    //        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);
+    //    }
+    //    NSArray *classptrs = machoReader.classPointers;
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
     INTEXPECT(classNameSymbolEntry,0,@"symtab entry");
     
@@ -489,7 +505,7 @@
     IDEXPECT(classnameSection.sectionName,@"__objc_classname",@"");
     INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
     IDEXPECT( [classnameSection strings].firstObject, @"TestClass", @"Objective-C classname");
-
+    
     // read RO part
     
     int roClassSmbolIndex=[machoReader indexOfSymbolNamed:roClassPartSymbol];
@@ -506,20 +522,20 @@
     
     MPWMachORelocationPointer *classNamePtr = [[[MPWMachORelocationPointer alloc] initWithSection:roClassPartSection relocEntryIndex:0] autorelease];
     IDEXPECT( [classNamePtr targetName],@"_TestClass_name",@"");
-
+    
     INTEXPECT( [[classNamePtr section] typeOfRelocEntryAt:0],0,@"");
     INTEXPECT( [classNamePtr targetOffset],0,@"target offset");
     NSString *className = [NSString stringWithUTF8String:[[classNamePtr targetPointer] bytes]];
     IDEXPECT( className,@"TestClass",@"");
-
+    
     // read data part (and find RO part)
- 
+    
     int rwClassSmbolIndex=[machoReader indexOfSymbolNamed:classPartSymbol];
     INTEXPECT(rwClassSmbolIndex, 2,@"symbol index");
     MPWMachOSection *rwClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:rwClassSmbolIndex]];
     MPWMachORelocationPointer *roClassViaRWPointer = [[[MPWMachORelocationPointer alloc] initWithSection:rwClassPartSection relocEntryIndex:0] autorelease];
     IDEXPECT( [roClassViaRWPointer targetName],@"__OBJC_CLASS_RO_TestClass",@"RO part of class def via RW part");
-
+    
     //  read the class pointers section
     
     NSArray <MPWMachORelocationPointer*>* classPtrs = [machoReader classPointers];
@@ -533,6 +549,23 @@
     
 }
 
++(void)testRelocationEntriesComeAfterAllSegmentData
+{
+    MPWMachOWriter *writer = [self stream];
+    MPWMachOClassWriter *classwriter=[MPWMachOClassWriter writerWithWriter:writer];
+    classwriter.nameOfClass = @"TestClass";
+    classwriter.nameOfSuperClass = @"NSObject";
+    [classwriter writeClass];
+    MPWMachOReader *reader=[MPWMachOReader readerWithData:[writer data]];
+    MPWMachOSection *firstSection = [reader sectionAtIndex:3];
+    MPWMachOSection *lastSection = [reader sectionAtIndex:reader.numSections];
+    int firstRelocationOffset = [firstSection relocEntryOffset];
+//    INTEXPECT(firstRelocationOffset,712,@"");
+    int lastDataOffset = lastSection.offset;
+//    INTEXPECT(lastDataOffset,864,@"");
+    EXPECTTRUE(firstRelocationOffset > lastDataOffset, @"all relocation entries should be after all data in segment");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -543,6 +576,7 @@
 //       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
        @"testWriteClassPartsAndReadPartsManually",
+       @"testRelocationEntriesComeAfterAllSegmentData"
 		];
 }
 

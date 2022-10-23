@@ -9,7 +9,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWMachOWriter;
+
 @interface MPWMachOClassWriter : NSObject
+
++(instancetype)writerWithWriter:(MPWMachOWriter*)writer;
+-(instancetype)initWithWriter:(MPWMachOWriter*)writer;
+
+@property (nonatomic,strong) NSString* nameOfClass;
+@property (nonatomic,strong) NSString* nameOfSuperClass;
+@property (nonatomic,assign) int instanceSize;
+
+-(void)writeClass;
+
 
 @end
 

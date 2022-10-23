@@ -13,15 +13,12 @@
 @interface MPWMachOClassWriter()
 
 @property (nonatomic,strong) MPWMachOWriter* writer;
-@property (nonatomic,strong) NSString* nameOfClass;
-@property (nonatomic,strong) NSString* nameOfSuperClass;
-@property (nonatomic,assign) int instanceSize;
 
 @end
 
 @implementation MPWMachOClassWriter
 
--(instancetype)initWithWriter:(MPWMachOWriter*)writer
+CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 {
     self=[super init];
     self.writer = writer;

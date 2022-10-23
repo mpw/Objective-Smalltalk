@@ -56,7 +56,7 @@
     textSection.size = self.length;
     textSection.flags = self.flags; //;
     textSection.nreloc = [self numRelocationEntries];
-    textSection.reloff = [self numRelocationEntries] >0 ? (int)(self.offset + [self sectionDataSize]) : 0;
+    textSection.reloff = [self numRelocationEntries] >0 ? self.relocationEntryOffset : 0;
     [writer appendBytes:&textSection length:sizeof textSection];
 }
 
@@ -116,9 +116,14 @@
     return [self sectionDataSize] + [self relocationEntriesSize];
 }
 
+-(long)relocEntrySize
+{
+    return relocCount * sizeof(struct relocation_info);
+}
+
 -(void)writeRelocationEntriesOn:(MPWByteStream*)writer
 {
-    [writer appendBytes:relocations length:relocCount * sizeof(struct relocation_info)];
+    [writer appendBytes:relocations length:self.relocEntrySize];
 }
 
 -(NSData*)data

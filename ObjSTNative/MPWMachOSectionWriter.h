@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)declareGlobalSymbol:(NSString*)symbol;
 
+-(long)sectionDataSize;
+-(long)relocEntrySize;
 -(long)totalSize;
 -(BOOL)isActive;
 
