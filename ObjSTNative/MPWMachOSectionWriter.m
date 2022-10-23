@@ -29,6 +29,7 @@
         self.sectname=@"__text";
         self.relocationType = GENERIC_RELOC_VANILLA;
         self.relocationLength = 3;
+        self.alignment=3;
     }
     return self;
 }
@@ -49,16 +50,17 @@
 
 -(void)writeSectionLoadCommandOnWriter:(MPWByteStream*)writer
 {
-    struct section_64 textSection={};
-    strncpy( textSection.segname, [self.segname UTF8String] ,16); // "__text"
-    strncpy( textSection.sectname, [self.sectname UTF8String] ,16 ); // "__TEXT"
-    textSection.addr = self.address;
-    textSection.offset = (int)self.offset;
-    textSection.size = self.length;
-    textSection.flags = self.flags; //;
-    textSection.nreloc = [self numRelocationEntries];
-    textSection.reloff = [self numRelocationEntries] >0 ? self.relocationEntryOffset : 0;
-    [writer appendBytes:&textSection length:sizeof textSection];
+    struct section_64 section={};
+    strncpy( section.segname, [self.segname UTF8String] ,16); // "__text"
+    strncpy( section.sectname, [self.sectname UTF8String] ,16 ); // "__TEXT"
+    section.addr = self.address;
+    section.offset = (int)self.offset;
+    section.size = self.length;
+    section.flags = self.flags; //;
+    section.nreloc = [self numRelocationEntries];
+    section.reloff = [self numRelocationEntries] >0 ? self.relocationEntryOffset : 0;
+    section.align = self.alignment;
+    [writer appendBytes:&section length:sizeof section];
 }
 
 -(void)declareGlobalSymbol:(NSString*)symbol

@@ -224,20 +224,20 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     MPWMachOWriter *writer = [MPWMachOWriter stream];
     
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
-    classWriter.nameOfClass = @"AnotherTestClass";
+    classWriter.nameOfClass = @"TestClass";
     classWriter.nameOfSuperClass = @"NSObject";
     classWriter.instanceSize = 24;
     
     [classWriter writeClass];
     NSData *macho=[writer data];
-    [macho writeToFile:@"/tmp/class2_via_writer.o" atomically:YES];
+    [macho writeToFile:@"/tmp/testclass.o" atomically:YES];
     
     
     MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
     NSLog(@"relocations for class2_via_writer.o:");
     [machoReader dumpRelocationsOn:[MPWByteStream Stderr]];
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
-    IDEXPECT(reader.nameOfClass,@"AnotherTestClass",@"");
+    IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
     IDEXPECT(reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"superclass pointer");
     INTEXPECT(reader.superclassPointer.targetSectionIndex ,0,@"");
