@@ -81,10 +81,12 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
     long meta_ptr_offset = ((void*)&classInfo.isa) - ((void*)&classInfo);
     long superclass_ptr_offset = ((void*)&classInfo.superclass) - ((void*)&classInfo);
+    long cache_ptr_offset = ((void*)&classInfo.cache) - ((void*)&classInfo);
 
     [classWriter declareGlobalSymbol:classPartSymbol];
     [classWriter addRelocationEntryForSymbol:roClassPartSymbol atOffset:classWriter.length + ro_ptr_offset];
     [classWriter addRelocationEntryForSymbol:metaclassSymbol atOffset:classWriter.length + meta_ptr_offset];
+    [classWriter addRelocationEntryForSymbol:@"__objc_empty_cache" atOffset:classWriter.length + cache_ptr_offset];
 
     [self.writer declareExternalSymbol:superclassSymbol];
     [classWriter addRelocationEntryForSymbol:superclassSymbol atOffset:classWriter.length + superclass_ptr_offset];
@@ -101,6 +103,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     //  class name goes in its own section
     
+    [writer declareExternalSymbol:@"__objc_empty_cache"];
     MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
     [classNameWriter declareGlobalSymbol:testclassNameSymbolName];
     [classNameWriter writeNullTerminatedString:self.nameOfClass];
@@ -175,7 +178,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     INTEXPECT( machoReader.numSections, 5,@"number of sections");
     
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
-    INTEXPECT(classNameSymbolEntry,0,@"symtab entry");
+    INTEXPECT(classNameSymbolEntry,1,@"symtab entry");
     
     //  read classname
     
@@ -188,7 +191,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     // read RO part
     
     int roClassSmbolIndex=[machoReader indexOfSymbolNamed:[classWriter roClassPartSymbol]];
-    INTEXPECT(roClassSmbolIndex, 1,@"symbol index");
+    INTEXPECT(roClassSmbolIndex, 2,@"symbol index");
     
     MPWMachOSection *roClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:roClassSmbolIndex]];
     const struct Mach_O_Class_RO *roClassPartCheck=[roClassPartSection bytes];
@@ -238,7 +241,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     INTEXPECT(reader.instanceSize,24,@"instance size");
     IDEXPECT(reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"superclass pointer");
     INTEXPECT(reader.superclassPointer.targetSectionIndex ,0,@"");
-    
+    IDEXPECT( reader.cachePointer.targetName,@"__objc_empty_cache",@"name of cache ptr");
+
     MPWMachOClassReader *metaclassReader=[reader metaclassReader];
     INTEXPECT(metaclassReader.instanceSize,40,@"class size");
 }

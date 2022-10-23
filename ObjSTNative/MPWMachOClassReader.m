@@ -37,6 +37,11 @@ static int offsetOfClassNamePointerFromBaseClassRO() {
     return (void*)&c.name - (void*)&c;
 }
 
+static int offsetOfCacheFromBaseClass() {
+    Mach_O_Class c;
+    return (void*)&c.cache - (void*)&c;
+}
+
 
 CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 {
@@ -63,6 +68,13 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 {
     return [[self.basePointer targetPointer] relocationPointerAtOffset:8];
 }
+
+-(MPWMachORelocationPointer*)cachePointer
+{
+    return [[self.basePointer targetPointer] relocationPointerAtOffset:offsetOfCacheFromBaseClass()];
+}
+
+
 
 
 -(instancetype)metaclassReader
@@ -184,7 +196,8 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
     INTEXPECT( reader.instanceSize, 8, @"instance size of class");
     IDEXPECT( reader.methodListSymbolName, @"__OBJC_$_INSTANCE_METHODS_SecondClass",@"method list symbol");
     IDEXPECT( reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"name of symbol pointing to superclass NSObject");
-    
+    IDEXPECT( reader.cachePointer.targetName,@"__objc_empty_cache",@"name of cache ptr");
+
     
     INTEXPECT( reader.numberOfMethods, 3,@"number of methods");
     INTEXPECT( reader.methodEntrySize, 24,@"method entry size");
@@ -194,6 +207,7 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
     IDEXPECT( [[reader methodNameAt:1] targetName], @"l_OBJC_METH_VAR_NAME_.4",@"second method name symbol name");
     IDEXPECT( [[reader methodTypesAt:1] targetName], @"l_OBJC_METH_VAR_TYPE_.3",@"second method type encoding symbol name");
     IDEXPECT( [[reader methodCodeAt:1] targetName], @"-[SecondClass there]",@"second method code symbol name");
+    
 }
 
 +(void)testReadMetaClass

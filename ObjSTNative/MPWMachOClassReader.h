@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)nameOfClass;
 
 -(MPWMachORelocationPointer*)superclassPointer;
+-(MPWMachORelocationPointer*)cachePointer;
 
 @end
 
