@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) long offset;
 @property (nonatomic, assign) long address;
+@property (nonatomic, assign) long relocationEntryOffset;
+
 @property (nonatomic) long sectionNumber;
 @property (nonatomic, weak) id <SymbolWriter> symbolWriter;
 @property (nonatomic, strong) NSString *segname;
@@ -23,8 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) int flags;
 @property (nonatomic, assign) int relocationType;
 
--(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer;
--(void)writeSectionDataOn:(MPWMachOWriter*)writer;
+-(void)writeSectionLoadCommandOnWriter:(MPWByteStream*)writer;
+-(void)writeSectionDataOn:(MPWByteStream*)writer;
+-(void)writeRelocationEntriesOn:(MPWByteStream*)writer;
 
 -(void)declareGlobalSymbol:(NSString*)symbol;
 

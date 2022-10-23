@@ -46,7 +46,7 @@
 }
 
 
--(void)writeSectionLoadCommandOnWriter:(MPWMachOWriter*)writer
+-(void)writeSectionLoadCommandOnWriter:(MPWByteStream*)writer
 {
     struct section_64 textSection={};
     strncpy( textSection.segname, [self.segname UTF8String] ,16); // "__text"
@@ -56,9 +56,8 @@
     textSection.size = self.length;
     textSection.flags = self.flags; //;
     textSection.nreloc = [self numRelocationEntries];
-    textSection.reloff = (int)(self.offset + [self sectionDataSize]);
+    textSection.reloff = [self numRelocationEntries] >0 ? (int)(self.offset + [self sectionDataSize]) : 0;
     [writer appendBytes:&textSection length:sizeof textSection];
-
 }
 
 -(void)declareGlobalSymbol:(NSString*)symbol
@@ -117,7 +116,7 @@
     return [self sectionDataSize] + [self relocationEntriesSize];
 }
 
--(void)writeRelocationEntriesOn:(MPWMachOWriter*)writer
+-(void)writeRelocationEntriesOn:(MPWByteStream*)writer
 {
     [writer appendBytes:relocations length:relocCount * sizeof(struct relocation_info)];
 }
@@ -128,12 +127,11 @@
 }
 
 
--(void)writeSectionDataOn:(MPWMachOWriter*)writer
+-(void)writeSectionDataOn:(MPWByteStream*)writer
 {
     const char padding[8]={ 0,0,0,0,0,0,0,0};
     [writer writeData:[self data]];
     [writer appendBytes:padding length:[self padding]];
-    [self writeRelocationEntriesOn:writer];
 }
 
 @end
@@ -143,17 +141,19 @@
 
 @implementation MPWMachOSectionWriter(testing) 
 
-+(void)testPadding
++(void)testComputePadding
 {
     MPWMachOSectionWriter *writer=[self stream];
     [writer appendBytes:"" length:1];
     INTEXPECT( [writer padding],7,@"padding after 1 byte");
+    [writer appendBytes:"" length:1];
+    INTEXPECT( [writer padding],6,@"padding after 2 bytes");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-       @"testPadding",
+       @"testComputePadding",
 			];
 }
 

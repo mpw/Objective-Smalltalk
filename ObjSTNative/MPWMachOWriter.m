@@ -233,6 +233,7 @@
     for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
         NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         [sectionWriter writeSectionDataOn:self];
+        [sectionWriter writeRelocationEntriesOn:self];
         NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
     }
 //     [self writeData:self.textSection];
