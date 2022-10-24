@@ -80,6 +80,21 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     [classROWriter appendBytes:&roClassPart length:sizeof roClassPart];
 }
 
+-(MPWMachOSectionWriter*)objcConstWriter
+{
+    return [self.writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
+}
+
+-(MPWMachOSectionWriter*)objcMethNameWriter
+{
+    return [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:0];
+}
+
+-(MPWMachOSectionWriter*)objcMethTypeWriter
+{
+    return [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methtype" flags:0];
+}
+
 -(void)writeRWPartOnSection:(MPWMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:(NSString*)superclassSymbol
 {
     Mach_O_Class classInfo={};
@@ -115,7 +130,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     // RO Part
     
     NSString *roClassPartSymbol = [self roClassPartSymbol];
-    MPWMachOSectionWriter *classROWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
+    MPWMachOSectionWriter *classROWriter = self.objcConstWriter;
     [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize flags:0 methods:self.instanceMethodListSymbol] ;
 
     // RO Metaclass Part
@@ -257,8 +272,10 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
 
+    NSString *methodNameSymbol = @"_method_name";
     NSString *methodName = @"method";
     NSString *methodSymbolName = @"-[TestClass method]";
+    NSString *methodTypeSymbol = @"_method_type";
     NSString *methodTypeString = @"@:";
     NSString *methodListSymbol = @"_methodList";
     int methodListSize = sizeof(BaseMethods) + sizeof(MethodEntry);
@@ -267,12 +284,25 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     methods->entrysize = 24;
     [writer.textSectionWriter declareGlobalSymbol:methodSymbolName];
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
-
+    
+    
+    
+//    [self.objcConstWriter declareGlobalSymbol:
+    
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
     classWriter.nameOfClass = @"TestClass";
     classWriter.nameOfSuperClass = @"NSObject";
     classWriter.instanceSize = 8;
+ 
+    MPWMachOSectionWriter *methNameWriter=classWriter.objcMethNameWriter;
+    [methNameWriter declareGlobalSymbol:methodNameSymbol];
+    [methNameWriter writeNullTerminatedString:methodName];
     
+//    MPWMachOSectionWriter *methTypeWriter=classWriter.objcMethTypeWriter;
+//    [methTypeWriter declareGlobalSymbol:methodTypeSymbol];
+//    [methNameWriter writeNullTerminatedString:methodTypeString];
+    
+
     
     [classWriter writeClass];
     NSData *macho=[writer data];
