@@ -282,7 +282,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     BaseMethods *methods = calloc( 1, methodListSize);
     methods->count = 1;
     methods->entrysize = 24;
-    [writer.textSectionWriter declareGlobalSymbol:methodSymbolName];
+    [writer.textSectionWriter declareGlobalTextSymbol:methodSymbolName];
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
     
     

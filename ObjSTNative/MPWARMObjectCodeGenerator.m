@@ -390,6 +390,18 @@ static void callme() {
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
 }
 
++(void)testGenerateMessageSendAndComputation
+{
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [g generateFunctionNamed:@"_lengthOfString" body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateMessageSendToSelector:@"hash"];
+        [gen generateAddDest:0 source:0 immediate:200];
+    }];
+    MPWJittableData *d=[g target];
+    NSData *code=[NSData dataWithBytes:d.bytes length:d.length];
+    [code writeToFile:@"/tmp/hashPlus200.code" atomically:YES];
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -407,6 +419,7 @@ static void callme() {
        @"testCanGenerateReturnAddressProtection",
        @"testGenerateMachOWithCallToExternalFunction",
        @"testGenerateMachOWithMessageSend",
+       @"testGenerateMessageSendAndComputation",
 			];
 }
 

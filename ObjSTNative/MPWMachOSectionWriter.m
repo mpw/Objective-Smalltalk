@@ -68,6 +68,11 @@
     [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xf section:self.sectionNumber];
 }
 
+-(void)declareGlobalTextSymbol:(NSString*)symbol
+{
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xe section:1];
+}
+
 
 
 -(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
