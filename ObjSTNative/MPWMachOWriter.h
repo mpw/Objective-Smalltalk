@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)writeFile;
 -(NSData*)data;
 -(int)declareExternalSymbol:(NSString*)symbol;
+-(MPWMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags;
 
 
 

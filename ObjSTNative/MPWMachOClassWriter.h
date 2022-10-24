@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString* nameOfSuperClass;
 @property (nonatomic,assign) int instanceSize;
 
+@property (nonatomic,strong) NSString *instanceMethodListSymbol;
+
 -(void)writeClass;
 
 

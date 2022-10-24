@@ -138,7 +138,9 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 
 -(const BaseMethods*)methodList
 {
-    return [self.methodListPointer bytes];
+    const BaseMethods *methodList=[self.methodListPointer bytes];
+    NSAssert(methodList!=NULL,@"MethodList is null");
+    return methodList;
 }
 
 -(int)numberOfMethods

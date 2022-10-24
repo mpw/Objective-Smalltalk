@@ -464,8 +464,8 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     INTEXPECT( classPointers.count, 2, @"number of classes");
     IDEXPECT( classPointers[0].targetName, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
     IDEXPECT( classPointers[1].targetName, @"_OBJC_CLASS_$_FirstClass",@"Last class in list");
-    NSLog(@"will dump relocations in two-clases.macho:");
-    [reader dumpRelocationsOn:[MPWByteStream Stderr]];
+//    NSLog(@"will dump relocations in two-clases.macho:");
+ //   [reader dumpRelocationsOn:[MPWByteStream Stderr]];
     
 }
 

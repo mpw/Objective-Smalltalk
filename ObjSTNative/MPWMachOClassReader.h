@@ -24,6 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWMachORelocationPointer*)superclassPointer;
 -(MPWMachORelocationPointer*)cachePointer;
 
+-(int)numberOfMethods;
+-(int)methodEntrySize;
+-(MPWMachORelocationPointer*)methodNameAt:(int)methodIndex;
+-(MPWMachORelocationPointer*)methodTypesAt:(int)methodIndex;
+-(MPWMachORelocationPointer*)methodCodeAt:(int)methodIndex;
+
 @end
 
 NS_ASSUME_NONNULL_END

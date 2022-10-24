@@ -31,6 +31,7 @@
 
 @property (nonatomic, strong) MPWMachOSectionWriter *textSectionWriter;
 @property (nonatomic, strong) NSMutableArray<MPWMachOSectionWriter*>* sectionWriters;
+@property (nonatomic, strong) NSMutableDictionary *sectionWritersByKind;
 
 //@property (nonatomic, strong) NSMutableDictionary *relocationEntries;
 
@@ -72,11 +73,20 @@
     if (!self.sectionWriters) {
         self.sectionWriters = [NSMutableArray array];
     }
-    MPWMachOSectionWriter *writer=[MPWMachOSectionWriter stream];
-    writer.segname = segname;
-    writer.sectname = sectname;
-    writer.flags = flags;
-    [self addSectionWriter:writer];
+    if (!self.sectionWritersByKind) {
+        self.sectionWritersByKind = [NSMutableDictionary dictionary];
+    }
+    NSString *key=[NSString stringWithFormat:@"%@/%@",segname,sectname];
+    MPWMachOSectionWriter *writer=self.sectionWritersByKind[key];
+    if (!writer) {
+        writer=[MPWMachOSectionWriter stream];
+        writer.segname = segname;
+        writer.sectname = sectname;
+        writer.flags = flags;
+        [self addSectionWriter:writer];
+        self.sectionWritersByKind[key]=writer;
+    }
+    
     return writer;
 }
 
@@ -588,6 +598,13 @@
     INTEXPECT( sectionSize, reader.segmentSize , @"segment size ");
 }
 
++(void)testSectionWritersAreUniqed
+{
+    MPWMachOWriter *writer = [self stream];
+    id s1=[writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:0];
+    id s2=[writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:0];
+    INTEXPECT( s1,s2, @"should be the same");
+}
 
 +(NSArray*)testSelectors
 {
@@ -600,6 +617,7 @@
        @"testWriteClassPartsAndReadPartsManually",
        @"testRelocationEntriesComeAfterAllSegmentData",
        @"testSegmentSizeIsOnlyDataNotRelocEntries",
+       @"testSectionWritersAreUniqed",
 		];
 }
 

@@ -62,15 +62,20 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     return [NSString stringWithFormat:@"_OBJC_METACLASS_$_%@",self.nameOfSuperClass];
 }
 
--(void)writeROPartOnSection:(MPWMachOSectionWriter*)classROWriter symbolName:(NSString*)roClassPartSymbol symbolNameOfClassName:(NSString*)symbolNameOfName instanceSize:(int)instanceSize flags:(int)flags
+-(void)writeROPartOnSection:(MPWMachOSectionWriter*)classROWriter symbolName:(NSString*)roClassPartSymbol symbolNameOfClassName:(NSString*)symbolNameOfName instanceSize:(int)instanceSize flags:(int)flags methods:(NSString*)methodListSymbol
 {
     Mach_O_Class_RO roClassPart={};
     long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
+    long method_ptr_offset = ((void*)&roClassPart.methods) - ((void*)&roClassPart);
+    
     bzero(&roClassPart, sizeof roClassPart);
     roClassPart.flags=flags;
 //    NSLog(@"offset of RO Part for %@: %ld",roClassPartSymbol,[classROWriter length]);
     [classROWriter declareGlobalSymbol:roClassPartSymbol];
     [classROWriter addRelocationEntryForSymbol:symbolNameOfName atOffset:classROWriter.length + name_ptr_offset];
+    if ( methodListSymbol) {
+        [classROWriter addRelocationEntryForSymbol:methodListSymbol atOffset:classROWriter.length + method_ptr_offset];
+    }
     roClassPart.instanceSize = instanceSize;
     [classROWriter appendBytes:&roClassPart length:sizeof roClassPart];
 }
@@ -99,7 +104,6 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     MPWMachOWriter* writer = self.writer;
     
     NSString *testclassNameSymbolName=[self classNameSymbolName];
-    [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
     
     //  class name goes in its own section
     
@@ -112,12 +116,12 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     NSString *roClassPartSymbol = [self roClassPartSymbol];
     MPWMachOSectionWriter *classROWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
-    [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize flags:0] ;
+    [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize flags:0 methods:self.instanceMethodListSymbol] ;
 
     // RO Metaclass Part
 
     NSString *metaROSymbol = [self roMetaClassPartSymbol];
-    [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:40 flags:1];
+    [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:40 flags:1 methods:nil];
 
     
     
@@ -162,7 +166,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 +(void)testWriteSimpleClassAndCheckManually
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
-    
+    [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
+
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
     classWriter.nameOfClass = @"TestClass";
     
@@ -222,7 +227,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 +(void)testWriteSimpleClassAndCheckViaClassReader
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
-    
+    [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
+
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
     classWriter.nameOfClass = @"TestClass";
     classWriter.nameOfSuperClass = @"NSObject";
@@ -234,8 +240,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     
     MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
-    NSLog(@"relocations for class2_via_writer.o:");
-    [machoReader dumpRelocationsOn:[MPWByteStream Stderr]];
+//    NSLog(@"relocations for class2_via_writer.o:");
+//    [machoReader dumpRelocationsOn:[MPWByteStream Stderr]];
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
@@ -247,11 +253,47 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     INTEXPECT(metaclassReader.instanceSize,40,@"class size");
 }
 
++(void)testWriteClassWithOneInstanceMethod
+{
+    MPWMachOWriter *writer = [MPWMachOWriter stream];
+
+    NSString *methodName = @"method";
+    NSString *methodSymbolName = @"-[TestClass method]";
+    NSString *methodTypeString = @"@:";
+    NSString *methodListSymbol = @"_methodList";
+    int methodListSize = sizeof(BaseMethods) + sizeof(MethodEntry);
+    BaseMethods *methods = calloc( 1, methodListSize);
+    methods->count = 1;
+    methods->entrysize = 24;
+    [writer.textSectionWriter declareGlobalSymbol:methodSymbolName];
+    [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
+
+    MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
+    classWriter.nameOfClass = @"TestClass";
+    classWriter.nameOfSuperClass = @"NSObject";
+    classWriter.instanceSize = 8;
+    
+    
+    [classWriter writeClass];
+    NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/testclass-with-method.o" atomically:YES];
+    
+    
+    MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
+    MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
+    IDEXPECT(reader.nameOfClass,@"TestClass",@"");
+    INTEXPECT(reader.instanceSize,8,@"instance size");
+//    INTEXPECT(reader.numberOfMethods,1, @"number of methods");
+    
+}
+
+
 +(NSArray*)testSelectors
 {
    return @[
        @"testWriteSimpleClassAndCheckManually",
        @"testWriteSimpleClassAndCheckViaClassReader",
+       @"testWriteClassWithOneInstanceMethod",
 			];
 }
 
