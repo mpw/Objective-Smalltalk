@@ -298,12 +298,15 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     [methNameWriter declareGlobalSymbol:methodNameSymbol];
     [methNameWriter writeNullTerminatedString:methodName];
     
-//    MPWMachOSectionWriter *methTypeWriter=classWriter.objcMethTypeWriter;
-//    [methTypeWriter declareGlobalSymbol:methodTypeSymbol];
-//    [methNameWriter writeNullTerminatedString:methodTypeString];
+    MPWMachOSectionWriter *methTypeWriter=classWriter.objcMethTypeWriter;
+    [methTypeWriter declareGlobalSymbol:methodTypeSymbol];
+    [methTypeWriter writeNullTerminatedString:methodTypeString];
     
-
+    MPWMachOSectionWriter *objcConstWriter=classWriter.objcConstWriter;
+    [objcConstWriter declareGlobalSymbol:methodListSymbol];
+    [objcConstWriter appendBytes:methods length:methodListSize];
     
+    classWriter.instanceMethodListSymbol=methodListSymbol;
     [classWriter writeClass];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/testclass-with-method.o" atomically:YES];
@@ -313,8 +316,9 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,8,@"instance size");
-//    INTEXPECT(reader.numberOfMethods,1, @"number of methods");
-    
+    INTEXPECT(reader.numberOfMethods,1, @"number of methods");
+    INTEXPECT(reader.methodEntrySize,24, @"entry size");
+
 }
 
 
