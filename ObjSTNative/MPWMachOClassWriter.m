@@ -304,9 +304,20 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     MPWMachOSectionWriter *objcConstWriter=classWriter.objcConstWriter;
     [objcConstWriter declareGlobalSymbol:methodListSymbol];
+    
+    long nameInMethodOffset=((void*)&(methods->methods[0].name))-(void*)methods;
+    [objcConstWriter addRelocationEntryForSymbol:methodNameSymbol atOffset:(int)nameInMethodOffset];
+    long typeInMethodOffset=((void*)&(methods->methods[0].type))-(void*)methods;
+    [objcConstWriter addRelocationEntryForSymbol:methodTypeSymbol atOffset:(int)typeInMethodOffset];
+    long impInMethodOffset=((void*)&(methods->methods[0].imp))-(void*)methods;
+    [objcConstWriter addRelocationEntryForSymbol:methodSymbolName atOffset:(int)impInMethodOffset];
+
     [objcConstWriter appendBytes:methods length:methodListSize];
     
     classWriter.instanceMethodListSymbol=methodListSymbol;
+    
+    
+    
     [classWriter writeClass];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/testclass-with-method.o" atomically:YES];
@@ -319,6 +330,9 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     INTEXPECT(reader.numberOfMethods,1, @"number of methods");
     INTEXPECT(reader.methodEntrySize,24, @"entry size");
 
+    IDEXPECT([[reader methodNameAt:0] targetName],methodNameSymbol,@"Symbol for the Method name");
+    IDEXPECT([[reader methodTypesAt:0] targetName],methodTypeSymbol,@"Symbol for the Method type");
+    IDEXPECT([[reader methodCodeAt:0] targetName],methodSymbolName,@"Symbol for the start of the actual method code");
 }
 
 
