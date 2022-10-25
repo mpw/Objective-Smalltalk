@@ -1147,6 +1147,7 @@
 		1FB39F9E088FDAE4008FC5C6 /* MPWSetAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSetAccessor.m; sourceTree = "<group>"; };
 		1FB39FA7088FDB20008FC5C6 /* MPWGetAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWGetAccessor.h; sourceTree = "<group>"; };
 		1FB39FA8088FDB20008FC5C6 /* MPWGetAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWGetAccessor.m; sourceTree = "<group>"; };
+		1FB559E92907D179009AE4D0 /* testclass_objc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = testclass_objc.m; sourceTree = "<group>"; };
 		1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBundle.h; sourceTree = "<group>"; };
 		1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBundle.m; sourceTree = "<group>"; };
 		1FB7AE3424DB118E00CCBE86 /* test.stb */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test.stb; sourceTree = "<group>"; };
@@ -1721,6 +1722,7 @@
 				1F9AE9DD28E825C600671748 /* class-with-method.macho */,
 				1F9AE9C428D75BC300671748 /* add.aarch64 */,
 				1F3466F328CB114E003257CB /* add.macho */,
+				1FB559E92907D179009AE4D0 /* testclass_objc.m */,
 			);
 			path = TestResources;
 			sourceTree = "<group>";

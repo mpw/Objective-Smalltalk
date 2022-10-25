@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)declareGlobalSymbol:(NSString*)symbol;
 -(void)addRelocationEntryForSymbol:(NSString*)symbol;
+-(void)declareExternalFunction:(NSString*)symbol;
 
 @end
 

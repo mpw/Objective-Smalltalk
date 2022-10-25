@@ -283,7 +283,16 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     methods->count = 1;
     methods->entrysize = 24;
     [writer.textSectionWriter declareGlobalTextSymbol:methodSymbolName];
-    [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
+    MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
+    g.symbolWriter = writer;
+    g.relocationWriter = writer.textSectionWriter;
+    [g generateFunctionNamed:@"_lengthOfString" body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateMessageSendToSelector:@"hash"];
+        [gen generateAddDest:0 source:0 immediate:200];
+    }];
+    NSData *d=[g target];
+
+    [writer addTextSectionData:d];
     
     
     
@@ -333,6 +342,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     IDEXPECT([[reader methodNameAt:0] targetName],methodNameSymbol,@"Symbol for the Method name");
     IDEXPECT([[reader methodTypesAt:0] targetName],methodTypeSymbol,@"Symbol for the Method type");
     IDEXPECT([[reader methodCodeAt:0] targetName],methodSymbolName,@"Symbol for the start of the actual method code");
+    int symbolNumberOfHashMessageStub = [machoReader indexOfSymbolNamed:@"_objc_msgSend$hash"];
+    EXPECTTRUE(symbolNumberOfHashMessageStub>=0,@"should have _objc_msgSend$hash somewhere in the symbol table");
 }
 
 

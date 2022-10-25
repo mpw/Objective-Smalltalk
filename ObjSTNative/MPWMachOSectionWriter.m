@@ -30,6 +30,7 @@
         self.relocationType = GENERIC_RELOC_VANILLA;
         self.relocationLength = 3;
         self.alignment=3;
+        self.relocationPCRel=0;
     }
     return self;
 }
@@ -83,14 +84,16 @@
 //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;
-    r.r_length=3;
-    r.r_pcrel=0;
+    r.r_length=self.relocationLength;
+    r.r_pcrel=self.relocationPCRel;
     r.r_type=self.relocationType;
     if ( relocCount >= relocCapacity ) {
         [self growRelocations];
     }
     relocations[relocCount++]=r;
 }
+
+
 
 
 -(int)numRelocationEntries

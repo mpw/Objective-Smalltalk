@@ -1,12 +1,12 @@
 #import <Foundation/Foundation.h>
 
 
-@interface TestClass : NSObject
-{}
+@interface TestClass : NSObject {}
+-(long)method;
 @end
 
 int main(int argc, char *argv[] ) {
    id a = [TestClass new];
-   printf("a=%s\n",[[a description] UTF8String]); 
+   printf("a=%ld\n",[a method]);
    return 0;
 }

@@ -114,6 +114,8 @@
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
         self.textSectionWriter.relocationType=ARM64_RELOC_BRANCH26;
         self.textSectionWriter.relocationLength=2;
+        self.textSectionWriter.relocationPCRel=1;
+
         [self addSectionWriterWithSegName:@"__DATA" sectName:@"_objectclasslist" flags:0];
         symtabCapacity = 10;
         [self growSymtab];

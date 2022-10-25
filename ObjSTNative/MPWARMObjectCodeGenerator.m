@@ -116,6 +116,7 @@
 
 -(void)generateCallToExternalFunctionNamed:(NSString*)name
 {
+    [self declareExternalFunction:name];
     [self addRelocationEntryForSymbol:name];
     [self generateBranchAndLinkWithOffset:0];
 }

@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) int flags;
 @property (nonatomic, assign) int relocationType;
 @property (nonatomic, assign) int relocationLength;
+@property (nonatomic, assign) int relocationPCRel;
 @property (nonatomic, assign) int alignment;
 
 -(void)writeSectionLoadCommandOnWriter:(MPWByteStream*)writer;

@@ -17,9 +17,13 @@
 -(void)addRelocationEntryForSymbol:(NSString*)symbol
 {
     NSLog(@"relocationWriter: %@  addRelocationSymbol: %@",self.relocationWriter,symbol);
-    [self.relocationWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length]];
+    [self.relocationWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length] ];
 }
 
+-(void)declareExternalFunction:(NSString*)symbol
+{
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
+}
 
 @end
 
