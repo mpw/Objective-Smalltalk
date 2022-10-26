@@ -70,7 +70,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     bzero(&roClassPart, sizeof roClassPart);
     roClassPart.flags=flags;
-//    NSLog(@"offset of RO Part for %@: %ld",roClassPartSymbol,[classROWriter length]);
+    //    NSLog(@"offset of RO Part for %@: %ld",roClassPartSymbol,[classROWriter length]);
     [classROWriter declareGlobalSymbol:roClassPartSymbol];
     [classROWriter addRelocationEntryForSymbol:symbolNameOfName atOffset:classROWriter.length + name_ptr_offset];
     if ( methodListSymbol) {
@@ -102,12 +102,12 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     long meta_ptr_offset = ((void*)&classInfo.isa) - ((void*)&classInfo);
     long superclass_ptr_offset = ((void*)&classInfo.superclass) - ((void*)&classInfo);
     long cache_ptr_offset = ((void*)&classInfo.cache) - ((void*)&classInfo);
-
+    
     [classWriter declareGlobalSymbol:classPartSymbol];
     [classWriter addRelocationEntryForSymbol:roClassPartSymbol atOffset:classWriter.length + ro_ptr_offset];
     [classWriter addRelocationEntryForSymbol:metaclassSymbol atOffset:classWriter.length + meta_ptr_offset];
     [classWriter addRelocationEntryForSymbol:@"__objc_empty_cache" atOffset:classWriter.length + cache_ptr_offset];
-
+    
     [self.writer declareExternalSymbol:superclassSymbol];
     [classWriter addRelocationEntryForSymbol:superclassSymbol atOffset:classWriter.length + superclass_ptr_offset];
     [classWriter appendBytes:&classInfo length:sizeof classInfo];
@@ -132,12 +132,12 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     NSString *roClassPartSymbol = [self roClassPartSymbol];
     MPWMachOSectionWriter *classROWriter = self.objcConstWriter;
     [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize flags:0 methods:self.instanceMethodListSymbol] ;
-
+    
     // RO Metaclass Part
-
+    
     NSString *metaROSymbol = [self roMetaClassPartSymbol];
     [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:40 flags:1 methods:nil];
-
+    
     
     
     // RW Part
@@ -149,11 +149,11 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     NSString *superclassMetaclassSymbol = [self superclassMetaclassSymbolName];
     [self.writer declareExternalSymbol:superclassSymbol];
     [self.writer declareExternalSymbol:superclassMetaclassSymbol];
-
+    
     
     [self writeRWPartOnSection:classDataWriter symbolName:metaclassSymbol roPartSymbol:metaROSymbol metaclassSymbol:superclassMetaclassSymbol superclassSymbol:superclassMetaclassSymbol];
     [self writeRWPartOnSection:classDataWriter symbolName:classPartSymbol roPartSymbol:roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:superclassSymbol];
-
+    
     
     // Pointers
     
@@ -162,10 +162,48 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     memset(zerobytes,0,80);
     [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:0];
     [classListWriter appendBytes:zerobytes length:8];
-
-    
     
 }
+
+-(void)writeMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols methodListSymbol:(NSString*)methodListSymbol
+{
+    int numberOfMethods = names.count;
+
+    int methodListSize = sizeof(BaseMethods) + (numberOfMethods * sizeof(MethodEntry));
+    BaseMethods *methods = calloc( 1, methodListSize);
+    methods->count = numberOfMethods;
+    methods->entrysize = 24;
+    MPWMachOSectionWriter *methNameWriter=self.objcMethNameWriter;
+    MPWMachOSectionWriter *methTypeWriter=self.objcMethTypeWriter;
+    MPWMachOSectionWriter *objcConstWriter=self.objcConstWriter;
+
+
+    for (int i=0;i<numberOfMethods;i++) {
+        NSString *methodNameSymbol = [NSString stringWithFormat:@"__METHOD_NAME_%@_%d",self.nameOfClass,i];
+        NSString *methodTypeSymbol = [NSString stringWithFormat:@"__METHOD_TYPE_%@_%d",self.nameOfClass,i];
+        
+
+
+        [methNameWriter declareGlobalSymbol:methodNameSymbol];
+        [methNameWriter writeNullTerminatedString:names[i]];
+        
+        [methTypeWriter declareGlobalSymbol:methodTypeSymbol];
+        [methTypeWriter writeNullTerminatedString:types[i]];
+        
+        
+        long nameInMethodOffset=((void*)&(methods->methods[i].name))-(void*)methods;
+        [objcConstWriter addRelocationEntryForSymbol:methodNameSymbol atOffset:(int)nameInMethodOffset];
+        long typeInMethodOffset=((void*)&(methods->methods[i].type))-(void*)methods;
+        [objcConstWriter addRelocationEntryForSymbol:methodTypeSymbol atOffset:(int)typeInMethodOffset];
+        long impInMethodOffset=((void*)&(methods->methods[i].imp))-(void*)methods;
+        [objcConstWriter addRelocationEntryForSymbol:functionSymbols[i] atOffset:(int)impInMethodOffset];
+    }
+    
+    [objcConstWriter declareGlobalSymbol:methodListSymbol];
+    [objcConstWriter appendBytes:methods length:methodListSize];
+    
+}
+
 
 @end
 
@@ -227,7 +265,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     INTEXPECT( [[classNamePtr section] typeOfRelocEntryAt:0],0,@"");
     INTEXPECT( [classNamePtr targetOffset],0,@"target offset");
-    NSString *className = [NSString stringWithUTF8String:[[classNamePtr targetPointer] bytes]];
+    NSString *className = [[classNamePtr targetPointer] stringValue];
     IDEXPECT( className,@"TestClass",@"");
     
     // read data part (and find RO part)
@@ -272,16 +310,10 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
 
-    NSString *methodNameSymbol = @"_method_name";
     NSString *methodName = @"method";
-    NSString *methodSymbolName = @"-[TestClass method]";
-    NSString *methodTypeSymbol = @"_method_type";
     NSString *methodTypeString = @"@:";
-    NSString *methodListSymbol = @"_methodList";
-    int methodListSize = sizeof(BaseMethods) + sizeof(MethodEntry);
-    BaseMethods *methods = calloc( 1, methodListSize);
-    methods->count = 1;
-    methods->entrysize = 24;
+    NSString *methodSymbolName = @"-[TestClass method]";
+
     [writer.textSectionWriter declareGlobalTextSymbol:methodSymbolName];
     MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
     g.symbolWriter = writer;
@@ -303,29 +335,11 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     classWriter.nameOfSuperClass = @"NSObject";
     classWriter.instanceSize = 8;
  
-    MPWMachOSectionWriter *methNameWriter=classWriter.objcMethNameWriter;
-    [methNameWriter declareGlobalSymbol:methodNameSymbol];
-    [methNameWriter writeNullTerminatedString:methodName];
-    
-    MPWMachOSectionWriter *methTypeWriter=classWriter.objcMethTypeWriter;
-    [methTypeWriter declareGlobalSymbol:methodTypeSymbol];
-    [methTypeWriter writeNullTerminatedString:methodTypeString];
-    
-    MPWMachOSectionWriter *objcConstWriter=classWriter.objcConstWriter;
-    [objcConstWriter declareGlobalSymbol:methodListSymbol];
-    
-    long nameInMethodOffset=((void*)&(methods->methods[0].name))-(void*)methods;
-    [objcConstWriter addRelocationEntryForSymbol:methodNameSymbol atOffset:(int)nameInMethodOffset];
-    long typeInMethodOffset=((void*)&(methods->methods[0].type))-(void*)methods;
-    [objcConstWriter addRelocationEntryForSymbol:methodTypeSymbol atOffset:(int)typeInMethodOffset];
-    long impInMethodOffset=((void*)&(methods->methods[0].imp))-(void*)methods;
-    [objcConstWriter addRelocationEntryForSymbol:methodSymbolName atOffset:(int)impInMethodOffset];
-
-    [objcConstWriter appendBytes:methods length:methodListSize];
-    
+    NSString *methodListSymbol = [NSString stringWithFormat:@"__INSTANCEMETHOD_LIST_%@",classWriter.nameOfClass];
     classWriter.instanceMethodListSymbol=methodListSymbol;
-    
-    
+
+    [classWriter writeMethodListForMethodNames:@[methodName] types:@[ methodTypeString ] functions:@[ methodSymbolName ] methodListSymbol:methodListSymbol];
+        
     
     [classWriter writeClass];
     NSData *macho=[writer data];
@@ -339,8 +353,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     INTEXPECT(reader.numberOfMethods,1, @"number of methods");
     INTEXPECT(reader.methodEntrySize,24, @"entry size");
 
-    IDEXPECT([[reader methodNameAt:0] targetName],methodNameSymbol,@"Symbol for the Method name");
-    IDEXPECT([[reader methodTypesAt:0] targetName],methodTypeSymbol,@"Symbol for the Method type");
+    IDEXPECT([[[reader methodNameAt:0] targetPointer] stringValue],@"method",@"Method name");
+    IDEXPECT([[[reader methodTypesAt:0] targetPointer] stringValue],@"@:",@" Method type");
     IDEXPECT([[reader methodCodeAt:0] targetName],methodSymbolName,@"Symbol for the start of the actual method code");
     int symbolNumberOfHashMessageStub = [machoReader indexOfSymbolNamed:@"_objc_msgSend$hash"];
     EXPECTTRUE(symbolNumberOfHashMessageStub>=0,@"should have _objc_msgSend$hash somewhere in the symbol table");

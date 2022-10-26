@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithSection:(MPWMachOSection*)section offset:(long)offset;
 -(const void*)bytes;
+-(NSString*)stringValue;
 -(BOOL)hasRelocEntry;
 -(instancetype)pointerAtOffset:(long)relativeOffset;
 -(MPWMachORelocationPointer*)relocationPointer;

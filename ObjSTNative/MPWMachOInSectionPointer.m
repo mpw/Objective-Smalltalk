@@ -59,6 +59,10 @@
     return [[self relocationPointerAtOffset:relativeOffset] targetPointer];
 }
 
+-(NSString*)stringValue
+{
+    return [NSString stringWithUTF8String:self.bytes];
+}
 
 -(void)dealloc
 {

@@ -122,7 +122,7 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 
 -(NSString*)nameOfClass
 {
-    return [NSString stringWithUTF8String:[[[self classNameRelocationPointer] targetPointer] bytes]];
+    return [[[self classNameRelocationPointer] targetPointer] stringValue];
 }
 
 

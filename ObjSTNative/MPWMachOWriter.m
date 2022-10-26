@@ -542,7 +542,7 @@
     
     INTEXPECT( [[classNamePtr section] typeOfRelocEntryAt:0],0,@"");
     INTEXPECT( [classNamePtr targetOffset],0,@"target offset");
-    NSString *className = [NSString stringWithUTF8String:[[classNamePtr targetPointer] bytes]];
+    NSString *className = [[classNamePtr targetPointer] stringValue];
     IDEXPECT( className,@"TestClass",@"");
     
     // read data part (and find RO part)
