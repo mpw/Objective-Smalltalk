@@ -322,7 +322,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
         [g generateMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
-    NSData *d=[g target];
+    NSData *d=(NSData*)[g target];
 
     [writer addTextSectionData:d];
     
