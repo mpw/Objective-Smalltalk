@@ -9,6 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWJittableData;
+
 @interface MPWARMObjectCodeGenerator : MPWByteStreamWithSymbols
 
 -(void)generateFunctionNamed:(NSString*)name body:(void(^)(MPWARMObjectCodeGenerator* gen))block;
@@ -20,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)generateMulDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg;
 -(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1;
 -(void)loadRegister:(int)destReg fromContentsOfConstantAdress:(void*)addressp;
+
+-(MPWJittableData*)generatedCode;
 
 @end
 

@@ -20,10 +20,11 @@
     return [[[MPWJittableData alloc] initWithCapacity:16384] autorelease];
 }
 
--(NSData*)generatedCode
+-(MPWJittableData*)generatedCode
 {
-    [(MPWJittableData*)[self target] makeExecutable];
-    return (NSData*)[self target];
+    MPWJittableData *data=(MPWJittableData*)[self target];
+    [data makeExecutable];
+    return data;
 }
 
 -(void)appendWord32:(unsigned int)word
@@ -189,7 +190,13 @@
     [self generateEndOfFunction];
 }
 
-
+-(void)generateMoveRegisterFrom:(int)from to:(int)to
+{
+    unsigned int base = 0xaa0003e0;
+    base |= to & 31;
+    base |= (from & 31) << 16;
+    [self appendWord32:base];
+}
 
 @end
 
@@ -398,7 +405,7 @@ static void callme() {
     [writer addTextSectionData:(NSData*)[g target]];
     [writer writeFile];
     NSData *macho=[writer data];
-    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
+//    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 4,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
@@ -411,7 +418,7 @@ static void callme() {
         [g generateMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
-    MPWJittableData *d=[g target];
+    MPWJittableData *d=[g generatedCode];
     NSData *code=[NSData dataWithBytes:d.bytes length:d.length];
     [code writeToFile:@"/tmp/hashPlus200.code" atomically:YES];
 }
@@ -426,12 +433,28 @@ typedef long (*IDPTR)(id,SEL);
         [g generateJittedMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
-    MPWJittableData *d=[g target];
-    [d makeExecutable];
+    MPWJittableData *d=[g generatedCode];
     IDPTR fn = (IDPTR)[d bytes];
-    long myHash = [self hash];    
-    long hashPlus200 = fn( self, @selector(method));
+    long myHash = [self hash];
+    long hashPlus200 = fn( self, @selector(hash));
     INTEXPECT( hashPlus200- myHash, 200, @"the hash");
+}
+
+typedef long (*IDIDPTR)(id,SEL,id);
+
+
++(void)testJITLengthOfPassedStringPlus3
+{
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [g generateFunctionNamed:@"-[TestClass lengthOfStringPlush3]" body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateMoveRegisterFrom:2 to:0];
+        [g generateJittedMessageSendToSelector:@"length"];
+        [gen generateAddDest:0 source:0 immediate:3];
+    }];
+    MPWJittableData *d=[g generatedCode];
+    IDIDPTR fn = (IDIDPTR)[d bytes];
+    long lengthPlush3 = fn( self , @selector(length), @"Test String");
+    INTEXPECT( lengthPlush3, 14, @"length of string plus 3");
 }
 
 +(NSArray*)testSelectors
@@ -453,6 +476,7 @@ typedef long (*IDPTR)(id,SEL);
        @"testGenerateMachOWithMessageSend",
        @"testGenerateMessageSendAndComputation",
        @"testJITMessageSendAndComputation",
+       @"testJITLengthOfPassedStringPlus3",
 			];
 }
 
