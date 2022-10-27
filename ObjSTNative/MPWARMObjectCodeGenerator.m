@@ -84,7 +84,7 @@
     [self generateOp:0x9b op2:0x7c dest:destReg source1:source1Reg source2:source2Reg];
 }
 
--(void)loadRegister:(int)destReg fromAdressInRegister:(int)sourceReg1
+-(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1
 {
     unsigned int baseword=0xf9400000;
     baseword |= destReg & 31;
@@ -92,7 +92,7 @@
     [self appendWord32:baseword];
 }
 
--(void)loadRegister:(int)destReg fromAddress:(void*)addressp
+-(void)loadRegister:(int)destReg withConstantAdress:(void*)addressp
 {
     long address = (long)addressp;
     long pc = (long)[(NSData*)[self target] bytes] + [self length];
@@ -106,12 +106,27 @@
     unsigned int adrp = adrp_base | (destReg & 31) | (hibits << 5 ) | (lobits << 29);
     [self appendWord32:adrp];
     [self generateAddDest:destReg source:destReg immediate:page_offset];
-    [self loadRegister:destReg fromAdressInRegister:destReg];
+}
+
+-(void)loadRegister:(int)destReg fromContentsOfConstantAdress:(void*)addressp
+{
+    [self loadRegister:destReg withConstantAdress:addressp];
+    [self loadRegister:destReg fromContentsOfAdressInRegister:destReg];
 }
 
 -(void)generateBranchAndLinkWithOffset:(int)offset
 {
     [self appendWord32:0x94000000 | (offset  >> 2)];
+}
+
+-(void)generateBranchAndLinkWithRegister:(int)theRegister
+{
+    [self appendWord32:0xd63f0000 | ((theRegister & 31) << 5)];
+}
+
+-(void)generateBranchWithRegister:(int)theRegister
+{
+    [self appendWord32:0xd61f0000 | ((theRegister & 31) << 5)];
 }
 
 -(void)generateCallToExternalFunctionNamed:(NSString*)name
@@ -127,14 +142,12 @@
     [self generateCallToExternalFunctionNamed:functionName];
 }
 
--(void)generateBranchAndLinkWithRegister:(int)theRegister
-{
-    [self appendWord32:0xd63f0000 | ((theRegister & 31) << 5)];
-}
 
--(void)generateBranchWithRegister:(int)theRegister
+-(void)generateJittedMessageSendToSelector:(NSString*)selector
 {
-    [self appendWord32:0xd61f0000 | ((theRegister & 31) << 5)];
+    [self loadRegister:2 withConstantAdress:objc_msgSend];
+    [self loadRegister:1 withConstantAdress:NSSelectorFromString(selector)];
+    [self generateBranchAndLinkWithRegister:2];
 }
 
 -(void)generateSaveLinkRegisterAndFramePtr
@@ -270,7 +283,7 @@ typedef long (*VOIDPTR)(void);
 +(void)testGenerateDereferencePointerPassedIn
 {
     IMPPTR loadfn = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
-        [gen loadRegister:0 fromAdressInRegister:0];
+        [gen loadRegister:0 fromContentsOfAdressInRegister:0];
     }];
     long numberToLoad = 43267;
     long result = loadfn(&numberToLoad);
@@ -280,8 +293,8 @@ typedef long (*VOIDPTR)(void);
 +(void)testGenerateSubtractPointedAtLongs
 {
     IMPPTRPTR subptrfn = (IMPPTRPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
-        [gen loadRegister:1 fromAdressInRegister:1];
-        [gen loadRegister:0 fromAdressInRegister:0];
+        [gen loadRegister:1 fromContentsOfAdressInRegister:1];
+        [gen loadRegister:0 fromContentsOfAdressInRegister:0];
         [gen generateSubDest:0 source1:0 source2:1];
     }];
     long firstNumber = 45;
@@ -295,7 +308,7 @@ typedef long (*VOIDPTR)(void);
     long myData[2]={};
     long *dataptr = myData;
     VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
-        [gen loadRegister:0 fromAddress:dataptr];
+        [gen loadRegister:0 fromContentsOfConstantAdress:dataptr];
         
     }];
     INTEXPECT(loadFromPtr(),0,@"0");
@@ -403,6 +416,24 @@ static void callme() {
     [code writeToFile:@"/tmp/hashPlus200.code" atomically:YES];
 }
 
+typedef long (*IDPTR)(id,SEL);
+
+
++(void)testJITMessageSendAndComputation
+{
+    MPWARMObjectCodeGenerator *g=[self stream];
+    [g generateFunctionNamed:@"-[TestClass method]" body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateJittedMessageSendToSelector:@"hash"];
+        [gen generateAddDest:0 source:0 immediate:200];
+    }];
+    MPWJittableData *d=[g target];
+    [d makeExecutable];
+    IDPTR fn = (IDPTR)[d bytes];
+    long myHash = [self hash];    
+    long hashPlus200 = fn( self, @selector(method));
+    INTEXPECT( hashPlus200- myHash, 200, @"the hash");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -421,6 +452,7 @@ static void callme() {
        @"testGenerateMachOWithCallToExternalFunction",
        @"testGenerateMachOWithMessageSend",
        @"testGenerateMessageSendAndComputation",
+       @"testJITMessageSendAndComputation",
 			];
 }
 
