@@ -151,3 +151,12 @@ idAccessor( context ,setContext )
 
 @end
 
+@implementation NSBundle(frameworkLoading)
+
+
+-loadIn:aContext
+{
+    return [aContext loadFramework:self];
+}
+
+@end

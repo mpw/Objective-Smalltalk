@@ -1,6 +1,6 @@
-#!/usr/local/bin/stsh
+#!env st
 #-<void>calsh:calendarName
-context loadFramework: framework:EventKit.
+framework:EventKit loadIn:context.
 store := EKEventStore alloc  initWithAccessToEntityTypes: EKEntityTypeReminder.
 calendar := ((store calendarsForEntityType: EKEntityTypeReminder ) selectWhereValueForKey:'title' isEqual:calendarName) lastObject.
 stdout println:'store: ' , store description.

@@ -446,7 +446,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
 +(void)testJITLengthOfPassedStringPlus3
 {
     MPWARMObjectCodeGenerator *g=[self stream];
-    [g generateFunctionNamed:@"-[TestClass lengthOfStringPlush3]" body:^(MPWARMObjectCodeGenerator *gen) {
+    [g generateFunctionNamed:@"-[TestClass lengthOfStringPlus3]" body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateMoveRegisterFrom:2 to:0];
         [g generateJittedMessageSendToSelector:@"length"];
         [gen generateAddDest:0 source:0 immediate:3];
