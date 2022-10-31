@@ -9,6 +9,7 @@
 #import "MPWMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
 #import "Mach_O_Structs.h"
+#import <mach-o/loader.h>
 
 @interface MPWMachOClassWriter()
 
@@ -87,7 +88,9 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(MPWMachOSectionWriter*)objcMethNameWriter
 {
-    return [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:0];
+    MPWMachOSectionWriter *writer = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:0];
+    writer.flags = S_CSTRING_LITERALS;
+    return writer;
 }
 
 -(MPWMachOSectionWriter*)objcMethTypeWriter
@@ -335,7 +338,6 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     
     
-//    [self.objcConstWriter declareGlobalSymbol:
     
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
     classWriter.nameOfClass = @"TestClass";
