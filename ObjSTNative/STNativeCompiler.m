@@ -21,6 +21,9 @@
     MPWMachOClassWriter *classwriter = [MPWMachOClassWriter writerWithWriter:writer];
     MPWARMObjectCodeGenerator *codegen = [MPWARMObjectCodeGenerator stream];
 
+    codegen.symbolWriter = writer;
+    codegen.relocationWriter = writer.textSectionWriter;
+
     classwriter.nameOfClass = aClass.name;
     classwriter.nameOfSuperClass = aClass.superclassName;
     NSMutableArray *symbolNames=[NSMutableArray array];
