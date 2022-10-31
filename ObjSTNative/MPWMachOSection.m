@@ -66,6 +66,11 @@
     return sectionHeader->size;
 }
 
+-(long)flags
+{
+    return sectionHeader->flags;
+}
+
 -(void)dumpRelocationsOn:(MPWByteStream*)s
 {
     const struct relocation_info *reloc=[self.machoData bytes] + [self relocEntryOffset];

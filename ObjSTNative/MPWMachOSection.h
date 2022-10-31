@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)typeOfRelocEntryAt:(int)i;
 -(long)offset;
 -(long)size;
+-(long)flags;
 -(long)offsetInTargetSectionForRelocEntryAt:(int)which;
 -(int)indexOfRelocationEntryAtOffset:(long)offset;
 -(int)indexOfSymboltableEntryAtOffset:(long)offset;

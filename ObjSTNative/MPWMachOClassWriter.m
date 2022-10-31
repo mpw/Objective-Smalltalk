@@ -88,14 +88,13 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(MPWMachOSectionWriter*)objcMethNameWriter
 {
-    MPWMachOSectionWriter *writer = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:0];
-    writer.flags = S_CSTRING_LITERALS;
+    MPWMachOSectionWriter *writer = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:S_CSTRING_LITERALS];
     return writer;
 }
 
 -(MPWMachOSectionWriter*)objcMethTypeWriter
 {
-    return [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methtype" flags:0];
+    return [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methtype" flags:S_CSTRING_LITERALS];
 }
 
 -(void)writeRWPartOnSection:(MPWMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:(NSString*)superclassSymbol
@@ -126,7 +125,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     //  class name goes in its own section
     
     [writer declareExternalSymbol:@"__objc_empty_cache"];
-    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
+    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:S_CSTRING_LITERALS];
     [classNameWriter declareGlobalSymbol:testclassNameSymbolName];
     [classNameWriter writeNullTerminatedString:self.nameOfClass];
     
@@ -363,6 +362,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     IDEXPECT([[reader methodCodeAt:0] targetName],methodSymbolName,@"Symbol for the start of the actual method code");
     int symbolNumberOfHashMessageStub = [machoReader indexOfSymbolNamed:@"_objc_msgSend$hash"];
     EXPECTTRUE(symbolNumberOfHashMessageStub>=0,@"should have _objc_msgSend$hash somewhere in the symbol table");
+    INTEXPECT([[machoReader objcClassNameSection] flags],2,@"should be a ");
 }
 
 
