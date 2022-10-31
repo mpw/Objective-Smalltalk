@@ -56,6 +56,7 @@
 #import <ObjectiveSmalltalk/MPWSpotlightScheme.h>
 #import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/MPWTreeNodeScheme.h>
+#import <ObjectiveSmalltalk/MPWStatementList.h>
 //#import <ObjectiveSmalltalk/MPWURLBinding.h>
 //#import <ObjectiveSmalltalk/MPWURLSchemeResolver.h>
 #import <ObjectiveSmalltalk/MPWVARBinding.h>
