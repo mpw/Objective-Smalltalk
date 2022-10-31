@@ -19,9 +19,24 @@
     NSMutableData *macho=[NSMutableData data];
     MPWMachOWriter *writer = [MPWMachOWriter streamWithTarget:macho];
     MPWMachOClassWriter *classwriter = [MPWMachOClassWriter writerWithWriter:writer];
+    MPWARMObjectCodeGenerator *codegen = [MPWARMObjectCodeGenerator stream];
+
     classwriter.nameOfClass = aClass.name;
     classwriter.nameOfSuperClass = aClass.superclassName;
-    [writer addTextSectionData:[@"    " asData]];       //  need to have something in the text section so section numbers work
+    NSMutableArray *symbolNames=[NSMutableArray array];
+    NSMutableArray *methodNames=[NSMutableArray array];
+    NSMutableArray *methodTypes=[NSMutableArray array];
+    for ( MPWScriptedMethod* method in aClass.methods) {
+        [methodNames addObject:method.methodName];
+        [methodTypes addObject:@"@:"];
+        NSString *symbol=[NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
+        [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+            // need to actually generate the code for the method body here
+        }];
+        [symbolNames addObject:symbol];
+    }
+    [writer addTextSectionData:[codegen target]];
+    [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
     [classwriter writeClass];
     [writer writeFile];
     return macho;
@@ -35,13 +50,14 @@
 #import "MPWMachOReader.h"
 #import "MPWMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
+#import "MPWMachOInSectionPointer.h"
 
 @implementation STNativeCompiler(testing) 
 
 +(void)testCompileSimpleClassAndMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@" class TestClass : NSObject {  -<int>hashPlush200  { self hash + 200. }}"];
+    MPWClassDefinition * compiledClass = [compiler compile:@" class TestClass : NSObject {  -<int>hashPlus200  { self hash + 200. }}"];
     IDEXPECT( compiledClass.name, @"TestClass", @"top level result");
     INTEXPECT( compiledClass.methods.count,1,@"method count");
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
@@ -53,7 +69,10 @@
     MPWMachOClassReader *classReader = [reader classReaders].firstObject;
     IDEXPECT(classReader.nameOfClass, @"TestClass", @"name of class");
     IDEXPECT(classReader.superclassPointer.targetName, @"_OBJC_CLASS_$_NSObject", @"symbol for superclass");
-//    INTEXPECT(classReader.numberOfMethods, 1,@"number of methods");
+    INTEXPECT(classReader.numberOfMethods, 1,@"number of methods");
+    IDEXPECT([classReader methodNameAt:0].targetPointer.stringValue,@"hashPlus200",@"name of method");
+    IDEXPECT([classReader methodTypesAt:0].targetPointer.stringValue,@"@:",@"type of method");
+    IDEXPECT([classReader methodCodeAt:0].targetName,@"-[TestClass hashPlus200]",@"symbol for method code");
 }
 
 +(NSArray*)testSelectors

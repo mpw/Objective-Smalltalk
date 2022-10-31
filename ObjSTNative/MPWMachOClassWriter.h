@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString *instanceMethodListSymbol;
 
 -(void)writeClass;
+-(void)writeInstanceMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols;
 
 
 @end

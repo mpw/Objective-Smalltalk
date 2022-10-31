@@ -204,6 +204,13 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
 }
 
+-(void)writeInstanceMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols
+{
+    NSString *methodListSymbol = [NSString stringWithFormat:@"__INSTANCEMETHOD_LIST_%@",self.nameOfClass];
+    self.instanceMethodListSymbol=methodListSymbol;
+    [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
+}
+
 
 @end
 
@@ -318,7 +325,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
     g.symbolWriter = writer;
     g.relocationWriter = writer.textSectionWriter;
-    [g generateFunctionNamed:@"_lengthOfString" body:^(MPWARMObjectCodeGenerator *gen) {
+    [g generateFunctionNamed:methodSymbolName body:^(MPWARMObjectCodeGenerator *gen) {
         [g generateMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
@@ -335,11 +342,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     classWriter.nameOfSuperClass = @"NSObject";
     classWriter.instanceSize = 8;
  
-    NSString *methodListSymbol = [NSString stringWithFormat:@"__INSTANCEMETHOD_LIST_%@",classWriter.nameOfClass];
-    classWriter.instanceMethodListSymbol=methodListSymbol;
-
-    [classWriter writeMethodListForMethodNames:@[methodName] types:@[ methodTypeString ] functions:@[ methodSymbolName ] methodListSymbol:methodListSymbol];
-        
+    [classWriter writeInstanceMethodListForMethodNames:@[methodName] types:@[ methodTypeString ] functions:@[ methodSymbolName ]];
     
     [classWriter writeClass];
     NSData *macho=[writer data];
