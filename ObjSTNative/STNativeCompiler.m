@@ -14,6 +14,10 @@
 
 @implementation STNativeCompiler
 
+-(void)writeMethodBody:(MPWScriptedMethod*)method on:(MPWARMObjectCodeGenerator*)codegen
+{
+}
+
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
 {
     NSMutableData *macho=[NSMutableData data];
@@ -31,10 +35,11 @@
     NSMutableArray *methodTypes=[NSMutableArray array];
     for ( MPWScriptedMethod* method in aClass.methods) {
         [methodNames addObject:method.methodName];
-        [methodTypes addObject:@"@:"];
+        [methodTypes addObject:[[method header] typeString]];
+        
         NSString *symbol=[NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
         [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
-            // need to actually generate the code for the method body here
+            [self writeMethodBody:method on:codegen];
         }];
         [symbolNames addObject:symbol];
     }
@@ -65,7 +70,7 @@
     INTEXPECT( compiledClass.methods.count,1,@"method count");
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
     NSData *macho=[compiler compileClassToMachoO:compiledClass];
-    [macho writeToFile:@"/tmp/testclass-from-source.o" atomically:YES];
+//    [macho writeToFile:@"/tmp/testclass-from-source.o" atomically:YES];
     MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
     EXPECTTRUE(reader.isHeaderValid, @"got a macho");
     INTEXPECT([reader classReaders].count,1,@"number of classes" );
@@ -74,7 +79,7 @@
     IDEXPECT(classReader.superclassPointer.targetName, @"_OBJC_CLASS_$_NSObject", @"symbol for superclass");
     INTEXPECT(classReader.numberOfMethods, 1,@"number of methods");
     IDEXPECT([classReader methodNameAt:0].targetPointer.stringValue,@"hashPlus200",@"name of method");
-    IDEXPECT([classReader methodTypesAt:0].targetPointer.stringValue,@"@:",@"type of method");
+    IDEXPECT([classReader methodTypesAt:0].targetPointer.stringValue,@"l@:",@"type of method");
     IDEXPECT([classReader methodCodeAt:0].targetName,@"-[TestClass hashPlus200]",@"symbol for method code");
 }
 
