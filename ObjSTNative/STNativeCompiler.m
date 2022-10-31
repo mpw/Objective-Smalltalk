@@ -10,12 +10,38 @@
 #import "MPWMachOWriter.h"
 #import "MPWARMObjectCodeGenerator.h"
 #import "MPWMachOClassWriter.h"
+#import <ObjectiveSmalltalk/MPWMessageExpression.h>
+#import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 
 
 @implementation STNativeCompiler
 
+-(void)generateMessageSend:(MPWMessageExpression*)expr on:(MPWARMObjectCodeGenerator*)codegen
+{
+    NSString *selectorString = NSStringFromSelector(expr.selector);
+    if ( [expr.receiver isKindOfClass:[MPWMessageExpression class]]) {
+        [self generateMessageSend:[expr receiver] on:codegen];
+    }
+    if (  [selectorString isEqual:@"add:"] ) {
+        id arg=expr.args[0];
+        if ( [arg isKindOfClass:[MPWLiteralExpression class]]) {
+            MPWLiteralExpression *lit=(MPWLiteralExpression*)arg;
+            [codegen generateAddDest:0 source:0 immediate:[[lit theLiteral] intValue]];
+        }
+    } else {
+        [codegen generateMessageSendToSelector:selectorString];
+    }
+}
+
+
 -(void)writeMethodBody:(MPWScriptedMethod*)method on:(MPWARMObjectCodeGenerator*)codegen
 {
+    MPWStatementList *body = method.methodBody;
+    id bodyStart = body.statements.firstObject;
+//    NSLog(@"method body: %@",bodyStart);
+    if ( [bodyStart isKindOfClass:[MPWMessageExpression class]]) {
+        [self generateMessageSend:bodyStart on:codegen];
+    }
 }
 
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
@@ -70,7 +96,7 @@
     INTEXPECT( compiledClass.methods.count,1,@"method count");
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
     NSData *macho=[compiler compileClassToMachoO:compiledClass];
-//    [macho writeToFile:@"/tmp/testclass-from-source.o" atomically:YES];
+    [macho writeToFile:@"/tmp/testclass-from-source.o" atomically:YES];
     MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
     EXPECTTRUE(reader.isHeaderValid, @"got a macho");
     INTEXPECT([reader classReaders].count,1,@"number of classes" );

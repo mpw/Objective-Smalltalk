@@ -13,7 +13,7 @@
 	id statements;
 }
 
-idAccessor_h( statements, setStatements )
+objectAccessor_h( NSMutableArray*, statements, setStatements )
 
 -(void)addStatement:aStatement;
 +statementList;

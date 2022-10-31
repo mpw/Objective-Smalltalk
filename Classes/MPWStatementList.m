@@ -12,7 +12,7 @@
 
 @implementation MPWStatementList
 
-idAccessor( statements, setStatements )
+objectAccessor( NSMutableArray*, statements, setStatements )
 
 +statementList
 {
