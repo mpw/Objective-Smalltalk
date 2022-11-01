@@ -12,16 +12,104 @@
 #import "MPWMachOClassWriter.h"
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
+#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+
+
+@interface STNativeCompiler()
+
+-(void)generateCodeForExpression:(MPWExpression*)expression;
+-(void)generateCodeFor:(MPWExpression*)someExpression;
+-(void)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
+-(void)generateMessageSend:(MPWMessageExpression*)expr;
+
+@end
+
+
+ 
+@interface MPWExpression(nativeCode)
+-(void)generateNativeCodeOn:(STNativeCompiler*)compiler;
+
+@end
+
+@implementation MPWExpression(nativeCode)
+
+-(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    [compiler generateCodeForExpression:self];
+}
+
+@end
+@implementation MPWStatementList(nativeCode)
+
+-(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    for ( id statement in self.statements ) {
+        [compiler generateCodeFor:statement];
+    }
+}
+
+@end
+@implementation MPWMessageExpression(nativeCode)
+
+-(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    [compiler generateMessageSend:self];
+}
+
+@end
+
+@implementation MPWIdentifierExpression(nativeCode)
+
+-(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    [compiler generateIdentifierExpression:self];
+}
+
+@end
+
 
 
 @implementation STNativeCompiler
+{
+    MPWARMObjectCodeGenerator* codegen;
+    MPWMachOWriter *writer;
+    MPWMachOClassWriter *classwriter;
+}
 
--(void)generateMessageSend:(MPWMessageExpression*)expr on:(MPWARMObjectCodeGenerator*)codegen
+objectAccessor(MPWARMObjectCodeGenerator*, codegen, setCodegen)
+objectAccessor(MPWMachOWriter*, writer, setWriter)
+objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
+
+-(instancetype)init
+{
+    self=[super init];
+    if ( self ) {
+        self.writer = [MPWMachOWriter stream];
+        self.classwriter = [MPWMachOClassWriter writerWithWriter:writer];
+        self.codegen = [MPWARMObjectCodeGenerator stream];
+        
+        codegen.symbolWriter = writer;
+        codegen.relocationWriter = writer.textSectionWriter;
+    }
+    return self;
+}
+
+-(void)generateIdentifierExpression:(MPWIdentifierExpression*)expr
+{
+    // this should do something
+}
+
+-(void)generateCodeForExpression:(MPWExpression*)expression
+{
+    [NSException raise:@"unknown" format:@"Can't yet compile code for %@/%@",expression.class,expression];
+}
+
+
+-(void)generateMessageSend:(MPWMessageExpression*)expr
 {
     NSString *selectorString = NSStringFromSelector(expr.selector);
-    if ( [expr.receiver isKindOfClass:[MPWMessageExpression class]]) {
-        [self generateMessageSend:[expr receiver] on:codegen];
-    }
+    [expr.receiver generateNativeCodeOn:self];
+
     if (  [selectorString isEqual:@"add:"] ) {
         id arg=expr.args[0];
         if ( [arg isKindOfClass:[MPWLiteralExpression class]]) {
@@ -33,27 +121,18 @@
     }
 }
 
-
--(void)writeMethodBody:(MPWScriptedMethod*)method on:(MPWARMObjectCodeGenerator*)codegen
+-(void)generateCodeFor:(MPWExpression*)someExpression
 {
-    MPWStatementList *body = method.methodBody;
-    id bodyStart = body.statements.firstObject;
-//    NSLog(@"method body: %@",bodyStart);
-    if ( [bodyStart isKindOfClass:[MPWMessageExpression class]]) {
-        [self generateMessageSend:bodyStart on:codegen];
-    }
+    [someExpression generateNativeCodeOn:self];
+}
+
+-(void)writeMethodBody:(MPWScriptedMethod*)method
+{
+    [method.methodBody generateNativeCodeOn:self];
 }
 
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
 {
-    NSMutableData *macho=[NSMutableData data];
-    MPWMachOWriter *writer = [MPWMachOWriter streamWithTarget:macho];
-    MPWMachOClassWriter *classwriter = [MPWMachOClassWriter writerWithWriter:writer];
-    MPWARMObjectCodeGenerator *codegen = [MPWARMObjectCodeGenerator stream];
-
-    codegen.symbolWriter = writer;
-    codegen.relocationWriter = writer.textSectionWriter;
-
     classwriter.nameOfClass = aClass.name;
     classwriter.nameOfSuperClass = aClass.superclassName;
     NSMutableArray *symbolNames=[NSMutableArray array];
@@ -65,7 +144,7 @@
         
         NSString *symbol=[NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
         [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
-            [self writeMethodBody:method on:codegen];
+            [self writeMethodBody:method];
         }];
         [symbolNames addObject:symbol];
     }
@@ -73,7 +152,7 @@
     [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
     [classwriter writeClass];
     [writer writeFile];
-    return macho;
+    return (NSData*)[writer target];
 }
 
 
