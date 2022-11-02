@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)generateMulDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg;
 -(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1;
 -(void)loadRegister:(int)destReg fromContentsOfConstantAdress:(void*)addressp;
+-(void)generateMoveRegisterFrom:(int)from to:(int)to;
 
 -(MPWJittableData*)generatedCode;
 

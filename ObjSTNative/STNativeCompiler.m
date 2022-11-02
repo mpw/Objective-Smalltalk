@@ -17,52 +17,56 @@
 
 @interface STNativeCompiler()
 
--(void)generateCodeForExpression:(MPWExpression*)expression;
--(void)generateCodeFor:(MPWExpression*)someExpression;
--(void)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
--(void)generateMessageSend:(MPWMessageExpression*)expr;
+-(int)generateCodeForExpression:(MPWExpression*)expression;
+-(int)generateCodeFor:(MPWExpression*)someExpression;
+-(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
+-(int)generateMessageSend:(MPWMessageExpression*)expr;
+
+@property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 
 @end
 
 
  
 @interface MPWExpression(nativeCode)
--(void)generateNativeCodeOn:(STNativeCompiler*)compiler;
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler;
 
 @end
 
 @implementation MPWExpression(nativeCode)
 
--(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
-    [compiler generateCodeForExpression:self];
+    return [compiler generateCodeForExpression:self];
 }
 
 @end
 @implementation MPWStatementList(nativeCode)
 
--(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
+    int returnRegister=0;
     for ( id statement in self.statements ) {
-        [compiler generateCodeFor:statement];
+        returnRegister=[compiler generateCodeFor:statement];
     }
+    return returnRegister;
 }
 
 @end
 @implementation MPWMessageExpression(nativeCode)
 
--(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
-    [compiler generateMessageSend:self];
+    return [compiler generateMessageSend:self];
 }
 
 @end
 
 @implementation MPWIdentifierExpression(nativeCode)
 
--(void)generateNativeCodeOn:(STNativeCompiler*)compiler
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
-    [compiler generateIdentifierExpression:self];
+    return [compiler generateIdentifierExpression:self];
 }
 
 @end
@@ -94,18 +98,33 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return self;
 }
 
--(void)generateIdentifierExpression:(MPWIdentifierExpression*)expr
+-(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr
 {
-    // this should do something
+    NSString *name=[[expr identifier] stringValue];
+    NSNumber *registerNumber =  self.variableToRegisterMap[name];
+    if ( registerNumber ) {
+        return registerNumber.intValue;
+    }  else {
+        [NSException raise:@"unknown" format:@"not found, identifier: %@ in names: %@",name,self.variableToRegisterMap];
+        return 0;
+    }
 }
 
--(void)generateCodeForExpression:(MPWExpression*)expression
+-(int)generateCodeForExpression:(MPWExpression*)expression
 {
     [NSException raise:@"unknown" format:@"Can't yet compile code for %@/%@",expression.class,expression];
+    return 0;
+}
+
+-(void)moveRegister:(int)source toRegister:(int)dest
+{
+    if (source != dest) {
+        [codegen generateMoveRegisterFrom:source to:dest];
+    }
 }
 
 
--(void)generateMessageSend:(MPWMessageExpression*)expr
+-(int)generateMessageSend:(MPWMessageExpression*)expr
 {
     NSString *selectorString = NSStringFromSelector(expr.selector);
     [expr.receiver generateNativeCodeOn:self];
@@ -115,20 +134,45 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         if ( [arg isKindOfClass:[MPWLiteralExpression class]]) {
             MPWLiteralExpression *lit=(MPWLiteralExpression*)arg;
             [codegen generateAddDest:0 source:0 immediate:[[lit theLiteral] intValue]];
+            return 0;
+        } else {
+            [NSException raise:@"unhandled" format:@"Only handling adds with constant right now"];
         }
     } else {
+        int receiverRegister = [self generateCodeFor:expr.receiver];
+        [self moveRegister:receiverRegister toRegister:0];
+        for (int i=0;i<expr.args.count;i++) {
+            int argRegister = [self generateCodeFor:expr.args[i]];
+            [self moveRegister:argRegister toRegister:2+i];
+        }
         [codegen generateMessageSendToSelector:selectorString];
+        return 0;
     }
+    return 0;
 }
 
--(void)generateCodeFor:(MPWExpression*)someExpression
+-(int)generateCodeFor:(MPWExpression*)someExpression
 {
-    [someExpression generateNativeCodeOn:self];
+    return [someExpression generateNativeCodeOn:self];
 }
 
--(void)writeMethodBody:(MPWScriptedMethod*)method
+-(int)writeMethodBody:(MPWScriptedMethod*)method
 {
-    [method.methodBody generateNativeCodeOn:self];
+    return [method.methodBody generateNativeCodeOn:self];
+}
+
+-(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
+{
+    NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
+    self.variableToRegisterMap = [NSMutableDictionary dictionary];
+    self.variableToRegisterMap[@"self"]=@(0);
+    for (int i=0;i<method.methodHeader.numArguments;i++) {
+        self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i]]=@(i+2);
+    }
+    [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+        [self writeMethodBody:method];
+    }];
+    return symbol;
 }
 
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
@@ -141,12 +185,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( MPWScriptedMethod* method in aClass.methods) {
         [methodNames addObject:method.methodName];
         [methodTypes addObject:[[method header] typeString]];
-        
-        NSString *symbol=[NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
-        [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
-            [self writeMethodBody:method];
-        }];
-        [symbolNames addObject:symbol];
+        [symbolNames addObject:[self compileMethod:method inClass:(MPWClassDefinition*)aClass]];
     }
     [writer addTextSectionData:[codegen target]];
     [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
@@ -188,10 +227,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([classReader methodCodeAt:0].targetName,@"-[TestClass hashPlus200]",@"symbol for method code");
 }
 
++(void)testCompileMethodWithMultipleArgs
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@" class Concatter : NSObject {  -concat:a and:b  { a stringByAppendingString:b. }}"];
+    IDEXPECT( compiledClass.name, @"Concatter", @"top level result");
+    INTEXPECT( compiledClass.methods.count,1,@"method count");
+    NSData *macho=[compiler compileClassToMachoO:compiledClass];
+    [macho writeToFile:@"/tmp/concatter.o" atomically:YES];
+}
+
 +(NSArray*)testSelectors
 {
    return @[
-			@"testCompileSimpleClassAndMethod",
+       @"testCompileSimpleClassAndMethod",
+       @"testCompileMethodWithMultipleArgs",
 			];
 }
 
