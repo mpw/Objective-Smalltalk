@@ -178,7 +178,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
 {
     classwriter.nameOfClass = aClass.name;
-    classwriter.nameOfSuperClass = aClass.superclassName;
+    classwriter.nameOfSuperClass = aClass.superclassNameToUse;
     NSMutableArray *symbolNames=[NSMutableArray array];
     NSMutableArray *methodNames=[NSMutableArray array];
     NSMutableArray *methodTypes=[NSMutableArray array];
@@ -230,11 +230,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testCompileMethodWithMultipleArgs
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@" class Concatter : NSObject {  -concat:a and:b  { a stringByAppendingString:b. }}"];
+    MPWClassDefinition * compiledClass = [compiler compile:@"class Concatter { -concat:a and:b { a, b. }}"];
     IDEXPECT( compiledClass.name, @"Concatter", @"top level result");
     INTEXPECT( compiledClass.methods.count,1,@"method count");
-    NSData *macho=[compiler compileClassToMachoO:compiledClass];
-    [macho writeToFile:@"/tmp/concatter.o" atomically:YES];
+    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/concatter.o" atomically:YES];
 }
 
 +(NSArray*)testSelectors
@@ -242,6 +241,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
    return @[
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
+//       @"testJitCompileAClassWithMethod",
 			];
 }
 

@@ -156,6 +156,7 @@
 		1F59A722202C7D7800BE06F6 /* win_xcb.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A71C202C7D7800BE06F6 /* win_xcb.m */; };
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F59AD4729130D69009282D4 /* use_concatter.m in Resources */ = {isa = PBXBuildFile; fileRef = 1F59AD4329130D69009282D4 /* use_concatter.m */; };
 		1F5D768F25E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769125E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
@@ -970,6 +971,7 @@
 		1F59A71B202C7D7700BE06F6 /* x11fs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = x11fs.m; sourceTree = "<group>"; };
 		1F59A71C202C7D7800BE06F6 /* win_xcb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = win_xcb.m; sourceTree = "<group>"; };
 		1F59A71D202C7D7800BE06F6 /* x11fs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x11fs.h; sourceTree = "<group>"; };
+		1F59AD4329130D69009282D4 /* use_concatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_concatter.m; sourceTree = "<group>"; };
 		1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionSenderPort.h; sourceTree = "<group>"; };
 		1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionSenderPort.m; sourceTree = "<group>"; };
 		1F5D768D25E98F6E00DCC82F /* STPortScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPortScheme.h; sourceTree = "<group>"; };
@@ -1721,6 +1723,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F59AD4329130D69009282D4 /* use_concatter.m */,
 				1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */,
 				1F99D23829055D77009F0CE8 /* use_testclass.m */,
 				1F9AE9E528ED76BD00671748 /* two-classes.macho */,
@@ -3230,6 +3233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
+				1F59AD4729130D69009282D4 /* use_concatter.m in Resources */,
 				1F9AE9E628ED76BD00671748 /* two-classes.macho in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
 				1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */,

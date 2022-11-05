@@ -1499,6 +1499,21 @@ idAccessor(solver, setSolver)
 	return [self bindingForIdentifier:identifier];
 }
 
+-(void)defineMethodsForClassDefinition:(MPWClassDefinition*)classDefinition
+{
+    MPWClassMethodStore* store= [self classStoreForName:classDefinition.name];
+    for ( MPWScriptedMethod *method in [classDefinition allMethods]) {
+        [store installMethod:method];
+    }
+    if ( classDefinition.classMethods.count) {
+        for ( MPWScriptedMethod *method in [classDefinition classMethods]) {
+            [store installClassMethod:method];
+        }
+    }
+}
+
+
+
 -(void)dealloc
 {
     [tokens release];

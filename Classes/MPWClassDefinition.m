@@ -62,18 +62,6 @@
     return [userDefinedMethods arrayByAddingObjectsFromArray:generatedMethods];
 }
 
--(void)addMethodsInStore:(MPWClassMethodStore*)store
-{
-    for ( MPWScriptedMethod *method in [self allMethods]) {
-        [store installMethod:method];
-    }
-    if ( self.classMethods.count) {
-        for ( MPWScriptedMethod *method in [self classMethods]) {
-            [store installClassMethod:method];
-        }
-    }
-}
-
 -(NSArray *)allIvarNames
 {
     if ( [[self instanceVariableDescriptions] count] >0 ) {
@@ -115,18 +103,13 @@
     return NSClassFromString(self.name);
 }
 
--(void)defineMethodsInContext:aContext
-{
-    [self addMethodsInStore:[aContext classStoreForName:self.name]];
-}
-
 -(id)evaluateIn:(id)aContext
 {
     Class theClassToDefine=[self classToDefine];
     if (!theClassToDefine) {
         [self defineClass];
     }
-    [self defineMethodsInContext:aContext];
+    [aContext defineMethodsForClassDefinition:self];
     return [self classToDefine];
 }
 
