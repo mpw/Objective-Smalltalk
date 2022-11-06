@@ -145,7 +145,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             int argRegister = [self generateCodeFor:expr.args[i]];
             [self moveRegister:argRegister toRegister:2+i];
         }
-        [codegen generateMessageSendToSelector:selectorString];
+        if ( self.jit ) {
+            [codegen generateJittedMessageSendToSelector:selectorString];
+        } else {
+            [codegen generateMessageSendToSelector:selectorString];
+        }
         return 0;
     }
     return 0;
@@ -175,10 +179,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return symbol;
 }
 
--(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
+
+-(void)compileMethodsForClass:(MPWClassDefinition*)aClass
 {
-    classwriter.nameOfClass = aClass.name;
-    classwriter.nameOfSuperClass = aClass.superclassNameToUse;
     NSMutableArray *symbolNames=[NSMutableArray array];
     NSMutableArray *methodNames=[NSMutableArray array];
     NSMutableArray *methodTypes=[NSMutableArray array];
@@ -189,8 +192,20 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
     [writer addTextSectionData:[codegen target]];
     [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
+}
+
+-(void)compileClass:(MPWClassDefinition*)aClass
+{
+    classwriter.nameOfClass = aClass.name;
+    classwriter.nameOfSuperClass = aClass.superclassNameToUse;
+    [self compileMethodsForClass:aClass];
     [classwriter writeClass];
     [writer writeFile];
+}
+
+-(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
+{
+    [self compileClass:aClass];
     return (NSData*)[writer target];
 }
 
@@ -203,6 +218,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 #import "MPWMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
+#import "MPWJittableData.h"
 
 @implementation STNativeCompiler(testing) 
 
@@ -236,12 +252,28 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/concatter.o" atomically:YES];
 }
 
+//typedef id (*IMP2)(id,SEL,id,id);
+
+
++(void)testJitCompileAMethod
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@"class Concatter { -concat:a and:b { a, b. }}"];
+    compiler.jit = YES;
+    [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass];
+    MPWJittableData *methodData = compiler.codegen.generatedCode;
+    IMP2 theFun=(IMP2)methodData.bytes;
+    id result=theFun(nil,NULL,@"This is ",@"working");
+    IDEXPECT(result,@"This is working",@"concatted");
+}
+
+
 +(NSArray*)testSelectors
 {
    return @[
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
-//       @"testJitCompileAClassWithMethod",
+       @"testJitCompileAMethod",
 			];
 }
 

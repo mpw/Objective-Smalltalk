@@ -146,9 +146,9 @@
 
 -(void)generateJittedMessageSendToSelector:(NSString*)selector
 {
-    [self loadRegister:2 withConstantAdress:objc_msgSend];
+    [self loadRegister:9 withConstantAdress:objc_msgSend];
     [self loadRegister:1 withConstantAdress:NSSelectorFromString(selector)];
-    [self generateBranchAndLinkWithRegister:2];
+    [self generateBranchAndLinkWithRegister:9];
 }
 
 -(void)generateSaveLinkRegisterAndFramePtr
