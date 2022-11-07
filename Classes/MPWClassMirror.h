@@ -22,6 +22,7 @@
 -(Class)theClass;
 -(Class)theSuperclass;
 -(BOOL)isInBundle:(NSBundle*)aBundle;
+-(MPWClassMirror*)createSubclassWithName:(NSString*)name;
 -(MPWClassMirror*)createAnonymousSubclass;
 -(MPWClassMirror*)superclassMirror;
 -(MPWClassMirror*)metaClassMirror;

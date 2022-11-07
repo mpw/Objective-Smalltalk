@@ -17,6 +17,7 @@ scalarAccessor( SEL, selector,setSelector )
 scalarAccessor( IMP, imp, setImp )
 scalarAccessor( const char *, typestring, setTypestring )
 
+
 -(NSString*)name
 {
 	return NSStringFromSelector(selector);
