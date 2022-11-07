@@ -179,6 +179,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return symbol;
 }
 
+-(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
+{
+    [self compileMethod:method inClass:aClass];
+    return self.codegen.generatedCode;
+}
+
 
 -(void)compileMethodsForClass:(MPWClassDefinition*)aClass
 {
@@ -220,8 +226,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 #import "MPWMachOInSectionPointer.h"
 #import "MPWJittableData.h"
 
-@interface STNativeCompiler(somewhereToDefineTheSelectorWeGenerateProgrammatically)
+@interface ConcatterTest1: NSObject
+@end
+@interface ConcatterTest1(dynamic)
 -concat:a and:b;
+-concat:a also:b;
+@end
+@implementation ConcatterTest1
 @end
 
 @implementation STNativeCompiler(testing) 
@@ -256,30 +267,45 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/concatter.o" atomically:YES];
 }
 
-//typedef id (*IMP2)(id,SEL,id,id);
-
-
 +(void)testJitCompileAMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"class ConcatterTest1 { -concat:a and:b { a, b. }}"];
+    MPWClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
     compiler.jit = YES;
     [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass];
     MPWJittableData *methodData = compiler.codegen.generatedCode;
-    IMP2 theFun=(IMP2)methodData.bytes;
-    MPWClassMirror *mirror = [MPWClassMirror mirrorWithClass:[NSObject class]];
-    MPWClassMirror *testclassMirror = [mirror createSubclassWithName:@"ConcatterTest1"];
-    Class testclass1=[testclassMirror theClass];
-    id concatter=[[testclass1 new] autorelease];
-    id result=nil;
+    ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
+    NSString* result=nil;
+    NSException *didRaise=nil;
     @try {
         result=[concatter concat:@"This is " and:@"working"];
         EXPECTFALSE(true,@"should not get here");
     } @catch ( NSException *e ) {
+        didRaise=e;
     }
-    class_addMethod(testclass1, NSSelectorFromString(@"concat:and:"), (IMP)theFun, "@@:@@");
+    EXPECTNOTNIL(didRaise, @"should have raised");
+    IDEXPECT(didRaise.name,  NSInvalidArgumentException,@"type of exception");
+    [concatter.class addMethod:methodData.bytes forSelector:@selector(concat:and:) types:"@@:@@"];
     result=[concatter concat:@"This is " and:@"working"];
     IDEXPECT(result,@"This is working",@"concatted");
+}
+
++(ConcatterTest1*)compileAndAddSingleMethodExtensionToConcatter:(NSString*)code
+{
+    STNativeCompiler *compiler = [self compiler];
+    compiler.jit = YES;
+    MPWClassDefinition * compiledClass = [compiler compile:code];
+    MPWScriptedMethod *method = compiledClass.methods.firstObject;
+    MPWJittableData *methodData=[compiler compiledCodeForMethod:method inClass:compiledClass];
+    ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
+    [concatter.class addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
+    return concatter;
+}
+
++(void)testJitCompileAMethodMoreCompactly
+{
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -concat:a also:b { a, b. }}"];
+    IDEXPECT([concatter concat:@"This is " also:@"working"],@"This is working",@"concatted");
 }
 
 
@@ -289,6 +315,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
        @"testJitCompileAMethod",
+       @"testJitCompileAMethodMoreCompactly",
 			];
 }
 
