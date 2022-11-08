@@ -21,6 +21,7 @@
 -(int)generateCodeFor:(MPWExpression*)someExpression;
 -(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
 -(int)generateMessageSend:(MPWMessageExpression*)expr;
+-(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 
@@ -71,6 +72,15 @@
 
 @end
 
+@implementation MPWLiteralExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateLiteralExpression:self];
+}
+
+@end
+
 
 
 @implementation STNativeCompiler
@@ -109,6 +119,28 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return 0;
     }
 }
+
+
+-(int)generateLiteralExpression:(MPWLiteralExpression*)expr
+{
+    id theLiteral=expr.theLiteral;
+    if ( [theLiteral isKindOfClass:[NSNumber class]]) {
+        int value = [theLiteral intValue];
+        if ( value <= 0xffff) {
+            [codegen generateMoveConstant:value to:0];
+            if (self.jit) {
+                [codegen loadRegister:9 withConstantAdress:MPWCreateInteger];
+                [codegen generateBranchAndLinkWithRegister:9];
+            } else {
+                [codegen generateCallToExternalFunctionNamed:@"CFNumberCreate"];
+            }
+            return 0;
+        }
+    }
+    [NSException raise:@"unsupported" format:@"don't know how to compile: %@  (%@):",theLiteral,[theLiteral class]];
+    return 0;
+}
+
 
 -(int)generateCodeForExpression:(MPWExpression*)expression
 {
@@ -231,6 +263,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 @interface ConcatterTest1(dynamic)
 -concat:a and:b;
 -concat:a also:b;
+-(NSNumber*)theAnswer;
 @end
 @implementation ConcatterTest1
 @end
@@ -305,7 +338,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testJitCompileAMethodMoreCompactly
 {
     ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -concat:a also:b { a, b. }}"];
-    IDEXPECT([concatter concat:@"This is " also:@"working"],@"This is working",@"concatted");
+    IDEXPECT([concatter concat:@"This abbreviated version " also:@"also works"],@"This abbreviated version also works",@"concatted");
+}
+
++(void)testJitCompileNumberObjectLiteral
+{
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -theAnswer { 42. }}"];
+    IDEXPECT([concatter theAnswer],@(42),@"the answer");
 }
 
 
@@ -316,6 +355,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testCompileMethodWithMultipleArgs",
        @"testJitCompileAMethod",
        @"testJitCompileAMethodMoreCompactly",
+       @"testJitCompileNumberObjectLiteral",
 			];
 }
 

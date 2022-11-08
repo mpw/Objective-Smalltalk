@@ -130,6 +130,14 @@
     [self appendWord32:0xd61f0000 | ((theRegister & 31) << 5)];
 }
 
+-(void)generateMoveConstant:(int)constant to:(int)regno
+{
+    unsigned int baseword=0xd2800000;
+    baseword |= regno & 31;
+    baseword |= (constant & 0xffff) << 5;
+    [self appendWord32:baseword];
+}
+
 -(void)generateCallToExternalFunctionNamed:(NSString*)name
 {
     [self declareExternalFunction:name];
