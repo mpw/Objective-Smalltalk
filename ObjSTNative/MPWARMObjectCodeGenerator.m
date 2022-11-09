@@ -72,7 +72,17 @@
     base |= (sourceReg & 31) << 5;
     base |= (immediateValue & 4095) << 10;
     [self appendWord32:base];
-//    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
+    //    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
+}
+
+-(void)generateSubDest:(int)destReg source:(int)sourceReg immediate:(int)immediateValue
+{
+    unsigned int base = 0xd1000000;
+    base |= destReg & 31;
+    base |= (sourceReg & 31) << 5;
+    base |= (immediateValue & 4095) << 10;
+    [self appendWord32:base];
+    //    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
 }
 
 -(void)generateSubDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg
@@ -307,6 +317,16 @@ typedef long (*VOIDPTR)(void);
     INTEXPECT(result,7,@"3+4");
 }
 
++(void)testGenerateImmediateSub
+{
+    NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateSubDest:0 source:0 immediate:7];
+    }];
+    IMPINTINT addfn=(IMPINTINT)[code bytes];
+    long result=addfn(23,0);
+    INTEXPECT(result,16,@"23-7");
+}
+
 +(void)testGenerateSub
 {
     IMPINTINT subfn = [self fnFor:^(MPWARMObjectCodeGenerator *gen) {
@@ -531,6 +551,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
        @"testGenerateReturn",
        @"testGenerateAdd",
        @"testGenerateImmediateAdd",
+       @"testGenerateImmediateSub",
        @"testGenerateSub",
        @"testGenerateMul",
        @"testGenerateSubReverseOrder",
