@@ -132,12 +132,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
                 [codegen loadRegister:9 withConstantAdress:MPWCreateInteger];
                 [codegen generateBranchAndLinkWithRegister:9];
             } else {
-                [codegen generateCallToExternalFunctionNamed:@"CFNumberCreate"];
+                [codegen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
             }
             return 0;
         }
+    } else  if ( [theLiteral isKindOfClass:[NSString class]] ) {
+        [NSException raise:@"unsupported" format:@"don't know how to compile string literal: %@  (%@):",theLiteral,[theLiteral class]];
     }
-    [NSException raise:@"unsupported" format:@"don't know how to compile: %@  (%@):",theLiteral,[theLiteral class]];
+    [NSException raise:@"unsupported" format:@"don't know how to compile literal: %@  (%@):",theLiteral,[theLiteral class]];
     return 0;
 }
 
@@ -161,7 +163,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSString *selectorString = NSStringFromSelector(expr.selector);
     [expr.receiver generateNativeCodeOn:self];
 
-    if (  [selectorString isEqual:@"add:"] ) {
+    if (  NO &&  [selectorString isEqual:@"add:"] ) {
         id arg=expr.args[0];
         if ( [arg isKindOfClass:[MPWLiteralExpression class]]) {
             MPWLiteralExpression *lit=(MPWLiteralExpression*)arg;
@@ -171,6 +173,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             [NSException raise:@"unhandled" format:@"Only handling adds with constant right now"];
         }
     } else {
+        //  FIXME:  code that comes later can clobber register 0
+        //          but it can also clobber the current source
         int receiverRegister = [self generateCodeFor:expr.receiver];
         [self moveRegister:receiverRegister toRegister:0];
         for (int i=0;i<expr.args.count;i++) {
@@ -264,6 +268,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -concat:a and:b;
 -concat:a also:b;
 -(NSNumber*)theAnswer;
+-(NSString*)stringAnswer;
 @end
 @implementation ConcatterTest1
 @end
@@ -347,6 +352,24 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([concatter theAnswer],@(42),@"the answer");
 }
 
++(void)testJitCompileStringObjectLiteral
+{
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -stringAnswer { 'answer: 42'. }}"];
+    IDEXPECT([concatter stringAnswer],@"answer: 42",@"the answer");
+}
+
++(void)testJitCompileNumberArithmetic
+{
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -arithmeticTest { 20 + 2. }}"];
+    IDEXPECT([concatter arithmeticTest],@(200),@"the answer");
+}
+
++(void)testCompileNumberArithmeticToMachO
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -arithmeticTest { 20 + 2. }}"];
+    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/arithmetic.o" atomically:YES];
+}
 
 +(NSArray*)testSelectors
 {
@@ -354,8 +377,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
        @"testJitCompileAMethod",
+       @"testJitCompileNumberObjectLiteral",            // moving this test to the end causes tests to crash under Xcode
        @"testJitCompileAMethodMoreCompactly",
-       @"testJitCompileNumberObjectLiteral",
+//       @"testJitCompileNumberArithmetic",
+       @"testCompileNumberArithmeticToMachO",
+//       @"testJitCompileStringObjectLiteral",
 			];
 }
 

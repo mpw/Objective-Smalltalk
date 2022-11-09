@@ -159,9 +159,27 @@
     [self generateBranchAndLinkWithRegister:9];
 }
 
+-(void)saveRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite
+{
+    unsigned int base = 0xa9000000;
+    base |= reg1 & 31;
+    base |= (reg2 & 31) << 10;
+    base |= (storeReg & 31) << 5;
+    int offsetdiv8 = offset >> 3;
+    base |= (offsetdiv8 & 127) << 15;
+    if (offset) {
+        base |= 1 << 23;
+    }
+//    NSAssert1(base == 0xa9bd7bfd, @"doesn't match: 0x%x vs. 0xa9bd7bfd", base);
+    [self appendWord32:base];     // stp    x29, x30, [sp, #-0x30]!
+}
+
+
+
+
 -(void)generateSaveLinkRegisterAndFramePtr
 {
-    [self appendWord32:0xa9bd7bfd];     // stp    x29, x30, [sp, #-0x30]!
+    [self saveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES];
 }
 
 -(void)generateRestoreLinkRegisterAndFramePtr
