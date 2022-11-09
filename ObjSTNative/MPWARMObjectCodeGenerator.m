@@ -159,28 +159,43 @@
     [self generateBranchAndLinkWithRegister:9];
 }
 
--(void)saveRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite
+
+-(void)generateLoadOrStore:(BOOL)isLoad forRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite pre:(BOOL)isPre
 {
-    unsigned int base = 0xa9000000;
+    unsigned int base = isLoad ? 0xa8400000: 0xa8000000;
     base |= reg1 & 31;
     base |= (reg2 & 31) << 10;
     base |= (storeReg & 31) << 5;
     int offsetdiv8 = offset >> 3;
     base |= (offsetdiv8 & 127) << 15;
-    if (offset) {
+    if (rewrite) {
         base |= 1 << 23;
     }
-//    NSAssert1(base == 0xa9bd7bfd, @"doesn't match: 0x%x vs. 0xa9bd7bfd", base);
-    [self appendWord32:base];     // stp    x29, x30, [sp, #-0x30]!
+    if (isPre) {
+        base |= 1 << 24;
+    }
+    [self appendWord32:base];
 }
 
+-(void)generateSaveRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite pre:(BOOL)isPre
+{
+    [self generateLoadOrStore:NO forRegister:reg1 andRegister:reg2 relativeToRegister:storeReg offset:offset rewrite:rewrite pre:isPre];
+}
 
 
 
 -(void)generateSaveLinkRegisterAndFramePtr
 {
-    [self saveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES];
+    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:YES];
 }
+
+
+-(void)generateLoadRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite pre:(BOOL)isPre
+{
+    [self generateLoadOrStore:YES forRegister:reg1 andRegister:reg2 relativeToRegister:storeReg offset:offset rewrite:rewrite pre:isPre];
+}
+
+
 
 -(void)generateRestoreLinkRegisterAndFramePtr
 {
@@ -263,6 +278,12 @@ typedef long (*VOIDPTR)(void);
     EXPECTTRUE(true, @"got here");
 }
 
++(unsigned int)instructionFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
+{
+    NSData *code=[self codeFor:block];
+    NSAssert1(code.length >= 4, @"Had only %ld bytes, need at least 4",code.length);
+    return *(unsigned int*)[code bytes];
+}
 
 
 +(void)testGenerateAdd
@@ -311,6 +332,27 @@ typedef long (*VOIDPTR)(void);
     }];
     long result=subfn(3,40);
     INTEXPECT(result,37,@"40-3");
+}
+
++(void)testGenerateStoreMultiple
+{
+    unsigned int storeMultipleInstructionPre = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:YES];
+    }];
+    INTEXPECT(storeMultipleInstructionPre, 0xa9bd7bfd, @"stp    x29, x30, [sp, #-0x30]!" );
+    unsigned int storeMultipleInstructionPost = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:NO];
+    }];
+//    INTEXPECT(storeMultipleInstructionPost, 0xa8bd7bfd, @"stp    x29, x30, [sp #-0x30]!" );
+}
+
++(void)testGenerateLoadMultiple
+{
+    unsigned int loadMultipleInstruction = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:0x30 rewrite:YES pre:NO];
+    }];
+    NSAssert2(loadMultipleInstruction== 0xa8c37bfd,@"load multiple: got %x expected %x",loadMultipleInstruction,0xa8c37bfd );
+    INTEXPECT(loadMultipleInstruction, 0xa8c37bfd, @"ldp    x29, x30, [sp], 0x030" );
 }
 
 +(void)testGenerateDereferencePointerPassedIn
@@ -492,6 +534,8 @@ typedef long (*IDIDPTR)(id,SEL,id);
        @"testGenerateSub",
        @"testGenerateMul",
        @"testGenerateSubReverseOrder",
+       @"testGenerateStoreMultiple",
+       @"testGenerateLoadMultiple",
        @"testGenerateDereferencePointerPassedIn",
        @"testGenerateSubtractPointedAtLongs",
        @"testGenerateCodeWithEmbeddedPointer",
