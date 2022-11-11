@@ -194,9 +194,9 @@
 
 
 
--(void)generateSaveLinkRegisterAndFramePtr
+-(void)generateSaveLinkRegisterAndFramePtr:(int)offset
 {
-    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:0x0 rewrite:NO pre:NO];
+    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:offset rewrite:NO pre:NO];
 }
 
 
@@ -207,9 +207,9 @@
 
 
 
--(void)generateRestoreLinkRegisterAndFramePtr
+-(void)generateRestoreLinkRegisterAndFramePtr:(int)offset
 {
-    [self generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:0x0 rewrite:NO pre:NO];
+    [self generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:offset rewrite:NO pre:NO];
 }
 
 -(void)generateCreateReturnAddressProtectionHash
@@ -236,14 +236,14 @@
 {
     [self declareGlobalSymbol:name];
     [self reserveStackSpace:0x50];
-    [self generateSaveLinkRegisterAndFramePtr];
+    [self generateSaveLinkRegisterAndFramePtr:0x30];
     [self generateAddDest:30 source:31 immediate:0x40];     // set FP
 }
 
 
 -(void)generateEndOfFunction
 {
-    [self generateRestoreLinkRegisterAndFramePtr];
+    [self generateRestoreLinkRegisterAndFramePtr:0x30];
     [self popStackSpace:0x50];
     [self generateReturn];
 }
@@ -474,9 +474,9 @@ static void callme() {
 +(void)testGenerateCallToPointerPassedAsArg
 {
     IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
-        [gen generateSaveLinkRegisterAndFramePtr];
+        [gen generateSaveLinkRegisterAndFramePtr:0x0];
         [gen generateBranchAndLinkWithRegister:0];
-        [gen generateRestoreLinkRegisterAndFramePtr];
+        [gen generateRestoreLinkRegisterAndFramePtr:0x0];
         
     }];
     iWasCalled=NO;
@@ -491,9 +491,9 @@ static void callme() {
 {
     IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
         [gen generateCreateReturnAddressProtectionHash];
-        [gen generateSaveLinkRegisterAndFramePtr];
+        [gen generateSaveLinkRegisterAndFramePtr:0x0];
         [gen generateBranchAndLinkWithRegister:0];
-        [gen generateRestoreLinkRegisterAndFramePtr];
+        [gen generateRestoreLinkRegisterAndFramePtr:0x0];
         [gen generateCheckReturnAddressProtectionHash];
     }];
     iWasCalled=NO;

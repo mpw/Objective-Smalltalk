@@ -153,6 +153,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(void)moveRegister:(int)source toRegister:(int)dest
 {
     if (source != dest) {
+        NSLog(@"%d != %d, generate the move via %@",source,dest,codegen);
         [codegen generateMoveRegisterFrom:source to:dest];
     }
 }
@@ -196,19 +197,47 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return [someExpression generateNativeCodeOn:self];
 }
 
+#define LOCAL_REG_BASE 19
+
+
+-(void)saveLocalRegistersAndMoveArgs:(MPWScriptedMethod*)method
+{
+    int totalArguments=method.methodHeader.numArguments+2;
+    int numPairs = (totalArguments+1)/2;
+    for (int i=0,regno=LOCAL_REG_BASE;i<numPairs;i++,regno+=2) {
+        [codegen  generateSaveRegister:regno andRegister:regno+1 relativeToRegister:31 offset:i*16 rewrite:NO pre:NO];
+    }
+    self.variableToRegisterMap[@"self"]=@(LOCAL_REG_BASE);
+    [self moveRegister:0 toRegister:LOCAL_REG_BASE];
+    NSLog(@"total arguments: %d for %@",totalArguments,method.methodHeader);
+    for (int i=2;i<totalArguments;i++) {
+        NSLog(@"generate move from %d to %d",i,LOCAL_REG_BASE+i);
+        [self moveRegister:i toRegister:LOCAL_REG_BASE+i];
+        self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i-2]]=@(LOCAL_REG_BASE+i);
+    }
+}
+
+-(void)restoreLocalRegisters:(MPWScriptedMethod*)method
+{
+    int totalArguments=method.methodHeader.numArguments+2;
+    int numPairs = (totalArguments+1)/2;
+    for (int i=0,regno=LOCAL_REG_BASE;i<numPairs;i++,regno+=2) {
+        [codegen  generateLoadRegister:regno andRegister:regno+1 relativeToRegister:31 offset:i*16 rewrite:NO pre:NO];
+    }
+}
+
 -(int)writeMethodBody:(MPWScriptedMethod*)method
 {
-    return [method.methodBody generateNativeCodeOn:self];
+    [self saveLocalRegistersAndMoveArgs:method];
+    int returnRegister =  [method.methodBody generateNativeCodeOn:self];
+    [self restoreLocalRegisters:method];
+    return returnRegister;
 }
 
 -(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
 {
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    self.variableToRegisterMap[@"self"]=@(0);
-    for (int i=0;i<method.methodHeader.numArguments;i++) {
-        self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i]]=@(i+2);
-    }
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
@@ -269,6 +298,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -concat:a also:b;
 -(NSNumber*)theAnswer;
 -(NSString*)stringAnswer;
+-add:a to:b to:c;
 @end
 @implementation ConcatterTest1
 @end
@@ -360,14 +390,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(void)testJitCompileNumberArithmetic
 {
-    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -arithmeticTest { 20 + 2. }}"];
-    IDEXPECT([concatter arithmeticTest],@(200),@"the answer");
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -add:a to:b to:c { a+b+c. }}"];
+    IDEXPECT([concatter add:@(100) to:@(10) to:@(3)],@(113),@"the answer");
 }
 
 +(void)testCompileNumberArithmeticToMachO
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -arithmeticTest { 20 + 2. }}"];
+    MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -add:a to:b to:c { a+b+c. }}"];
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/arithmetic.o" atomically:YES];
 }
 
@@ -379,7 +409,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testJitCompileAMethod",
        @"testJitCompileNumberObjectLiteral",            // moving this test to the end causes tests to crash under Xcode
        @"testJitCompileAMethodMoreCompactly",
-//       @"testJitCompileNumberArithmetic",
+       @"testJitCompileNumberArithmetic",
        @"testCompileNumberArithmeticToMachO",
 //       @"testJitCompileStringObjectLiteral",
 			];
