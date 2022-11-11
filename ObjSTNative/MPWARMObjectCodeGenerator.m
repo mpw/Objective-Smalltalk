@@ -196,7 +196,7 @@
 
 -(void)generateSaveLinkRegisterAndFramePtr
 {
-    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:YES];
+    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x10 rewrite:YES pre:YES];
 }
 
 
@@ -209,7 +209,7 @@
 
 -(void)generateRestoreLinkRegisterAndFramePtr
 {
-    [self appendWord32:0xa8c37bfd];
+    [self generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:0x10 rewrite:YES pre:NO];
 }
 
 -(void)generateCreateReturnAddressProtectionHash
@@ -222,15 +222,28 @@
     [self appendWord32:0xd50323ff];
 }
 
+-(void)reserveStackSpace:(int)amount
+{
+    [self generateSubDest:31 source1:31 source2:amount];
+}
+
+-(void)popStackSpace:(int)amount
+{
+    [self generateAddDest:31 source1:31 source2:amount];
+}
+
 -(void)generateStartOfFunctionNamed:(NSString*)name
 {
     [self declareGlobalSymbol:name];
+    [self reserveStackSpace:0x30];
     [self generateSaveLinkRegisterAndFramePtr];
 }
+
 
 -(void)generateEndOfFunction
 {
     [self generateRestoreLinkRegisterAndFramePtr];
+    [self popStackSpace:0x30];
     [self generateReturn];
 }
 
@@ -477,7 +490,7 @@ static void callme() {
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 4,@"location of call to _other");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 8,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_other",@"name of call to _other");
 }
 
@@ -495,7 +508,7 @@ static void callme() {
     NSData *macho=[writer data];
 //    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 4,@"location of call to _other");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 8,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
 }
 
