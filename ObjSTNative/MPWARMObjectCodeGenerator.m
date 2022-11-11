@@ -196,7 +196,7 @@
 
 -(void)generateSaveLinkRegisterAndFramePtr
 {
-    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x10 rewrite:YES pre:YES];
+    [self generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:0x0 rewrite:NO pre:NO];
 }
 
 
@@ -209,7 +209,7 @@
 
 -(void)generateRestoreLinkRegisterAndFramePtr
 {
-    [self generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:0x10 rewrite:YES pre:NO];
+    [self generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:0x0 rewrite:NO pre:NO];
 }
 
 -(void)generateCreateReturnAddressProtectionHash
@@ -224,26 +224,27 @@
 
 -(void)reserveStackSpace:(int)amount
 {
-    [self generateSubDest:31 source1:31 source2:amount];
+    [self generateSubDest:31 source:31 immediate:amount];
 }
 
 -(void)popStackSpace:(int)amount
 {
-    [self generateAddDest:31 source1:31 source2:amount];
+    [self generateAddDest:31 source:31 immediate:amount];
 }
 
 -(void)generateStartOfFunctionNamed:(NSString*)name
 {
     [self declareGlobalSymbol:name];
-    [self reserveStackSpace:0x30];
+    [self reserveStackSpace:0x50];
     [self generateSaveLinkRegisterAndFramePtr];
+    [self generateAddDest:30 source:31 immediate:0x40];     // set FP
 }
 
 
 -(void)generateEndOfFunction
 {
     [self generateRestoreLinkRegisterAndFramePtr];
-    [self popStackSpace:0x30];
+    [self popStackSpace:0x50];
     [self generateReturn];
 }
 
@@ -340,6 +341,7 @@ typedef long (*VOIDPTR)(void);
     INTEXPECT(result,16,@"23-7");
 }
 
+
 +(void)testGenerateSub
 {
     IMPINTINT subfn = [self fnFor:^(MPWARMObjectCodeGenerator *gen) {
@@ -377,6 +379,32 @@ typedef long (*VOIDPTR)(void);
         [gen generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:NO];
     }];
 //    INTEXPECT(storeMultipleInstructionPost, 0xa8bd7bfd, @"stp    x29, x30, [sp #-0x30]!" );
+}
+
++(void)testGenerateAddImmediate
+{
+    unsigned int addImmediate = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateAddDest:31 source:31 immediate:0x08];
+    }];
+    HEXEXPECT(addImmediate, 0x910023ff, @"add    sp, sp, #0x8" );
+}
+
++(void)testReserveStackSpace
+{
+    unsigned int reserveStack = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen reserveStackSpace:0x08];
+    }];
+    HEXEXPECT(reserveStack, 0xd10023ff, @"sub    sp, sp, #0x8" );
+
+}
+
+
++(void)testGenerateSubImmediate
+{
+    unsigned int addImmediate = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen generateSubDest:31 source:31 immediate:0x08];
+    }];
+    HEXEXPECT(addImmediate, 0xd10023ff, @"sub    sp, sp, #0x8" );
 }
 
 +(void)testGenerateLoadMultiple
@@ -490,7 +518,7 @@ static void callme() {
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 8,@"location of call to _other");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 12,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_other",@"name of call to _other");
 }
 
@@ -508,7 +536,7 @@ static void callme() {
     NSData *macho=[writer data];
 //    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 8,@"location of call to _other");
+    INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 12,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
 }
 
@@ -569,6 +597,9 @@ typedef long (*IDIDPTR)(id,SEL,id);
        @"testGenerateMul",
        @"testGenerateSubReverseOrder",
        @"testGenerateStoreMultiple",
+       @"testGenerateAddImmediate",
+       @"testGenerateSubImmediate",
+       @"testReserveStackSpace",
        @"testGenerateLoadMultiple",
        @"testGenerateDereferencePointerPassedIn",
        @"testGenerateSubtractPointedAtLongs",
