@@ -180,7 +180,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(int)generateMessageSend:(MPWMessageExpression*)expr
 {
     NSString *selectorString = NSStringFromSelector(expr.selector);
-    [expr.receiver generateNativeCodeOn:self];
 
     if (  NO &&  [selectorString isEqual:@"add:"] ) {
         id arg=expr.args[0];
@@ -197,7 +196,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [toEval addObjectsFromArray:expr.args];
         int numArgs = toEval.count;
         int argRegisters[numArgs];
-    
+        NSLog(@"%@ receiver + args: %@",NSStringFromSelector(expr.selector), toEval);
         for (int i=0;i<numArgs;i++) {
             if ( [toEval[i] isKindOfClass:[MPWMessageExpression class]] ||
                 [toEval[i] isKindOfClass:[MPWLiteralExpression class]]
@@ -210,7 +209,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self saveRegisters];
         
         // evaluate any message expressions
-        
+
         NSLog(@"first pass, nested messages for %@",NSStringFromSelector(expr.selector));
         for (int i=0;i<numArgs;i++) {
             if ( argRegisters[i] != 0) {            // this is a nested message/function expression, need to evaluate now and stash result
