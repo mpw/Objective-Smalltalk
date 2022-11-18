@@ -16,7 +16,7 @@
 
 -(void)addRelocationEntryForSymbol:(NSString*)symbol
 {
-    NSLog(@"relocationWriter: %@  addRelocationSymbol: %@",self.relocationWriter,symbol);
+//    NSLog(@"relocationWriter: %@  addRelocationSymbol: %@",self.relocationWriter,symbol);
     [self.relocationWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length] ];
 }
 

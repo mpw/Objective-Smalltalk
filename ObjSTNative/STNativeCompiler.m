@@ -25,6 +25,10 @@
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 
+@property (nonatomic, assign) int localRegisterMin,localRegisterMax,currentLocalRegStack,savedRegisterMax;
+
+
+
 @end
 
 
@@ -102,6 +106,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         self.classwriter = [MPWMachOClassWriter writerWithWriter:writer];
         self.codegen = [MPWARMObjectCodeGenerator stream];
         
+        self.localRegisterMin = 19;     // ARM min saved register
+        self.localRegisterMax = 29;     // ARM min saved register
+        self.currentLocalRegStack = self.localRegisterMin;
         codegen.symbolWriter = writer;
         codegen.relocationWriter = writer.textSectionWriter;
     }
@@ -143,6 +150,17 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return 0;
 }
 
+-(int)allocateRegister
+{
+    int theRegister = self.currentLocalRegStack;
+    self.currentLocalRegStack++;
+    if ( self.currentLocalRegStack <= self.localRegisterMax) {
+        return theRegister;
+    } else {
+        @throw [NSException exceptionWithName:@"overflow" reason:@"out of registers" userInfo:nil];
+    }
+}
+
 
 -(int)generateCodeForExpression:(MPWExpression*)expression
 {
@@ -153,7 +171,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(void)moveRegister:(int)source toRegister:(int)dest
 {
     if (source != dest) {
-        NSLog(@"%d != %d, generate the move via %@",source,dest,codegen);
+//        NSLog(@"%d != %d, generate the move via %@",source,dest,codegen);
         [codegen generateMoveRegisterFrom:source to:dest];
     }
 }
@@ -174,23 +192,69 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             [NSException raise:@"unhandled" format:@"Only handling adds with constant right now"];
         }
     } else {
-        //  FIXME:  code that comes later can clobber register 0
-        //          but it can also clobber the current source
-        int receiverRegister = [self generateCodeFor:expr.receiver];
-        if ( receiverRegister == 0) {
-            receiverRegister = 27;
-            [self moveRegister:0 toRegister:receiverRegister];
+        int currentRegs = self.currentLocalRegStack;
+        NSMutableArray *toEval = [NSMutableArray arrayWithObject:expr.receiver];
+        [toEval addObjectsFromArray:expr.args];
+        int numArgs = toEval.count;
+        int argRegisters[numArgs];
+    
+        for (int i=0;i<numArgs;i++) {
+            if ( [toEval[i] isKindOfClass:[MPWMessageExpression class]] ||
+                [toEval[i] isKindOfClass:[MPWLiteralExpression class]]
+                ) {
+                argRegisters[i]=[self allocateRegister];
+            } else {
+                argRegisters[i]=0;
+            }
         }
-        for (int i=0;i<expr.args.count;i++) {
-            int argRegister = [self generateCodeFor:expr.args[i]];
-            [self moveRegister:argRegister toRegister:2+i];
+        [self saveRegisters];
+        
+        // evaluate any message expressions
+        
+        NSLog(@"first pass, nested messages for %@",NSStringFromSelector(expr.selector));
+        for (int i=0;i<numArgs;i++) {
+            if ( argRegisters[i] != 0) {            // this is a nested message/function expression, need to evaluate now and stash result
+                int evaluatedRegister = [self generateCodeFor:toEval[i]];
+                NSLog(@"evaluated[%d] %@ and returned in %d",i,toEval[i],evaluatedRegister);;
+                NSLog(@"evaluated[%d] stash in %d",i,argRegisters[i]);;
+                [self moveRegister:evaluatedRegister toRegister:argRegisters[i]];
+            }
         }
-        [self moveRegister:receiverRegister toRegister:0];
+        
+        // now move everything into argument passing registers
+        
+        NSLog(@"second pass, non-messages for %@",NSStringFromSelector(expr.selector));
+       for (int i=numArgs-1;i>=0;i--) {
+            int evaluatedRegister;
+            if ( argRegisters[i] == 0) {    // evaluate now, wasn't evaluated before
+                evaluatedRegister = [self generateCodeFor:toEval[i]];
+                NSLog(@"evaluated[%d] %@ result in register %d",i,toEval[i],evaluatedRegister);
+            } else {                        // was evaluated before fetch the register the value is stashed in
+                evaluatedRegister = argRegisters[i];
+                NSLog(@"previously evaluated[%d] result in register %d",i,evaluatedRegister);
+            }
+            [self moveRegister:evaluatedRegister toRegister:i >= 1 ? i+1 : i];
+        }
+
+//        //  FIXME:  code that comes later can clobber register 0
+//        //          but it can also clobber the current source
+//        int receiverRegister = [self generateCodeFor:expr.receiver];
+//        if ( receiverRegister == 0) {
+//            receiverRegister = 27;
+//            [self moveRegister:0 toRegister:receiverRegister];
+//        }
+//        for (int i=0;i<expr.args.count;i++) {
+//            int argRegister = [self generateCodeFor:expr.args[i]];
+//            [self moveRegister:argRegister toRegister:2+i];
+//        }
+//        [self moveRegister:receiverRegister toRegister:0];
         if ( self.jit ) {
             [codegen generateJittedMessageSendToSelector:selectorString];
         } else {
             [codegen generateMessageSendToSelector:selectorString];
         }
+        
+        self.currentLocalRegStack=currentRegs;
         return 0;
     }
     return 0;
@@ -201,37 +265,50 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return [someExpression generateNativeCodeOn:self];
 }
 
-#define LOCAL_REG_BASE 19
+-(void)saveRegisters
+{
+    if ( self.currentLocalRegStack > self.savedRegisterMax) {
+        int numRegister=self.currentLocalRegStack - self.savedRegisterMax;
+        int numPairs = (numRegister+1)/2;
+        for (int i=0,regno=self.savedRegisterMax;i<numPairs;i++,regno+=2) {
+            int relativeOffset=regno - self.localRegisterMin;
+            [codegen  generateSaveRegister:regno andRegister:regno+1 relativeToRegister:31 offset:relativeOffset*8 rewrite:NO pre:NO];
+        }
+        self.savedRegisterMax=self.currentLocalRegStack;
+    }
+}
 
 
 -(void)saveLocalRegistersAndMoveArgs:(MPWScriptedMethod*)method
 {
     int totalArguments=method.methodHeader.numArguments+2;
-    int numPairs = (totalArguments+1)/2;
-    for (int i=0,regno=LOCAL_REG_BASE;i<numPairs;i++,regno+=2) {
-        [codegen  generateSaveRegister:regno andRegister:regno+1 relativeToRegister:31 offset:i*16 rewrite:NO pre:NO];
-    }
-    self.variableToRegisterMap[@"self"]=@(LOCAL_REG_BASE);
-    [self moveRegister:0 toRegister:LOCAL_REG_BASE];
-    NSLog(@"total arguments: %d for %@",totalArguments,method.methodHeader);
+//     self.currentLocalRegStack+=totalArguments;
+    self.currentLocalRegStack+=8;
+    [self saveRegisters];
+    self.currentLocalRegStack=self.localRegisterMin+totalArguments;
+
+    self.variableToRegisterMap[@"self"]=@(self.localRegisterMin);
+    [self moveRegister:0 toRegister:self.localRegisterMin];
     for (int i=2;i<totalArguments;i++) {
-        NSLog(@"generate move from %d to %d",i,LOCAL_REG_BASE+i);
-        [self moveRegister:i toRegister:LOCAL_REG_BASE+i];
-        self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i-2]]=@(LOCAL_REG_BASE+i);
+        [self moveRegister:i toRegister:self.localRegisterMin+i];
+        self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i-2]]=@(self.localRegisterMin+i);
     }
 }
 
 -(void)restoreLocalRegisters:(MPWScriptedMethod*)method
 {
-    int totalArguments=method.methodHeader.numArguments+2;
-    int numPairs = (totalArguments+1)/2;
-    for (int i=0,regno=LOCAL_REG_BASE;i<numPairs;i++,regno+=2) {
+    int totalToRestore=self.savedRegisterMax - self.localRegisterMin;
+    int numPairs = (totalToRestore+1)/2;
+    for (int i=0,regno=self.localRegisterMin;i<numPairs;i++,regno+=2) {
         [codegen  generateLoadRegister:regno andRegister:regno+1 relativeToRegister:31 offset:i*16 rewrite:NO pre:NO];
     }
 }
 
 -(int)writeMethodBody:(MPWScriptedMethod*)method
 {
+    self.currentLocalRegStack=self.localRegisterMin;
+    self.savedRegisterMax=self.localRegisterMin;
+
     [self saveLocalRegistersAndMoveArgs:method];
     int returnRegister =  [method.methodBody generateNativeCodeOn:self];
     [self restoreLocalRegisters:method];
@@ -401,14 +478,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testJitCompileConstantNumberArithmeticSequence
 {
     ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -someConstantNumbersAdded { 100+30 * 2. }}"];
-    IDEXPECT([concatter someConstantNumbersAdded],@(260),@"the answer");
+    id expectedAnswer = @(260);
+    id computedAnswer = [concatter someConstantNumbersAdded];
+    IDEXPECT(computedAnswer,expectedAnswer,@"the answer");
 }
 
-+(void)testCompileContantNumberArithmeticToMachO
++(void)testCompileConstantNumberArithmeticToMachO
 {
     STNativeCompiler *compiler = [self compiler];
     MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -someConstantNumbersAdded { 100+30+7. }}"];
-    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/consstantArithmetic.o" atomically:YES];
+    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/constantArithmetic.o" atomically:YES];
 }
 
 +(void)testCompileNumberArithmeticToMachO
@@ -430,12 +509,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
    return @[
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
-       @"testJitCompileAMethod",
+//       @"testJitCompileAMethod",
        @"testJitCompileNumberObjectLiteral",            // moving this test to the end causes tests to crash under Xcode
-       @"testJitCompileAMethodMoreCompactly",
+//       @"testJitCompileAMethodMoreCompactly",
        @"testJitCompileNumberArithmetic",
        @"testJitCompileConstantNumberArithmeticSequence",
-       @"testCompileContantNumberArithmeticToMachO",
+       @"testCompileConstantNumberArithmeticToMachO",
        @"testCompileNumberArithmeticToMachO",
        @"testMachOCompileSimpleFilter",
 //       @"testJitCompileStringObjectLiteral",

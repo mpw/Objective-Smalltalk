@@ -235,16 +235,16 @@
 -(void)generateStartOfFunctionNamed:(NSString*)name
 {
     [self declareGlobalSymbol:name];
-    [self reserveStackSpace:0x50];
-    [self generateSaveLinkRegisterAndFramePtr:0x30];
-    [self generateAddDest:30 source:31 immediate:0x40];     // set FP
+    [self reserveStackSpace:0x120];
+    [self generateSaveLinkRegisterAndFramePtr:0x110];
+    [self generateAddDest:30 source:31 immediate:0x100];     // set FP
 }
 
 
 -(void)generateEndOfFunction
 {
-    [self generateRestoreLinkRegisterAndFramePtr:0x30];
-    [self popStackSpace:0x50];
+    [self generateRestoreLinkRegisterAndFramePtr:0x110];
+    [self popStackSpace:0x120];
     [self generateReturn];
 }
 
