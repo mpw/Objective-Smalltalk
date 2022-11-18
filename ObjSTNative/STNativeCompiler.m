@@ -177,11 +177,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         //  FIXME:  code that comes later can clobber register 0
         //          but it can also clobber the current source
         int receiverRegister = [self generateCodeFor:expr.receiver];
-        [self moveRegister:receiverRegister toRegister:0];
+        if ( receiverRegister == 0) {
+            receiverRegister = 27;
+            [self moveRegister:0 toRegister:receiverRegister];
+        }
         for (int i=0;i<expr.args.count;i++) {
             int argRegister = [self generateCodeFor:expr.args[i]];
             [self moveRegister:argRegister toRegister:2+i];
         }
+        [self moveRegister:receiverRegister toRegister:0];
         if ( self.jit ) {
             [codegen generateJittedMessageSendToSelector:selectorString];
         } else {
@@ -296,7 +300,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 @interface ConcatterTest1(dynamic)
 -concat:a and:b;
 -concat:a also:b;
--(NSNumber*)theAnswer;
+-(NSNumber*)someConstantNumbersAdded;
 -(NSString*)stringAnswer;
 -add:a to:b to:c;
 @end
@@ -394,11 +398,31 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([concatter add:@(100) to:@(10) to:@(3)],@(113),@"the answer");
 }
 
++(void)testJitCompileConstantNumberArithmeticSequence
+{
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -someConstantNumbersAdded { 100+30 * 2. }}"];
+    IDEXPECT([concatter someConstantNumbersAdded],@(260),@"the answer");
+}
+
++(void)testCompileContantNumberArithmeticToMachO
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -someConstantNumbersAdded { 100+30+7. }}"];
+    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/consstantArithmetic.o" atomically:YES];
+}
+
 +(void)testCompileNumberArithmeticToMachO
 {
     STNativeCompiler *compiler = [self compiler];
     MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -add:a to:b to:c { a+b+c. }}"];
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/arithmetic.o" atomically:YES];
+}
+
++(void)testMachOCompileSimpleFilter
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@"filter Upcaser |{ ^object stringValue uppercaseString. }"];
+    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/upcasefilter.o" atomically:YES];
 }
 
 +(NSArray*)testSelectors
@@ -410,7 +434,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testJitCompileNumberObjectLiteral",            // moving this test to the end causes tests to crash under Xcode
        @"testJitCompileAMethodMoreCompactly",
        @"testJitCompileNumberArithmetic",
+       @"testJitCompileConstantNumberArithmeticSequence",
+       @"testCompileContantNumberArithmeticToMachO",
        @"testCompileNumberArithmeticToMachO",
+       @"testMachOCompileSimpleFilter",
 //       @"testJitCompileStringObjectLiteral",
 			];
 }
