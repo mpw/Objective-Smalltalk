@@ -506,13 +506,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(NSArray*)testSelectors
 {
    return @[
-       @"testCompileSimpleClassAndMethod",
-       @"testCompileMethodWithMultipleArgs",
+//       @"testCompileSimpleClassAndMethod",
+//       @"testCompileMethodWithMultipleArgs",
 //       @"testJitCompileAMethod",
-       @"testJitCompileNumberObjectLiteral",            // moving this test to the end causes tests to crash under Xcode
+//       @"testJitCompileNumberObjectLiteral",            // moving this test to the end causes tests to crash under Xcode
 //       @"testJitCompileAMethodMoreCompactly",
-       @"testJitCompileNumberArithmetic",
-       @"testJitCompileConstantNumberArithmeticSequence",
+//       @"testJitCompileNumberArithmetic",
+//       @"testJitCompileConstantNumberArithmeticSequence",
        @"testCompileConstantNumberArithmeticToMachO",
        @"testCompileNumberArithmeticToMachO",
        @"testMachOCompileSimpleFilter",
