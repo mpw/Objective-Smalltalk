@@ -108,6 +108,7 @@
 
 -(unsigned int)adrpToDestReg:(int)destReg withPageOffset:(long)pagediff
 {
+    NSAssert2(labs(pagediff) < (1<<20), @"pagediff %ld/%lx out of range for adrp", pagediff,pagediff);
     int hibits = (int)(pagediff << 3) & (0x7ffff << 5);
     int lobits = pagediff & 3;
     unsigned int adrp_base = 0x90000000;
@@ -656,7 +657,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
     unsigned int adrp5=[gen adrpForRegister:0 address:16384 pc:0];
     HEXEXPECT(adrp5,0x90000020,@"four page offset ");        // 1001   --
     unsigned int adrp6=[gen adrpForRegister:0 address:0 pc:4096];
-    HEXEXPECT(adrp6,0xf0ffffe0,@"negative one page offset ");        // 1001   --
+    HEXEXPECT(adrp6,0xf0ffffe0,@"negative one page offset ");        // 1111   --
 //    unsigned int adrp7=[gen adrpForRegister:0 address:0 pc:5000 page_offset:&page_offset];
 //    HEXEXPECT(adrp7,0xf0ffffe0,@"negative one page offset ");        // 1001   --
 }
