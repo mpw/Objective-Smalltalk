@@ -379,6 +379,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(NSNumber*)someConstantNumbersAdded;
 -(NSString*)stringAnswer;
 -add:a to:b to:c;
+-theAnswer;
 @end
 @implementation ConcatterTest1
 @end
@@ -476,8 +477,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(void)testJitCompileConstantNumberArithmeticSequence
 {
-    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -someConstantNumbersAdded { 100+30 * 2. }}"];
-    id expectedAnswer = @(260);
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -someConstantNumbersAdded { 100+30 + 5  * 2 * 2. }}"];
+    id expectedAnswer = @(540);
     id computedAnswer = [concatter someConstantNumbersAdded];
     IDEXPECT(computedAnswer,expectedAnswer,@"the answer");
 }
@@ -508,8 +509,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
    return @[
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
-//       @"testJitCompileAMethod",
-//       @"testJitCompileNumberObjectLiteral",
+       @"testJitCompileAMethod",
+       @"testJitCompileNumberObjectLiteral",
        @"testJitCompileAMethodMoreCompactly",
        @"testJitCompileNumberArithmetic",
        @"testJitCompileConstantNumberArithmeticSequence",

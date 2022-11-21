@@ -1701,6 +1701,18 @@ idAccessor(solver, setSolver)
     IDEXPECT( result, @(16), @"square-bracket array access as start of expression");
 }
 
++(void)testHexLiteral
+{
+    IDEXPECT( [self evaluate:@"0xff"], @(255), @"hex constant");
+    IDEXPECT( [self evaluate:@"0x1a"], @(26), @"hex constant");
+}
+
++(void)testBinaryLiteral
+{
+    IDEXPECT( [self evaluate:@"0b1001"], @(9), @"binary constant");
+    IDEXPECT( [self evaluate:@"0b1111"], @(15), @"binary constant");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1722,6 +1734,8 @@ idAccessor(solver, setSolver)
               @"testSquareBracketLiteralArraysCanHaveCustomClasses",
               @"testCanAccessArraysWithSquareBrackets",
               @"testArrayAccessDoesNotStopEvaluation",
+              @"testHexLiteral",
+              @"testBinaryLiteral",
     ];
 }
 

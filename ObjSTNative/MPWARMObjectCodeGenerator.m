@@ -108,7 +108,8 @@
 
 -(unsigned int)adrpToDestReg:(int)destReg withPageOffset:(long)pagediff
 {
-    NSAssert2(labs(pagediff) < (1<<20), @"pagediff %ld/%lx out of range for adrp", pagediff,pagediff);
+    NSAssert2(labs(pagediff) < (1L<<20), @"pagediff %ld/%lx out of range for adrp", pagediff,pagediff);
+
     int hibits = (int)(pagediff << 3) & (0x7ffff << 5);
     int lobits = pagediff & 3;
     unsigned int adrp_base = 0x90000000;

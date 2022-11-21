@@ -203,7 +203,6 @@
 		1F5E506609B4B754000298D9 /* STConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FCEB7EA099C03ED00867A95 /* STConnector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E506709B4B754000298D9 /* MPWEvaluable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E506B09B4B754000298D9 /* STCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABD00F0A61B015ADD82 /* STCompiler.m */; settings = {ATTRIBUTES = (); }; };
-		1F5E506C09B4B754000298D9 /* MPWStScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */; settings = {ATTRIBUTES = (); }; };
 		1F5E506D09B4B754000298D9 /* MPWMessageExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */; settings = {ATTRIBUTES = (); }; };
 		1F5E506E09B4B754000298D9 /* MPWAssignmentExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ADE00F0A95F015ADD82 /* MPWAssignmentExpression.m */; };
 		1F5E506F09B4B754000298D9 /* MPWExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74AE500F0AAB8015ADD82 /* MPWExpression.m */; };
@@ -459,6 +458,7 @@
 		1FD0D4321A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */; };
 		1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */; };
 		1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */; };
+		1FD589AF292BE3EA0080ABD0 /* MPWStScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */; };
 		1FD6CA6325B8340B00639458 /* ObjectiveSmalltalkUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6CA6125B8340B00639458 /* ObjectiveSmalltalkUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD6CA7725B8341500639458 /* UIView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6CA3925B830E600639458 /* UIView+dictionary.m */; };
 		1FD6CA9825B8347D00639458 /* UIView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6CA3825B830E600639458 /* UIView+dictionary.h */; };
@@ -3407,7 +3407,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework\nif  [ -f ${tester}  ]  ; then\n$tester -vv ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 		1F084A2716DEB8A600ED2517 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3612,7 +3612,6 @@
 			files = (
 				1F5E506B09B4B754000298D9 /* STCompiler.m in Sources */,
 				1F50461D2118658F00073E1E /* MPWPropertyPathDefinition.m in Sources */,
-				1F5E506C09B4B754000298D9 /* MPWStScanner.m in Sources */,
 				1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
 				1F5E506D09B4B754000298D9 /* MPWMessageExpression.m in Sources */,
 				1F2B6651268CCC6A00DE4416 /* STTypeDescriptor.m in Sources */,
@@ -3645,6 +3644,7 @@
 				1F5E507F09B4B754000298D9 /* MPWScriptedMethod.m in Sources */,
 				1FBFEBA418FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */,
 				1F5E508009B4B754000298D9 /* MPWAbstractInterpretedMethod.m in Sources */,
+				1FD589AF292BE3EA0080ABD0 /* MPWStScanner.m in Sources */,
 				1F9BD22E2566505F006D7476 /* MPWStPropertyPathTests.m in Sources */,
 				1F5E508109B4B754000298D9 /* MPWMethodType.m in Sources */,
 				1F5E508209B4B754000298D9 /* MPWMethodStore.m in Sources */,
