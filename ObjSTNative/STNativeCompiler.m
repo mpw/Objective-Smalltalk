@@ -127,6 +127,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
+-(int)generateStringLiteral:(NSString*)theString
+{
+    if (self.jit) {
+        [codegen loadRegister:0 withConstantAdress:theString];
+        return 0;
+    } else {
+        [NSException raise:@"unsupported" format:@"don't know how to Mach-O compile string literal: %@  (%@):",theString,[theString class]];
+    }
+    return 0;
+}
 
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr
 {
@@ -144,7 +154,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             return 0;
         }
     } else  if ( [theLiteral isKindOfClass:[NSString class]] ) {
-        [NSException raise:@"unsupported" format:@"don't know how to compile string literal: %@  (%@):",theLiteral,[theLiteral class]];
+        return [self generateStringLiteral:theLiteral];
     }
     [NSException raise:@"unsupported" format:@"don't know how to compile literal: %@  (%@):",theLiteral,[theLiteral class]];
     return 0;
@@ -517,7 +527,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testCompileConstantNumberArithmeticToMachO",
        @"testCompileNumberArithmeticToMachO",
        @"testMachOCompileSimpleFilter",
-//       @"testJitCompileStringObjectLiteral",
+       @"testJitCompileStringObjectLiteral",
 			];
 }
 

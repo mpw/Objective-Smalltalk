@@ -86,6 +86,11 @@
     //    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
 }
 
+-(void)generateNOP
+{
+    [self appendWord32:0xd503201f];
+}
+
 -(void)generateSubDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg
 {
     [self generateOp:0xcb dest:destReg source1:source1Reg source2:source2Reg];
@@ -135,14 +140,43 @@
 }
 
 
--(void)loadRegister:(int)destReg withConstantAdress:(void*)addressp
+-(void)loadRegister:(int)destReg withPCRelativeConstantAdress:(void*)addressp
 {
+    NSLog(@"generate ADRP");
     long address = (long)addressp;
     int page_offset = address & 0xfff;
     long pc = (long)[(NSData*)[self target] bytes] + [self length];
     unsigned int adrp=[self adrpForRegister:destReg address:address pc:pc];
     [self appendWord32:adrp];
     [self generateAddDest:destReg source:destReg immediate:page_offset];
+}
+
+-(long)pc
+{
+    return (long)[(NSData*)[self target] bytes] + [self length];
+
+}
+
+-(void)loadRegister:(int)destReg withEmbeddedPointer:(void*)addressp
+{
+    unsigned int base = 0x58000040;
+    base |= destReg & 31;
+    [self appendWord32:base];     // ldr x0,[pc+4]
+    [self appendWord32:0x14000003];     // branch around
+    [self appendBytes:&addressp length:8];  // the pointer;    
+}
+
+-(void)loadRegister:(int)destReg withConstantAdress:(void*)addressp
+{
+    long pc = [self pc];
+    long address = (long)addressp;
+    long pagediff=[self pageDiffForPC:pc address:address];
+    if ( (labs(pagediff) >= (1L<<20)) ) {
+        [self loadRegister:destReg withEmbeddedPointer:addressp];
+    } else {
+        [self loadRegister:destReg withPCRelativeConstantAdress:addressp];
+    }
+
 }
 
 -(void)loadRegister:(int)destReg pcRelative:(int)pcOffset
@@ -663,6 +697,15 @@ typedef long (*IDIDPTR)(id,SEL,id);
 //    HEXEXPECT(adrp7,0xf0ffffe0,@"negative one page offset ");        // 1001   --
 }
 
++(void)testLoadEmbeddedPointer
+{
+    VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen loadRegister:0 withEmbeddedPointer:(void*)0x123456789abcdef];
+        
+    }];
+    INTEXPECT(loadFromPtr(),0x123456789abcdef,@"embedded answer");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -692,6 +735,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
 //       @"testJITLengthOfPassedStringPlus3",
        @"testADRPGeneration",
 //    @"testEmbeddedPointerGenerationOverRange",
+       @"testLoadEmbeddedPointer",
 			];
 }
 
