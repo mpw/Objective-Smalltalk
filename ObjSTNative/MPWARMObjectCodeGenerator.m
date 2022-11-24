@@ -119,7 +119,6 @@
     int lobits = pagediff & 3;
     unsigned int adrp_base = 0x90000000;
     unsigned int adrp = adrp_base | (destReg & 31) | (hibits ) | (lobits << 29);
-    NSLog(@"generated adrp: %x hibits: %x lobits: %x pagediff=%lx -pagediff=%lx",adrp,hibits,lobits,pagediff,-pagediff);
     return adrp;
 }
 
@@ -135,14 +134,12 @@
 {
     long pagediff=[self pageDiffForPC:pc address:address];
     unsigned int adrp=[self adrpToDestReg:destReg withPageOffset:pagediff];
-    NSLog(@"generated adrp: %x pagediff=%lx -pagediff=%lx",adrp,pagediff,-pagediff);
    return adrp;
 }
 
 
 -(void)loadRegister:(int)destReg withPCRelativeConstantAdress:(void*)addressp
 {
-    NSLog(@"generate ADRP");
     long address = (long)addressp;
     int page_offset = address & 0xfff;
     long pc = (long)[(NSData*)[self target] bytes] + [self length];

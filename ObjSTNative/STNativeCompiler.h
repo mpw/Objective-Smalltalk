@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) bool jit;
 
++(instancetype)jitCompiler;
+
 @end
 
 NS_ASSUME_NONNULL_END

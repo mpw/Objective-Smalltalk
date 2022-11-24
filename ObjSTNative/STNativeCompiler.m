@@ -13,6 +13,7 @@
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+#import "MPWJittableData.h"
 
 
 @interface STNativeCompiler()
@@ -97,6 +98,13 @@
 objectAccessor(MPWARMObjectCodeGenerator*, codegen, setCodegen)
 objectAccessor(MPWMachOWriter*, writer, setWriter)
 objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
+
++(instancetype)jitCompiler
+{
+    STNativeCompiler *compiler=[self compiler];
+    compiler.jit=true;
+    return compiler;
+}
 
 -(instancetype)init
 {
@@ -206,7 +214,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [toEval addObjectsFromArray:expr.args];
         int numArgs = toEval.count;
         int argRegisters[numArgs];
-        NSLog(@"%@ receiver + args: %@",NSStringFromSelector(expr.selector), toEval);
+//        NSLog(@"%@ receiver + args: %@",NSStringFromSelector(expr.selector), toEval);
         for (int i=0;i<numArgs;i++) {
             if ( [toEval[i] isKindOfClass:[MPWMessageExpression class]] ||
                 [toEval[i] isKindOfClass:[MPWLiteralExpression class]]
@@ -220,27 +228,27 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         
         // evaluate any message expressions
 
-        NSLog(@"first pass, nested messages for %@",NSStringFromSelector(expr.selector));
+//        NSLog(@"first pass, nested messages for %@",NSStringFromSelector(expr.selector));
         for (int i=0;i<numArgs;i++) {
             if ( argRegisters[i] != 0) {            // this is a nested message/function expression, need to evaluate now and stash result
                 int evaluatedRegister = [self generateCodeFor:toEval[i]];
-                NSLog(@"evaluated[%d] %@ and returned in %d",i,toEval[i],evaluatedRegister);;
-                NSLog(@"evaluated[%d] stash in %d",i,argRegisters[i]);;
+//                NSLog(@"evaluated[%d] %@ and returned in %d",i,toEval[i],evaluatedRegister);;
+//                NSLog(@"evaluated[%d] stash in %d",i,argRegisters[i]);;
                 [self moveRegister:evaluatedRegister toRegister:argRegisters[i]];
             }
         }
         
         // now move everything into argument passing registers
         
-        NSLog(@"second pass, non-messages for %@",NSStringFromSelector(expr.selector));
+//        NSLog(@"second pass, non-messages for %@",NSStringFromSelector(expr.selector));
        for (int i=numArgs-1;i>=0;i--) {
             int evaluatedRegister;
             if ( argRegisters[i] == 0) {    // evaluate now, wasn't evaluated before
                 evaluatedRegister = [self generateCodeFor:toEval[i]];
-                NSLog(@"evaluated[%d] %@ result in register %d",i,toEval[i],evaluatedRegister);
+//                NSLog(@"evaluated[%d] %@ result in register %d",i,toEval[i],evaluatedRegister);
             } else {                        // was evaluated before fetch the register the value is stashed in
                 evaluatedRegister = argRegisters[i];
-                NSLog(@"previously evaluated[%d] result in register %d",i,evaluatedRegister);
+//                NSLog(@"previously evaluated[%d] result in register %d",i,evaluatedRegister);
             }
             [self moveRegister:evaluatedRegister toRegister:i >= 1 ? i+1 : i];
         }
@@ -355,6 +363,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
 }
 
+-(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(MPWClassDefinition*)compiledClass
+{
+    MPWJittableData *methodData=[self compiledCodeForMethod:method inClass:compiledClass];
+    Class existingClass=NSClassFromString(compiledClass.name);
+    NSAssert1(existingClass!=nil , @"Class not found: %@", compiledClass.name);
+    [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
+}
+
+-(void)compileAndAddMethodsForClassDefinition:(MPWClassDefinition*)aClass
+{
+    for ( MPWScriptedMethod* method in aClass.methods) {
+        [self compileAndAddMethod:method forClassDefinition:aClass];
+    }
+}
+
 -(void)compileClass:(MPWClassDefinition*)aClass
 {
     classwriter.nameOfClass = aClass.name;
@@ -379,7 +402,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 #import "MPWMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
-#import "MPWJittableData.h"
 
 @interface ConcatterTest1: NSObject
 @end
@@ -428,9 +450,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(void)testJitCompileAMethod
 {
-    STNativeCompiler *compiler = [self compiler];
+    STNativeCompiler *compiler = [self jitCompiler];
     MPWClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
-    compiler.jit = YES;
     [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass];
     MPWJittableData *methodData = compiler.codegen.generatedCode;
     ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
@@ -451,14 +472,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(ConcatterTest1*)compileAndAddSingleMethodExtensionToConcatter:(NSString*)code
 {
-    STNativeCompiler *compiler = [self compiler];
-    compiler.jit = YES;
-    MPWClassDefinition * compiledClass = [compiler compile:code];
-    MPWScriptedMethod *method = compiledClass.methods.firstObject;
-    MPWJittableData *methodData=[compiler compiledCodeForMethod:method inClass:compiledClass];
-    ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
-    [concatter.class addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
-    return concatter;
+    STNativeCompiler *compiler = [self jitCompiler];
+    MPWClassDefinition *compiledClass = [compiler compile:code];
+    [compiler compileAndAddMethodsForClassDefinition:compiledClass];
+    return [[ConcatterTest1 new] autorelease];
 }
 
 +(void)testJitCompileAMethodMoreCompactly
