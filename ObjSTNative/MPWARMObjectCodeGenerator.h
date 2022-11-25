@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)generateAddDest:(int)destReg source:(int)sourceReg immediate:(int)immediateValue;
 -(void)generateSubDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg;
 -(void)generateMulDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg;
+-(void)clearRegister:(int)regno;
 -(void)loadRegister:(int)destReg withConstantAdress:(void*)addressp;
 -(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1;
 -(void)loadRegister:(int)destReg fromContentsOfConstantAdress:(void*)addressp;

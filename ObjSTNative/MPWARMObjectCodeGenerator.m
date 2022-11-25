@@ -40,6 +40,13 @@
     [self appendWord32:0xd65f03c0];
 }
 
+-(void)clearRegister:(int)regno
+{
+    long base=0xd2800000;
+    base |= regno & 31;
+    [self appendWord32:base];
+}
+
 
 -(void)generateOp:(int)opcode op2:(int)op2 dest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg
 {

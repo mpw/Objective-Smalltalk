@@ -283,18 +283,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             [self moveRegister:evaluatedRegister toRegister:i >= 1 ? i+1 : i];
         }
 
-//        //  FIXME:  code that comes later can clobber register 0
-//        //          but it can also clobber the current source
-//        int receiverRegister = [self generateCodeFor:expr.receiver];
-//        if ( receiverRegister == 0) {
-//            receiverRegister = 27;
-//            [self moveRegister:0 toRegister:receiverRegister];
-//        }
-//        for (int i=0;i<expr.args.count;i++) {
-//            int argRegister = [self generateCodeFor:expr.args[i]];
-//            [self moveRegister:argRegister toRegister:2+i];
-//        }
-//        [self moveRegister:receiverRegister toRegister:0];
         if ( self.jit ) {
             [codegen generateJittedMessageSendToSelector:selectorString];
         } else {
@@ -343,8 +331,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self moveRegister:i toRegister:self.localRegisterMin+i];
         self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i-2]]=@(self.localRegisterMin+i);
     }
+    //--- save registers needed 
     for (int i=0;i<numLocalVars;i++) {
-        [self moveRegister:i+totalArguments toRegister:self.localRegisterMin+i+totalArguments];
+        [codegen clearRegister:self.localRegisterMin+i+totalArguments];
         self.variableToRegisterMap[localVars[i]]=@(self.localRegisterMin+i+totalArguments);
     }
 }
