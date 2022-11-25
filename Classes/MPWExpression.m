@@ -12,7 +12,7 @@
 
 @implementation MPWExpression
 
-longAccessor(offset , setOffset)
+longAccessor(textOffset , setTextOffset)
 longAccessor(len, setLen)
 
 
@@ -26,6 +26,10 @@ longAccessor(len, setLen)
 	return self;
 }
 
+-(void)accumulateLocalVars:(NSMutableArray*)vars
+{
+    
+}
 
 -(NSException*)handleOffsetsInException:(NSException*)exception
 {
@@ -37,7 +41,7 @@ longAccessor(len, setLen)
         } else {
             dict=[NSMutableDictionary dictionaryWithCapacity:1];
         }
-        [dict setObject:[NSNumber numberWithLong:offset] forKey:@"offset"];
+        [dict setObject:[NSNumber numberWithLong:textOffset] forKey:@"offset"];
         exception =  [NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:dict];
 //        NSLog(@"offset: %ld",offset);
    }

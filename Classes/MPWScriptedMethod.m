@@ -24,7 +24,7 @@
 
 
 objectAccessor(MPWExpression*, methodBody, setMethodBody )
-objectAccessor(NSArray*, localVars, setLocalVars )
+lazyAccessor(NSArray*, localVars, setLocalVars, computeLocalVars )
 idAccessor( script, _setScript )
 //idAccessor( _contextClass, setContextClass )
 
@@ -35,6 +35,12 @@ idAccessor( script, _setScript )
 	[self _setScript:newScript];
 }
 
+-computeLocalVars
+{
+    NSMutableArray *localVars=[NSMutableArray array];
+    [self.methodBody accumulateLocalVars:localVars];
+    return localVars;
+}
 
 -compiledScript
 {
@@ -194,7 +200,7 @@ idAccessor( script, _setScript )
 
 -(void)dealloc 
 {
-	[localVars release];
+    [localVars release];
 	[methodBody release];
 	[script release];
 	[super dealloc];
@@ -217,6 +223,7 @@ idAccessor( script, _setScript )
 
 @end
 
+#import "MPWClassDefinition.h"
 
 @implementation MPWScriptedMethod(testing)
 
@@ -305,12 +312,22 @@ idAccessor( script, _setScript )
     IDEXPECT( [tester script] , @"some script text",@"property via self: property-scheme");
 }
 
++(void)testComputeLocalVars
+{
+    STCompiler *compiler=[STCompiler compiler];
+    MPWClassDefinition *classDef = [compiler compile:@"class TestClass { -<void>setText:someText { var a. var b. 3. } }" ];
+    MPWScriptedMethod *method=classDef.methods.firstObject;
+    NSArray *localVarNames = [method localVars];
+    INTEXPECT(localVarNames.count, 2, @"number of local vars");
+}
+
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
             @"testLookupOfNilVariableInMethodWorks",
             @"testThisSchemeReadsObject",
             @"testThisSchemeWritesObject",
+            @"testComputeLocalVars",
 //            @"testSimpleBacktrace",                       // FIXME:  exceptions are currently swallowed
 //            @"testNestedBacktrace",
 //            @"testCombinedScriptedAndNativeBacktrace",

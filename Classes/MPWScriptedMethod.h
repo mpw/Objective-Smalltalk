@@ -13,7 +13,7 @@
 @interface MPWScriptedMethod : MPWAbstractInterpretedMethod {
 	id					script;
 	MPWExpression*		methodBody;
-	NSArray*			localVars;
+    NSArray*			localVars;
 	id					contextClass;
 }
 

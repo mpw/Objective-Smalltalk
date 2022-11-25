@@ -23,6 +23,7 @@
 -(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
 -(int)generateMessageSend:(MPWMessageExpression*)expr;
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
+-(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr;
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 
@@ -82,6 +83,24 @@
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
     return [compiler generateLiteralExpression:self];
+}
+
+@end
+
+@implementation STVariableDefinition(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return 0;
+}
+
+@end
+
+@implementation MPWAssignmentExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    [compiler generateAssignmentExpression:self];
 }
 
 @end
@@ -166,6 +185,17 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
     [NSException raise:@"unsupported" format:@"don't know how to compile literal: %@  (%@):",theLiteral,[theLiteral class]];
     return 0;
+}
+
+-(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr
+{
+    MPWExpression *rhs = [expr rhs];
+    MPWIdentifierExpression *lhs = [expr lhs];
+    int registerForRHS = [self generateCodeFor:rhs];
+    NSString *lhsName = [lhs name];
+    NSNumber *lhsRegisterNumber = self.variableToRegisterMap[lhsName];
+    NSAssert1( lhsRegisterNumber, @"Don't have a variable named '%@'",lhsName);
+    [self moveRegister:registerForRHS toRegister:lhsRegisterNumber.intValue];
 }
 
 -(int)allocateRegister
@@ -298,10 +328,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)saveLocalRegistersAndMoveArgs:(MPWScriptedMethod*)method
 {
+    NSArray *localVars = [method localVars];
+    int numLocalVars = (int)localVars.count;
     int totalArguments=method.methodHeader.numArguments+2;
 //     self.currentLocalRegStack+=totalArguments;
-    self.currentLocalRegStack+=8;
+    self.currentLocalRegStack+=10;
     [self saveRegisters];
+    
     self.currentLocalRegStack=self.localRegisterMin+totalArguments;
 
     self.variableToRegisterMap[@"self"]=@(self.localRegisterMin);
@@ -309,6 +342,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for (int i=2;i<totalArguments;i++) {
         [self moveRegister:i toRegister:self.localRegisterMin+i];
         self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i-2]]=@(self.localRegisterMin+i);
+    }
+    for (int i=0;i<numLocalVars;i++) {
+        [self moveRegister:i+totalArguments toRegister:self.localRegisterMin+i+totalArguments];
+        self.variableToRegisterMap[localVars[i]]=@(self.localRegisterMin+i+totalArguments);
     }
 }
 
@@ -377,6 +414,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self compileAndAddMethod:method forClassDefinition:aClass];
     }
 }
+
+-(void)defineMethodsForClassDefinition:(MPWClassDefinition*)classDefinition
+{
+    if (self.jit) {
+        [self compileAndAddMethodsForClassDefinition:classDefinition];
+    } else {
+        [self compileMethodsForClass:classDefinition];
+    }
+}
+
 
 -(void)compileClass:(MPWClassDefinition*)aClass
 {
@@ -531,6 +578,28 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/upcasefilter.o" atomically:YES];
 }
 
++(void)testJitCompileFilter
+{
+    STNativeCompiler *compiler = [self jitCompiler];
+    Class testClass1 = [compiler evaluateScriptString:@"filter TestDowncaser |{ ^object lowercaseString. }"];
+    MPWFilter *filter = [testClass1 stream];
+    [filter writeObject:@"Some Upper CASE string Data"];
+    IDEXPECT([(NSArray*)[filter target] firstObject],@"some upper case string data",@"Filter result (should be lowercase)");
+    
+}
+
++(void)testJitCompileMethodWithLocalVariables
+{
+    STNativeCompiler *compiler = [self jitCompiler];
+    Class testClass1 = [compiler evaluateScriptString:@"filter TestLocalVarFilter |{ var a. a := object uppercaseString. ^a. ^object. }"];
+    MPWFilter *filter = [testClass1 stream];
+    NSString *testData = @"Some Upper CASE string Data";
+    [filter writeObject:testData];
+    IDEXPECT([(NSArray*)[filter target] firstObject],@"SOME UPPER CASE STRING DATA",@"Filter result (should be uppercase)");
+    IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
+
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -545,6 +614,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testCompileNumberArithmeticToMachO",
        @"testMachOCompileSimpleFilter",
        @"testJitCompileStringObjectLiteral",
+       @"testJitCompileFilter",
+       @"testJitCompileMethodWithLocalVariables",
 			];
 }
 

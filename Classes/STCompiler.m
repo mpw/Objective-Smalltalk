@@ -420,7 +420,7 @@ idAccessor(solver, setSolver)
 	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	MPWIdentifier *identifierToAddNameTo=identifier;
 	NSString *scheme=[aToken stringValue];
-    [variable setOffset:[scanner offset]];
+    [variable setTextOffset:[scanner offset]];
     [variable setLen:1];
 	scheme=[scheme substringToIndex:[scheme length]-1];
 	NSString* name;
@@ -497,7 +497,7 @@ idAccessor(solver, setSolver)
 -makeLocalVar:aToken
 {
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
-    [variable setOffset:[scanner offset]];
+    [variable setTextOffset:[scanner offset]];
     [variable setLen:1];
 	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
 	NSString* name = [aToken stringValue];
@@ -588,7 +588,7 @@ idAccessor(solver, setSolver)
 //	NSAssert1( [closeBrace isEqual:@"]"], @"'[' not followed by ']': '%@'",closeBrace);
 	id expr = [MPWBlockExpression blockWithStatements:statements arguments:blockVariables];
 //    NSLog(@"closeBrace: %@",closeBrace);
-    [expr setOffset:[scanner offset]];
+    [expr setTextOffset:[scanner offset]];
     [expr setLen:1];
     if ( ![closeBrace isEqual:endOfBlock] ) {
         NSString *s=[NSString stringWithFormat:@"block not closed by matching '%@' got '%@' instead",endOfBlock,closeBrace];
@@ -679,7 +679,7 @@ idAccessor(solver, setSolver)
     while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]) {
 //        NSLog(@"part of parseUnary, token: %@",next);
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
-        [expr setOffset:[scanner offset]];
+        [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
         [expr setSelector:[self mapSelectorString:next]];
 		expr=[self mapConnector:expr];
@@ -727,7 +727,7 @@ idAccessor(solver, setSolver)
                     if ( [self isSpecialSelector:keyword] ) {
 //                        NSLog(@"special selector '%@' encountered, parsing subexpression",keyword);
                         id subExpr = [[[MPWMessageExpression alloc] initWithReceiver:arg] autorelease];
-                        [subExpr setOffset:[scanner offset]];
+                        [subExpr setTextOffset:[scanner offset]];
                         [subExpr setLen:1];
                         [self parseSelectorAndArgs:subExpr];
 						subExpr=[self mapConnector:subExpr];
@@ -800,7 +800,7 @@ idAccessor(solver, setSolver)
         }
         expr=[[[MPWMessageExpression alloc] initWithReceiver:expr] autorelease];
         ((MPWMessageExpression*)expr).isSuper=isSuper;
-        [expr setOffset:[scanner offset]];
+        [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
 //		NSLog(@"message expression with scanner: %@",scanner);
         expr=[self parseSelectorAndArgs:expr];
@@ -829,7 +829,7 @@ idAccessor(solver, setSolver)
         
         id expr=[[[MPWMessageExpression alloc] initWithReceiver:firstExpression] autorelease];
 //            NSLog(@"next expr start: %@",expr);
-        [expr setOffset:[scanner offset]];
+        [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
 //            NSLog(@"parse cascade");
         [self parseSelectorAndArgs:expr];
@@ -855,7 +855,7 @@ idAccessor(solver, setSolver)
         }
         id expr=[[[MPWMessageExpression alloc] initWithReceiver:[firstExpression receiver]] autorelease];
         //            NSLog(@"next expr start: %@",expr);
-        [expr setOffset:[scanner offset]];
+        [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
         //            NSLog(@"parse cascade");
         [self parseSelectorAndArgs:expr];
@@ -891,7 +891,7 @@ idAccessor(solver, setSolver)
 {
 	id rhs = [self parseExpression];
     id assignment = [[[assignmentExpressionClass alloc] init] autorelease];
-    [assignment setOffset:[scanner offset]];
+    [assignment setTextOffset:[scanner offset]];
     [assignment setLen:1];
 //	NSLog(@"have assignment of first: %@",first,assignment);
 	[assignment setLhs:lhs];

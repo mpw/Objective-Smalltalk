@@ -10,7 +10,7 @@
 #import <ObjectiveSmalltalk/MPWEvaluable.h>
 
 @interface MPWExpression : MPWObject <MPWEvaluable> {
-    long offset,len;
+    long textOffset,len;
 }
 
 -(NSSet*)variablesRead;

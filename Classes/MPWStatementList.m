@@ -19,6 +19,14 @@ objectAccessor( NSMutableArray*, statements, setStatements )
 	return [[[self alloc] init] autorelease];
 }
 
+-(void)accumulateLocalVars:(NSMutableArray*)vars
+{
+    for (MPWExpression *statement in statements) {
+        [statement accumulateLocalVars:vars];
+    }
+}
+
+
 -init
 {
 	self=[super init];

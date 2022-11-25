@@ -3480,7 +3480,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\n\nif  [ -f ${tester}  ]  ; then\n    $tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 		1F6810381E117B54006CE0D1 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;

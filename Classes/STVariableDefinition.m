@@ -17,6 +17,11 @@
     return self;
 }
 
+-(void)accumulateLocalVars:(NSMutableArray*)vars
+{
+    [vars addObject:self.name];
+}
+
 -(void)dealloc
 {
     [_name release];

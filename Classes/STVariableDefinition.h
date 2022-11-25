@@ -5,13 +5,13 @@
 //  Created by Marcel Weiher on 01.07.21.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class STTypeDescriptor;
 
-@interface STVariableDefinition : NSObject
+@interface STVariableDefinition : MPWExpression
 
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,strong) STTypeDescriptor *type;
