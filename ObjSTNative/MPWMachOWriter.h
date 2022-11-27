@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSData*)data;
 -(int)declareExternalSymbol:(NSString*)symbol;
 -(MPWMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags;
+-(void)writeNSStringLiteral:(NSString*)theString label:(NSString*)label;
 
 
 

@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)declareGlobalSymbol:(NSString*)symbol;
 -(void)addRelocationEntryForSymbol:(NSString*)symbol;
 -(void)declareExternalFunction:(NSString*)symbol;
+-(void)addRelocationEntryForSymbol:(NSString*)symbol relativeOffset:(int)offset type:(int)relocationType relative:(BOOL)relative;
 
 @end
 

@@ -14,6 +14,7 @@
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import "MPWJittableData.h"
+#import <mach-o/arm64/reloc.h>
 
 
 @interface STNativeCompiler()
@@ -160,7 +161,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [codegen loadRegister:0 withConstantAdress:theString];
         return 0;
     } else {
-        [NSException raise:@"unsupported" format:@"don't know how to Mach-O compile string literal: %@  (%@):",theString,[theString class]];
+        NSString *literalSymbol=@"_CFSTR_L_";
+        [writer writeNSStringLiteral:theString label:literalSymbol];
+        [codegen addRelocationEntryForSymbol:literalSymbol relativeOffset:0 type:ARM64_RELOC_PAGE21 relative:YES];
+        [codegen appendWord32:[codegen adrpToDestReg:0 withPageOffset:0]];
+        [codegen addRelocationEntryForSymbol:literalSymbol relativeOffset:0 type:ARM64_RELOC_PAGEOFF12 relative:NO];
+        [codegen generateAddDest:0 source:0 immediate:0];
+
     }
     return 0;
 }
@@ -532,6 +539,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([concatter stringAnswer],@"answer: 42",@"the answer");
 }
 
++(void)testMachOCompileStringObjectLiteral
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@"class StringTest { -stringAnswer { 'answer: 42'. }}"];
+    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/stringLiteral.o" atomically:YES];
+}
+
 +(void)testJitCompileNumberArithmetic
 {
     ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -add:a to:b to:c { a+b+c. }}"];
@@ -586,8 +600,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [filter writeObject:testData];
     IDEXPECT([(NSArray*)[filter target] firstObject],@"SOME UPPER CASE STRING DATA",@"Filter result (should be uppercase)");
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
-
 }
+
 
 +(NSArray*)testSelectors
 {
@@ -603,6 +617,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testCompileNumberArithmeticToMachO",
        @"testMachOCompileSimpleFilter",
        @"testJitCompileStringObjectLiteral",
+       @"testMachOCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
 			];

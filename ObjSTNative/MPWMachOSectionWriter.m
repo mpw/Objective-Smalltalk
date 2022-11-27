@@ -69,6 +69,11 @@
     [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xf section:self.sectionNumber];
 }
 
+-(void)declareLocalSymbol:(NSString*)symbol
+{
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xe section:self.sectionNumber];
+}
+
 -(void)declareGlobalTextSymbol:(NSString*)symbol
 {
     [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xe section:1];
@@ -76,21 +81,27 @@
 
 
 
--(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
+-(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset type:(int)type relative:(BOOL)relative
 {
     struct relocation_info r={};
     // FIXME:  this should not declare, it should retrieve + verify that the symbol already exists
     r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0xf section:self.sectionNumber];
-//    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
+    //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;
     r.r_length=self.relocationLength;
-    r.r_pcrel=self.relocationPCRel;
-    r.r_type=self.relocationType;
+    r.r_pcrel=relative;
+    r.r_type=type;
     if ( relocCount >= relocCapacity ) {
         [self growRelocations];
     }
     relocations[relocCount++]=r;
+}
+
+
+-(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset
+{
+    [self addRelocationEntryForSymbol:symbol atOffset:offset type:self.relocationType relative:self.relocationPCRel];
 }
 
 

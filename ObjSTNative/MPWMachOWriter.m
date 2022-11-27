@@ -117,6 +117,7 @@
         self.textSectionWriter.relocationPCRel=1;
 
         [self addSectionWriterWithSegName:@"__DATA" sectName:@"_objectclasslist" flags:0];
+//        [self addSectionWriterWithSegName:@"__TEXT" sectName:@"_cstring" flags:0];
         symtabCapacity = 10;
         [self growSymtab];
         
@@ -275,6 +276,17 @@
     [self writeData:(NSData*)[self.stringTableWriter target]];
 }
 
+-(MPWMachOSectionWriter*)cstringWriter
+{
+    return [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__string" flags:0];
+}
+
+-(MPWMachOSectionWriter*)cfstringWriter
+{
+    return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__cfstring" flags:0];
+}
+
+
 -(int)stringTableOffsetOfString:(NSString*)theString
 {
     int offset = [self.stringTableOffsets[theString] intValue];
@@ -292,6 +304,26 @@
     for (NSString* symbol in self.globalSymbolOffsets.allKeys) {
         [self stringTableOffsetOfString:symbol];
     }
+}
+
+-(void)writeNSStringLiteral:(NSString*)theString label:(NSString*)label
+{
+    MPWMachOSectionWriter *cstringWriter=[self cstringWriter];
+    MPWMachOSectionWriter *cfstringWriter=[self cfstringWriter];
+    // write the cstring, retain a symbol reference to it
+    
+    Mach_O_NSString str={
+        0,1992,0,[theString length]
+    };
+    long offset=((void*)&str.cstring) - (void*)&str;
+    NSString *contentLabel=[label stringByAppendingString:@"_cstr"];
+    [cstringWriter declareLocalSymbol:contentLabel];
+    [cstringWriter appendBytes:[theString UTF8String] length:[theString length]];
+    [cfstringWriter declareLocalSymbol:label];
+    [cfstringWriter addRelocationEntryForSymbol:@"___CFConstantStringClassReference" atOffset:0];
+    
+    [cfstringWriter addRelocationEntryForSymbol:contentLabel atOffset:(int)offset];
+    [cfstringWriter appendBytes:&str length:sizeof str];
 }
 
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
@@ -375,6 +407,7 @@
 #import "MPWMachOClassWriter.h"
 #import "Mach_O_Structs.h"
 #import "MPWMachORelocationPointer.h"
+#import "MPWMachOInSectionPointer.h"
 
 @implementation MPWMachOWriter(testing) 
 
@@ -608,6 +641,34 @@
     INTEXPECT( s1,s2, @"should be the same");
 }
 
++(void)testMachOWriteNSStringLiteral
+{
+    NSString *theString=@"Hello World!";
+    MPWMachOWriter *writer = [self stream];
+    [writer writeNSStringLiteral:theString label:@"_theString"];
+    [writer addTextSectionData:[NSData dataWithBytes:"1234" length:4]];
+    NSData *d=[writer data];
+//    [d writeToFile:@"/tmp/cfstr.o" atomically:YES];
+    
+    
+    
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:d];
+
+    MPWMachOInSectionPointer *cfstrPtr = [reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_theString"]];
+    Mach_O_NSString *str_read=(Mach_O_NSString*)[cfstrPtr bytes];
+    
+    long offset=((void*)&str_read->cstring) - (void*)str_read;
+
+    INTEXPECT( str_read->length,[theString length],@"length");
+    INTEXPECT( str_read->flags, 1992, @"flags");
+    MPWMachORelocationPointer *classPtr = [cfstrPtr relocationPointer];
+    MPWMachOInSectionPointer *contentPtr = [[cfstrPtr relocationPointerAtOffset:offset] targetPointer];
+    IDEXPECT( classPtr.targetName,@"___CFConstantStringClassReference",@"string literal class");
+    IDEXPECT( contentPtr.stringValue,@"Hello World!",@"contents");
+
+}
+
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -620,6 +681,7 @@
        @"testRelocationEntriesComeAfterAllSegmentData",
        @"testSegmentSizeIsOnlyDataNotRelocEntries",
        @"testSectionWritersAreUniqed",
+       @"testMachOWriteNSStringLiteral",
 		];
 }
 

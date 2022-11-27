@@ -34,6 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)generateSaveRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite pre:(BOOL)isPre;
 -(void)generateLoadRegister:(int)reg1 andRegister:(int)reg2 relativeToRegister:(int)storeReg offset:(int)offset rewrite:(BOOL)rewrite pre:(BOOL)isPre;
 
+-(unsigned int)adrpToDestReg:(int)destReg withPageOffset:(long)pagediff;
+-(void)appendWord32:(unsigned int)word;
+
+
 
 -(MPWJittableData*)generatedCode;
 

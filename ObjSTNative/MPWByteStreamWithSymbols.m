@@ -20,6 +20,11 @@
     [self.relocationWriter addRelocationEntryForSymbol:symbol atOffset:(int)[self length] ];
 }
 
+-(void)addRelocationEntryForSymbol:(NSString*)symbol relativeOffset:(int)offset type:(int)relocationType relative:(BOOL)relative
+{
+    [self.relocationWriter addRelocationEntryForSymbol:symbol atOffset:offset+(int)[self length] type:relocationType relative:relative];
+}
+
 -(void)declareExternalFunction:(NSString*)symbol
 {
     [self.symbolWriter declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];

@@ -33,9 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)writeRelocationEntriesOn:(MPWByteStream*)writer;
 
 -(void)declareGlobalSymbol:(NSString*)symbol;
+-(void)declareLocalSymbol:(NSString*)symbol;
+
 -(void)declareGlobalTextSymbol:(NSString*)symbol;
 -(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset;
-
+-(void)addRelocationEntryForSymbol:(NSString*)symbol atOffset:(int)offset type:(int)type relative:(BOOL)relative;
 
 -(long)sectionDataSize;
 -(long)relocEntrySize;
