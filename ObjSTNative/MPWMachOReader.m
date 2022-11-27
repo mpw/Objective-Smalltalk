@@ -13,6 +13,7 @@
 #import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
 #import "MPWMachORelocationPointer.h"
+#import "MPWMachOInSectionPointer.h"
 #import "MPWMachOClassReader.h"
 
 @interface MPWMachOReader()
@@ -185,6 +186,11 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return [self sectionWithName:"__objc_data"];
 }
 
+-(MPWMachOSection*)cfstringSection
+{
+    return [self sectionWithName:"__cfstring"];
+}
+
 -(MPWMachOSection*)objcClassListSection
 {
     return [self sectionWithName:"__objc_classlist"];
@@ -297,6 +303,13 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     symtab_entry *entry = [self entryAt:which];
     
     return (entry->section) == 0 && (entry->type & N_EXT);
+}
+
+-(MPWMachOInSectionPointer*)pointerForSymbolAt:(int)symbolIndex
+{
+    MPWMachOSection *section = [self sectionAtIndex:[self sectionForSymbolAt:symbolIndex]];
+    
+    return [[[MPWMachOInSectionPointer alloc] initWithSection:section offset:[self symbolOffsetAt:symbolIndex]-[section address]] autorelease];
 }
 
 

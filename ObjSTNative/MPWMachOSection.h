@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(bool)isExternalRelocEntryAt:(int)i;
 -(int)typeOfRelocEntryAt:(int)i;
 -(long)offset;
+-(long)address;
 -(long)size;
 -(long)flags;
 -(long)offsetInTargetSectionForRelocEntryAt:(int)which;

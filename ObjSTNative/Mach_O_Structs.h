@@ -43,5 +43,11 @@ typedef struct Mach_O_Class {
     Mach_O_Class_RO *data;
 } Mach_O_Class;
 
+typedef struct Mach_O_NSString {
+    struct Mach_O_Class *isa;
+    long   flags;
+    char   *cstring;
+    long   length;
+} Mach_O_NSString;
 
 #endif /* Mach_O_Structs_h */
