@@ -456,6 +456,9 @@
 		1FD0D42F1A935F8D006CA1D7 /* MPWClassMethodStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD0D42B1A935F8D006CA1D7 /* MPWClassMethodStore.h */; };
 		1FD0D4301A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */; };
 		1FD0D4321A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */; };
+		1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FD405BE293267F5000F4122 /* function-calling-block.macho */; };
+		1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FD405BF293267F5000F4122 /* function-passing-block.macho */; };
+		1FD405C329334F6F000F4122 /* function-passing-nsstring.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FD405C229334F6F000F4122 /* function-passing-nsstring.macho */; };
 		1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */; };
 		1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */; };
 		1FD589AF292BE3EA0080ABD0 /* MPWStScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A74ABE00F0A61B015ADD82 /* MPWStScanner.m */; };
@@ -1211,6 +1214,9 @@
 		1FD2367A2641BC6C009C5E46 /* blink.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = blink.st; sourceTree = "<group>"; };
 		1FD2F6CF075227AC00547D6F /* MPWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPWMessage.h; path = Classes/MPWMessage.h; sourceTree = SOURCE_ROOT; };
 		1FD2F6D0075227AC00547D6F /* MPWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMessage.m; sourceTree = "<group>"; };
+		1FD405BE293267F5000F4122 /* function-calling-block.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "function-calling-block.macho"; sourceTree = "<group>"; };
+		1FD405BF293267F5000F4122 /* function-passing-block.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "function-passing-block.macho"; sourceTree = "<group>"; };
+		1FD405C229334F6F000F4122 /* function-passing-nsstring.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "function-passing-nsstring.macho"; sourceTree = "<group>"; };
 		1FD48C4A15B7241000BDCECA /* MPWTaggedFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTaggedFloat.h; sourceTree = "<group>"; };
 		1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTaggedFloat.m; sourceTree = "<group>"; };
 		1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjCGenerator.h; sourceTree = "<group>"; };
@@ -1723,6 +1729,9 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1FD405C229334F6F000F4122 /* function-passing-nsstring.macho */,
+				1FD405BE293267F5000F4122 /* function-calling-block.macho */,
+				1FD405BF293267F5000F4122 /* function-passing-block.macho */,
 				1F59AD4329130D69009282D4 /* use_concatter.m */,
 				1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */,
 				1F99D23829055D77009F0CE8 /* use_testclass.m */,
@@ -3232,6 +3241,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD405C329334F6F000F4122 /* function-passing-nsstring.macho in Resources */,
+				1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */,
+				1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */,
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
 				1F59AD4729130D69009282D4 /* use_concatter.m in Resources */,
 				1F9AE9E628ED76BD00671748 /* two-classes.macho in Resources */,

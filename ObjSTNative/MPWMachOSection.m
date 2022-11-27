@@ -461,6 +461,14 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     INTEXPECT( methods->entrysize, 24, @"entry size");
 }
 
++(void)testReadObjectiveC_StringConstant
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"function-passing-nsstring"];
+    //    MPWMachOClassReader *classReader=[[[MPWMachOClassReader alloc] initWithReader:reader] autorelease];
+    EXPECTNOTNIL(reader, @"reader");
+}
+
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -473,6 +481,7 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
        @"testReadObjectiveC_MethodNameList",
        @"testReadObjectiveC_MethodListForClass",
        @"testReadObjectiveC_MethodListForClass_Pointers",
+       @"testReadObjectiveC_StringConstant",
 			];
 }
 
