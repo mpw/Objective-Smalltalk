@@ -242,7 +242,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     
     MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
-    INTEXPECT( machoReader.numSections, 5,@"number of sections");
+    INTEXPECT( machoReader.numSections, 6,@"number of sections");
     
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
     INTEXPECT(classNameSymbolEntry,1,@"symtab entry");

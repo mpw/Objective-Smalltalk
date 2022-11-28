@@ -117,9 +117,10 @@
         self.textSectionWriter.relocationPCRel=1;
 
         [self addSectionWriterWithSegName:@"__DATA" sectName:@"_objectclasslist" flags:0];
-//        [self addSectionWriterWithSegName:@"__TEXT" sectName:@"_cstring" flags:0];
         symtabCapacity = 10;
         [self growSymtab];
+        [self addObjcImageInfo];
+
         
         
     }
@@ -278,12 +279,14 @@
 
 -(MPWMachOSectionWriter*)cstringWriter
 {
-    return [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__string" flags:0];
+    MPWMachOSectionWriter *w = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__cstring" flags:2];
+    w.alignment=1;
+    return w;
 }
 
 -(MPWMachOSectionWriter*)cfstringWriter
 {
-    return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__cfstring" flags:0];
+    return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__string" flags:0];
 }
 
 
@@ -319,9 +322,11 @@
     NSString *contentLabel=[label stringByAppendingString:@"_cstr"];
     [cstringWriter declareLocalSymbol:contentLabel];
     [cstringWriter appendBytes:[theString UTF8String] length:[theString length]];
+    [cstringWriter appendBytes:"" length:1];        // NULL terminate
     [cfstringWriter declareLocalSymbol:label];
+    [self declareExternalSymbol:@"___CFConstantStringClassReference"];
     [cfstringWriter addRelocationEntryForSymbol:@"___CFConstantStringClassReference" atOffset:0];
-    
+
     [cfstringWriter addRelocationEntryForSymbol:contentLabel atOffset:(int)offset];
     [cfstringWriter appendBytes:&str length:sizeof str];
 }
@@ -375,6 +380,13 @@
         [self writeFile];
     }
     return data;
+}
+
+-(void)addObjcImageInfo
+{
+    MPWMachOSectionWriter *objcInfo=[self addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_imageinfo" flags:0];
+    unsigned char data[8]={0,0,0,0,0x40,0,0,0};
+    [objcInfo appendBytes:data length:8];
 }
 
 -(void)writeFile
@@ -484,7 +496,7 @@
     
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([[reader textSection] relocEntryOffset],216,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],304,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
@@ -539,7 +551,7 @@
     
     
     MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
-    INTEXPECT( machoReader.numSections, 5,@"number of sections");
+    INTEXPECT( machoReader.numSections, 6,@"number of sections");
     //    for (int i=1;i<machoReader.numSections;i++) {
     //        MPWMachOSection *s=[machoReader sectionAtIndex:i];
     //        NSLog(@"section %@, segname='%@' sectname='%@'",s,s.segmentName,s.sectionName);

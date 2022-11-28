@@ -445,6 +445,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 #import "MPWMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
+#import "Mach_O_Structs.h"
 
 @interface ConcatterTest1: NSObject
 @end
@@ -543,7 +544,23 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     STNativeCompiler *compiler = [self compiler];
     MPWClassDefinition * compiledClass = [compiler compile:@"class StringTest { -stringAnswer { 'answer: 42'. }}"];
-    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/stringLiteral.o" atomically:YES];
+    NSData *d=[compiler compileClassToMachoO:compiledClass];
+    [d writeToFile:@"/tmp/stringLiteral.o" atomically:YES];
+    
+    MPWMachOReader *reader=[MPWMachOReader readerWithData:d];
+    MPWMachOInSectionPointer *s=[reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_CFSTR_L_"]];
+    EXPECTNOTNIL(s, @" pointer");
+    Mach_O_NSString *str_read=(Mach_O_NSString*)[s bytes];
+    IDEXPECT([[s relocationPointer] targetName],@"___CFConstantStringClassReference",@"class");
+    INTEXPECT( str_read->length,10,@"length");
+    INTEXPECT( str_read->flags, 1992, @"flags");
+
+    long offset=((void*)&str_read->cstring) - (void*)str_read;
+    MPWMachOInSectionPointer *contentPtr = [[s relocationPointerAtOffset:offset] targetPointer];
+    IDEXPECT( contentPtr.stringValue,@"answer: 42",@"contents");
+
+    
+    
 }
 
 +(void)testJitCompileNumberArithmetic
