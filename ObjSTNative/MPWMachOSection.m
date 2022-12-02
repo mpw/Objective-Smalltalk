@@ -466,29 +466,6 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     INTEXPECT( methods->entrysize, 24, @"entry size");
 }
 
-+(void)testReadObjectiveC_StringConstant
-{
-    MPWMachOReader *reader=[self readerForTestFile:@"function-passing-nsstring"];
-    int cfstringSymbolIndex = [reader indexOfSymbolNamed:@"l__unnamed_cfstring_"];
-    INTEXPECT( cfstringSymbolIndex,1,@"index of the cfstring");
-    MPWMachOInSectionPointer *stringPointer=[reader pointerForSymbolAt:cfstringSymbolIndex];
-    EXPECTNOTNIL(stringPointer, @"stringPointer");
-    IDEXPECT([[stringPointer section] sectionName],@"__cfstring",@"section");
-    Mach_O_NSString *s=(Mach_O_NSString*)[stringPointer bytes];
-    INTEXPECT(s->length,2,@"length");
-    INTEXPECT(s->flags,1992,@"flags");
-    INTEXPECT([stringPointer offset],0,@"offset");
-    MPWMachORelocationPointer *stringClassPtr=[stringPointer relocationPointer];
-    EXPECTNOTNIL(stringClassPtr, @"stringClassPtr");
-    IDEXPECT(stringClassPtr.targetName,@"___CFConstantStringClassReference",@"string class name");
-    long cStringPtrOffset = ((void*)&(s->cstring) - (void*)s);
-    INTEXPECT( cStringPtrOffset,16,@"");
-    MPWMachORelocationPointer *stringContentsPointer=[stringPointer relocationPointerAtOffset:cStringPtrOffset];
-    EXPECTNOTNIL(stringContentsPointer, @"stringContentsPointer");
-    IDEXPECT(stringContentsPointer.targetName,@"l_.str",@"");
-    IDEXPECT([[stringContentsPointer targetPointer] stringValue],@"hi",@"actual string value");
-}
-
 
 +(NSArray*)testSelectors
 {
@@ -502,7 +479,6 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
        @"testReadObjectiveC_MethodNameList",
        @"testReadObjectiveC_MethodListForClass",
        @"testReadObjectiveC_MethodListForClass_Pointers",
-       @"testReadObjectiveC_StringConstant",
 			];
 }
 

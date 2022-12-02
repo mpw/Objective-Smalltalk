@@ -619,6 +619,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
 }
 
++(void)testJitCompileBlock
+{
+//    EXPECTTRUE(false,@"implemented");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -637,6 +642,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testMachOCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
+//       @"testJitCompileBlock",
 			];
 }
 

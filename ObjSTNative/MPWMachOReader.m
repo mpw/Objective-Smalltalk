@@ -482,6 +482,59 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     
 }
 
++(void)testReadObjectiveC_StringConstant
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"function-passing-nsstring"];
+    int cfstringSymbolIndex = [reader indexOfSymbolNamed:@"l__unnamed_cfstring_"];
+    INTEXPECT( cfstringSymbolIndex,1,@"index of the cfstring");
+    MPWMachOInSectionPointer *stringPointer=[reader pointerForSymbolAt:cfstringSymbolIndex];
+    EXPECTNOTNIL(stringPointer, @"stringPointer");
+    IDEXPECT([[stringPointer section] sectionName],@"__cfstring",@"section");
+    Mach_O_NSString *s=(Mach_O_NSString*)[stringPointer bytes];
+    INTEXPECT(s->length,2,@"length");
+    INTEXPECT(s->flags,1992,@"flags");
+    INTEXPECT([stringPointer offset],0,@"offset");
+    MPWMachORelocationPointer *stringClassPtr=[stringPointer relocationPointer];
+    EXPECTNOTNIL(stringClassPtr, @"stringClassPtr");
+    IDEXPECT(stringClassPtr.targetName,@"___CFConstantStringClassReference",@"string class name");
+    long cStringPtrOffset = ((void*)&(s->cstring) - (void*)s);
+    INTEXPECT( cStringPtrOffset,16,@"");
+    MPWMachORelocationPointer *stringContentsPointer=[stringPointer relocationPointerAtOffset:cStringPtrOffset];
+    EXPECTNOTNIL(stringContentsPointer, @"stringContentsPointer");
+    IDEXPECT(stringContentsPointer.targetName,@"l_.str",@"");
+    IDEXPECT([[stringContentsPointer targetPointer] stringValue],@"hi",@"actual string value");
+}
+
+
++(void)testReadBlock
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"function-passing-block"];
+    int blockIndex = [reader indexOfSymbolNamed:@"___block_literal_global"];
+    MPWMachOInSectionPointer *blockPointer=[reader pointerForSymbolAt:blockIndex];
+    EXPECTNOTNIL(blockPointer, @"block pointer");
+    struct Block_struct *b=(struct Block_struct*)[blockPointer bytes];
+    long blockCodePointerOffset = ((void*)&(b->invoke) - (void*)b);
+    long blockDescriptorPointerOffset = ((void*)&(b->descriptor) - (void*)b);
+    INTEXPECT( blockDescriptorPointerOffset, 24,@"blockDescriptorPointerOffset");
+    INTEXPECT( b->flags, 0x50000000,@"flags");
+    INTEXPECT( b->reserved, 0,@"reserved");
+    IDEXPECT([[blockPointer relocationPointerAtOffset:blockCodePointerOffset] targetName],@"___bfn_block_invoke",@"invoke fn");
+    IDEXPECT([[blockPointer relocationPointer] targetName],@"__NSConcreteGlobalBlock",@"block class reference");
+    MPWMachORelocationPointer *block2descriptor=[blockPointer relocationPointerAtOffset:blockDescriptorPointerOffset];
+    IDEXPECT([block2descriptor targetName],@"___block_descriptor_tmp",@"descriptor");
+    MPWMachOInSectionPointer *descriptorPointer=[block2descriptor targetPointer];
+
+    const Mach_O_BlockDescriptor *descriptor = [descriptorPointer bytes];
+    INTEXPECT( descriptor->size, sizeof *descriptor, @"size");
+    long signatureOffset = ((void*)&(descriptor->signature) - (void*)descriptor);
+    INTEXPECT(signatureOffset,16,@"signatureoffset (from block descriptor)");
+    MPWMachORelocationPointer *signaturePointer = [descriptorPointer relocationPointerAtOffset:signatureOffset];
+    IDEXPECT( [signaturePointer targetName],@"l_.str",@"symbol of signature");
+    IDEXPECT( [[signaturePointer targetPointer] stringValue], @"i12@?0i8", @"signature");
+
+}
+
+
 
 +(NSArray*)testSelectors
 {
@@ -495,6 +548,9 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
        @"testReadStringTable",
        @"testReadMachOWithExternalSymbols",
        @"testGetClassPointers",
+       @"testReadObjectiveC_StringConstant",
+       @"testReadBlock",
+
 			];
 }
 

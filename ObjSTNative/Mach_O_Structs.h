@@ -43,6 +43,13 @@ typedef struct Mach_O_Class {
     Mach_O_Class_RO *data;
 } Mach_O_Class;
 
+typedef struct Mach_O_BlockDescriptor {
+    long flags;
+    long size;
+    char *signature;
+    long reserved;
+} Mach_O_BlockDescriptor;
+
 typedef struct Mach_O_NSString {
     struct Mach_O_Class *isa;
     long   flags;
