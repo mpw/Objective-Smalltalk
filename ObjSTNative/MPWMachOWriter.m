@@ -289,6 +289,11 @@
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__string" flags:0];
 }
 
+-(MPWMachOSectionWriter*)constWriter
+{
+    return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__const" flags:0];
+}
+
 
 -(int)stringTableOffsetOfString:(NSString*)theString
 {
@@ -329,6 +334,42 @@
 
     [cfstringWriter addRelocationEntryForSymbol:contentLabel atOffset:(int)offset];
     [cfstringWriter appendBytes:&str length:sizeof str];
+}
+
+-(void)writeBlockLiteralWithCodeAtSymbol:(NSString*)codeSymbol blockSymbol:(NSString*)blockSymbol signature:(NSString*)signature
+{
+    NSString *signatureSymbol=[blockSymbol stringByAppendingString:@"_sig"];
+    NSString *descriptorSymbol=[blockSymbol stringByAppendingString:@"_descriptor"];
+//    NSString *descriptorSymbol=[blockSymbol stringByAppendingString:@"_descriptor"];
+    MPWMachOSectionWriter *cstringWriter=[self cstringWriter];
+    MPWMachOSectionWriter *blockWriter=[self constWriter];
+    [self declareExternalSymbol:@"__NSConcreteGlobalBlock"];
+
+    [cstringWriter declareLocalSymbol:signatureSymbol];
+    [cstringWriter appendBytes:[signature UTF8String] length:[signature length]];
+    [cstringWriter appendBytes:"" length:1];        // NULL terminate
+
+    Mach_O_BlockDescriptor descriptor = {
+        0,32,0,0
+    };
+    long signaturePtrOffset=((void*)&descriptor.signature) - (void*)&descriptor;
+    [blockWriter declareLocalSymbol:descriptorSymbol];
+    [blockWriter addRelocationEntryForSymbol:signatureSymbol atOffset:[blockWriter length]+signaturePtrOffset];
+    [blockWriter appendBytes:&descriptor length:sizeof descriptor];
+
+    struct Block_struct block = {
+        0,0x50000000,0,0,0
+    };
+    long codePtrOffset=((void*)&block.invoke) - (void*)&block;
+    long descriptorPtrOffset=((void*)&block.descriptor) - (void*)&block;
+    
+    
+    [blockWriter declareLocalSymbol:blockSymbol];
+    [blockWriter addRelocationEntryForSymbol:@"__NSConcreteGlobalBlock" atOffset:[blockWriter length]];
+    [blockWriter addRelocationEntryForSymbol:codeSymbol atOffset:(int)codePtrOffset+[blockWriter length]];
+    [blockWriter addRelocationEntryForSymbol:descriptorSymbol atOffset:(int)descriptorPtrOffset+[blockWriter length]];
+    [blockWriter appendBytes:&block length:sizeof block];
+    
 }
 
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
@@ -677,7 +718,23 @@
     MPWMachOInSectionPointer *contentPtr = [[cfstrPtr relocationPointerAtOffset:offset] targetPointer];
     IDEXPECT( classPtr.targetName,@"___CFConstantStringClassReference",@"string literal class");
     IDEXPECT( contentPtr.stringValue,@"Hello World!",@"contents");
+}
 
++(void)testMachOWriteBlockStructures
+{
+    MPWMachOWriter *writer = [self stream];
+    [writer declareGlobalSymbol:@"_block_fn" atOffset:10];
+    NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
+    [writer addTextSectionData:machineCode];
+    [writer writeBlockLiteralWithCodeAtSymbol:@"_block_fn" blockSymbol:@"_global_block" signature:@"i12@?0i8"];
+    NSData *d=[writer data];
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:d];
+    MPWMachOInSectionPointer *blockPtr = [reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_global_block"]];
+    EXPECTNOTNIL(blockPtr, @"pointer to block");
+    MPWMachOInSectionPointer *descriptorPtr=[reader verifyBlockAndReturnDescriptor:blockPtr codeSymbol:@"_block_fn" descriptorSymbol:@"_global_block_descriptor"];
+    EXPECTNOTNIL(descriptorPtr, @"descriptor ptr");
+    [reader verifyBlockDescriptor:descriptorPtr signature:@"i12@?0i8" signatureSymbol:@"_global_block_sig"];
+    
 }
 
 
@@ -694,6 +751,7 @@
        @"testSegmentSizeIsOnlyDataNotRelocEntries",
        @"testSectionWritersAreUniqed",
        @"testMachOWriteNSStringLiteral",
+       @"testMachOWriteBlockStructures",
 		];
 }
 

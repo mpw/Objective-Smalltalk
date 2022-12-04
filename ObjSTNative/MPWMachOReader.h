@@ -54,6 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)dumpRelocationsOn:(MPWByteStream*)s;
 
+-(void)verifyBlockDescriptor:(MPWMachOInSectionPointer*)descriptorPointer signature:(NSString*)signature signatureSymbol:(NSString*)symbol;
+-(MPWMachOInSectionPointer*)verifyBlockAndReturnDescriptor:(MPWMachOInSectionPointer *)blockPointer codeSymbol:(NSString*)codeSymbol descriptorSymbol:(NSString*)descriptorSymbol;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

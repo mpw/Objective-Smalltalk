@@ -312,6 +312,32 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return [[[MPWMachOInSectionPointer alloc] initWithSection:section offset:[self symbolOffsetAt:symbolIndex]-[section address]] autorelease];
 }
 
+-(void)verifyBlockDescriptor:(MPWMachOInSectionPointer*)descriptorPointer signature:(NSString*)signature signatureSymbol:(NSString*)symbol
+{
+    const Mach_O_BlockDescriptor *descriptor = [descriptorPointer bytes];
+    INTEXPECT( descriptor->size, sizeof *descriptor, @"size");
+    long signatureOffset = ((void*)&(descriptor->signature) - (void*)descriptor);
+    INTEXPECT(signatureOffset,16,@"signatureoffset (from block descriptor)");
+    MPWMachORelocationPointer *signaturePointer = [descriptorPointer relocationPointerAtOffset:signatureOffset];
+    IDEXPECT( [signaturePointer targetName],symbol,@"symbol of signature");
+    IDEXPECT( [[signaturePointer targetPointer] stringValue], signature, @"signature");
+}
+
+-(MPWMachOInSectionPointer*)verifyBlockAndReturnDescriptor:(MPWMachOInSectionPointer *)blockPointer codeSymbol:(NSString*)codeSymbol descriptorSymbol:(NSString*)descriptorSymbol
+{
+    struct Block_struct *b=(struct Block_struct*)[blockPointer bytes];
+    long blockCodePointerOffset = ((void*)&(b->invoke) - (void*)b);
+    long blockDescriptorPointerOffset = ((void*)&(b->descriptor) - (void*)b);
+    INTEXPECT( blockDescriptorPointerOffset, 24,@"blockDescriptorPointerOffset");
+    HEXEXPECT( b->flags, 0x50000000,@"flags");
+    INTEXPECT( b->reserved, 0,@"reserved");
+    IDEXPECT([[blockPointer relocationPointerAtOffset:blockCodePointerOffset] targetName],codeSymbol,@"invoke fn");
+    IDEXPECT([[blockPointer relocationPointer] targetName],@"__NSConcreteGlobalBlock",@"block class reference");
+    MPWMachORelocationPointer *block2descriptor=[blockPointer relocationPointerAtOffset:blockDescriptorPointerOffset];
+    IDEXPECT([block2descriptor targetName],descriptorSymbol,@"descriptor");
+    MPWMachOInSectionPointer *descriptorPointer=[block2descriptor targetPointer];
+    return descriptorPointer;
+}
 
 
 @end
@@ -505,6 +531,11 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     IDEXPECT([[stringContentsPointer targetPointer] stringValue],@"hi",@"actual string value");
 }
 
+#define VERIFYUSING( method, arg ) @try { [self method:arg]; } @catch (NSException *e) { \
+NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#method,[e reason]]; \
+    EXPECTTRUE(false,reason);\
+}
+
 
 +(void)testReadBlock
 {
@@ -512,25 +543,9 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     int blockIndex = [reader indexOfSymbolNamed:@"___block_literal_global"];
     MPWMachOInSectionPointer *blockPointer=[reader pointerForSymbolAt:blockIndex];
     EXPECTNOTNIL(blockPointer, @"block pointer");
-    struct Block_struct *b=(struct Block_struct*)[blockPointer bytes];
-    long blockCodePointerOffset = ((void*)&(b->invoke) - (void*)b);
-    long blockDescriptorPointerOffset = ((void*)&(b->descriptor) - (void*)b);
-    INTEXPECT( blockDescriptorPointerOffset, 24,@"blockDescriptorPointerOffset");
-    INTEXPECT( b->flags, 0x50000000,@"flags");
-    INTEXPECT( b->reserved, 0,@"reserved");
-    IDEXPECT([[blockPointer relocationPointerAtOffset:blockCodePointerOffset] targetName],@"___bfn_block_invoke",@"invoke fn");
-    IDEXPECT([[blockPointer relocationPointer] targetName],@"__NSConcreteGlobalBlock",@"block class reference");
-    MPWMachORelocationPointer *block2descriptor=[blockPointer relocationPointerAtOffset:blockDescriptorPointerOffset];
-    IDEXPECT([block2descriptor targetName],@"___block_descriptor_tmp",@"descriptor");
-    MPWMachOInSectionPointer *descriptorPointer=[block2descriptor targetPointer];
-
-    const Mach_O_BlockDescriptor *descriptor = [descriptorPointer bytes];
-    INTEXPECT( descriptor->size, sizeof *descriptor, @"size");
-    long signatureOffset = ((void*)&(descriptor->signature) - (void*)descriptor);
-    INTEXPECT(signatureOffset,16,@"signatureoffset (from block descriptor)");
-    MPWMachORelocationPointer *signaturePointer = [descriptorPointer relocationPointerAtOffset:signatureOffset];
-    IDEXPECT( [signaturePointer targetName],@"l_.str",@"symbol of signature");
-    IDEXPECT( [[signaturePointer targetPointer] stringValue], @"i12@?0i8", @"signature");
+    MPWMachOInSectionPointer *descriptorPointer=[reader verifyBlockAndReturnDescriptor:blockPointer codeSymbol:@"___bfn_block_invoke" descriptorSymbol:@"___block_descriptor_tmp"];
+//    VERIFYUSING(verifyDescriptor, descriptorPointer);
+    [reader verifyBlockDescriptor:descriptorPointer signature:@"i12@?0i8" signatureSymbol:@"l_.str"];
 
 }
 
