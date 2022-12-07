@@ -25,6 +25,7 @@
 -(int)generateMessageSend:(MPWMessageExpression*)expr;
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr;
+-(int)generateBlockExpression:(MPWBlockExpression*)expr;
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 
@@ -54,7 +55,8 @@
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
     int returnRegister=0;
-    for ( id statement in self.statements ) {
+    NSLog(@"statements: %@",statements);
+    for ( id statement in [self statements] ) {
         returnRegister=[compiler generateCodeFor:statement];
     }
     return returnRegister;
@@ -101,11 +103,28 @@
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
-    [compiler generateAssignmentExpression:self];
+    return [compiler generateAssignmentExpression:self];
 }
+
 
 @end
 
+@implementation MPWBlockExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateBlockExpression:self];
+}
+
+-(NSString*)name
+{
+    NSLog(@"name called: %@",[NSThread callStackSymbols]);
+    return nil;
+}
+
+
+
+@end
 
 
 @implementation STNativeCompiler
@@ -155,6 +174,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
+-(int)generateBlockExpression:(MPWBlockExpression*)expr
+{
+    //--- retrieve the already generated block and return its address in register 0 (or possibly some other register)
+}
+
 -(int)generateStringLiteral:(NSString*)theString
 {
     if (self.jit) {
@@ -199,7 +223,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     MPWExpression *rhs = [expr rhs];
     MPWIdentifierExpression *lhs = [expr lhs];
     int registerForRHS = [self generateCodeFor:rhs];
+    NSLog(@"lhs: %@ / %@",lhs.class,lhs);
     NSString *lhsName = [lhs name];
+    NSLog(@"got the name: %@",lhsName);
     NSNumber *lhsRegisterNumber = self.variableToRegisterMap[lhsName];
     NSAssert1( lhsRegisterNumber, @"Don't have a variable named '%@'",lhsName);
     [self moveRegister:registerForRHS toRegister:lhsRegisterNumber.intValue];
@@ -369,6 +395,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
+    //--- retrieve all the blocks and generate them first
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
@@ -430,9 +457,39 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [writer writeFile];
 }
 
+-(void)compileBlock:(MPWBlockExpression*)aBlock
+{
+    NSString *symbol = @"_block_invoke";
+    self.variableToRegisterMap = [NSMutableDictionary dictionary];
+    //--- retrieve all the blocks and generate them first
+    [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+        int returnRegister=0;
+        id statements = [aBlock statements];
+        if ( [statements respondsToSelector:@selector(statements)]) {
+            statements=[statements statements];
+        }
+        if ( [statements respondsToSelector:@selector(count)]) {
+            for ( id statement in statements) {
+                returnRegister = [statement generateNativeCodeOn:self];
+            }
+        } else {
+            returnRegister = [statements generateNativeCodeOn:self];
+        }
+    }];
+    [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:@"_theBlock" signature:@"i" global:YES];
+}
+
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
 {
     [self compileClass:aClass];
+    return (NSData*)[writer target];
+}
+
+-(NSData*)compileBlockToMachoO:(MPWBlockExpression*)aBlock
+{
+    [self compileBlock:aBlock];
+    [writer addTextSectionData:[codegen target]];
+    [writer writeFile];
     return (NSData*)[writer target];
 }
 
@@ -619,9 +676,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
 }
 
-+(void)testJitCompileBlock
++(void)testMachOCompileBlock
 {
-//    EXPECTTRUE(false,@"implemented");
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ 3 }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockFromST.o" atomically:YES];
 }
 
 
@@ -642,7 +701,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testMachOCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
-//       @"testJitCompileBlock",
+       @"testMachOCompileBlock",
 			];
 }
 
