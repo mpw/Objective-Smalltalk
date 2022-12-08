@@ -156,7 +156,7 @@
 		1F59A722202C7D7800BE06F6 /* win_xcb.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A71C202C7D7800BE06F6 /* win_xcb.m */; };
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F59AD4729130D69009282D4 /* use_concatter.m in Resources */ = {isa = PBXBuildFile; fileRef = 1F59AD4329130D69009282D4 /* use_concatter.m */; };
+		1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */; };
 		1F5D768F25E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769125E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
@@ -414,7 +414,6 @@
 		1FAFD9861855BC5500EC5221 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FAFD9891855BC5500EC5221 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAABC4184BDBBA00086047 /* InfoPlist.strings */; };
 		1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB559EE290D61E0009AE4D0 /* STNativeCompiler.h */; };
-		1FB559F1290D61E0009AE4D0 /* STNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */; };
 		1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7AE3124DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7AE3224DB0F3000CCBE86 /* STBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */; };
@@ -3245,7 +3244,6 @@
 				1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */,
 				1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */,
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
-				1F59AD4729130D69009282D4 /* use_concatter.m in Resources */,
 				1F9AE9E628ED76BD00671748 /* two-classes.macho in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
 				1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */,
@@ -3419,7 +3417,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework\nif  [ -f ${tester}  ]  ; then\n   $tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 		1F084A2716DEB8A600ED2517 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3575,7 +3573,7 @@
 				1FDDE95E29029887002A4AA4 /* MPWMachOClassWriter.m in Sources */,
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
-				1FB559F1290D61E0009AE4D0 /* STNativeCompiler.m in Sources */,
+				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

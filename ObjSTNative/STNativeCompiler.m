@@ -475,6 +475,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         } else {
             returnRegister = [statements generateNativeCodeOn:self];
         }
+        [self moveRegister:returnRegister toRegister:0];
     }];
     [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:@"_theBlock" signature:@"i" global:YES];
 }
@@ -683,6 +684,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockFromST.o" atomically:YES];
 }
 
++(void)testMachOCompileBlockWithArg
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :cond | cond ifTrue:{ 'true' . } ifFalse:{ 'false' . }. }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/ifTrueBlock.o" atomically:YES];
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -702,6 +710,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
        @"testMachOCompileBlock",
+       @"testMachOCompileBlockWithArg",
 			];
 }
 
