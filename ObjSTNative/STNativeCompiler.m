@@ -347,31 +347,38 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
 
 
--(void)saveLocalRegistersAndMoveArgs:(MPWScriptedMethod*)method
+-(void)saveLocalRegisters:(NSArray*)localVars andMoveArgs:(NSArray*)args
 {
-    NSArray *localVars = [method localVars];
     int numLocalVars = (int)localVars.count;
-    int totalArguments=method.methodHeader.numArguments+2;
-//     self.currentLocalRegStack+=totalArguments;
+    int totalArguments=(int)args.count;
     self.currentLocalRegStack+=10;
     [self saveRegisters];
     
     self.currentLocalRegStack=self.localRegisterMin+totalArguments;
-
-    self.variableToRegisterMap[@"self"]=@(self.localRegisterMin);
+    
     [self moveRegister:0 toRegister:self.localRegisterMin];
-    for (int i=2;i<totalArguments;i++) {
+    for (int i=0;i<totalArguments;i++) {
         [self moveRegister:i toRegister:self.localRegisterMin+i];
-        self.variableToRegisterMap[[method.methodHeader argumentNameAtIndex:i-2]]=@(self.localRegisterMin+i);
+        self.variableToRegisterMap[args[i]]=@(self.localRegisterMin+i);
     }
-    //--- save registers needed 
+    //--- save registers needed
     for (int i=0;i<numLocalVars;i++) {
         [codegen clearRegister:self.localRegisterMin+i+totalArguments];
         self.variableToRegisterMap[localVars[i]]=@(self.localRegisterMin+i+totalArguments);
     }
 }
 
--(void)restoreLocalRegisters:(MPWScriptedMethod*)method
+-(void)saveLocalRegistersAndMoveArgs:(MPWScriptedMethod*)method
+{
+    NSArray *localVars = [method localVars];
+    NSMutableArray *arguments =[[@[ @"self" , @"_cmd"] mutableCopy] autorelease];
+    for (int i=0,max=method.methodHeader.numArguments;i<max;i++) {
+        [arguments addObject:[method.methodHeader argumentNameAtIndex:i]];
+    }
+    [self saveLocalRegisters:localVars andMoveArgs:arguments];
+}
+
+-(void)restoreLocalRegisters
 {
     int totalToRestore=self.savedRegisterMax - self.localRegisterMin;
     int numPairs = (totalToRestore+1)/2;
@@ -387,7 +394,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
     [self saveLocalRegistersAndMoveArgs:method];
     int returnRegister =  [method.methodBody generateNativeCodeOn:self];
-    [self restoreLocalRegisters:method];
+    [self restoreLocalRegisters];
     return returnRegister;
 }
 
@@ -463,7 +470,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     //--- retrieve all the blocks and generate them first
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+        
         int returnRegister=0;
+        NSArray *arguments=[aBlock arguments];
+        arguments=[@[@"thisBlock"] arrayByAddingObjectsFromArray:arguments];
+        [self saveLocalRegisters:@[] andMoveArgs:arguments];
         id statements = [aBlock statements];
         if ( [statements respondsToSelector:@selector(statements)]) {
             statements=[statements statements];
@@ -476,6 +487,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             returnRegister = [statements generateNativeCodeOn:self];
         }
         [self moveRegister:returnRegister toRegister:0];
+        [self restoreLocalRegisters];
     }];
     [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:@"_theBlock" signature:@"i" global:YES];
 }
@@ -687,8 +699,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testMachOCompileBlockWithArg
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :cond | cond ifTrue:{ 'true' . } ifFalse:{ 'false' . }. }"];
-    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/ifTrueBlock.o" atomically:YES];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArg.o" atomically:YES];
 }
 
 
