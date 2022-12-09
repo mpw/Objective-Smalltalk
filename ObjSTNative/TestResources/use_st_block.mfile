@@ -4,7 +4,6 @@
 extern id (^theBlock)();
 
 int main(void) {
-    [MPWBlockContext new];
     id b = [theBlock value:@(20)];
     printf("b=%p\n",b);
     NSLog(@"b=%@",b);

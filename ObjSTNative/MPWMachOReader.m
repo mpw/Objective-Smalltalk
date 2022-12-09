@@ -332,7 +332,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     HEXEXPECT( b->flags, 0x50000000,@"flags");
     INTEXPECT( b->reserved, 0,@"reserved");
     IDEXPECT([[blockPointer relocationPointerAtOffset:blockCodePointerOffset] targetName],codeSymbol,@"invoke fn");
-    IDEXPECT([[blockPointer relocationPointer] targetName],@"__NSConcreteGlobalBlock",@"block class reference");
+//    IDEXPECT([[blockPointer relocationPointer] targetName],@"__NSConcreteGlobalBlock",@"block class reference");
     MPWMachORelocationPointer *block2descriptor=[blockPointer relocationPointerAtOffset:blockDescriptorPointerOffset];
     IDEXPECT([block2descriptor targetName],descriptorSymbol,@"descriptor");
     MPWMachOInSectionPointer *descriptorPointer=[block2descriptor targetPointer];

@@ -718,9 +718,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(void)testJITCompileBlockWithArg
 {
-    STNativeCompiler *compiler = [self compiler];
-    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
-    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArg.o" atomically:YES];
+    STNativeCompiler *compiler = [self jitCompiler];
+    MPWBlockInvocable * compiledBlock = [compiler evaluateScriptString:@"{ :a | a + 3. }"];
+    IDEXPECT( [compiledBlock value:@(12)],@(15),@"jitted block");
 }
 
 
@@ -744,6 +744,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testMachOCompileBlock",
        @"testMachOCompileBlockWithArg",
        @"testMachOCompileAndRunBlockWithArg",
+       @"testJITCompileBlockWithArg",
 			];
 }
 
