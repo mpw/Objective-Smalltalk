@@ -157,6 +157,7 @@
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */; };
+		1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F5BBA2929434BD600C3D345 /* use_st_block.mfile */; };
 		1F5D768F25E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769125E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
@@ -974,6 +975,7 @@
 		1F59A71C202C7D7800BE06F6 /* win_xcb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = win_xcb.m; sourceTree = "<group>"; };
 		1F59A71D202C7D7800BE06F6 /* x11fs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x11fs.h; sourceTree = "<group>"; };
 		1F59AD4329130D69009282D4 /* use_concatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_concatter.m; sourceTree = "<group>"; };
+		1F5BBA2929434BD600C3D345 /* use_st_block.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_st_block.mfile; sourceTree = "<group>"; };
 		1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionSenderPort.h; sourceTree = "<group>"; };
 		1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionSenderPort.m; sourceTree = "<group>"; };
 		1F5D768D25E98F6E00DCC82F /* STPortScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPortScheme.h; sourceTree = "<group>"; };
@@ -1728,6 +1730,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F5BBA2929434BD600C3D345 /* use_st_block.mfile */,
 				1FD405C229334F6F000F4122 /* function-passing-nsstring.macho */,
 				1FD405BE293267F5000F4122 /* function-calling-block.macho */,
 				1FD405BF293267F5000F4122 /* function-passing-block.macho */,
@@ -3241,6 +3244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FD405C329334F6F000F4122 /* function-passing-nsstring.macho in Resources */,
+				1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */,
 				1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */,
 				1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */,
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,

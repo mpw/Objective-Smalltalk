@@ -5,8 +5,12 @@ extern id (^theBlock)();
 
 int main(void) {
     [MPWBlockContext new];
-    id b = [theBlock value];
+    id b = [theBlock value:@(20)];
     printf("b=%p\n",b);
     NSLog(@"b=%@",b);
-    return 0;
+    if ([b intValue]==23) {
+        return 0;
+    } else {
+        return 1;
+    }
 }

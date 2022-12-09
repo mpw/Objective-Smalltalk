@@ -703,6 +703,26 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArg.o" atomically:YES];
 }
 
++(void)testMachOCompileAndRunBlockWithArg
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArgToLink.o" atomically:YES];
+    [[self frameworkResource:@"use_st_block" category:@"mfile"] writeToFile:@"/tmp/use_st_block.m" atomically:YES];
+    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_st_block use_st_block.m blockWithArgToLink.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    INTEXPECT(compileSucess,0,@"compile worked");
+    int runSucess = system("cd /tmp; ./use_st_block");
+    INTEXPECT(runSucess,0,@"run worked");
+
+}
+
++(void)testJITCompileBlockWithArg
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArg.o" atomically:YES];
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -723,6 +743,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testJitCompileMethodWithLocalVariables",
        @"testMachOCompileBlock",
        @"testMachOCompileBlockWithArg",
+       @"testMachOCompileAndRunBlockWithArg",
 			];
 }
 
