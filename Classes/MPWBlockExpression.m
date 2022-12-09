@@ -10,6 +10,7 @@
 #import "MPWBlockContext.h"
 #import <MPWFoundation/NSNil.h>
 #import "MPWIdentifier.h"
+#import "MPWStatementList.h"
 
 @implementation MPWBlockExpression
 
@@ -22,6 +23,15 @@ idAccessor( declaredArguments, setDeclaredArguments )
 	[self setStatements:newStatements];
 	[self setDeclaredArguments:newArgNames];
 	return self;
+}
+
+-statementArray
+{
+    id statements = [self statements];
+    while ( [statements isKindOfClass:[MPWStatementList class]]) {
+        statements=[statements statements];
+    }
+    return statements;
 }
 
 +blockWithStatements:newStatements arguments:newArgNames
@@ -43,6 +53,8 @@ idAccessor( declaredArguments, setDeclaredArguments )
 {
 	[statements addToVariablesRead:variablesRead];
 }
+
+
 
 -(NSArray*)implicitUsedArguments
 {

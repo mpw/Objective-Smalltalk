@@ -49,6 +49,11 @@
     return [compiler generateCodeForExpression:self];
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+
+}
+
 @end
 @implementation MPWStatementList(nativeCode)
 
@@ -62,6 +67,14 @@
     return returnRegister;
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    for ( id statement in [self statements] ) {
+        [statement accumulateBlocks:blocks];
+    }
+}
+
+
 @end
 @implementation MPWMessageExpression(nativeCode)
 
@@ -69,6 +82,15 @@
 {
     return [compiler generateMessageSend:self];
 }
+
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    [[self receiver] accumulateBlocks:blocks];
+    for ( id arg in [self args] ) {
+        [arg accumulateBlocks:blocks];
+    }
+}
+
 
 @end
 
@@ -122,6 +144,13 @@
     return nil;
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    for ( id statement in [self statementArray] ) {
+        [statement accumulateBlocks:blocks];
+    }
+    [blocks addObject:self];
+}
 
 
 @end
@@ -506,6 +535,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return (NSData*)[writer target];
 }
 
+-(NSArray*)findBlocksInMethod:(MPWScriptedMethod*)aMethod
+{
+    NSMutableArray *blocks=[NSMutableArray array];
+    [aMethod.methodBody accumulateBlocks:blocks];
+    return blocks;
+}
+
 
 @end
 
@@ -723,6 +759,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT( [compiledBlock value:@(12)],@(15),@"jitted block");
 }
 
++(void)testFindBlocksInMethod
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
+    MPWScriptedMethod *firstMethod = [[theClass methods] firstObject];
+    IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
+    NSArray *blocks = [compiler findBlocksInMethod:firstMethod];
+    INTEXPECT(blocks.count, 2,@"number of blocks in method");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -745,6 +791,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testMachOCompileBlockWithArg",
        @"testMachOCompileAndRunBlockWithArg",
        @"testJITCompileBlockWithArg",
+       @"testFindBlocksInMethod",
 			];
 }
 

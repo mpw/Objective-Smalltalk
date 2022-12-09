@@ -17,5 +17,6 @@
 +blockWithStatements:newStatements arguments:newArgs;
 
 -(NSArray*)arguments;
+-statementArray;
 
 @end
