@@ -1,10 +1,10 @@
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 
 
-extern id (^theBlock)();
+extern id (^theBlock_l1)();
 
 int main(void) {
-    id b = [theBlock value:@(20)];
+    id b = [theBlock_l1 value:@(20)];
     printf("b=%p\n",b);
     NSLog(@"b=%@",b);
     if ([b intValue]==23) {

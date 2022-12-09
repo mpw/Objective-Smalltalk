@@ -19,4 +19,6 @@
 -(NSArray*)arguments;
 -statementArray;
 
+@property (nonatomic, strong ) NSString *symbol;
+
 @end

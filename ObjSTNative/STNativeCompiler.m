@@ -161,6 +161,7 @@
     MPWARMObjectCodeGenerator* codegen;
     MPWMachOWriter *writer;
     MPWMachOClassWriter *classwriter;
+    int blockNo;
 }
 
 objectAccessor(MPWARMObjectCodeGenerator*, codegen, setCodegen)
@@ -205,7 +206,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateBlockExpression:(MPWBlockExpression*)expr
 {
-    //--- retrieve the already generated block and return its address in register 0 (or possibly some other register)
+    NSAssert1( expr.symbol != nil, @"blockmust have a symbol: %@",expr);
+    unsigned int adrp=[codegen adrpToDestReg:0 withPageOffset:0];
+    [codegen addRelocationEntryForSymbol:expr.symbol relativeOffset:0 type:ARM64_RELOC_PAGE21 relative:YES];
+    [codegen appendWord32:adrp];
+    [codegen addRelocationEntryForSymbol:expr.symbol relativeOffset:0 type:ARM64_RELOC_PAGEOFF12 relative:NO];
+    [codegen generateAddDest:0 source:0 immediate:0];
+    return 0;
 }
 
 -(int)generateStringLiteral:(NSString*)theString
@@ -429,6 +436,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
 {
+    NSArray *blocks = [self findBlocksInMethod:method];
+    for ( MPWBlockExpression *block in blocks ) {
+        NSString *blockSymbol = [self compileBlock:block];
+        block.symbol = blockSymbol;
+    }
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     //--- retrieve all the blocks and generate them first
@@ -493,16 +505,18 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [writer writeFile];
 }
 
--(void)compileBlock:(MPWBlockExpression*)aBlock
+
+-(NSString*)compileBlock:(MPWBlockExpression*)aBlock
 {
-    NSString *symbol = @"_block_invoke";
+    blockNo++;
+    NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     //--- retrieve all the blocks and generate them first
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         
         int returnRegister=0;
         NSArray *arguments=[aBlock arguments];
-        arguments=[@[@"thisBlock"] arrayByAddingObjectsFromArray:arguments];
+        arguments=[@[@"_thisBlock"] arrayByAddingObjectsFromArray:arguments];
         [self saveLocalRegisters:@[] andMoveArgs:arguments];
         id statements = [aBlock statements];
         if ( [statements respondsToSelector:@selector(statements)]) {
@@ -518,7 +532,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self moveRegister:returnRegister toRegister:0];
         [self restoreLocalRegisters];
     }];
-    [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:@"_theBlock" signature:@"i" global:YES];
+    NSString *blockSymbol = [NSString stringWithFormat:@"_theBlock_l%d",blockNo];
+    [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:blockSymbol signature:@"i" global:YES];
+    return blockSymbol;
 }
 
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
@@ -587,6 +603,29 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([classReader methodNameAt:0].targetPointer.stringValue,@"hashPlus200",@"name of method");
     IDEXPECT([classReader methodTypesAt:0].targetPointer.stringValue,@"l@:",@"type of method");
     IDEXPECT([classReader methodCodeAt:0].targetName,@"-[TestClass hashPlus200]",@"symbol for method code");
+}
+
++(void)testCompileSimpleClassWithTwoMethods
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition * compiledClass = [compiler compile:@" class TestClass2Methods : NSObject {  -<int>hashPlus100 { self hash + 100. } -<int>hashPlus200  { self hash + 200. }}"];
+    IDEXPECT( compiledClass.name, @"TestClass2Methods", @"top level result");
+    INTEXPECT( compiledClass.methods.count,2,@"method count");
+    INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
+    NSData *macho=[compiler compileClassToMachoO:compiledClass];
+    [macho writeToFile:@"/tmp/testclass2methods-from-source.o" atomically:YES];
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
+    EXPECTTRUE(reader.isHeaderValid, @"got a macho");
+    INTEXPECT([reader classReaders].count,1,@"number of classes" );
+    MPWMachOClassReader *classReader = [reader classReaders].firstObject;
+    IDEXPECT(classReader.nameOfClass, @"TestClass2Methods", @"name of class");
+    IDEXPECT(classReader.superclassPointer.targetName, @"_OBJC_CLASS_$_NSObject", @"symbol for superclass");
+    INTEXPECT(classReader.numberOfMethods, 2,@"number of methods");
+    IDEXPECT([classReader methodNameAt:0].targetPointer.stringValue,@"hashPlus100",@"name of method");
+    IDEXPECT([classReader methodNameAt:1].targetPointer.stringValue,@"hashPlus200",@"name of method");
+    IDEXPECT([classReader methodTypesAt:0].targetPointer.stringValue,@"l@:",@"type of method");
+    IDEXPECT([classReader methodCodeAt:0].targetName,@"-[TestClass2Methods hashPlus100]",@"symbol for method code");
+    IDEXPECT([classReader methodCodeAt:1].targetName,@"-[TestClass2Methods hashPlus200]",@"symbol for method code");
 }
 
 +(void)testCompileMethodWithMultipleArgs
@@ -767,6 +806,26 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
     NSArray *blocks = [compiler findBlocksInMethod:firstMethod];
     INTEXPECT(blocks.count, 2,@"number of blocks in method");
+    MPWBlockExpression *trueBlock = blocks.firstObject;
+    MPWBlockExpression *falseBlock = blocks.lastObject;
+    MPWLiteralExpression *trueLiteral = [[trueBlock statementArray] firstObject];
+    MPWLiteralExpression *falseLiteral = [[falseBlock statementArray] lastObject];
+    IDEXPECT( trueLiteral.theLiteral, @"trueBlock",@"true block literal");
+    IDEXPECT( falseLiteral.theLiteral, @"falseBlock",@"false block literal");
+}
+
++(void)testGenerateCodeForBlocksInMethod
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestClassIfTrueIfFalse { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
+    [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithIfTrueIfFalse.o" atomically:YES];
+
+ 
+    [[self frameworkResource:@"use_class_with_if" category:@"mfile"] writeToFile:@"/tmp/use_class_with_if.m" atomically:YES];
+    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_with_if use_class_with_if.m classWithIfTrueIfFalse.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    INTEXPECT(compileSucess,0,@"compile worked");
+    int runSucess = system("cd /tmp; ./use_class_with_if");
+    INTEXPECT(runSucess,0,@"run worked");
 }
 
 
@@ -775,6 +834,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
    return @[
        @"testCompileSimpleClassAndMethod",
        @"testCompileMethodWithMultipleArgs",
+       @"testCompileSimpleClassWithTwoMethods",
        @"testJitCompileAMethod",
        @"testJitCompileNumberObjectLiteral",
        @"testJitCompileAMethodMoreCompactly",
@@ -792,6 +852,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testMachOCompileAndRunBlockWithArg",
        @"testJITCompileBlockWithArg",
        @"testFindBlocksInMethod",
+       @"testGenerateCodeForBlocksInMethod",
 			];
 }
 
