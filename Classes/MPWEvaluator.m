@@ -46,7 +46,8 @@
 	} else {
 		blockToEval=falseBlock;
 	}
-	return [blockToEval value];
+    id result = [blockToEval value];
+	return result;
 }
 
 -ifTrue:trueBlock

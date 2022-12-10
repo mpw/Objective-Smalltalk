@@ -351,8 +351,8 @@
     MPWMachOSectionWriter *blockWriter=[self constWriter];
     MPWMachOSectionWriter *dataWriter=[self dataWriter];
 
-//    [self declareExternalSymbol:@"__NSConcreteGlobalBlock"];
-    [self declareExternalSymbol:@"_OBJC_CLASS_$_MPWBlock"];
+    [self declareExternalSymbol:@"__NSConcreteGlobalBlock"];
+//    [self declareExternalSymbol:@"_OBJC_CLASS_$_MPWBlock"];
 
     [cstringWriter declareLocalSymbol:signatureSymbol];
     [cstringWriter appendBytes:[signature UTF8String] length:[signature length]];
@@ -373,8 +373,8 @@
     long descriptorPtrOffset=((void*)&block.descriptor) - (void*)&block;
 
     [blockWriter declareLocalSymbol:blockConstSymbol];
-    [blockWriter addRelocationEntryForSymbol:@"_OBJC_CLASS_$_MPWBlock" atOffset:[blockWriter length]];
-//    [blockWriter addRelocationEntryForSymbol:@"__NSConcreteGlobalBlock" atOffset:[blockWriter length]];
+//    [blockWriter addRelocationEntryForSymbol:@"_OBJC_CLASS_$_MPWBlock" atOffset:[blockWriter length]];
+    [blockWriter addRelocationEntryForSymbol:@"__NSConcreteGlobalBlock" atOffset:[blockWriter length]];
     [blockWriter addRelocationEntryForSymbol:codeSymbol atOffset:(int)codePtrOffset+[blockWriter length]];
     [blockWriter addRelocationEntryForSymbol:descriptorSymbol atOffset:(int)descriptorPtrOffset+[blockWriter length]];
     [blockWriter appendBytes:&block length:sizeof block];

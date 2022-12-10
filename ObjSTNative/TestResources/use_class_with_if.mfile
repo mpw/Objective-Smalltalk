@@ -7,6 +7,8 @@
 
 
 int main(void) {
+    [MPWBlock new];
+    [MPWBlockContext class];
     id tester = [TestClassIfTrueIfFalse new];
     NSLog(@"tester: %@",tester);
     id trueObject=@(true);
