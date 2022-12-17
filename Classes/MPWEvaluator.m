@@ -71,7 +71,6 @@ idAccessor( _schemes, _setSchemes )
 
 -(void)setSchemes:(id)schemes
 {
-//    NSLog(@"%p/%@ setSchemes:%p (old %p)",self,[self class],schemes,_schemes);
     [self _setSchemes:schemes];
 }
 

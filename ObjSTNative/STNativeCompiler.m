@@ -60,7 +60,7 @@
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
     int returnRegister=0;
-    NSLog(@"statements: %@",statements);
+//    NSLog(@"statements: %@",statements);
     for ( id statement in [self statements] ) {
         returnRegister=[compiler generateCodeFor:statement];
     }

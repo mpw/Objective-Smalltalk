@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWMachOSection*)cfstringSection;
 -(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
 -(NSArray<MPWMachORelocationPointer*>*)classPointers;
+-(NSArray<MPWMachORelocationPointer*>*)classReferences;
+
 -(NSArray<MPWMachOClassReader*>*)classReaders;
 -(MPWMachOInSectionPointer*)pointerForSymbolAt:(int)symbolIndex;
 

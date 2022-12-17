@@ -196,6 +196,11 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return [self sectionWithName:"__objc_classlist"];
 }
 
+-(MPWMachOSection*)objcClassReferenceSection
+{
+    return [self sectionWithName:"__objc_classref"];
+}
+
 -(MPWMachOSection*)objcMethodNamesSection
 {
     return [self sectionWithName:"__objc_methname"];
@@ -213,6 +218,21 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     NSMutableArray *classes = [NSMutableArray array];
     for (int i=0;i<[self numberOfClasses];i++) {
         [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:classListSection relocEntryIndex:i] autorelease]];;
+    }
+    return classes;
+}
+
+-(int)numberOfClassReferences
+{
+    return [self.objcClassReferenceSection numRelocEntries];
+}
+
+-(NSArray<MPWMachORelocationPointer*>*)classReferences
+{
+    MPWMachOSection *classRefSection=self.objcClassReferenceSection;
+    NSMutableArray *classes = [NSMutableArray array];
+    for (int i=0;i<[self numberOfClassReferences];i++) {
+        [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:classRefSection relocEntryIndex:i] autorelease]];;
     }
     return classes;
 }
@@ -549,6 +569,16 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
 
 }
 
++(void)testReadClassReferences
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"use_class"];
+    EXPECTNOTNIL(reader, @"reader for use_class.macho");
+    INTEXPECT(reader.numberOfClassReferences,2,@"number of class references");
+    NSArray <MPWMachORelocationPointer*> *refs=[reader classReferences];
+    INTEXPECT(refs.count,2,@"number of refs again");
+    IDEXPECT(refs.firstObject.targetName, @"_OBJC_CLASS_$_NSObject",@"class ref");
+    IDEXPECT(refs.lastObject.targetName, @"_OBJC_CLASS_$_NSNumber",@"class ref");
+}
 
 
 +(NSArray*)testSelectors
@@ -565,6 +595,7 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
        @"testGetClassPointers",
        @"testReadObjectiveC_StringConstant",
        @"testReadBlock",
+       @"testReadClassReferences",
 
 			];
 }
