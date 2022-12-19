@@ -237,6 +237,14 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return classes;
 }
 
+-(NSArray<NSString*>*)classReferenceNames
+{
+    int prefixLen=@"_OBJC_CLASS_$_".length;
+    NSArray *targetNames = [[[self classReferences] collect] targetName];
+    NSArray *classNames = [[targetNames collect] substringFromIndex:prefixLen];
+    return classNames;
+}
+
 -(NSArray<MPWMachOClassReader*>*)classReaders
 {
     return [[MPWMachOClassReader collect] readerWithPointer:[[self classPointers] each] ];
@@ -576,8 +584,14 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     INTEXPECT(reader.numberOfClassReferences,2,@"number of class references");
     NSArray <MPWMachORelocationPointer*> *refs=[reader classReferences];
     INTEXPECT(refs.count,2,@"number of refs again");
-    IDEXPECT(refs.firstObject.targetName, @"_OBJC_CLASS_$_NSObject",@"class ref");
-    IDEXPECT(refs.lastObject.targetName, @"_OBJC_CLASS_$_NSNumber",@"class ref");
+    MPWMachORelocationPointer *first=refs.firstObject;
+    MPWMachORelocationPointer *last=refs.lastObject;
+
+    IDEXPECT(first.targetName, @"_OBJC_CLASS_$_NSObject",@"class ref");
+    IDEXPECT(last.targetName, @"_OBJC_CLASS_$_NSNumber",@"class ref");
+    NSArray *names=[reader classReferenceNames];
+    NSArray *expectedNames = @[ @"NSObject", @"NSNumber"];
+    IDEXPECT( names, expectedNames, @"class names");
 }
 
 

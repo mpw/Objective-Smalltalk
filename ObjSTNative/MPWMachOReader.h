@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSData *data;
 @property (readonly) int numSections;
+@property (readonly) int numberOfClassReferences;
 
 
 +(instancetype)readerWithData:(NSData*)machodata;

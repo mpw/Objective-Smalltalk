@@ -289,6 +289,11 @@
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__string" flags:0];
 }
 
+-(MPWMachOSectionWriter*)classRefWriter
+{
+    return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classref" flags:0];
+}
+
 -(MPWMachOSectionWriter*)constWriter
 {
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__const" flags:0];
@@ -340,6 +345,17 @@
     [cfstringWriter addRelocationEntryForSymbol:contentLabel atOffset:(int)offset];
     [cfstringWriter appendBytes:&str length:sizeof str];
 }
+
+-(void)addClassRefernceForClass:(NSString*)className
+{
+    NSString *externalSymbolName=[@"_OBJC_CLASS_$_" stringByAppendingString:className];
+    const char zerobytes[8]={0,0,0,0,0,0,0,0};
+    MPWMachOSectionWriter *refWRiter=[self classRefWriter];
+    [self declareExternalSymbol:externalSymbolName];
+    [refWRiter addRelocationEntryForSymbol:externalSymbolName atOffset:0];
+    [refWRiter appendBytes:zerobytes length:8];
+}
+
 
 -(void)writeBlockLiteralWithCodeAtSymbol:(NSString*)codeSymbol blockSymbol:(NSString*)blockSymbol signature:(NSString*)signature global:(BOOL)global
 {
@@ -761,6 +777,31 @@
     
 }
 
++(void)testWriteClassReferences
+{
+    MPWMachOWriter *writer=[self stream];
+    [writer addClassRefernceForClass:@"NSObject"];
+    [writer addClassRefernceForClass:@"NSNumber"];
+//    [writer addClassRefernceForClass:@"NSObject"];
+
+    
+    NSData *macho=[writer data];
+    MPWMachOReader *reader=[MPWMachOReader readerWithData:macho];
+    INTEXPECT(reader.numberOfClassReferences,2,@"number of class references");
+    NSArray <MPWMachORelocationPointer*> *refs=[reader classReferences];
+    INTEXPECT(refs.count,2,@"number of refs again");
+    MPWMachORelocationPointer *first=refs.firstObject;
+    MPWMachORelocationPointer *last=refs.lastObject;
+    
+    IDEXPECT(first.targetName, @"_OBJC_CLASS_$_NSObject",@"class ref");
+    IDEXPECT(last.targetName, @"_OBJC_CLASS_$_NSNumber",@"class ref");
+    NSArray *names=[reader classReferenceNames];
+    NSArray *expectedNames = @[ @"NSObject", @"NSNumber"];
+    IDEXPECT( names, expectedNames, @"class names");
+}
+
+
+
 
 +(NSArray*)testSelectors
 {
@@ -776,6 +817,7 @@
        @"testSectionWritersAreUniqed",
        @"testMachOWriteNSStringLiteral",
        @"testMachOWriteBlockStructures",
+       @"testWriteClassReferences",
 		];
 }
 
