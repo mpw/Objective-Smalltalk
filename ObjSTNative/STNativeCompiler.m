@@ -200,7 +200,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     if ( registerNumber ) {
         return registerNumber.intValue;
     }  else {
-        [NSException raise:@"unknown" format:@"not found, identifier: %@ in names: %@",name,self.variableToRegisterMap];
+        if ( [[expr.identifier schemeName] isEqual:@"class"])  {
+            [NSException raise:@"unhandled" format:@"don't know how to compile class reference: %@",name];
+        } else {
+            [NSException raise:@"unknown" format:@"not found, identifier: %@ in names: %@",name,self.variableToRegisterMap];
+        }
         return 0;
     }
 }
@@ -822,13 +826,27 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     STNativeCompiler *compiler = [self compiler];
     MPWClassDefinition *theClass = [compiler compile:@"class TestClassIfTrueIfFalse { -tester:cond { cond ifTrue: { 3. } ifFalse:{ 2. }. } }"];
     [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithIfTrueIfFalse.o" atomically:YES];
-
- 
+    
+    
     [[self frameworkResource:@"use_class_with_if" category:@"mfile"] writeToFile:@"/tmp/use_class_with_if.m" atomically:YES];
     int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_with_if use_class_with_if.m classWithIfTrueIfFalse.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
     INTEXPECT(compileSucess,0,@"compile worked");
-//    int runSucess = system("cd /tmp; ./use_class_with_if");
-//    INTEXPECT(runSucess,0,@"run worked");
+    //    int runSucess = system("cd /tmp; ./use_class_with_if");
+    //    INTEXPECT(runSucess,0,@"run worked");
+}
+
++(void)testGenerateCodeForClassReference
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestClassWithClassRef { -tester { class:NSObject new. } }"];
+    [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classThatCreatesNSObjects.o" atomically:YES];
+    
+    
+    [[self frameworkResource:@"use_class_that_creates_nsobject" category:@"mfile"] writeToFile:@"/tmp/use_class_that_creates_nsobject.m" atomically:YES];
+    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_that_creates_nsobject use_class_that_creates_nsobject.m classThatCreatesNSObjects.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    INTEXPECT(compileSucess,0,@"compile worked");
+    //    int runSucess = system("cd /tmp; ./use_class_with_if");
+    //    INTEXPECT(runSucess,0,@"run worked");
 }
 
 
@@ -856,6 +874,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testJITCompileBlockWithArg",
        @"testFindBlocksInMethod",
        @"testGenerateCodeForBlocksInMethod",
+       @"testGenerateCodeForClassReference",
 			];
 }
 
