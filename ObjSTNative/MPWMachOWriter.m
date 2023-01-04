@@ -32,6 +32,7 @@
 @property (nonatomic, strong) MPWMachOSectionWriter *textSectionWriter;
 @property (nonatomic, strong) NSMutableArray<MPWMachOSectionWriter*>* sectionWriters;
 @property (nonatomic, strong) NSMutableDictionary *sectionWritersByKind;
+@property (nonatomic, strong) NSMutableDictionary *classReferences;
 
 //@property (nonatomic, strong) NSMutableDictionary *relocationEntries;
 
@@ -111,6 +112,7 @@
         [self.stringTableWriter appendBytes:"" length:1];
         self.stringTableOffsets=[NSMutableDictionary dictionary];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
+        self.classReferences=[NSMutableDictionary dictionary];
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
         self.textSectionWriter.relocationType=ARM64_RELOC_BRANCH26;
         self.textSectionWriter.relocationLength=2;
@@ -346,14 +348,21 @@
     [cfstringWriter appendBytes:&str length:sizeof str];
 }
 
--(void)addClassRefernceForClass:(NSString*)className
+-(NSString*)addClassRefernceForClass:(NSString*)className
 {
-    NSString *externalSymbolName=[@"_OBJC_CLASS_$_" stringByAppendingString:className];
-    const char zerobytes[8]={0,0,0,0,0,0,0,0};
-    MPWMachOSectionWriter *refWRiter=[self classRefWriter];
-    [self declareExternalSymbol:externalSymbolName];
-    [refWRiter addRelocationEntryForSymbol:externalSymbolName atOffset:0];
-    [refWRiter appendBytes:zerobytes length:8];
+    NSString *localReferenceName=self.classReferences[className];
+    if ( localReferenceName == nil ) {
+        NSString *externalSymbolName=[@"_OBJC_CLASS_$_" stringByAppendingString:className];
+        localReferenceName=[@"_OBJC_CLASS_REF_"  stringByAppendingString:className];
+        const char zerobytes[8]={0,0,0,0,0,0,0,0};
+        MPWMachOSectionWriter *refWriter=[self classRefWriter];
+        [self declareExternalSymbol:externalSymbolName];
+        [refWriter declareLocalSymbol:localReferenceName];
+        [refWriter addRelocationEntryForSymbol:externalSymbolName atOffset:0];
+        [refWriter appendBytes:zerobytes length:8];
+        self.classReferences[className]=localReferenceName;
+    }
+    return localReferenceName;
 }
 
 
@@ -782,7 +791,7 @@
     MPWMachOWriter *writer=[self stream];
     [writer addClassRefernceForClass:@"NSObject"];
     [writer addClassRefernceForClass:@"NSNumber"];
-//    [writer addClassRefernceForClass:@"NSObject"];
+    [writer addClassRefernceForClass:@"NSObject"];
 
     
     NSData *macho=[writer data];

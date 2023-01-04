@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
 -(NSArray<MPWMachORelocationPointer*>*)classPointers;
 -(NSArray<MPWMachORelocationPointer*>*)classReferences;
+-(NSArray<NSString*>*)classReferenceNames;
 
 -(NSArray<MPWMachOClassReader*>*)classReaders;
 -(MPWMachOInSectionPointer*)pointerForSymbolAt:(int)symbolIndex;
