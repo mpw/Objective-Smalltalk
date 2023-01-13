@@ -17,6 +17,7 @@
 		1F0F13E618D18C86008B5E80 /* MPWStsh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* MPWStsh.h */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
+		1F1A64732971822A00B8776C /* use_class_that_creates_nsobject.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */; };
 		1F1BE5F7224D2FAF002D58AC /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
@@ -845,6 +846,7 @@
 		1F0F13E518D18C86008B5E80 /* MPWStsh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStsh.h; sourceTree = "<group>"; };
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
 		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
+		1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_class_that_creates_nsobject.mfile; sourceTree = "<group>"; };
 		1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWSketching.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
 		1F1F57FB083395A000D3275A /* MPWMethodHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodHeader.m; sourceTree = "<group>"; };
@@ -1734,6 +1736,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */,
 				1F5BBA35294DEC1200C3D345 /* use_class.macho */,
 				1F5BBA2929434BD600C3D345 /* use_st_block.mfile */,
 				1F5BBA332943BC4000C3D345 /* use_class_with_if.mfile */,
@@ -3257,6 +3260,7 @@
 				1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */,
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
 				1F9AE9E628ED76BD00671748 /* two-classes.macho in Resources */,
+				1F1A64732971822A00B8776C /* use_class_that_creates_nsobject.mfile in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
 				1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */,
 				1F9AE9E028E825C600671748 /* call-external-fn.macho in Resources */,

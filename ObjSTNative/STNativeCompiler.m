@@ -194,9 +194,17 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
  
 
--(void)generateClassReference:(NSString*)className
+-(int)generateClassReference:(NSString*)className
 {
-    NSAssert1(false,@"don't know how to compile class reference: %@",className);
+    
+    NSString *classRefLabel = [writer addClassRefernceForClass:className];
+    [codegen addRelocationEntryForSymbol:classRefLabel relativeOffset:0 type:ARM64_RELOC_PAGE21 relative:YES];
+    [codegen appendWord32:[codegen adrpToDestReg:0 withPageOffset:0]];
+    [codegen addRelocationEntryForSymbol:classRefLabel relativeOffset:0 type:ARM64_RELOC_PAGEOFF12 relative:NO];
+    [codegen generateAddDest:0 source:0 immediate:0];
+    [codegen loadRegister:0 fromContentsOfAdressInRegister:0];
+    return 0;
+//    NSAssert1(false,@"don't know how to compile class reference: %@",className);
 }
 
 -(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr
@@ -207,7 +215,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return registerNumber.intValue;
     }  else {
         if ( [[expr.identifier schemeName] isEqual:@"class"])  {
-            [self generateClassReference:name];
+            return [self generateClassReference:name];
         } else {
             [NSException raise:@"unknown" format:@"not found, identifier: %@ in names: %@",name,self.variableToRegisterMap];
         }
@@ -851,8 +859,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[self frameworkResource:@"use_class_that_creates_nsobject" category:@"mfile"] writeToFile:@"/tmp/use_class_that_creates_nsobject.m" atomically:YES];
     int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_that_creates_nsobject use_class_that_creates_nsobject.m classThatCreatesNSObjects.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
     INTEXPECT(compileSucess,0,@"compile worked");
-    //    int runSucess = system("cd /tmp; ./use_class_with_if");
-    //    INTEXPECT(runSucess,0,@"run worked");
+    int runSucess = system("cd /tmp; ./use_class_that_creates_nsobject");
+    INTEXPECT(runSucess,0,@"run worked");
 }
 
 
@@ -880,7 +888,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testJITCompileBlockWithArg",
        @"testFindBlocksInMethod",
        @"testGenerateCodeForBlocksInMethod",
-//       @"testGenerateCodeForClassReference",
+       @"testGenerateCodeForClassReference",
 			];
 }
 
