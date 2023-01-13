@@ -1,0 +1,15 @@
+
+#import <Foundation/Foundation.h>
+
+@interface TestClassWithClassRef:NSObject {}
+-tester;
+@end
+
+int main(void) {
+    TestClassWithClassRef *testinstance=[TestClassWithClassRef new];
+    NSLog(@"testinstance: %@",testinstance);
+    NSLog(@"will send msg 'tester''");
+    id testObject=[testinstance tester];
+    NSLog(@"testObject: %@",testObject);
+    return 0;
+}
