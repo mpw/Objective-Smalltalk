@@ -15,7 +15,7 @@
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import "MPWJittableData.h"
 #import <mach-o/arm64/reloc.h>
-
+#import "MPWClassScheme.h"
 
 @interface STNativeCompiler()
 
@@ -27,6 +27,9 @@
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr;
 -(int)generateBlockExpression:(MPWBlockExpression*)expr;
 
+-(int)generateLoadClassReference:(NSString*)className;
+
+
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 
 @property (nonatomic, assign) int localRegisterMin,localRegisterMax,currentLocalRegStack,savedRegisterMax;
@@ -36,9 +39,34 @@
 @end
 
 
+@interface MPWScheme(nativeCodeGenertion)
+
+-(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler;
+
+@end
+
+
  
 @interface MPWExpression(nativeCode)
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler;
+
+@end
+
+@implementation MPWScheme(nativeCodeGenertion)
+
+-(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler
+{
+    @throw [NSException exceptionWithName:@"unimplemented" reason:@"generating code for identifier not implemented" userInfo:@{}];
+}
+
+@end
+
+@implementation MPWClassScheme(nativeCodeGenertion)
+
+-(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler
+{
+    return [compiler generateLoadClassReference:[identifier stringValue]];
+}
 
 @end
 
@@ -194,7 +222,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
  
 
--(int)generateClassReference:(NSString*)className
+-(int)generateLoadClassReference:(NSString*)className
 {
     
     NSString *classRefLabel = [writer addClassRefernceForClass:className];
@@ -214,12 +242,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     if ( registerNumber ) {
         return registerNumber.intValue;
     }  else {
-        if ( [[expr.identifier schemeName] isEqual:@"class"])  {
-            return [self generateClassReference:name];
-        } else {
-            [NSException raise:@"unknown" format:@"not found, identifier: %@ in names: %@",name,self.variableToRegisterMap];
-        }
-        return 0;
+        MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
+        NSAssert2(scheme != nil, @"unknown scheme %@ identifier %@",[expr.identifier schemeName],expr.identifier);
+        return [scheme generateLoadForIdentifier:expr.identifier on:self];
     }
 }
 
