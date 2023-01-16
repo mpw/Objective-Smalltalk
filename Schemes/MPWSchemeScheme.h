@@ -15,5 +15,8 @@
 
 -(NSDictionary*)schemes;
 -(void)setSchemeHandler:(id <MPWStorage>)aScheme   forSchemeName:(NSString*)schemeName;
++(instancetype)currentScheme;
++(void)setCurrentScheme:(MPWSchemeScheme*)newScheme;
++(instancetype)createGlobalSchemeScheme;
 
 @end

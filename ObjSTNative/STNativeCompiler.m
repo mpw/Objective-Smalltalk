@@ -548,7 +548,23 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     classwriter.nameOfSuperClass = aClass.superclassNameToUse;
     [self compileMethodsForClass:aClass];
     [classwriter writeClass];
+}
+
+-(void)compileAndWriteClass:(MPWClassDefinition*)aClass
+{
+    [self compileClass:aClass];
     [writer writeFile];
+}
+
+-(void)compileMainCallingClass:(NSString*)aClass
+{
+    NSString *symbol = @"_main";
+    self.variableToRegisterMap = [NSMutableDictionary dictionary];
+    [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+        [self generateLoadClassReference:aClass];
+        [codegen generateMessageSendToSelector:@"main:"];
+        [codegen generateMoveConstant:0 to:0];
+    }];
 }
 
 
@@ -585,7 +601,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
 {
-    [self compileClass:aClass];
+    [self compileAndWriteClass:aClass];
     return (NSData*)[writer target];
 }
 
@@ -888,6 +904,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     INTEXPECT(runSucess,0,@"run worked");
 }
 
++(void)testGenerateMainThatCallsClassMethod
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:'Hello World!'. } }"];
+    [compiler compileMainCallingClass:@"TestHelloWorld"];
+    [compiler compileClass:theClass];
+    [compiler.writer writeFile];
+    [(NSData*)[compiler.writer target] writeToFile:@"/tmp/selfContainedHelloWorld.o" atomically:YES];
+    int compileSucess = system("cd /tmp; cc -O  -Wall -o selfContainedHelloWorld selfContainedHelloWorld.o  -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    INTEXPECT(compileSucess,0,@"compile worked");
+    int runSucess = system("cd /tmp; ./selfContainedHelloWorld");
+    INTEXPECT(runSucess,0,@"run worked");
+
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -914,7 +945,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testFindBlocksInMethod",
        @"testGenerateCodeForBlocksInMethod",
        @"testGenerateCodeForClassReference",
+       @"testGenerateMainThatCallsClassMethod",
 			];
 }
 
 @end
+

@@ -11,10 +11,61 @@
 #import "MPWVARBinding.h"
 #import "MPWIdentifier.h"
 #import <MPWFoundation/MPWGenericReference.h>
+#import "STPortScheme.h"
+#import "STProtocolScheme.h"
+#import "MPWClassScheme.h"
+#import "MPWRefScheme.h"
+#import "MPWFrameworkScheme.h"
+#import "MPWEnvScheme.h"
+#import "MPWEnvScheme.h"
+#import "MPWBundleScheme.h"
+#import "MPWDefaultsScheme.h"
 
 @implementation MPWSchemeScheme
 
 objectAccessor(NSMutableDictionary*, _schemes, setSchemes )
+
+id currentScheme=nil;
+
++(instancetype)currentScheme
+{
+    if (!currentScheme) {
+        currentScheme=[[self createGlobalSchemeScheme] retain];
+    }
+    return currentScheme;
+}
+
++(void)setCurrentScheme:newSchemeScheme
+{
+    currentScheme=newSchemeScheme;
+}
+
++(instancetype)createGlobalSchemeScheme
+{
+    MPWSchemeScheme *schemes=[self store];
+    
+    MPWClassScheme *classScheme=[MPWClassScheme store];
+    [schemes setSchemeHandler:classScheme forSchemeName:@"class"];
+    [schemes setSchemeHandler:classScheme forSchemeName:@"builder"];
+    [schemes setSchemeHandler:[STProtocolScheme store] forSchemeName:@"protocol"];
+    [schemes setSchemeHandler:[MPWSFTPStore store] forSchemeName:@"sftp"];
+    [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
+    [schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
+    [schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
+    [schemes setSchemeHandler:[MPWFrameworkScheme store] forSchemeName:@"framework"];
+    [schemes setSchemeHandler:[MPWDefaultsScheme store]  forSchemeName:@"defaults"];
+    [schemes setSchemeHandler:[MPWFileSchemeResolver store]  forSchemeName:@"file"];
+    [schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
+    [schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
+    [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
+    
+    [schemes setSchemeHandler:[MPWEnvScheme store]  forSchemeName:@"env"];
+    [schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
+    [schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
+    //    [schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
+    
+    return schemes;
+}
 
 -(NSDictionary*)schemes { return [self _schemes]; }
 
@@ -27,10 +78,7 @@ objectAccessor(NSMutableDictionary*, _schemes, setSchemes )
 
 -(void)setSchemeHandler:(id <MPWStorage>)aScheme   forSchemeName:(NSString*)schemeName
 {
-//    NSLog(@"%p scheme handler: '%@' for scheme name: '%@'",self,aScheme,schemeName);
-    if ( aScheme && schemeName) {
-        [[self _schemes] setObject:aScheme forKey:schemeName];
-    }
+    [self at:schemeName put:aScheme];
 }
 
 -(id)at:(id)aReference
@@ -40,6 +88,9 @@ objectAccessor(NSMutableDictionary*, _schemes, setSchemes )
 
 -(void)at:(id)aReference put:(id)theObject
 {
+    // FIXME:  the -identifierName shouldn't be there, but is needed or
+    //         one of the constraint tests fails (so now have that
+    //         weird NSObject category below
     [self _schemes][[aReference identifierName]]=theObject;
 }
 
@@ -85,6 +136,15 @@ objectAccessor(NSMutableDictionary*, _schemes, setSchemes )
 {
 	[_schemes release];
 	[super dealloc];
+}
+
+@end
+
+@implementation NSObject(identifierName)
+
+-identifierName         // FIXME: this is currently needed so setSchemeHandler:forSchemeName: can use at:put:
+{
+    return self;
 }
 
 @end

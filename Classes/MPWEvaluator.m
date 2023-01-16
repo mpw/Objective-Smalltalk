@@ -76,26 +76,18 @@ idAccessor( _schemes, _setSchemes )
 
 -(MPWSchemeScheme*)createSchemes
 {
-	MPWSchemeScheme *schemes=[MPWSchemeScheme store];
-	id varScheme = [MPWVarScheme store];
-	[schemes setSchemeHandler:varScheme forSchemeName:@"var"];
+    MPWSchemeScheme *s = [MPWSchemeScheme createGlobalSchemeScheme];
+    MPWVarScheme* varScheme = [MPWVarScheme store];
+    [varScheme setContext:self];
+    [s setSchemeHandler:varScheme forSchemeName:@"var"];
+    [s setSchemeHandler:varScheme forSchemeName:@"default"];
     STPortScheme *portScheme=[STPortScheme store];
     portScheme.source = varScheme;
+    [s setSchemeHandler:portScheme forSchemeName:@"port"];
     
-    [varScheme setContext:self];
-    MPWClassScheme *classScheme=[MPWClassScheme store];
-    [schemes setSchemeHandler:classScheme forSchemeName:@"class"];
-    [schemes setSchemeHandler:classScheme forSchemeName:@"builder"];
-    [schemes setSchemeHandler:portScheme forSchemeName:@"port"];
-    [schemes setSchemeHandler:[STProtocolScheme store] forSchemeName:@"protocol"];
-    [schemes setSchemeHandler:[MPWSFTPStore store] forSchemeName:@"sftp"];
-    [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
-	[schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
-	[schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
-	[schemes setSchemeHandler:varScheme forSchemeName:@"default"];
-	[schemes setSchemeHandler:[MPWFrameworkScheme store] forSchemeName:@"framework"];
-	return schemes;
+    return s;
 }
+
 
 -schemes
 {

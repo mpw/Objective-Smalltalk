@@ -38,6 +38,7 @@
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 #import "STTypeDescriptor.h"
 #import "STSubscriptExpression.h"
+#import "STPortScheme.h"
 
 @class MPWClassMethodStore;
 
@@ -167,24 +168,6 @@ idAccessor(solver, setSolver)
 
 
 #pragma mark Evaluator
-
--(MPWSchemeScheme*)createSchemes
-{
-	MPWSchemeScheme* schemes=[super createSchemes];
-	[schemes setSchemeHandler:[MPWDefaultsScheme store]  forSchemeName:@"defaults"];
-	[schemes setSchemeHandler:[MPWFileSchemeResolver store]  forSchemeName:@"file"];
-	[schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
-	[schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
-    [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
-    
-	[schemes setSchemeHandler:[MPWEnvScheme store]  forSchemeName:@"env"];
-	[schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
-	[schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
-//	[schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
-	
-	return schemes;
-}
-
 
 
 
@@ -1750,5 +1733,25 @@ idAccessor(solver, setSolver)
 }
 
 
+
+@end
+
+
+id objs_get_scheme_reference(NSString *schemeName, NSString *reference )
+{
+    return [(MPWScheme*)[[MPWSchemeScheme currentScheme] at:schemeName] get:reference];
+}
+
+
+@interface STProcess : NSObject {}
+@end
+
+@implementation STProcess
+
++(int)main:args
+{
+    [[self new] main:args];
+    return 0;
+}
 
 @end
