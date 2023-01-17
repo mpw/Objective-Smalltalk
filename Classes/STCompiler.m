@@ -1742,16 +1742,3 @@ id objs_get_scheme_reference(NSString *schemeName, NSString *reference )
     return [(MPWScheme*)[[MPWSchemeScheme currentScheme] at:schemeName] get:reference];
 }
 
-
-@interface STProcess : NSObject {}
-@end
-
-@implementation STProcess
-
-+(int)main:args
-{
-    [[self new] main:args];
-    return 0;
-}
-
-@end

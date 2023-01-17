@@ -260,22 +260,27 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return 0;
 }
 
--(int)generateStringLiteral:(NSString*)theString
+-(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
 {
     if (self.jit) {
-        [codegen loadRegister:0 withConstantAdress:theString];
-        return 0;
+        [codegen loadRegister:regno withConstantAdress:theString];
+        return regno;
     } else {
         stringLiteralNo++;
         NSString *literalSymbol=[NSString stringWithFormat:@"_CFSTR_L%d",stringLiteralNo];
         [writer writeNSStringLiteral:theString label:literalSymbol];
         [codegen addRelocationEntryForSymbol:literalSymbol relativeOffset:0 type:ARM64_RELOC_PAGE21 relative:YES];
-        [codegen appendWord32:[codegen adrpToDestReg:0 withPageOffset:0]];
+        [codegen appendWord32:[codegen adrpToDestReg:regno withPageOffset:0]];
         [codegen addRelocationEntryForSymbol:literalSymbol relativeOffset:0 type:ARM64_RELOC_PAGEOFF12 relative:NO];
-        [codegen generateAddDest:0 source:0 immediate:0];
+        [codegen generateAddDest:regno source:regno immediate:0];
 
     }
-    return 0;
+    return regno;
+}
+
+-(int)generateStringLiteral:(NSString*)theString
+{
+    return [self generateStringLiteral:theString intoRegister:0];
 }
 
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr
@@ -548,6 +553,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     classwriter.nameOfSuperClass = aClass.superclassNameToUse;
     [self compileMethodsForClass:aClass];
     [classwriter writeClass];
+    [writer addClassRefernceForClass:aClass.name];
 }
 
 -(void)compileAndWriteClass:(MPWClassDefinition*)aClass
@@ -556,13 +562,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [writer writeFile];
 }
 
--(void)compileMainCallingClass:(NSString*)aClass
+-(void)compileMainCallingClass:(NSString*)aClassName
 {
     NSString *symbol = @"_main";
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
-        [self generateLoadClassReference:aClass];
-        [codegen generateMessageSendToSelector:@"main:"];
+        [self generateStringLiteral:aClassName intoRegister:2];
+//        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
+        [codegen generateCallToExternalFunctionNamed:@"_runSTMain"];
         [codegen generateMoveConstant:0 to:0];
     }];
 }
@@ -907,7 +914,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testGenerateMainThatCallsClassMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:'Hello World!'. } }"];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:2 stringValue. } }"];
     [compiler compileMainCallingClass:@"TestHelloWorld"];
     [compiler compileClass:theClass];
     [compiler.writer writeFile];
