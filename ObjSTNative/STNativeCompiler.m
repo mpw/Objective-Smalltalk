@@ -929,7 +929,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testTwoStringsInMachO
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestClassTwoStrings { -method1 { 'Hello World!'. } -method2 { '2nd string'. } }"];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestClassTwoStrings { -method1 { 'Hello World!'.} -method2 { '2nd string'. } }"];
     [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithTwoStrings.o" atomically:YES];
     
     
