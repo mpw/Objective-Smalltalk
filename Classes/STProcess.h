@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STProcess : NSObject
 
+-Stdout;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -6,6 +6,7 @@
 //
 
 #import "STProcess.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 @interface STProcess()
 
@@ -18,6 +19,11 @@
 -(int)main:args
 {
     return 0;
+}
+
+-Stdout
+{
+    return [MPWByteStream Stdout];
 }
 
 +(int)main:(NSArray <NSString*>*)args

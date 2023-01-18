@@ -914,7 +914,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testGenerateMainThatCallsClassMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:2 stringValue. } }"];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestHelloWorld : STProcess { -main:args { self Stdout println:'Hello World from auto-generated main'. } }"];
     [compiler compileMainCallingClass:@"TestHelloWorld"];
     [compiler compileClass:theClass];
     [compiler.writer writeFile];
