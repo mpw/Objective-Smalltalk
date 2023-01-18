@@ -365,7 +365,7 @@
         MPWMachOSectionWriter *refWriter=[self classRefWriter];
         [self declareExternalSymbol:externalSymbolName];
         [refWriter declareLocalSymbol:localReferenceName];
-        [refWriter addRelocationEntryForSymbol:externalSymbolName atOffset:0];
+        [refWriter addRelocationEntryForSymbol:externalSymbolName atOffset:(int)[refWriter length]];
         [refWriter appendBytes:zerobytes length:8];
         self.classReferences[className]=localReferenceName;
     }
