@@ -750,7 +750,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(void)testJitCompileStringObjectLiteral
 {
-    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -stringAnswer { 'answer: 42'. }}"];
+    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -stringAnswer { 'abcd'.  'answer: 42'. }}"];
     IDEXPECT([concatter stringAnswer],@"answer: 42",@"the answer");
 }
 
@@ -893,8 +893,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [[self frameworkResource:@"use_class_with_if" category:@"mfile"] writeToFile:@"/tmp/use_class_with_if.m" atomically:YES];
     int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_with_if use_class_with_if.m classWithIfTrueIfFalse.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
     INTEXPECT(compileSucess,0,@"compile worked");
-    //    int runSucess = system("cd /tmp; ./use_class_with_if");
-    //    INTEXPECT(runSucess,0,@"run worked");
+    int runSucess = system("cd /tmp; ./use_class_with_if");
+    INTEXPECT(runSucess,0,@"run worked");
 }
 
 +(void)testGenerateCodeForClassReference
@@ -926,6 +926,20 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 }
 
++(void)testTwoStringsInMachO
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWClassDefinition *theClass = [compiler compile:@"class TestClassTwoStrings { -method1 { 'Hello World!'. } -method2 { '2nd string'. } }"];
+    [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithTwoStrings.o" atomically:YES];
+    
+    
+    [[self frameworkResource:@"use_class_with_two_strings" category:@"mfile"] writeToFile:@"/tmp/use_class_with_two_strings.m" atomically:YES];
+    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_with_two_strings use_class_with_two_strings.m classWithTwoStrings.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    INTEXPECT(compileSucess,0,@"compile worked");
+    int runSucess = system("cd /tmp; ./use_class_with_two_strings");
+    INTEXPECT(runSucess,0,@"run worked");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -953,6 +967,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
        @"testGenerateCodeForBlocksInMethod",
        @"testGenerateCodeForClassReference",
        @"testGenerateMainThatCallsClassMethod",
+       @"testTwoStringsInMachO",
 			];
 }
 

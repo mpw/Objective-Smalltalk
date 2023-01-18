@@ -15,8 +15,8 @@ int main(void) {
     id falseObject=@(false);
     NSLog(@"true: %@",[tester tester:trueObject]);
     NSLog(@"false: %@",[tester tester:falseObject]);
-    if ([[tester tester:@(true)] isEqual:@"trueBlock"] &&
-        [[tester tester:@(false)] isEqual:@"falseBlock"]) {
+    if ([[tester tester:@(true)] isEqual:@(3)] &&
+        [[tester tester:@(false)] isEqual:@(2)]) {
         return 0;
     } else {
         return 1;

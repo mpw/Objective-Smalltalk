@@ -21,6 +21,7 @@
 		1F1A64762975C47600B8776C /* STProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1A64742975C47600B8776C /* STProcess.h */; };
 		1F1A64782975C7B400B8776C /* STProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProcess.m */; };
 		1F1A647A2975C7B500B8776C /* STProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProcess.m */; };
+		1F1A647D2976F72300B8776C /* use_class_with_two_strings.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */; };
 		1F1BE5F7224D2FAF002D58AC /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F222C8D1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
@@ -852,6 +853,7 @@
 		1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_class_that_creates_nsobject.mfile; sourceTree = "<group>"; };
 		1F1A64742975C47600B8776C /* STProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProcess.h; sourceTree = "<group>"; };
 		1F1A64752975C47600B8776C /* STProcess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProcess.m; sourceTree = "<group>"; };
+		1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_class_with_two_strings.mfile; sourceTree = "<group>"; };
 		1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWSketching.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
 		1F1F57FB083395A000D3275A /* MPWMethodHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodHeader.m; sourceTree = "<group>"; };
@@ -1741,6 +1743,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */,
 				1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */,
 				1F5BBA35294DEC1200C3D345 /* use_class.macho */,
 				1F5BBA2929434BD600C3D345 /* use_st_block.mfile */,
@@ -3264,6 +3267,7 @@
 				1F5BBA36294DEC1200C3D345 /* use_class.macho in Resources */,
 				1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */,
 				1F5BBA342943BC4000C3D345 /* use_class_with_if.mfile in Resources */,
+				1F1A647D2976F72300B8776C /* use_class_with_two_strings.mfile in Resources */,
 				1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */,
 				1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */,
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
