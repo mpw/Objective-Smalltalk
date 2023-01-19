@@ -16,9 +16,9 @@
 
 @implementation STProcess
 
--(int)main:args
+-main:args
 {
-    return 0;
+    return @(0);
 }
 
 -Stdout
@@ -34,7 +34,7 @@
         process.name = [args firstObject];
         args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
     }
-    int retval = [process main:args];
+    int retval = [[process main:args] intValue];
     [process release];
     return retval;
 }
@@ -70,7 +70,7 @@ int runSTMain( int argc, char *argv[], NSString *className ) {
     NSLog(@"className: %@",className);
     Class theClass = NSClassFromString(className);
     NSLog(@"theClass: %@",theClass);
-    return (int)[theClass mainArgc:argc argv:argv];
+    return [theClass mainArgc:argc argv:argv];
 
 }
 

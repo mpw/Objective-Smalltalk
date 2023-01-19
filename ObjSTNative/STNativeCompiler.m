@@ -570,7 +570,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self generateStringLiteral:aClassName intoRegister:2];
 //        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
         [codegen generateCallToExternalFunctionNamed:@"_runSTMain"];
-        [codegen generateMoveConstant:0 to:0];
+//        [codegen generateMoveConstant:0 to:0];
     }];
 }
 
@@ -611,6 +611,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [self compileAndWriteClass:aClass];
     return (NSData*)[writer target];
 }
+
+-(NSData*)compileProcessToMachoO:(MPWClassDefinition*)theClass
+{
+    [self compileMainCallingClass:theClass.name];
+    [self compileClass:theClass];
+    [writer writeFile];
+    return (NSData*)[writer target];
+}
+
 
 -(NSData*)compileBlockToMachoO:(MPWBlockExpression*)aBlock
 {
@@ -911,33 +920,41 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     INTEXPECT(runSucess,0,@"run worked");
 }
 
-+(void)testGenerateMainThatCallsClassMethod
++(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:'Hello World from auto-generated main'. } }"];
-    [compiler compileMainCallingClass:@"TestHelloWorld"];
-    [compiler compileClass:theClass];
-    [compiler.writer writeFile];
-    [(NSData*)[compiler.writer target] writeToFile:@"/tmp/selfContainedHelloWorld.o" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -O  -Wall -o selfContainedHelloWorld selfContainedHelloWorld.o  -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
-    INTEXPECT(compileSucess,0,@"compile worked");
-    int runSucess = system("cd /tmp; ./selfContainedHelloWorld");
-    INTEXPECT(runSucess,0,@"run worked");
-
+    MPWClassDefinition *theClass = [compiler compile:objs];
+    
+    [[compiler compileProcessToMachoO:theClass] writeToFile:[NSString stringWithFormat:@"/tmp/%@.o",filename] atomically:YES];
+    NSString *linkCommand=[NSString stringWithFormat:@"cd /tmp; cc -O  -Wall -o %@ %@.o  -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation",filename,filename];
+    int compileSuccess = system([linkCommand UTF8String]);
+    if (compileSuccess!=0) {
+        return [NSString stringWithFormat:@"link of %@ failed with %d",filename,compileSuccess];
+    }
+//    INTEXPECT(compileSucess,0,@"compile worked");
+    NSString *runCommmand=[NSString stringWithFormat:@"cd /tmp; ./%@",filename];
+    int runSucess = system([runCommmand UTF8String]);
+    if (runSucess!=0) {
+        return [NSString stringWithFormat:@"run of %@ failed with %d",filename,runSucess];
+    }
+    return @"";
+//    INTEXPECT(runSucess,0,@"run worked");
 }
+
+#define COMPILEANDRUN( str, theFilename )\
+NSString *msg=[self errorCompilingAndRunning:str filename:theFilename];\
+IDEXPECT(msg,@"",@"compile and run");\
+
+
++(void)testGenerateMainThatCallsClassMethod
+{
+    COMPILEANDRUN( @"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:'Hello World from auto-generated main'. 0. } }", @"selfContainedHelloWorld");
+}
+
 
 +(void)testTwoStringsInMachO
 {
-    STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestClassTwoStrings { -method1 { 'Hello World!'.} -method2 { '2nd string'. } }"];
-    [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithTwoStrings.o" atomically:YES];
-    
-    
-    [[self frameworkResource:@"use_class_with_two_strings" category:@"mfile"] writeToFile:@"/tmp/use_class_with_two_strings.m" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_with_two_strings use_class_with_two_strings.m classWithTwoStrings.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
-    INTEXPECT(compileSucess,0,@"compile worked");
-    int runSucess = system("cd /tmp; ./use_class_with_two_strings");
-    INTEXPECT(runSucess,0,@"run worked");
+    COMPILEANDRUN( @"class TestClassTwoStrings : STProcess {  -method2 { self Stdout println:'2nd string'.  } -main { self Stdout println:'2nd string'. self method2. 1. } }", @"classWithTwoStrings");
 }
 
 
