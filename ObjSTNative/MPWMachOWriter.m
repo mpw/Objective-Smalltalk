@@ -331,7 +331,7 @@
 {
     MPWMachOSectionWriter *cstringWriter=[self cstringWriter];
     MPWMachOSectionWriter *cfstringWriter=[self cfstringWriter];
-    NSLog(@"cfstringwriter offset at start of writeNSStringLiteral: %ld",[cfstringWriter length]);
+//    NSLog(@"cfstringwriter offset at start of writeNSStringLiteral: %ld",[cfstringWriter length]);
     // write the cstring, retain a symbol reference to it
     
     Mach_O_NSString str={
@@ -347,12 +347,12 @@
         [self declareExternalSymbol:@"___CFConstantStringClassReference"];
         self.constantStringClassDeclared = true;
     }
-    NSLog(@"cfstringwriter offset before writing: %ld",[cfstringWriter length]);
+//    NSLog(@"cfstringwriter offset before writing: %ld",[cfstringWriter length]);
     [cfstringWriter addRelocationEntryForSymbol:@"___CFConstantStringClassReference" atOffset:(int)[cfstringWriter length]];
 
     [cfstringWriter addRelocationEntryForSymbol:contentLabel atOffset:(int)[cfstringWriter length]+(int)offset];
     [cfstringWriter appendBytes:&str length:sizeof str];
-    NSLog(@"cfstringwriter offset after writing: %ld",[cfstringWriter length]);
+//    NSLog(@"cfstringwriter offset after writing: %ld",[cfstringWriter length]);
 }
 
 -(NSString*)addClassRefernceForClass:(NSString*)className

@@ -7,12 +7,20 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
 
-@interface STProcess : NSObject
+@interface NSObject(stprocess)
 
+-main:args;
 -Stdout;
++(int)main:(NSArray <NSString*>*)args;
++(int)mainArgc:(int)argc argv:(char**)argv;
 
 @end
 
-NS_ASSUME_NONNULL_END
+
+
+@interface STProcess : NSObject
+
+
+@end
+

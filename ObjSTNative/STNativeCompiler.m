@@ -636,6 +636,22 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return blocks;
 }
 
+-(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
+{
+    NSMutableString *command=[NSMutableString string];
+    if ( dir ) {
+        [command appendFormat:@"cd %@;",dir];
+    }
+    [command appendFormat:@"cc -o  %@ ",executable];
+    for ( NSString *objectFilename in objects ) {
+        [command appendFormat:@"%@.o ",objectFilename ];
+    }
+    
+    [command appendFormat:@" -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation"];
+    int compileSuccess = system([command UTF8String]);
+    return compileSuccess;
+}
+
 
 @end
 
@@ -926,24 +942,22 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     MPWClassDefinition *theClass = [compiler compile:objs];
     
     [[compiler compileProcessToMachoO:theClass] writeToFile:[NSString stringWithFormat:@"/tmp/%@.o",filename] atomically:YES];
-    NSString *linkCommand=[NSString stringWithFormat:@"cd /tmp; cc -O  -Wall -o %@ %@.o  -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation",filename,filename];
-    int compileSuccess = system([linkCommand UTF8String]);
+    int compileSuccess = [compiler linkObjects:@[ filename ] toExecutable:filename inDir:@"/tmp"];
     if (compileSuccess!=0) {
         return [NSString stringWithFormat:@"link of %@ failed with %d",filename,compileSuccess];
     }
-//    INTEXPECT(compileSucess,0,@"compile worked");
     NSString *runCommmand=[NSString stringWithFormat:@"cd /tmp; ./%@",filename];
     int runSucess = system([runCommmand UTF8String]);
     if (runSucess!=0) {
         return [NSString stringWithFormat:@"run of %@ failed with %d",filename,runSucess];
     }
-    return @"";
+    return @"No error";
 //    INTEXPECT(runSucess,0,@"run worked");
 }
 
 #define COMPILEANDRUN( str, theFilename )\
 NSString *msg=[self errorCompilingAndRunning:str filename:theFilename];\
-IDEXPECT(msg,@"",@"compile and run");\
+IDEXPECT(msg,@"No error",@"compile and run");\
 
 
 +(void)testGenerateMainThatCallsClassMethod
@@ -954,7 +968,7 @@ IDEXPECT(msg,@"",@"compile and run");\
 
 +(void)testTwoStringsInMachO
 {
-    COMPILEANDRUN( @"class TestClassTwoStrings : STProcess {  -method2 { self Stdout println:'2nd string'.  } -main { self Stdout println:'2nd string'. self method2. 1. } }", @"classWithTwoStrings");
+    COMPILEANDRUN( @"class TestClassTwoStrings : STProcess {  -method2 { self Stdout println:'2nd string'.  } -main:args { self Stdout println:'1st string'. self method2. 0. } }", @"classWithTwoStrings");
 }
 
 

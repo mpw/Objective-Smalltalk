@@ -1,0 +1,21 @@
+
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+
+@interface TestClassTwoStrings : NSObject {}
+-method1;
+-method2;
+@end
+
+
+int main(void) {
+    id tester = [TestClassTwoStrings new];
+    NSLog(@"method1: '%@'",[tester method1]);
+    NSLog(@"method2: '%@'",[tester method2]);
+    
+    if ([[tester method1] isEqual:@"Hello World!"] &&
+        [[tester method2] isEqual:@"2nd string"]) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
