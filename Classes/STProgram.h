@@ -19,7 +19,7 @@
 
 
 
-@interface STProcess : NSObject
+@interface STProgram : NSObject
 
 
 @end

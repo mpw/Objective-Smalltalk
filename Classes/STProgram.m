@@ -5,17 +5,17 @@
 //  Created by Marcel Weiher on 16.01.23.
 //
 
-#import "STProcess.h"
+#import "STProgram.h"
 #import <MPWFoundation/MPWFoundation.h>
 
 
-@interface STProcess()
+@interface STProgram()
 
 @property (nonatomic,strong ) NSString *name;
 
 @end
 
-@implementation STProcess
+@implementation STProgram
 
 
 @end
@@ -23,7 +23,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation STProcess(testing) 
+@implementation STProgram(testing) 
 
 
 +(void)someTest
@@ -66,8 +66,8 @@ int runSTMain( int argc, char *argv[], NSString *className ) {
 
 +(int)main:(NSArray <NSString*>*)args
 {
-    STProcess *process=[[self new] autorelease];
-    if ( args.count > 0) {
+    STProgram *process=[[self new] autorelease];
+    if ( args.count > 0 && [process respondsToSelector:@selector(setName:)]) {
         process.name = [args firstObject];
         args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
     }

@@ -18,9 +18,9 @@
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
 		1F1A64732971822A00B8776C /* use_class_that_creates_nsobject.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */; };
-		1F1A64762975C47600B8776C /* STProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1A64742975C47600B8776C /* STProcess.h */; };
-		1F1A64782975C7B400B8776C /* STProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProcess.m */; };
-		1F1A647A2975C7B500B8776C /* STProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProcess.m */; };
+		1F1A64762975C47600B8776C /* STProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1A64742975C47600B8776C /* STProgram.h */; };
+		1F1A64782975C7B400B8776C /* STProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProgram.m */; };
+		1F1A647A2975C7B500B8776C /* STProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProgram.m */; };
 		1F1A647D2976F72300B8776C /* use_class_with_two_strings.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */; };
 		1F1BE5F7224D2FAF002D58AC /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F222C8C1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -851,8 +851,8 @@
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
 		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
 		1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_class_that_creates_nsobject.mfile; sourceTree = "<group>"; };
-		1F1A64742975C47600B8776C /* STProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProcess.h; sourceTree = "<group>"; };
-		1F1A64752975C47600B8776C /* STProcess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProcess.m; sourceTree = "<group>"; };
+		1F1A64742975C47600B8776C /* STProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProgram.h; sourceTree = "<group>"; };
+		1F1A64752975C47600B8776C /* STProgram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProgram.m; sourceTree = "<group>"; };
 		1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_class_with_two_strings.mfile; sourceTree = "<group>"; };
 		1F1BE5DB224BC0E9002D58AC /* MPWSketching.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWSketching.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F1F57FA083395A000D3275A /* MPWMethodHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWMethodHeader.h; sourceTree = "<group>"; };
@@ -2318,8 +2318,8 @@
 				1FB7AE2F24DB0F3000CCBE86 /* STBundle.m */,
 				F5A74AC100F0A61B015ADD82 /* STCompiler.h */,
 				F5A74ABD00F0A61B015ADD82 /* STCompiler.m */,
-				1F1A64742975C47600B8776C /* STProcess.h */,
-				1F1A64752975C47600B8776C /* STProcess.m */,
+				1F1A64742975C47600B8776C /* STProgram.h */,
+				1F1A64752975C47600B8776C /* STProgram.m */,
 				1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */,
 				1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */,
 				1FC661EE25D83BC700ED1BCB /* STObjectTemplate.h */,
@@ -2380,7 +2380,7 @@
 				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
-				1F1A64762975C47600B8776C /* STProcess.h in Headers */,
+				1F1A64762975C47600B8776C /* STProgram.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
@@ -3682,7 +3682,7 @@
 				1F5E507D09B4B754000298D9 /* MPWSetAccessor.m in Sources */,
 				1F5E507E09B4B754000298D9 /* MPWGetAccessor.m in Sources */,
 				1F5E507F09B4B754000298D9 /* MPWScriptedMethod.m in Sources */,
-				1F1A64782975C7B400B8776C /* STProcess.m in Sources */,
+				1F1A64782975C7B400B8776C /* STProgram.m in Sources */,
 				1FBFEBA418FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */,
 				1F5E508009B4B754000298D9 /* MPWAbstractInterpretedMethod.m in Sources */,
 				1FD589AF292BE3EA0080ABD0 /* MPWStScanner.m in Sources */,
@@ -3912,7 +3912,7 @@
 				1F7AFACF260F78E5002DC530 /* MPWFastSuperMessage.m in Sources */,
 				1FE37B751969610600C9A378 /* MPWBindingLegacy.m in Sources */,
 				1FE37B9C1969610600C9A378 /* STMessagePortDescriptor.m in Sources */,
-				1F1A647A2975C7B500B8776C /* STProcess.m in Sources */,
+				1F1A647A2975C7B500B8776C /* STProgram.m in Sources */,
 				1FE37B7B1969610600C9A378 /* MPWBridgeReader.m in Sources */,
 				1FE37B861969610600C9A378 /* MPWEvaluator.m in Sources */,
 				1FE37BC21969610800C9A378 /* MPWTaggedFloat.m in Sources */,

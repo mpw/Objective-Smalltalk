@@ -962,13 +962,13 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 
 +(void)testGenerateMainThatCallsClassMethod
 {
-    COMPILEANDRUN( @"class TestHelloWorld : STProcess { -main:args { class:MPWByteStream Stdout println:'Hello World from auto-generated main'. 0. } }", @"selfContainedHelloWorld");
+    COMPILEANDRUN( @"class TestHelloWorld : STProgram { -main:args { class:MPWByteStream Stdout println:'Hello World from auto-generated main'. 0. } }", @"selfContainedHelloWorld");
 }
 
 
 +(void)testTwoStringsInMachO
 {
-    COMPILEANDRUN( @"class TestClassTwoStrings : STProcess {  -method2 { self Stdout println:'2nd string'.  } -main:args { self Stdout println:'1st string'. self method2. 0. } }", @"classWithTwoStrings");
+    COMPILEANDRUN( @"class TestClassTwoStrings : STProgram {  -method2 { self Stdout println:'2nd string'.  } -main:args { self Stdout println:'1st string'. self method2. 0. } }", @"classWithTwoStrings");
 }
 
 
