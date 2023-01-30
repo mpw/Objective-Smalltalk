@@ -362,7 +362,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         int currentRegs = self.currentLocalRegStack;
         NSMutableArray *toEval = [NSMutableArray arrayWithObject:expr.receiver];
         [toEval addObjectsFromArray:expr.args];
-        int numArgs = toEval.count;
+        int numArgs = (int)toEval.count;
         int argRegisters[numArgs];
 //        NSLog(@"%@ receiver + args: %@",NSStringFromSelector(expr.selector), toEval);
         for (int i=0;i<numArgs;i++) {
@@ -370,6 +370,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
                 [toEval[i] isKindOfClass:[MPWLiteralExpression class]]
                 ) {
                 argRegisters[i]=[self allocateRegister];
+//                NSLog(@"allocated register %d for arg %d",argRegisters[i],i);
             } else {
                 argRegisters[i]=0;
             }
@@ -441,17 +442,18 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     self.currentLocalRegStack+=10;
     [self saveRegisters];
     
-    self.currentLocalRegStack=self.localRegisterMin+totalArguments;
-    
+    self.currentLocalRegStack=self.localRegisterMin+totalArguments+numLocalVars;
+
     [self moveRegister:0 toRegister:self.localRegisterMin];
     for (int i=0;i<totalArguments;i++) {
         [self moveRegister:i toRegister:self.localRegisterMin+i];
         self.variableToRegisterMap[args[i]]=@(self.localRegisterMin+i);
     }
-    //--- save registers needed
+    //--- save registers needed for local vars
     for (int i=0;i<numLocalVars;i++) {
+        int currentRegister = self.localRegisterMin+i+totalArguments;
         [codegen clearRegister:self.localRegisterMin+i+totalArguments];
-        self.variableToRegisterMap[localVars[i]]=@(self.localRegisterMin+i+totalArguments);
+        self.variableToRegisterMap[localVars[i]]=@(currentRegister);
     }
 }
 
@@ -971,6 +973,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestClassTwoStrings : STProgram {  -method2 { self Stdout println:'2nd string'.  } -main:args { self Stdout println:'1st string'. self method2. 0. } }", @"classWithTwoStrings");
 }
 
++(void)testLocalVariablesNotOverwrittenByNestedExpressionsRegression
+{
+    COMPILEANDRUN( @"class TestDoNotOverwriteLocalVar : STProgram {  -main:args {  var a. a := 10. var b. b := 20. (3+4) * a - 70.  a * 2 - 20.} }", @"TestDoNotOverwriteLocalVar");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -999,6 +1006,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testGenerateCodeForClassReference",
        @"testGenerateMainThatCallsClassMethod",
        @"testTwoStringsInMachO",
+       @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
 			];
 }
 
