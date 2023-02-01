@@ -94,6 +94,11 @@ longAccessor(len, setLen)
     return names;
 }
 
+-(BOOL)isSuper
+{
+    return NO;
+}
+
 @end
 
 

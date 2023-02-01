@@ -326,13 +326,14 @@ idAccessor( localVars, setLocalVars )
 
 -sendMessage:(SEL)selector to:receiver withArguments:args supersend:(BOOL)isSuper
 {	
-	id nilValue = [NSNil nsNil];
+    id evaluatedReceiver = [self evaluate:receiver];
+    id nilValue = [NSNil nsNil];
 	id returnValue;
-	id evaluatedReceiver = [self evaluate:receiver];
 	id evaluatedArgs[[args count]+5];
 	[self evaluatedArgs:args into:evaluatedArgs];
     id message =  nil;
     if (isSuper){
+
         MPWFastSuperMessage *supermsg = [MPWFastSuperMessage messageWithSelector:selector typestring:""];   // typestring isn't used
         supermsg.superclassOfTarget = [self.contextClass superclass];
         NSLog(@"contextClass: %@, superclassOfTarget: %@",self.contextClass,supermsg.superclassOfTarget);

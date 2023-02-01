@@ -23,6 +23,7 @@ longAccessor_h(len, setLen)
 
 
 -(NSException*)handleOffsetsInException:(NSException*)exception;
+@property (readonly,assign ) BOOL isSuper;
 
 @end
 

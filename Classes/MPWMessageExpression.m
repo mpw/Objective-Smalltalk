@@ -3,7 +3,8 @@
 #import "MPWMessageExpression.h"
 #import "MPWEvaluator.h"
 #import "MPWObjCGenerator.h"
-
+#import "MPWIdentifierExpression.h"
+#import "MPWIdentifier.h"
 #ifndef GNUSTEP
 #include <objc/runtime.h>
 #endif
@@ -28,6 +29,8 @@
 @end
 
 @implementation MPWMessageExpression
+{
+}
 
 idAccessor( receiver, setReceiver )
 scalarAccessor( SEL, selector, setSelector )
@@ -35,9 +38,15 @@ objectAccessor(NSArray*, args, setArgs )
 scalarAccessor( const char*, _argtypes, setArgtypes )
 scalarAccessor( char , returnType, setReturnType )
 
--initWithReceiver:newReceiver
+-(instancetype)initWithReceiver:(MPWExpression*)newReceiver
 {
     self=[super init];
+    self.isSuperSend = newReceiver.isSuper;
+    if ( self.isSuperSend) {
+        MPWIdentifierExpression *ie=[[[MPWIdentifierExpression alloc] init] autorelease];
+        [ie setIdentifier:[MPWIdentifier identifierWithName:@"self"]];
+        newReceiver=ie;
+    }
     [self setReceiver:newReceiver];
     return self;
 }
@@ -61,7 +70,7 @@ scalarAccessor( char , returnType, setReturnType )
 {
 	id retval = nil;
     @try {
-        retval = [aContext sendMessage:selector to:receiver withArguments:args supersend:self.isSuper];
+        retval = [aContext sendMessage:selector to:receiver withArguments:args supersend:self.isSuperSend];
     } @catch (id exception) {
         exception=[self handleOffsetsInException:exception];
         NSLog(@"exception sending message '%@': %@ offset: %@",NSStringFromSelector(selector) ,exception,[exception userInfo]);

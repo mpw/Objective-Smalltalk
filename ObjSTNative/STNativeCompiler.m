@@ -168,7 +168,7 @@
 
 -(NSString*)name
 {
-    NSLog(@"name called: %@",[NSThread callStackSymbols]);
+    NSLog(@"-[MPWBlockExpression name] called: %@",[NSThread callStackSymbols]);
     return nil;
 }
 
@@ -978,6 +978,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestDoNotOverwriteLocalVar : STProgram {  -main:args {  var a. a := 10. var b. b := 20. (3+4) * a - 70.  a * 2 - 20.} }", @"TestDoNotOverwriteLocalVar");
 }
 
++(void)testBlockCanAccessOutsideScopeVariables
+{
+    COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1007,6 +1012,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testGenerateMainThatCallsClassMethod",
        @"testTwoStringsInMachO",
        @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
+//       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }
 

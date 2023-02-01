@@ -21,6 +21,11 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 	return [[self identifier] schemeName];
 }
 
+-(BOOL)isSuper
+{
+    return [[self name] isEqual:@"super"];
+}
+
 -name
 {
 	return [[self identifier] identifierName];

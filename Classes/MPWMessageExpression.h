@@ -17,12 +17,12 @@ scalarAccessor_h( const char*, argtypes, setArgtypes )
 scalarAccessor_h( char , returnType, setReturnType )
 
 objectAccessor_h(NSArray*, args, setArgs )
--initWithReceiver:newReceiver;
+-(instancetype)initWithReceiver:(MPWExpression*)newReceiver;
 
 -(NSString*)messageName;
 -(NSString*)messageNameForCompletion;
 
-@property (nonatomic, assign) BOOL isSuper;
+@property (nonatomic, assign) BOOL isSuperSend;
 
 
 @end
