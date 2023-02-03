@@ -42,6 +42,14 @@ idAccessor( script, _setScript )
     return localVars;
 }
 
+-(NSArray <MPWBlockExpression*>*)findBlocks
+{
+    NSMutableArray *blocks=[NSMutableArray array];
+    [self.methodBody accumulateBlocks:blocks];
+    return blocks;
+}
+
+
 -compiledScript
 {
 	if ( ![self methodBody] ) {

@@ -106,3 +106,31 @@ idAccessor( declaredArguments, setDeclaredArguments )
 }
 
 @end
+
+#import "STCompiler.h"
+#import "MPWClassDefinition.h"
+#import "MPWScriptedMethod.h"
+
+
+
+@implementation MPWBlockExpression(testing)
+
++(void)testComputeBlockCaptures
+{
+    NSString *code = @"class __STTestBlockCaptureComputation1 {  -main:args {  var a. a := 10. { a - 10. } value. } }";
+    STCompiler *compiler = [STCompiler compiler];
+    MPWClassDefinition *theClass = [compiler compile:code];
+    MPWScriptedMethod *method=theClass.methods.firstObject;
+    
+    EXPECTNOTNIL( method, @"got a method");
+}
+
++testSelectors
+{
+    return @[
+        @"testComputeBlockCaptures",
+    ];
+}
+
+@end
+

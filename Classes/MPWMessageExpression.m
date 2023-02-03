@@ -91,6 +91,16 @@ scalarAccessor( char , returnType, setReturnType )
 	[[args do] addToVariablesRead:variablesRead];
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    [[self receiver] accumulateBlocks:blocks];
+    for ( id arg in [self args] ) {
+        [arg accumulateBlocks:blocks];
+    }
+}
+
+
+
 
 -description
 {

@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 
-@class MPWMethodHeader;
+@class MPWMethodHeader,MPWBlockExpression;
 
 @interface MPWScriptedMethod : MPWAbstractInterpretedMethod {
 	id					script;
@@ -20,6 +20,7 @@
 objectAccessor_h(MPWExpression*, methodBody, setMethodBody )
 objectAccessor_h(NSArray*, localVars, setLocalVars )
 idAccessor_h( script, setScript )
+-(NSArray <MPWBlockExpression*>*)findBlocks;
 
 @property (nonatomic,assign) Class classOfMethod;
 

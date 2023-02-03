@@ -16,6 +16,7 @@
 #import "MPWJittableData.h"
 #import <mach-o/arm64/reloc.h>
 #import "MPWClassScheme.h"
+#import "MPWIdentifier.h"
 
 @interface STNativeCompiler()
 
@@ -56,7 +57,10 @@
 
 -(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler
 {
-    @throw [NSException exceptionWithName:@"unimplemented" reason:@"generating code for identifier not implemented" userInfo:@{}];
+    NSString *msg=[NSString stringWithFormat:@"generating code for identifier '%@' scheme: '%@' not implemented",
+                   identifier.path,identifier.schemeName];
+    @throw [NSException exceptionWithName:@"unimplemented" reason:msg
+                                 userInfo:@{@"identifier": identifier }];
 }
 
 @end
@@ -79,7 +83,7 @@
 
 -(void)accumulateBlocks:(NSMutableArray*)blocks
 {
-
+    ;
 }
 
 @end
@@ -109,14 +113,6 @@
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
     return [compiler generateMessageSend:self];
-}
-
--(void)accumulateBlocks:(NSMutableArray*)blocks
-{
-    [[self receiver] accumulateBlocks:blocks];
-    for ( id arg in [self args] ) {
-        [arg accumulateBlocks:blocks];
-    }
 }
 
 
@@ -439,10 +435,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     int numLocalVars = (int)localVars.count;
     int totalArguments=(int)args.count;
-    self.currentLocalRegStack+=10;
+
+    self.currentLocalRegStack=self.localRegisterMin+totalArguments+numLocalVars;
     [self saveRegisters];
     
-    self.currentLocalRegStack=self.localRegisterMin+totalArguments+numLocalVars;
 
     [self moveRegister:0 toRegister:self.localRegisterMin];
     for (int i=0;i<totalArguments;i++) {
@@ -491,7 +487,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     NSArray *blocks = [self findBlocksInMethod:method];
     for ( MPWBlockExpression *block in blocks ) {
-        NSString *blockSymbol = [self compileBlock:block];
+        NSString *blockSymbol = [self compileBlock:block inMethod:method];
         block.symbol = blockSymbol;
     }
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
@@ -577,12 +573,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
 
 
--(NSString*)compileBlock:(MPWBlockExpression*)aBlock
+-(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
 {
     blockNo++;
     NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    //--- retrieve all the blocks and generate them first
+
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         
         int returnRegister=0;
@@ -625,7 +621,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSData*)compileBlockToMachoO:(MPWBlockExpression*)aBlock
 {
-    [self compileBlock:aBlock];
+    [self compileBlock:aBlock inMethod:nil];
     [writer addTextSectionData:[codegen target]];
     [writer writeFile];
     return (NSData*)[writer target];
@@ -633,9 +629,18 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSArray*)findBlocksInMethod:(MPWScriptedMethod*)aMethod
 {
-    NSMutableArray *blocks=[NSMutableArray array];
-    [aMethod.methodBody accumulateBlocks:blocks];
-    return blocks;
+    return [aMethod findBlocks];
+//    
+//    NSMutableArray *blocks=[NSMutableArray array];
+//    [aMethod.methodBody accumulateBlocks:blocks];
+//    return blocks;
+}
+
++(BOOL)isPointerOnStackAboveMe:(void*)ptr within:(long)maxDiff
+{
+    void *roughlyMyFrame = &_cmd;
+    long differenceFromPtr = ptr - roughlyMyFrame;
+    return differenceFromPtr > 0 && differenceFromPtr < maxDiff;
 }
 
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
@@ -649,7 +654,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [command appendFormat:@"%@.o ",objectFilename ];
     }
     
-    [command appendFormat:@" -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation"];
+    [command appendFormat:@" -F/Library/Frameworks -framework ObjectiveSmalltalk -framework MPWFoundation -framework Foundation"];
     int compileSuccess = system([command UTF8String]);
     return compileSuccess;
 }
@@ -983,6 +988,17 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
 }
 
+static long notOnStack = 0;
+
++(void)testPointerOnStackCheck
+{
+    void *ptr_to_something_on_stack = &_cmd;
+    
+    EXPECTTRUE([self isPointerOnStackAboveMe:ptr_to_something_on_stack within:1000], @"_cmd is on stack");
+    EXPECTFALSE([self isPointerOnStackAboveMe:&notOnStack within:1000], @"static is not stack");
+
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1012,6 +1028,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testGenerateMainThatCallsClassMethod",
        @"testTwoStringsInMachO",
        @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
+       @"testPointerOnStackCheck",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }

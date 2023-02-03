@@ -1,12 +1,9 @@
 #!env st
-#
+#-<void>compile:source
 framework:ObjSTNative load.
-source := args[0].
 basename := source stringValue stringByDeletingPathExtension.
-prog := NSData dataWithContentsOfFile: source.
 compiler := STNativeCompiler compiler.
-theClass := compiler compile:prog.
-compiled := compiler compileProcessToMachoO: theClass.
-outfileName := basename , '.o'.
-compiled writeToFile: outfileName atomically: 1.
-error := compiler linkObjects: #[ basename ] toExecutable: basename inDir: nil.
+compiled := compiler compileProcessToMachoO: (compiler compile: file:{source}).
+objectFileName := basename , '.o'.
+file:{objectFileName} := compiled.
+compiler linkObjects: #[ basename ] toExecutable: basename inDir: nil.
