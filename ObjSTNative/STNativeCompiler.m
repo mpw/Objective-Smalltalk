@@ -572,13 +572,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }];
 }
 
-
--(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
+-(NSString*)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
 {
-    blockNo++;
-    NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         
         int returnRegister=0;
@@ -599,6 +595,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self moveRegister:returnRegister toRegister:0];
         [self restoreLocalRegisters];
     }];
+}
+
+-(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
+{
+    blockNo++;
+    NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
+    [self compileBlockInvocatinFunction:aBlock inMethod:method blockFunctionSymbol:symbol];
     NSString *blockSymbol = [NSString stringWithFormat:@"_theBlock_l%d",blockNo];
     [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:blockSymbol signature:@"i" global:YES];
     return blockSymbol;
@@ -641,6 +644,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     void *roughlyMyFrame = &_cmd;
     long differenceFromPtr = ptr - roughlyMyFrame;
     return differenceFromPtr > 0 && differenceFromPtr < maxDiff;
+}
+
++(BOOL)isPointerOnStackAboveMe:(void*)ptr
+{
+    return [self isPointerOnStackAboveMe:ptr within:1000];
 }
 
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
@@ -988,15 +996,23 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
 }
 
-static long notOnStack = 0;
+static int notOnStack = 0;
 
 +(void)testPointerOnStackCheck
 {
     void *ptr_to_something_on_stack = &_cmd;
     
-    EXPECTTRUE([self isPointerOnStackAboveMe:ptr_to_something_on_stack within:1000], @"_cmd is on stack");
-    EXPECTFALSE([self isPointerOnStackAboveMe:&notOnStack within:1000], @"static is not stack");
+    EXPECTTRUE([self isPointerOnStackAboveMe:ptr_to_something_on_stack], @"_cmd is on stack");
+    EXPECTFALSE([self isPointerOnStackAboveMe:&notOnStack], @"static is not stack");
+}
 
++(void)testBlocksWithCapturesAreOnStackWithoutCapturesNot
+{
+    id staticBlock=^{ return 2; };
+    int a=2;
+    id stackBlock=^{ return a+2; };
+    EXPECTTRUE([self isPointerOnStackAboveMe:stackBlock], @"block with captured var is on stack");
+    EXPECTFALSE([self isPointerOnStackAboveMe:staticBlock], @"block without captured var is not on stack");
 }
 
 
@@ -1029,6 +1045,7 @@ static long notOnStack = 0;
        @"testTwoStringsInMachO",
        @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
        @"testPointerOnStackCheck",
+       @"testBlocksWithCapturesAreOnStackWithoutCapturesNot",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }
