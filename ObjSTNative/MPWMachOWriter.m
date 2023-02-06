@@ -412,9 +412,9 @@
     long descriptorPtrOffset=((void*)&block.descriptor) - (void*)&block;
 
     [blockWriter declareLocalSymbol:blockConstSymbol];
-    [blockWriter addRelocationEntryForSymbol:@"__NSConcreteGlobalBlock" atOffset:[blockWriter length]];
-    [blockWriter addRelocationEntryForSymbol:codeSymbol atOffset:(int)codePtrOffset+[blockWriter length]];
-    [blockWriter addRelocationEntryForSymbol:descriptorSymbol atOffset:(int)descriptorPtrOffset+[blockWriter length]];
+    [blockWriter addRelocationEntryForSymbol:@"__NSConcreteGlobalBlock" atOffset:(int)[blockWriter length]];
+    [blockWriter addRelocationEntryForSymbol:codeSymbol atOffset:(int)(codePtrOffset+[blockWriter length])];
+    [blockWriter addRelocationEntryForSymbol:descriptorSymbol atOffset:(int)(descriptorPtrOffset+[blockWriter length])];
     [blockWriter appendBytes:&block length:sizeof block];
     
     
@@ -423,7 +423,7 @@
     } else {
         [dataWriter declareLocalSymbol:blockSymbol];
     }
-    [dataWriter addRelocationEntryForSymbol:blockConstSymbol atOffset:[dataWriter length]];
+    [dataWriter addRelocationEntryForSymbol:blockConstSymbol atOffset:(int)[dataWriter length]];
     [dataWriter appendBytes:"\0\0\0\0\0\0\0\0\0" length:8];
     
 }

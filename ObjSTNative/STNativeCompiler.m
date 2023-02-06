@@ -244,7 +244,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
--(int)generateBlockExpression:(MPWBlockExpression*)expr
+-(int)generateStaticBlockExpression:(MPWBlockExpression*)expr
 {
     NSAssert1( expr.symbol != nil, @"blockmust have a symbol: %@",expr);
     unsigned int adrp=[codegen adrpToDestReg:0 withPageOffset:0];
@@ -255,6 +255,28 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [codegen loadRegister:0 fromContentsOfAdressInRegister:0];
     return 0;
 }
+
+-(int)generateStackBlockExpression:(MPWBlockExpression*)expr
+{
+    EXPECTTRUE(false, @"stack blocks implemented");
+    return 0;
+}
+
+-(BOOL)shouldGenerateStackBlockForBlockExpression:(MPWBlockExpression*)expr
+{
+    return NO;
+}
+
+-(int)generateBlockExpression:(MPWBlockExpression*)expr
+{
+    if ( [self shouldGenerateStackBlockForBlockExpression:expr]) {
+        return [self generateStackBlockExpression:expr];
+    } else {
+        return [self generateStaticBlockExpression:expr];
+    }
+}
+    
+
 
 -(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
 {
