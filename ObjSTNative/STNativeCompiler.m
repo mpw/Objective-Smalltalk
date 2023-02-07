@@ -32,9 +32,8 @@
 
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
-
 @property (nonatomic, assign) int localRegisterMin,localRegisterMax,currentLocalRegStack,savedRegisterMax;
-
+@property (nonatomic, assign) BOOL forceStackBlocks;
 
 
 @end
@@ -155,7 +154,17 @@
 
 @end
 
+
+@interface MPWBlockExpression(nativeCode)
+-(BOOL)needsToBeOnStack;
+@end
+
 @implementation MPWBlockExpression(nativeCode)
+
+-(BOOL)needsToBeOnStack
+{
+    return NO;
+}
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
@@ -264,7 +273,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(BOOL)shouldGenerateStackBlockForBlockExpression:(MPWBlockExpression*)expr
 {
-    return NO;
+    return self.forceStackBlocks || [expr needsToBeOnStack];
 }
 
 -(int)generateBlockExpression:(MPWBlockExpression*)expr
