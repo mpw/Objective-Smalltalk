@@ -267,9 +267,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateStackBlockExpression:(MPWBlockExpression*)expr
 {
-    EXPECTTRUE(false, @"stack blocks implemented");
-    return 0;
+    return [self generateStaticBlockExpression:expr];
+//    return 0;
 }
+
 
 -(BOOL)shouldGenerateStackBlockForBlockExpression:(MPWBlockExpression*)expr
 {
@@ -670,18 +671,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 //    return blocks;
 }
 
-+(BOOL)isPointerOnStackAboveMe:(void*)ptr within:(long)maxDiff
-{
-    void *roughlyMyFrame = &_cmd;
-    long differenceFromPtr = ptr - roughlyMyFrame;
-    return differenceFromPtr > 0 && differenceFromPtr < maxDiff;
-}
-
-+(BOOL)isPointerOnStackAboveMe:(void*)ptr
-{
-    return [self isPointerOnStackAboveMe:ptr within:1000];
-}
-
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
 {
     NSMutableString *command=[NSMutableString string];
@@ -982,9 +971,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     INTEXPECT(runSucess,0,@"run worked");
 }
 
-+(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename
++(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename compiler:(STNativeCompiler *)compiler
 {
-    STNativeCompiler *compiler = [self compiler];
     MPWClassDefinition *theClass = [compiler compile:objs];
     
     [[compiler compileProcessToMachoO:theClass] writeToFile:[NSString stringWithFormat:@"/tmp/%@.o",filename] atomically:YES];
@@ -1000,6 +988,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return @"No error";
 //    INTEXPECT(runSucess,0,@"run worked");
 }
+
++(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename
+{
+    return [self errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename compiler:[self compiler]];
+}
+
 
 #define COMPILEANDRUN( str, theFilename )\
 NSString *msg=[self errorCompilingAndRunning:str filename:theFilename];\
@@ -1035,6 +1029,8 @@ static int notOnStack = 0;
     
     EXPECTTRUE([self isPointerOnStackAboveMe:ptr_to_something_on_stack], @"_cmd is on stack");
     EXPECTFALSE([self isPointerOnStackAboveMe:&notOnStack], @"static is not stack");
+    IDEXPECT( [self isPointerOnStackAboveMeForST:&ptr_to_something_on_stack],@(true),@"on stack");
+    IDEXPECT( [self isPointerOnStackAboveMeForST:&notOnStack],@(false),@"not on stack");
 }
 
 +(void)testBlocksWithCapturesAreOnStackWithoutCapturesNot
@@ -1044,6 +1040,28 @@ static int notOnStack = 0;
     id stackBlock=^{ return a+2; };
     EXPECTTRUE([self isPointerOnStackAboveMe:stackBlock], @"block with captured var is on stack");
     EXPECTFALSE([self isPointerOnStackAboveMe:staticBlock], @"block without captured var is not on stack");
+}
+
++(void)testNormalBlocksAreNotOnStack
+{
+    COMPILEANDRUN( @"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. }. } }", @"TestStaticBlocksNotOnStack");
+}
+
++(instancetype)stackBlockCompiler {
+    STNativeCompiler *stackBlockCompiler = [self compiler];
+    stackBlockCompiler.forceStackBlocks = true;
+    return stackBlockCompiler;
+}
+
+#define COMPILEANDRUNSTACKBLOCKS( str, theFilename )\
+NSString *msg=[self errorCompilingAndRunning:str filename:theFilename compiler:[self stackBlockCompiler]];\
+IDEXPECT(msg,@"No error",@"compile and run");\
+
+
+
++(void)testStackBlocksAreActuallyOnStack
+{
+    COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. } not. } }",  @"TestStackBlocksAreOnStack")
 }
 
 
@@ -1077,6 +1095,8 @@ static int notOnStack = 0;
        @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
        @"testPointerOnStackCheck",
        @"testBlocksWithCapturesAreOnStackWithoutCapturesNot",
+       @"testNormalBlocksAreNotOnStack",
+//       @"testStackBlocksAreActuallyOnStack",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }
