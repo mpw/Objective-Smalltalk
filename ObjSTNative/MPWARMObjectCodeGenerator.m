@@ -13,8 +13,20 @@
 #import <objc/message.h>
 #import "MPWMachOSectionWriter.h"
 
+@interface MPWARMObjectCodeGenerator()
+
+
+@end
+
 
 @implementation MPWARMObjectCodeGenerator
+
+-(instancetype)initWithTarget:(id)aTarget
+{
+    self=[super initWithTarget:aTarget];
+    self.defaultFunctionStackSpace=0x120;
+    return self;
+}
 
 +(id)defaultTarget
 {
@@ -302,27 +314,31 @@
     [self generateAddDest:31 source:31 immediate:amount];
 }
 
--(void)generateStartOfFunctionNamed:(NSString*)name
+-(void)generateStartOfFunctionNamed:(NSString*)name stackSpace:(int)stackSpace
 {
     [self declareGlobalSymbol:name];
-    [self reserveStackSpace:0x120];
-    [self generateSaveLinkRegisterAndFramePtr:0x110];
-    [self generateAddDest:30 source:31 immediate:0x100];     // set FP
+    [self reserveStackSpace:stackSpace];
+    [self generateSaveLinkRegisterAndFramePtr:stackSpace-0x10];
+    [self generateAddDest:30 source:31 immediate:stackSpace-0x20];     // set FP
 }
 
-
--(void)generateEndOfFunction
+-(void)generateEndOfFunctionStackSpace:(int)stackSpace
 {
-    [self generateRestoreLinkRegisterAndFramePtr:0x110];
-    [self popStackSpace:0x120];
+    [self generateRestoreLinkRegisterAndFramePtr:stackSpace-0x10];
+    [self popStackSpace:stackSpace];
     [self generateReturn];
+}
+
+-(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(MPWARMObjectCodeGenerator* gen))block
+{
+    [self generateStartOfFunctionNamed:name stackSpace:stackSpace];
+    block(self);
+    [self generateEndOfFunctionStackSpace:stackSpace];
 }
 
 -(void)generateFunctionNamed:(NSString*)name body:(void(^)(MPWARMObjectCodeGenerator* gen))block
 {
-    [self generateStartOfFunctionNamed:name];
-    block(self);
-    [self generateEndOfFunction];
+    [self generateFunctionNamed:name stackSpace:self.defaultFunctionStackSpace body:block ];
 }
 
 -(void)generateMoveRegisterFrom:(int)from to:(int)to
