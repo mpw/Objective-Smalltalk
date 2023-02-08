@@ -339,9 +339,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     MPWExpression *rhs = [expr rhs];
     MPWIdentifierExpression *lhs = [expr lhs];
     int registerForRHS = [self generateCodeFor:rhs];
-    NSLog(@"lhs: %@ / %@",lhs.class,lhs);
     NSString *lhsName = [lhs name];
-    NSLog(@"got the name: %@",lhsName);
     NSNumber *lhsRegisterNumber = self.variableToRegisterMap[lhsName];
     NSAssert1( lhsRegisterNumber, @"Don't have a variable named '%@'",lhsName);
     [self moveRegister:registerForRHS toRegister:lhsRegisterNumber.intValue];
@@ -516,9 +514,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return returnRegister;
 }
 
+#define SIZE_OF_STACK_BLOCK 64
+
 -(int)computeStackSpaceForMethod:(MPWScriptedMethod*)method
 {
-    return 0x120;
+    return 0x120 + (blockNo * SIZE_OF_STACK_BLOCK);
 }
 
 -(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
@@ -610,7 +610,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }];
 }
 
--(NSString*)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
+-(void)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
 {
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
@@ -633,10 +633,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self moveRegister:returnRegister toRegister:0];
         [self restoreLocalRegisters];
     }];
+    return ;
 }
+
+
 
 -(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
 {
+    aBlock.stackOffset = blockNo * SIZE_OF_STACK_BLOCK;
     blockNo++;
     NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     [self compileBlockInvocatinFunction:aBlock inMethod:method blockFunctionSymbol:symbol];

@@ -20,5 +20,6 @@
 -statementArray;
 
 @property (nonatomic, strong ) NSString *symbol;
+@property (nonatomic, assign ) int  stackOffset;   // for ARM native compiler 
 
 @end
