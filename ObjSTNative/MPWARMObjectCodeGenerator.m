@@ -477,10 +477,14 @@ typedef long (*VOIDPTR)(void);
 
 +(void)testReserveStackSpace
 {
-    unsigned int reserveStack = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int reserveStackx8 = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
         [gen reserveStackSpace:0x08];
     }];
-    HEXEXPECT(reserveStack, 0xd10023ff, @"sub    sp, sp, #0x8" );
+    HEXEXPECT(reserveStackx8, 0xd10023ff, @"sub    sp, sp, #0x8" );
+    unsigned int reserveStackx22 = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+        [gen reserveStackSpace:0x22];
+    }];
+    HEXEXPECT(reserveStackx22, 0xd1008bff, @"sub    sp, sp, #0x22" );
 
 }
 

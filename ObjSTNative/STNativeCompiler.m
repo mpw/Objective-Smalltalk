@@ -33,6 +33,7 @@
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
 @property (nonatomic, assign) int localRegisterMin,localRegisterMax,currentLocalRegStack,savedRegisterMax;
+
 @property (nonatomic, assign) BOOL forceStackBlocks;
 
 
@@ -515,6 +516,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return returnRegister;
 }
 
+-(int)computeStackSpaceForMethod:(MPWScriptedMethod*)method
+{
+    return 0x120;
+}
+
 -(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
 {
     NSArray *blocks = [self findBlocksInMethod:method];
@@ -525,7 +531,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     //--- retrieve all the blocks and generate them first
-    [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+    [codegen generateFunctionNamed:symbol stackSpace:[self computeStackSpaceForMethod:method] body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
     return symbol;
