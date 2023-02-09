@@ -258,11 +258,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return regno;
 }
 
+-(int)generateLoadClassReference:(NSString*)className intoRegister:(int)regno
+{
+    NSString *classRefLabel = [writer addClassRefernceForClass:className];
+    return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:regno];
+}
+
 -(int)generateLoadClassReference:(NSString*)className
 {
-    
-    NSString *classRefLabel = [writer addClassRefernceForClass:className];
-    return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:0];
+    return [self generateLoadClassReference:className intoRegister:0];
 }
 
 -(int)generateStaticBlockExpression:(MPWBlockExpression*)expr
@@ -274,18 +278,20 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateStackBlockExpression:(MPWBlockExpression*)block
 {
+    NSLog(@"===== generateStackBlockExpression: ");
     int stackOffset = block.stackOffset;
     [codegen generateAddDest:0 source:31 immediate:stackOffset];
-    // store the class pointer  at [r0]   __NSConcreteStackBlock
-    //
-//    adrp    x11, __NSConcreteStackBlock@GOTPAGE
-//    ldr     x11, [x11, __NSConcreteStackBlock@GOTPAGEOFF]
-//    stp     x11, [x0]
-//
-    // store flags at [r0+8]  (can combine)  #-1040187392
-    // store invocation-function at [r0+16]
-    // store descriptor at [r0+24]
-    // any captures after this:  [r0+32]
+
+    NSString *classRefLabel = [writer addClassRefernceForClass:@"_NSConcreteStackBlock" prefix:@"_"];
+    [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:8];
+
+//    [self generateLoadClassReference:@"_NSConcreteStackBlock" intoRegister:8];
+    [codegen generateMoveConstant:0x3e000000 to:9];     // flags
+    [codegen generateSaveRegister:8 andRegister:9 relativeToRegister:0 offset:0 rewrite:NO pre:NO];
+
+    [self generateLoadSymbolicAddress:block.blockFunctionSymbol intoRegister:10];  // class ptr
+    [self generateLoadSymbolicAddress:block.blockDescriptorSymbol intoRegister:11];  // class ptr
+    [codegen generateSaveRegister:10 andRegister:11 relativeToRegister:0 offset:16 rewrite:NO pre:NO];
     
     return 0;
 }
@@ -1150,7 +1156,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testComputeStackBlockOffsetsWithinFrame",
        @"testNormalBlocksAreNotOnStack",
        @"testStackBlocksAreActuallyOnStack",
-//       @"testStackBlocksCanBeUsed",
+       @"testStackBlocksCanBeUsed",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }

@@ -95,6 +95,16 @@
     //    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
 }
 
+-(void)generateMo:(int)destReg source:(int)sourceReg immediate:(int)immediateValue
+{
+    unsigned int base = 0x91000000;
+    base |= destReg & 31;
+    base |= (sourceReg & 31) << 5;
+    base |= (immediateValue & 4095) << 10;
+    [self appendWord32:base];
+    //    [self generateOp:0x8b dest:destReg source1:source1Reg source2:0];
+}
+
 -(void)generateSubDest:(int)destReg source:(int)sourceReg immediate:(int)immediateValue
 {
     unsigned int base = 0xd1000000;

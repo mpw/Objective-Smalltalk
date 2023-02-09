@@ -355,11 +355,11 @@
 //    NSLog(@"cfstringwriter offset after writing: %ld",[cfstringWriter length]);
 }
 
--(NSString*)addClassRefernceForClass:(NSString*)className
+-(NSString*)addClassRefernceForClass:(NSString*)className prefix:(NSString*)prefix
 {
     NSString *localReferenceName=self.classReferences[className];
     if ( localReferenceName == nil ) {
-        NSString *externalSymbolName=[@"_OBJC_CLASS_$_" stringByAppendingString:className];
+        NSString *externalSymbolName=[prefix stringByAppendingString:className];
         localReferenceName=[@"_OBJC_CLASS_REF_"  stringByAppendingString:className];
         const char zerobytes[8]={0,0,0,0,0,0,0,0};
         MPWMachOSectionWriter *refWriter=[self classRefWriter];
@@ -370,6 +370,11 @@
         self.classReferences[className]=localReferenceName;
     }
     return localReferenceName;
+}
+
+-(NSString*)addClassRefernceForClass:(NSString*)className
+{
+    return [self addClassRefernceForClass:(NSString*)className prefix:@"_OBJC_CLASS_$_"];
 }
 
 -(NSString*)writeBlockDescritorWithCodeAtSymbol:(NSString*)codeSymbol blockSymbol:(NSString*)blockSymbol signature:(NSString*)signature

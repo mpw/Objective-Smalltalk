@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)writeBlockLiteralWithCodeAtSymbol:(NSString*)codeSymbol blockSymbol:(NSString*)blockSymbol signature:(NSString*)signature global:(BOOL)global;
 -(void)addTextSectionData:(NSData*)data;
 -(NSString*)addClassRefernceForClass:(NSString*)className;
+-(NSString*)addClassRefernceForClass:(NSString*)className prefix:(NSString*)prefix;
 
 
 
