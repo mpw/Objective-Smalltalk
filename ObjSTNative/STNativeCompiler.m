@@ -648,7 +648,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     [self compileBlockInvocatinFunction:aBlock inMethod:method blockFunctionSymbol:symbol];
     NSString *blockSymbol = [NSString stringWithFormat:@"_theBlock_l%d",blockNo];
-    [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:blockSymbol signature:@"i" global:YES];
+    if ( [self shouldGenerateStackBlockForBlockExpression:aBlock]) {
+        aBlock.blockFunctionSymbol = symbol;
+        aBlock.blockDescriptorSymbol = [writer writeBlockDescritorWithCodeAtSymbol:symbol blockSymbol:blockSymbol signature:@"i"];
+    } else {
+        [writer writeBlockLiteralWithCodeAtSymbol:symbol blockSymbol:blockSymbol signature:@"i" global:YES];
+        aBlock.symbol = blockSymbol;
+    }
     return blockSymbol;
 }
 

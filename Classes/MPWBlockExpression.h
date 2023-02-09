@@ -19,7 +19,11 @@
 -(NSArray*)arguments;
 -statementArray;
 
-@property (nonatomic, strong ) NSString *symbol;
-@property (nonatomic, assign ) int  stackOffset;   // for ARM native compiler 
+//   for the native compiler
+
+@property (nonatomic, strong ) NSString *symbol;    // the block object symbol for static blocks 
+@property (nonatomic, assign ) int  stackOffset;    // for ARM native compiler
+@property (nonatomic, strong ) NSString *blockDescriptorSymbol;
+@property (nonatomic, strong ) NSString *blockFunctionSymbol;
 
 @end
