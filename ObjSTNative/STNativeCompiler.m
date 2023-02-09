@@ -1094,6 +1094,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  1 - (class:NSObject isPointerOnStackAboveMeForST:{ 2. }). } }",  @"TestStackBlocksAreOnStack")
 }
 
++(void)testStackBlocksCanBeUsed
+{
+    COMPILEANDRUNSTACKBLOCKS(@"class TestStackBlocksCanBeUsed : STProgram {  -main:args {  { :stream | stream println:'Stack Block executing!'. 0. } value: self Stdout. } }",  @"TestStackBlocksCanBeUsed")
+}
+
 +(void)testBlockCanAccessOutsideScopeVariables
 {
     COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
@@ -1133,6 +1138,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testComputeStackBlockOffsetsWithinFrame",
        @"testNormalBlocksAreNotOnStack",
        @"testStackBlocksAreActuallyOnStack",
+       @"testStackBlocksCanBeUsed",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }
