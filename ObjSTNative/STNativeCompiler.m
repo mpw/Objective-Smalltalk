@@ -1096,7 +1096,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 
 +(void)testStackBlocksCanBeUsed
 {
-    COMPILEANDRUNSTACKBLOCKS(@"class TestStackBlocksCanBeUsed : STProgram {  -main:args {  { :stream | stream println:'Stack Block executing!'. 0. } value: self Stdout. } }",  @"TestStackBlocksCanBeUsed")
+    COMPILEANDRUNSTACKBLOCKS(@"class TestStackBlocksCanBeUsed : STProgram {  -main:args { class:MPWBlockContext class. { :stream | stream println:'Stack Block executing!'. 0. } value: self Stdout. } }",  @"TestStackBlocksCanBeUsed")
 }
 
 +(void)testBlockCanAccessOutsideScopeVariables
