@@ -266,10 +266,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return 0;
 }
 
--(int)generateStackBlockExpression:(MPWBlockExpression*)expr
+-(int)generateStackBlockExpression:(MPWBlockExpression*)block
 {
-    return [self generateStaticBlockExpression:expr];
-//    return 0;
+    int statckOffset = block.stackOffset;
+    [codegen generateAddDest:0 source:31 immediate:block.stackOffset];
+    // place the address to the location on stack in register 0
+    return 0;
 }
 
 
@@ -1018,11 +1020,6 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestDoNotOverwriteLocalVar : STProgram {  -main:args {  var a. a := 10. var b. b := 20. (3+4) * a - 70.  a * 2 - 20.} }", @"TestDoNotOverwriteLocalVar");
 }
 
-+(void)testBlockCanAccessOutsideScopeVariables
-{
-    COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
-}
-
 static int notOnStack = 0;
 
 +(void)testPointerOnStackCheck
@@ -1035,18 +1032,13 @@ static int notOnStack = 0;
     IDEXPECT( [self isPointerOnStackAboveMeForST:&notOnStack],@(false),@"not on stack");
 }
 
-+(void)testBlocksWithCapturesAreOnStackWithoutCapturesNot
++(void)testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot
 {
     id staticBlock=^{ return 2; };
     int a=2;
     id stackBlock=^{ return a+2; };
     EXPECTTRUE([self isPointerOnStackAboveMe:stackBlock], @"block with captured var is on stack");
     EXPECTFALSE([self isPointerOnStackAboveMe:staticBlock], @"block without captured var is not on stack");
-}
-
-+(void)testNormalBlocksAreNotOnStack
-{
-    COMPILEANDRUN( @"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. }. } }", @"TestStaticBlocksNotOnStack");
 }
 
 +(instancetype)stackBlockCompiler {
@@ -1059,12 +1051,6 @@ static int notOnStack = 0;
 NSString *msg=[self errorCompilingAndRunning:str filename:theFilename compiler:[self stackBlockCompiler]];\
 IDEXPECT(msg,@"No error",@"compile and run");\
 
-
-
-+(void)testStackBlocksAreActuallyOnStack
-{
-    COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. } not. } }",  @"TestStackBlocksAreOnStack")
-}
 
 +(void)testComputeStackSpaceForStackBlocks
 {
@@ -1089,6 +1075,22 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     INTEXPECT(blocks[0].stackOffset,0x0,@"first block stack offset");
     [compiler compileBlock:blocks[1] inMethod:methods[0]];
     INTEXPECT(blocks[1].stackOffset,0x40,@"second block stack offset");
+}
+
+
++(void)testNormalBlocksAreNotOnStack
+{
+    COMPILEANDRUN( @"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. }. } }", @"TestStaticBlocksNotOnStack");
+}
+
++(void)testStackBlocksAreActuallyOnStack
+{
+    COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  1 - (class:NSObject isPointerOnStackAboveMeForST:{ 2. }). } }",  @"TestStackBlocksAreOnStack")
+}
+
++(void)testBlockCanAccessOutsideScopeVariables
+{
+    COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
 }
 
 +(NSArray*)testSelectors
@@ -1120,11 +1122,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testTwoStringsInMachO",
        @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
        @"testPointerOnStackCheck",
-       @"testBlocksWithCapturesAreOnStackWithoutCapturesNot",
-       @"testNormalBlocksAreNotOnStack",
+       @"testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot",
        @"testComputeStackSpaceForStackBlocks",
        @"testComputeStackBlockOffsetsWithinFrame",
-//       @"testStackBlocksAreActuallyOnStack",
+       @"testNormalBlocksAreNotOnStack",
+       @"testStackBlocksAreActuallyOnStack",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }
