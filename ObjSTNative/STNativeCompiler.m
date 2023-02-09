@@ -1066,7 +1066,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. } not. } }",  @"TestStackBlocksAreOnStack")
 }
 
-+(void)testComputeStackSpaceAndPositionForStackBlocks
++(void)testComputeStackSpaceForStackBlocks
 {
     STNativeCompiler *compiler=[self stackBlockCompiler];
     MPWClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
@@ -1075,9 +1075,21 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x120,@"0 blocks");
     INTEXPECT([compiler stackSpaceForMethod:methods[1]],0x160,@"1 block");
     INTEXPECT([compiler stackSpaceForMethod:methods[2]],0x1a0,@"2 blocks");
-
 }
 
++(void)testComputeStackBlockOffsetsWithinFrame
+{
+    STNativeCompiler *compiler=[self stackBlockCompiler];
+    MPWClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -two { { 2. }. { 3. }. } } "];
+    NSArray <MPWScriptedMethod*>* methods=classWithBlocks.methods;
+    INTEXPECT(methods.count,1,@"number of methods");
+    INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x1a0,@"2 blocks");
+    NSArray <MPWBlockExpression*>*  blocks=methods[0].blocks;
+    [compiler compileBlock:blocks[0] inMethod:methods[0]];
+    INTEXPECT(blocks[0].stackOffset,0x0,@"first block stack offset");
+    [compiler compileBlock:blocks[1] inMethod:methods[0]];
+    INTEXPECT(blocks[1].stackOffset,0x40,@"second block stack offset");
+}
 
 +(NSArray*)testSelectors
 {
@@ -1110,7 +1122,8 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testPointerOnStackCheck",
        @"testBlocksWithCapturesAreOnStackWithoutCapturesNot",
        @"testNormalBlocksAreNotOnStack",
-       @"testComputeStackSpaceAndPositionForStackBlocks",
+       @"testComputeStackSpaceForStackBlocks",
+       @"testComputeStackBlockOffsetsWithinFrame",
 //       @"testStackBlocksAreActuallyOnStack",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];
