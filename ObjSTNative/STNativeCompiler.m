@@ -516,14 +516,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 #define SIZE_OF_STACK_BLOCK 64
 
--(int)computeStackSpaceForMethod:(MPWScriptedMethod*)method
+-(int)stackSpaceForMethod:(MPWScriptedMethod*)method
 {
-    return 0x120 + (blockNo * SIZE_OF_STACK_BLOCK);
+    return 0x120 + ((int)method.blocks.count * SIZE_OF_STACK_BLOCK);
 }
 
 -(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
 {
-    NSArray *blocks = [self findBlocksInMethod:method];
+    NSArray *blocks = method.blocks;
+    blockNo=0;
     for ( MPWBlockExpression *block in blocks ) {
         NSString *blockSymbol = [self compileBlock:block inMethod:method];
         block.symbol = blockSymbol;
@@ -531,7 +532,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     //--- retrieve all the blocks and generate them first
-    [codegen generateFunctionNamed:symbol stackSpace:[self computeStackSpaceForMethod:method] body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
+    [codegen generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
     return symbol;
@@ -670,15 +671,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [writer addTextSectionData:[codegen target]];
     [writer writeFile];
     return (NSData*)[writer target];
-}
-
--(NSArray*)findBlocksInMethod:(MPWScriptedMethod*)aMethod
-{
-    return [aMethod findBlocks];
-//    
-//    NSMutableArray *blocks=[NSMutableArray array];
-//    [aMethod.methodBody accumulateBlocks:blocks];
-//    return blocks;
 }
 
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
@@ -943,7 +935,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     MPWClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
     MPWScriptedMethod *firstMethod = [[theClass methods] firstObject];
     IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
-    NSArray *blocks = [compiler findBlocksInMethod:firstMethod];
+    NSArray *blocks = firstMethod.blocks;
     INTEXPECT(blocks.count, 2,@"number of blocks in method");
     MPWBlockExpression *trueBlock = blocks.firstObject;
     MPWBlockExpression *falseBlock = blocks.lastObject;
@@ -1074,6 +1066,18 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. } not. } }",  @"TestStackBlocksAreOnStack")
 }
 
++(void)testComputeStackSpaceAndPositionForStackBlocks
+{
+    STNativeCompiler *compiler=[self stackBlockCompiler];
+    MPWClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
+    NSArray <MPWScriptedMethod*>* methods=classWithBlocks.methods;
+    INTEXPECT(methods.count,3,@"number of methods");
+    INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x120,@"0 blocks");
+    INTEXPECT([compiler stackSpaceForMethod:methods[1]],0x160,@"1 block");
+    INTEXPECT([compiler stackSpaceForMethod:methods[2]],0x1a0,@"2 blocks");
+
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1106,6 +1110,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testPointerOnStackCheck",
        @"testBlocksWithCapturesAreOnStackWithoutCapturesNot",
        @"testNormalBlocksAreNotOnStack",
+       @"testComputeStackSpaceAndPositionForStackBlocks",
 //       @"testStackBlocksAreActuallyOnStack",
 //       @"testBlockCanAccessOutsideScopeVariables",
 			];

@@ -19,8 +19,8 @@
 
 objectAccessor_h(MPWExpression*, methodBody, setMethodBody )
 objectAccessor_h(NSArray*, localVars, setLocalVars )
+@property (readonly, nonatomic) NSArray <MPWBlockExpression*>* blocks;
 idAccessor_h( script, setScript )
--(NSArray <MPWBlockExpression*>*)findBlocks;
 
 @property (nonatomic,assign) Class classOfMethod;
 

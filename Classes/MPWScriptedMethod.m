@@ -21,6 +21,9 @@
 
 
 @implementation MPWScriptedMethod
+{
+    NSArray <MPWBlockExpression*>* blocks;
+}
 
 
 objectAccessor(MPWExpression*, methodBody, setMethodBody )
@@ -48,6 +51,8 @@ idAccessor( script, _setScript )
     [self.methodBody accumulateBlocks:blocks];
     return blocks;
 }
+
+lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 
 -compiledScript
