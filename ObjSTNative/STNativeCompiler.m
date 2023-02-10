@@ -35,6 +35,7 @@
 @property (nonatomic, assign) int localRegisterMin,localRegisterMax,currentLocalRegStack,savedRegisterMax;
 
 @property (nonatomic, assign) BOOL forceStackBlocks;
+@property (nonatomic, assign) int currentBlockStackOffset;
 
 
 @end
@@ -272,10 +273,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [self generateLoadSymbolicAddress:block.blockFunctionSymbol intoRegister:10];  // class ptr
     [self generateLoadSymbolicAddress:block.blockDescriptorSymbol intoRegister:11];  // class ptr
     [codegen generateSaveRegister:10 andRegister:11 relativeToRegister:0 offset:16 rewrite:NO pre:NO];
+
+    //  copy captured variables
     
     return 0;
 }
-
 
 -(BOOL)shouldGenerateStackBlockForBlockExpression:(MPWBlockExpression*)expr
 {
@@ -290,8 +292,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return [self generateStaticBlockExpression:expr];
     }
 }
-    
-
 
 -(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
 {
@@ -525,6 +525,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     NSArray *blocks = method.blocks;
     blockNo=0;
+    self.currentBlockStackOffset=0;
     for ( MPWBlockExpression *block in blocks ) {
         NSString *blockSymbol = [self compileBlock:block inMethod:method];
         block.symbol = blockSymbol;
@@ -641,7 +642,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
 {
-    aBlock.stackOffset = blockNo * SIZE_OF_STACK_BLOCK;
+    aBlock.stackOffset = self.currentBlockStackOffset;
+    self.currentBlockStackOffset += SIZE_OF_STACK_BLOCK;
     blockNo++;
     NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     [self compileBlockInvocatinFunction:aBlock inMethod:method blockFunctionSymbol:symbol];
@@ -673,6 +675,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSData*)compileBlockToMachoO:(MPWBlockExpression*)aBlock
 {
+    self.currentBlockStackOffset=0;
     [self compileBlock:aBlock inMethod:nil];
     [writer addTextSectionData:[codegen target]];
     [writer writeFile];
