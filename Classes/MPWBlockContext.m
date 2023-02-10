@@ -385,7 +385,7 @@ typedef id  (^idBlock)(id arg );
 {
     MPWBlockContext *stblock = [STCompiler evaluate:@"{ 42. }"];
     [stblock installInClass:[NSNumber class] withSignature:"i@:" selector:@selector(theIntAnswer)];
-    NSLog(@"=== should convert to int");
+//    NSLog(@"=== should convert to int");
     int theAnswer=[@(2) theIntAnswer];
     INTEXPECT(theAnswer, 42, @"theAnswer");
 }

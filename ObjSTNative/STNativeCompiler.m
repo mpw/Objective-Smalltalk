@@ -81,10 +81,6 @@
     return [compiler generateCodeForExpression:self];
 }
 
--(void)accumulateBlocks:(NSMutableArray*)blocks
-{
-    ;
-}
 
 @end
 @implementation MPWStatementList(nativeCode)
@@ -99,12 +95,6 @@
     return returnRegister;
 }
 
--(void)accumulateBlocks:(NSMutableArray*)blocks
-{
-    for ( id statement in [self statements] ) {
-        [statement accumulateBlocks:blocks];
-    }
-}
 
 
 @end
@@ -176,14 +166,6 @@
 {
     NSLog(@"-[MPWBlockExpression name] called: %@",[NSThread callStackSymbols]);
     return nil;
-}
-
--(void)accumulateBlocks:(NSMutableArray*)blocks
-{
-    for ( id statement in [self statementArray] ) {
-        [statement accumulateBlocks:blocks];
-    }
-    [blocks addObject:self];
 }
 
 
@@ -260,7 +242,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateLoadClassReference:(NSString*)className intoRegister:(int)regno
 {
-    NSString *classRefLabel = [writer addClassRefernceForClass:className];
+    NSString *classRefLabel = [writer addClassReferenceForClass:className];
     return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:regno];
 }
 
@@ -278,14 +260,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateStackBlockExpression:(MPWBlockExpression*)block
 {
-    NSLog(@"===== generateStackBlockExpression: ");
     int stackOffset = block.stackOffset;
     [codegen generateAddDest:0 source:31 immediate:stackOffset];
 
-    NSString *classRefLabel = [writer addClassRefernceForClass:@"_NSConcreteStackBlock" prefix:@"_"];
+    NSString *classRefLabel = [writer addClassReferenceForClass:@"_NSConcreteStackBlock" prefix:@"_"];
     [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:8];
 
-//    [self generateLoadClassReference:@"_NSConcreteStackBlock" intoRegister:8];
     [codegen generateMoveConstant:0x3e000000 to:9];     // flags
     [codegen generateSaveRegister:8 andRegister:9 relativeToRegister:0 offset:0 rewrite:NO pre:NO];
 
@@ -610,7 +590,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     classwriter.nameOfSuperClass = aClass.superclassNameToUse;
     [self compileMethodsForClass:aClass];
     [classwriter writeClass];
-    [writer addClassRefernceForClass:aClass.name];
+    [writer addClassReferenceForClass:aClass.name];
 }
 
 -(void)compileAndWriteClass:(MPWClassDefinition*)aClass

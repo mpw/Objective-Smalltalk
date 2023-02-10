@@ -11,6 +11,7 @@
 #import <MPWFoundation/NSNil.h>
 #import "MPWIdentifier.h"
 #import "MPWStatementList.h"
+#import "MPWScriptedMethod.h"
 
 @implementation MPWBlockExpression
 
@@ -27,11 +28,11 @@ idAccessor( declaredArguments, setDeclaredArguments )
 
 -statementArray
 {
-    id statements = [self statements];
-    while ( [statements isKindOfClass:[MPWStatementList class]]) {
-        statements=[statements statements];
+    id actualStatements = [self statements];
+    while ( [actualStatements isKindOfClass:[MPWStatementList class]]) {
+        actualStatements=[actualStatements statements];
     }
-    return statements;
+    return actualStatements;
 }
 
 +blockWithStatements:newStatements arguments:newArgNames
@@ -91,6 +92,24 @@ idAccessor( declaredArguments, setDeclaredArguments )
     return arguments;
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    for ( id statement in [self statementArray] ) {
+        [statement accumulateBlocks:blocks];
+    }
+    [blocks addObject:self];
+}
+
+-(NSArray*)capturedVariablesFromMethod:(MPWScriptedMethod*)method
+{
+    MPWStatementList *s=[self statements];
+    NSMutableSet *variablesReferencedInBlock=[NSMutableSet set];
+    [s addToVariablesRead:variablesReferencedInBlock];
+    [s addToVariablesWritten:variablesReferencedInBlock];
+
+    
+    return [variablesReferencedInBlock allObjects];
+}
 
 -(NSString*)description
 {
@@ -109,11 +128,11 @@ idAccessor( declaredArguments, setDeclaredArguments )
 
 #import "STCompiler.h"
 #import "MPWClassDefinition.h"
-#import "MPWScriptedMethod.h"
 
 
 
 @implementation MPWBlockExpression(testing)
+
 
 +(void)testComputeBlockCaptures
 {
@@ -121,8 +140,13 @@ idAccessor( declaredArguments, setDeclaredArguments )
     STCompiler *compiler = [STCompiler compiler];
     MPWClassDefinition *theClass = [compiler compile:code];
     MPWScriptedMethod *method=theClass.methods.firstObject;
-    
     EXPECTNOTNIL( method, @"got a method");
+    NSArray *blocks = method.blocks;
+    INTEXPECT(blocks.count, 1, @"numbr of blocks");
+    MPWBlockExpression *block = blocks.firstObject;
+    NSArray *captured=[block capturedVariablesFromMethod:method];
+    INTEXPECT( captured.count, 1, @"number of captures");
+    IDEXPECT( [captured.firstObject name], @"a", @"name of capture");
 }
 
 +testSelectors

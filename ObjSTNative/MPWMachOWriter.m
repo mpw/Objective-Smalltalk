@@ -355,7 +355,7 @@
 //    NSLog(@"cfstringwriter offset after writing: %ld",[cfstringWriter length]);
 }
 
--(NSString*)addClassRefernceForClass:(NSString*)className prefix:(NSString*)prefix
+-(NSString*)addClassReferenceForClass:(NSString*)className prefix:(NSString*)prefix
 {
     NSString *localReferenceName=self.classReferences[className];
     if ( localReferenceName == nil ) {
@@ -372,9 +372,9 @@
     return localReferenceName;
 }
 
--(NSString*)addClassRefernceForClass:(NSString*)className
+-(NSString*)addClassReferenceForClass:(NSString*)className
 {
-    return [self addClassRefernceForClass:(NSString*)className prefix:@"_OBJC_CLASS_$_"];
+    return [self addClassReferenceForClass:(NSString*)className prefix:@"_OBJC_CLASS_$_"];
 }
 
 -(NSString*)writeBlockDescritorWithCodeAtSymbol:(NSString*)codeSymbol blockSymbol:(NSString*)blockSymbol signature:(NSString*)signature
@@ -807,9 +807,9 @@
 +(void)testWriteClassReferences
 {
     MPWMachOWriter *writer=[self stream];
-    [writer addClassRefernceForClass:@"NSObject"];
-    [writer addClassRefernceForClass:@"NSNumber"];
-    [writer addClassRefernceForClass:@"NSObject"];
+    [writer addClassReferenceForClass:@"NSObject"];
+    [writer addClassReferenceForClass:@"NSNumber"];
+    [writer addClassReferenceForClass:@"NSObject"];
 
     
     NSData *macho=[writer data];

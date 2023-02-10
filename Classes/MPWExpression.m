@@ -99,6 +99,11 @@ longAccessor(len, setLen)
     return NO;
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    ;
+}
+
 @end
 
 

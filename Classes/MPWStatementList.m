@@ -74,6 +74,13 @@ objectAccessor( NSMutableArray*, statements, setStatements )
 	return self;
 }
 
+-(void)accumulateBlocks:(NSMutableArray*)blocks
+{
+    for ( id statement in [self statements] ) {
+        [statement accumulateBlocks:blocks];
+    }
+}
+
 -(NSString *)description
 {
     return [NSString stringWithFormat:@"<%@:%p: %@>",[self class],self,statements];

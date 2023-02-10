@@ -13,11 +13,15 @@
 #import <objc/message.h>
 #import "MPWMachOSectionWriter.h"
 
-@interface MPWARMObjectCodeGenerator()
 
-
-@end
-
+//   ARM64 register conventions: https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms
+//   x0-x8   arguments + return value
+//   x9-x17  temporary (not saved)
+//   x18     platform register, Apple says do not use
+//   x19-x28 saved local registers
+//   x29     FP frame pointer
+//   x30     link register
+//   x31     SP / zero register dependingon instruction
 
 @implementation MPWARMObjectCodeGenerator
 
@@ -54,7 +58,7 @@
 
 -(void)clearRegister:(int)regno
 {
-    long base=0xd2800000;
+    unsigned int base=0xd2800000;
     base |= regno & 31;
     [self appendWord32:base];
 }
