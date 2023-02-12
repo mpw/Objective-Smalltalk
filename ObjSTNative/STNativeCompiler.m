@@ -643,7 +643,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
 {
     aBlock.stackOffset = self.currentBlockStackOffset;
-    self.currentBlockStackOffset += SIZE_OF_STACK_BLOCK;
+    self.currentBlockStackOffset += SIZE_OF_STACK_BLOCK + (8 * aBlock.numberOfCaptures);
     blockNo++;
     NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     [self compileBlockInvocatinFunction:aBlock inMethod:method blockFunctionSymbol:symbol];
@@ -950,6 +950,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     MPWBlockExpression *falseBlock = blocks.lastObject;
     MPWLiteralExpression *trueLiteral = [[trueBlock statementArray] firstObject];
     MPWLiteralExpression *falseLiteral = [[falseBlock statementArray] lastObject];
+    EXPECTNOTNIL( trueBlock.method ,@"trueBlock should have method");
+    EXPECTNOTNIL( falseBlock.method ,@"trueBlock should have method");
     IDEXPECT( trueLiteral.theLiteral, @"trueBlock",@"true block literal");
     IDEXPECT( falseLiteral.theLiteral, @"falseBlock",@"false block literal");
 }

@@ -12,6 +12,7 @@
 #import "MPWMethodHeader.h"
 #import "MPWVarScheme.h"
 #import "MPWSchemeScheme.h"
+#import "MPWBlockExpression.h"
 
 @interface NSObject(MethodServeraddException)
 
@@ -49,6 +50,9 @@ idAccessor( script, _setScript )
 {
     NSMutableArray *blocks=[NSMutableArray array];
     [self.methodBody accumulateBlocks:blocks];
+    for ( MPWBlockExpression *block in blocks ) {
+        block.method = self;
+    }
     return blocks;
 }
 

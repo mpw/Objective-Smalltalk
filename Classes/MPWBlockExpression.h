@@ -8,6 +8,7 @@
 
 #import <ObjectiveSmalltalk/MPWExpression.h>
 
+@class MPWScriptedMethod;
 
 @interface MPWBlockExpression : MPWExpression {
 	NSArray* statements;
@@ -25,5 +26,8 @@
 @property (nonatomic, assign ) int  stackOffset;    // for ARM native compiler
 @property (nonatomic, strong ) NSString *blockDescriptorSymbol;
 @property (nonatomic, strong ) NSString *blockFunctionSymbol;
+@property (nonatomic, assign) MPWScriptedMethod *method;    // FIXME: should be weak, but crashes
+@property (readonly ) NSArray *capturedVariables;
+@property (readonly ) int numberOfCaptures;
 
 @end

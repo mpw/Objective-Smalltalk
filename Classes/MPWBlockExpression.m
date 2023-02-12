@@ -14,9 +14,13 @@
 #import "MPWScriptedMethod.h"
 
 @implementation MPWBlockExpression
+{
+    NSArray *capturedVariables;
+}
 
 idAccessor( statements, setStatements )
 idAccessor( declaredArguments, setDeclaredArguments )
+lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCapturedVariables )
 
 -initWithStatements:newStatements arguments:newArgNames
 {
@@ -106,9 +110,20 @@ idAccessor( declaredArguments, setDeclaredArguments )
     NSMutableSet *variablesReferencedInBlock=[NSMutableSet set];
     [s addToVariablesRead:variablesReferencedInBlock];
     [s addToVariablesWritten:variablesReferencedInBlock];
-
+    
     
     return [variablesReferencedInBlock allObjects];
+}
+
+-(NSArray*)computeCapturedVariables
+{
+    NSAssert( self.method , @"need method to compute captures");
+    return [self capturedVariablesFromMethod:self.method];
+}
+
+-(int)numberOfCaptures
+{
+    return self.method ? (int)self.capturedVariables.count : 0;
 }
 
 -(NSString*)description
