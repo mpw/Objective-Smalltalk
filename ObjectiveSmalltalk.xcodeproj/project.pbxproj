@@ -18,7 +18,6 @@
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
 		1F1A64732971822A00B8776C /* use_class_that_creates_nsobject.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */; };
-		1F1A64762975C47600B8776C /* STProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1A64742975C47600B8776C /* STProgram.h */; };
 		1F1A64782975C7B400B8776C /* STProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProgram.m */; };
 		1F1A647A2975C7B500B8776C /* STProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A64752975C47600B8776C /* STProgram.m */; };
 		1F1A647D2976F72300B8776C /* use_class_with_two_strings.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */; };
@@ -284,6 +283,7 @@
 		1F73288D2344BEF300379386 /* MPWShellPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */; };
 		1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F7328912344C10000379386 /* MPWREPLViewPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F73288F2344C10000379386 /* MPWREPLViewPrinter.m */; };
+		1F74D043299A7CDF004A3DF0 /* STProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1A64742975C47600B8776C /* STProgram.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F7A21B91B779CDD00FF6C03 /* MPWDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */; };
 		1F7AFACC260F78E5002DC530 /* MPWFastSuperMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7AFACA260F78E5002DC530 /* MPWFastSuperMessage.h */; };
 		1F7AFACD260F78E5002DC530 /* MPWFastSuperMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7AFACA260F78E5002DC530 /* MPWFastSuperMessage.h */; };
@@ -2380,7 +2380,6 @@
 				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
-				1F1A64762975C47600B8776C /* STProgram.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
@@ -2441,6 +2440,7 @@
 				1F22C8CA0BC8DCD2003BC673 /* MPWBridgeReader.h in Headers */,
 				1F5E504D09B4B754000298D9 /* STCompiler.h in Headers */,
 				1F9CD1E01A2C94AE00578177 /* MPWCascadeExpression.h in Headers */,
+				1F74D043299A7CDF004A3DF0 /* STProgram.h in Headers */,
 				1F5E504E09B4B754000298D9 /* MPWStScanner.h in Headers */,
 				1F697AD625E267F700D015DB /* STProtocolScheme.h in Headers */,
 				1F8B855219AC72C700F8A107 /* MPWFileWatcher.h in Headers */,

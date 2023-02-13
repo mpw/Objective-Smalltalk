@@ -139,7 +139,7 @@
     unsigned int baseword=0xf9400000;
     baseword |= destReg & 31;
     baseword |= (sourceReg1 & 31) << 5;
-    baseword |= offset << 12;
+    baseword |= offset << 10;
     [self appendWord32:baseword];
 }
 

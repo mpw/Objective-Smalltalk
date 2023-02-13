@@ -213,13 +213,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return registerNumber;
     }  else if ( self.currentBlock && self.currentBlock.capturedVariableOffets[name] )  {
         int offset = [self.currentBlock.capturedVariableOffets[name] intValue];
-        NSLog(@"captured var %@ offset: %d",name,[self.currentBlock.capturedVariableOffets[name] intValue]);
         int blockRegister = [self registerForLocalVar:@"_thisBlock"];
         NSAssert( blockRegister , @"have _thisBlock");
         
         [codegen loadRegister:0 fromContentsOfAdressInRegister:blockRegister offset:offset];
-        // --- load from blockptr + offset into register 0
-        // --- do I have the blockptr?
         return 0;
     }  else {
         MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
@@ -258,7 +255,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateStaticBlockExpression:(MPWBlockExpression*)expr
 {
-    NSAssert1( expr.symbol != nil, @"blockmust have a symbol: %@",expr);
+    NSAssert1( expr.symbol != nil, @"block must have a symbol: %@",expr);
     [self generateLoadFromSymbolicAddress:expr.symbol intoRegister:0];
     return 0;
 }
@@ -1131,7 +1128,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 
 +(void)testBlockCanAccessOutsideScopeVariables
 {
-    COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STProgram {  -main:args {  var a. a := 10. { a - 10. } value. } }", @"TestAccessOutsideScopeVarsFromBlock");
+    COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STNonNilTestProgram {  -main:args {  class:MPWBlockContext class.  var a. a := 10. { a - 10. } value.} }", @"TestAccessOutsideScopeVarsFromBlock");
 }
 
 +(NSArray*)testSelectors
@@ -1170,7 +1167,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testForcedStackBlocksAreActuallyOnStack",
        @"testStackBlocksAreActuallyOnStack",
        @"testStackBlocksCanBeUsed",
-//       @"testBlockCanAccessOutsideScopeVariables",
+       @"testBlockCanAccessOutsideScopeVariables",
 			];
 }
 

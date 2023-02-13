@@ -9,12 +9,6 @@
 #import <MPWFoundation/MPWFoundation.h>
 
 
-@interface STProgram()
-
-@property (nonatomic,strong ) NSString *name;
-
-@end
-
 @implementation STProgram
 
 
@@ -71,9 +65,11 @@ int runSTMain( int argc, char *argv[], NSString *className ) {
         process.name = [args firstObject];
         args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
     }
-    int retval = [[process main:args] intValue];
+    id retval = [process main:args];
+    NSLog(@"object retval: %@",retval);
+    int retcode = [retval intValue];
     [process release];
-    return retval;
+    return retcode;
 }
 
 +(int)mainArgc:(int)argc argv:(char**)argv
@@ -83,6 +79,29 @@ int runSTMain( int argc, char *argv[], NSString *className ) {
         [args addObject:@(argv[i])];
     }
     return [self main:args];
+}
+
+@end
+
+
+
+@interface STNonNilTestProgram : STProgram
+@end
+
+@implementation STNonNilTestProgram
+
++(int)main:(NSArray <NSString*>*)args
+{
+    STProgram *process=[[self new] autorelease];
+    if ( args.count > 0 && [process respondsToSelector:@selector(setName:)]) {
+        process.name = [args firstObject];
+        args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
+    }
+    id retval = [process main:args];
+    NSAssert( retval != nil, @"retval should not be nil");
+    int retcode = [retval intValue];
+    [process release];
+    return retcode;
 }
 
 @end

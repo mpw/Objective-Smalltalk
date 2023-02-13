@@ -21,6 +21,8 @@
 
 @interface STProgram : NSObject
 
+@property (nonatomic,strong ) NSString *name;
+
 
 @end
 
