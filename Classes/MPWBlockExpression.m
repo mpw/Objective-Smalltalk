@@ -131,7 +131,7 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
     return self.numberOfCaptures > 0;
 }
 
--(bool)isOnStack
+-(bool)needsToBeOnStack
 {
     return self.hasCaptures;
 }
@@ -192,9 +192,9 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
     MPWBlockExpression *noCaptureBlock = first.blocks.firstObject;
     MPWBlockExpression *captureBlock = second.blocks.firstObject;
     EXPECTFALSE( noCaptureBlock.hasCaptures, @"first block has no captures");
-    EXPECTFALSE( noCaptureBlock.isOnStack, @"first block doesn't need to be on stack");
+    EXPECTFALSE( noCaptureBlock.needsToBeOnStack, @"first block doesn't need to be on stack");
     EXPECTTRUE( captureBlock.hasCaptures, @"2nd block has  captures");
-    EXPECTTRUE( captureBlock.isOnStack, @"2nd block needs to be on stack");
+    EXPECTTRUE( captureBlock.needsToBeOnStack, @"2nd block needs to be on stack");
 
 }
 

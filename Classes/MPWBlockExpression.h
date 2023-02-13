@@ -31,6 +31,6 @@
 @property (readonly ) NSArray *capturedVariables;
 @property (readonly ) int numberOfCaptures;
 @property (readonly ) bool hasCaptures;
-@property (readonly ) bool isOnStack;
+@property (readonly ) bool needsToBeOnStack;
 
 @end

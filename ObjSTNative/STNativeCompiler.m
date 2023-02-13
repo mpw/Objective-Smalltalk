@@ -36,7 +36,7 @@
 
 @property (nonatomic, assign) BOOL forceStackBlocks;
 @property (nonatomic, assign) int currentBlockStackOffset;
-
+@property (nonatomic, strong) MPWBlockExpression *currentBlock;
 
 @end
 
@@ -146,17 +146,7 @@
 
 @end
 
-
-@interface MPWBlockExpression(nativeCode)
--(BOOL)needsToBeOnStack;
-@end
-
 @implementation MPWBlockExpression(nativeCode)
-
--(BOOL)needsToBeOnStack
-{
-    return NO;
-}
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
@@ -217,6 +207,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSNumber *registerNumber =  self.variableToRegisterMap[name];
     if ( registerNumber ) {
         return registerNumber.intValue;
+    }  else if ( self.currentBlock && self.currentBlock.capturedVariableOffets[name] )  {
+        NSLog(@"captured var ");
+        return 0;
     }  else {
         MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
         NSAssert2(scheme != nil, @"unknown scheme %@ identifier %@",[expr.identifier schemeName],expr.identifier);
@@ -614,6 +607,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
 {
+    self.currentBlock = aBlock;
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     [codegen generateFunctionNamed:symbol body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         
@@ -635,6 +629,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self moveRegister:returnRegister toRegister:0];
         [self restoreLocalRegisters];
     }];
+    self.currentBlock = nil;
     return ;
 }
 
@@ -643,7 +638,17 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
 {
     aBlock.stackOffset = self.currentBlockStackOffset;
-    self.currentBlockStackOffset += SIZE_OF_STACK_BLOCK + (8 * aBlock.numberOfCaptures);
+    int blockOffset = SIZE_OF_STACK_BLOCK;
+    if ( aBlock.hasCaptures){
+        NSMutableDictionary *capturedOffsets=[NSMutableDictionary dictionary];
+
+        for ( MPWIdentifier *identifier in aBlock.capturedVariables) {
+            capturedOffsets[identifier.path]=@(blockOffset);
+            blockOffset += (8 * aBlock.numberOfCaptures);
+        }
+        aBlock.capturedVariableOffets=capturedOffsets;
+    }
+    self.currentBlockStackOffset += blockOffset;
     blockNo++;
     NSString *symbol = [NSString stringWithFormat:@"_block_invoke_%d",blockNo];
     [self compileBlockInvocatinFunction:aBlock inMethod:method blockFunctionSymbol:symbol];
@@ -1092,9 +1097,14 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. }. } }", @"TestStaticBlocksNotOnStack");
 }
 
-+(void)testStackBlocksAreActuallyOnStack
++(void)testForcedStackBlocksAreActuallyOnStack
 {
     COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  1 - (class:NSObject isPointerOnStackAboveMeForST:{ 2. }). } }",  @"TestStackBlocksAreOnStack")
+}
+
++(void)testStackBlocksAreActuallyOnStack
+{
+    COMPILEANDRUN(@"class TestCapturedVarBlocksOnStack : STProgram {  -main:args { var a. a:=1.  1 - (class:NSObject isPointerOnStackAboveMeForST:{ a. }). } }",  @"TestCapturedVarBlocksOnStack")
 }
 
 +(void)testStackBlocksCanBeUsed
@@ -1140,6 +1150,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testComputeStackSpaceForStackBlocks",
        @"testComputeStackBlockOffsetsWithinFrame",
        @"testNormalBlocksAreNotOnStack",
+       @"testForcedStackBlocksAreActuallyOnStack",
        @"testStackBlocksAreActuallyOnStack",
        @"testStackBlocksCanBeUsed",
 //       @"testBlockCanAccessOutsideScopeVariables",
