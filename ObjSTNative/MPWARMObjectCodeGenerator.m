@@ -136,16 +136,19 @@
 
 -(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1 offset:(int)offset
 {
-    unsigned int baseword=0xf9400000;
+    unsigned int baseword=0xf8400000;
     baseword |= destReg & 31;
     baseword |= (sourceReg1 & 31) << 5;
-    baseword |= offset << 10;
+    baseword |= offset << 12;
     [self appendWord32:baseword];
 }
 
 -(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1
 {
-    [self loadRegister:destReg fromContentsOfAdressInRegister:sourceReg1 offset:0];
+    unsigned int baseword=0xf9400000;
+    baseword |= destReg & 31;
+    baseword |= (sourceReg1 & 31) << 5;
+    [self appendWord32:baseword];
 }
 
 
