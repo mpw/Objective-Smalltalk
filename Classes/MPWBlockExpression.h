@@ -26,8 +26,11 @@
 @property (nonatomic, assign ) int  stackOffset;    // for ARM native compiler
 @property (nonatomic, strong ) NSString *blockDescriptorSymbol;
 @property (nonatomic, strong ) NSString *blockFunctionSymbol;
+@property (nonatomic, strong ) NSDictionary *capturedVariableOffets;
 @property (nonatomic, assign) MPWScriptedMethod *method;    // FIXME: should be weak, but crashes
 @property (readonly ) NSArray *capturedVariables;
 @property (readonly ) int numberOfCaptures;
+@property (readonly ) bool hasCaptures;
+@property (readonly ) bool isOnStack;
 
 @end

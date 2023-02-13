@@ -126,6 +126,16 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
     return self.method ? (int)self.capturedVariables.count : 0;
 }
 
+-(bool)hasCaptures
+{
+    return self.numberOfCaptures > 0;
+}
+
+-(bool)isOnStack
+{
+    return self.hasCaptures;
+}
+
 -(NSString*)description
 {
     return [NSString stringWithFormat:@"<%@:%p: statements: %@ arguments: %@>",[self class],self,statements,[self arguments]];
@@ -136,6 +146,10 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 {
 	[statements release];
 	[declaredArguments release];
+    [capturedVariables release];
+    [_capturedVariableOffets release];
+    [_blockFunctionSymbol release];
+    [_blockDescriptorSymbol release];
 	[super dealloc];
 }
 
@@ -148,12 +162,17 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 
 @implementation MPWBlockExpression(testing)
 
++(MPWClassDefinition*)_classDefinitionFor:(NSString*)code
+{
+    STCompiler *compiler = [STCompiler compiler];
+    MPWClassDefinition *theClass = [compiler compile:code];
+    return theClass;
+}
 
 +(void)testComputeBlockCaptures
 {
-    NSString *code = @"class __STTestBlockCaptureComputation1 {  -main:args {  var a. a := 10. { a - 10. } value. } }";
-    STCompiler *compiler = [STCompiler compiler];
-    MPWClassDefinition *theClass = [compiler compile:code];
+    
+    MPWClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -main:args {  var a. a := 10. { a - 10. } value. } }"];
     MPWScriptedMethod *method=theClass.methods.firstObject;
     EXPECTNOTNIL( method, @"got a method");
     NSArray *blocks = method.blocks;
@@ -164,10 +183,26 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
     IDEXPECT( [captured.firstObject name], @"a", @"name of capture");
 }
 
++(void)testIsOnStack
+{
+    MPWClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -first {  { 10. } value. }  -second:a { { a -10. } value. } }"];
+    INTEXPECT(theClass.methods.count,2,@"number of methods");
+    MPWScriptedMethod *first=theClass.methods.firstObject;
+    MPWScriptedMethod *second=theClass.methods.lastObject;
+    MPWBlockExpression *noCaptureBlock = first.blocks.firstObject;
+    MPWBlockExpression *captureBlock = second.blocks.firstObject;
+    EXPECTFALSE( noCaptureBlock.hasCaptures, @"first block has no captures");
+    EXPECTFALSE( noCaptureBlock.isOnStack, @"first block doesn't need to be on stack");
+    EXPECTTRUE( captureBlock.hasCaptures, @"2nd block has  captures");
+    EXPECTTRUE( captureBlock.isOnStack, @"2nd block needs to be on stack");
+
+}
+
 +testSelectors
 {
     return @[
         @"testComputeBlockCaptures",
+        @"testIsOnStack",
     ];
 }
 
