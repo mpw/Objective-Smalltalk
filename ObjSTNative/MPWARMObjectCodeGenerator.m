@@ -134,12 +134,18 @@
     [self generateOp:0x9b op2:0x7c dest:destReg source1:source1Reg source2:source2Reg];
 }
 
--(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1
+-(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1 offset:(int)offset
 {
     unsigned int baseword=0xf9400000;
     baseword |= destReg & 31;
     baseword |= (sourceReg1 & 31) << 5;
+    baseword |= offset << 12;
     [self appendWord32:baseword];
+}
+
+-(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1
+{
+    [self loadRegister:destReg fromContentsOfAdressInRegister:sourceReg1 offset:0];
 }
 
 
@@ -478,7 +484,7 @@ typedef long (*VOIDPTR)(void);
     unsigned int storeMultipleInstructionPost = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
         [gen generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:NO];
     }];
-//    INTEXPECT(storeMultipleInstructionPost, 0xa8bd7bfd, @"stp    x29, x30, [sp #-0x30]!" );
+    INTEXPECT(storeMultipleInstructionPost, 0xa8bd7bfd, @"stp    x29, x30, [sp #-0x30]!" );
 }
 
 +(void)testGenerateAddImmediate

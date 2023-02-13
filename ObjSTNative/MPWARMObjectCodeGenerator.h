@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)clearRegister:(int)regno;
 -(void)loadRegister:(int)destReg withConstantAdress:(void*)addressp;
 -(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1;
+-(void)loadRegister:(int)destReg fromContentsOfAdressInRegister:(int)sourceReg1 offset:(int)offset;
 -(void)loadRegister:(int)destReg fromContentsOfConstantAdress:(void*)addressp;
 -(void)loadRegister:(int)destReg withPCRelativeConstantAdress:(void*)addressp;
 -(void)loadRegister:(int)destReg withEmbeddedPointer:(void*)addressp;

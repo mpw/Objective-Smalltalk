@@ -199,16 +199,27 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
     return self;
 }
- 
 
+-(int)registerForLocalVar:(NSString*)name
+{
+    return [self.variableToRegisterMap[name] intValue];     // local registers aren't 0, so 0 is an ok sentinel
+}
+ 
 -(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr
 {
     NSString *name=[[expr identifier] stringValue];
-    NSNumber *registerNumber =  self.variableToRegisterMap[name];
+    int registerNumber =  [self registerForLocalVar:name];
     if ( registerNumber ) {
-        return registerNumber.intValue;
+        return registerNumber;
     }  else if ( self.currentBlock && self.currentBlock.capturedVariableOffets[name] )  {
-        NSLog(@"captured var ");
+        int offset = [self.currentBlock.capturedVariableOffets[name] intValue];
+        NSLog(@"captured var %@ offset: %d",name,[self.currentBlock.capturedVariableOffets[name] intValue]);
+        int blockRegister = [self registerForLocalVar:@"_thisBlock"];
+        NSAssert( blockRegister , @"have _thisBlock");
+        
+        [codegen loadRegister:0 fromContentsOfAdressInRegister:blockRegister offset:offset];
+        // --- load from blockptr + offset into register 0
+        // --- do I have the blockptr?
         return 0;
     }  else {
         MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
@@ -267,7 +278,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [self generateLoadSymbolicAddress:block.blockDescriptorSymbol intoRegister:11];  // class ptr
     [codegen generateSaveRegister:10 andRegister:11 relativeToRegister:0 offset:16 rewrite:NO pre:NO];
 
-    //  copy captured variables
+    for ( MPWIdentifier *capturedIdentifier in block.capturedVariables) {
+        NSString *idName = [capturedIdentifier path];
+        int blockOffset = [[block capturedVariableOffets][idName] intValue];
+        int sourceRegister = [self registerForLocalVar:idName];
+        
+        [codegen generateSaveRegister:sourceRegister andRegister:sourceRegister relativeToRegister:0 offset:blockOffset rewrite:NO pre:NO];
+    }
     
     return 0;
 }
