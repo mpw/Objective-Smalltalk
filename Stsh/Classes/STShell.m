@@ -15,7 +15,7 @@
 //#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import <ObjectiveSmalltalk/MPWStScanner.h>
 #import "MPWShellCompiler.h"
-#import "MPWStScript.h"
+#import "STScript.h"
 #import "MPWObjectMirror.h"
 #import "MPWClassMirror.h"
 #import "MPWMethodMirror.h"
@@ -292,7 +292,7 @@ idAccessor( retval, setRetval )
 
 -(void)executeFromFileName:(NSString*)filename
 {
-	id script = [MPWStScript scriptWithContentsOfFile:filename];
+	id script = [STScript scriptWithContentsOfFile:filename];
     [[self evaluator] bindValue:filename toVariableNamed:@"argv0" withScheme:@"var"];
 	[script executeInContext:self];
 

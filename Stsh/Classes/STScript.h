@@ -10,7 +10,7 @@
 
 @class STShell;
 
-@interface MPWStScript : MPWObject {
+@interface STScript : MPWObject {
 	id  filename;
 	id	data;
 	id	methodHeader;

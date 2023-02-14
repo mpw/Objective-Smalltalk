@@ -6,7 +6,7 @@
 //  Copyright 2007 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWStScript.h"
+#import "STScript.h"
 #import <ObjectiveSmalltalk/MPWMethodHeader.h>
 #import "STShell.h"
 #import "MPWShellCompiler.h"
@@ -36,7 +36,7 @@
 #endif
 
 
-@implementation MPWStScript
+@implementation STScript
 
 idAccessor( data, setData )
 idAccessor( methodHeader , setMethodHeader )
@@ -45,7 +45,7 @@ objectAccessor(NSString*, filename, setFilename )
 
 +scriptWithContentsOfFile:(NSString*)filename
 {
-	MPWStScript *script = [[[self alloc] initWithData:[NSData dataWithContentsOfFile:filename]] autorelease];
+	STScript *script = [[[self alloc] initWithData:[NSData dataWithContentsOfFile:filename]] autorelease];
   [script setFilename:filename];
   return script;
 }
@@ -238,12 +238,12 @@ objectAccessor(NSString*, filename, setFilename )
 
 @end
 
-@implementation MPWStScript(testing)
+@implementation STScript(testing)
 
 +(void)testMultipleLineBlockExpression
 {
     STShell *shell=[[[STShell alloc] init] autorelease];
-    MPWStScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\n42" asData]] autorelease];
+    STScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\n42" asData]] autorelease];
     [script executeInContext:shell];
     IDEXPECT([shell retval], @(42), @"simple expression");
 }
@@ -252,7 +252,7 @@ objectAccessor(NSString*, filename, setFilename )
 +(void)testDefineAndUseClass
 {
     STShell *shell=[[[STShell alloc] init] autorelease];
-    MPWStScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\nclass MyObject : NSObject { -theAnswer { 45. } }.\nMyObject new theAnswer." asData]] autorelease];
+    STScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\nclass MyObject : NSObject { -theAnswer { 45. } }.\nMyObject new theAnswer." asData]] autorelease];
     [script executeInContext:shell];
     IDEXPECT([shell retval], @(45), @"simple expression");
 }

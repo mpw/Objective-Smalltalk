@@ -404,10 +404,10 @@
 		1FAB448C19031343009EEE6D /* MPWShellCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448319031343009EEE6D /* MPWShellCompiler.h */; };
 		1FAB448D19031343009EEE6D /* MPWShellProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448419031343009EEE6D /* MPWShellProcess.h */; };
 		1FAB448E19031343009EEE6D /* MPWUpcaseFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448519031343009EEE6D /* MPWUpcaseFilter.h */; };
-		1FAFD9731855B98200EC5221 /* MPWStScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAFD9721855B98200EC5221 /* MPWStScript.h */; };
+		1FAFD9731855B98200EC5221 /* STScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAFD9721855B98200EC5221 /* STScript.h */; };
 		1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC38184BDF6A00086047 /* MPWExternalCommand.m */; };
 		1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC36184BDF6A00086047 /* MPWEchoCommand.m */; };
-		1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC41184BDF6A00086047 /* MPWStScript.m */; };
+		1FAFD9781855BC5500EC5221 /* STScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC41184BDF6A00086047 /* STScript.m */; };
 		1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC43184BDF6A00086047 /* MPWUpcaseFilter.m */; };
 		1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3C184BDF6A00086047 /* MPWObjectPipeCommand.m */; };
 		1FAFD97C1855BC5500EC5221 /* MPWShellCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC3F184BDF6A00086047 /* MPWShellCompiler.m */; };
@@ -1159,7 +1159,7 @@
 		1FAB448319031343009EEE6D /* MPWShellCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWShellCompiler.h; sourceTree = "<group>"; };
 		1FAB448419031343009EEE6D /* MPWShellProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWShellProcess.h; sourceTree = "<group>"; };
 		1FAB448519031343009EEE6D /* MPWUpcaseFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWUpcaseFilter.h; sourceTree = "<group>"; };
-		1FAFD9721855B98200EC5221 /* MPWStScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWStScript.h; sourceTree = "<group>"; };
+		1FAFD9721855B98200EC5221 /* STScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STScript.h; sourceTree = "<group>"; };
 		1FAFD98E1855BC5500EC5221 /* StshFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StshFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "StshFramework-Info.plist"; path = "/Users/marcel/programming/Kits/ObjectiveSmalltalk/StshFramework-Info.plist"; sourceTree = "<absolute>"; };
 		1FB39EF5088F0AD2008FC5C6 /* MPWInstanceVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWInstanceVariable.h; sourceTree = "<group>"; };
@@ -1191,7 +1191,7 @@
 		1FBAAC3E184BDF6A00086047 /* MPWAbstractShellCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWAbstractShellCommand.m; sourceTree = "<group>"; };
 		1FBAAC3F184BDF6A00086047 /* MPWShellCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWShellCompiler.m; sourceTree = "<group>"; };
 		1FBAAC40184BDF6A00086047 /* MPWShellProcess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWShellProcess.m; sourceTree = "<group>"; };
-		1FBAAC41184BDF6A00086047 /* MPWStScript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWStScript.m; sourceTree = "<group>"; };
+		1FBAAC41184BDF6A00086047 /* STScript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STScript.m; sourceTree = "<group>"; };
 		1FBAAC42184BDF6A00086047 /* STShell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STShell.m; sourceTree = "<group>"; };
 		1FBAAC43184BDF6A00086047 /* MPWUpcaseFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWUpcaseFilter.m; sourceTree = "<group>"; };
 		1FBAAC58184BE03500086047 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = usr/lib/libedit.dylib; sourceTree = SDKROOT; };
@@ -2018,8 +2018,8 @@
 				1FBAAC3F184BDF6A00086047 /* MPWShellCompiler.m */,
 				1FAB448419031343009EEE6D /* MPWShellProcess.h */,
 				1FBAAC40184BDF6A00086047 /* MPWShellProcess.m */,
-				1FAFD9721855B98200EC5221 /* MPWStScript.h */,
-				1FBAAC41184BDF6A00086047 /* MPWStScript.m */,
+				1FAFD9721855B98200EC5221 /* STScript.h */,
+				1FBAAC41184BDF6A00086047 /* STScript.m */,
 				1F0F13E518D18C86008B5E80 /* STShell.h */,
 				1FBAAC42184BDF6A00086047 /* STShell.m */,
 				1FAB448519031343009EEE6D /* MPWUpcaseFilter.h */,
@@ -2433,7 +2433,7 @@
 				1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */,
 				1F2B664F268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */,
 				1F5E505E09B4B754000298D9 /* MPWInstanceVariable.h in Headers */,
-				1FAFD9731855B98200EC5221 /* MPWStScript.h in Headers */,
+				1FAFD9731855B98200EC5221 /* STScript.h in Headers */,
 				1F5E506409B4B754000298D9 /* MPWMethodStore.h in Headers */,
 				1F5E506509B4B754000298D9 /* NSObjectScripting.h in Headers */,
 				1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */,
@@ -3838,7 +3838,7 @@
 				1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */,
 				1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */,
 				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
-				1FAFD9781855BC5500EC5221 /* MPWStScript.m in Sources */,
+				1FAFD9781855BC5500EC5221 /* STScript.m in Sources */,
 				1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */,
 				1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */,
 				1FAFD97C1855BC5500EC5221 /* MPWShellCompiler.m in Sources */,
