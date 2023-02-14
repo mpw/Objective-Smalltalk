@@ -8,7 +8,7 @@
 
 #import "MPWStScript.h"
 #import <ObjectiveSmalltalk/MPWMethodHeader.h>
-#import "MPWStsh.h"
+#import "STShell.h"
 #import "MPWShellCompiler.h"
 
 #ifdef GS_API_LATEST
@@ -158,7 +158,7 @@ objectAccessor(NSString*, filename, setFilename )
     }
 }
 
--(void)executeInContext_lines:(MPWStsh *)executionContext
+-(void)executeInContext_lines:(STShell *)executionContext
 {
 	id  scriptSource=[[self script] objectEnumerator];
 	int line=1;
@@ -207,7 +207,7 @@ objectAccessor(NSString*, filename, setFilename )
 	NS_ENDHANDLER
 }
 
--(void)executeInContext_whole:(MPWStsh *)executionContext
+-(void)executeInContext_whole:(STShell *)executionContext
 {
     NSString *exprString=[[self script] componentsJoinedByString:@"\n"];
     [self processArgsFromExecutionContext:executionContext];
@@ -231,7 +231,7 @@ objectAccessor(NSString*, filename, setFilename )
     }
 }
 
--(void)executeInContext:(MPWStsh *)executionContext
+-(void)executeInContext:(STShell *)executionContext
 {
     [self executeInContext_lines:executionContext];
 }
@@ -242,7 +242,7 @@ objectAccessor(NSString*, filename, setFilename )
 
 +(void)testMultipleLineBlockExpression
 {
-    MPWStsh *shell=[[[MPWStsh alloc] init] autorelease];
+    STShell *shell=[[[STShell alloc] init] autorelease];
     MPWStScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\n42" asData]] autorelease];
     [script executeInContext:shell];
     IDEXPECT([shell retval], @(42), @"simple expression");
@@ -251,7 +251,7 @@ objectAccessor(NSString*, filename, setFilename )
 
 +(void)testDefineAndUseClass
 {
-    MPWStsh *shell=[[[MPWStsh alloc] init] autorelease];
+    STShell *shell=[[[STShell alloc] init] autorelease];
     MPWStScript *script=[[[self alloc] initWithData:[@"#!/usr/local/bin/stsh\n#-<int>answer\nclass MyObject : NSObject { -theAnswer { 45. } }.\nMyObject new theAnswer." asData]] autorelease];
     [script executeInContext:shell];
     IDEXPECT([shell retval], @(45), @"simple expression");

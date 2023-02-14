@@ -11,7 +11,7 @@
 
 @class MPWByteStream,STEvaluator,STCompiler,NSRunLoop;
 
-@interface MPWStsh : MPWObject {
+@interface STShell : MPWObject {
     MPWByteStream  *Stdout,*Stdin,*Stderr;
     BOOL   readingFile;
     BOOL   echo;

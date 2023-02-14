@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWStsh;
+@class STShell;
 
 @interface MPWStScript : MPWObject {
 	id  filename;
@@ -19,7 +19,7 @@
 
 +scriptWithContentsOfFile:(NSString*)filename;
 
--(void)executeInContext:(MPWStsh *)executionContext;
+-(void)executeInContext:(STShell *)executionContext;
 
 
 @end

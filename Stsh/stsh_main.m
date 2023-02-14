@@ -8,7 +8,7 @@
 
 
 #import <MPWFoundation/MPWFoundation.h>
-#import "MPWStsh.h"
+#import "STShell.h"
 
 
 int main (int argc, const char *argv[])
@@ -18,7 +18,7 @@ int main (int argc, const char *argv[])
     for (int i=1;i<argc;i++) {
         [args addObject:[NSString stringWithUTF8String:argv[i]]];
     }
-    MPWStsh *stsh=[[[MPWStsh alloc] initWithArgs:args] autorelease];
+    STShell *stsh=[[[STShell alloc] initWithArgs:args] autorelease];
     [stsh setCommandName:[NSString stringWithUTF8String:argv[0]]];
     [stsh run];
     exit(0);       // insure the process exit status is 0

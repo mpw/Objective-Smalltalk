@@ -7,17 +7,16 @@
 //
 
 #import "MPWExpression+autocomplete.h"
-#import "STEvaluator.h"
 #import "MPWMessageExpression.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
 #import "MPWStatementList.h"
-#import "STEvaluator.h"
 #import "MPWScheme.h"
 #import "MPWMethodMirror.h"
 #import "MPWObjectMirror.h"
 #import "MPWClassMirror.h"
 #import "MPWLiteralExpression.h"
+#import "STEvaluator.h"
 #import "STCompiler.h"
 
 @implementation STCompiler(completion)

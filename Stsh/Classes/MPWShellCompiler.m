@@ -17,7 +17,7 @@
 #import "MPWEnvScheme.h"
 #import <MPWFoundation/MPWNeXTPListWriter.h>
 #import "MPWAbstractShellCommand.h"
-#import "MPWStsh.h"
+#import "STShell.h"
 #import "MPWShellPrinter.h"
 #import <MPWFoundation/MPWFDStreamSource.h>
 #import "MPWCommandStore.h"

@@ -6,7 +6,7 @@
 //  Copyright 2006 Marcel Weiher. All rights reserved
 
 
-#import "MPWStsh.h"
+#import "STShell.h"
 #import <histedit.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -39,7 +39,7 @@
 
 
 
-@implementation MPWStsh
+@implementation STShell
 {
     EditLine *currentLine;
 }
@@ -79,7 +79,7 @@ intAccessor(completionLimit, setCompletionLimit)
 +(void)runCommand:commandName withArgs:args
 {
     @autoreleasepool {
-        MPWStsh* sh;
+        STShell* sh;
         sh=[[[self alloc] initWithArgs:args] autorelease];
         [sh run];
     }
@@ -180,7 +180,7 @@ intAccessor(completionLimit, setCompletionLimit)
 }
 
 static const char * promptfn(EditLine *e) {
-    MPWStsh* self = nil;
+    STShell* self = nil;
     el_get(e, EL_CLIENTDATA,&self);
     const char *prompt="] ";
     if ( self ) {
@@ -266,7 +266,7 @@ static const char * promptfn(EditLine *e) {
 }
 
 static const char completionfun(EditLine *e, char ch) {
-    MPWStsh* self = nil;
+    STShell* self = nil;
     el_get(e, EL_CLIENTDATA,&self);
     [self doCompletionWithLine:e character:ch];
     return CC_REDISPLAY;
