@@ -11,6 +11,28 @@
 
 @implementation STProgram
 
++(int)main:(NSArray <NSString*>*)args
+{
+    STProgram *process=[[self new] autorelease];
+    if ( args.count > 0 && [process respondsToSelector:@selector(setName:)]) {
+        process.name = [args firstObject];
+        args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
+    }
+    id retval = [process main:args];
+    int retcode = [retval intValue];
+    [process release];
+    return retcode;
+}
+
++(int)mainArgc:(int)argc argv:(char**)argv
+{
+    NSMutableArray *args=[NSMutableArray array];
+    [MPWBlockContext class];            //
+    for (int i=0;i<argc;i++) {
+        [args addObject:@(argv[i])];
+    }
+    return [self main:args];
+}
 
 @end
 
@@ -44,44 +66,6 @@ int runSTMain( int argc, char *argv[], NSString *className ) {
     return [theClass mainArgc:argc argv:argv];
     
 }
-
-@implementation NSObject(stprocess)
-
-
--main:args
-{
-    return @(0);
-}
-
--Stdout
-{
-    return [MPWByteStream Stdout];
-}
-
-+(int)main:(NSArray <NSString*>*)args
-{
-    STProgram *process=[[self new] autorelease];
-    if ( args.count > 0 && [process respondsToSelector:@selector(setName:)]) {
-        process.name = [args firstObject];
-        args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
-    }
-    id retval = [process main:args];
-    int retcode = [retval intValue];
-    [process release];
-    return retcode;
-}
-
-+(int)mainArgc:(int)argc argv:(char**)argv
-{
-    NSMutableArray *args=[NSMutableArray array];
-    [MPWBlockContext class];            //
-    for (int i=0;i<argc;i++) {
-        [args addObject:@(argv[i])];
-    }
-    return [self main:args];
-}
-
-@end
 
 
 

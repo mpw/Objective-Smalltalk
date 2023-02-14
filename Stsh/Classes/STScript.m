@@ -190,7 +190,9 @@ objectAccessor(NSString*, filename, setFilename )
 //        NSLog(@"localResult: %@",localResult);
 		if ( [self hasDeclaredReturn] ) {
 			[executionContext setRetval:localResult];
-		}
+        } else {
+            
+        }
 		line++;
 		[pool release];
 	}

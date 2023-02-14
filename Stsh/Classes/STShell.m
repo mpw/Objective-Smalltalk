@@ -312,7 +312,7 @@ idAccessor( retval, setRetval )
 
 -(void)evaluateReturnValue:value
 {
-    [[[MPWByteStream Stdout] do] println:[value each]];
+    [value runWithStdin:[MPWFDStreamSource fd:0] Stdout:[MPWByteStream Stdout]];
 }
 
 
