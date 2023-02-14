@@ -8,7 +8,7 @@
 
 #import "MPWBlockContext.h"
 #import "MPWStatementList.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "STCompiler.h"
 #import <MPWFoundation/MPWMapFilter.h>
 #import "MPWBindingLegacy.h"
@@ -74,7 +74,7 @@ typedef id (^ZeroArgBlock)(void);
 -freshExecutionContextForRealLocalVars
 {
     //    NSLog(@"creating new context from context: %@",[self context]);
-    MPWEvaluator *evalContext= [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
+    STEvaluator *evalContext= [[[[self contextClass] alloc] initWithParent:[self context]] autorelease];
 
     
     return evalContext;
@@ -85,7 +85,7 @@ typedef id (^ZeroArgBlock)(void);
 #if 0
     return [self context];
 #else
-    MPWEvaluator *evalContext=[self freshExecutionContextForRealLocalVars];
+    STEvaluator *evalContext=[self freshExecutionContextForRealLocalVars];
     return evalContext;
 #endif
 }
@@ -249,7 +249,7 @@ typedef id (^ZeroArgBlock)(void);
 
 @end
 
-@implementation MPWEvaluator(autorelease)
+@implementation STEvaluator(autorelease)
 
 -(void)autoreleased:(ZeroArgBlock)block
 {

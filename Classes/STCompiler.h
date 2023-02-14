@@ -1,10 +1,10 @@
 /* STCompiler.h created by marcel on Mon 03-Jul-2000 */
 
-#import <ObjectiveSmalltalk/MPWEvaluator.h>
+#import <ObjectiveSmalltalk/STEvaluator.h>
 
 @class MPWMethodHeader,MPWStScanner,MPWMethodStore,MPWScriptedMethod,MPWClassDefinition;
 
-@interface STCompiler : MPWEvaluator
+@interface STCompiler : STEvaluator
 {
     MPWStScanner *scanner;
     id tokens;

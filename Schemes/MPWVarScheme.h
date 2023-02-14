@@ -8,11 +8,11 @@
 
 #import <ObjectiveSmalltalk/MPWSelfContainedBindingsScheme.h>
 
-@class MPWEvaluator;
+@class STEvaluator;
 
 @interface MPWVarScheme : MPWSelfContainedBindingsScheme {
 }
 
-@property (nonatomic, strong ) MPWEvaluator *context;
+@property (nonatomic, strong ) STEvaluator *context;
 
 @end

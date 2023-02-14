@@ -6,7 +6,7 @@
 //
 
 #import "MPWSelfContainedBindingsScheme.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import <objc/runtime.h>
 
 @implementation MPWSelfContainedBindingsScheme

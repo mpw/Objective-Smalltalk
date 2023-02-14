@@ -6,17 +6,17 @@
 //
 
 #import "MPWComplexLiteralExpression.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 
 @implementation MPWComplexLiteralExpression
 
 
--(id <MPWStorage>)builderForContext:(MPWEvaluator*)aContext
+-(id <MPWStorage>)builderForContext:(STEvaluator*)aContext
 {
     return (id <MPWStorage>)[aContext schemeForName:@"builder"];
 }
 
--(Class)classForContext:(MPWEvaluator*)aContext
+-(Class)classForContext:(STEvaluator*)aContext
 {
     id <MPWStorage> builder = [self builderForContext:aContext];
     NSAssert2(builder!= nil, @"builder for context: %@ schemes: %@",aContext,[aContext schemeForName:@"scheme"]);
@@ -31,7 +31,7 @@
     return finalClass;
 }
 
--factoryForContext:(MPWEvaluator*)aContext
+-factoryForContext:(STEvaluator*)aContext
 {
     return [[self classForContext:aContext] factoryForContext:aContext];
 }
@@ -65,7 +65,7 @@
     return self;
 }
 
-+(id)factoryForContext:(MPWEvaluator*)aContext
++(id)factoryForContext:(STEvaluator*)aContext
 {
     return [self factory];
 }

@@ -7,12 +7,12 @@
 //
 
 #import "MPWExpression+autocomplete.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWMessageExpression.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
 #import "MPWStatementList.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWScheme.h"
 #import "MPWMethodMirror.h"
 #import "MPWObjectMirror.h"
@@ -104,7 +104,7 @@
     return [self sortMessageNamesByImportance:messages];
 }
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
     return @[];
 }
@@ -123,7 +123,7 @@
     return @[ @"default", @"class", @"scheme"];
 }
 
--(NSArray *)identifiersInEvaluator:(MPWEvaluator*)evaluator matchingPrefix:(NSString*)prefix  schemeNames:(NSArray *)schemeNames
+-(NSArray *)identifiersInEvaluator:(STEvaluator*)evaluator matchingPrefix:(NSString*)prefix  schemeNames:(NSArray *)schemeNames
 {
     NSMutableArray *completions=[NSMutableArray array];
     for ( NSString *schemeName in schemeNames) {
@@ -134,7 +134,7 @@
     return completions;
 }
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
     MPWBinding* binding=[[evaluator localVars] objectForKey:[self name]];
     id value=[binding value];
@@ -165,7 +165,7 @@
 
 
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
     id evaluatedReceiver = [[self receiver] evaluateIn:evaluator];
     NSArray *completions=nil;
@@ -199,7 +199,7 @@
 
 @implementation MPWAssignmentExpression(completion)
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
     return [[self rhs] completionsForString:s withEvaluator:evaluator resultName:resultName];
 }
@@ -208,7 +208,7 @@
 
 @implementation MPWStatementList(completion)
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
     return [[[self statements] lastObject] completionsForString:s withEvaluator:evaluator resultName:resultName];
 }
@@ -217,7 +217,7 @@
 
 @implementation MPWLiteralExpression(completion)
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
     return [self messageNamesForObject:[self theLiteral] matchingPrefix:nil];
 }

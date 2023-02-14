@@ -8,13 +8,13 @@
 
 #import <ObjectiveSmalltalk/MPWExpression.h>
 
-@class MPWEvaluator;
+@class STEvaluator;
 
 
 
 @interface MPWExpression (autocomplete)
 
 
--(NSArray*)completionsForString:(NSString*)s withEvaluator:(MPWEvaluator*)evaluator resultName:(NSString **)resultName;
+-(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName;
 
 @end

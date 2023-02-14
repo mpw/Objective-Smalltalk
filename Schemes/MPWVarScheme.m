@@ -8,7 +8,7 @@
 
 #import "MPWVarScheme.h"
 #import "MPWVARBinding.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWIdentifier.h"
 
 @implementation MPWVarScheme
@@ -29,7 +29,7 @@
 }
 
 
--createBindingForName:(NSString*)variableName inContext:(MPWEvaluator*)aContext
+-createBindingForName:(NSString*)variableName inContext:(STEvaluator*)aContext
 {
     NSString *firstName=variableName;
     MPWBinding *theBinding=nil;

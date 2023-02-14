@@ -6,11 +6,11 @@
 //
 
 #import "STObjectTemplate.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 
 @implementation STObjectTemplate
 
--(id)evaluateIn:(MPWEvaluator*)aContext
+-(id)evaluateIn:(STEvaluator*)aContext
 {
     MPWScheme *scheme=[aContext schemeForName:@"template"];
     [scheme at:self.literalClassName put:self.literal];

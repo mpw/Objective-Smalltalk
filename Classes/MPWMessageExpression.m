@@ -1,7 +1,7 @@
 /* MPWMessageExpression.m created by marcel on Tue 04-Jul-2000 */
 
 #import "MPWMessageExpression.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWObjCGenerator.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWIdentifier.h"

@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <MPWFoundation/MPWObject.h>
 
-@class MPWByteStream,MPWEvaluator,STCompiler,NSRunLoop;
+@class MPWByteStream,STEvaluator,STCompiler,NSRunLoop;
 
 @interface MPWStsh : MPWObject {
     MPWByteStream  *Stdout,*Stdin,*Stderr;
     BOOL   readingFile;
     BOOL   echo;
-	MPWEvaluator*		_evaluator;
+	STEvaluator*		_evaluator;
 	id		retval;
     NSString *prompt;
     char  cstrPrompt[200];

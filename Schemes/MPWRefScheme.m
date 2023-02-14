@@ -8,13 +8,13 @@
 
 #import "MPWRefScheme.h"
 #import "MPWSelfContainedBinding.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWRecursiveIdentifier.h"
 
 @implementation MPWRefScheme
 
 
--bindingForReference:(MPWRecursiveIdentifier*)anIdentifier inContext:(MPWEvaluator*)aContext
+-bindingForReference:(MPWRecursiveIdentifier*)anIdentifier inContext:(STEvaluator*)aContext
 {
     MPWIdentifier* nextIdentifier = [anIdentifier nextIdentifier];
 //    NSAssert1( [nextIdentifier scheme], @"nextIdentifier", nil );

@@ -6,7 +6,7 @@
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWBindingLegacy.h"
 #import <MPWFoundation/MPWInterval.h>
 #import <MPWFoundation/NSNil.h>
@@ -64,7 +64,7 @@
 
 
 
-@implementation MPWEvaluator
+@implementation STEvaluator
 
 idAccessor( _schemes, _setSchemes )
 

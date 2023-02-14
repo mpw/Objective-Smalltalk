@@ -11,7 +11,7 @@
 #import "MPWIdentifier.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/NSNil.h>
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "STMessagePortDescriptor.h"
 
 @implementation MPWAbstractStore(SchemeCompatibility)

@@ -7,7 +7,7 @@
 //
 
 #import "MPWStatementList.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import "MPWObjCGenerator.h"
 
 @implementation MPWStatementList

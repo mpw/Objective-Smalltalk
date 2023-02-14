@@ -9,22 +9,22 @@
 
 //NS_ASSUME_NONNULL_BEGIN
 
-@class MPWEvaluator;
+@class STEvaluator;
 
 
 @interface MPWComplexLiteralExpression : MPWExpression
 
 @property (nonatomic, strong) NSString *literalClassName;
 
--(Class)classForContext:(MPWEvaluator*)aContext;
--factoryForContext:(MPWEvaluator*)aContext;
+-(Class)classForContext:(STEvaluator*)aContext;
+-factoryForContext:(STEvaluator*)aContext;
 
 @end
 
 @interface NSObject(factory)
 
 +(id)factory;
-+(id)factoryForContext:(MPWEvaluator*)aContext;
++(id)factoryForContext:(STEvaluator*)aContext;
 
 @end
 

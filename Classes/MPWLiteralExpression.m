@@ -7,7 +7,7 @@
 //
 
 #import "MPWLiteralExpression.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #import <MPWFoundation/MPWByteStream.h>
 #import "MPWScheme.h"
 #import "MPWStScanner.h"

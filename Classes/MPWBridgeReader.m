@@ -9,7 +9,7 @@
 #import "MPWBridgeReader.h"
 #import <MPWFoundation/AccessorMacros.h>
 #import <Foundation/Foundation.h>
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 #include <dlfcn.h>
 
 
@@ -115,7 +115,7 @@ idAccessor( context ,setContext )
 @end
 
 
-@implementation MPWEvaluator(loadFramework)
+@implementation STEvaluator(loadFramework)
 
 
 

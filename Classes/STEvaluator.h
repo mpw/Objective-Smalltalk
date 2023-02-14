@@ -10,7 +10,7 @@
 
 @class MPWBinding,MPWScheme,MPWSchemeScheme;
 
-@interface MPWEvaluator : MPWObject {
+@interface STEvaluator : MPWObject {
 	id localVars;
 	id parent;
 	id messageCache;

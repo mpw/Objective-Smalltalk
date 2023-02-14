@@ -7,7 +7,7 @@
 //
 
 #import "MPWLiteralDictionaryExpression.h"
-#import "MPWEvaluator.h"
+#import "STEvaluator.h"
 
 @interface MPWLiteralDictionaryExpression ()
 
@@ -39,7 +39,7 @@
     self.literalClassName=name;
 }
 
--(NSDictionary*)dictionaryForLiteralInContext:(MPWEvaluator*)aContext class:(Class)dictClass
+-(NSDictionary*)dictionaryForLiteralInContext:(STEvaluator*)aContext class:(Class)dictClass
 {
 #define MAXSTACK 50
     id stackKeys[MAXSTACK];
