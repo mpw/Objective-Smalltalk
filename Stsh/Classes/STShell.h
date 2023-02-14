@@ -23,8 +23,7 @@
     NSRunLoop *runLoop;
     NSThread *runLoopThread;
 }
-+(void)runWithArgs:(NSArray*)args;
-+(void)runWithArgCount:(int)argc argStrings:(const char**)argv;
+
 -initWithArgs:args;
 -(STCompiler*)evaluator;
 -retval;

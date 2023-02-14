@@ -76,15 +76,6 @@ intAccessor(completionLimit, setCompletionLimit)
 }
  
 
-+(void)runCommand:commandName withArgs:args
-{
-    @autoreleasepool {
-        STShell* sh;
-        sh=[[[self alloc] initWithArgs:args] autorelease];
-        [sh run];
-    }
-}
-
 -(void)run
 {
     if ( self.args.count == 0) {
@@ -98,27 +89,6 @@ intAccessor(completionLimit, setCompletionLimit)
     }
 }
 
-+(void)runWithArgs:(NSArray*)args
-{
-    @autoreleasepool {
-        if ( [args count] >= 1 ) {
-            [self runCommand:[args objectAtIndex:0] withArgs:[args subarrayWithRange:NSMakeRange(1,[args count]-1)]];
-        } else {
-            [[[[self alloc] init] autorelease] runInteractiveLoop];
-        }
-    }
-}
-
-
-
-+(void)runWithArgCount:(int)argc argStrings:(const char**)argv
-{
-	NSMutableArray *args=[NSMutableArray array];
-	for (int i=1;i<argc;i++) {
-		[args addObject:[NSString stringWithUTF8String:argv[i]]];
-	}
-    [self runWithArgs:args];
-}
 
 -(void)setReadingFile:(BOOL)newReadingFile
 {
