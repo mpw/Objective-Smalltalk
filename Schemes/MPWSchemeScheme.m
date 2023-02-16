@@ -48,6 +48,7 @@ id currentScheme=nil;
     [schemes setSchemeHandler:classScheme forSchemeName:@"class"];
     [schemes setSchemeHandler:classScheme forSchemeName:@"builder"];
     [schemes setSchemeHandler:[STProtocolScheme store] forSchemeName:@"protocol"];
+    [schemes setSchemeHandler:[MPWTCPStore store] forSchemeName:@"tcp"];
     [schemes setSchemeHandler:[MPWSFTPStore store] forSchemeName:@"sftp"];
     [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
     [schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];

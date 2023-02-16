@@ -74,11 +74,28 @@ intAccessor(completionLimit, setCompletionLimit)
 	[newEval bindValue:self toVariableNamed:@"shell"];
     [newEval bindValue:[NSRunLoop currentRunLoop] toVariableNamed:@"runLoop"];
 }
- 
+
+-(BOOL)hasScriptArgs
+{
+    NSArray *args=self.args;
+    for ( long i=0,max=args.count;i<max;i++ ) {
+        if ( [args[i] hasPrefix:@"-"]) {
+            i++;
+        } else {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+-(BOOL)isInteractive
+{
+    return ![self hasScriptArgs];
+}
 
 -(void)run
 {
-    if ( self.args.count == 0) {
+    if ( [self isInteractive]) {
         [self runInteractiveLoop];
     } else {
         self.commandName=self.args.firstObject;
@@ -117,9 +134,7 @@ intAccessor(completionLimit, setCompletionLimit)
         self.args = args;
         self.evaluator = newEvaluator;
     
-//		NSLog(@"initWithArgs: %@",args);
         BOOL istty=isatty(0);
-//        NSLog(@"istty: %d",istty);
         if ( istty) {
             [self setPrompt:@"] "];
         }
@@ -498,5 +513,36 @@ idAccessor( retval, setRetval )
 {
 	return [[[self alloc] initWithSingleUnichar:character] autorelease];
 }
+
+@end
+
+#import <MPWFoundation/DebugMacros.h>
+
+@implementation STShell(testing)
+
++(instancetype)shell:(NSArray*)args
+{
+    return [[[self alloc] initWithArgs:args] autorelease];
+}
+
++(void)testHasScriptArgs
+{
+    EXPECTFALSE( [[STShell shell:@[]] hasScriptArgs], @"empty arglist has no script args");
+    EXPECTTRUE( [[STShell shell:@[ @"script" ]] hasScriptArgs], @"non-dash arg");
+    EXPECTFALSE( ([[STShell shell:@[ @"--port=80" ]] hasScriptArgs]), @"dash arg");
+    EXPECTFALSE( ([[STShell shell:@[ @"-port", @"80" ]] hasScriptArgs]), @"skip over NSUserDefaults");
+    EXPECTTRUE( ([[STShell shell:@[ @"-port", @"80", @"hi.st" ]] hasScriptArgs]), @"only skip 1 over NSUserDefaults");
+
+    
+}
+
+
++(NSArray*)testSelectors
+{
+    return @[
+      @"testHasScriptArgs",
+    ];
+}
+
 
 @end
