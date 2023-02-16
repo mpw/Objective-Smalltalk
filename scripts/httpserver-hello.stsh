@@ -1,8 +1,4 @@
 #!/usr/local/bin/stsh
+#-serve
 framework:ObjectiveHTTPD load.
-port := 8081.
-server ⇦ MPWHTTPServer new.
-server setPort:port.
-server start:nil.
-stdout println:server port.
-shell runInteractiveLoop
+MPWHTTPServer.

@@ -1,8 +1,0 @@
-#!/usr/local/bin/stsh
-framework:ObjectiveHTTPD load.
-
-#MPWDictStore{
-	#hello: 'Hello World!'
-} serveOnPort:8090.
-
-shell runInteractiveLoop.
