@@ -11,14 +11,14 @@ class EarthquakesReader {
       stdout  := self Stdout retain.
 	awk ← class:STAWK stream.
 	awk setBlock: { :time :latitude :longitude :depth :magnitude |
-            magnitude := 'Magnitude: ', magnitude.
-            magnitude :=  magnitude, ' latitude: ', latitude.
-            stdout println:magnitude..
+            stdout print:'Magnitude: ', magnitude.
+            stdout print:' latitude: ', latitude.
+            stdout println:' longitude: ',longitude.
         }.
 	awk setSeparator:','.
         stdin setTarget: lines.
 	lines setTarget: awk.
         stdin run.
-      
+	0.      
   }
 }
