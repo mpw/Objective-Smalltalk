@@ -17,6 +17,7 @@
 #import <mach-o/arm64/reloc.h>
 #import "MPWClassScheme.h"
 #import "MPWIdentifier.h"
+#import "MPWConnectToDefault.h"
 
 @interface STNativeCompiler()
 
@@ -27,8 +28,8 @@
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr;
 -(int)generateBlockExpression:(MPWBlockExpression*)expr;
-
 -(int)generateLoadClassReference:(NSString*)className;
+-(int)generateConnectionFrom:(id)left to:(id)right;
 
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
@@ -75,6 +76,15 @@
 
 @end
 
+@implementation MPWConnectToDefault(nativeCodeGenertion)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateConnectionFrom:[self lhs] to:[self rhs]];
+}
+
+@end
+
 @implementation MPWExpression(nativeCode)
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
@@ -96,9 +106,9 @@
     return returnRegister;
 }
 
-
-
 @end
+
+
 @implementation MPWMessageExpression(nativeCode)
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
@@ -233,6 +243,17 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [codegen addRelocationEntryForSymbol:symbol relativeOffset:0 type:ARM64_RELOC_PAGEOFF12 relative:NO];
     [codegen generateAddDest:regno source:regno immediate:0];
     return regno;
+}
+
+-(int)generateConnectionFrom:(id)left to:(id)right
+{
+    int lhs_register = [left generateNativeCodeOn:self];
+    int rhs_register = [right generateNativeCodeOn:self];
+    [self moveRegister:rhs_register toRegister:1];
+    [self moveRegister:lhs_register toRegister:0];
+
+    [codegen generateCallToExternalFunctionNamed:@"_st_connect_components"];
+    return 0;
 }
 
 -(int)generateLoadFromSymbolicAddress:(NSString*)symbol intoRegister:(int)regno

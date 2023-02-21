@@ -16,8 +16,8 @@ class EarthquakesReader {
             stdout println:' longitude: ',longitude.
         }.
 	awk setSeparator:','.
-        stdin setTarget: lines.
-	lines setTarget: awk.
+        stdin → lines.
+	lines → awk.
         stdin run.
 	0.      
   }

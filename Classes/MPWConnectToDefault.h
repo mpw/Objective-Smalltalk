@@ -12,6 +12,8 @@
 {
     id lhs,rhs;
 }
+-lhs;
+-rhs;
 
 @end
 

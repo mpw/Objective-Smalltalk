@@ -17,11 +17,7 @@
 idAccessor( rhs, setRhs )
 idAccessor( lhs, setLhs )
 
--(id)evaluateIn:(id)aContext
-{
-    id left=[[self lhs] evaluateIn:aContext];
-    id right=[[self rhs] evaluateIn:aContext];
-    
+id st_connect_components( id left, id right ) {
     if ( [right isKindOfClass:[STConnector class]]) {
         STConnector *connector=(STConnector*)right;
         left=[left defaultComponentInstance];
@@ -69,6 +65,15 @@ idAccessor( lhs, setLhs )
         }    }
     
     
+}
+
+
+-(id)evaluateIn:(id)aContext
+{
+    id left=[[self lhs] evaluateIn:aContext];
+    id right=[[self rhs] evaluateIn:aContext];
+    
+    return st_connect_components( left, right );
 }
 
 -(void)dealloc
