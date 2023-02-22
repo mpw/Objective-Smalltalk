@@ -30,6 +30,7 @@
 -(int)generateBlockExpression:(MPWBlockExpression*)expr;
 -(int)generateLoadClassReference:(NSString*)className;
 -(int)generateConnectionFrom:(id)left to:(id)right;
+-(int)generateLoadIdentifier:(NSString*)identifierName withScheme:(NSString*)scheme;
 
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
@@ -55,14 +56,15 @@
 
 @end
 
-@implementation MPWScheme(nativeCodeGenertion)
+@implementation MPWAbstractStore(nativeCodeGenertion)
 
 -(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler
 {
-    NSString *msg=[NSString stringWithFormat:@"generating code for identifier '%@' scheme: '%@' not implemented",
-                   identifier.path,identifier.schemeName];
-    @throw [NSException exceptionWithName:@"unimplemented" reason:msg
-                                 userInfo:@{@"identifier": identifier }];
+    return [compiler generateLoadIdentifier:identifier.path withScheme:identifier.schemeName];
+//    NSString *msg=[NSString stringWithFormat:@"generating code for identifier '%@' scheme: '%@' not implemented",
+//                   identifier.path,identifier.schemeName];
+//    @throw [NSException exceptionWithName:@"unimplemented" reason:msg
+//                                 userInfo:@{@"identifier": identifier }];
 }
 
 @end
@@ -230,7 +232,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return 0;
     }  else {
         MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
-        NSAssert2(scheme != nil, @"unknown scheme %@ identifier %@",[expr.identifier schemeName],expr.identifier);
         return [scheme generateLoadForIdentifier:expr.identifier on:self];
     }
 }
@@ -251,8 +252,19 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     int rhs_register = [right generateNativeCodeOn:self];
     [self moveRegister:rhs_register toRegister:1];
     [self moveRegister:lhs_register toRegister:0];
-
+    
     [codegen generateCallToExternalFunctionNamed:@"_st_connect_components"];
+    return 0;
+}
+
+-(int)generateLoadIdentifier:(NSString*)identifierName withScheme:(NSString*)scheme
+{
+    int nameRegister = [self generateStringLiteral:identifierName intoRegister:1];
+    int schemeRegister = [self generateStringLiteral:scheme intoRegister:0];
+    [self moveRegister:nameRegister toRegister:1];
+    [self moveRegister:schemeRegister toRegister:0];
+    
+    [codegen generateCallToExternalFunctionNamed:@"_st_lookup_identifier_in_scheme"];
     return 0;
 }
 
@@ -371,6 +383,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSNumber *lhsRegisterNumber = self.variableToRegisterMap[lhsName];
     NSAssert1( lhsRegisterNumber, @"Don't have a variable named '%@'",lhsName);
     [self moveRegister:registerForRHS toRegister:lhsRegisterNumber.intValue];
+    return lhsRegisterNumber;
 }
 
 -(int)allocateRegister
@@ -722,7 +735,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return (NSData*)[writer target];
 }
 
--(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
+-(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
     NSMutableString *command=[NSMutableString string];
     if ( dir ) {
@@ -733,9 +746,27 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [command appendFormat:@"%@.o ",objectFilename ];
     }
     
-    [command appendFormat:@" -F/Library/Frameworks -framework ObjectiveSmalltalk -framework MPWFoundation -framework Foundation"];
+    [command appendFormat:@" -F/Library/Frameworks "];
+    for ( NSString *frameworkName in frameworks) {
+        [command appendFormat:@" -framework %@ ",frameworkName];
+    }
     int compileSuccess = system([command UTF8String]);
     return compileSuccess;
+}
+
+-(NSArray*)defaultFrameworks
+{
+    return @[ @"ObjectiveSmalltalk", @"MPWFoundation", @"Foundation"];
+}
+
+-(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir
+{
+    return [self linkObjects:objects toExecutable:executable inDir:dir withFrameworks:[self defaultFrameworks]];
+}
+
+-(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir additionalFrameworks:(NSArray*)additionalFrameworks
+{
+    return [self linkObjects:objects toExecutable:executable inDir:dir withFrameworks:[additionalFrameworks arrayByAddingObjectsFromArray:[self defaultFrameworks]]];
 }
 
 

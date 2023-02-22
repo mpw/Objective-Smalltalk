@@ -139,6 +139,12 @@ id currentScheme=nil;
 	[super dealloc];
 }
 
+id st_lookup_identifier_in_scheme( NSString *scheme, NSString *identifier)
+{
+    return [[[MPWSchemeScheme currentScheme] at:scheme] at:identifier];
+}
+
+
 @end
 
 @implementation NSObject(identifierName)

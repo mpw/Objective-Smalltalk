@@ -21,9 +21,9 @@
               ];
 }
 
--(id)at:(id)aReference
+-(id)at:(id <MPWReferencing>)aReference
 {
-    NSString *name=[aReference name];
+    NSString *name=[aReference path];
     NSBundle *result=nil;
     for ( NSString *base in [self basePaths]) {
         result=[NSBundle bundleWithPath:[[base stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"framework"]];

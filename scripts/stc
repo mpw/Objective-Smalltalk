@@ -6,4 +6,4 @@ compiler := STNativeCompiler compiler.
 compiled := compiler compileProcessToMachoO: (compiler compile: file:{source}).
 objectFileName := basename , '.o'.
 file:{objectFileName} := compiled.
-compiler linkObjects: #[ basename ] toExecutable: basename inDir: nil.
+compiler linkObjects: #[ basename ] toExecutable: basename inDir: nil additionalFrameworks:[ 'ObjectiveHttpd' ].
