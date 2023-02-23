@@ -5,3 +5,5 @@ sawk-filter
 CollectFor
 HelloHTTP
 PrintFile
+hello.txt
+PutFile

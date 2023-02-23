@@ -264,7 +264,19 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [self moveRegister:nameRegister toRegister:1];
     [self moveRegister:schemeRegister toRegister:0];
     
-    [codegen generateCallToExternalFunctionNamed:@"_st_lookup_identifier_in_scheme"];
+    [codegen generateCallToExternalFunctionNamed:@"_st_scheme_at"];
+    return 0;
+}
+
+-(int)generateStoreObjectInRegister:(int)regno atIdentifier:(NSString*)identifierName withScheme:(NSString*)scheme
+{
+    int nameRegister = [self generateStringLiteral:identifierName intoRegister:1];
+    int schemeRegister = [self generateStringLiteral:scheme intoRegister:0];
+    [self moveRegister:regno toRegister:2];
+    [self moveRegister:nameRegister toRegister:1];
+    [self moveRegister:schemeRegister toRegister:0];
+
+    [codegen generateCallToExternalFunctionNamed:@"_st_scheme_at_put"];
     return 0;
 }
 
@@ -377,13 +389,23 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr
 {
     MPWExpression *rhs = [expr rhs];
-    MPWIdentifierExpression *lhs = [expr lhs];
+    MPWIdentifier *lhs = [(MPWIdentifierExpression*)[expr lhs] identifier];;
+
     int registerForRHS = [self generateCodeFor:rhs];
-    NSString *lhsName = [lhs name];
+    
+    //  lhs is a local name
+    
+    NSString *lhsName = [lhs path];
     NSNumber *lhsRegisterNumber = self.variableToRegisterMap[lhsName];
+    if ( lhsRegisterNumber ) {
+        [self moveRegister:registerForRHS toRegister:lhsRegisterNumber.intValue];
+        return lhsRegisterNumber.intValue;
+    } else {
+        NSString *lhsScheme = lhs.schemeName;
+        [self generateStoreObjectInRegister:registerForRHS atIdentifier:lhsName withScheme:lhsScheme];
+        return registerForRHS;
+    }
     NSAssert1( lhsRegisterNumber, @"Don't have a variable named '%@'",lhsName);
-    [self moveRegister:registerForRHS toRegister:lhsRegisterNumber.intValue];
-    return lhsRegisterNumber;
 }
 
 -(int)allocateRegister
