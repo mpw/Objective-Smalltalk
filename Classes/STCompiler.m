@@ -653,23 +653,31 @@ idAccessor(solver, setSolver)
     return sel;
 }
 
+
 -parseUnary
 {
 //    NSLog(@"parseUnary");
     id expr=[self parseArgument];
 //    NSLog(@"argument: %@",expr);
   id next=nil;
-    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]) {
+    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]&& ![next isEqual:@"["]) {
 //        NSLog(@"part of parseUnary, token: %@",next);
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
+        NSAssert1( ![next isEqual:@"["],@"selector shouldn't be open bracket: %@",next);
         [expr setSelector:[self mapSelectorString:next]];
 		expr=[self mapConnector:expr];
 //        NSLog(@"part of parseUnary: %@",expr);
     }
     if ( next ) {
-        [self pushBack:next];
+        if ( [next isEqual:@"["]) {
+//            PARSEERROR(@"got a [ in parseUnary", next);
+//            [self pushBack:next];
+            expr =  [self parseSubscriptExpression:expr];
+        } else {
+            [self pushBack:next];
+        }
     }
 //    NSLog(@"parseUnary -> %@",expr);
     return expr;
@@ -684,6 +692,7 @@ idAccessor(solver, setSolver)
 
     if ( selector && isalpha( [selector characterAtIndex:0] )) {
 //        NSLog(@"possibly keyword: '%@'",selector);
+        NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
         BOOL isKeyword =[selector isKeyword];
         if ( isKeyword   ) {
             args=[NSMutableArray array];
@@ -739,10 +748,11 @@ idAccessor(solver, setSolver)
             [selector isEqual:@"|="]) {
             PARSEERROR(@"unexpected", selector);
         } else if ([selector isEqualToString:@":"]){
-//            NSLog(@"single ':' as selector");
+            //            NSLog(@"single ':' as selector");
             [self pushBack:selector];
             return [expr receiver];
         } else {
+            NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
 //            NSLog(@"binary: %@",selector);
             id arg=[self parseUnary];
 //            NSLog(@"arg to binary: %@",arg);
@@ -755,6 +765,7 @@ idAccessor(solver, setSolver)
 //		NSLog(@"parse unary: selector=%@ args=%@",selector, args);
     }
 //	NSLog(@"got selector: %@ args: %@",selector,args);
+    NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
     [expr setSelector:[self mapSelectorString:selector]];
     [expr setArgs:args];
 //    NSLog(@"return expr from parseSelectorAndArgs: %@",expr);
@@ -893,7 +904,20 @@ idAccessor(solver, setSolver)
 	return [self connectorClassForToken:aToken];
 }
 
-
+-parseSubscriptExpression:first
+{
+    MPWExpression* indexExpr=[self parseExpression];
+    id closeBrace=[self nextToken];
+    if ( [closeBrace isEqual:@"]"]) {
+        STSubscriptExpression *expr=[[STSubscriptExpression new] autorelease];
+        expr.receiver=first;
+        expr.subscript=indexExpr;
+        first=expr;
+    } else {
+        PARSEERROR(@"indexExpression not closed by ']'", closeBrace);
+    }
+    return first;
+}
 
 -parseExpressionInLiteral:(BOOL)inLiteral
 {
@@ -925,16 +949,7 @@ idAccessor(solver, setSolver)
         second = [self nextToken];
     }
     if ( [second isEqual:@"["]) {
-        MPWExpression* indexExpr=[self parseExpression];
-        id closeBrace=[self nextToken];
-        if ( [closeBrace isEqual:@"]"]) {
-            STSubscriptExpression *expr=[[STSubscriptExpression new] autorelease];
-            expr.receiver=first;
-            expr.subscript=indexExpr;
-            first=expr;
-        } else {
-            PARSEERROR(@"indexExpression not closed by ']'", closeBrace);
-        }
+        first = [self parseSubscriptExpression:first];
         second = [self nextToken];
         if ([self isAssignmentLikeToken:second] ) {
             return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];

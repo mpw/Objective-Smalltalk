@@ -1403,6 +1403,17 @@
     IDEXPECT( [compiler evaluateScriptString:@"a supersender."],@"base",@"super send - if sent to self then result will be 'sub' instead");
 }
 
+
++(void)testArrayExpressionAsArg
+{
+    STCompiler *compiler=[STCompiler compiler];
+    @try {
+        MPWMessageExpression* compiled = [compiler compile:@"2 + a[1]"];
+    } @catch ( NSException *e) {
+        IDEXPECT(e,@"No error",@"shouldn't be an error");
+    }
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1556,6 +1567,7 @@
         @"testConnectStreamToBinding",
         @"testMappingStoreCanReferToSourceAsScheme",
         @"testSuperSend",
+        @"testArrayExpressionAsArg",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         ];
