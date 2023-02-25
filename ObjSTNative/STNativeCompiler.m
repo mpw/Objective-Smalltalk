@@ -231,6 +231,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [codegen loadRegister:0 fromContentsOfAdressInRegister:blockRegister offset:offset];
         return 0;
     }  else {
+        NSString *schemeName = [expr.identifier schemeName];
+        NSAssert1(schemeName != nil,@"identifier %@ not found",name);
         MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
         return [scheme generateLoadForIdentifier:expr.identifier on:self];
     }
