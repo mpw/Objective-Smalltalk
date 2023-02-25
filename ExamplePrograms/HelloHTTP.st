@@ -4,15 +4,11 @@ class Hello
    {
         var dict.
         var store.
-        dict := class:NSMutableDictionary dictionary.
-        self Stdout println:dict.
-        self Stdout println:'Hello World'.
-        self Stdout println: dict class.
-        dict at:'hello' put:'World!'.
-        self Stdout println:dict.
-        store := class:MPWDictStore storeWithDictionary:dict.
-        self Stdout println:store.
+        store := MPWDictStore store.
+        scheme:db := store.
+        db:hello := 'World'.
         store serveOn:9001.
+        self Stdout println: scheme:db.
         self Stdout println:'started serving'.
         class:NSRunLoop currentRunLoop run.
         0.

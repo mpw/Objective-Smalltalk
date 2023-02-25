@@ -270,9 +270,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateStoreObjectInRegister:(int)regno atIdentifier:(NSString*)identifierName withScheme:(NSString*)scheme
 {
+    [self moveRegister:regno toRegister:2];
     int nameRegister = [self generateStringLiteral:identifierName intoRegister:1];
     int schemeRegister = [self generateStringLiteral:scheme intoRegister:0];
-    [self moveRegister:regno toRegister:2];
     [self moveRegister:nameRegister toRegister:1];
     [self moveRegister:schemeRegister toRegister:0];
 
@@ -405,7 +405,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [self generateStoreObjectInRegister:registerForRHS atIdentifier:lhsName withScheme:lhsScheme];
         return registerForRHS;
     }
-    NSAssert1( lhsRegisterNumber, @"Don't have a variable named '%@'",lhsName);
 }
 
 -(int)allocateRegister
