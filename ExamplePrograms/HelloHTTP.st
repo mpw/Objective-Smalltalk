@@ -4,12 +4,10 @@ class Hello
    {
         var dict.
         var store.
-        store := MPWDictStore store.
+        store := class:MPWDictStore store.
         scheme:db := store.
         db:hello := 'World'.
-        store serveOn:9001.
-        self Stdout println: scheme:db.
-        self Stdout println:'started serving'.
+        store serveOnPort:9001 intValue.
         class:NSRunLoop currentRunLoop run.
         0.
    }
