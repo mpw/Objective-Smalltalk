@@ -33,8 +33,8 @@
 		1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22E01B1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h */; };
 		1F22E0211A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
 		1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22E01C1A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m */; };
-		1F22EC8226B321DE00087E8D /* STSubscriptExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */; };
-		1F22EC8326B321DE00087E8D /* STSubscriptExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */; };
+		1F22EC8226B321DE00087E8D /* STSubscriptExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F22EC8326B321DE00087E8D /* STSubscriptExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F22EC8426B321DE00087E8D /* STSubscriptExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */; };
 		1F22EC8526B321DE00087E8D /* STSubscriptExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */; };
 		1F23AD7725BF345700F51B6F /* MPWUIImageStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23AD7525BF345700F51B6F /* MPWUIImageStore.h */; settings = {ATTRIBUTES = (Public, ); }; };

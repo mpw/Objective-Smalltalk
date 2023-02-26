@@ -8,3 +8,5 @@ PrintFile
 hello.txt
 PutFile
 HelloSchemes
+PrintArgs
+TwoClasses

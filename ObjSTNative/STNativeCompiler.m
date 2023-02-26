@@ -13,6 +13,7 @@
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+#import <ObjectiveSmalltalk/STSubscriptExpression.h>
 #import "MPWJittableData.h"
 #import <mach-o/arm64/reloc.h>
 #import "MPWClassScheme.h"
@@ -24,6 +25,7 @@
 -(int)generateCodeForExpression:(MPWExpression*)expression;
 -(int)generateCodeFor:(MPWExpression*)someExpression;
 -(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
+-(int)generateMessageSendOf:(NSString*)selectorString to:receiver with:args;
 -(int)generateMessageSend:(MPWMessageExpression*)expr;
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr;
@@ -155,6 +157,14 @@
     return [compiler generateAssignmentExpression:self];
 }
 
+@end
+
+@implementation STSubscriptExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateMessageSendOf:@"at:" to:self.receiver with:@[ self.subscript]];
+}
 
 @end
 
@@ -232,8 +242,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return 0;
     }  else {
         NSString *schemeName = [expr.identifier schemeName];
-        NSAssert1(schemeName != nil,@"identifier %@ not found",name);
+        if ( schemeName == nil || schemeName.length == 0 ) {
+            NSLog(@"can't find identifier '%@' in local vars %@ or captured vars: %@",name,[self localVars],self.currentBlock.capturedVariableOffets);
+            NSAssert1(schemeName != nil,@"identifier %@ not found",name);
+        }
         MPWScheme *scheme=[self schemeForName:[expr.identifier schemeName]];
+        if ( schemeName == nil || schemeName.length == 0 ) {
+            NSLog(@"can't find scheme '%@' for identifier: %@",schemeName,name);
+            NSAssert2(schemeName != nil,@"scheme %@ for identifier %@ not found",schemeName,name);
+        }
         return [scheme generateLoadForIdentifier:expr.identifier on:self];
     }
 }
@@ -251,6 +268,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(int)generateConnectionFrom:(id)left to:(id)right
 {
     int lhs_register = [left generateNativeCodeOn:self];
+    // probably need to stash lhs register somewhere
     int rhs_register = [right generateNativeCodeOn:self];
     [self moveRegister:rhs_register toRegister:1];
     [self moveRegister:lhs_register toRegister:0];
@@ -435,13 +453,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
-
--(int)generateMessageSend:(MPWMessageExpression*)expr
+-(int)generateMessageSendOf:(NSString*)selectorString to:receiver with:args
 {
-    NSString *selectorString = NSStringFromSelector(expr.selector);
-
     if (  NO &&  [selectorString isEqual:@"add:"] ) {
-        id arg=expr.args[0];
+        id arg=args[0];
         if ( [arg isKindOfClass:[MPWLiteralExpression class]]) {
             MPWLiteralExpression *lit=(MPWLiteralExpression*)arg;
             [codegen generateAddDest:0 source:0 immediate:[[lit theLiteral] intValue]];
@@ -451,8 +466,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         }
     } else {
         int currentRegs = self.currentLocalRegStack;
-        NSMutableArray *toEval = [NSMutableArray arrayWithObject:expr.receiver];
-        [toEval addObjectsFromArray:expr.args];
+        NSMutableArray *toEval = [NSMutableArray arrayWithObject:receiver];
+        [toEval addObjectsFromArray:args];
         int numArgs = (int)toEval.count;
         int argRegisters[numArgs];
 //        NSLog(@"%@ receiver + args: %@",NSStringFromSelector(expr.selector), toEval);
@@ -505,6 +520,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         return 0;
     }
     return 0;
+}
+
+-(int)generateMessageSend:(MPWMessageExpression*)expr
+{
+    NSString *selectorString = NSStringFromSelector(expr.selector);
+
+    return [self generateMessageSendOf:selectorString to:expr.receiver with:expr.args];
 }
 
 -(int)generateCodeFor:(MPWExpression*)someExpression

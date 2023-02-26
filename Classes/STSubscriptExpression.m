@@ -53,6 +53,12 @@ lazyAccessor(MPWMessageExpression*, setter, setSetter, computeSetter)
     return [[self getter] evaluateIn:aContext];
 }
 
+-(void)addToVariablesRead:(NSMutableSet *)variableList
+{
+    [self.receiver addToVariablesRead:variableList];
+    [self.subscript addToVariablesRead:variableList];
+}
+
 -(void)dealloc
 {
     [_receiver release];

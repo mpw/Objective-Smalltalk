@@ -80,6 +80,10 @@
 
 @implementation NSArray(mykvc)
 
+-at:anObject
+{
+    return [self objectAtIndex:[anObject intValue]];
+}
 
 -valueForUndefinedKey:(NSString*)aKey
 {
