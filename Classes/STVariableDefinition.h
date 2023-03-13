@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class STTypeDescriptor;
 
-@interface STVariableDefinition : MPWExpression
+@interface STVariableDefinition : STExpression
 
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,strong) STTypeDescriptor *type;

@@ -6,13 +6,13 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class MPWIdentifier;
 
 
 
-@interface MPWIdentifierExpression : MPWExpression {
+@interface MPWIdentifierExpression : STExpression {
 	id	evaluationEnvironment;
 	MPWIdentifier*  identifier;
 }

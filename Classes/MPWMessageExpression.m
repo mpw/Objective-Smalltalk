@@ -38,7 +38,7 @@ objectAccessor(NSArray*, args, setArgs )
 scalarAccessor( const char*, _argtypes, setArgtypes )
 scalarAccessor( char , returnType, setReturnType )
 
--(instancetype)initWithReceiver:(MPWExpression*)newReceiver
+-(instancetype)initWithReceiver:(STExpression*)newReceiver
 {
     self=[super init];
     self.isSuperSend = newReceiver.isSuper;

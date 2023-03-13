@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 19.02.19.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class MPWInstanceVariable,MPWScriptedMethod;
 
-@interface MPWProtocolDefinition : MPWExpression
+@interface MPWProtocolDefinition : STExpression
 
 @property (nonatomic, strong) NSString *name;
 

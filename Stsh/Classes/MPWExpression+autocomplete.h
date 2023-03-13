@@ -6,13 +6,13 @@
 //
 //
 
-#import "MPWExpression.h"
+#import "STExpression.h"
 
 @class STEvaluator;
 
 
 
-@interface MPWExpression (autocomplete)
+@interface STExpression (autocomplete)
 
 
 -(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName;

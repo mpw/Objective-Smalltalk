@@ -7,7 +7,7 @@
 //
 
 #import "MPWStTests.h"
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 #import <ObjectiveSmalltalk/MPWAssignmentExpression.h>
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
@@ -31,6 +31,9 @@
 #import "STObjectTemplate.h"
 #import "MPWLiteralDictionaryExpression.h"
 #import "STTypeDescriptor.h"
+#import "MPWStTests.h"
+
+
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
 -lengthMultipliedBy:aNumber;
@@ -59,7 +62,7 @@
 {
 	id result=nil;
 	NS_DURING
-    result = (MPWExpression*)[self evaluate:expr];
+    result = (STExpression*)[self evaluate:expr];
     result = [result stringValue];
     expected=[expected stringValue];
 	NS_HANDLER
@@ -155,7 +158,7 @@
 	id evaluator = [[[self alloc] init] autorelease];
 	id result;
 	[evaluator bindValue:a toVariableNamed:@"a"];
-	result = [(MPWExpression*)[evaluator evaluateScriptString:expr] stringValue];
+	result = [(STExpression*)[evaluator evaluateScriptString:expr] stringValue];
     IDEXPECT( result, expected, @"send uppercaseString");
 	
 }

@@ -6,11 +6,11 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class MPWMethodHeader;
 
-@interface MPWAbstractInterpretedMethod : MPWExpression {
+@interface MPWAbstractInterpretedMethod : STExpression {
 	MPWMethodHeader*	methodHeader;
 	id					context;
 	id					methodType;

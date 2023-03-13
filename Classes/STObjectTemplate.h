@@ -5,13 +5,13 @@
 //  Created by Marcel Weiher on 13.02.21.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class MPWComplexLiteralExpression;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STObjectTemplate : MPWExpression
+@interface STObjectTemplate : STExpression
 
 @property (nonatomic, strong) NSString *literalClassName;
 @property (nonatomic, strong) MPWComplexLiteralExpression *literal;

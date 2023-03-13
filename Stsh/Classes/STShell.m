@@ -231,7 +231,7 @@ static const char * promptfn(EditLine *e) {
         const char *end=lineInfo->lastchar;
         NSString *s=[[[NSString alloc] initWithBytes:start length:end-start encoding:NSUTF8StringEncoding] autorelease];
 
-        MPWExpression *expr=nil;
+        STExpression *expr=nil;
         NSException *exception=nil;
         STCompiler *evaluator=[self _evaluator];
         @try {

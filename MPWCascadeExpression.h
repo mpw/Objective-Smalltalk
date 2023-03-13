@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
-@interface MPWCascadeExpression : MPWExpression
+@interface MPWCascadeExpression : STExpression
 {
     NSMutableArray *messageExpressions;
 }

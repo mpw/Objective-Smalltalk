@@ -24,14 +24,14 @@
 -(NSArray*)completionsForString:(NSString*)s
 {
     NSString *dummy=@"";
-    MPWExpression *e=[self compile:s];
+    STExpression *e=[self compile:s];
     return [e completionsForString:s withEvaluator:self resultName:&dummy];
 }
 
 @end
 
 
-@implementation MPWExpression(completion)
+@implementation STExpression(completion)
 
 -(NSSet *)lessInterestingMessageNames
 {
@@ -234,7 +234,7 @@
 {
     NSString *res=nil;
     STCompiler *c=[STCompiler compiler];
-    MPWExpression *e=[c compile:s];
+    STExpression *e=[c compile:s];
     NSArray *completions = [e completionsForString:s withEvaluator:c resultName:&res];
     return [completions sortedArrayUsingSelector:@selector(compare:)];
 }
@@ -243,7 +243,7 @@
 {
     NSString *res=nil;
     STCompiler *c=[STCompiler compiler];
-    MPWExpression *e=[c compile:s];
+    STExpression *e=[c compile:s];
     [e completionsForString:s withEvaluator:c resultName:&res];
     return res;
 }

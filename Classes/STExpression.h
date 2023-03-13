@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import <ObjectiveSmalltalk/MPWEvaluable.h>
 
-@interface MPWExpression : MPWObject <MPWEvaluable> {
+@interface STExpression : MPWObject <MPWEvaluable> {
     long textOffset,len;
 }
 

@@ -6,11 +6,11 @@
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class MPWScriptedMethod;
 
-@interface MPWBlockExpression : MPWExpression {
+@interface MPWBlockExpression : STExpression {
 	NSArray* statements;
 	NSArray* declaredArguments;
 }

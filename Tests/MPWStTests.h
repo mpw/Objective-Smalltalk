@@ -20,7 +20,7 @@
    id result=nil;\
    id expectedString;\
    @try { \
-      result = (MPWExpression*)[self evaluate:expr];\
+      result = (STExpression*)[self evaluate:expr];\
       result = [result stringValue];\
       expectedString=[expected stringValue];\
    } @catch (NSException *e) {\

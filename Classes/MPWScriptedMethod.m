@@ -27,7 +27,7 @@
 }
 
 
-objectAccessor(MPWExpression*, methodBody, setMethodBody )
+objectAccessor(STExpression*, methodBody, setMethodBody )
 lazyAccessor(NSArray*, localVars, setLocalVars, computeLocalVars )
 idAccessor( script, _setScript )
 //idAccessor( _contextClass, setContextClass )

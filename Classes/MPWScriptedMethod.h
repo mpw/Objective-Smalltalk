@@ -12,12 +12,12 @@
 
 @interface MPWScriptedMethod : MPWAbstractInterpretedMethod {
 	id					script;
-	MPWExpression*		methodBody;
+	STExpression*		methodBody;
     NSArray*			localVars;
 	id					contextClass;
 }
 
-objectAccessor_h(MPWExpression*, methodBody, setMethodBody )
+objectAccessor_h(STExpression*, methodBody, setMethodBody )
 objectAccessor_h(NSArray*, localVars, setLocalVars )
 @property (readonly, nonatomic) NSArray <MPWBlockExpression*>* blocks;
 idAccessor_h( script, setScript )

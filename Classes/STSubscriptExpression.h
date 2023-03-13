@@ -9,10 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STSubscriptExpression : MPWExpression
+@interface STSubscriptExpression : STExpression
 
-@property (nonatomic,strong) MPWExpression *receiver;
-@property (nonatomic,strong) MPWExpression *subscript;
+@property (nonatomic,strong) STExpression *receiver;
+@property (nonatomic,strong) STExpression *subscript;
 
 -evaluateAssignmentOf:value in:aContext;
 

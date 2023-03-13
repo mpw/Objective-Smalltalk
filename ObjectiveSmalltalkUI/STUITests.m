@@ -6,7 +6,7 @@
 //
 
 #import "STUITests.h"
-#import "MPWExpression.h"
+#import "STExpression.h"
 #import "STTargetActionConnector.h"
 
 @interface STTargetActionTestClass:NSObject

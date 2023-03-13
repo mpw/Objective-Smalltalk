@@ -6,7 +6,7 @@
 //  Copyright 2006 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class STMessagePortDescriptor;
 

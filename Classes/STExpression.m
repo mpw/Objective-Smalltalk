@@ -6,11 +6,11 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 #import "STCompiler.h"
 #import "MPWIdentifier.h"
 
-@implementation MPWExpression
+@implementation STExpression
 
 longAccessor(textOffset , setTextOffset)
 longAccessor(len, setLen)

@@ -906,7 +906,7 @@ idAccessor(solver, setSolver)
 
 -parseSubscriptExpression:first
 {
-    MPWExpression* indexExpr=[self parseExpression];
+    STExpression* indexExpr=[self parseExpression];
     id closeBrace=[self nextToken];
     if ( [closeBrace isEqual:@"]"]) {
         STSubscriptExpression *expr=[[STSubscriptExpression new] autorelease];

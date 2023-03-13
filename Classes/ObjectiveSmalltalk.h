@@ -28,7 +28,7 @@
 #import <ObjectiveSmalltalk/MPWEvaluable.h>
 #import <ObjectiveSmalltalk/STEvaluator.h>
 #import <ObjectiveSmalltalk/MPWExpression+autocomplete.h>
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 #import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
 #import <ObjectiveSmalltalk/MPWFilterDefinition.h>
 #import <ObjectiveSmalltalk/MPWFrameworkScheme.h>

@@ -22,8 +22,8 @@
 
 @interface STNativeCompiler()
 
--(int)generateCodeForExpression:(MPWExpression*)expression;
--(int)generateCodeFor:(MPWExpression*)someExpression;
+-(int)generateCodeForExpression:(STExpression*)expression;
+-(int)generateCodeFor:(STExpression*)someExpression;
 -(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
 -(int)generateMessageSendOf:(NSString*)selectorString to:receiver with:args;
 -(int)generateMessageSend:(MPWMessageExpression*)expr;
@@ -53,7 +53,7 @@
 
 
  
-@interface MPWExpression(nativeCode)
+@interface STExpression(nativeCode)
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler;
 
 @end
@@ -89,7 +89,7 @@
 
 @end
 
-@implementation MPWExpression(nativeCode)
+@implementation STExpression(nativeCode)
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
@@ -408,7 +408,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr
 {
-    MPWExpression *rhs = [expr rhs];
+    STExpression *rhs = [expr rhs];
     MPWIdentifier *lhs = [(MPWIdentifierExpression*)[expr lhs] identifier];;
 
     int registerForRHS = [self generateCodeFor:rhs];
@@ -439,7 +439,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
 
 
--(int)generateCodeForExpression:(MPWExpression*)expression
+-(int)generateCodeForExpression:(STExpression*)expression
 {
     [NSException raise:@"unknown" format:@"Can't yet compile code for %@/%@",expression.class,expression];
     return 0;
@@ -529,7 +529,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return [self generateMessageSendOf:selectorString to:expr.receiver with:expr.args];
 }
 
--(int)generateCodeFor:(MPWExpression*)someExpression
+-(int)generateCodeFor:(STExpression*)someExpression
 {
     return [someExpression generateNativeCodeOn:self];
 }

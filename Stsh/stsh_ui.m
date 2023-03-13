@@ -40,13 +40,23 @@ int main (int argc, const char *argv[])
     if ( self.app ) {
         [newEval bindValue:self.app toVariableNamed:@"app"];
     }
-    
 }
 
--(void)evaluateReturnValue:value
+-(void)evaluateReturnValue_disabled:value
 {
     [self.app runFromCLI:value];
 }
 
 @end
 
+
+@implementation NSWindow(running)
+
+-main:args
+{
+    NSLog(@"window main:");
+    [[CLIApp sharedApplication] runFromCLI:self];
+    return @(0);
+}
+
+@end

@@ -1,10 +1,10 @@
 /* MPWMessageExpression.h created by marcel on Tue 04-Jul-2000 */
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
-@interface MPWMessageExpression : MPWExpression
+@interface MPWMessageExpression : STExpression
 {
-    MPWExpression*      receiver;
+    STExpression*      receiver;
     SEL	                selector;
     NSArray*            args;
     const char*         _argtypes;
@@ -17,7 +17,7 @@ scalarAccessor_h( const char*, argtypes, setArgtypes )
 scalarAccessor_h( char , returnType, setReturnType )
 
 objectAccessor_h(NSArray*, args, setArgs )
--(instancetype)initWithReceiver:(MPWExpression*)newReceiver;
+-(instancetype)initWithReceiver:(STExpression*)newReceiver;
 
 -(NSString*)messageName;
 -(NSString*)messageNameForCompletion;

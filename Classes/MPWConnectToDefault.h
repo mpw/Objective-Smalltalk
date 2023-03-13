@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
-@interface MPWConnectToDefault : MPWExpression
+@interface MPWConnectToDefault : STExpression
 {
     id lhs,rhs;
 }

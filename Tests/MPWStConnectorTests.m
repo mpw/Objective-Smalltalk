@@ -6,7 +6,8 @@
 //
 
 #import "MPWStConnectorTests.h"
-#import "MPWExpression.h"
+#import "STExpression.h"
+#import "MPWStTests.h"
 
 @implementation MPWStConnectorTests
 

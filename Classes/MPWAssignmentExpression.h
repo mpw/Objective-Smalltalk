@@ -6,14 +6,14 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
 @class MPWIdentifierExpression;
 
-@interface MPWAssignmentExpression : MPWExpression {
+@interface MPWAssignmentExpression : STExpression {
 	MPWIdentifierExpression* lhs;
 	id context;
-	MPWExpression* rhs;
+	STExpression* rhs;
 }
 
 idAccessor_h( lhs, setLhs )

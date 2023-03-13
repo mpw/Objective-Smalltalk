@@ -45,7 +45,7 @@
 
 @end
 
-@implementation MPWExpression(constraintCreation)
+@implementation STExpression(constraintCreation)
 
 -(STSimpleDataflowConstraint*)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
 {

@@ -13,7 +13,7 @@
 #import <MPWFoundation/MPWByteStream.h>
 #import "MPWMessage.h"
 #import "MPWClassScheme.h"
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 #import "MPWRefScheme.h"
 #import "MPWSchemeScheme.h"
 #import "MPWVarScheme.h"

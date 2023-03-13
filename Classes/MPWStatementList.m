@@ -21,7 +21,7 @@ objectAccessor( NSMutableArray*, statements, setStatements )
 
 -(void)accumulateLocalVars:(NSMutableArray*)vars
 {
-    for (MPWExpression *statement in statements) {
+    for (STExpression *statement in statements) {
         [statement accumulateLocalVars:vars];
     }
 }

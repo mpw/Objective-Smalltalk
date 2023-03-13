@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWExpression.h>
+#import <ObjectiveSmalltalk/STExpression.h>
 
-@interface MPWLiteralExpression : MPWExpression
+@interface MPWLiteralExpression : STExpression
 {
     id  theLiteral;
 }
