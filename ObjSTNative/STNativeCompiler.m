@@ -799,6 +799,26 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return compileSuccess;
 }
 
+
+-(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
+{
+    NSMutableString *command=[NSMutableString string];
+    if ( dir ) {
+        [command appendFormat:@"cd %@;",dir];
+    }
+    [command appendFormat:@"cc -dynamiclib -current_version 1.0 -compatibility_version 1.0 -o  %@ ",executable];
+    for ( NSString *objectFilename in objects ) {
+        [command appendFormat:@"%@.o ",objectFilename ];
+    }
+    
+    [command appendFormat:@" -F/Library/Frameworks "];
+    for ( NSString *frameworkName in frameworks) {
+        [command appendFormat:@" -framework %@ ",frameworkName];
+    }
+    int compileSuccess = system([command UTF8String]);
+    return compileSuccess;
+}
+
 -(NSArray*)defaultFrameworks
 {
     return @[ @"ObjectiveSmalltalk", @"MPWFoundation", @"Foundation"];
