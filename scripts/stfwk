@@ -5,7 +5,9 @@ basename := source stringValue stringByDeletingPathExtension.
 compiler := STNativeCompiler compiler.
 compiled := compiler compileClassToMachoO: (compiler compile: file:{source}).
 objectFileName := basename , '.o'.
-sharedLibName := "lib{basename}.A.dylib".
-stdout println:sharedLibName.
+fwkName := "{basename}.framework".
+stdout println: fwkName.
+ref:file:. mkdir:fwkName.
+binaryName := "{fwkName}/{basename}".
 file:{objectFileName} := compiled.
-compiler linkObjects: #[ basename ] toSharedLibrary: sharedLibName inDir: nil withFrameworks:[ 'ObjectiveHttpd', 'ObjectiveSmalltalk', 'MPWFoundation', 'Foundation' ].
+compiler linkObjects: #[ basename ] toSharedLibrary: binaryName inDir: nil withFrameworks:[ 'ObjectiveHttpd', 'ObjectiveSmalltalk', 'MPWFoundation', 'Foundation' ].

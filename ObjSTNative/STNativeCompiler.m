@@ -765,11 +765,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(NSData*)compileProcessToMachoO:(MPWClassDefinition*)theClass
 {
     [self compileMainCallingClass:theClass.name];
-    [self compileClass:theClass];
-    [writer writeFile];
-    return (NSData*)[writer target];
+    return [self compileClassToMachoO:theClass];
 }
-
 
 -(NSData*)compileBlockToMachoO:(MPWBlockExpression*)aBlock
 {
@@ -780,13 +777,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return (NSData*)[writer target];
 }
 
--(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
+-(int)processObjects:(NSArray*)objects withCommand:(NSString*)baseCommand output:(NSString*)output inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
     NSMutableString *command=[NSMutableString string];
     if ( dir ) {
         [command appendFormat:@"cd %@;",dir];
     }
-    [command appendFormat:@"cc -o  %@ ",executable];
+    [command appendString:baseCommand];
+    [command appendFormat:@" -o  %@ ",output];
     for ( NSString *objectFilename in objects ) {
         [command appendFormat:@"%@.o ",objectFilename ];
     }
@@ -800,23 +798,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
 
 
+
+-(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
+{
+    return [self processObjects:objects withCommand:@"cc" output:executable inDir:dir withFrameworks:frameworks];
+}
+
+
 -(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
-    NSMutableString *command=[NSMutableString string];
-    if ( dir ) {
-        [command appendFormat:@"cd %@;",dir];
-    }
-    [command appendFormat:@"cc -dynamiclib -current_version 1.0 -compatibility_version 1.0 -o  %@ ",executable];
-    for ( NSString *objectFilename in objects ) {
-        [command appendFormat:@"%@.o ",objectFilename ];
-    }
-    
-    [command appendFormat:@" -F/Library/Frameworks "];
-    for ( NSString *frameworkName in frameworks) {
-        [command appendFormat:@" -framework %@ ",frameworkName];
-    }
-    int compileSuccess = system([command UTF8String]);
-    return compileSuccess;
+    return [self processObjects:objects withCommand:@"cc -dynamiclib -current_version 1.0 -compatibility_version 1.0 " output:executable inDir:dir withFrameworks:frameworks];
 }
 
 -(NSArray*)defaultFrameworks
