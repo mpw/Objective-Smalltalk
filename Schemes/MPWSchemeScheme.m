@@ -20,6 +20,7 @@
 #import "MPWEnvScheme.h"
 #import "MPWBundleScheme.h"
 #import "MPWDefaultsScheme.h"
+#import "MPWGlobalVariableStore.h"
 
 @implementation MPWSchemeScheme
 
@@ -63,6 +64,7 @@ id currentScheme=nil;
     [schemes setSchemeHandler:[MPWEnvScheme store]  forSchemeName:@"env"];
     [schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
     [schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
+    [schemes setSchemeHandler:[MPWGlobalVariableStore store]  forSchemeName:@"global"];
     //    [schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
     
     return schemes;

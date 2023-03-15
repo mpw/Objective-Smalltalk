@@ -25,10 +25,15 @@
 {
     NSString *name=[aReference path];
     NSBundle *result=nil;
-    for ( NSString *base in [self basePaths]) {
-        result=[NSBundle bundleWithPath:[[base stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"framework"]];
-        if ( result ) {
-            break;
+    
+    if ( [name containsString:@"/"])  {
+        result=[NSBundle bundleWithPath:[name stringByAppendingPathExtension:@"framework"]];
+    } else {
+        for ( NSString *base in [self basePaths]) {
+            result=[NSBundle bundleWithPath:[[base stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"framework"]];
+            if ( result ) {
+                break;
+            }
         }
     }
     return result;
