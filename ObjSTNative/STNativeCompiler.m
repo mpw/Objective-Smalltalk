@@ -777,7 +777,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return (NSData*)[writer target];
 }
 
--(int)processObjects:(NSArray*)objects withCommand:(NSString*)baseCommand output:(NSString*)output inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
+-(NSString*)commandToProcessObjects:(NSArray*)objects withCommand:(NSString*)baseCommand output:(NSString*)output inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
     NSMutableString *command=[NSMutableString string];
     if ( dir ) {
@@ -793,6 +793,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( NSString *frameworkName in frameworks) {
         [command appendFormat:@" -framework %@ ",frameworkName];
     }
+    fprintf(stderr,"\n%s\n",[command UTF8String]);
+    return command;
+}
+
+-(int)shellOut:(NSString*)command
+{
     int compileSuccess = system([command UTF8String]);
     return compileSuccess;
 }
@@ -801,13 +807,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
-    return [self processObjects:objects withCommand:@"cc" output:executable inDir:dir withFrameworks:frameworks];
+    return [self shellOut:[self commandToProcessObjects:objects withCommand:@"cc" output:executable inDir:dir withFrameworks:frameworks]];
 }
 
 
--(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
+-(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)lib inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
-    return [self processObjects:objects withCommand:@"cc -dynamiclib -current_version 1.0 -compatibility_version 1.0 " output:executable inDir:dir withFrameworks:frameworks];
+    return [self shellOut:[self commandToProcessObjects:objects withCommand:@"ld -dynamic -dylib_compatibility_version 1.0  -dylib_current_version 1.0 -platform_version macos 13.0.0 13.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -dylib -current_version 1.0 -compatibility_version 1.0" output:lib inDir:dir withFrameworks:frameworks]];
 }
 
 -(NSArray*)defaultFrameworks
