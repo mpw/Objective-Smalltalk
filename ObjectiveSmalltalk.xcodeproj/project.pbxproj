@@ -647,6 +647,7 @@
 		1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FFD20DE19278611009052B1 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFD20DF19278611009052B1 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
+		1FFDEE9529C4ADED00A4DFCF /* ConstArray.framework in Resources */ = {isa = PBXBuildFile; fileRef = 1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */; };
 		1FFE3AD720B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFE3AD520B46BDD00E65B93 /* MPWSelfContainedBinding.h */; };
 		1FFE3AD820B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFE3AD520B46BDD00E65B93 /* MPWSelfContainedBinding.h */; };
 		1FFE3AD920B46BDD00E65B93 /* MPWSelfContainedBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFE3AD620B46BDD00E65B93 /* MPWSelfContainedBinding.m */; };
@@ -1308,6 +1309,7 @@
 		1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralExpression.h; sourceTree = "<group>"; };
 		1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralExpression.m; sourceTree = "<group>"; };
+		1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ConstArray.framework; sourceTree = "<group>"; };
 		1FFE3AD520B46BDD00E65B93 /* MPWSelfContainedBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSelfContainedBinding.h; sourceTree = "<group>"; };
 		1FFE3AD620B46BDD00E65B93 /* MPWSelfContainedBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSelfContainedBinding.m; sourceTree = "<group>"; };
 		F5A74ABD00F0A61B015ADD82 /* STCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = STCompiler.m; sourceTree = "<group>"; };
@@ -1743,6 +1745,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */,
 				1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */,
 				1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */,
 				1F5BBA35294DEC1200C3D345 /* use_class.macho */,
@@ -3264,6 +3267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FD405C329334F6F000F4122 /* function-passing-nsstring.macho in Resources */,
+				1FFDEE9529C4ADED00A4DFCF /* ConstArray.framework in Resources */,
 				1F5BBA36294DEC1200C3D345 /* use_class.macho in Resources */,
 				1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */,
 				1F5BBA342943BC4000C3D345 /* use_class_with_if.mfile in Resources */,

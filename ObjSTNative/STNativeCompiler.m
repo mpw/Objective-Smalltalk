@@ -1245,6 +1245,22 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STNonNilTestProgram {  -main:args { var a. a := 10. { a - 10. } value.} }", @"TestAccessOutsideScopeVarsFromBlock");
 }
 
++(void)testCanLoadNSArrayFromAFramework
+{
+    id <MPWStorage> globals = [MPWGlobalVariableStore store];
+    EXPECTNIL(globals[@"constant_nsarray_test"],@"shouldn't be here yet");
+    NSURL *frameworkURL=[[NSBundle bundleForClass:self] URLForResource:@"ConstArray" withExtension:@"framework"];
+    EXPECTNOTNIL(frameworkURL, @"frameowrk URL");
+    NSBundle *b=[NSBundle bundleWithURL:frameworkURL];
+    EXPECTNOTNIL(b, @"embedded framework");
+    EXPECTTRUE([b load], @"loaded");
+    NSArray* array = globals[@"constant_nsarray_test"];
+    EXPECTNOTNIL(array, @"array");
+    INTEXPECT( array.count,2,@"number of elements");
+    IDEXPECT( array[0], @"string1",@"first element");
+    IDEXPECT( array[1], @"string2",@"second element");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -1282,6 +1298,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testStackBlocksAreActuallyOnStack",
        @"testStackBlocksCanBeUsed",
        @"testBlockCanAccessOutsideScopeVariables",
+       @"testCanLoadNSArrayFromAFramework",
 			];
 }
 
