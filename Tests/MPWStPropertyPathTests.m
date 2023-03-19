@@ -163,8 +163,14 @@
     [compiler evaluateScriptString:@"scheme:m := PropertyTestClass9 storeWithSource: scheme:d."];
     [compiler evaluateScriptString:@"d:a := 3."];
     IDEXPECT( [compiler evaluateScriptString:@"m:a"],@(3),@"dict via mapping store subclass that doesn't define getter");
+}
 
-
++(void)testPropertyPathWildcardMatchesRoot
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"scheme PropertyTestClass11  {  /* { |= { 'hello' }}} "];
+    [compiler evaluateScriptString:@"scheme:s := PropertyTestClass11 store."];
+    IDEXPECT( [compiler evaluateScriptString:@" s:/ "],@"hello",@"root should be matched by wildcard");
 }
 
 +(NSArray*)testSelectors
@@ -188,6 +194,7 @@
        @"testPropertyPathGetterWithArgsWorksWithPlainClass",
        @"testSimplePropertyPathSetterWorksWithPlainClass",
        @"testDefiningNoPropertyPathGettersAllowsSuperclassDefinitionToPrevail",
+       @"testPropertyPathWildcardMatchesRoot",
 
 			];
 }

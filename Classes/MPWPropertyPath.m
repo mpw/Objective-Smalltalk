@@ -39,27 +39,39 @@ CONVENIENCEANDINIT( propertyPath, WithPathString:(NSString*)path)
 {
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     NSArray *pathComponents=[ref relativePathComponents];
+    NSLog(@"ref: %@",ref);
     BOOL isWild=NO;
-    for (long i=0, max=MIN(pathComponents.count,self.pathComponents.count);i<max;i++) {
-        NSString *segment=pathComponents[i];
-        MPWPropertyPathComponent *matcher=self.pathComponents[i];
-        NSString *matcherName=matcher.name;
-        NSString *argName=matcher.parameter;
-
-        if ( matcherName ) {
-            if ( ![matcherName isEqualToString:segment]) {
-                return nil;
-            }
-        } else if ( argName) {
-            if ( matcher.isWildcard ) {
-                isWild=YES;
-                result[argName]=[pathComponents subarrayWithRange:NSMakeRange(i,pathComponents.count-i)];
-                break;
-            } else {
-                result[argName]=segment;
+    if ( pathComponents.count > 0) {
+        for (long i=0, max=MIN(pathComponents.count,self.pathComponents.count);i<max;i++) {
+            NSString *segment=pathComponents[i];
+            MPWPropertyPathComponent *matcher=self.pathComponents[i];
+            NSString *matcherName=matcher.name;
+            NSString *argName=matcher.parameter;
+            
+            if ( matcherName ) {
+                if ( ![matcherName isEqualToString:segment]) {
+                    return nil;
+                }
+            } else if ( argName) {
+                if ( matcher.isWildcard ) {
+                    isWild=YES;
+                    result[argName]=[pathComponents subarrayWithRange:NSMakeRange(i,pathComponents.count-i)];
+                    break;
+                } else {
+                    result[argName]=segment;
+                }
             }
         }
+    } else if ( [[ref path] isEqual:@"/"] ) {
+        if ( self.pathComponents.count == 1) {
+            MPWPropertyPathComponent *matcher=self.pathComponents[0];
+            if ( matcher.isWildcard ) {
+                isWild=YES;
+                result[@"/"]=@"/";
+           }
+        }
     }
+
     if ( isWild || pathComponents.count == self.pathComponents.count) {
         return result;
     } else {
