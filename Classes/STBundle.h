@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(STCompiler*)interpreter;
 -(NSDictionary*)methodDict;
 -(id <MPWReferencing>)resourceRef;
+-(id <MPWReferencing>)sourceRef;
 -(MPWWriteBackCache*)cachedResources;
 -(void)save;
 

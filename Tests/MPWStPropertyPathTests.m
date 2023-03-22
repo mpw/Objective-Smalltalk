@@ -113,7 +113,7 @@
 +(void)testEvaluatePropertyPathGetterWithWildcard
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"class PropertyTestClass4 : MPWScheme { /propertyA/*:path { |= {  path   reverseObjectEnumerator allObjects componentsJoinedByString:':'. }}} "];
+    [compiler evaluateScriptString:@"class PropertyTestClass4 : MPWScheme { /propertyA/*:path { |= {  (path componentsSeparatedByString:'/')  reverseObjectEnumerator allObjects componentsJoinedByString:':'. }}} "];
     id result1 = [compiler evaluateScriptString:@"a := PropertyTestClass4 scheme. scheme:p := a. p:propertyA/a/b/c."];
     IDEXPECT(result1,@"c:b:a",@"evaluating a wildcard property with 3 args");
 }

@@ -61,4 +61,9 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     return @" 'property path'. ";
 }
 
+-(BOOL)isPropertyPathDefs
+{
+    
+}
+
 @end

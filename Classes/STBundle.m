@@ -55,9 +55,14 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [NSURL fileURLWithPath:self.path];
 }
 
+-(MPWBinding*)refForSubDir:(NSString*)subdir
+{
+    return [[self binding] referenceByAppendingReference:subdir];
+}
+
 -(id <MPWHierarchicalStorage>)storeForSubDir:(NSString*)subdir
 {
-    return [[[self binding] referenceByAppendingReference:subdir] asScheme];
+    return [[self refForSubDir:subdir] asScheme];
 }
 
 -(id <MPWHierarchicalStorage>)resources
@@ -74,6 +79,13 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     } @catch ( NSException *exception ) {
         return NO;
     }
+}
+
+-(id <MPWReferencing>)sourceRef
+{
+    return [self refForSubDir:@"Sources"];
+//    NSString *path=[[self path] stringByAppendingPathComponent:@"Resources"];
+//    return path;
 }
 
 -(id <MPWReferencing>)resourceRef
@@ -98,7 +110,8 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSArray<NSString*>*)sourceNames
 {
-    return (NSArray<NSString*>*)[[(NSArray<NSString*>*)[[[[[self sourceDir] at:@"."] contents] collect] path] collect] lastPathComponent];
+    NSArray<NSString*>* allFiles = (NSArray<NSString*>*)[[(NSArray<NSString*>*)[[[[[self sourceDir] at:@"."] contents] collect] path] collect] lastPathComponent];
+    return [[allFiles select] __hasSuffix:@"st"];
 }
 
 -(NSDictionary*)readInfo
