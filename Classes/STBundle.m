@@ -29,12 +29,13 @@
 lazyAccessor(NSDictionary*, info, setInfo, readInfo)
 lazyAccessor(STCompiler*, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary*, methodDict, setMethodDict, methodDictForSourceFiles)
-lazyAccessor(MPWWriteBackCache*, cachedResources, setCachedResources, createResources)
+lazyAccessor(MPWWriteBackCache*, cachedResources, setCachedResources, createCachedResources)
 
 CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 {
     self=[super init];
     self.binding=newBinding;
+    self.saveSource = YES;
     return self;
 }
 
@@ -94,10 +95,10 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return path;
 }
 
--(MPWWriteBackCache*)createResources
+-(MPWWriteBackCache*)createCachedResources
 {
 
-    MPWDiskStore *base = [MPWDiskStore store];
+    id <MPWStorage,MPWHierarchicalStorage> base = self.resources;
     MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
     cache.autoFlush=NO;
     return cache;
@@ -121,7 +122,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(void)configureInterpreter:(STCompiler*)newInterpreter
 {
-    [[newInterpreter schemes] setSchemeHandler:[MPWPathRelativeStore storeWithSource:self.cachedResources reference:[self resourceRef]]   forSchemeName:@"rsrc"];
+    [[newInterpreter schemes] setSchemeHandler:self.cachedResources   forSchemeName:@"rsrc"];
     [newInterpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 }
 
@@ -153,7 +154,9 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [self methodDict];
     [target mkdirAt:@""];
     [target mkdirAt:@"Sources"];
-    [[self.interpreter methodStore] fileoutToStore:[target relativeStoreAt:@"Sources"]];
+    if ( self.saveSource ) {
+        [[self.interpreter methodStore] fileoutToStore:[target relativeStoreAt:@"Sources"]];
+    }
     [target mkdirAt:@"Resources"];
     id <MPWStorage> resourceTarget=[target relativeStoreAt:@"Resources"];
     target[@"Info.json"] = [self storeForSubDir:@"."][@"Info.json"];
@@ -172,10 +175,11 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [self.cachedResources flush];
     NSFileManager *fm=[NSFileManager defaultManager];
     [fm createDirectoryAtURL:self.url withIntermediateDirectories:YES attributes:nil error:&outError];
-    NSURL *sourcesDir=[NSURL URLWithString:@"Sources" relativeToURL:self.url];
-    [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
-    
-    [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
+    if ( self.saveSource) {
+        NSURL *sourcesDir=[NSURL URLWithString:@"Sources" relativeToURL:self.url];
+        [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
+        [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
+    }
 }
 
 @end

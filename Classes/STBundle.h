@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property (readonly) BOOL isPresentOnDisk;
+@property (assign) BOOL saveSource;           // should probably be a temp hack
 
 @end
 
