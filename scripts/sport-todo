@@ -1,4 +1,4 @@
-#!/usr/local/bin/stsh
+#!env st
 #-<int>addSportEvents
 calendarName:='Sport'
 context loadFramework:'EventKit' .

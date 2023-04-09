@@ -1,5 +1,5 @@
 #!env st
-#-<void>compile:source
+#-<void>compileToFramework:source
 framework:ObjSTNative load.
 basename := source stringValue stringByDeletingPathExtension.
 compiler := STNativeCompiler compiler.

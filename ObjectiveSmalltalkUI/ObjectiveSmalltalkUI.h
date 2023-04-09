@@ -12,3 +12,4 @@
 #import <ObjectiveSmalltalkUI/MPWProgramTextView.h>
 #import <ObjectiveSmalltalkUI/MPWColorStore.h>
 #import <ObjectiveSmalltalkUI/MPWFontStore.h>
+#import <ObjectiveSmalltalkUI/STTextField.h>

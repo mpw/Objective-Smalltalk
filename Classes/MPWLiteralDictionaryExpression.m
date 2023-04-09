@@ -62,6 +62,7 @@
         values[i]=[values[i] evaluateIn:aContext];
         if ( values[i]==nil) {
             values[i]=[NSNull null];
+            // FIXME:  should this really raise?
             [NSException raise:@"nil" format:@"in literal expression class %@ key:%@ value:%@",self.literalClassName,keys[i],values[i]];
         }
     }

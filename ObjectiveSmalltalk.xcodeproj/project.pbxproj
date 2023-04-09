@@ -168,7 +168,7 @@
 		1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769125E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
 		1F5D769225E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
-		1F5D76A525EA389200DCC82F /* STTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76A325EA389200DCC82F /* STTextField.h */; };
+		1F5D76A525EA389200DCC82F /* STTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76A325EA389200DCC82F /* STTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5D76A625EA389200DCC82F /* STTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76A425EA389200DCC82F /* STTextField.m */; };
 		1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */; };
 		1F5D76D125EBC9AF00DCC82F /* MPWSTTouchUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */; };
@@ -485,6 +485,8 @@
 		1FD713E41522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713E71522DAA6004A5E15 /* MPWObjectMirror.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
+		1FD8C3B529E16F4A00E6A9C2 /* AppKitInit.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FD8C3B129E16F4A00E6A9C2 /* AppKitInit.st */; };
+		1FD8C3B729E171E500E6A9C2 /* appkit-enums.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FD8C3B629E171E500E6A9C2 /* appkit-enums.json */; };
 		1FDB6CB41855BE1400623042 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
@@ -1249,6 +1251,8 @@
 		1FD713D71522DA96004A5E15 /* MPWMethodMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWMethodMirror.m; sourceTree = "<group>"; };
 		1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjectMirror.h; sourceTree = "<group>"; };
 		1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjectMirror.m; sourceTree = "<group>"; };
+		1FD8C3B129E16F4A00E6A9C2 /* AppKitInit.st */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AppKitInit.st; sourceTree = "<group>"; };
+		1FD8C3B629E171E500E6A9C2 /* appkit-enums.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "appkit-enums.json"; sourceTree = "<group>"; };
 		1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSchemeScheme.h; sourceTree = "<group>"; };
 		1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSchemeScheme.m; sourceTree = "<group>"; };
 		1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDefaultsScheme.h; sourceTree = "<group>"; };
@@ -1929,6 +1933,8 @@
 			isa = PBXGroup;
 			children = (
 				1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */,
+				1FD8C3B129E16F4A00E6A9C2 /* AppKitInit.st */,
+				1FD8C3B629E171E500E6A9C2 /* appkit-enums.json */,
 				1F7045ED22313E83005ED7FB /* MPWMethodBrowser.m */,
 				1FA85A181923739E00F52396 /* CLIView.h */,
 				1FA85A191923739E00F52396 /* CLIView.m */,
@@ -3388,8 +3394,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA859F91923731900F52396 /* InfoPlist.strings in Resources */,
+				1FD8C3B729E171E500E6A9C2 /* appkit-enums.json in Resources */,
 				1F7045FB2231417E005ED7FB /* classdef-method-browser-scheme.stsh in Resources */,
 				1F7045F122313E84005ED7FB /* MPWMethodBrowser.xib in Resources */,
+				1FD8C3B529E16F4A00E6A9C2 /* AppKitInit.st in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5678,7 +5686,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "StshFramework-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = StshFramework;
@@ -5726,7 +5734,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "StshFramework-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = StshFramework;
 				WRAPPER_EXTENSION = framework;
