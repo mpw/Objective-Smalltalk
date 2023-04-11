@@ -27,6 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWWriteBackCache*)cachedResources;
 -(void)save;
 
+-(id)resultOfCompilingSourceFileNamed:(NSString*)sourceName;
+-(void)compileSourceFile:(NSString*)sourceName;
+-(void)compileAllSourceFiles;
+
 
 @property (readonly) BOOL isPresentOnDisk;
 @property (assign) BOOL saveSource;           // should probably be a temp hack

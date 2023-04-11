@@ -133,20 +133,38 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return compiler;
 }
 
--(NSDictionary*)methodDictForSourceFiles
+-(id)resultOfCompilingSourceFileNamed:(NSString*)sourceName
 {
-    STCompiler *compiler=self.interpreter;
-    id <MPWHierarchicalStorage> sources=[self sourceDir];
+    id statements=nil;
+    @autoreleasepool {
+        STCompiler *compiler=self.interpreter;
+        id <MPWHierarchicalStorage> sources=[self sourceDir];
+        NSData *stSource = sources[sourceName];
+        statements=[[compiler compile:stSource] retain];
+    }
+    return [statements autorelease];
+}
+
+-(void)compileSourceFile:(NSString*)sourceName
+{
+    @autoreleasepool {
+        [self.interpreter evaluate:[self resultOfCompilingSourceFileNamed:sourceName]];
+    }
+}
+
+-(void)compileAllSourceFiles
+{
     for ( NSString *filename in [self sourceNames] ) {
         @autoreleasepool {
-            NSData *stSource = sources[filename];
-            NSArray *statements=[compiler compile:stSource];
-            [compiler evaluate:statements];
+            [self compileSourceFile:filename];
         }
     }
+}
 
-    NSDictionary *subDict=[compiler externalScriptDict];
-    return subDict;
+-(NSDictionary*)methodDictForSourceFiles
+{
+    [self compileAllSourceFiles];
+    return [self.interpreter externalScriptDict];
 }
 
 -(void)writeToStore:(id <MPWStorage>)target
