@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(id <MPWReferencing>)resourceRef;
 -(id <MPWReferencing>)sourceRef;
 -(MPWWriteBackCache*)cachedResources;
+-(MPWWriteBackCache*)cachedSources;
 -(void)save;
 
 -(id)resultOfCompilingSourceFileNamed:(NSString*)sourceName;

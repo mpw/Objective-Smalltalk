@@ -24,12 +24,14 @@
     STCompiler     *interpreter;
     NSDictionary      *methodDict;
     MPWWriteBackCache *cachedResources;
+    MPWWriteBackCache *cachedSources;
 }
 
 lazyAccessor(NSDictionary*, info, setInfo, readInfo)
 lazyAccessor(STCompiler*, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary*, methodDict, setMethodDict, methodDictForSourceFiles)
 lazyAccessor(MPWWriteBackCache*, cachedResources, setCachedResources, createCachedResources)
+lazyAccessor(MPWWriteBackCache*, cachedSources, setCachedSources, createCachedSources)
 
 CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 {
@@ -71,6 +73,12 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [self storeForSubDir:@"Resources"];
 }
 
+-(id <MPWHierarchicalStorage>)sourceDir
+{
+    return [self storeForSubDir:@"Sources"];
+}
+
+
 -(BOOL)isPresentOnDisk
 {
     MPWBinding *binding=[self binding];
@@ -104,10 +112,14 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return cache;
 }
 
--(id <MPWHierarchicalStorage>)sourceDir
+-(MPWWriteBackCache*)createCachedSources
 {
-    return [self storeForSubDir:@"Sources"];
+    id <MPWStorage,MPWHierarchicalStorage> base = self.sourceDir;
+    MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
+    cache.autoFlush=NO;
+    return cache;
 }
+
 
 -(NSArray<NSString*>*)sourceNames
 {
@@ -138,7 +150,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     id statements=nil;
     @autoreleasepool {
         STCompiler *compiler=self.interpreter;
-        id <MPWHierarchicalStorage> sources=[self sourceDir];
+        id <MPWHierarchicalStorage> sources=[self cachedSources];
         NSData *stSource = sources[sourceName];
         statements=[[compiler compile:stSource] retain];
     }
@@ -241,7 +253,6 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     STBundle *bundle=[self _testBundle];
     NSArray<NSString*> *names=[bundle sourceNames];
-    NSLog(@"names: %@",names);
     INTEXPECT(names.count, 2, @"number of source files");
     NSData *s1=[bundle sourceDir][names[0]];
     IDEXPECT(names[0], @"STBundleLoadedTestClass1.st", @"what is it?");
