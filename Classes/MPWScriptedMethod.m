@@ -171,14 +171,11 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     } @catch (id exception) {
 //        NSLog(@"exception evaluating scripted method: %@",[self methodHeader]);
         id newException = [self handleException:exception target:target];
-#if 1
         NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);
         Class c=NSClassFromString(@"MethodServer");
         [c addException:newException];
         NSLog(@"added exception to %@",c);
-#else
         @throw newException;
-#endif
     }
         [returnVal retain];
 //	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
