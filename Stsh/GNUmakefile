@@ -26,12 +26,14 @@ stsh_HEADER_FILES_INSTALL_DIR = /stsh
 
 
 libstsh_OBJC_FILES = \
-    Classes/MPWStScript.m \
-    Classes/MPWStsh.m \
+    Classes/STScript.m \
+    Classes/STShell.m \
     Classes/MPWEchoCommand.m \
     Classes/MPWShellCompiler.m \
     Classes/MPWExternalCommand.m \
     Classes/MPWCommandFilter.m \
+    Classes/MPWCommandStore.m \
+    Classes/MPWCommandBinding.m \
     Classes/MPWObjectPipeCommand.m \
     Classes/MPWUpcaseFilter.m \
     Classes/MPWAbstractShellCommand.m \
@@ -69,4 +71,4 @@ after-clean ::
 
 
 stsh  : libstsh
-	$(CC) -g -fblocks -fobjc-runtime=gnustep-2.1 -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L ${HOME}/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh  -lObjectiveSmalltalk -lObjectiveHTTPD -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd
+	$(CC) -g -fobjc-runtime=gnustep-2.1  -fblocks -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L ${HOME}/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh  -lObjectiveSmalltalk -lObjectiveHTTPD -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc -lreadline -ledit -lmicrohttpd

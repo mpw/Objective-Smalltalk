@@ -410,9 +410,14 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     if ( SCANINBOUNDS(cur+1) && cur[0]=='0' && tolower(cur[1])=='x') {
         cur+=2;
         long value=0;
-        while ( SCANINBOUNDS(cur) && ishexnumber(*cur)) {
+        while ( SCANINBOUNDS(cur) && isxdigit(*cur)) {
             value*=16;
-            value+=digittoint(*cur);
+            int digit = toupper(*cur)-'0';
+            if ( digit > 10 ) {
+                digit -= ('A' - '9'  - 1);
+            }
+            value+=digit;
+            
             cur++;
         }
         pos=cur;

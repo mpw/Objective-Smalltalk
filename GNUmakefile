@@ -28,7 +28,7 @@ ObjectiveSmalltalk_HEADER_FILES_INSTALL_DIR = /ObjectiveSmalltalk
 libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWIdentifier.m \
     Classes/MPWScheme.m \
-    Classes/MPWExpression.m \
+    Classes/STExpression.m \
     Stsh/Classes/MPWExpression+autocomplete.m \
     Classes/MPWBindingLegacy.m \
     Classes/MPWStScanner.m \
@@ -38,7 +38,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWClassMirror.m \
     Classes/MPWObjectMirror.m \
     Classes/MPWMethodMirror.m \
-    Classes/MPWEvaluator.m \
+    Classes/STEvaluator.m \
     Classes/MPWMessageExpression.m \
     Classes/MPWRecursiveIdentifier.m \
     Classes/MPWFilterDefinition.m \
@@ -103,6 +103,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/MPWBlockFilterScheme.m \
     Schemes/STPortScheme.m \
     Schemes/STProtocolScheme.m \
+    Schemes/MPWGlobalVariableStore.m \
     Tests/MPWStTests.m \
 
 

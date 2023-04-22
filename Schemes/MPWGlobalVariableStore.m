@@ -8,6 +8,10 @@
 #import "MPWGlobalVariableStore.h"
 #include <dlfcn.h>
 
+#ifndef RTLD_DEFAULT
+#define RTLD_DEFAULT 0
+#endif
+
 @implementation MPWGlobalVariableStore
 
 -(id)at:(id<MPWReferencing>)aReference
@@ -21,6 +25,26 @@
         return nil;
     }
 
+}
+
+@end
+
+@implementation MPWGlobalVariableStore(testing)
+
+id MPWGlobalVariableStore_test_global=@"global variable test content";
+
++(void)testCanReadGlboal
+{
+    MPWGlobalVariableStore *globals=[MPWGlobalVariableStore store];
+    IDEXPECT( globals[@"MPWGlobalVariableStore_test_global"], @"global variable test content",@"the global" );
+    
+}
+
++testSelectors
+{
+    return @[
+        @"testCanReadGlboal",
+    ];
 }
 
 @end

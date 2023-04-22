@@ -147,7 +147,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     id compiledMethod = [self compiledScript];
 	STEvaluator* executionContext = [self executionContext];
 //    NSLog(@"compiledExecutionContext: %@ schemes: %@",[self compiledInExecutionContext],[[self compiledInExecutionContext] schemes]);
-    [executionContext bindValue:self toVariableNamed:@"self"];
+    [executionContext bindValue:self toVariableNamed:@"thisMethod"];
+    [executionContext bindValue:executionContext toVariableNamed:@"thisContext"];
     [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
     if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
 //        NSLog(@"for %@, getting schemeNames: %@",[[self methodHeader] methodName],[target schemeNames]);
