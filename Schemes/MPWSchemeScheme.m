@@ -41,32 +41,45 @@ id currentScheme=nil;
     currentScheme=newSchemeScheme;
 }
 
+typedef struct {
+    NSString *key,*value;
+} keyvalue;
+
 +(instancetype)createGlobalSchemeScheme
 {
     MPWSchemeScheme *schemes=[self store];
-    
-    MPWClassScheme *classScheme=[MPWClassScheme store];
-    [schemes setSchemeHandler:classScheme forSchemeName:@"class"];
-    [schemes setSchemeHandler:classScheme forSchemeName:@"builder"];
-    [schemes setSchemeHandler:[STProtocolScheme store] forSchemeName:@"protocol"];
-    [schemes setSchemeHandler:[MPWTCPStore store] forSchemeName:@"tcp"];
-    [schemes setSchemeHandler:[MPWSFTPStore store] forSchemeName:@"sftp"];
-    [schemes setSchemeHandler:[MPWDictStore store] forSchemeName:@"template"];
-    [schemes setSchemeHandler:[[MPWRefScheme new] autorelease] forSchemeName:@"ref"];
+    keyvalue storemap[] = {
+        { @"class", @"MPWClassScheme" },
+        { @"builder", @"MPWClassScheme" },
+        { @"protocol", @"STProtocolScheme" },
+        { @"tcp", @"MPWTCPStore" },
+        { @"sftp", @"MPWSFTPStore" },
+        { @"template", @"MPWDictStore" },
+        { @"ref", @"MPWRefScheme" },
+        { @"framework", @"MPWFrameworkScheme" },
+        { @"defaults", @"MPWDefaultsScheme" },
+        { @"file", @"MPWFileSchemeResolver" },
+        { @"env", @"MPWEnvScheme" },
+        { @"bundle", @"MPWBundleScheme" },
+        { @"global", @"MPWGlobalVariableStore" },
+        { @"keychain", @"MPWKeychainStore" },
+        { @"app", @"MPWScriptingBridgeScheme" },
+        { nil, nil }
+    };
+  
+    for (int i=0; storemap[i].key; i++) {
+        Class storeClass=NSClassFromString(storemap[i].value);
+        if ( storeClass ) {
+            [schemes setSchemeHandler:[storeClass store] forSchemeName:storemap[i].key];
+        }
+    }
+    [schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
+
     [schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
-    [schemes setSchemeHandler:[MPWFrameworkScheme store] forSchemeName:@"framework"];
-    [schemes setSchemeHandler:[MPWDefaultsScheme store]  forSchemeName:@"defaults"];
-    [schemes setSchemeHandler:[MPWFileSchemeResolver store]  forSchemeName:@"file"];
     [schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
     [schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
     [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
-    
-    [schemes setSchemeHandler:[MPWEnvScheme store]  forSchemeName:@"env"];
-    [schemes setSchemeHandler:[MPWBundleScheme store]  forSchemeName:@"bundle"];
-    [schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
-    [schemes setSchemeHandler:[MPWGlobalVariableStore store]  forSchemeName:@"global"];
-    //    [schemes setSchemeHandler:[MPWScriptingBridgeScheme scheme]  forSchemeName:@"app"];
-    
+        
     return schemes;
 }
 
