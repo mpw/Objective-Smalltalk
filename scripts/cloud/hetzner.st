@@ -1,37 +1,33 @@
 #!env st
 
-scheme:https setHeaders: #{ #Authorization: "Bearer {keychain:password/hetzner-api/metaobject}" }.
+scheme:https setHeaders: #{ #Authorization: "Bearer {keychain:password/hetzner-api/metaobject}", #Content-Type: 'application/json' }.
 scheme:api := ref:https://api.hetzner.cloud/v1 asScheme.
 
 class HetznerHost : MPWRemoteHost {
    var hostDict.
-   var serverId.
+   var id.
    +withDictionary:theServer {
 	self alloc initWithDictionary:theServer.
    }
    -initWithDictionary:theServer {
        self := super initWithName:(theServer at:'public_net' | at:'ipv4' | at:'ip') user:'root'.
        self setHostDict:theServer.
-       self setServerId:self getId.
+       self setId: theServer['id'].
        self.
      }
-     -getId {  self hostDict at:'id'. } 
-     -status { self hostDict at:'status'. }
-     -actions { api:server/{ivar:serverId}/actions. }
-     -liveStatus { id := self getId. api:servers/{id}/status. }
+     -status { this:hostDict at:'status'. }
+     -actions { api:servers/{this:id}/actions value.  }
+     -liveStatus { api:servers/{this:id}/status. }
+     -metrics { api:servers/{this:id}/metrics. }
      -<void>refresh {
-         id := self getId.
-         self setHostDict: (api:servers/{id} value at:'server').
+         self setHostDict: (api:servers/{this:id} value at:'server').
      }
      -<void>shutdown {
-         id := self getId.
-         scheme:api at: ref:api:servers/{id}/actions/shutdown post:#{}.
+         scheme:api at: ref:api:servers/{this:id}/actions/shutdown post:#{}.
      }
      -<void>start {
-         id := self getId.
-         scheme:api at: ref:api:servers/{id}/actions/poweron post:#{}.
+         scheme:api at: ref:api:servers/{this:id}/actions/poweron post:#{}.
      }
-     
 }
 
 class HetznerCloud {
