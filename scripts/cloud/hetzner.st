@@ -23,6 +23,15 @@ class HetznerHost : MPWRemoteHost {
          id := self getId.
          self setHostDict: (api:servers/{id} value at:'server').
      }
+     -<void>shutdown {
+         id := self getId.
+         scheme:api at: ref:api:servers/{id}/actions/shutdown post:#{}.
+     }
+     -<void>start {
+         id := self getId.
+         scheme:api at: ref:api:servers/{id}/actions/poweron post:#{}.
+     }
+     
 }
 
 class HetznerCloud {
