@@ -16,6 +16,11 @@
     mpz_t n;
 }
 
+-(BOOL)isSuper
+{
+    return NO;
+}
+
 -to:other
 {
     return [MPWInterval intervalFrom:self to:other];

@@ -1,3 +1,4 @@
+#!env stui
 scheme:home := ref:file:{env:HOME} asScheme.      
 
 browser := MPWBrowser new 

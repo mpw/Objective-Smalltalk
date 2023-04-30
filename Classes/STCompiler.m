@@ -752,7 +752,10 @@ idAccessor(solver, setSolver)
             [self pushBack:selector];
             return [expr receiver];
         } else {
-            NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
+            if ( [selector isEqual:@"["]) {
+                NSLog(@"selector shouldn't be open bracket:\%@",[NSThread callStackSymbols]);
+                PARSEERROR(@"selector shouldn't be open bracket", selector);
+            }
 //            NSLog(@"binary: %@",selector);
             id arg=[self parseUnary];
 //            NSLog(@"arg to binary: %@",arg);

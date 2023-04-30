@@ -142,12 +142,12 @@
 
 +(void)collectArrayLiteral
 {
-    TESTEXPR(@"#(1, 2, 3) collect + 3" ,([NSMutableArray arrayWithObjects:@"4",@"5",@"6",nil]));
+    TESTEXPR(@"[1, 2, 3] collect + 3" ,([NSMutableArray arrayWithObjects:@"4",@"5",@"6",nil]));
 }
 
 +(void)collectTwoArrayLiterals
 {
-    [self testexpr:@"#(1, 2, 3) collect + #(1, 2, 3) each" expected:[NSMutableArray arrayWithObjects:@"2",@"4",@"6",nil]];
+    [self testexpr:@"[1, 2, 3] collect + [1, 2, 3] each" expected:[NSMutableArray arrayWithObjects:@"2",@"4",@"6",nil]];
 }
 
 +(void)testLocalVariables
@@ -1407,11 +1407,21 @@
 }
 
 
-+(void)testArrayExpressionAsArg
++(void)testArraySubscriptExpressionAsArg
 {
     STCompiler *compiler=[STCompiler compiler];
     @try {
         MPWMessageExpression* compiled = [compiler compile:@"2 + a[1]"];
+    } @catch ( NSException *e) {
+        IDEXPECT(e,@"No error",@"shouldn't be an error");
+    }
+}
+
++(void)testChainedSubscriptExpressionsCompile
+{
+    STCompiler *compiler=[STCompiler compiler];
+    @try {
+        MPWMessageExpression* compiled = [compiler compile:@"2 + a[1][2]"];
     } @catch ( NSException *e) {
         IDEXPECT(e,@"No error",@"shouldn't be an error");
     }
@@ -1570,7 +1580,8 @@
         @"testConnectStreamToBinding",
         @"testMappingStoreCanReferToSourceAsScheme",
         @"testSuperSend",
-        @"testArrayExpressionAsArg",
+        @"testArraySubscriptExpressionAsArg",
+        @"testChainedSubscriptExpressionsCompile",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         ];
