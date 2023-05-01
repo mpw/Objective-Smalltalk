@@ -23,10 +23,16 @@ class HetznerHost : MPWRemoteHost {
          self setHostDict: (api:servers/{this:id} value at:'server').
      }
      -<void>shutdown {
-         scheme:api at: ref:api:servers/{this:id}/actions/shutdown post:#{}.
+         ref:api:servers/{this:id}/actions/shutdown post:#{}.
      }
      -<void>start {
-         scheme:api at: ref:api:servers/{this:id}/actions/poweron post:#{}.
+         ref:api:servers/{this:id}/actions/poweron post:#{}.
+     }
+     -<void>reinstall:osName {
+         ref:api:servers/{this:id}/actions/rebuild post: #{ #image: osName }.
+     }
+     -<void>reinstall {
+         self reinstall:'ubuntu-20.04'.
      }
 }
 
