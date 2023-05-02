@@ -46,15 +46,30 @@ class HetznerCloud {
    -servers {
 	HetznerHost collect withDictionary: (api:servers at:'servers') each.
    }
+   -images {
+	api:images .
+   }
    -types {
 	api:server_types .
    }
-   -serverDefinitionDict {
+   -intelServerDefinition {
+	#{
+           #name:  'objst-2',
+           #image: '67794396',
+           #ssh_keys: ['marcel@naraht.local' ],
+           #server_type: 'cx11',
+           #location: 'fsn1',
+           #public_net: #{
+                #enable_ipv4: true,
+                #enable_ipv6: false,
+           }
+	}.
+   }
+   -armServerDefinition {
 	#{
            #name:  'objst-2',
            #image: '103908070',
            #ssh_keys: ['marcel@naraht.local' ],
-           #architecture: 'arm',
            #server_type: 'cax11',
            #location: 'fsn1',
            #public_net: #{
@@ -64,7 +79,10 @@ class HetznerCloud {
 	}.
    }
    -create {
-	ref:api:servers post: self serverDefinitionDict asJSON.
+	ref:api:servers post: self armServerDefinition asJSON.
+   }
+   -createIntel {
+	ref:api:servers post: self intelServerDefinition asJSON.
    }
 }
 
