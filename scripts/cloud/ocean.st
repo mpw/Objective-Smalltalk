@@ -15,26 +15,26 @@ class DODroplet : MPWRemoteHost {
        self.
      }
      -status { this:hostDict at:'status'. }
-     -actions { api:servers/{this:id}/actions value.  }
-     -liveStatus { api:servers/{this:id}/status. }
-     -metrics { api:servers/{this:id}/metrics. }
+     -actions { api:droplets/{this:id}/actions value.  }
+     -liveStatus { api:droplets/{this:id}/status. }
+     -metrics { api:droplets/{this:id}/metrics. }
      -<void>refresh {
-         self setHostDict: (api:servers/{this:id} value at:'server').
+         self setHostDict: (api:droplets/{this:id} value at:'server').
      }
      -shutdown {
-         ref:api:servers/{this:id}/actions/shutdown post:#{}.
+         ref:api:droplets/{this:id}/actions/shutdown post:#{}.
      }
      -start {
-         ref:api:servers/{this:id}/actions/poweron post:#{}.
+         ref:api:droplets/{this:id}/actions/power_on post:#{}.
      }
      -reinstall:osName {
-         ref:api:servers/{this:id}/actions/rebuild post: #{ #image: osName }.
+         ref:api:droplets/{this:id}/actions/rebuild post: #{ #image: osName }.
      }
      -reinstall {
          self reinstall:'ubuntu-20.04'.
      }
      -delete {
-         ref:api:servers/{this:id} delete.
+         ref:api:droplets/{this:id} delete.
 
      }
 }
@@ -54,23 +54,10 @@ class DigitalOcean {
    -intelServerDefinition {
 	#{
            #name:  'objst-2',
-           #image: '67794396',
+           #region:  'nyc',
+           #image: 'ubuntu-20-04-x64',
            #ssh_keys: ['marcel@naraht.local' ],
-           #server_type: 'cx11',
-           #location: 'fsn1',
-           #public_net: #{
-                #enable_ipv4: true,
-                #enable_ipv6: false,
-           }
-	}.
-   }
-   -armServerDefinition {
-	#{
-           #name:  'objst-2',
-           #image: '103908070',
-           #ssh_keys: ['marcel@naraht.local' ],
-           #server_type: 'cax11',
-           #location: 'fsn1',
+           #size:    's-1vcpu-1gb',
            #public_net: #{
                 #enable_ipv4: true,
                 #enable_ipv6: false,
@@ -78,9 +65,6 @@ class DigitalOcean {
 	}.
    }
    -create {
-	ref:api:servers post: self armServerDefinition asJSON.
-   }
-   -createIntel {
 	ref:api:servers post: self intelServerDefinition asJSON.
    }
 }
