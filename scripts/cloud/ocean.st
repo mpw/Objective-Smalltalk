@@ -5,11 +5,12 @@ scheme:api := ref:https://api.digitalocean.com/v2/ asScheme.
 
 class DODroplet : MPWRemoteHost {
    var id.
+   var hostDict.
    +withDictionary:theServer {
 	self alloc initWithDictionary:theServer.
    }
    -initWithDictionary:theServer {
-       self := super initWithName:(theServer at:'public_net' | at:'ipv4' | at:'ip') user:'root'.
+       self := super initWithName:( theServer at:'networks' | at:'v4' | firstObject | at:'ip_address')  user:'root'.
        self setHostDict:theServer.
        self setId: theServer['id'].
        self.
@@ -43,7 +44,10 @@ class DigitalOcean {
    var api.
    -schemeNames { [ 'api' ]. }
    -servers {
-	DODroplet collect withDictionary: (api:servers at:'servers') each.
+        api:droplets.
+   }
+   -serverObjects {
+	DODroplet collect withDictionary: (api:droplets value at:'droplets') each.
    }
    -images {
 	api:images .
@@ -55,17 +59,13 @@ class DigitalOcean {
 	#{
            #name:  'objst-2',
            #region:  'nyc',
-           #image: 'ubuntu-20-04-x64',
-           #ssh_keys: ['marcel@naraht.local' ],
+           #image: '129211873',
+           #ssh_keys: [ ],
            #size:    's-1vcpu-1gb',
-           #public_net: #{
-                #enable_ipv4: true,
-                #enable_ipv6: false,
-           }
 	}.
    }
    -create {
-	ref:api:servers post: self intelServerDefinition asJSON.
+	ref:api:droplets post: self intelServerDefinition asJSON.
    }
 }
 
