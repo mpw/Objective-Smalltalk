@@ -57,18 +57,22 @@ class HetznerCloud {
    -types {
 	api:server_types .
    }
+   -baseDefinition {
+	#{ 
+	    #location: 'fsn1',
+	    #public_net: #{
+                #enable_ipv4: true,
+                #enable_ipv6: false,
+           }
+	}.
+   }
    -intelServerDefinition {
 	#{
            #name:  'objst-2',
            #image: '67794396',
            #ssh_keys: ['marcel@naraht.local' ],
            #server_type: 'cx11',
-           #location: 'fsn1',
-           #public_net: #{
-                #enable_ipv4: true,
-                #enable_ipv6: false,
-           }
-	}.
+	} , self baseDefinition.
    }
    -armServerDefinition {
 	#{
@@ -76,15 +80,10 @@ class HetznerCloud {
            #image: '103908070',
            #ssh_keys: ['marcel@naraht.local' ],
            #server_type: 'cax11',
-           #location: 'fsn1',
-           #public_net: #{
-                #enable_ipv4: true,
-                #enable_ipv6: false,
-           }
-	}.
+	} , self baseDefinition.
    }
    -create {
-	ref:api:servers post: self armServerDefinition asJSON.
+	ref:api:servers post: self armServerDefinition  asJSON.
    }
    -createIntel {
 	ref:api:servers post: self intelServerDefinition asJSON.

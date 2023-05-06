@@ -6,6 +6,8 @@ scheme:api := ref:https://api.digitalocean.com/v2/ asScheme.
 class DODroplet : MPWRemoteHost {
    var id.
    var hostDict.
+   var droplet.
+
    +withDictionary:theServer {
 	self alloc initWithDictionary:theServer.
    }
@@ -13,29 +15,35 @@ class DODroplet : MPWRemoteHost {
        self := super initWithName:( theServer at:'networks' | at:'v4' | firstObject | at:'ip_address')  user:'root'.
        self setHostDict:theServer.
        self setId: theServer['id'].
+       self setDroplet: ref:api:/droplets/{this:id} asScheme.
+
        self.
      }
+     -schemeNames { ['droplet']. }
      -status { this:hostDict at:'status'. }
-     -actions { api:droplets/{this:id}/actions value.  }
-     -liveStatus { api:droplets/{this:id}/status. }
-     -metrics { api:droplets/{this:id}/metrics. }
+     -actions { droplet:actions value.  }
+     -liveStatus { droplets:status. }
+     -metrics { droplet:metrics. }
+     -fetchDropletDict {
+	droplet:/ .
+     }
      -<void>refresh {
-         self setHostDict: (api:droplets/{this:id} value at:'server').
+         self setHostDict: (droplet:/ value at:'server').
      }
      -shutdown {
-         ref:api:droplets/{this:id}/actions/shutdown post:#{}.
+         ref:droplet:actions/shutdown post:#{}.
      }
      -start {
-         ref:api:droplets/{this:id}/actions/power_on post:#{}.
+         ref:droplet:actions/power_on post:#{}.
      }
      -reinstall:osName {
-         ref:api:droplets/{this:id}/actions/rebuild post: #{ #image: osName }.
+         ref:droplets:actions/rebuild post: #{ #image: osName }.
      }
      -reinstall {
          self reinstall:'ubuntu-20.04'.
      }
      -delete {
-         ref:api:droplets/{this:id} delete.
+         ref:droplet:/ delete.
 
      }
 }
