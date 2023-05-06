@@ -6,6 +6,8 @@ scheme:api := ref:https://api.hetzner.cloud/v1 asScheme.
 class HetznerHost : MPWRemoteHost {
    var hostDict.
    var id.
+   var server.
+
    +withDictionary:theServer {
 	self alloc initWithDictionary:theServer.
    }
@@ -13,29 +15,32 @@ class HetznerHost : MPWRemoteHost {
        self := super initWithName:(theServer at:'public_net' | at:'ipv4' | at:'ip') user:'root'.
        self setHostDict:theServer.
        self setId: theServer['id'].
+       self setServer: ref:api:/servers/{this:id} asScheme.
+
        self.
      }
+     -schemeNames { ['server']. }
      -status { this:hostDict at:'status'. }
      -actions { api:servers/{this:id}/actions value.  }
-     -liveStatus { api:servers/{this:id}/status. }
-     -metrics { api:servers/{this:id}/metrics. }
+     -liveStatus { server:status. }
+     -metrics { server:metrics. }
      -<void>refresh {
-         self setHostDict: (api:servers/{this:id} value at:'server').
+         self setHostDict: (server:/ value at:'server').
      }
      -shutdown {
-         ref:api:servers/{this:id}/actions/shutdown post:#{}.
+         ref:server:actions/shutdown post:#{}.
      }
      -start {
-         ref:api:servers/{this:id}/actions/poweron post:#{}.
+         ref:server:actions/poweron post:#{}.
      }
      -reinstall:osName {
-         ref:api:servers/{this:id}/actions/rebuild post: #{ #image: osName }.
+         ref:server:actions/rebuild post: #{ #image: osName }.
      }
      -reinstall {
          self reinstall:'ubuntu-20.04'.
      }
      -delete {
-         ref:api:servers/{this:id} delete.
+         ref:server:/ delete.
 
      }
 }
