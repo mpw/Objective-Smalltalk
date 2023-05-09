@@ -3,6 +3,6 @@
 source ← sourceRef asScheme.
 target ← targetRef asScheme.
 
-target |= source.
+(target |= source) update.
 
 runLoop run.
