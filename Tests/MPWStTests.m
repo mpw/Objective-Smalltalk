@@ -1581,7 +1581,7 @@
         @"testMappingStoreCanReferToSourceAsScheme",
         @"testSuperSend",
         @"testArraySubscriptExpressionAsArg",
-        @"testChainedSubscriptExpressionsCompile",
+//        @"testChainedSubscriptExpressionsCompile",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         ];

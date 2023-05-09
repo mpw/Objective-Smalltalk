@@ -10,18 +10,6 @@
 #import "STSimpleDataflowConstraint.h"
 #import "MPWIdentifierExpression.h"
 
-@implementation MPWAbstractStore(constraintCreation)
-
--(MPWLoggingStore*)syncToTarget:(id <MPWStorage>)target
-{
-    MPWRESTCopyStream *copier = [[MPWRESTCopyStream alloc] initWithSource:self target:target];
-    MPWLoggingStore *logger = [self logger];
-    [logger setLog:copier];
-    return logger;
-}
-
-@end
-
 @implementation MPWIdentifierExpression(constraintCreation)
 
 
@@ -135,7 +123,7 @@
     [compiler evaluateScriptString:@"scheme:target := MPWDictStore store."];
     [compiler evaluateScriptString:@"source:a ← 3. source:b ← 5."];
     [compiler evaluateScriptString:@"target:a ← 12. target:b ← 14."];
-    [compiler evaluateScriptString:@"scheme:constrained := scheme:target |= scheme:source."];
+    [compiler evaluateScriptString:@"scheme:constrained := (scheme:target |= scheme:source) source."];
     [compiler evaluateScriptString:@"scheme:source := scheme:constrained."];
     [compiler evaluateScriptString:@"source:a := 42"];
     IDEXPECT( [compiler evaluateScriptString:@"target:a"],@42, @"a in source target");
