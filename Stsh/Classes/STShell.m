@@ -330,6 +330,10 @@ idAccessor( retval, setRetval )
     [value runWithStdin:[MPWFDStreamSource fd:0] Stdout:[MPWByteStream Stdout]];
 }
 
+-(void)nohup
+{
+    signal(SIGHUP, SIG_IGN);
+}
 
 -(void)evaluateExpression:expr isAssignmnent:(BOOL)isAssignment
 {
