@@ -13,6 +13,19 @@
 
 boolAccessor( doLines , setDoLines )
 
+static int processGroup=0;
+
+
++(int)processGroup
+{
+    return processGroup;
+}
+
++(void)setProcessGroup:(int)newProcessGroup
+{
+    processGroup = newProcessGroup;
+}
+
 +(NSArray*)PATH
 {
 	id environment = [[NSProcessInfo processInfo] environment];
@@ -86,6 +99,10 @@ objectAccessor(NSTask*, task, setTask )
 -(void)startRunning
 {
 	[task launch];
+    if ( processGroup ) {
+        setpgid(task.processIdentifier, processGroup);
+    }
+    
 }
 
 

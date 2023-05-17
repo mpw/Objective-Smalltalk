@@ -335,6 +335,11 @@ idAccessor( retval, setRetval )
     signal(SIGHUP, SIG_IGN);
 }
 
+-(int)processGroup
+{
+    return getpgrp();
+}
+
 -(void)evaluateExpression:expr isAssignmnent:(BOOL)isAssignment
 {
     id result=nil;
