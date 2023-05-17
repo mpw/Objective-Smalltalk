@@ -28,6 +28,8 @@
 -(void)configureProcessForRunningWithStdinput:processStdin stdoutput:processStdout;
 
 boolAccessor_h( doLines , setDoLines )
++(int)processGroup;
++(void)setProcessGroup:(int)newProcessGroup;
 
 @property (nonatomic,strong ) NSArray *arguments;
 
