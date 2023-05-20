@@ -35,6 +35,7 @@
    return @[
        @"testConnectFilters",
        @"testConnectStores",
+       @"testConnectStores",
    ];
 }
 
