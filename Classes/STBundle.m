@@ -179,22 +179,33 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [self.interpreter externalScriptDict];
 }
 
+-(void)copySource:(id <MPWStorage>)source to:(id <MPWStorage>)target
+{
+    NSArray *children=[source childrenOfReference:@""];
+    for ( id child in children ) {
+        target[child] = source[child];
+    }
+}
+
 -(void)writeToStore:(id <MPWStorage>)target
 {
     [self methodDict];
     [target mkdirAt:@""];
     [target mkdirAt:@"Sources"];
-    if ( self.saveSource ) {
-        [[self.interpreter methodStore] fileoutToStore:[target relativeStoreAt:@"Sources"]];
-    }
     [target mkdirAt:@"Resources"];
-    id <MPWStorage> resourceTarget=[target relativeStoreAt:@"Resources"];
     target[@"Info.json"] = [self storeForSubDir:@"."][@"Info.json"];
-    NSArray *children=[[self resources] childrenOfReference:@""];
-    id <MPWStorage> resourceSource=[self resources];
-    for ( id child in children ) {
-        resourceTarget[child] = resourceSource[child];
-    }
+    
+    [self copySource:[self resources] to:[target relativeStoreAt:@"Resources"]];
+    [self copySource:[self sourceDir] to:[target relativeStoreAt:@"Sources"]];
+
+    //   fileout code, inactive and doesn't work with property paths
+    //    if ( self.saveSource ) {
+    //        [[self.interpreter methodStore] fileoutToStore:[target relativeStoreAt:@"Sources"]];
+    //    } else {
+    //
+    //    }
+
+    
 }
 
 
