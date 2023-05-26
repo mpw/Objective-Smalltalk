@@ -31,13 +31,13 @@ class DODroplet : MPWRemoteHost {
          self setHostDict: (droplet:/ value at:'server').
      }
      -shutdown {
-         ref:droplet:actions/shutdown post:#{}.
+         droplet:actions/shutdown += #{}.
      }
      -start {
-         ref:droplet:actions/power_on post:#{}.
+         droplet:actions/power_on += #{}.
      }
      -reinstall:osName {
-         ref:droplets:actions/rebuild post: #{ #image: osName }.
+         droplets:actions/rebuild  += #{ #image: osName }.
      }
      -reinstall {
          self reinstall:'ubuntu-20.04'.
@@ -73,7 +73,7 @@ class DigitalOcean {
 	}.
    }
    -create {
-	ref:api:droplets post: self intelServerDefinition asJSON.
+	api:droplets += self intelServerDefinition asJSON.
    }
 }
 

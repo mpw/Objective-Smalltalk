@@ -40,6 +40,7 @@
 #import "STSubscriptExpression.h"
 #import "STPortScheme.h"
 #import "STNotificationDefinition.h"
+#import "STPostExpression.h"
 
 @class MPWClassMethodStore;
 
@@ -91,6 +92,7 @@ idAccessor(solver, setSolver)
 -(void)defineBuiltInConnectors
 {
     [self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@":="];
+    [self defineConnectorClass:[STPostExpression class] forConnectorSymbol:@"+="];
     [self defineConnectorClass:[MPWDataflowConstraintExpression class] forConnectorSymbol:@"|="];
     [self defineConnectorClass:[MPWBidirectionalDataflowConstraintExpression class] forConnectorSymbol:@"=|="];
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u21e6"];
