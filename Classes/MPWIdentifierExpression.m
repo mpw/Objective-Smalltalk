@@ -67,7 +67,15 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 {
     [aContext bindValue:value toVariableNamed:[[self identifier] evaluatedIdentifierNameInContext:aContext] withScheme:[self scheme]];
     return value;
+    
+}
 
+-evaluatePostOf:value in:aContext
+{
+    NSString *variableName=[[self identifier] evaluatedIdentifierNameInContext:aContext];
+    MPWScheme *scheme=[aContext schemeForName:[self scheme]];
+    [scheme at:[scheme referenceForPath:variableName] post:value ];
+    return value;
 }
 
 -description

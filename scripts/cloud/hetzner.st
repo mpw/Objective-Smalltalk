@@ -28,13 +28,13 @@ class HetznerHost : MPWRemoteHost {
          self setHostDict: (server:/ value at:'server').
      }
      -shutdown {
-         ref:server:actions/shutdown post:#{}.
+         server:actions/shutdown += #{}.
      }
      -start {
-         ref:server:actions/poweron post:#{}.
+         server:actions/poweron += #{}.
      }
      -reinstall:osName {
-         ref:server:actions/rebuild post: #{ #image: osName }.
+         server:actions/rebuild += #{ #image: osName }.
      }
      -reinstall {
          self reinstall:'ubuntu-20.04'.
@@ -83,10 +83,10 @@ class HetznerCloud {
 	} , self baseDefinition.
    }
    -create {
-	ref:api:servers post: self armServerDefinition  asJSON.
+	api:servers += self armServerDefinition  asJSON.
    }
    -createIntel {
-	ref:api:servers post: self intelServerDefinition asJSON.
+	api:servers += self intelServerDefinition asJSON.
    }
 }
 
