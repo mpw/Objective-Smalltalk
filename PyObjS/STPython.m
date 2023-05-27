@@ -5,13 +5,13 @@
 //  Created by Marcel Weiher on 27.05.23.
 //
 
-#import "STYtb_dlp.h"
+#import "STPython.h"
 #import <Python/Python.h>
 #import "STPythonObject.h"
 
 
 
-@implementation STYtb_dlp
+@implementation STPython
 {
 }
 
@@ -20,6 +20,19 @@
     self=[super init];
     Py_Initialize();
     return self;
+}
+
+-(id)at:(id<MPWReferencing>)aReference
+{
+    NSArray *components=[aReference relativePathComponents];
+    if ( [components[0] isEqual:@"module"]) {
+        STPythonObject *obj=[self import:components[1]];
+        for (long i=2,max=components.count;i<max;i++) {
+            obj=[obj at:components[i]];
+        }
+        return obj;
+    }
+    return nil;
 }
 
 
@@ -41,11 +54,11 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation STYtb_dlp(testing) 
+@implementation STPython(testing) 
 
 +(void)someTest
 {
-    STYtb_dlp *py=[[STYtb_dlp new] autorelease];
+    STPython *py=[[STPython new] autorelease];
 //    [py run];
 }
 

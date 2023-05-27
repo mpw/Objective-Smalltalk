@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 27.05.23.
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STYtb_dlp : NSObject
+@interface STPython : MPWAbstractStore
 
 @end
 
