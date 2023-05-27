@@ -75,6 +75,11 @@
             [self context],[[self context] localVars]];
 }
 
+-(void)at:aReference post:(id)theObject
+{
+    [[self at:aReference] addObject:theObject];
+}
+
 
 @end
 
@@ -122,6 +127,16 @@
 -(void)put:obj at:ref
 {
     self[[ref path]]=obj;
+}
+
+@end
+
+
+@implementation NSMutableString(addObject)
+
+-(void)addObject:anObject
+{
+    [self appendString:[anObject stringValue]];
 }
 
 @end

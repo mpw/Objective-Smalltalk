@@ -277,6 +277,7 @@ idAccessor( retval, setRetval )
 
 -(void)executeFromFileName:(NSString*)filename
 {
+    pthread_setname_np( [filename UTF8String] );
 	id script = [STScript scriptWithContentsOfFile:filename];
     [[self evaluator] bindValue:filename toVariableNamed:@"argv0" withScheme:@"var"];
 	[script executeInContext:self];
