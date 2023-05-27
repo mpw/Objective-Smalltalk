@@ -25,20 +25,26 @@
 
 -(void)run
 {
-    char *script =
+    NSString *os=@"https://www.youtube.com/watch?v=XqUgUgiToNs";
+    char *s=[os UTF8String];
+    int len=strlen(s);
+    char *script1 =
     "import re\n"
     "import sys\n"
-    "sys.path.append('/opt/homebrew/lib/python3.9/site-packages')\n"
-    "from yt_dlp import _real_main\n"
-    "args = [  'https://www.youtube.com/watch?v=XqUgUgiToNs' ]\n"
-    "print('Before exexuting')\n"
-    "_real_main(args)\n"
-    "print('After exexuting')\n";
-//    NSLog(@"script:\n%s",script);
-    PyRun_SimpleString(script);
-}
+    "sys.path.append('/opt/homebrew/lib/python3.9/site-packages')\n";
 
-//     "main()\n"
+    PyRun_SimpleString(script1);
+
+    PyObject *pyURL=PyUnicode_FromString(s );
+    PyObject *moduleName=PyUnicode_FromString("yt_dlp" );
+    PyObject *yt_dlp_module=PyImport_Import(moduleName);
+
+    PyObject *mainFunction = PyObject_GetAttrString(yt_dlp_module, "_real_main");
+    
+    PyObject *args = PyList_New(1);
+    PyList_SetItem(args, 0, pyURL);
+    PyObject_CallFunctionObjArgs(mainFunction, args, NULL);
+}
 
 
 @end
