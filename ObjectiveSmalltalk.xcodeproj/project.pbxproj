@@ -252,6 +252,8 @@
 		1F6060032A22420700783E17 /* STYtb_dlp.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060012A22420700783E17 /* STYtb_dlp.h */; };
 		1F6060042A22420700783E17 /* STYtb_dlp.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6060022A22420700783E17 /* STYtb_dlp.m */; };
 		1F6060092A2244D300783E17 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F6060082A2244D300783E17 /* Python.framework */; };
+		1F60600E2A2286E300783E17 /* STPythonObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60600C2A2286E300783E17 /* STPythonObject.h */; };
+		1F60600F2A2286E300783E17 /* STPythonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60600D2A2286E300783E17 /* STPythonObject.m */; };
 		1F60964F25E788FC0018BB72 /* STUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60964D25E788FC0018BB72 /* STUITests.h */; };
 		1F60965025E788FC0018BB72 /* STUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60964E25E788FC0018BB72 /* STUITests.m */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
@@ -1035,6 +1037,8 @@
 		1F6060022A22420700783E17 /* STYtb_dlp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STYtb_dlp.m; sourceTree = "<group>"; };
 		1F6060062A22449800783E17 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		1F6060082A2244D300783E17 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = ../../../../../Library/Frameworks/Python.framework; sourceTree = "<group>"; };
+		1F60600C2A2286E300783E17 /* STPythonObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPythonObject.h; sourceTree = "<group>"; };
+		1F60600D2A2286E300783E17 /* STPythonObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPythonObject.m; sourceTree = "<group>"; };
 		1F60963725E786840018BB72 /* STTargetActionConnector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionConnector.h; sourceTree = "<group>"; };
 		1F60963825E786840018BB72 /* STTargetActionConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionConnector.m; sourceTree = "<group>"; };
 		1F60964D25E788FC0018BB72 /* STUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STUITests.h; sourceTree = "<group>"; };
@@ -1863,6 +1867,8 @@
 				1F605FF82A2231D300783E17 /* PyObjS.docc */,
 				1F6060012A22420700783E17 /* STYtb_dlp.h */,
 				1F6060022A22420700783E17 /* STYtb_dlp.m */,
+				1F60600C2A2286E300783E17 /* STPythonObject.h */,
+				1F60600D2A2286E300783E17 /* STPythonObject.m */,
 			);
 			path = PyObjS;
 			sourceTree = "<group>";
@@ -2592,6 +2598,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F60600E2A2286E300783E17 /* STPythonObject.h in Headers */,
 				1F6060032A22420700783E17 /* STYtb_dlp.h in Headers */,
 				1F605FFA2A2231D300783E17 /* PyObjS.h in Headers */,
 			);
@@ -3889,6 +3896,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F605FF92A2231D300783E17 /* PyObjS.docc in Sources */,
+				1F60600F2A2286E300783E17 /* STPythonObject.m in Sources */,
 				1F6060042A22420700783E17 /* STYtb_dlp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

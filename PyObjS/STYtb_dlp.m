@@ -7,8 +7,7 @@
 
 #import "STYtb_dlp.h"
 #import <Python/Python.h>
-
-
+#import "STPythonObject.h"
 
 
 
@@ -23,27 +22,17 @@
     return self;
 }
 
--(void)run
+
+-(STPythonObject*)import:(NSString*)module
 {
-    NSString *os=@"https://www.youtube.com/watch?v=XqUgUgiToNs";
-    char *s=[os UTF8String];
-    int len=strlen(s);
-    char *script1 =
-    "import re\n"
-    "import sys\n"
-    "sys.path.append('/opt/homebrew/lib/python3.9/site-packages')\n";
+    return [[[STPythonObject alloc] initWithPyObject:PyImport_Import( PyUnicode_FromString([module UTF8String]))] autorelease];
+}
 
-    PyRun_SimpleString(script1);
 
-    PyObject *pyURL=PyUnicode_FromString(s );
-    PyObject *moduleName=PyUnicode_FromString("yt_dlp" );
-    PyObject *yt_dlp_module=PyImport_Import(moduleName);
-
-    PyObject *mainFunction = PyObject_GetAttrString(yt_dlp_module, "_real_main");
-    
-    PyObject *args = PyList_New(1);
-    PyList_SetItem(args, 0, pyURL);
-    PyObject_CallFunctionObjArgs(mainFunction, args, NULL);
+-(void)download:(NSString*)urlstring
+{
+    [[self import:@"sys"][@"path"][@"append"] call:@"/opt/homebrew/lib/python3.9/site-packages"];
+    [[self import:@"yt_dlp"][@"_real_main"] call:@[ urlstring ]];
 }
 
 
