@@ -60,6 +60,22 @@
     return [self at:key];
 }
 
+-(id)asObject
+{
+    if ( PyNumber_Check(pyObject)) {
+        return @(PyNumber_AsSsize_t(pyObject, NULL));
+    } else if ( PyByteArray_Check( pyObject )) {
+        return @(PyByteArray_AsString(pyObject));
+    } else if ( PyUnicode_Check( pyObject )) {
+        const char *utf8;
+        Py_ssize_t size;
+        
+        utf8=PyUnicode_AsUTF8AndSize(pyObject, &size);
+        return [NSString stringWithUTF8String:utf8];
+    }
+    return nil;
+}
+
 @end
 
 

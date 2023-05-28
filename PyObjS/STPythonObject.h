@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void*)pythonObject;
 -(instancetype)call:arg;
 -objectForKeyedSubscript:key;
+-asObject;
 
 @end
 
