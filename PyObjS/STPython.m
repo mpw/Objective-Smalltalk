@@ -24,15 +24,21 @@
 
 -(id)at:(id<MPWReferencing>)aReference
 {
+    STPythonObject *obj=nil;
     NSArray *components=[aReference relativePathComponents];
     if ( [components[0] isEqual:@"module"]) {
-        STPythonObject *obj=[self import:components[1]];
+        obj=[self import:components[1]];
         for (long i=2,max=components.count;i<max;i++) {
             obj=[obj at:components[i]];
         }
-        return obj;
+    } else {
+        obj=[self import:@"__main__"];
+        for (long i=0,max=components.count;i<max;i++) {
+            obj=[obj at:components[i]];
+        }
+
     }
-    return nil;
+    return obj;
 }
 
 
@@ -41,6 +47,10 @@
     return [[[STPythonObject alloc] initWithPyObject:PyImport_Import( PyUnicode_FromString([module UTF8String]))] autorelease];
 }
 
+-(void)runString:(NSString*)pythonCode
+{
+    PyRun_SimpleString([pythonCode UTF8String]);
+}
 
 -(void)download:(NSString*)urlstring
 {
