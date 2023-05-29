@@ -260,6 +260,9 @@
 		1F6060162A24803800783E17 /* MPWELFReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6060142A24803800783E17 /* MPWELFReader.m */; };
 		1F6060192A2481D100783E17 /* elf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060172A2481D100783E17 /* elf.h */; };
 		1F60601A2A2481D100783E17 /* features.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060182A2481D100783E17 /* features.h */; };
+		1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60601B2A24957E00783E17 /* MPWDyLibScheme.h */; };
+		1F60601F2A249CF800783E17 /* MPWDyLibScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60601C2A24957E00783E17 /* MPWDyLibScheme.m */; };
+		1F6060202A249CF900783E17 /* MPWDyLibScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60601C2A24957E00783E17 /* MPWDyLibScheme.m */; };
 		1F60964F25E788FC0018BB72 /* STUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60964D25E788FC0018BB72 /* STUITests.h */; };
 		1F60965025E788FC0018BB72 /* STUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60964E25E788FC0018BB72 /* STUITests.m */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
@@ -1050,6 +1053,8 @@
 		1F6060142A24803800783E17 /* MPWELFReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFReader.m; sourceTree = "<group>"; };
 		1F6060172A2481D100783E17 /* elf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elf.h; sourceTree = "<group>"; };
 		1F6060182A2481D100783E17 /* features.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = features.h; sourceTree = "<group>"; };
+		1F60601B2A24957E00783E17 /* MPWDyLibScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWDyLibScheme.h; sourceTree = "<group>"; };
+		1F60601C2A24957E00783E17 /* MPWDyLibScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWDyLibScheme.m; sourceTree = "<group>"; };
 		1F60963725E786840018BB72 /* STTargetActionConnector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionConnector.h; sourceTree = "<group>"; };
 		1F60963825E786840018BB72 /* STTargetActionConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionConnector.m; sourceTree = "<group>"; };
 		1F60964D25E788FC0018BB72 /* STUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STUITests.h; sourceTree = "<group>"; };
@@ -1709,6 +1714,8 @@
 				1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */,
 				1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */,
 				1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */,
+				1F60601B2A24957E00783E17 /* MPWDyLibScheme.h */,
+				1F60601C2A24957E00783E17 /* MPWDyLibScheme.m */,
 				1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */,
 				1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */,
 			);
@@ -2478,6 +2485,7 @@
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
+				1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */,
 				1F6060192A2481D100783E17 /* elf.h in Headers */,
 				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
 				1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */,
@@ -3897,6 +3905,7 @@
 				1F1BCB4E2A19710000AE984C /* STConnectionDefinition.m in Sources */,
 				1FA5F48B147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */,
 				1F2EB8052111D1670086D540 /* MPWFilterDefinition.m in Sources */,
+				1F60601F2A249CF800783E17 /* MPWDyLibScheme.m in Sources */,
 				1FB7D7F41E9E5ACC008E5D8E /* MPWClassDefinition.m in Sources */,
 				1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */,
 				1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
@@ -4132,6 +4141,7 @@
 				1F321C702133F063001BE6CC /* MPWPropertyPathSetter.m in Sources */,
 				1FE37B7D1969610600C9A378 /* MPWClassMirror.m in Sources */,
 				1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */,
+				1F6060202A249CF900783E17 /* MPWDyLibScheme.m in Sources */,
 				1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */,
 				1F1BCB4F2A19710000AE984C /* STConnectionDefinition.m in Sources */,
 				1FE37BC01969610800C9A378 /* MPWStTests.m in Sources */,
