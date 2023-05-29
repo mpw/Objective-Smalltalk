@@ -10,6 +10,12 @@
 #import <MPWFoundation/MPWFoundation.h>
 
 
+@interface MPWFrameworkScheme()
+
+@property (nonatomic, strong) NSMutableArray *paths;
+
+@end
+
 @implementation MPWFrameworkScheme
 
 -(NSArray *)basePaths
@@ -21,6 +27,17 @@
               ];
 }
 
+-(instancetype)init {
+    self=[super init];
+    self.paths=[self basePaths];
+    return self;
+}
+
+-(void)addPath:(NSString*)path
+{
+    [self.paths insertObject:path atIndex:0];
+}
+
 -(id)at:(id <MPWReferencing>)aReference
 {
     NSString *name=[aReference path];
@@ -29,7 +46,7 @@
     if ( [name containsString:@"/"])  {
         result=[NSBundle bundleWithPath:[name stringByAppendingPathExtension:@"framework"]];
     } else {
-        for ( NSString *base in [self basePaths]) {
+        for ( NSString *base in self.paths) {
             result=[NSBundle bundleWithPath:[[base stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"framework"]];
             if ( result ) {
                 break;
