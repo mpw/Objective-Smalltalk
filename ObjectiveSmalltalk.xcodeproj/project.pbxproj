@@ -255,6 +255,11 @@
 		1F60600E2A2286E300783E17 /* STPythonObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60600C2A2286E300783E17 /* STPythonObject.h */; };
 		1F60600F2A2286E300783E17 /* STPythonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60600D2A2286E300783E17 /* STPythonObject.m */; };
 		1F6060102A22A1EC00783E17 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1F6060122A247FF000783E17 /* empty-function.elf-o in Resources */ = {isa = PBXBuildFile; fileRef = 1F6060112A247FF000783E17 /* empty-function.elf-o */; };
+		1F6060152A24803800783E17 /* MPWELFReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060132A24803800783E17 /* MPWELFReader.h */; };
+		1F6060162A24803800783E17 /* MPWELFReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6060142A24803800783E17 /* MPWELFReader.m */; };
+		1F6060192A2481D100783E17 /* elf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060172A2481D100783E17 /* elf.h */; };
+		1F60601A2A2481D100783E17 /* features.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060182A2481D100783E17 /* features.h */; };
 		1F60964F25E788FC0018BB72 /* STUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F60964D25E788FC0018BB72 /* STUITests.h */; };
 		1F60965025E788FC0018BB72 /* STUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F60964E25E788FC0018BB72 /* STUITests.m */; };
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
@@ -1040,6 +1045,11 @@
 		1F6060082A2244D300783E17 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = ../../../../../Library/Frameworks/Python.framework; sourceTree = "<group>"; };
 		1F60600C2A2286E300783E17 /* STPythonObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPythonObject.h; sourceTree = "<group>"; };
 		1F60600D2A2286E300783E17 /* STPythonObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPythonObject.m; sourceTree = "<group>"; };
+		1F6060112A247FF000783E17 /* empty-function.elf-o */ = {isa = PBXFileReference; lastKnownFileType = file; path = "empty-function.elf-o"; sourceTree = "<group>"; };
+		1F6060132A24803800783E17 /* MPWELFReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFReader.h; sourceTree = "<group>"; };
+		1F6060142A24803800783E17 /* MPWELFReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFReader.m; sourceTree = "<group>"; };
+		1F6060172A2481D100783E17 /* elf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elf.h; sourceTree = "<group>"; };
+		1F6060182A2481D100783E17 /* features.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = features.h; sourceTree = "<group>"; };
 		1F60963725E786840018BB72 /* STTargetActionConnector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTargetActionConnector.h; sourceTree = "<group>"; };
 		1F60963825E786840018BB72 /* STTargetActionConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionConnector.m; sourceTree = "<group>"; };
 		1F60964D25E788FC0018BB72 /* STUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STUITests.h; sourceTree = "<group>"; };
@@ -1594,6 +1604,8 @@
 		1F084A1016DCE6A200ED2517 /* ObjSTNative */ = {
 			isa = PBXGroup;
 			children = (
+				1F6060172A2481D100783E17 /* elf.h */,
+				1F6060182A2481D100783E17 /* features.h */,
 				1F3466F228CB112E003257CB /* TestResources */,
 				1F2F8DB9192C691900A5D1B5 /* MPWMethodDescriptor.h */,
 				1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */,
@@ -1615,6 +1627,8 @@
 				1F9AE9C028D4957A00671748 /* Mach_O_Structs.h */,
 				1F3466EE28CB10F7003257CB /* MPWMachOReader.h */,
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
+				1F6060132A24803800783E17 /* MPWELFReader.h */,
+				1F6060142A24803800783E17 /* MPWELFReader.m */,
 				1F9AE9E128EC696200671748 /* MPWMachOSection.h */,
 				1F9AE9E228EC696200671748 /* MPWMachOSection.m */,
 				1FDDE94428F1D487002A4AA4 /* MPWMachOClassReader.h */,
@@ -1795,6 +1809,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F6060112A247FF000783E17 /* empty-function.elf-o */,
 				1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */,
 				1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */,
 				1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */,
@@ -2451,6 +2466,7 @@
 			files = (
 				1FDDE95D29029887002A4AA4 /* MPWMachOClassWriter.h in Headers */,
 				1FDDE95128F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h in Headers */,
+				1F6060152A24803800783E17 /* MPWELFReader.h in Headers */,
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
@@ -2461,6 +2477,8 @@
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
+				1F60601A2A2481D100783E17 /* features.h in Headers */,
+				1F6060192A2481D100783E17 /* elf.h in Headers */,
 				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
 				1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
@@ -3389,6 +3407,7 @@
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
 				1F9AE9E628ED76BD00671748 /* two-classes.macho in Resources */,
 				1F1A64732971822A00B8776C /* use_class_that_creates_nsobject.mfile in Resources */,
+				1F6060122A247FF000783E17 /* empty-function.elf-o in Resources */,
 				1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */,
 				1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */,
 				1F9AE9E028E825C600671748 /* call-external-fn.macho in Resources */,
@@ -3743,6 +3762,7 @@
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,
 				1FDDE95E29029887002A4AA4 /* MPWMachOClassWriter.m in Sources */,
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
+				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
