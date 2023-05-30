@@ -64,6 +64,7 @@ typedef struct {
         { @"global", @"MPWGlobalVariableStore" },
         { @"keychain", @"MPWKeychainStore" },
         { @"app", @"MPWScriptingBridgeScheme" },
+        { @"dl", @"MPWDyLibScheme" },
         { nil, nil }
     };
   
@@ -139,7 +140,12 @@ typedef struct {
 
 -(NSArray *)completionsForPartialName:(NSString *)partialName inContext:aContext
 {
-    return (NSArray*)[[[super completionsForPartialName:partialName inContext:aContext] collect] stringByAppendingString:@":"];
+    NSArray *baseCompletions=[super completionsForPartialName:partialName inContext:aContext];
+    NSMutableArray *colonAdded=[NSMutableArray array];
+    for ( NSString *aCompletion in baseCompletions ) {
+        [colonAdded addObject:[aCompletion stringByAppendingString:@":"]];
+    }
+    return colonAdded;
 }
 
 
