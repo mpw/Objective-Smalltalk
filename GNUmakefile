@@ -56,6 +56,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWProtocolDefinition.m \
     Classes/MPWBlockExpression.m \
     Classes/MPWAssignmentExpression.m \
+    Classes/STPostExpression.m \
     Classes/MPWStatementList.m \
     Classes/MPWDataflowConstraintExpression.m \
     Classes/MPWLiteralDictionaryExpression.m \
@@ -66,6 +67,8 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWObjCGenerator.m \
     Classes/MPWPropertyPathDefinition.m \
     Classes/STConnector.m \
+    Classes/STConnectionDefinition.m \
+    Classes/STNotificationDefinition.m \
     Classes/STSimpleDataflowConstraint.m \
     Classes/MPWMethodType.m \
     Classes/MPWPropertyPathGetter.m \
@@ -86,6 +89,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STVariableDefinition.m \
     Classes/STTypeDescriptor.m \
     MPWCascadeExpression.m \
+    Schemes/MPWDyLibScheme.m \
     Schemes/MPWRefScheme.m \
     Schemes/MPWClassScheme.m \
     Schemes/MPWFrameworkScheme.m \
