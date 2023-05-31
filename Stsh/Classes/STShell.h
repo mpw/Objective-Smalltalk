@@ -1,5 +1,5 @@
 //
-//  MPWStsh.h
+//  MPSTShellWStsh.h
 //  MPWShellScriptKit
 //
 //  Created by Marcel Weiher on 26/01/2006.
