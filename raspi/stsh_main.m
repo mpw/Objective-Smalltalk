@@ -8,7 +8,7 @@
 
 
 #import <MPWFoundation/MPWFoundation.h>
-#import "MPWStsh.h"
+#import "STShell.h"
 
 
 int main (int argc, const char *argv[])
@@ -18,7 +18,7 @@ int main (int argc, const char *argv[])
     for (int i=1;i<argc;i++) {
         [args addObject:[NSString stringWithUTF8String:argv[i]]];
     }
-    MPWStsh *stsh=[[[MPWStsh alloc] initWithArgs:args] autorelease];
+    STShell *stsh=[[[STShell alloc] initWithArgs:args] autorelease];
     [[stsh evaluator] evaluateScriptString:@"scheme:gpio := MPWBCMStore store."];
     [[stsh evaluator] evaluateScriptString:@"object Blinker : #MPWFixedValueSource{ #values: #(0,1) }"];
     [stsh runInRunLoop];
