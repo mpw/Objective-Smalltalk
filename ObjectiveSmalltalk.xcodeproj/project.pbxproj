@@ -137,14 +137,6 @@
 		1F50461C2118658F00073E1E /* MPWPropertyPathDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5046192118658F00073E1E /* MPWPropertyPathDefinition.h */; };
 		1F50461D2118658F00073E1E /* MPWPropertyPathDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F50461A2118658F00073E1E /* MPWPropertyPathDefinition.m */; };
 		1F50461E2118658F00073E1E /* MPWPropertyPathDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F50461A2118658F00073E1E /* MPWPropertyPathDefinition.m */; };
-		1F504627211885E900073E1E /* MPWReferenceTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F504625211885E900073E1E /* MPWReferenceTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F504628211885E900073E1E /* MPWReferenceTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F504625211885E900073E1E /* MPWReferenceTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F504629211885E900073E1E /* MPWReferenceTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F504626211885E900073E1E /* MPWReferenceTemplate.m */; };
-		1F50462A211885E900073E1E /* MPWReferenceTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F504626211885E900073E1E /* MPWReferenceTemplate.m */; };
-		1F50462D2118AEB400073E1E /* MPWPropertyPathComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F50462B2118AEB400073E1E /* MPWPropertyPathComponent.h */; };
-		1F50462E2118AEB400073E1E /* MPWPropertyPathComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F50462B2118AEB400073E1E /* MPWPropertyPathComponent.h */; };
-		1F50462F2118AEB400073E1E /* MPWPropertyPathComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F50462C2118AEB400073E1E /* MPWPropertyPathComponent.m */; };
-		1F5046302118AEB400073E1E /* MPWPropertyPathComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F50462C2118AEB400073E1E /* MPWPropertyPathComponent.m */; };
 		1F51A74710DA784A00753C9A /* MPWVARBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F51A74510DA784A00753C9A /* MPWVARBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F51A74810DA784A00753C9A /* MPWVARBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F51A74610DA784A00753C9A /* MPWVARBinding.m */; };
 		1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; };
@@ -995,10 +987,6 @@
 		1F4FD0EC10E4FEFA00934A17 /* MPWVarScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWVarScheme.m; sourceTree = "<group>"; };
 		1F5046192118658F00073E1E /* MPWPropertyPathDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWPropertyPathDefinition.h; sourceTree = "<group>"; };
 		1F50461A2118658F00073E1E /* MPWPropertyPathDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathDefinition.m; sourceTree = "<group>"; };
-		1F504625211885E900073E1E /* MPWReferenceTemplate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWReferenceTemplate.h; sourceTree = "<group>"; };
-		1F504626211885E900073E1E /* MPWReferenceTemplate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWReferenceTemplate.m; sourceTree = "<group>"; };
-		1F50462B2118AEB400073E1E /* MPWPropertyPathComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWPropertyPathComponent.h; sourceTree = "<group>"; };
-		1F50462C2118AEB400073E1E /* MPWPropertyPathComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathComponent.m; sourceTree = "<group>"; };
 		1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F51A74510DA784A00753C9A /* MPWVARBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWVARBinding.h; sourceTree = "<group>"; };
 		1F51A74610DA784A00753C9A /* MPWVARBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWVARBinding.m; sourceTree = "<group>"; };
@@ -2376,10 +2364,6 @@
 				1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */,
 				1FD713E21522DAA6004A5E15 /* MPWObjectMirror.h */,
 				1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */,
-				1F504625211885E900073E1E /* MPWReferenceTemplate.h */,
-				1F504626211885E900073E1E /* MPWReferenceTemplate.m */,
-				1F50462B2118AEB400073E1E /* MPWPropertyPathComponent.h */,
-				1F50462C2118AEB400073E1E /* MPWPropertyPathComponent.m */,
 				1F5046192118658F00073E1E /* MPWPropertyPathDefinition.h */,
 				1F50461A2118658F00073E1E /* MPWPropertyPathDefinition.m */,
 				1F321C65213334F3001BE6CC /* MPWPropertyPathGetter.h */,
@@ -2524,9 +2508,7 @@
 				1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */,
 				1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */,
 				1F5E505509B4B754000298D9 /* MPWStatementList.h in Headers */,
-				1F50462D2118AEB400073E1E /* MPWPropertyPathComponent.h in Headers */,
 				1F5D777B25EBF52900DCC82F /* STTargetActionSenderPort.h in Headers */,
-				1F504627211885E900073E1E /* MPWReferenceTemplate.h in Headers */,
 				1F5E505609B4B754000298D9 /* MPWBlockExpression.h in Headers */,
 				1F5E505709B4B754000298D9 /* MPWBlockContext.h in Headers */,
 				1FE7879624C0B440005ED5D4 /* MPWWindowsScheme.h in Headers */,
@@ -2760,13 +2742,11 @@
 				1F697A8125E15D1600D015DB /* STMessageConnector.h in Headers */,
 				1FE37B9D1969610600C9A378 /* MPWAbstractInterpretedMethod.h in Headers */,
 				1FE37B991969610600C9A378 /* MPWMessageExpression.h in Headers */,
-				1F50462E2118AEB400073E1E /* MPWPropertyPathComponent.h in Headers */,
 				1FA1B3A2267CFCB500F463ED /* STAWK.h in Headers */,
 				1F8C938A24F5720D00646461 /* ObjectiveSmalltalk.h in Headers */,
 				1FE37BAD1969610700C9A378 /* MPWObjectMirror.h in Headers */,
 				1FE37B781969610600C9A378 /* MPWBlockExpression.h in Headers */,
 				1F697AD725E267F700D015DB /* STProtocolScheme.h in Headers */,
-				1F504628211885E900073E1E /* MPWReferenceTemplate.h in Headers */,
 				1FD6CAE325BB026500639458 /* MPWGlobalVariableStore.h in Headers */,
 				1FE37B6A1969610600C9A378 /* MPWExpression+autocomplete.h in Headers */,
 				1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */,
@@ -3837,7 +3817,6 @@
 				1F5E507209B4B754000298D9 /* MPWBindingLegacy.m in Sources */,
 				1F5E507309B4B754000298D9 /* MPWStatementList.m in Sources */,
 				1F5E507409B4B754000298D9 /* MPWBlockExpression.m in Sources */,
-				1F50462F2118AEB400073E1E /* MPWPropertyPathComponent.m in Sources */,
 				1F5E507509B4B754000298D9 /* MPWBlockContext.m in Sources */,
 				1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */,
 				1FC661F225D83BC700ED1BCB /* STObjectTemplate.m in Sources */,
@@ -3918,7 +3897,6 @@
 				1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
 				1FE5CFDE221C4A2B003E11DC /* MPWProtocolDefinition.m in Sources */,
 				1F68D1E215D2DCEB005C7BF5 /* STMessagePortDescriptor.m in Sources */,
-				1F504629211885E900073E1E /* MPWReferenceTemplate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4087,7 +4065,6 @@
 				1FE37BA61969610700C9A378 /* MPWMethodStore.m in Sources */,
 				1FE37B8A1969610600C9A378 /* MPWFastMessage.m in Sources */,
 				1F5D771725EBF33900DCC82F /* STTargetActionConnector.m in Sources */,
-				1F50462A211885E900073E1E /* MPWReferenceTemplate.m in Sources */,
 				1FE37BB41969610700C9A378 /* MPWScheme.m in Sources */,
 				1FD0D4321A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */,
 				1FE37BE01969612500C9A378 /* MPWVarScheme.m in Sources */,
@@ -4164,7 +4141,6 @@
 				1F5D769225E98F6E00DCC82F /* STPortScheme.m in Sources */,
 				1FE37B9E1969610600C9A378 /* MPWAbstractInterpretedMethod.m in Sources */,
 				1FA5963F2A20CD8900C4EB45 /* STPostExpression.m in Sources */,
-				1F5046302118AEB400073E1E /* MPWPropertyPathComponent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

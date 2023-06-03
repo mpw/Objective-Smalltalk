@@ -32,8 +32,7 @@
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
 #import "MPWPropertyPathDefinition.h"
-#import "MPWReferenceTemplate.h"
-#import "MPWPropertyPathComponent.h"
+#import <MPWFoundation/MPWPropertyPathComponent.h>
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 #import "STTypeDescriptor.h"

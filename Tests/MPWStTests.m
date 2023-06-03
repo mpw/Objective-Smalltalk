@@ -26,7 +26,7 @@
 #import "MPWMessageExpression.h"
 #import "MPWClassDefinition.h"
 #import "MPWPropertyPathDefinition.h"
-#import "MPWReferenceTemplate.h"
+//#import "MPWReferenceTemplate.h"
 #import "MPWLiteralExpression.h"
 #import "STObjectTemplate.h"
 #import "MPWLiteralDictionaryExpression.h"
