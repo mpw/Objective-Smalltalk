@@ -33,7 +33,25 @@
     return (Elf64_Ehdr*)[self bytes];
 }
 
+-(NSString*)elfmagic
+{
+    return [[[NSString alloc] initWithBytes:[self bytes] length:4 encoding:NSASCIIStringEncoding] autorelease];
+}
 
+-(int)elfType
+{
+    return [self header]->e_type;
+}
+
+-(int)elfMachine
+{
+    return [self header]->e_machine;
+}
+
+-(int)elfVersion
+{
+    return [self header]->e_version;
+}
 
 @end
 
@@ -54,6 +72,10 @@
     MPWELFReader *reader=[self readerForTestFile:@"empty-function"];
     EXPECTNOTNIL(reader.elfData, @"elf data");
     EXPECTTRUE(!strncmp([reader bytes],ELFMAG ,4), @"elf magic");
+    IDEXPECT( [reader elfmagic], @"\177ELF",@"elf magice");
+    INTEXPECT( [reader elfType], ET_REL, @"elf type");
+    INTEXPECT( [reader elfMachine], EM_AARCH64, @"machine type");
+    INTEXPECT( [reader elfVersion], 1, @"version");
 }
 
 +(NSArray*)testSelectors
