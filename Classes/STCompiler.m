@@ -32,7 +32,6 @@
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
 #import "MPWPropertyPathDefinition.h"
-#import <MPWFoundation/MPWPropertyPathComponent.h>
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 #import "STTypeDescriptor.h"
@@ -1208,34 +1207,11 @@ idAccessor(solver, setSolver)
 
 -(MPWPropertyPathDefinition *)parsePropertyPathDefinition
 {
-    MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
-    MPWReferenceTemplate *path=[[MPWReferenceTemplate new] autorelease];
-    NSMutableArray *identifierComponents=[NSMutableArray array];
-    
-    NSString *separator=nil;
-    do {
-        id nextName=[self nextToken];
-        MPWPropertyPathComponent* comp=[[MPWPropertyPathComponent new] autorelease];
-        if ( [nextName isEqualToString:@"*"] ) {
-            comp.isWildcard=YES;
-            nextName=[self nextToken];
-        }
-        if  ([nextName isEqualToString:@":"]  ) {
-            nextName=[self nextToken];
-            comp.parameter=nextName;
-        } else {
-            if ( !comp.isWildcard) {
-                comp.name=nextName;
-            } else {
-                [self pushBack:nextName];
-            }
-        }
-        [identifierComponents addObject:comp];
-    } while ( (separator=[self nextToken])  &&  [separator isEqualToString:@"/"]);
-    [self pushBack:separator];
-    path.pathComponents=identifierComponents;
+   MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
+    MPWIdentifierExpression *pathExpression=[self makeComplexIdentifier:@"dummy:"];
+    MPWGenericReference *ref=[[[MPWGenericReference alloc] initWithPath:[pathExpression name]] autorelease];
+    MPWReferenceTemplate *path=[[[MPWReferenceTemplate alloc] initWithReference:ref] autorelease];
     propertyDef.propertyPath=path;
-
     NSString *nextToken  = [self nextToken];
 //    NSLog(@"nextToken after parse of property header: %@",nextToken);
     if ( [nextToken isEqualToString:@"{"]) {
