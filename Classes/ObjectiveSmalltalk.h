@@ -42,7 +42,7 @@
 #import <ObjectiveSmalltalk/MPWMethodStore.h>
 #import <ObjectiveSmalltalk/MPWMethodType.h>
 #import <ObjectiveSmalltalk/MPWObjectMirror.h>
-#import <ObjectiveSmalltalk/MPWPropertyPath.h>
+#import <ObjectiveSmalltalk/MPWReferenceTemplate.h>
 #import <ObjectiveSmalltalk/MPWProtocolDefinition.h>
 #import <ObjectiveSmalltalk/MPWRefScheme.h>
 #import <ObjectiveSmalltalk/MPWRelScheme.h>

@@ -7,7 +7,7 @@
 
 #import "MPWPropertyPathGetter.h"
 #import <MPWFoundation/MPWFoundation.h>
-#import "MPWPropertyPath.h"
+#import "MPWReferenceTemplate.h"
 #import "MPWPropertyPathDefinition.h"
 #import "MPWMethodHeader.h"
 

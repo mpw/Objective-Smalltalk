@@ -9,7 +9,7 @@
 
 @protocol MPWReferencing;
 
-@interface MPWPropertyPath : NSObject
+@interface MPWReferenceTemplate : NSObject
 
 @property (nonatomic, strong) NSArray *pathComponents;
 @property (readonly) NSString *name;
