@@ -7,7 +7,7 @@
 
 #import "MPWStPropertyPathTests.h"
 #import "MPWPropertyPathDefinition.h"
-#import "MPWPropertyPath.h"
+#import "MPWReferenceTemplate.h"
 #import "MPWClassDefinition.h"
 #import "MPWStTests.h"
 

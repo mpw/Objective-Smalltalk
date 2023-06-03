@@ -32,7 +32,7 @@
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
 #import "MPWPropertyPathDefinition.h"
-#import "MPWPropertyPath.h"
+#import "MPWReferenceTemplate.h"
 #import "MPWPropertyPathComponent.h"
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
@@ -1210,7 +1210,7 @@ idAccessor(solver, setSolver)
 -(MPWPropertyPathDefinition *)parsePropertyPathDefinition
 {
     MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
-    MPWPropertyPath *path=[[MPWPropertyPath new] autorelease];
+    MPWReferenceTemplate *path=[[MPWReferenceTemplate new] autorelease];
     NSMutableArray *identifierComponents=[NSMutableArray array];
     
     NSString *separator=nil;
