@@ -1,0 +1,20 @@
+#!env stsh
+#-<void>mountplist:<ref>plistRef
+
+framework:ObjectiveHTTPD load.
+framework:SchemeFUSE load.
+server := MPWSchemeHttpServer new.
+server server setPort: 8082.
+
+plist :=  plistRef value stringValue propertyList.
+theScheme := MPWPlistStore storeWithDictionary:plist.
+
+server setScheme: theScheme.
+scheme:base := theScheme.
+
+server start:nil.
+fs := theScheme mountAt:'/Volumes/SchemeFS' .
+
+shell runInteractiveLoop.
+
+fs unmount.
