@@ -52,7 +52,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWFastSuperMessage.m \
     Classes/MPWInstanceVariable.m \
     Classes/MPWLiteralArrayExpression.m \
-    Classes/MPWPropertyPathComponent.m \
     Classes/MPWProtocolDefinition.m \
     Classes/MPWBlockExpression.m \
     Classes/MPWAssignmentExpression.m \
@@ -62,7 +61,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWLiteralDictionaryExpression.m \
     Classes/MPWConnectToDefault.m \
     Classes/MPWClassDefinition.m \
-    Classes/MPWPropertyPath.m \
     Classes/MPWMethodStore.m \
     Classes/MPWObjCGenerator.m \
     Classes/MPWPropertyPathDefinition.m \
