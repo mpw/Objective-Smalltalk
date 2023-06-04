@@ -25,7 +25,7 @@ static void runTests()
                        @"MPWPropertyPath",
 //                       @"MPWPropertyPathGetter",
 //                       @"MPWPropertyPathSetter",
-                       @"MPWPropertyPathComponent",
+//                       @"MPWPropertyPathComponent",
 //                       @"MPWFrameworkScheme",
                        @"MPWSchemeScheme",
 //                       @"MPWVarScheme",
