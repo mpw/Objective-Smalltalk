@@ -213,6 +213,11 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
     return [self valueWithObjects:@[ anObject]];
 }
 
+-evaluateOnObject:target parameters:parameters
+{
+    return [self valueWithObjects:parameters];
+}
+
 
 -value:anObject with:otherObject
 {
