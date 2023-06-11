@@ -1427,6 +1427,12 @@
     }
 }
 
++(void)testTemplateMatchingStoreCanUseBlocks
+{
+    TESTEXPR( @"scheme:t := MPWTemplateMatchingStore store. t:hello/:who := { :who | 'Hello: ',who. }. t:hello/Marcel", @"Hello: Marcel");
+    TESTEXPR( @"scheme:t := MPWTemplateMatchingStore store. t:add6/:value := { :value | value intValue + 6. }. t:add6/4", @(10));
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1584,6 +1590,7 @@
 //        @"testChainedSubscriptExpressionsCompile",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
+        @"testTemplateMatchingStoreCanUseBlocks",
         ];
 }
 
