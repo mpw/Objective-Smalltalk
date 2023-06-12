@@ -1433,6 +1433,12 @@
     TESTEXPR( @"scheme:t := MPWTemplateMatchingStore store. t:add6/:value := { :value | value intValue + 6. }. t:add6/4", @(10));
 }
 
+
++(void)testTemplateMatchingStoreCanUseImpsViaFastInvocation
+{
+    TESTEXPR( @"d := #{ #a: 43 }. scheme:t := MPWTemplateMatchingStore store. scheme:t setTarget:d. t:value/:arg := d invocationForSelector: #objectForKey: . t:value/a", @(43));
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1591,6 +1597,7 @@
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         @"testTemplateMatchingStoreCanUseBlocks",
+        @"testTemplateMatchingStoreCanUseImpsViaFastInvocation",
         ];
 }
 
