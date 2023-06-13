@@ -247,10 +247,12 @@ idAccessor( localVars, setLocalVars )
 	[self bindValue:value toVariableNamed:variableName withScheme:[self defaultScheme]];
 }
 
--(void)applyParameters:parameterList forFormals:formalParameterList
+-(void)applyParameters:(NSArray*)parameterList forFormals:(NSArray*)formalParameterList
 {
-	int i;
-	for (i=0;i<[formalParameterList count];i++) {
+    if ( parameterList.count != formalParameterList.count ) {
+        [NSException raise:@"mismatch" format:@"formal parameters %@ do not match actual parameters: %@",formalParameterList,parameterList];
+    }
+	for (int i=0;i<[formalParameterList count];i++) {
 		[self bindValue:[parameterList objectAtIndex:i] toVariableNamed:[formalParameterList objectAtIndex:i]];
 	}
 }

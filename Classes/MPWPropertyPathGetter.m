@@ -19,12 +19,22 @@
 
 @implementation MPWPropertyPathGetter
 
+-(void)setupStoreWithPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths
+{
+    for ( MPWPropertyPathDefinition *def in newPaths) {
+        if ( def.get ) {
+            self.store[def.propertyPath] = def.get;
+        }
+    }
+}
+
+
 CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 {
     self=[super init];
     self.store = [MPWTemplateMatchingStore store];
-    self.store.target = self;       // circular reference, FIXME (weak, ...?)
-    
+    self.store.addRef = true;
+    [self setupStoreWithPaths:newPaths];
     self.propertyPathDefs=newPaths;
     self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
     return self;
@@ -42,15 +52,19 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
-    id <MPWReferencing> ref=parameters.lastObject;
-    for ( MPWPropertyPathDefinition *def in self.propertyPathDefs) {
-        NSDictionary *pathParams=[def.propertyPath bindingsForMatchedReference:ref];
-        if (pathParams) {
-            return [self evaluateFoundPropertyPath:def onTarget:target boundParams:pathParams additionalParams:parameters];
-        }
-    }
-    [NSException raise:@"undefined" format:@"undefined path: '%@' for object: %@",ref,target];
-    return nil;
+    id ref=[parameters.lastObject name];        // the lastObject is an MPWIdentifier
+    self.store.target = target;       // circular reference, FIXME (weak, ...?)
+    NSLog(@"property path getter will evaluate: %@",ref);
+    [self.store at:ref];
+//    id <MPWReferencing> ref=parameters.lastObject;
+//    for ( MPWPropertyPathDefinition *def in self.propertyPathDefs) {
+//        NSDictionary *pathParams=[def.propertyPath bindingsForMatchedReference:ref];
+//        if (pathParams) {
+//            return [self evaluateFoundPropertyPath:def onTarget:target boundParams:pathParams additionalParams:parameters];
+//        }
+//    }
+//    [NSException raise:@"undefined" format:@"undefined path: '%@' for object: %@",ref,target];
+//    return nil;
 }
 
 -declarationString
