@@ -40,31 +40,12 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     return self;
 }
 
--(id)evaluateFoundPropertyPath:(MPWPropertyPathDefinition*)def onTarget:target boundParams:(NSDictionary*)pathParams additionalParams:(NSArray*)param
-{
-    MPWScriptedMethod *m=[def get];
-    NSArray *params=[pathParams objectsForKeys:[def.propertyPath formalParameters] notFoundMarker:@""];
-    params = [params arrayByAddingObject:param.lastObject];
-     id result=[m evaluateOnObject:target parameters:params];
-    return result;
-}
-
-
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
     id ref=[parameters.lastObject name];        // the lastObject is an MPWIdentifier
-    self.store.target = target;       // circular reference, FIXME (weak, ...?)
-    NSLog(@"property path getter will evaluate: %@",ref);
-    [self.store at:ref];
-//    id <MPWReferencing> ref=parameters.lastObject;
-//    for ( MPWPropertyPathDefinition *def in self.propertyPathDefs) {
-//        NSDictionary *pathParams=[def.propertyPath bindingsForMatchedReference:ref];
-//        if (pathParams) {
-//            return [self evaluateFoundPropertyPath:def onTarget:target boundParams:pathParams additionalParams:parameters];
-//        }
-//    }
-//    [NSException raise:@"undefined" format:@"undefined path: '%@' for object: %@",ref,target];
-//    return nil;
+    self.store.target = target;                 // should pass as parameter not method
+                                    
+    return [self.store at:ref];         // this returns nil when there's no match, previous threw exception?
 }
 
 -declarationString

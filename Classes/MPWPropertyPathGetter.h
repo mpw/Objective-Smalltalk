@@ -16,5 +16,6 @@
 
 @property (nonatomic,strong) NSArray<MPWPropertyPathDefinition*> *propertyPathDefs;
 @property (nonatomic,assign) Class classOfMethod;
+@property (nonatomic, readonly) MPWTemplateMatchingStore *store;
 
 @end
