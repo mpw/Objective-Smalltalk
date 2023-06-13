@@ -26,10 +26,23 @@
     return result;
 }
 
+-(id)evaluateOnObject_get:(id)target parameters:(NSArray *)parameters
+{
+    id <MPWReferencing> ref=parameters.lastObject;
+    for ( MPWPropertyPathDefinition *def in self.propertyPathDefs) {
+        NSDictionary *pathParams=[def.propertyPath bindingsForMatchedReference:ref];
+        if (pathParams) {
+            return [self evaluateFoundPropertyPath:def onTarget:target boundParams:pathParams additionalParams:parameters];
+        }
+    }
+    [NSException raise:@"undefined" format:@"undefined path: '%@' for object: %@",ref,target];
+    return nil;
+}
+
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
     parameters=@[ parameters[1], parameters[0]];
-    return [super evaluateOnObject:target parameters:parameters];
+    return [self evaluateOnObject_get:target parameters:parameters];
 }
 
 

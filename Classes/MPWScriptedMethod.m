@@ -124,7 +124,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 -(NSException*)handleException:exception target:target
 {
-    NSLog(@"post-process exception: %@",exception);
+    NSLog(@"post-process exception: %@ with raw trace: %@",exception,[exception callStackSymbols]);
     NSException *newException;
     NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];
