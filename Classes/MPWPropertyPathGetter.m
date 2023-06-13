@@ -11,12 +11,20 @@
 #import "MPWPropertyPathDefinition.h"
 #import "MPWMethodHeader.h"
 
+@interface MPWPropertyPathGetter()
+
+@property (nonatomic, strong) MPWTemplateMatchingStore *store;
+
+@end
 
 @implementation MPWPropertyPathGetter
 
 CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 {
     self=[super init];
+    self.store = [MPWTemplateMatchingStore store];
+    self.store.target = self;       // circular reference, FIXME (weak, ...?)
+    
     self.propertyPathDefs=newPaths;
     self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
     return self;
