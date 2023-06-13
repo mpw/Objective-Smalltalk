@@ -193,7 +193,7 @@
        @"testPropertyPathGetterWithArgsWorksWithPlainClass",
        @"testSimplePropertyPathSetterWorksWithPlainClass",
        @"testDefiningNoPropertyPathGettersAllowsSuperclassDefinitionToPrevail",
-//       @"testPropertyPathWildcardMatchesRoot",
+       @"testPropertyPathWildcardMatchesRoot",
 
 			];
 }
