@@ -35,11 +35,13 @@
 
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
-    id ref=[parameters.firstObject name];        // the lastObject is an MPWIdentifier
-    NSLog(@"setter: %@",ref);
-    self.store.target = target;                 // should pass as parameter not method
-    self.store.additionalParam = parameters.lastObject;
-    return [self.store at:ref];         // this returns nil when there's no match, previous threw exception?
+    id ref=[parameters.firstObject name];
+    id extraParams[2]={parameters.lastObject, ref};// the lastObject is an MPWIdentifier
+
+    return [self.store at:ref for:target with:extraParams count:2];
+
+
+//    return [self.store at:ref];         // this returns nil when there's no match, previous threw exception?
 }
 
 
