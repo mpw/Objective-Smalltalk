@@ -28,12 +28,10 @@
     }
 }
 
-
 CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 {
     self=[super init];
     self.store = [MPWTemplateMatchingStore store];
-    self.store.addRef = true;
     [self setupStoreWithPaths:newPaths];
     self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
     return self;
