@@ -26,13 +26,11 @@
     return @"<void>at:aReference put:newValue";
 }
 
--(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
+-(int)numberOfExtraParameters
 {
-    id extraParameters[2];
-    [parameters getObjects:extraParameters range:NSMakeRange(0,2)];
-    id ref = extraParameters[0];
-    return [self.store at:ref for:target with:extraParameters count:2];
+    return 2;
 }
+
 
 
 @end
