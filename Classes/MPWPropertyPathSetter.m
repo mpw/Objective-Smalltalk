@@ -21,13 +21,6 @@
 }
 
 
--(instancetype)initWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition *> *)defs
-{
-    self=[super initWithPropertyPathDefinitions:defs];
-    self.store.useParam = true;
-    return self;
-}
-
 -declarationString
 {
     return @"<void>at:aReference put:newValue";
@@ -35,13 +28,10 @@
 
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
-    id ref=[parameters.firstObject name];
-    id extraParams[2]={parameters.lastObject, ref};// the lastObject is an MPWIdentifier
-
-    return [self.store at:ref for:target with:extraParams count:2];
-
-
-//    return [self.store at:ref];         // this returns nil when there's no match, previous threw exception?
+    id extraParameters[2];
+    [parameters getObjects:extraParameters range:NSMakeRange(0,2)];
+    id ref = extraParameters[0];
+    return [self.store at:ref for:target with:extraParameters count:2];
 }
 
 
