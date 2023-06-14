@@ -22,12 +22,18 @@
 -(void)setupStoreWithPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths
 {
     for ( MPWPropertyPathDefinition *def in newPaths) {
-        MPWScriptedMethod *method = [def getMethodAtVerb:MPWRESTVerbGET];
+        MPWScriptedMethod *method = [def methodForVerb:[self restVerb]];
         if ( method ) {
             self.store[def.propertyPath] = method;
         }
     }
 }
+
+-(MPWRESTVerb)restVerb
+{
+    return MPWRESTVerbGET;
+}
+
 
 CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 {
