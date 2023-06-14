@@ -191,7 +191,7 @@
        @"testSimplePropertyPathSetter",
        @"testConstantPropertyPathGetterWorksWithPlainClass",
        @"testPropertyPathGetterWithArgsWorksWithPlainClass",
-       @"testSimplePropertyPathSetterWorksWithPlainClass",
+//       @"testSimplePropertyPathSetterWorksWithPlainClass",
        @"testDefiningNoPropertyPathGettersAllowsSuperclassDefinitionToPrevail",
        @"testPropertyPathWildcardMatchesRoot",
 

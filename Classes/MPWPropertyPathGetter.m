@@ -35,7 +35,6 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     self.store = [MPWTemplateMatchingStore store];
     self.store.addRef = true;
     [self setupStoreWithPaths:newPaths];
-    self.propertyPathDefs=newPaths;
     self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
     return self;
 }
@@ -56,15 +55,12 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 -(void)setContext:(id)newVar
 {
     [super setContext:newVar];
-    for ( MPWPropertyPathDefinition *p in self.propertyPathDefs) {
-        [p.get setContext:newVar];
-        [p.set setContext:newVar];
-    }
+    [self.store setContext:newVar];
 }
 
 -(void)dealloc
 {
-    [_propertyPathDefs release];
+    [_store release];
     [super dealloc];
 }
 

@@ -14,7 +14,6 @@
 +(instancetype)getterWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 -(instancetype)initWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 
-@property (nonatomic,strong) NSArray<MPWPropertyPathDefinition*> *propertyPathDefs;
 @property (nonatomic,assign) Class classOfMethod;
 @property (nonatomic, readonly) MPWTemplateMatchingStore *store;
 
