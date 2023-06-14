@@ -5,13 +5,16 @@
 //  Created by Marcel Weiher on 8/6/18.
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 @class MPWReferenceTemplate,MPWScriptedMethod;
 
 @interface MPWPropertyPathDefinition : NSObject
 
 @property (nonatomic, strong)  MPWReferenceTemplate* propertyPath;
-@property (nonatomic, strong)  MPWScriptedMethod *get,*set;
+
+-(void)setMethod:(MPWScriptedMethod*)method forVerb:(MPWRESTVerb)verb;
+-(MPWScriptedMethod*)getMethodAtVerb:(MPWRESTVerb)verb;
+
 
 @end

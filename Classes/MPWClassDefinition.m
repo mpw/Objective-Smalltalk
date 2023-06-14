@@ -22,7 +22,7 @@
 {
     NSMutableArray *getters=[NSMutableArray array];
     for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
-        if ( def.get ) {
+        if ( [def getMethodAtVerb:MPWRESTVerbGET] ) {
             [getters addObject:def];
         }
     }
@@ -33,7 +33,7 @@
 {
     NSMutableArray *setters=[NSMutableArray array];
     for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
-        if ( def.set ) {
+        if ( [def getMethodAtVerb:MPWRESTVerbPUT] ) {
             [setters addObject:def];
         }
     }

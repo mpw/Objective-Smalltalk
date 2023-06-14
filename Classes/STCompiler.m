@@ -1236,9 +1236,11 @@ idAccessor(solver, setSolver)
             nextToken=[self nextToken];
             
             if ( [getOrSet isEqualToString:@"|="] || [getOrSet isEqualToString:@"get"] ) {
-                propertyDef.get=body;
+                [propertyDef setMethod:body forVerb:MPWRESTVerbGET];
+//                propertyDef.get=body;
             } else if ( [getOrSet isEqualToString:@"=|"] || [getOrSet isEqualToString:@"put"] ) {
-                propertyDef.set=body;
+                [propertyDef setMethod:body forVerb:MPWRESTVerbPUT];
+//                propertyDef.set=body;
             } else {
             }
         }
