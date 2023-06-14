@@ -37,10 +37,18 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     return self;
 }
 
+-(int)numberOfExtraParameters
+{
+    return 1;
+}
+
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
-    id ref=[parameters.lastObject name];        // the lastObject is an MPWIdentifier
-    return [self.store at:ref for:target with:&ref count:1];
+    int numExtras=[self numberOfExtraParameters];
+    id extraParameters[numExtras+2];
+    [parameters getObjects:extraParameters range:NSMakeRange(0,numExtras)];
+    id ref = extraParameters[0];
+    return [self.store at:ref for:target with:extraParameters count:numExtras];
 }
 
 -declarationString
