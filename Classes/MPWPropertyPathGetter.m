@@ -42,9 +42,7 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
     id ref=[parameters.lastObject name];        // the lastObject is an MPWIdentifier
-    self.store.target = target;                 // should pass as parameter not method
-                                    
-    return [self.store at:ref];         // this returns nil when there's no match, previous threw exception?
+    return [self.store at:ref for:target with:&ref count:1];
 }
 
 -declarationString
