@@ -22,8 +22,9 @@
 -(void)setupStoreWithPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths
 {
     for ( MPWPropertyPathDefinition *def in newPaths) {
-        if ( def.get ) {
-            self.store[def.propertyPath] = def.get;
+        MPWScriptedMethod *method = [def getMethodAtVerb:MPWRESTVerbGET];
+        if ( method ) {
+            self.store[def.propertyPath] = method;
         }
     }
 }

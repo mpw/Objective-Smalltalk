@@ -7,7 +7,20 @@
 
 #import "MPWPropertyPathDefinition.h"
 
-@implementation MPWPropertyPathDefinition
+@implementation MPWPropertyPathDefinition{
+    MPWScriptedMethod *methods[MPWRESTVerbMAX];
+}
+
+-(void)setMethod:(MPWScriptedMethod*)method forVerb:(MPWRESTVerb)verb
+{
+    [methods[verb] release];
+    methods[verb]=[method retain];
+}
+
+-(MPWScriptedMethod*)getMethodAtVerb:(MPWRESTVerb)verb
+{
+    return methods[verb];
+}
 
 
 -(NSString *)description
@@ -18,8 +31,9 @@
 -(void)dealloc
 {
     [_propertyPath release];
-    [_get release];
-    [_set release];
+    for (int i=0;i<MPWRESTVerbMAX;i++) {
+        [methods[i] release];
+    }
     [super dealloc];
 }
 
