@@ -1219,7 +1219,7 @@ idAccessor(solver, setSolver)
         nextToken=[self nextToken];
 //        NSLog(@"get/set:  %@",nextToken);
         while ( [nextToken isEqualToString:@"|="] || [nextToken isEqualToString:@"=|"]
-               || [nextToken isEqualToString:@"=|="]) {
+               || [nextToken isEqualToString:@"=|="] || [nextToken isEqualToString:@"get"] || [nextToken isEqualToString:@"put"]) {
             NSString *getOrSet=nextToken;
             NSArray *formals=[propertyDef.propertyPath formalParameters];
             NSMutableString *s=[@"method" mutableCopy];
@@ -1227,7 +1227,7 @@ idAccessor(solver, setSolver)
                 [s appendFormat:@"Arg:%@ ",paramName];
             }
             [s appendString:@"ref:theRef "];
-            if ([getOrSet isEqualToString:@"=|"] ) {
+            if ([getOrSet isEqualToString:@"=|"] || [getOrSet isEqualToString:@"put"] ) {
                 [s appendString:@"value:newValue "];
             }
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:s];
@@ -1235,9 +1235,9 @@ idAccessor(solver, setSolver)
 //            NSLog(@"did parse body: %@",body);
             nextToken=[self nextToken];
             
-            if ( [getOrSet isEqualToString:@"|="]  ) {
+            if ( [getOrSet isEqualToString:@"|="] || [getOrSet isEqualToString:@"get"] ) {
                 propertyDef.get=body;
-            } else if ( [getOrSet isEqualToString:@"=|"] ) {
+            } else if ( [getOrSet isEqualToString:@"=|"] || [getOrSet isEqualToString:@"put"] ) {
                 propertyDef.set=body;
             } else {
             }
