@@ -14,7 +14,7 @@
 @property (nonatomic, strong)  MPWReferenceTemplate* propertyPath;
 
 -(void)setMethod:(MPWScriptedMethod*)method forVerb:(MPWRESTVerb)verb;
--(MPWScriptedMethod*)getMethodAtVerb:(MPWRESTVerb)verb;
+-(MPWScriptedMethod*)methodForVerb:(MPWRESTVerb)verb;
 
 
 @end

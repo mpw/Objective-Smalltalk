@@ -17,7 +17,7 @@
     methods[verb]=[method retain];
 }
 
--(MPWScriptedMethod*)getMethodAtVerb:(MPWRESTVerb)verb
+-(MPWScriptedMethod*)methodForVerb:(MPWRESTVerb)verb
 {
     return methods[verb];
 }
