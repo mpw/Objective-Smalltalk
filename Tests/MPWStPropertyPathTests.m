@@ -85,11 +85,19 @@
     IDEXPECT(result,@(42),@"evaluating a simple property");
 }
 
++(void)testEvaluateSimplePropertyPathGetterWithGetSyntax
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass1 : MPWScheme { /property { get {  47.}  }}."];
+    id result = [compiler evaluateScriptString:@"a := PropertyTestClass1 new. scheme:p := a. p:property."];
+    IDEXPECT(result,@(47),@"evaluating a simple property");
+}
+
 +(void)testEvaluateSimplePropertyPathGetterHasRef
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"class PropertyTestClass1 : MPWScheme { /property { |= {  theRef.}  }}."];
-    id result = [compiler evaluateScriptString:@"a := PropertyTestClass1 new. scheme:p := a. p:property."];
+    [compiler evaluateScriptString:@"class PropertyTestClass1a : MPWScheme { /property { |= {  theRef.}  }}."];
+    id result = [compiler evaluateScriptString:@"a := PropertyTestClass1a new. scheme:p := a. p:property."];
     id ref = [compiler evaluateScriptString:@"ref:p:property reference."];
     IDEXPECT(result,ref,@"evaluating a simple property");
 }
@@ -123,9 +131,21 @@
     [compiler evaluateScriptString:@"class PropertyTestClass5 : MPWDictStore { /propertyA { =| {  self dict setObject:(newValue + 10)  forKey:'variantOfPropertyA'. }}} "];
     [compiler evaluateScriptString:@"a := PropertyTestClass5 scheme. scheme:p := a. p:propertyA := 5 ."];
     id oldKeyValue = [compiler evaluateScriptString:@"a dict objectForKey:'propertyA'."];
-
+    
     id result1=[compiler evaluateScriptString:@"a dict objectForKey:'variantOfPropertyA'."];
     IDEXPECT(result1,@(15),@"did set properly");
+    EXPECTFALSE([oldKeyValue isNotNil],@"nil or NSNil");
+}
+
++(void)testSimplePropertyPathSetterWithPutSyntax
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass5a : MPWDictStore { /propertyA { put {  self dict setObject:(newValue + 12)  forKey:'variantOfPropertyA'. }}} "];
+    [compiler evaluateScriptString:@"a := PropertyTestClass5a scheme. scheme:p := a. p:propertyA := 5 ."];
+    id oldKeyValue = [compiler evaluateScriptString:@"a dict objectForKey:'propertyA'."];
+    
+    id result1=[compiler evaluateScriptString:@"a dict objectForKey:'variantOfPropertyA'."];
+    IDEXPECT(result1,@(17),@"did set properly");
     EXPECTFALSE([oldKeyValue isNotNil],@"nil or NSNil");
 }
 
@@ -183,12 +203,14 @@
        @"testParsePropertyPathWithWildcard",
        @"testParsePropertyPathWithWildcardAndParameter",
        @"testEvaluateSimplePropertyPathGetter",
+       @"testEvaluateSimplePropertyPathGetterWithGetSyntax",
        @"testEvaluateSimplePropertyPathGetterHasRef",
        @"testEvaluatePropertyPathGettersWithArg",
        @"testEvaluatePropertyPathGettersWithSeveralArgs",
        @"testEvaluatePropertyPathGetterWithWildcard",
        @"testIdentifierInterpolationWorksAsAssignmentTarget",
        @"testSimplePropertyPathSetter",
+       @"testSimplePropertyPathSetterWithPutSyntax",
        @"testConstantPropertyPathGetterWorksWithPlainClass",
        @"testPropertyPathGetterWithArgsWorksWithPlainClass",
 //       @"testSimplePropertyPathSetterWorksWithPlainClass",
