@@ -70,7 +70,6 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STSimpleDataflowConstraint.m \
     Classes/MPWMethodType.m \
     Classes/MPWPropertyPathGetter.m \
-    Classes/MPWPropertyPathSetter.m \
     Classes/MPWBlockContext.m \
     Classes/MPWAbstractInterpretedMethod.m \
     Classes/MPWClassMethodStore.m \

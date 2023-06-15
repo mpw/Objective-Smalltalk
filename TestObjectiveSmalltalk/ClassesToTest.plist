@@ -49,7 +49,6 @@
 	"MPWPropertyPathComponent",
 	"MPWPropertyPathDefinition",
 	"MPWPropertyPathGetter",
-	"MPWPropertyPathSetter",
 	"MPWRecursiveIdentifier",
 	MPWRefScheme,
 	MPWResource,
