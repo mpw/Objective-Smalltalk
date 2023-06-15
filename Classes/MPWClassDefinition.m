@@ -40,18 +40,22 @@
     return setters;
 }
 
+-(NSArray*)generatedPropertyPathMethods
+{
+    NSMutableArray *methods=[NSMutableArray array];
+//    MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
+    if ( self.propertyPathGetterDefinitions.count) {
+        [methods addObject:[[[MPWPropertyPathGetter alloc] initWithPropertyPaths:self.propertyPathGetterDefinitions verb:MPWRESTVerbGET] autorelease]];
+    }
+    if ( self.propertyPathSetterDefinitions.count) {
+        [methods addObject:[[[MPWPropertyPathGetter alloc] initWithPropertyPaths:self.propertyPathSetterDefinitions verb:MPWRESTVerbPUT] autorelease]];
+    }
+    return methods;
+}
 
 -(NSArray*)generatedMethods
 {
-    NSMutableArray *methods=[NSMutableArray array];
-    
-    if ( self.propertyPathGetterDefinitions.count) {
-        [methods addObject:[MPWPropertyPathGetter getterWithPropertyPathDefinitions:self.propertyPathGetterDefinitions]];
-    }
-    if ( self.propertyPathSetterDefinitions.count) {
-        [methods addObject:[MPWPropertyPathSetter getterWithPropertyPathDefinitions:self.propertyPathSetterDefinitions]];
-    }
-    return methods;
+    return [self generatedPropertyPathMethods];
 }
 
 

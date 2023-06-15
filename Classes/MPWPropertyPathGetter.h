@@ -12,8 +12,7 @@
 @interface MPWPropertyPathGetter : MPWAbstractInterpretedMethod
 
 
-+(instancetype)getterWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
--(instancetype)initWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
+-(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb;
 
 @property (nonatomic,assign) Class classOfMethod;
 @property (nonatomic, readonly) MPWTemplateMatchingStore *store;
