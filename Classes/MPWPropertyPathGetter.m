@@ -18,11 +18,14 @@
 @end
 
 @implementation MPWPropertyPathGetter
-
--(void)setupStoreWithPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths
+{
+    int         numExtraparams;
+}
+ 
+-(void)setupStoreWithPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)theVerb
 {
     for ( MPWPropertyPathDefinition *def in newPaths) {
-        MPWScriptedMethod *method = [def methodForVerb:[self restVerb]];
+        MPWScriptedMethod *method = [def methodForVerb:theVerb];
         if ( method ) {
             self.store[def.propertyPath] = method;
         }
@@ -34,15 +37,22 @@
     return MPWRESTVerbGET;
 }
 
+-(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb numExtraParams:(int)newNumExtraParams
+{
+    if ( self=[super init] ) {
+        self.store = [MPWTemplateMatchingStore store];
+        [self setupStoreWithPaths:newPaths verb:newVerb];
+        self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
+        numExtraparams = newNumExtraParams;
+    }
+    return self;
+}
 
 CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 {
-    self=[super init];
-    self.store = [MPWTemplateMatchingStore store];
-    [self setupStoreWithPaths:newPaths];
-    self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
-    return self;
+    return [self initWithPropertyPaths:newPaths verb:[self restVerb] numExtraParams:[self numberOfExtraParameters]];
 }
+
 
 -(int)numberOfExtraParameters
 {
@@ -51,7 +61,7 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
 
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
-    int numExtras=[self numberOfExtraParameters];
+    int numExtras=numExtraparams;
     id extraParameters[numExtras+2];
     [parameters getObjects:extraParameters range:NSMakeRange(0,numExtras)];
     id ref = extraParameters[0];
