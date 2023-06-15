@@ -11,6 +11,7 @@
 
 @interface MPWPropertyPathGetter : MPWAbstractInterpretedMethod
 
+
 +(instancetype)getterWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 -(instancetype)initWithPropertyPathDefinitions:(NSArray<MPWPropertyPathDefinition*>*)defs;
 
