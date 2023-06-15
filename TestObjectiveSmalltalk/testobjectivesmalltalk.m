@@ -24,7 +24,6 @@ static void runTests()
                        @"MPWMethodCallBack",
                        @"MPWPropertyPath",
 //                       @"MPWPropertyPathGetter",
-//                       @"MPWPropertyPathSetter",
 //                       @"MPWPropertyPathComponent",
 //                       @"MPWFrameworkScheme",
                        @"MPWSchemeScheme",

@@ -12,43 +12,32 @@
 #import "MPWClassMethodStore.h"
 #import "STCompiler.h"
 #import "MPWPropertyPathGetter.h"
-#import "MPWPropertyPathSetter.h"
 #import "MPWPropertyPathDefinition.h"
 
 
 @implementation MPWClassDefinition
 
--(NSArray*)propertyPathGetterDefinitions
-{
-    NSMutableArray *getters=[NSMutableArray array];
-    for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
-        if ( [def methodForVerb:MPWRESTVerbGET] ) {
-            [getters addObject:def];
-        }
-    }
-    return getters;
-}
 
--(NSArray*)propertyPathSetterDefinitions
+-(NSArray*)propertyPathDefinitionsForVerb:(MPWRESTVerb)verb
 {
-    NSMutableArray *setters=[NSMutableArray array];
+    NSMutableArray *ppdefs=[NSMutableArray array];
     for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
-        if ( [def methodForVerb:MPWRESTVerbPUT] ) {
-            [setters addObject:def];
+        if ( [def methodForVerb:verb] ) {
+            [ppdefs addObject:def];
         }
     }
-    return setters;
+    return ppdefs;
 }
 
 -(NSArray*)generatedPropertyPathMethods
 {
     NSMutableArray *methods=[NSMutableArray array];
-//    MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
-    if ( self.propertyPathGetterDefinitions.count) {
-        [methods addObject:[[[MPWPropertyPathGetter alloc] initWithPropertyPaths:self.propertyPathGetterDefinitions verb:MPWRESTVerbGET] autorelease]];
-    }
-    if ( self.propertyPathSetterDefinitions.count) {
-        [methods addObject:[[[MPWPropertyPathGetter alloc] initWithPropertyPaths:self.propertyPathSetterDefinitions verb:MPWRESTVerbPUT] autorelease]];
+    MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
+    for (int i=0;i<2;i++ ) {
+        NSArray *definitions=[self propertyPathDefinitionsForVerb:verbs[i]];
+        if ( definitions.count) {
+            [methods addObject:[[[MPWPropertyPathGetter alloc] initWithPropertyPaths:definitions verb:verbs[i]] autorelease]];
+        }
     }
     return methods;
 }
