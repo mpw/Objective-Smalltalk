@@ -14,6 +14,7 @@
 @interface MPWPropertyPathGetter()
 
 @property (nonatomic, strong) MPWTemplateMatchingStore *store;
+@property (nonatomic, strong) NSString *declarationString;
 
 @end
 
@@ -32,32 +33,38 @@
     }
 }
 
--(MPWRESTVerb)restVerb
-{
-    return MPWRESTVerbGET;
-}
 
--(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb numExtraParams:(int)newNumExtraParams
+
+-(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb
 {
+    static struct {
+        MPWRESTVerb verb;
+        int         numExtraParams;
+        NSString    *declstring;
+    } defaults[] = {
+        {MPWRESTVerbGET, 1,@"at:aReference"},
+        {MPWRESTVerbPUT, 2,@"<void>at:aReference put:newValue"},
+    };
     if ( self=[super init] ) {
+        int whichDefault=-1;
+        for (int i=0;i<2;i++) {
+            if ( newVerb == defaults[i].verb) {
+                whichDefault=i;
+                break;
+            }
+        }
+        NSAssert1(whichDefault>=0, @"unsupported REST Verb: %d",newVerb);
+        
         self.store = [MPWTemplateMatchingStore store];
         [self setupStoreWithPaths:newPaths verb:newVerb];
-        self.methodHeader=[MPWMethodHeader methodHeaderWithString:[self declarationString]];
-        numExtraparams = newNumExtraParams;
+        self.methodHeader=[MPWMethodHeader methodHeaderWithString:defaults[whichDefault].declstring];
+        numExtraparams = defaults[whichDefault].numExtraParams;
+        self.declarationString = defaults[whichDefault].declstring;
     }
     return self;
 }
 
-CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
-{
-    return [self initWithPropertyPaths:newPaths verb:[self restVerb] numExtraParams:[self numberOfExtraParameters]];
-}
 
-
--(int)numberOfExtraParameters
-{
-    return 1;
-}
 
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
@@ -68,10 +75,6 @@ CONVENIENCEANDINIT(getter, WithPropertyPathDefinitions:newPaths)
     return [self.store at:ref for:target with:extraParameters count:numExtras];
 }
 
--declarationString
-{
-    return @"at:aReference";
-}
 
 -(void)setContext:(id)newVar
 {

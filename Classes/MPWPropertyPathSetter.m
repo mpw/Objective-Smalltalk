@@ -17,7 +17,7 @@
     return MPWRESTVerbPUT;
 }
 
--declarationString
+-declString
 {
     return @"<void>at:aReference put:newValue";
 }
