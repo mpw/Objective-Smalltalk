@@ -14,7 +14,5 @@
 
 -(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb;
 
-@property (nonatomic,assign) Class classOfMethod;
-@property (nonatomic, readonly) MPWTemplateMatchingStore *store;
 
 @end
