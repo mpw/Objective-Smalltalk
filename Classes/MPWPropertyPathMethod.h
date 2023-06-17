@@ -9,7 +9,7 @@
 
 @class MPWPropertyPathDefinition;
 
-@interface MPWPropertyPathGetter : MPWAbstractInterpretedMethod
+@interface MPWPropertyPathMethod : MPWAbstractInterpretedMethod
 
 
 -(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb;
