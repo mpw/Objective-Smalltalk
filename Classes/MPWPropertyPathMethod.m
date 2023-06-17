@@ -13,6 +13,7 @@
 
 @interface MPWPropertyPathMethod()
 
+@property (nonatomic, assign) Class classOfMethod;
 @property (nonatomic, strong) MPWTemplateMatchingStore *store;
 @property (nonatomic, strong) NSString *declarationString;
 
