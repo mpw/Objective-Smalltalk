@@ -5,20 +5,20 @@
 //  Created by Marcel Weiher on 8/26/18.
 //
 
-#import "MPWPropertyPathGetter.h"
+#import "MPWPropertyPathMethod.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/MPWReferenceTemplate.h>
 #import "MPWPropertyPathDefinition.h"
 #import "MPWMethodHeader.h"
 
-@interface MPWPropertyPathGetter()
+@interface MPWPropertyPathMethod()
 
 @property (nonatomic, strong) MPWTemplateMatchingStore *store;
 @property (nonatomic, strong) NSString *declarationString;
 
 @end
 
-@implementation MPWPropertyPathGetter
+@implementation MPWPropertyPathMethod
 {
     int         numExtraparams;
 }
@@ -64,8 +64,6 @@
     return self;
 }
 
-
-
 -(id)evaluateOnObject:(id)target parameters:(NSArray *)parameters
 {
     int numExtras=numExtraparams;
@@ -74,7 +72,6 @@
     id ref = extraParameters[0];
     return [self.store at:ref for:target with:extraParameters count:numExtras];
 }
-
 
 -(void)setContext:(id)newVar
 {

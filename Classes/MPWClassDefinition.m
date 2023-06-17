@@ -11,7 +11,7 @@
 #import "MPWMethodStore.h"
 #import "MPWClassMethodStore.h"
 #import "STCompiler.h"
-#import "MPWPropertyPathGetter.h"
+#import "MPWPropertyPathMethod.h"
 #import "MPWPropertyPathDefinition.h"
 
 
@@ -36,7 +36,7 @@
     for (int i=0;i<2;i++ ) {
         NSArray *definitions=[self propertyPathDefinitionsForVerb:verbs[i]];
         if ( definitions.count) {
-            [methods addObject:[[[MPWPropertyPathGetter alloc] initWithPropertyPaths:definitions verb:verbs[i]] autorelease]];
+            [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:definitions verb:verbs[i]] autorelease]];
         }
     }
     return methods;
