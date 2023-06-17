@@ -301,7 +301,7 @@ static int debugMsgSend=NO;
 	id expectedReturn = @(45); // [target evaluateScript:@"45" onObject:target];
 	IMP0 function;
 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
-    [method setClassOfMethod:[__MPWMethodCallBackDummyTestClass class]];
+//    [method setClassOfMethod:[__MPWMethodCallBackDummyTestClass class]];
 //	[method setContext:target];
 	[method setScript:@"45"];
     [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:@"<int>answerToEverything"]];

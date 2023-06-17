@@ -6,13 +6,15 @@
 //
 
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
+#import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundation/MPWTemplateMatchingStore.h>
 
 @class MPWPropertyPathDefinition;
 
 @interface MPWPropertyPathMethod : MPWAbstractInterpretedMethod
 
 
--(instancetype)initWithPropertyPaths:(NSArray<MPWPropertyPathDefinition*>*)newPaths verb:(MPWRESTVerb)newVerb;
+-(instancetype)initWithPropertyPaths:(PropertyPathDefs*)newPaths;
 
 
 @end
