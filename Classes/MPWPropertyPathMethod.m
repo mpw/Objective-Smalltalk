@@ -24,33 +24,6 @@
 {
     int         numExtraparams;
 }
- 
--(void)setupStoreWithPaths:(PropertyPathDefs*)newPaths
-{
-    for ( int i=0;i<newPaths->count;i++) {
-        PropertyPathDef *def=&(newPaths->defs[i]);
-        id method = def->method;
-        if ( !method ) {
-            if ( def->function){
-                MPWFastInvocation *f=[MPWFastInvocation invocation];
-                [f setIMP:def->function];
-                method=f;
-            } else {
-                [NSException raise:@"undefined" format:@"No method defined for property path %@ (%d of %d) verb %d",def->propertyPath,i,newPaths->count,newPaths->verb];
-              
-            }
-        }
-        self.store[def->propertyPath] = method;
-    }
-//    for ( MPWPropertyPathDefinition *def in newPaths) {
-//        if ( method ) {
-//            self.store[def.propertyPath] = method;
-//        } else {
-//            @throw @"Should have been filtered before";
-//        }
-//    }
-}
-
 
 
 -(instancetype)initWithPropertyPaths:(PropertyPathDefs*)newPaths
@@ -73,8 +46,7 @@
         }
         NSAssert1(whichDefault>=0, @"unsupported REST Verb: %d",newPaths->verb);
         
-        self.store = [MPWTemplateMatchingStore store];
-        [self setupStoreWithPaths:newPaths];
+        self.store = [[[MPWTemplateMatchingStore alloc] initWithPropertyPathDefs:newPaths] autorelease];
         self.methodHeader=[MPWMethodHeader methodHeaderWithString:defaults[whichDefault].declstring];
         numExtraparams = defaults[whichDefault].numExtraParams;
         self.declarationString = defaults[whichDefault].declstring;
@@ -114,3 +86,4 @@
 
 
 @end
+
