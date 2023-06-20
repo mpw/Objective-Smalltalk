@@ -14,7 +14,7 @@
 @interface MPWPropertyPathMethod : MPWAbstractInterpretedMethod
 
 
--(instancetype)initWithPropertyPaths:(PropertyPathDefs*)newPaths;
+-(instancetype)initWithPropertyPaths:(PropertyPathDef*)newPaths count:(int)count verb:(MPWRESTVerb)verb;
 
 
 @end

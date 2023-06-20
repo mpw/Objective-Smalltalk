@@ -26,7 +26,7 @@
 }
 
 
--(instancetype)initWithPropertyPaths:(PropertyPathDefs*)newPaths
+-(instancetype)initWithPropertyPaths:(PropertyPathDef*)newPaths count:(int)count verb:(MPWRESTVerb)verb
 {
     static struct {
         MPWRESTVerb verb;
@@ -39,14 +39,14 @@
     if ( self=[super init] ) {
         int whichDefault=-1;
         for (int i=0;i<2;i++) {
-            if ( newPaths->verb == defaults[i].verb) {
+            if ( verb == defaults[i].verb) {
                 whichDefault=i;
                 break;
             }
         }
-        NSAssert1(whichDefault>=0, @"unsupported REST Verb: %d",newPaths->verb);
+        NSAssert1(whichDefault>=0, @"unsupported REST Verb: %d",verb);
         
-        self.store = [[[MPWTemplateMatchingStore alloc] initWithPropertyPathDefs:newPaths] autorelease];
+        self.store = [[[MPWTemplateMatchingStore alloc] initWithPropertyPathDefs:newPaths count:count] autorelease];
         self.methodHeader=[MPWMethodHeader methodHeaderWithString:defaults[whichDefault].declstring];
         numExtraparams = defaults[whichDefault].numExtraParams;
         self.declarationString = defaults[whichDefault].declstring;
