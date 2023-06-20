@@ -36,17 +36,15 @@
     for (int i=0;i<2;i++ ) {
         MPWRESTVerb thisVerb=verbs[i];
         NSArray *definitions=[self propertyPathDefinitionsForVerb:thisVerb];
-        long numDefinitions=definitions.count;
+        int numDefinitions=(int)definitions.count;
         if ( numDefinitions ) {
-            PropertyPathDefs *defs=calloc( sizeof(PropertyPathDefs)+numDefinitions*sizeof(PropertyPathDef),1);
-            defs->verb = thisVerb;
-            defs->count = (int)numDefinitions;
+            PropertyPathDef *defs=calloc(numDefinitions, sizeof(PropertyPathDef));
             for (long j=0;j<numDefinitions;j++) {
-                defs->defs[j].function=NULL;
-                defs->defs[j].method = [definitions[j] methodForVerb:thisVerb];
-                defs->defs[j].propertyPath = (id)[definitions[j] propertyPath];
+                defs[j].function=NULL;
+                defs[j].method = [definitions[j] methodForVerb:thisVerb];
+                defs[j].propertyPath = (id)[definitions[j] propertyPath];
             }
-            [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:defs] autorelease]];
+            [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:defs count:numDefinitions verb:thisVerb] autorelease]];
         }
     }
     return methods;
