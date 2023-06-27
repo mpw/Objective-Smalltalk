@@ -55,7 +55,7 @@ idAccessor( method, _setMethod )
 
 -(void)installInClass:(Class)aClass withSignature:(const char*)signature
 {
-    savedMethodDescriptor=[self installInClass:aClass withSignature:signature selector:selname oldIMP:&oldIMP];
+    savedMethodDescriptor=[aClass installIMP:[self stub] withSignature:signature selector:selname oldIMP:&oldIMP];
     if (savedMethodDescriptor) {
         installed=YES;
         targetClass = aClass;
