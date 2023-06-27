@@ -25,6 +25,7 @@ Build instructions:
 Example scripts are in the scripts directory.
 
 
+
 Raspberry Pi build instructions
 -------------
 
@@ -36,6 +37,7 @@ Raspberry Pi build instructions
 6. run   make raspish  
 
 The raspish is pre-configured/-linked to know about GPIO pins.
+
 
 
 

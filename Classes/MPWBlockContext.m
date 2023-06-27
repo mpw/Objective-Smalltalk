@@ -276,8 +276,8 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
     //--- by imp_implementationWithBloc()
     
     typeString = [[[typeString substringToIndex:3] stringByAppendingString:@"@"] stringByAppendingString:[typeString substringFromIndex:3]];
-    [self installInClass:aClass withSignatureString:typeString selectorString:methodName];
-    
+    [self installInClass:aClass withSignature:[typeString UTF8String] selector:NSSelectorFromString(methodName)];
+
 }
 
 -(NSString*)description
