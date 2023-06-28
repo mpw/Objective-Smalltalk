@@ -13,6 +13,11 @@
 #import "STCompiler.h"
 #import "MPWPropertyPathMethod.h"
 #import "MPWPropertyPathDefinition.h"
+#import <MPWFoundation/MPWFoundation.h>
+
+@interface NSObject(asReferenceTemplate)
+-(MPWReferenceTemplate*)asReferenceTemplate;
+@end
 
 
 @implementation MPWClassDefinition
@@ -41,8 +46,8 @@
             PropertyPathDef *defs=calloc(numDefinitions, sizeof(PropertyPathDef));
             for (long j=0;j<numDefinitions;j++) {
                 defs[j].function=NULL;
-                defs[j].method = [definitions[j] methodForVerb:thisVerb];
-                defs[j].propertyPath = (id)[definitions[j] propertyPath];
+                defs[j].method = [[definitions[j] methodForVerb:thisVerb] retain];
+                defs[j].propertyPath = [[[definitions[j] propertyPath] asReferenceTemplate] retain];
             }
             [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:defs count:numDefinitions verb:thisVerb] autorelease]];
         }
@@ -119,6 +124,43 @@
 {
     [_superclassName release];
     [super dealloc];
+}
+
+@end
+
+@implementation NSObject(asReferenceTemplate)
+
+-asReferenceTemplate
+{
+    return [MPWReferenceTemplate templateWithReference:[self stringValue]];
+}
+
+@end
+
+@implementation NSString(asReferenceTemplate)
+
+-asReferenceTemplate
+{
+    return [MPWReferenceTemplate templateWithReference:self];
+}
+
+@end
+
+@implementation MPWReferenceTemplate(asReferenceTemplate)
+
+-asReferenceTemplate
+{
+    return self;
+}
+
+@end
+
+
+@implementation MPWReference(asReferenceTemplate)
+
+-asReferenceTemplate
+{
+    return [MPWReferenceTemplate templateWithReference:self];
 }
 
 @end
