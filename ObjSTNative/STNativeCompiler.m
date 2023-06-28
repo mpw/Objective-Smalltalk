@@ -618,7 +618,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
     NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    //--- retrieve all the blocks and generate them first
     [codegen generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
