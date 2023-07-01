@@ -4323,6 +4323,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include/;
 				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				LLVM_LDFLAGS = "-L/usr/local/lib  -lpthread -lm  -lc++ -ltermcap";
@@ -4373,6 +4374,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include/;
 				INFOPLIST_FILE = "ObjSTNative/ObjSTNative-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				LLVM_LDFLAGS = "-L/usr/local/lib  -lpthread -lm  -lc++ -ltermcap";

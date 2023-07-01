@@ -788,6 +788,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         [command appendFormat:@"%@.o ",objectFilename ];
     }
     
+    [command appendFormat:@" -rpath /Library/Frameworks/ "];
     [command appendFormat:@" -F/Library/Frameworks "];
     for ( NSString *frameworkName in frameworks) {
         [command appendFormat:@" -framework %@ ",frameworkName];
@@ -812,7 +813,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)lib inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks
 {
-    return [self shellOut:[self commandToProcessObjects:objects withCommand:@"ld -dynamic -dylib_compatibility_version 1.0  -dylib_current_version 1.0 -platform_version macos 13.0.0 13.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -dylib -current_version 1.0 -compatibility_version 1.0" output:lib inDir:dir withFrameworks:frameworks]];
+    return [self shellOut:[self commandToProcessObjects:objects withCommand:@"ld -dynamic -dylib_compatibility_version 1.0 -rpath @executable_path/ -dylib_current_version 1.0 -platform_version macos 13.0.0 13.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -dylib -current_version 1.0 -compatibility_version 1.0" output:lib inDir:dir withFrameworks:frameworks]];
 }
 
 -(NSArray*)defaultFrameworks
@@ -1056,7 +1057,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
     [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArgToLink.o" atomically:YES];
     [[self frameworkResource:@"use_st_block" category:@"mfile"] writeToFile:@"/tmp/use_st_block.m" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_st_block use_st_block.m blockWithArgToLink.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    int compileSucess = system("cd /tmp; cc -rpath /Library/Frameworks -O  -Wall -o use_st_block use_st_block.m blockWithArgToLink.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
     INTEXPECT(compileSucess,0,@"compile worked");
     int runSucess = system("cd /tmp; ./use_st_block");
     INTEXPECT(runSucess,0,@"run worked");
@@ -1096,7 +1097,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     
     
     [[self frameworkResource:@"use_class_with_if" category:@"mfile"] writeToFile:@"/tmp/use_class_with_if.m" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_with_if use_class_with_if.m classWithIfTrueIfFalse.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    int compileSucess = system("cd /tmp; cc -rpath /Library/Frameworks -O  -Wall -o use_class_with_if use_class_with_if.m classWithIfTrueIfFalse.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
     INTEXPECT(compileSucess,0,@"compile worked");
     int runSucess = system("cd /tmp; ./use_class_with_if");
     INTEXPECT(runSucess,0,@"run worked");
@@ -1110,7 +1111,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     
     
     [[self frameworkResource:@"use_class_that_creates_nsobject" category:@"mfile"] writeToFile:@"/tmp/use_class_that_creates_nsobject.m" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -O  -Wall -o use_class_that_creates_nsobject use_class_that_creates_nsobject.m classThatCreatesNSObjects.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    int compileSucess = system("cd /tmp; cc -rpath /Library/Frameworks -O  -Wall -o use_class_that_creates_nsobject use_class_that_creates_nsobject.m classThatCreatesNSObjects.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
     INTEXPECT(compileSucess,0,@"compile worked");
     int runSucess = system("cd /tmp; ./use_class_that_creates_nsobject");
     INTEXPECT(runSucess,0,@"run worked");
