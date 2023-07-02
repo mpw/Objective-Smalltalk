@@ -6,23 +6,39 @@
 //
 
 #import "STPropertyMethodHeader.h"
+#import "STTypeDescriptor.h"
+
+@interface STPropertyMethodHeader()
+
+@property (nonatomic,strong ) MPWReferenceTemplate *template;
+
+@end
 
 @implementation STPropertyMethodHeader
-
--(id)initWithTemplate:(MPWReferenceTemplate*)template verb:(MPWRESTVerb)verb
 {
-    NSArray *formals=[template formalParameters];
-    NSMutableString *s=[@"method" mutableCopy];
-    for (NSString *paramName in formals) {
-        [s appendFormat:@"Arg:%@ ",paramName];
-    }
-    [s appendString:@"ref:theRef "];
-    if ( verb == MPWRESTVerbPUT ) {
-        [s appendString:@"value:newValue "];
-    }
+    MPWRESTVerb verb;
+}
 
-    self=[super initWithString:s];
-    
+-(instancetype)initWithTemplate:(MPWReferenceTemplate*)newTemplate verb:(MPWRESTVerb)newVerb
+{
+    if ( self = [super init]) {
+        verb=newVerb;
+        if (verb == MPWRESTVerbPUT) {
+            self.returnType = [STTypeDescriptor descritptorForObjcCode:'v'];
+        } else {
+            self.returnType = [STTypeDescriptor descritptorForObjcCode:'@'];
+        }
+        self.template = newTemplate;
+        NSString *keyword=@"methodArg:";
+        for ( NSString *parameterName in newTemplate.formalParameters) {
+            [self addParameterName:parameterName type:@"id" keyWord:keyword];
+            keyword=@"Arg:";
+        }
+        [self addParameterName:@"theRef" type:@"id" keyWord:@"ref:"];
+        if (verb == MPWRESTVerbPUT) {
+            [self addParameterName:@"newValue" type:@"id" keyWord:@"value:"];
+        }
+    }
     return self;
 }
 
