@@ -19,10 +19,11 @@
 
 objectAccessor_h(NSString*, methodName, setMethodName )
 
+@property (nonatomic, strong) STTypeDescriptor *returnType;
+
 +methodHeaderWithString:(NSString*)aString;
 -initWithString:(NSString*)aString;
 -initWithScanner:(MPWStScanner*)scanner;
--(NSString*)returnTypeName;
 -(STTypeDescriptor*)returnType;
 -(NSString*)headerString;
 -typeString;
@@ -35,6 +36,7 @@ objectAccessor_h(NSString*, methodName, setMethodName )
 -(NSString*)argumentTypeNameAtIndex:(int)anIndex;
 -(const char*)typeSignature;
 -(SEL)selector;
+-(void)addParameterName:(NSString*)name type:(NSString*)type keyWord:(NSString*)keyWord;
 
 
 @end
