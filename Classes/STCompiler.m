@@ -28,6 +28,7 @@
 #import "MPWLiteralArrayExpression.h"
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
+#import "STPropertyMethodHeader.h"
 #import "MPWClassDefinition.h"
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
@@ -1221,16 +1222,13 @@ idAccessor(solver, setSolver)
         while ( [nextToken isEqualToString:@"|="] || [nextToken isEqualToString:@"=|"]
                || [nextToken isEqualToString:@"=|="] || [nextToken isEqualToString:@"get"] || [nextToken isEqualToString:@"put"]) {
             NSString *getOrSet=nextToken;
-            NSArray *formals=[propertyDef.propertyPath formalParameters];
-            NSMutableString *s=[@"method" mutableCopy];
-            for (NSString *paramName in formals) {
-                [s appendFormat:@"Arg:%@ ",paramName];
+            MPWRESTVerb verb=MPWRESTVerbGET;
+            if ( [getOrSet isEqual:@"put"] || [getOrSet isEqual:@"=|"] ) {
+                verb=MPWRESTVerbPUT;
             }
-            [s appendString:@"ref:theRef "];
-            if ([getOrSet isEqualToString:@"=|"] || [getOrSet isEqualToString:@"put"] ) {
-                [s appendString:@"value:newValue "];
-            }
-            MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:s];
+            STPropertyMethodHeader *header=[[[STPropertyMethodHeader alloc] initWithTemplate:path verb:verb] autorelease];
+            
+            
             MPWScriptedMethod* body=[self parseMethodBodyWithHeader:header];
 //            NSLog(@"did parse body: %@",body);
             nextToken=[self nextToken];
