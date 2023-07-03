@@ -39,6 +39,13 @@ static NSDictionary *typesBySTName;
     return td;
 }
 
+typedef struct {
+    unsigned char objcTypeCode;
+    char *name;
+    char *cName;
+} STTypeDescriptorStruct;
+
+
 
 static STTypeDescriptorStruct definedTypes[]={
     { '@', "id", "id" },
@@ -76,6 +83,16 @@ static STTypeDescriptorStruct definedTypes[]={
         st2type[t.name]=t;
     }
     typesBySTName=[st2type copy];
+}
+
++(instancetype)voidType
+{
+    return [self descritptorForObjcCode:'v'];
+}
+
++(instancetype)idType
+{
+    return [self descritptorForObjcCode:'@'];
 }
 
 @end
