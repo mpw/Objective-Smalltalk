@@ -24,20 +24,23 @@
     if ( self = [super init]) {
         verb=newVerb;
         if (verb == MPWRESTVerbPUT) {
-            self.returnType = [STTypeDescriptor descritptorForObjcCode:'v'];
+            self.returnType = [STTypeDescriptor voidType];
         } else {
-            self.returnType = [STTypeDescriptor descritptorForObjcCode:'@'];
+            self.returnType = [STTypeDescriptor idType];
         }
         self.template = newTemplate;
-        NSString *keyword=@"methodArg:";
         for ( NSString *parameterName in newTemplate.formalParameters) {
-            [self addParameterName:parameterName type:@"id" keyWord:keyword];
-            keyword=@"Arg:";
+            [self addParameterName:parameterName type:@"id" keyWord:parameterName];
         }
         [self addParameterName:@"theRef" type:@"id" keyWord:@"ref:"];
+        NSString *methodNameTemplate=nil;
         if (verb == MPWRESTVerbPUT) {
             [self addParameterName:@"newValue" type:@"id" keyWord:@"value:"];
+            methodNameTemplate = @"PUT_%@:";
+        } else {
+            methodNameTemplate = @"GET_%@";
         }
+        [self setMethodName:[NSString stringWithFormat:methodNameTemplate,[newTemplate name]]];
     }
     return self;
 }
@@ -49,15 +52,17 @@
 
 @implementation STPropertyMethodHeader(testing) 
 
-+(void)someTest
++(void)testMethodName
 {
-	EXPECTTRUE(false, @"implemented");
+    MPWReferenceTemplate *t=[MPWReferenceTemplate templateWithReference:@"/get/:arg1/param/:p2"];
+    STPropertyMethodHeader *header=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbPUT] autorelease];
+    IDEXPECT( header.methodName, @"PUT_/get/:arg1/param/:p2:", @"methodName");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
+			@"testMethodName",
 			];
 }
 

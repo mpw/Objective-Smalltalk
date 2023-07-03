@@ -9,12 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef struct {
-    unsigned char objcTypeCode;
-    char *name;
-    char *cName;
-} STTypeDescriptorStruct;
-
 
 @interface STTypeDescriptor : NSObject
 
@@ -24,6 +18,8 @@ typedef struct {
 
 +(instancetype)descritptorForObjcCode:(unsigned char)typeCode;
 +(instancetype)descritptorForSTTypeName:(NSString*)typeName;
++(instancetype)voidType;
++(instancetype)idType;
 
 @end
 
