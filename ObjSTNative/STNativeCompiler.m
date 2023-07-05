@@ -636,7 +636,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     NSMutableArray *symbolNames=[NSMutableArray array];
     NSMutableArray *methodNames=[NSMutableArray array];
     NSMutableArray *methodTypes=[NSMutableArray array];
-    for ( MPWScriptedMethod* method in aClass.methods) {
+    for ( MPWScriptedMethod* method in aClass.allImplementationMethods) {
         [methodNames addObject:method.methodName];
         [methodTypes addObject:[[method header] typeString]];
         [symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass]];

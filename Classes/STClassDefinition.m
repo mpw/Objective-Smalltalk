@@ -55,6 +55,20 @@
     return methods;
 }
 
+-(NSArray*)propertyPathImplementationMethods
+{
+    NSMutableArray *methods=[NSMutableArray array];
+    MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
+    for (int i=0;i<2;i++ ) {
+        MPWRESTVerb thisVerb=verbs[i];
+        NSArray *definitions=[self propertyPathDefinitionsForVerb:thisVerb];
+        for (long j=0,numDefinitions=definitions.count;j<numDefinitions;j++) {
+            [methods addObject:[definitions[j] methodForVerb:thisVerb]];
+        }
+    }
+    return methods;
+}
+
 -(NSArray*)generatedMethods
 {
     return [self generatedPropertyPathMethods];
@@ -66,6 +80,13 @@
     NSArray *userDefinedMethods=self.methods;
     NSArray *generatedMethods=[self generatedMethods];
     return [userDefinedMethods arrayByAddingObjectsFromArray:generatedMethods];
+}
+
+-(NSArray*)allImplementationMethods
+{
+    NSArray *userDefinedMethods=self.methods;
+    NSArray *propertPathMethods=[self propertyPathImplementationMethods];
+    return [userDefinedMethods arrayByAddingObjectsFromArray:propertPathMethods];
 }
 
 -(NSArray *)allIvarNames

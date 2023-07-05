@@ -14,7 +14,10 @@
 @property (nonatomic, strong) NSString *superclassName;
 @property (nonatomic, readonly) NSString *superclassNameToUse;
 
-@property (readonly) NSArray *propertyPathGetterDefinitions;
-@property (readonly) NSArray *propertyPathSetterDefinitions;
+@property (readonly) NSArray *propertyPathImplementationMethods;
+@property (readonly) NSArray *allImplementationMethods;
+
+
+
 
 @end
