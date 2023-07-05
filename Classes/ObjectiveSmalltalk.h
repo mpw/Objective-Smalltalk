@@ -17,7 +17,7 @@
 #import <ObjectiveSmalltalk/MPWBlockContext.h>
 #import <ObjectiveSmalltalk/MPWBlockExpression.h>
 #import <ObjectiveSmalltalk/MPWBundleScheme.h>
-#import <ObjectiveSmalltalk/MPWClassDefinition.h>
+#import <ObjectiveSmalltalk/STClassDefinition.h>
 #import <ObjectiveSmalltalk/MPWClassMirror.h>
 #import <ObjectiveSmalltalk/MPWComplexLiteralExpression.h>
 #import <ObjectiveSmalltalk/STConnector.h>

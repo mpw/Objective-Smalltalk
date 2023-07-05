@@ -1,5 +1,5 @@
 //
-//  MPWClassDefinition.h
+//  STClassDefinition.h
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 4/12/17.
@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/MPWProtocolDefinition.h>
 
-@interface MPWClassDefinition : MPWProtocolDefinition
+@interface STClassDefinition : MPWProtocolDefinition
 
 @property (nonatomic, readonly) Class classToDefine;
 @property (nonatomic, strong) NSString *superclassName;

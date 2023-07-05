@@ -60,7 +60,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWDataflowConstraintExpression.m \
     Classes/MPWLiteralDictionaryExpression.m \
     Classes/MPWConnectToDefault.m \
-    Classes/MPWClassDefinition.m \
+    Classes/STClassDefinition.m \
     Classes/MPWMethodStore.m \
     Classes/MPWObjCGenerator.m \
     Classes/MPWPropertyPathDefinition.m \

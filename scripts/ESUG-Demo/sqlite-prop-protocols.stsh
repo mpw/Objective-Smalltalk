@@ -99,7 +99,7 @@ scheme SQLiteScheme  {
      stdout do println: self tables each.	
   }
   -classForTable:tableInfo  {
-  	  classDef := MPWClassDefinition new.
+  	  classDef := STClassDefinition new.
       classDef setName: tableInfo name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
 	  columns := tableInfo columns collect: { :oldColumn | 

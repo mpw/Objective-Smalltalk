@@ -607,7 +607,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return 0x120 + ((int)method.blocks.count * SIZE_OF_STACK_BLOCK);
 }
 
--(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
+-(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass
 {
     NSArray *blocks = method.blocks;
     blockNo=0;
@@ -624,14 +624,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return symbol;
 }
 
--(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClass:(MPWClassDefinition*)aClass
+-(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass
 {
     [self compileMethod:method inClass:aClass];
     return self.codegen.generatedCode;
 }
 
 
--(void)compileMethodsForClass:(MPWClassDefinition*)aClass
+-(void)compileMethodsForClass:(STClassDefinition*)aClass
 {
     NSMutableArray *symbolNames=[NSMutableArray array];
     NSMutableArray *methodNames=[NSMutableArray array];
@@ -639,13 +639,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( MPWScriptedMethod* method in aClass.methods) {
         [methodNames addObject:method.methodName];
         [methodTypes addObject:[[method header] typeString]];
-        [symbolNames addObject:[self compileMethod:method inClass:(MPWClassDefinition*)aClass]];
+        [symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass]];
     }
+
     [writer addTextSectionData:[codegen target]];
     [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
 }
 
--(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(MPWClassDefinition*)compiledClass
+-(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
 {
     MPWJittableData *methodData=[self compiledCodeForMethod:method inClass:compiledClass];
     Class existingClass=NSClassFromString(compiledClass.name);
@@ -653,14 +654,14 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
 }
 
--(void)compileAndAddMethodsForClassDefinition:(MPWClassDefinition*)aClass
+-(void)compileAndAddMethodsForClassDefinition:(STClassDefinition*)aClass
 {
     for ( MPWScriptedMethod* method in aClass.methods) {
         [self compileAndAddMethod:method forClassDefinition:aClass];
     }
 }
 
--(void)defineMethodsForClassDefinition:(MPWClassDefinition*)classDefinition
+-(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
     if (self.jit) {
         [self compileAndAddMethodsForClassDefinition:classDefinition];
@@ -670,7 +671,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
 
 
--(void)compileClass:(MPWClassDefinition*)aClass
+-(void)compileClass:(STClassDefinition*)aClass
 {
     classwriter.nameOfClass = aClass.name;
     classwriter.nameOfSuperClass = aClass.superclassNameToUse;
@@ -679,7 +680,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [writer addClassReferenceForClass:aClass.name];
 }
 
--(void)compileAndWriteClass:(MPWClassDefinition*)aClass
+-(void)compileAndWriteClass:(STClassDefinition*)aClass
 {
     [self compileClass:aClass];
     [writer writeFile];
@@ -755,13 +756,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return blockSymbol;
 }
 
--(NSData*)compileClassToMachoO:(MPWClassDefinition*)aClass
+-(NSData*)compileClassToMachoO:(STClassDefinition*)aClass
 {
     [self compileAndWriteClass:aClass];
     return (NSData*)[writer target];
 }
 
--(NSData*)compileProcessToMachoO:(MPWClassDefinition*)theClass
+-(NSData*)compileProcessToMachoO:(STClassDefinition*)theClass
 {
     [self compileMainCallingClass:theClass.name];
     return [self compileClassToMachoO:theClass];
@@ -860,7 +861,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testCompileSimpleClassAndMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@" class TestClass : NSObject {  -<int>hashPlus200  { self hash + 200. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@" class TestClass : NSObject {  -<int>hashPlus200  { self hash + 200. }}"];
     IDEXPECT( compiledClass.name, @"TestClass", @"top level result");
     INTEXPECT( compiledClass.methods.count,1,@"method count");
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
@@ -881,7 +882,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testCompileSimpleClassWithTwoMethods
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@" class TestClass2Methods : NSObject {  -<int>hashPlus100 { self hash + 100. } -<int>hashPlus200  { self hash + 200. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@" class TestClass2Methods : NSObject {  -<int>hashPlus100 { self hash + 100. } -<int>hashPlus200  { self hash + 200. }}"];
     IDEXPECT( compiledClass.name, @"TestClass2Methods", @"top level result");
     INTEXPECT( compiledClass.methods.count,2,@"method count");
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
@@ -904,7 +905,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testCompileMethodWithMultipleArgs
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"class Concatter { -concat:a and:b { a, b. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@"class Concatter { -concat:a and:b { a, b. }}"];
     IDEXPECT( compiledClass.name, @"Concatter", @"top level result");
     INTEXPECT( compiledClass.methods.count,1,@"method count");
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/concatter.o" atomically:YES];
@@ -913,7 +914,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testJitCompileAMethod
 {
     STNativeCompiler *compiler = [self jitCompiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
     [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass];
     MPWJittableData *methodData = compiler.codegen.generatedCode;
     ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
@@ -935,7 +936,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(ConcatterTest1*)compileAndAddSingleMethodExtensionToConcatter:(NSString*)code
 {
     STNativeCompiler *compiler = [self jitCompiler];
-    MPWClassDefinition *compiledClass = [compiler compile:code];
+    STClassDefinition *compiledClass = [compiler compile:code];
     [compiler compileAndAddMethodsForClassDefinition:compiledClass];
     return [[ConcatterTest1 new] autorelease];
 }
@@ -961,7 +962,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testMachOCompileStringObjectLiteral
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"class StringTest { -stringAnswer { 'answer: 42'. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@"class StringTest { -stringAnswer { 'answer: 42'. }}"];
     NSData *d=[compiler compileClassToMachoO:compiledClass];
     [d writeToFile:@"/tmp/stringLiteral.o" atomically:YES];
 
@@ -998,21 +999,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testCompileConstantNumberArithmeticToMachO
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -someConstantNumbersAdded { 100+30+7. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -someConstantNumbersAdded { 100+30+7. }}"];
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/constantArithmetic.o" atomically:YES];
 }
 
 +(void)testCompileNumberArithmeticToMachO
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -add:a to:b to:c { a+b+c. }}"];
+    STClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -add:a to:b to:c { a+b+c. }}"];
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/arithmetic.o" atomically:YES];
 }
 
 +(void)testMachOCompileSimpleFilter
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition * compiledClass = [compiler compile:@"filter Upcaser |{ ^object stringValue uppercaseString. }"];
+    STClassDefinition * compiledClass = [compiler compile:@"filter Upcaser |{ ^object stringValue uppercaseString. }"];
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/upcasefilter.o" atomically:YES];
 }
 
@@ -1074,7 +1075,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testFindBlocksInMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
+    STClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
     MPWScriptedMethod *firstMethod = [[theClass methods] firstObject];
     IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
     NSArray *blocks = firstMethod.blocks;
@@ -1092,7 +1093,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testGenerateCodeForBlocksInMethod
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestClassIfTrueIfFalse { -tester:cond { cond ifTrue: { 3. } ifFalse:{ 2. }. } }"];
+    STClassDefinition *theClass = [compiler compile:@"class TestClassIfTrueIfFalse { -tester:cond { cond ifTrue: { 3. } ifFalse:{ 2. }. } }"];
     [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithIfTrueIfFalse.o" atomically:YES];
     
     
@@ -1106,7 +1107,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 +(void)testGenerateCodeForClassReference
 {
     STNativeCompiler *compiler = [self compiler];
-    MPWClassDefinition *theClass = [compiler compile:@"class TestClassWithClassRef { -tester { class:NSObject new. } }"];
+    STClassDefinition *theClass = [compiler compile:@"class TestClassWithClassRef { -tester { class:NSObject new. } }"];
     [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classThatCreatesNSObjects.o" atomically:YES];
     
     
@@ -1119,7 +1120,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename compiler:(STNativeCompiler *)compiler
 {
-    MPWClassDefinition *theClass = [compiler compile:objs];
+    STClassDefinition *theClass = [compiler compile:objs];
     
     [[compiler compileProcessToMachoO:theClass] writeToFile:[NSString stringWithFormat:@"/tmp/%@.o",filename] atomically:YES];
     int compileSuccess = [compiler linkObjects:@[ filename ] toExecutable:filename inDir:@"/tmp"];
@@ -1197,7 +1198,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 +(void)testComputeStackSpaceForStackBlocks
 {
     STNativeCompiler *compiler=[self stackBlockCompiler];
-    MPWClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
+    STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
     NSArray <MPWScriptedMethod*>* methods=classWithBlocks.methods;
     INTEXPECT(methods.count,3,@"number of methods");
     INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x120,@"0 blocks");
@@ -1208,7 +1209,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 +(void)testComputeStackBlockOffsetsWithinFrame
 {
     STNativeCompiler *compiler=[self stackBlockCompiler];
-    MPWClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -two { { 2. }. { 3. }. } } "];
+    STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -two { { 2. }. { 3. }. } } "];
     NSArray <MPWScriptedMethod*>* methods=classWithBlocks.methods;
     INTEXPECT(methods.count,1,@"number of methods");
     INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x1a0,@"2 blocks");

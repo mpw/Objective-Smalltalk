@@ -54,15 +54,27 @@
 
 +(void)testMethodName
 {
-    MPWReferenceTemplate *t=[MPWReferenceTemplate templateWithReference:@"/get/:arg1/param/:p2"];
-    STPropertyMethodHeader *header=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbPUT] autorelease];
-    IDEXPECT( header.methodName, @"PUT_/get/:arg1/param/:p2:", @"methodName");
+    MPWReferenceTemplate *t=[MPWReferenceTemplate templateWithReference:@"/property/:arg1/param/:p2"];
+    STPropertyMethodHeader *header_put=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbPUT] autorelease];
+    IDEXPECT( header_put.methodName, @"PUT_/property/:arg1/param/:p2:", @"methodName");
+    STPropertyMethodHeader *header_get=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbGET] autorelease];
+    IDEXPECT( header_get.methodName, @"GET_/property/:arg1/param/:p2", @"methodName");
+}
+
++(void)testArgsAndReturnType
+{
+    MPWReferenceTemplate *t=[MPWReferenceTemplate templateWithReference:@"/property/:arg1/param/:p2"];
+    STPropertyMethodHeader *header_put=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbPUT] autorelease];
+    IDEXPECT( @([header_put typeSignature]),@"v@:@@@@", @"method signature for PUT with 2 path matches")
+    STPropertyMethodHeader *header_get=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbGET] autorelease];
+    IDEXPECT( @([header_get typeSignature]), @"@@:@@@", @"method signature for GET with 2 path matches");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-			@"testMethodName",
+       @"testMethodName",
+       @"testArgsAndReturnType",
 			];
 }
 

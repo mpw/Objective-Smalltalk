@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 8/1/18.
 //
 
-#import <ObjectiveSmalltalk/MPWClassDefinition.h>
+#import <ObjectiveSmalltalk/STClassDefinition.h>
 
 @class MPWScriptedMethod;
 
-@interface MPWFilterDefinition : MPWClassDefinition
+@interface MPWFilterDefinition : STClassDefinition
 
 @property (nonatomic, strong) MPWScriptedMethod *filterMethod;
 

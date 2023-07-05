@@ -238,7 +238,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 @end
 
-#import "MPWClassDefinition.h"
+#import "STClassDefinition.h"
 
 @implementation MPWScriptedMethod(testing)
 
@@ -330,7 +330,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 +(void)testComputeLocalVars
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *classDef = [compiler compile:@"class TestClass { -<void>setText:someText { var a. var b. 3. } }" ];
+    STClassDefinition *classDef = [compiler compile:@"class TestClass { -<void>setText:someText { var a. var b. 3. } }" ];
     MPWScriptedMethod *method=classDef.methods.firstObject;
     NSArray *localVarNames = [method localVars];
     INTEXPECT(localVarNames.count, 2, @"number of local vars");

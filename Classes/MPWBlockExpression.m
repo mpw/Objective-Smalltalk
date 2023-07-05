@@ -156,23 +156,23 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 @end
 
 #import "STCompiler.h"
-#import "MPWClassDefinition.h"
+#import "STClassDefinition.h"
 
 
 
 @implementation MPWBlockExpression(testing)
 
-+(MPWClassDefinition*)_classDefinitionFor:(NSString*)code
++(STClassDefinition*)_classDefinitionFor:(NSString*)code
 {
     STCompiler *compiler = [STCompiler compiler];
-    MPWClassDefinition *theClass = [compiler compile:code];
+    STClassDefinition *theClass = [compiler compile:code];
     return theClass;
 }
 
 +(void)testComputeBlockCaptures
 {
     
-    MPWClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -main:args {  var a. a := 10. { a - 10. } value. } }"];
+    STClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -main:args {  var a. a := 10. { a - 10. } value. } }"];
     MPWScriptedMethod *method=theClass.methods.firstObject;
     EXPECTNOTNIL( method, @"got a method");
     NSArray *blocks = method.blocks;
@@ -185,7 +185,7 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 
 +(void)testIsOnStack
 {
-    MPWClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -first {  { 10. } value. }  -second:a { { a -10. } value. } }"];
+    STClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -first {  { 10. } value. }  -second:a { { a -10. } value. } }"];
     INTEXPECT(theClass.methods.count,2,@"number of methods");
     MPWScriptedMethod *first=theClass.methods.firstObject;
     MPWScriptedMethod *second=theClass.methods.lastObject;
