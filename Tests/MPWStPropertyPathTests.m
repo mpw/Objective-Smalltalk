@@ -7,7 +7,7 @@
 
 #import "MPWStPropertyPathTests.h"
 #import "MPWPropertyPathDefinition.h"
-#import "MPWClassDefinition.h"
+#import "STClassDefinition.h"
 #import "MPWStTests.h"
 
 @implementation MPWStPropertyPathTests
@@ -23,7 +23,7 @@
 +(void)testParseSimpleProperty
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass {  /property { |= {  3. }}}"];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass {  /property { |= {  3. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property", @"name of prop def");
 }
@@ -31,7 +31,7 @@
 +(void)testParsePropertyPathWithTwoComponents
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path { |= {  3. }}}"];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path { |= {  3. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/path", @"name of prop def");
 }
@@ -39,7 +39,7 @@
 +(void)testParseTwoPropertyPaths
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path1 { |= {  3. }} /property/path2 { |= {  5. }}}"];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/path1 { |= {  3. }} /property/path2 { |= {  5. }}}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 2, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/path1", @"name of prop def");
     IDEXPECT( [[[[def propertyPathDefinitions] lastObject] propertyPath] name], @"property/path2", @"name of prop def");
@@ -48,7 +48,7 @@
 +(void)testParsePropertyPathWithArg
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg { |= {  arg+4. }}} "];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg { |= {  arg+4. }}} "];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/:arg", @"name of prop def");
 }
@@ -56,7 +56,7 @@
 +(void)testParsePropertyPathSetter
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg { =| {  arg+4. }}} "];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/:arg { =| {  arg+4. }}} "];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/:arg", @"name of prop def");
 }
@@ -64,7 +64,7 @@
 +(void)testParsePropertyPathWithWildcard
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/* { |= {  3.}  }}"];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/* { |= {  3.}  }}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/*", @"name of prop def");
 }
@@ -72,7 +72,7 @@
 +(void)testParsePropertyPathWithWildcardAndParameter
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/*:path { |= {  path. }  }}"];
+    STClassDefinition *def=[compiler compile:@"class PropertyTestClass { /property/*:path { |= {  path. }  }}"];
     INTEXPECT( [[def propertyPathDefinitions] count], 1, @"number of prop defs");
     IDEXPECT( [[[[def propertyPathDefinitions] firstObject] propertyPath] name], @"property/*:path", @"name of prop def");
 }

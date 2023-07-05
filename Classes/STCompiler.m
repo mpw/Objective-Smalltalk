@@ -29,7 +29,7 @@
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "STPropertyMethodHeader.h"
-#import "MPWClassDefinition.h"
+#import "STClassDefinition.h"
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
 #import "MPWPropertyPathDefinition.h"
@@ -1047,7 +1047,7 @@ idAccessor(solver, setSolver)
     } else if ( [next isEqual:@"scheme"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
-        MPWClassDefinition *schemeDef = [self parseClassDefinition];
+        STClassDefinition *schemeDef = [self parseClassDefinition];
         if ( !schemeDef.superclassName ) {
             schemeDef.superclassName=@"MPWScheme";
         }
@@ -1165,7 +1165,7 @@ idAccessor(solver, setSolver)
     return header;
 }
 
--(MPWClassDefinition*)parseClassDefinitionFromString:aString
+-(STClassDefinition*)parseClassDefinitionFromString:aString
 {
     [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
     return [self parseClassDefinition];
@@ -1273,18 +1273,18 @@ idAccessor(solver, setSolver)
 }
 
 
--(MPWClassDefinition*)parseClassDefinition
+-(STClassDefinition*)parseClassDefinition
 {
     NSString *s=[self nextToken];
     Class defClass=nil;
     if ( [s isEqualToString:@"class"] || [s isEqualToString:@"extension"]) {
-        defClass=[MPWClassDefinition class];
+        defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"scheme"]) {
-        defClass=[MPWClassDefinition class];
+        defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
         defClass=[MPWFilterDefinition class];
     }
-    MPWClassDefinition *classDef=[[defClass new] autorelease];
+    STClassDefinition *classDef=[[defClass new] autorelease];
     if ( classDef ) {
         NSString *name=[self nextToken];
         classDef.name = name;
@@ -1472,7 +1472,7 @@ idAccessor(solver, setSolver)
 	return [self bindingForIdentifier:identifier];
 }
 
--(void)defineMethodsForClassDefinition:(MPWClassDefinition*)classDefinition
+-(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
     MPWClassMethodStore* store= [self classStoreForName:classDefinition.name];
     for ( MPWScriptedMethod *method in [classDefinition allMethods]) {
@@ -1609,7 +1609,7 @@ idAccessor(solver, setSolver)
 +(void)testInstanceVarHasTypeInformation
 {
     NSString *script=@"class Hi { var untyped. var <id> idtyped. var <int> inttyped. var <float> floattyped. } ";
-    MPWClassDefinition* classDef=[[self compiler] compile:script];
+    STClassDefinition* classDef=[[self compiler] compile:script];
     NSArray<MPWInstanceVariable*> *ivars=[classDef instanceVariableDescriptions];
     INTEXPECT( ivars.count, 4, @"number of ivars");
     IDEXPECT( ivars[0].type.name, @"id", @"untyped defaults to id");

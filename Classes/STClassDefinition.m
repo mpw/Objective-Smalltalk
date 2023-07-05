@@ -1,12 +1,12 @@
 //
-//  MPWClassDefinition.m
+//  STClassDefinition.m
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 4/12/17.
 //
 //
 
-#import "MPWClassDefinition.h"
+#import "STClassDefinition.h"
 #import "NSObjectScripting.h"
 #import "MPWMethodStore.h"
 #import "MPWClassMethodStore.h"
@@ -20,7 +20,7 @@
 @end
 
 
-@implementation MPWClassDefinition
+@implementation STClassDefinition
 
 
 -(NSArray*)propertyPathDefinitionsForVerb:(MPWRESTVerb)verb

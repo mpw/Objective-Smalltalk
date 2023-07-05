@@ -7,7 +7,7 @@
 	MPWBlockFilterScheme,
 	MPWBundleScheme,
 	MPWCascadeExpression,
-	MPWClassDefinition,
+	STClassDefinition,
 	MPWClassMethodStore,
 	MPWClassMirror,
 	"MPWClassMirrorSubclassForTesting",

@@ -24,7 +24,7 @@
 #import "MPWBlockExpression.h"
 #import "MPWStatementList.h"
 #import "MPWMessageExpression.h"
-#import "MPWClassDefinition.h"
+#import "STClassDefinition.h"
 #import "MPWPropertyPathDefinition.h"
 //#import "MPWReferenceTemplate.h"
 #import "MPWLiteralExpression.h"
@@ -616,7 +616,7 @@
 +(void)testParseSubclassWithInstanceVariablesUsingSyntax
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+    STClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
     
     MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
@@ -1050,7 +1050,7 @@
 +(void)testClassDefSyntax
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
+    STClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : NSNumber { -multiplyByNumber:num { self * num. }}"];
     EXPECTNOTNIL(classDef,@"should have a class definition object");
     
     IDEXPECT(classDef.name,@"ObjStTestsMyNumberSubclass",@"name of class" );
@@ -1081,7 +1081,7 @@
 +(void)testCreateSubclassUsingSnytax
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : MPWInteger { -multiplyByNumber:num { self * num. }}"];
+    STClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class ObjStTestsMyNumberSubclass : MPWInteger { -multiplyByNumber:num { self * num. }}"];
 
     Class aClass = NSClassFromString( @"ObjStTestsMyNumberSubclass" );
     Class superClass = NSClassFromString( classDef.superclassName);

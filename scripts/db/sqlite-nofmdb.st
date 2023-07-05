@@ -46,7 +46,7 @@ scheme SQLiteScheme  {
   }
 
   -classDefForTable:table   {
-  	  classDef := MPWClassDefinition new.
+  	  classDef := STClassDefinition new.
       classDef setName:table name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
       classDef setInstanceVariableDescriptions: table schema.
