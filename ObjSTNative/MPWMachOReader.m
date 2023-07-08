@@ -600,7 +600,9 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     EXPECTNOTNIL(reader, @"reader for define-pp-structs");
     int structindex = [reader indexOfSymbolNamed:@"_defs"];
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
+    MPWMachOInSectionPointer *thegetfn=[reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_get"]];
     EXPECTNOTNIL( structptr, @"pp struct pointer");
+    EXPECTNOTNIL( thegetfn, @"get fn pointer");
     const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
 
     INTEXPECT(defs->count,2,@"count");
@@ -609,6 +611,14 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     INTEXPECT(stringoffset1,8,@"offset of first ppath template");
     unsigned long stringoffset2 = (void*)&(defs->defs[1].propertyPath)-(void*)defs;
     INTEXPECT(stringoffset2,32,@"offset of second ppath template");
+    unsigned long impoffset1 = (void*)&(defs->defs[0].function)-(void*)defs;
+    unsigned long impoffset2 = (void*)&(defs->defs[1].function)-(void*)defs;
+    INTEXPECT(impoffset1,16,@"offset of first IMP");
+    INTEXPECT(impoffset2,40,@"offset of second IMP");
+    MPWMachOInSectionPointer *impfn1=[[structptr relocationPointerAtOffset:impoffset1] targetPointer];
+    MPWMachOInSectionPointer *impfn2=[[structptr relocationPointerAtOffset:impoffset2] targetPointer];
+    PTREXPECT(impfn1.bytes, thegetfn.bytes, @"imp ptr 1");
+    PTREXPECT(impfn2.bytes, thegetfn.bytes, @"imp ptr 2");
 
     NSString *s1=[[[structptr relocationPointerAtOffset:stringoffset1] targetPointer] cfStringValue];
     NSString *s2=[[[structptr relocationPointerAtOffset:stringoffset2] targetPointer] cfStringValue];
