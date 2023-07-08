@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F009D402A599BAB006724B5 /* define-pp-structs.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */; };
 		1F00D791258A2331007C1F68 /* stapp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F00D790258A2331007C1F68 /* stapp.png */; };
 		1F02B9A1288EC6C30023588A /* MPWCommandBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F02B99F288EC6C30023588A /* MPWCommandBinding.h */; };
 		1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */; };
@@ -851,6 +852,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "define-pp-structs.macho"; sourceTree = "<group>"; };
 		1F00D790258A2331007C1F68 /* stapp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stapp.png; sourceTree = "<group>"; };
 		1F02B99F288EC6C30023588A /* MPWCommandBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCommandBinding.h; sourceTree = "<group>"; };
 		1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWCommandBinding.m; sourceTree = "<group>"; };
@@ -1804,6 +1806,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */,
 				1F6060112A247FF000783E17 /* empty-function.elf-o */,
 				1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */,
 				1F1A647C2976F72300B8776C /* use_class_with_two_strings.mfile */,
@@ -3384,6 +3387,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F009D402A599BAB006724B5 /* define-pp-structs.macho in Resources */,
 				1FD405C329334F6F000F4122 /* function-passing-nsstring.macho in Resources */,
 				1FFDEE9529C4ADED00A4DFCF /* ConstArray.framework in Resources */,
 				1F5BBA36294DEC1200C3D345 /* use_class.macho in Resources */,

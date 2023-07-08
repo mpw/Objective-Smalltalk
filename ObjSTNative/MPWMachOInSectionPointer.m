@@ -8,6 +8,8 @@
 #import "MPWMachOInSectionPointer.h"
 #import "MPWMachOSection.h"
 #import "MPWMachORelocationPointer.h"
+#import <MPWFoundation/DebugMacros.h>
+#import "Mach_O_Structs.h"
 
 @interface MPWMachOInSectionPointer()
 
@@ -64,6 +66,25 @@
     return [NSString stringWithUTF8String:self.bytes];
 }
 
+-(NSString*)cfStringValue
+{
+//    EXPECTNOTNIL(self, @"stringPointer");
+//    IDEXPECT([[self section] sectionName],@"__cfstring",@"section");
+    Mach_O_NSString *s=(Mach_O_NSString*)[self bytes];
+//    INTEXPECT(s->length,2,@"length");
+    INTEXPECT(s->flags,1992,@"flags");
+
+    MPWMachORelocationPointer *stringClassPtr=[self relocationPointer];
+    EXPECTNOTNIL(stringClassPtr, @"stringClassPtr");
+    IDEXPECT(stringClassPtr.targetName,@"___CFConstantStringClassReference",@"string class name");
+    long cStringPtrOffset = ((void*)&(s->cstring) - (void*)s);
+    INTEXPECT( cStringPtrOffset,16,@"");
+    MPWMachORelocationPointer *stringContentsPointer=[self relocationPointerAtOffset:cStringPtrOffset];
+    EXPECTNOTNIL(stringContentsPointer, @"stringContentsPointer");
+//    IDEXPECT(,@"hi",@"actual string value");
+    return [[stringContentsPointer targetPointer] stringValue];
+}
+
 -(void)dealloc
 {
     [_section release];
@@ -73,18 +94,22 @@
 @end
 
 
-#import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWMachOInSectionPointer(testing) 
+@implementation MPWMachOInSectionPointer(testing)
 
-+(void)someTest
++(void)testReadNSString
 {
-	EXPECTTRUE(false, @"implemented");
+    MPWMachOReader *reader=[MPWMachOReader readerForTestFile:@"function-passing-nsstring"];
+    int cfstringSymbolIndex = [reader indexOfSymbolNamed:@"l__unnamed_cfstring_"];
+    INTEXPECT( cfstringSymbolIndex,1,@"index of the cfstring");
+    MPWMachOInSectionPointer *stringPointer=[reader pointerForSymbolAt:cfstringSymbolIndex];
+    IDEXPECT([stringPointer cfStringValue],@"hi",@"actual string value");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
+       @"testReadNSString",
 			];
 }
 

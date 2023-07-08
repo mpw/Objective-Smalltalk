@@ -594,6 +594,28 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     IDEXPECT( names, expectedNames, @"class names");
 }
 
++(void)testVerifyExternallyProvidedPropertyPathDefs
+{
+    MPWMachOReader *reader=[self readerForTestFile:@"define-pp-structs"];
+    EXPECTNOTNIL(reader, @"reader for define-pp-structs");
+    int structindex = [reader indexOfSymbolNamed:@"_defs"];
+    MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
+    EXPECTNOTNIL( structptr, @"pp struct pointer");
+    const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
+
+    INTEXPECT(defs->count,2,@"count");
+    INTEXPECT(defs->verb,MPWRESTVerbGET,@"verb");
+    unsigned long stringoffset1 = (void*)&(defs->defs[0].propertyPath)-(void*)defs;
+    INTEXPECT(stringoffset1,8,@"offset of first ppath template");
+    unsigned long stringoffset2 = (void*)&(defs->defs[1].propertyPath)-(void*)defs;
+    INTEXPECT(stringoffset2,32,@"offset of second ppath template");
+
+    NSString *s1=[[[structptr relocationPointerAtOffset:stringoffset1] targetPointer] cfStringValue];
+    NSString *s2=[[[structptr relocationPointerAtOffset:stringoffset2] targetPointer] cfStringValue];
+    IDEXPECT(s1,@"hi/there",@"template1");
+    IDEXPECT(s2,@"hi/:more",@"template2");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -610,6 +632,8 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
        @"testReadObjectiveC_StringConstant",
        @"testReadBlock",
        @"testReadClassReferences",
+       @"testVerifyExternallyProvidedPropertyPathDefs",
+
 
 			];
 }

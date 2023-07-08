@@ -2,15 +2,14 @@ scheme Hello
 {
    /hi {
       get { 
-	'Hello World'.
+	'Simple GET Property Path without parameters'.
      }
    }
    /hi/:p1 {
       get { 
-	'Hello, ' stringByAppendingString:p1.
+	'GET property path /hi/:p1 with paramater: ' stringByAppendingString:p1.
      }
    }
-   /* { get { 'Backup'. }}
    -main:args
    {
         self Stdout println: self GET_hi.
