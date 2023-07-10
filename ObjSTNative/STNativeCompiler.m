@@ -607,7 +607,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return 0x120 + ((int)method.blocks.count * SIZE_OF_STACK_BLOCK);
 }
 
--(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass
+-(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass isClassMethod:(BOOL)isClassMethod
 {
     NSArray *blocks = method.blocks;
     blockNo=0;
@@ -616,7 +616,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         NSString *blockSymbol = [self compileBlock:block inMethod:method];
         block.symbol = blockSymbol;
     }
-    NSString *symbol = [NSString stringWithFormat:@"-[%@ %@]",aClass.name,method.methodName];
+    NSString *symbol = [NSString stringWithFormat:@"%@[%@ %@]",isClassMethod ? @"+":@"-", aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
     [codegen generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(MPWARMObjectCodeGenerator * _Nonnull gen) {
         [self writeMethodBody:method];
@@ -626,7 +626,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass
 {
-    [self compileMethod:method inClass:aClass];
+    [self compileMethod:method inClass:aClass isClassMethod:NO];
     return self.codegen.generatedCode;
 }
 
@@ -639,11 +639,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( MPWScriptedMethod* method in aClass.allImplementationMethods) {
         [methodNames addObject:method.methodName];
         [methodTypes addObject:[[method header] typeString]];
-        [symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass]];
+        [symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass isClassMethod:NO]];
     }
-
+    
+    NSMutableArray *classSymbolNames=[NSMutableArray array];
+    NSMutableArray *classMethodNames=[NSMutableArray array];
+    NSMutableArray *classMethodTypes=[NSMutableArray array];
+    for ( MPWScriptedMethod* method in aClass.classMethods) {
+        [classMethodNames addObject:method.methodName];
+        [classMethodTypes addObject:[[method header] typeString]];
+        [classSymbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass isClassMethod:YES]];
+    }
+    
     [writer addTextSectionData:[codegen target]];
     [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
+    [classwriter writeClassMethodListForMethodNames:classMethodNames types:classMethodTypes functions:classSymbolNames ];
 }
 
 -(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
@@ -915,7 +925,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     STNativeCompiler *compiler = [self jitCompiler];
     STClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
-    [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass];
+    [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass isClassMethod:NO];
     MPWJittableData *methodData = compiler.codegen.generatedCode;
     ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
     NSString* result=nil;
@@ -1262,6 +1272,12 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     IDEXPECT( array[1], @"string2",@"second element");
 }
 
++(void)testClassMethodsWork
+{
+    COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram {  +theAnswer { 32. } -main:args { self class theAnswer - 32. } }", @"testClassMethodsWork");
+}
+
+
 
 +(NSArray*)testSelectors
 {
@@ -1301,6 +1317,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testStackBlocksCanBeUsed",
        @"testBlockCanAccessOutsideScopeVariables",
        @"testCanLoadNSArrayFromAFramework",
+//       @"testClassMethodsWork",
 			];
 }
 

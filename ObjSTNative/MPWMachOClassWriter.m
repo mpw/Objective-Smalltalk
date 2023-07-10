@@ -120,25 +120,25 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 {
     MPWMachOWriter* writer = self.writer;
     
-    NSString *testclassNameSymbolName=[self classNameSymbolName];
+    NSString *classNameSymbolName=[self classNameSymbolName];
     
     //  class name goes in its own section
     
     [writer declareExternalSymbol:@"__objc_empty_cache"];
     MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:S_CSTRING_LITERALS];
-    [classNameWriter declareGlobalSymbol:testclassNameSymbolName];
+    [classNameWriter declareGlobalSymbol:classNameSymbolName];
     [classNameWriter writeNullTerminatedString:self.nameOfClass];
     
     // RO Part
     
     NSString *roClassPartSymbol = [self roClassPartSymbol];
     MPWMachOSectionWriter *classROWriter = self.objcConstWriter;
-    [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:self.instanceSize flags:0 methods:self.instanceMethodListSymbol] ;
+    [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:classNameSymbolName instanceSize:self.instanceSize flags:0 methods:self.instanceMethodListSymbol] ;
     
     // RO Metaclass Part
     
     NSString *metaROSymbol = [self roMetaClassPartSymbol];
-    [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:testclassNameSymbolName instanceSize:40 flags:1 methods:nil];
+    [self writeROPartOnSection:classROWriter symbolName:metaROSymbol symbolNameOfClassName:classNameSymbolName instanceSize:40 flags:1 methods:self.classMethodListSymbol];
     
     
     
@@ -212,6 +212,15 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     self.instanceMethodListSymbol=methodListSymbol;
     [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
 }
+
+
+-(void)writeClassMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols
+{
+    NSString *methodListSymbol = [NSString stringWithFormat:@"__CLASSMETHOD_LIST_%@",self.nameOfClass];
+    self.classMethodListSymbol=methodListSymbol;
+    [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
+}
+
 
 
 @end
