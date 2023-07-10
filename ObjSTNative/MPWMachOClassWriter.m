@@ -221,7 +221,12 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
 }
 
-
+-(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName
+{
+    MPWMachOSectionWriter *objcConstWriter=self.objcConstWriter;
+    [objcConstWriter declareGlobalSymbol:symbolName];
+    [objcConstWriter appendBytes:theDefs length:sizeof *theDefs];
+}
 
 @end
 
@@ -356,7 +361,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
     [classWriter writeClass];
     NSData *macho=[writer data];
-    [macho writeToFile:@"/tmp/testclass-with-method.o" atomically:YES];
+//    [macho writeToFile:@"/tmp/testclass-with-method.o" atomically:YES];
     
     
     MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
@@ -374,6 +379,27 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     INTEXPECT([[machoReader objcClassNameSection] flags],2,@"should be a ");
 }
 
++(void)testWriteSimplePropertyPathStruct
+{
+    PropertyPathDef theDefs[]={
+        { @"hi", nil, nil  },
+    };
+    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 0, theDefs);
+    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
+    [classWriter writePropertyDefStruct:defs symbolName:@"_propertyPathDefs"];
+    [writer addTextSectionData:[NSData dataWithBytes:"0123" length:4]];
+    NSData *macho=[writer data];
+    [macho writeToFile:@"/tmp/ppath-def.macho" atomically:YES];
+    INTEXPECT(macho.length,427,@"generate macho for 0 length ppath");
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
+    int structindex = [reader indexOfSymbolNamed:@"_propertyPathDefs"];
+    MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
+    [reader verifyPropertyPathsAtPointer:structptr against:defs];
+    
+    free(defs);
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -381,6 +407,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
        @"testWriteSimpleClassAndCheckManually",
        @"testWriteSimpleClassAndCheckViaClassReader",
        @"testWriteClassWithOneInstanceMethod",
+       @"testWriteSimplePropertyPathStruct",
 			];
 }
 
