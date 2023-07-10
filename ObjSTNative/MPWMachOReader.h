@@ -64,4 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface MPWMachOReader(testing)
+-(void)verifyPropertyPathsAtPointer:(MPWMachOInSectionPointer*)structptr against:(PropertyPathDefs*)checkdefs;
+@end
+
 NS_ASSUME_NONNULL_END

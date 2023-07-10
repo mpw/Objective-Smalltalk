@@ -167,7 +167,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 {
     struct segment_command_64 *segment=[self segment];
     struct section_64 *sections=(struct section_64*)(segment + 1);
-    NSAssert(sectionIndex >=1 && sectionIndex <= segment->nsects, @"section index out of range");
+    NSAssert2(sectionIndex >=1 && sectionIndex <= segment->nsects, @"section index %d out of range %d",sectionIndex,segment->nsects);
     return [self sectionWithSectionHeader:sections+sectionIndex-1];
 }
 
@@ -594,22 +594,11 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     IDEXPECT( names, expectedNames, @"class names");
 }
 
-static PropertyPathDefs *makePropertyPathDesf( MPWRESTVerb verb, int count, PropertyPathDef *theDefs) {
-    PropertyPathDefs* defs=calloc( sizeof *defs + count * sizeof(PropertyPathDef),1);
-    defs->count=2;
-    defs->verb=MPWRESTVerbGET;
-    for (int i=0;i<count;i++) {
-        defs->defs[i].propertyPath = theDefs[i].propertyPath;
-        defs->defs[i].function=theDefs[i].function;
-        defs->defs[i].method=theDefs[i].method;
-    }
-    return defs;
-}
 
-+(void)testPropertyPathsAtPointer:(MPWMachOInSectionPointer*)structptr against:(PropertyPathDefs*)checkdefs
+-(void)verifyPropertyPathsAtPointer:(MPWMachOInSectionPointer*)structptr against:(PropertyPathDefs*)checkdefs
 {
     const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
-
+    
     INTEXPECT(defs->count,checkdefs->count,@"count");
     INTEXPECT(defs->verb,checkdefs->verb,@"verb");
     for (int i=0;i<checkdefs->count;i++ ) {
@@ -622,6 +611,7 @@ static PropertyPathDefs *makePropertyPathDesf( MPWRESTVerb verb, int count, Prop
         MPWMachOInSectionPointer *impfn=[[structptr relocationPointerAtOffset:impoffset] targetPointer];
         PTREXPECT(impfn.bytes, checkdefs->defs[i].function, @"imp ptr");
     }
+    
 }
 
 +(void)testVerifyExternallyProvidedPropertyPathDefs
@@ -632,15 +622,14 @@ static PropertyPathDefs *makePropertyPathDesf( MPWRESTVerb verb, int count, Prop
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
     MPWMachOInSectionPointer *thegetfn=[reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_get"]];
     const void *fnptr=thegetfn.bytes;
-    
     EXPECTNOTNIL( structptr, @"pp struct pointer");
     EXPECTNOTNIL( fnptr, @"get fn pointer");
     PropertyPathDef theDefs[]={
         { @"hi/there", fnptr, nil  },
         { @"hi/:more", fnptr, nil  },
     };
-    PropertyPathDefs* defs=makePropertyPathDesf(MPWRESTVerbGET, 2, theDefs);
-    [self testPropertyPathsAtPointer:structptr against:defs];
+    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 2, theDefs);
+    [reader verifyPropertyPathsAtPointer:structptr against:defs];
     free( defs);
 }
 
