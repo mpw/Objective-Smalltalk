@@ -21,9 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) int instanceSize;
 
 @property (nonatomic,strong) NSString *instanceMethodListSymbol;
+@property (nonatomic,strong) NSString *classMethodListSymbol;
 
 -(void)writeClass;
 -(void)writeInstanceMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols;
+-(void)writeClassMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols;
 
 
 @end
