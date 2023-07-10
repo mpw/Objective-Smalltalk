@@ -594,6 +594,36 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     IDEXPECT( names, expectedNames, @"class names");
 }
 
+static PropertyPathDefs *makePropertyPathDesf( MPWRESTVerb verb, int count, PropertyPathDef *theDefs) {
+    PropertyPathDefs* defs=calloc( sizeof *defs + count * sizeof(PropertyPathDef),1);
+    defs->count=2;
+    defs->verb=MPWRESTVerbGET;
+    for (int i=0;i<count;i++) {
+        defs->defs[i].propertyPath = theDefs[i].propertyPath;
+        defs->defs[i].function=theDefs[i].function;
+        defs->defs[i].method=theDefs[i].method;
+    }
+    return defs;
+}
+
++(void)testPropertyPathsAtPointer:(MPWMachOInSectionPointer*)structptr against:(PropertyPathDefs*)checkdefs
+{
+    const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
+
+    INTEXPECT(defs->count,checkdefs->count,@"count");
+    INTEXPECT(defs->verb,checkdefs->verb,@"verb");
+    for (int i=0;i<checkdefs->count;i++ ) {
+        unsigned long stringoffset = (void*)&(defs->defs[i].propertyPath)-(void*)defs;
+        INTEXPECT(stringoffset,8 + 24*i,@"offset of ppath template");
+        unsigned long impoffset = (void*)&(defs->defs[i].function)-(void*)defs;
+        INTEXPECT(impoffset,16 + 24*i,@"offset of imp");
+        NSString *s=[[[structptr relocationPointerAtOffset:stringoffset] targetPointer] cfStringValue];
+        IDEXPECT(s,checkdefs->defs[i].propertyPath,@"template1");
+        MPWMachOInSectionPointer *impfn=[[structptr relocationPointerAtOffset:impoffset] targetPointer];
+        PTREXPECT(impfn.bytes, checkdefs->defs[i].function, @"imp ptr");
+    }
+}
+
 +(void)testVerifyExternallyProvidedPropertyPathDefs
 {
     MPWMachOReader *reader=[self readerForTestFile:@"define-pp-structs"];
@@ -601,30 +631,19 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
     int structindex = [reader indexOfSymbolNamed:@"_defs"];
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
     MPWMachOInSectionPointer *thegetfn=[reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_get"]];
+    const void *fnptr=thegetfn.bytes;
+    
     EXPECTNOTNIL( structptr, @"pp struct pointer");
-    EXPECTNOTNIL( thegetfn, @"get fn pointer");
-    const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
-
-    INTEXPECT(defs->count,2,@"count");
-    INTEXPECT(defs->verb,MPWRESTVerbGET,@"verb");
-    unsigned long stringoffset1 = (void*)&(defs->defs[0].propertyPath)-(void*)defs;
-    INTEXPECT(stringoffset1,8,@"offset of first ppath template");
-    unsigned long stringoffset2 = (void*)&(defs->defs[1].propertyPath)-(void*)defs;
-    INTEXPECT(stringoffset2,32,@"offset of second ppath template");
-    unsigned long impoffset1 = (void*)&(defs->defs[0].function)-(void*)defs;
-    unsigned long impoffset2 = (void*)&(defs->defs[1].function)-(void*)defs;
-    INTEXPECT(impoffset1,16,@"offset of first IMP");
-    INTEXPECT(impoffset2,40,@"offset of second IMP");
-    MPWMachOInSectionPointer *impfn1=[[structptr relocationPointerAtOffset:impoffset1] targetPointer];
-    MPWMachOInSectionPointer *impfn2=[[structptr relocationPointerAtOffset:impoffset2] targetPointer];
-    PTREXPECT(impfn1.bytes, thegetfn.bytes, @"imp ptr 1");
-    PTREXPECT(impfn2.bytes, thegetfn.bytes, @"imp ptr 2");
-
-    NSString *s1=[[[structptr relocationPointerAtOffset:stringoffset1] targetPointer] cfStringValue];
-    NSString *s2=[[[structptr relocationPointerAtOffset:stringoffset2] targetPointer] cfStringValue];
-    IDEXPECT(s1,@"hi/there",@"template1");
-    IDEXPECT(s2,@"hi/:more",@"template2");
+    EXPECTNOTNIL( fnptr, @"get fn pointer");
+    PropertyPathDef theDefs[]={
+        { @"hi/there", fnptr, nil  },
+        { @"hi/:more", fnptr, nil  },
+    };
+    PropertyPathDefs* defs=makePropertyPathDesf(MPWRESTVerbGET, 2, theDefs);
+    [self testPropertyPathsAtPointer:structptr against:defs];
+    free( defs);
 }
+
 
 
 +(NSArray*)testSelectors
