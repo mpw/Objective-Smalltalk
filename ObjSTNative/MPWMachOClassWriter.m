@@ -10,6 +10,8 @@
 #import "MPWMachOSectionWriter.h"
 #import "Mach_O_Structs.h"
 #import <mach-o/loader.h>
+#import "MPWMachOInSectionPointer.h"
+
 
 @interface MPWMachOClassWriter()
 
@@ -221,7 +223,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
 }
 
--(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName
+-(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName functionSymbols:(NSArray <NSString*>*)functionSymbols
 {
     PropertyPathDef zeroDef={nil,nil,nil};
     
@@ -232,6 +234,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
         NSString *symbol=[NSString stringWithFormat:@"_PP_%@_%d",self.nameOfClass,i];
         [self.writer writeNSStringLiteral:theDefs->defs[i].propertyPath label:symbol];
         [objcConstWriter addRelocationEntryForSymbol:symbol atOffset:(int)objcConstWriter.length];
+        [objcConstWriter addRelocationEntryForSymbol:functionSymbols[i] atOffset:(int)objcConstWriter.length + 8 ];
         [objcConstWriter appendBytes:&zeroDef length:sizeof zeroDef];
     }
 }
@@ -389,22 +392,42 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 +(void)testWriteSimplePropertyPathStruct
 {
+    MPWMachOWriter *writer = [MPWMachOWriter stream];
     NSString *symbol=@"_propertyPathDef";
+    NSString *functionSymbol=@"_theFunction";
+    MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
+    g.symbolWriter = writer;
+    g.relocationWriter = writer.textSectionWriter;
+    [g generateFunctionNamed:functionSymbol body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateMessageSendToSelector:@"hash"];
+        [g generateMessageSendToSelector:@"hash"];
+        [g generateMessageSendToSelector:@"hash"];
+        [gen generateAddDest:0 source:0 immediate:200];
+    }];
+    NSData *d=(NSData*)[g target];
+    
+    [writer addTextSectionData:d];
+
     PropertyPathDef theDefs[]={
         { @"path", nil, nil  },
         { @"root/:arg", nil, nil  },
     };
-    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 2, theDefs);
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 1, theDefs);
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
-    [classWriter writePropertyDefStruct:defs symbolName:symbol];
-    [writer addTextSectionData:[NSData dataWithBytes:"0123" length:4]];
+    classWriter.nameOfClass=@"PropertyPathTestClass";
+    [classWriter writePropertyDefStruct:defs symbolName:symbol functionSymbols:@[ functionSymbol,functionSymbol]];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/ppath-def.macho" atomically:YES];
 //    INTEXPECT(macho.length,938,@"generate macho for 0 length ppath");
     MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
     int structindex = [reader indexOfSymbolNamed:symbol];
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
+    int functionIndex = [reader indexOfSymbolNamed:functionSymbol];
+    MPWMachOInSectionPointer *fnptr=[reader pointerForSymbolAt:functionIndex];
+    for (int i=0;i<2;i++ ) {
+        defs->defs[i].function=fnptr.bytes;
+    }
+
     [reader verifyPropertyPathsAtPointer:structptr against:defs];
     
     free(defs);

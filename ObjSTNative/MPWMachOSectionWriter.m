@@ -76,7 +76,7 @@
 
 -(void)declareGlobalTextSymbol:(NSString*)symbol
 {
-    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xe section:1];
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xf section:1];
 }
 
 

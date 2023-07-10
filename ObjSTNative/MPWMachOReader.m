@@ -607,9 +607,12 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
         unsigned long impoffset = (void*)&(defs->defs[i].function)-(void*)defs;
         INTEXPECT(impoffset,16 + 24*i,@"offset of imp");
         NSString *s=[[[structptr relocationPointerAtOffset:stringoffset] targetPointer] cfStringValue];
-        IDEXPECT(s,checkdefs->defs[i].propertyPath,@"template1");
+        NSString *strmsg=[NSString stringWithFormat:@"template string[%d]",i];
+        IDEXPECT(s,checkdefs->defs[i].propertyPath,strmsg);
         MPWMachOInSectionPointer *impfn=[[structptr relocationPointerAtOffset:impoffset] targetPointer];
-        PTREXPECT(impfn.bytes, checkdefs->defs[i].function, @"imp ptr");
+        NSString *impmsg=[NSString stringWithFormat:@"imp ptr[%d] diff",i];
+        long theDiff = (void*)impfn.bytes - (void*)checkdefs->defs[i].function;
+        INTEXPECT(theDiff,0, impmsg);
     }
     
 }
