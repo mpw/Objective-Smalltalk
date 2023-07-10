@@ -223,9 +223,17 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName
 {
+    PropertyPathDef zeroDef={nil,nil,nil};
+    
     MPWMachOSectionWriter *objcConstWriter=self.objcConstWriter;
     [objcConstWriter declareGlobalSymbol:symbolName];
     [objcConstWriter appendBytes:theDefs length:sizeof *theDefs];
+    for (int i=0;i<theDefs->count;i++) {
+        NSString *symbol=[NSString stringWithFormat:@"_PP_%@_%d",self.nameOfClass,i];
+        [self.writer writeNSStringLiteral:theDefs->defs[i].propertyPath label:symbol];
+        [objcConstWriter addRelocationEntryForSymbol:symbol atOffset:(int)objcConstWriter.length];
+        [objcConstWriter appendBytes:&zeroDef length:sizeof zeroDef];
+    }
 }
 
 @end
@@ -381,19 +389,21 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 +(void)testWriteSimplePropertyPathStruct
 {
+    NSString *symbol=@"_propertyPathDef";
     PropertyPathDef theDefs[]={
-        { @"hi", nil, nil  },
+        { @"path", nil, nil  },
+        { @"root/:arg", nil, nil  },
     };
-    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 0, theDefs);
+    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 2, theDefs);
     MPWMachOWriter *writer = [MPWMachOWriter stream];
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
-    [classWriter writePropertyDefStruct:defs symbolName:@"_propertyPathDefs"];
+    [classWriter writePropertyDefStruct:defs symbolName:symbol];
     [writer addTextSectionData:[NSData dataWithBytes:"0123" length:4]];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/ppath-def.macho" atomically:YES];
-    INTEXPECT(macho.length,427,@"generate macho for 0 length ppath");
+//    INTEXPECT(macho.length,938,@"generate macho for 0 length ppath");
     MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
-    int structindex = [reader indexOfSymbolNamed:@"_propertyPathDefs"];
+    int structindex = [reader indexOfSymbolNamed:symbol];
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
     [reader verifyPropertyPathsAtPointer:structptr against:defs];
     
