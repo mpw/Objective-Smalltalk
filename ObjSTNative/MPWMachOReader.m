@@ -19,6 +19,7 @@
 @interface MPWMachOReader()
 
 @property (nonatomic, strong) NSData *data;
+@property (nonatomic, strong) NSMutableDictionary* sections;
 
 @end
 
@@ -30,6 +31,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     if ( machodata ) {
         self=[super init];
         self.data = machodata;
+        self.sections = [NSMutableDictionary dictionary];
         return self;
     } else {
         return nil;
@@ -156,6 +158,19 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return [self sectionWithName:"__text"];
 }
 
+-(MPWMachOSection*)sectionAtIndex:(int)sectionIndex
+{
+    MPWMachOSection *section=self.sections[@(sectionIndex)];
+    if ( !section ) {
+        struct segment_command_64 *segment=[self segment];
+        struct section_64 *sections=(struct section_64*)(segment + 1);
+        NSAssert2(sectionIndex >=1 && sectionIndex <= segment->nsects, @"section index %d out of range %d",sectionIndex,segment->nsects);
+        section = [self sectionWithSectionHeader:sections+sectionIndex-1];
+        self.sections[@(sectionIndex)]=section;
+    }
+    return section;
+}
+
 -(void)dumpRelocationsOn:(MPWByteStream*)s
 {
     for (int i=1;i<[self numSections];i++) {
@@ -163,13 +178,6 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     }
 }
 
--(MPWMachOSection*)sectionAtIndex:(int)sectionIndex
-{
-    struct segment_command_64 *segment=[self segment];
-    struct section_64 *sections=(struct section_64*)(segment + 1);
-    NSAssert2(sectionIndex >=1 && sectionIndex <= segment->nsects, @"section index %d out of range %d",sectionIndex,segment->nsects);
-    return [self sectionWithSectionHeader:sections+sectionIndex-1];
-}
 
 -(MPWMachOSection*)objcClassNameSection
 {
@@ -610,6 +618,7 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
         NSString *strmsg=[NSString stringWithFormat:@"template string[%d]",i];
         IDEXPECT(s,checkdefs->defs[i].propertyPath,strmsg);
         MPWMachOInSectionPointer *impfn=[[structptr relocationPointerAtOffset:impoffset] targetPointer];
+        NSLog(@"impfnptr[%d]=%@",i,impfn);
         NSString *impmsg=[NSString stringWithFormat:@"imp ptr[%d] diff",i];
         long theDiff = (void*)impfn.bytes - (void*)checkdefs->defs[i].function;
         INTEXPECT(theDiff,0, impmsg);
