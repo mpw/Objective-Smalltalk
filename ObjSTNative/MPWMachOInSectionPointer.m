@@ -85,6 +85,12 @@
     return [[stringContentsPointer targetPointer] stringValue];
 }
 
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: section: %@ offset: %ld>",
+    self.className,self,self.section,self.offset];
+}
+
 -(void)dealloc
 {
     [_section release];

@@ -24,6 +24,7 @@
 @implementation MPWMachOSection
 {
     const struct section_64 *sectionHeader;
+    NSData *sectionData;
 }
 
 -(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(MPWMachOReader*)newReader
@@ -88,7 +89,9 @@
     }
 }
 
--(NSData*)sectionData
+lazyAccessor(NSData*, sectionData, setSectionData, createSectionData)
+
+-(NSData*)createSectionData
 {
     return [self.machoData subdataWithRange:NSMakeRange(sectionHeader->offset,sectionHeader->size)];
 }
@@ -223,6 +226,11 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     MPWMachOSection *targetSection = [self sectionForRelocEntryAt:which];
     int symbolEntryIndex = [self symbolNumberOfRelocEntryAt:which];
     return [targetSection shiftedOffsetForBaseSymbolOffset:[self.reader symbolOffsetAt:symbolEntryIndex]];
+}
+
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: segment: %@ section: %@ offset: %ld reloc offset: %d data ptr: %p macho data bytes: %p>",self.className,self,self.segmentName,self.sectionName,self.offset,self.relocEntryOffset,self.bytes,self.machoData.bytes];
 }
 
 -(void)dealloc

@@ -424,6 +424,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
     int functionIndex = [reader indexOfSymbolNamed:functionSymbol];
     MPWMachOInSectionPointer *fnptr=[reader pointerForSymbolAt:functionIndex];
+    NSLog(@"function pointer: %@",fnptr);
     for (int i=0;i<2;i++ ) {
         defs->defs[i].function=fnptr.bytes;
     }
