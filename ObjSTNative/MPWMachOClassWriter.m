@@ -11,7 +11,7 @@
 #import "Mach_O_Structs.h"
 #import <mach-o/loader.h>
 #import "MPWMachOInSectionPointer.h"
-
+#import "STMethodSymbols.h"
 
 @interface MPWMachOClassWriter()
 
@@ -169,9 +169,9 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
 }
 
--(void)writeMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols methodListSymbol:(NSString*)methodListSymbol
+-(void)writeMethodList:(STMethodSymbols*)methodSymbols methodListSymbol:(NSString*)methodListSymbol
 {
-    int numberOfMethods = names.count;
+    int numberOfMethods = methodSymbols.methodNames.count;
 
     int methodListSize = sizeof(BaseMethods) + (numberOfMethods * sizeof(MethodEntry));
     BaseMethods *methods = calloc( 1, methodListSize);
@@ -189,10 +189,10 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 
         [methNameWriter declareGlobalSymbol:methodNameSymbol];
-        [methNameWriter writeNullTerminatedString:names[i]];
+        [methNameWriter writeNullTerminatedString:methodSymbols.methodNames[i]];
         
         [methTypeWriter declareGlobalSymbol:methodTypeSymbol];
-        [methTypeWriter writeNullTerminatedString:types[i]];
+        [methTypeWriter writeNullTerminatedString:methodSymbols.methodTypes[i]];
         
         
         long nameInMethodOffset=((void*)&(methods->methods[i].name))-(void*)methods;
@@ -200,7 +200,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
         long typeInMethodOffset=((void*)&(methods->methods[i].type))-(void*)methods;
         [objcConstWriter addRelocationEntryForSymbol:methodTypeSymbol atOffset:(int)typeInMethodOffset];
         long impInMethodOffset=((void*)&(methods->methods[i].imp))-(void*)methods;
-        [objcConstWriter addRelocationEntryForSymbol:functionSymbols[i] atOffset:(int)impInMethodOffset];
+        [objcConstWriter addRelocationEntryForSymbol:methodSymbols.symbolNames[i] atOffset:(int)impInMethodOffset];
     }
     
     [objcConstWriter declareGlobalSymbol:methodListSymbol];
@@ -208,19 +208,19 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
 }
 
--(void)writeInstanceMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols
+-(void)writeInstanceMethodList:(STMethodSymbols*)methodSymbols
 {
     NSString *methodListSymbol = [NSString stringWithFormat:@"__INSTANCEMETHOD_LIST_%@",self.nameOfClass];
     self.instanceMethodListSymbol=methodListSymbol;
-    [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
+    [self writeMethodList:methodSymbols methodListSymbol:methodListSymbol];
 }
 
 
--(void)writeClassMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols
+-(void)writeClassMethodList:(STMethodSymbols*)methodSymbols
 {
     NSString *methodListSymbol = [NSString stringWithFormat:@"__CLASSMETHOD_LIST_%@",self.nameOfClass];
     self.classMethodListSymbol=methodListSymbol;
-    [self writeMethodListForMethodNames:names types:types functions:functionSymbols methodListSymbol:methodListSymbol];
+    [self writeMethodList:methodSymbols methodListSymbol:methodListSymbol];
 }
 
 -(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName functionSymbols:(NSArray <NSString*>*)functionSymbols
@@ -367,8 +367,13 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     classWriter.nameOfClass = @"TestClass";
     classWriter.nameOfSuperClass = @"NSObject";
     classWriter.instanceSize = 8;
- 
-    [classWriter writeInstanceMethodListForMethodNames:@[methodName] types:@[ methodTypeString ] functions:@[ methodSymbolName ]];
+    STMethodSymbols *symbols=[[STMethodSymbols new] autorelease];
+    symbols.methodNames=@[methodName];
+    symbols.methodTypes=@[methodTypeString];
+    symbols.symbolNames=@[methodSymbolName];
+
+    
+    [classWriter writeInstanceMethodList:symbols];
     
     [classWriter writeClass];
     NSData *macho=[writer data];
@@ -392,46 +397,45 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 +(void)testWriteSimplePropertyPathStruct
 {
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
-    NSString *symbol=@"_propertyPathDef";
-    NSString *functionSymbol=@"_theFunction";
-    MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
-    g.symbolWriter = writer;
-    g.relocationWriter = writer.textSectionWriter;
-    [g generateFunctionNamed:functionSymbol body:^(MPWARMObjectCodeGenerator *gen) {
-        [g generateMessageSendToSelector:@"hash"];
-        [g generateMessageSendToSelector:@"hash"];
-        [g generateMessageSendToSelector:@"hash"];
-        [gen generateAddDest:0 source:0 immediate:200];
-    }];
-    NSData *d=(NSData*)[g target];
-    
-    [writer addTextSectionData:d];
-
-    PropertyPathDef theDefs[]={
-        { @"path", nil, nil  },
-        { @"root/:arg", nil, nil  },
-    };
-    PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, 1, theDefs);
-    MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
-    classWriter.nameOfClass=@"PropertyPathTestClass";
-    [classWriter writePropertyDefStruct:defs symbolName:symbol functionSymbols:@[ functionSymbol,functionSymbol]];
-    NSData *macho=[writer data];
-    [macho writeToFile:@"/tmp/ppath-def.macho" atomically:YES];
-//    INTEXPECT(macho.length,938,@"generate macho for 0 length ppath");
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
-    int structindex = [reader indexOfSymbolNamed:symbol];
-    MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
-    int functionIndex = [reader indexOfSymbolNamed:functionSymbol];
-    MPWMachOInSectionPointer *fnptr=[reader pointerForSymbolAt:functionIndex];
-    NSLog(@"function pointer: %@",fnptr);
-    for (int i=0;i<2;i++ ) {
-        defs->defs[i].function=fnptr.bytes;
+    @autoreleasepool {
+        MPWMachOWriter *writer = [MPWMachOWriter stream];
+        NSString *symbol=@"_propertyPathDef";
+        NSString *functionSymbol=@"_theFunction";
+        MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
+        g.symbolWriter = writer;
+        g.relocationWriter = writer.textSectionWriter;
+        [g generateFunctionNamed:functionSymbol body:^(MPWARMObjectCodeGenerator *gen) {
+            [gen generateAddDest:0 source:0 immediate:200];
+        }];
+        NSData *d=(NSData*)[g target];
+        
+        [writer addTextSectionData:d];
+        int numDefs=2;
+        PropertyPathDef theDefs[]={
+            { @"path", nil, nil  },
+            { @"root/:arg", nil, nil  },
+        };
+        PropertyPathDefs* defs=makePropertyPathDefs(MPWRESTVerbGET, numDefs, theDefs);
+        MPWMachOClassWriter *classWriter = [[self alloc] initWithWriter:writer];
+        classWriter.nameOfClass=@"PropertyPathTestClass";
+        [classWriter writePropertyDefStruct:defs symbolName:symbol functionSymbols:@[ functionSymbol,functionSymbol]];
+        NSData *macho=[writer data];
+        [macho writeToFile:@"/tmp/ppath-def.macho" atomically:YES];
+        //    INTEXPECT(macho.length,938,@"generate macho for 0 length ppath");
+        MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
+        int structindex = [reader indexOfSymbolNamed:symbol];
+        MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
+        int functionIndex = [reader indexOfSymbolNamed:functionSymbol];
+        MPWMachOInSectionPointer *fnptr=[reader pointerForSymbolAt:functionIndex];
+        //    NSLog(@"function pointer: %@",fnptr);
+        for (int i=0;i<numDefs;i++ ) {
+            defs->defs[i].function=fnptr.bytes;
+        }
+        
+        [reader verifyPropertyPathsAtPointer:structptr against:defs];
+        
+        free(defs);
     }
-
-    [reader verifyPropertyPathsAtPointer:structptr against:defs];
-    
-    free(defs);
 }
 
 
