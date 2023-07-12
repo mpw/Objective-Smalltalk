@@ -605,25 +605,26 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
 
 -(void)verifyPropertyPathsAtPointer:(MPWMachOInSectionPointer*)structptr against:(PropertyPathDefs*)checkdefs
 {
-    const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
-    
-    INTEXPECT(defs->count,checkdefs->count,@"count");
-    INTEXPECT(defs->verb,checkdefs->verb,@"verb");
-    for (int i=0;i<checkdefs->count;i++ ) {
-        unsigned long stringoffset = (void*)&(defs->defs[i].propertyPath)-(void*)defs;
-        INTEXPECT(stringoffset,8 + 24*i,@"offset of ppath template");
-        unsigned long impoffset = (void*)&(defs->defs[i].function)-(void*)defs;
-        INTEXPECT(impoffset,16 + 24*i,@"offset of imp");
-        NSString *s=[[[structptr relocationPointerAtOffset:stringoffset] targetPointer] cfStringValue];
-        NSString *strmsg=[NSString stringWithFormat:@"template string[%d]",i];
-        IDEXPECT(s,checkdefs->defs[i].propertyPath,strmsg);
-        MPWMachOInSectionPointer *impfn=[[structptr relocationPointerAtOffset:impoffset] targetPointer];
-        NSLog(@"impfnptr[%d]=%@",i,impfn);
-        NSString *impmsg=[NSString stringWithFormat:@"imp ptr[%d] diff",i];
-        long theDiff = (void*)impfn.bytes - (void*)checkdefs->defs[i].function;
-        INTEXPECT(theDiff,0, impmsg);
+    @autoreleasepool {
+        const PropertyPathDefs *defs=(PropertyPathDefs*)[structptr bytes];
+        INTEXPECT(defs->count,checkdefs->count,@"count");
+        INTEXPECT(defs->verb,checkdefs->verb,@"verb");
+        for (int i=0;i<checkdefs->count;i++ ) {
+            unsigned long stringoffset = (void*)&(defs->defs[i].propertyPath)-(void*)defs;
+            INTEXPECT(stringoffset,8 + 24*i,@"offset of ppath template");
+            unsigned long impoffset = (void*)&(defs->defs[i].function)-(void*)defs;
+            INTEXPECT(impoffset,16 + 24*i,@"offset of imp");
+            NSString *s=[[[structptr relocationPointerAtOffset:stringoffset] targetPointer] cfStringValue];
+            
+            NSString *strmsg=[NSString stringWithFormat:@"template string[%d]",i];
+            IDEXPECT(s,checkdefs->defs[i].propertyPath,strmsg);
+            MPWMachOInSectionPointer *impfn=[[structptr relocationPointerAtOffset:impoffset] targetPointer];
+//            NSLog(@"impfnptr[%d]=%@",i,impfn);
+            NSString *impmsg=[NSString stringWithFormat:@"imp ptr[%d] diff",i];
+            long theDiff = (void*)impfn.bytes - (void*)checkdefs->defs[i].function;
+            INTEXPECT(theDiff,0, impmsg);
+        }
     }
-    
 }
 
 +(void)testVerifyExternallyProvidedPropertyPathDefs

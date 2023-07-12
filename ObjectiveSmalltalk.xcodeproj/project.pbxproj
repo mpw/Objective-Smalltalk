@@ -361,6 +361,8 @@
 		1F8E81CC1923AAFD00821570 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */; };
 		1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8E81D01924229B00821570 /* MPWDocumentScheme.m */; };
+		1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */; };
+		1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */; };
 		1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */ = {isa = PBXBuildFile; fileRef = 1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */; };
 		1F9AE9C528D75BC300671748 /* add.aarch64 in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9C428D75BC300671748 /* add.aarch64 */; };
 		1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9CA28E1E58600671748 /* MPWJittableData.h */; };
@@ -1143,6 +1145,8 @@
 		1F8B855119AC72C700F8A107 /* MPWFileWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFileWatcher.m; sourceTree = "<group>"; };
 		1F8E81CF1924229B00821570 /* MPWDocumentScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDocumentScheme.h; sourceTree = "<group>"; };
 		1F8E81D01924229B00821570 /* MPWDocumentScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDocumentScheme.m; sourceTree = "<group>"; };
+		1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMethodSymbols.h; sourceTree = "<group>"; };
+		1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMethodSymbols.m; sourceTree = "<group>"; };
 		1F99D23829055D77009F0CE8 /* use_testclass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_testclass.m; sourceTree = "<group>"; };
 		1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hashPlus200.aarch64; sourceTree = "<group>"; };
 		1F9AE9C028D4957A00671748 /* Mach_O_Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mach_O_Structs.h; sourceTree = "<group>"; };
@@ -1610,6 +1614,8 @@
 				1F3466EB28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m */,
 				1FB559EE290D61E0009AE4D0 /* STNativeCompiler.h */,
 				1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */,
+				1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */,
+				1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */,
 				1F9AE9CA28E1E58600671748 /* MPWJittableData.h */,
 				1F9AE9CB28E1E58600671748 /* MPWJittableData.m */,
 				1F81D90A16DEBC6300408D41 /* llvm-components.txt */,
@@ -2470,6 +2476,7 @@
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
+				1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
 				1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */,
@@ -3756,6 +3763,7 @@
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
+				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
 			);

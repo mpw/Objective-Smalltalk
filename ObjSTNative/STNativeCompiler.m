@@ -19,6 +19,8 @@
 #import "MPWClassScheme.h"
 #import "MPWIdentifier.h"
 #import "MPWConnectToDefault.h"
+#import "STMethodSymbols.h"
+
 
 @interface STNativeCompiler()
 
@@ -630,30 +632,26 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return self.codegen.generatedCode;
 }
 
+-(STMethodSymbols*)compileMethodsInList:(NSArray<MPWScriptedMethod*>*)methods forClass:(STClassDefinition*)aClass classMethods:(BOOL)classMethods
+{
+    STMethodSymbols *methodSymbols=[[STMethodSymbols new] autorelease];
+    for ( MPWScriptedMethod* method in methods) {
+        [methodSymbols.methodNames addObject:method.methodName];
+        [methodSymbols.methodTypes addObject:[[method header] typeString]];
+        [methodSymbols.symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass isClassMethod:classMethods]];
+    }
+    return methodSymbols;
+}
 
 -(void)compileMethodsForClass:(STClassDefinition*)aClass
 {
-    NSMutableArray *symbolNames=[NSMutableArray array];
-    NSMutableArray *methodNames=[NSMutableArray array];
-    NSMutableArray *methodTypes=[NSMutableArray array];
-    for ( MPWScriptedMethod* method in aClass.allImplementationMethods) {
-        [methodNames addObject:method.methodName];
-        [methodTypes addObject:[[method header] typeString]];
-        [symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass isClassMethod:NO]];
-    }
-    
-    NSMutableArray *classSymbolNames=[NSMutableArray array];
-    NSMutableArray *classMethodNames=[NSMutableArray array];
-    NSMutableArray *classMethodTypes=[NSMutableArray array];
-    for ( MPWScriptedMethod* method in aClass.classMethods) {
-        [classMethodNames addObject:method.methodName];
-        [classMethodTypes addObject:[[method header] typeString]];
-        [classSymbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass isClassMethod:YES]];
-    }
+    STMethodSymbols *instanceMethods=[self compileMethodsInList:aClass.allImplementationMethods forClass:aClass classMethods:NO];
+        
+    STMethodSymbols *classMethods=[self compileMethodsInList:aClass.classMethods forClass:aClass classMethods:YES];
     
     [writer addTextSectionData:[codegen target]];
-    [classwriter writeInstanceMethodListForMethodNames:methodNames types:methodTypes functions:symbolNames ];
-    [classwriter writeClassMethodListForMethodNames:classMethodNames types:classMethodTypes functions:classSymbolNames ];
+    [classwriter writeInstanceMethodList:instanceMethods ];
+    [classwriter writeClassMethodList:classMethods];
 }
 
 -(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass

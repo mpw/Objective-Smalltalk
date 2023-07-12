@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOWriter;
+@class MPWMachOWriter,STMethodSymbols;
 
 @interface MPWMachOClassWriter : NSObject
 
@@ -24,9 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString *classMethodListSymbol;
 
 -(void)writeClass;
--(void)writeInstanceMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols;
--(void)writeClassMethodListForMethodNames:(NSArray<NSString*>*)names types:(NSArray<NSString*>*)types functions:(NSArray<NSString*>*)functionSymbols;
-
+-(void)writeInstanceMethodList:(STMethodSymbols*)methodSymbols;
+-(void)writeClassMethodList:(STMethodSymbols*)methodSymbols;
 
 @end
 
