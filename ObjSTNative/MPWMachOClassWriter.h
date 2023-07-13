@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 21.10.22.
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)writeClass;
 -(void)writeInstanceMethodList:(STMethodSymbols*)methodSymbols;
 -(void)writeClassMethodList:(STMethodSymbols*)methodSymbols;
+-(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName functionSymbols:(NSArray <NSString*>*)functionSymbols;
 
 @end
 
