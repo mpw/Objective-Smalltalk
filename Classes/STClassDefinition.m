@@ -34,22 +34,33 @@
     return ppdefs;
 }
 
+-(PropertyPathDefs*)propertyPathDefsForVerb:(MPWRESTVerb)thisVerb
+{
+    NSArray *definitions=[self propertyPathDefinitionsForVerb:thisVerb];
+    int numDefinitions=(int)definitions.count;
+    PropertyPathDefs *allDefs=NULL;
+    if ( numDefinitions ) {
+        PropertyPathDef *defs=calloc(numDefinitions, sizeof(PropertyPathDef));
+        for (long j=0;j<numDefinitions;j++) {
+            defs[j].function=NULL;
+            defs[j].method = [[definitions[j] methodForVerb:thisVerb] retain];
+            defs[j].propertyPath = [[[definitions[j] propertyPath] asReferenceTemplate] retain];
+        }
+        allDefs=makePropertyPathDefs(thisVerb ,numDefinitions, defs);
+        free(defs);
+    }
+    return allDefs;
+}
+
 -(NSArray*)generatedPropertyPathMethods
 {
     NSMutableArray *methods=[NSMutableArray array];
     MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
     for (int i=0;i<2;i++ ) {
-        MPWRESTVerb thisVerb=verbs[i];
-        NSArray *definitions=[self propertyPathDefinitionsForVerb:thisVerb];
-        int numDefinitions=(int)definitions.count;
-        if ( numDefinitions ) {
-            PropertyPathDef *defs=calloc(numDefinitions, sizeof(PropertyPathDef));
-            for (long j=0;j<numDefinitions;j++) {
-                defs[j].function=NULL;
-                defs[j].method = [[definitions[j] methodForVerb:thisVerb] retain];
-                defs[j].propertyPath = [[[definitions[j] propertyPath] asReferenceTemplate] retain];
-            }
-            [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:defs count:numDefinitions verb:thisVerb] autorelease]];
+        PropertyPathDefs *defs = [self propertyPathDefsForVerb:verbs[i]];
+        if (defs) {
+            [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:defs->defs count:defs->count verb:defs->verb] autorelease]];
+            free(defs);
         }
     }
     return methods;

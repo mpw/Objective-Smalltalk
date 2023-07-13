@@ -632,22 +632,32 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return self.codegen.generatedCode;
 }
 
--(STMethodSymbols*)compileMethodsInList:(NSArray<MPWScriptedMethod*>*)methods forClass:(STClassDefinition*)aClass classMethods:(BOOL)classMethods
+-(STMethodSymbols*)compileMethodsInList:(NSArray<MPWScriptedMethod*>*)methods forClass:(STClassDefinition*)aClass info:(STMethodSymbols *)methodSymbols classMethods:(BOOL)classMethods
 {
-    STMethodSymbols *methodSymbols=[[STMethodSymbols new] autorelease];
     for ( MPWScriptedMethod* method in methods) {
         [methodSymbols.methodNames addObject:method.methodName];
         [methodSymbols.methodTypes addObject:[[method header] typeString]];
-        [methodSymbols.symbolNames addObject:[self compileMethod:method inClass:(STClassDefinition*)aClass isClassMethod:classMethods]];
+        [methodSymbols.symbolNames addObject:[self compileMethod:method inClass:aClass isClassMethod:classMethods]];
     }
     return methodSymbols;
 }
 
 -(void)compileMethodsForClass:(STClassDefinition*)aClass
 {
-    STMethodSymbols *instanceMethods=[self compileMethodsInList:aClass.allImplementationMethods forClass:aClass classMethods:NO];
-        
-    STMethodSymbols *classMethods=[self compileMethodsInList:aClass.classMethods forClass:aClass classMethods:YES];
+    STMethodSymbols *instanceMethods=[[STMethodSymbols new] autorelease];
+    NSArray *propertyPathMethods=[aClass propertyPathImplementationMethods];
+    if ( propertyPathMethods.count) {
+        [self compileMethodsInList:propertyPathMethods forClass:aClass info:instanceMethods classMethods:NO];
+        PropertyPathDefs *getters=[aClass propertyPathDefsForVerb:MPWRESTVerbGET];
+        NSAssert2(getters->count == propertyPathMethods.count, @"property path getter count %d not equal to method count %ld", getters->count,propertyPathMethods.count);
+        NSString *propertyPathGetterListSymbol=[NSString stringWithFormat:@"_%@_PropertyPaths_get",aClass.name];
+//        [classwriter writePropertyDefStruct:getters symbolName:propertyPathGetterListSymbol functionSymbols:instanceMethods.symbolNames];
+    }
+    
+    [self compileMethodsInList:aClass.methods forClass:aClass info:instanceMethods classMethods:NO];
+
+    STMethodSymbols *classMethods=[[STMethodSymbols new] autorelease];
+    [self compileMethodsInList:aClass.classMethods forClass:aClass info:classMethods classMethods:YES];
     
     [writer addTextSectionData:[codegen target]];
     [classwriter writeInstanceMethodList:instanceMethods ];

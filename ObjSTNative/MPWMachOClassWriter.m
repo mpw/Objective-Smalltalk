@@ -232,7 +232,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     [objcConstWriter appendBytes:theDefs length:sizeof *theDefs];
     for (int i=0;i<theDefs->count;i++) {
         NSString *symbol=[NSString stringWithFormat:@"_PP_%@_%d",self.nameOfClass,i];
-        [self.writer writeNSStringLiteral:theDefs->defs[i].propertyPath label:symbol];
+        [self.writer writeNSStringLiteral:[theDefs->defs[i].propertyPath stringValue] label:symbol];
         [objcConstWriter addRelocationEntryForSymbol:symbol atOffset:(int)objcConstWriter.length];
         [objcConstWriter addRelocationEntryForSymbol:functionSymbols[i] atOffset:(int)objcConstWriter.length + 8 ];
         [objcConstWriter appendBytes:&zeroDef length:sizeof zeroDef];
