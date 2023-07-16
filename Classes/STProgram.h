@@ -12,7 +12,7 @@
 
 -main:args;
 -Stdout;
-+(int)main:(NSArray <NSString*>*)args;
++(int)intMain:(NSArray <NSString*>*)args;
 +(int)mainArgc:(int)argc argv:(char**)argv;
 
 @end

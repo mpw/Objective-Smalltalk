@@ -11,16 +11,24 @@
 
 @implementation STProgram
 
-+(int)main:(NSArray <NSString*>*)args
++(id)main:(NSArray <NSString*>*)args
 {
     STProgram *process=[[self new] autorelease];
     if ( args.count > 0 && [process respondsToSelector:@selector(setName:)]) {
         process.name = [args firstObject];
         args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
     }
-    id retval = [process main:args];
+    // yes, the retain here is weird, but it appears to be necessary
+    return [[process main:args] retain];
+}
+
+
++(int)intMain:(NSArray <NSString*>*)args
+{
+    id retval = [self main:args];
     int retcode = [retval intValue];
-    [process release];
+    //  weird autorelease to balance out the weird retain above
+    [retval autorelease];
     return retcode;
 }
 
@@ -31,7 +39,7 @@
     for (int i=0;i<argc;i++) {
         [args addObject:@(argv[i])];
     }
-    return [self main:args];
+    return [self intMain:args];
 }
 
 @end
