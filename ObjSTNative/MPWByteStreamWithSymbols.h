@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SymbolWriter
 
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection;
 
 @end
 

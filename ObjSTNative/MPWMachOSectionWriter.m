@@ -23,7 +23,7 @@
 {
     self=[super initWithTarget:aTarget];
     if ( self ) {
-        relocCapacity = 10;
+        relocCapacity = 20;
         [self growRelocations];
         self.segname=@"__TEXT";
         self.sectname=@"__text";
@@ -66,7 +66,7 @@
 
 -(void)declareGlobalSymbol:(NSString*)symbol
 {
-    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xf section:self.sectionNumber];
+    [self.symbolWriter declareGlobalSymbol:symbol atOffset:(int)[self length] type:0xf section:(int)self.sectionNumber];
 }
 
 -(void)declareLocalSymbol:(NSString*)symbol
@@ -85,7 +85,7 @@
 {
     struct relocation_info r={};
     // FIXME:  this should not declare, it should retrieve + verify that the symbol already exists
-    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:offset type:0xf section:self.sectionNumber];
+    r.r_symbolnum = [self.symbolWriter declareGlobalSymbol:symbol atOffset:offset type:0xf section:(int)self.sectionNumber];
     //    NSLog(@"offset of reloc entry[%d]=%d, symbol name: %@",relocCount,offset,symbol);
     r.r_address = offset;
     r.r_extern = 1;

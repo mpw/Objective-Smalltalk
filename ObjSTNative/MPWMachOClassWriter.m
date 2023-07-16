@@ -16,6 +16,7 @@
 @interface MPWMachOClassWriter()
 
 @property (nonatomic,strong) MPWMachOWriter* writer;
+@property (nonatomic,strong) MPWMachOSectionWriter* typeWriter;
 
 @end
 
@@ -96,7 +97,10 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(MPWMachOSectionWriter*)objcMethTypeWriter
 {
-    return [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methtype" flags:S_CSTRING_LITERALS];
+    if ( !self.typeWriter) {
+        self.typeWriter = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methtype" flags:S_CSTRING_LITERALS];
+    }
+    return self.typeWriter;
 }
 
 -(void)writeRWPartOnSection:(MPWMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:(NSString*)superclassSymbol
@@ -171,11 +175,11 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(void)writeMethodList:(STMethodSymbols*)methodSymbols methodListSymbol:(NSString*)methodListSymbol kind:(NSString*)classOrInstance
 {
-    int numberOfMethods = methodSymbols.methodNames.count;
+    long numberOfMethods = methodSymbols.methodNames.count;
 
-    int methodListSize = sizeof(BaseMethods) + (numberOfMethods * sizeof(MethodEntry));
+    int methodListSize = (int)(sizeof(BaseMethods) + (numberOfMethods * sizeof(MethodEntry)));
     BaseMethods *methods = calloc( 1, methodListSize);
-    methods->count = numberOfMethods;
+    methods->count = (int)numberOfMethods;
     methods->entrysize = 24;
     MPWMachOSectionWriter *methNameWriter=self.objcMethNameWriter;
     MPWMachOSectionWriter *methTypeWriter=self.objcMethTypeWriter;
@@ -186,8 +190,6 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
         NSString *methodNameSymbol = [NSString stringWithFormat:@"__%@_METHOD_NAME_%@_%d",classOrInstance,self.nameOfClass,i];
         NSString *methodTypeSymbol = [NSString stringWithFormat:@"__%@_METHOD_TYPE_%@_%d",classOrInstance,self.nameOfClass,i];
         
-
-
         [methNameWriter declareGlobalSymbol:methodNameSymbol];
         [methNameWriter writeNullTerminatedString:methodSymbols.methodNames[i]];
         
@@ -196,11 +198,11 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
         
         
         long nameInMethodOffset=((void*)&(methods->methods[i].name))-(void*)methods;
-        [objcConstWriter addRelocationEntryForSymbol:methodNameSymbol atOffset:(int)nameInMethodOffset];
+        [objcConstWriter addRelocationEntryForSymbol:methodNameSymbol atOffset:(int)objcConstWriter.length+nameInMethodOffset];
         long typeInMethodOffset=((void*)&(methods->methods[i].type))-(void*)methods;
-        [objcConstWriter addRelocationEntryForSymbol:methodTypeSymbol atOffset:(int)typeInMethodOffset];
+        [objcConstWriter addRelocationEntryForSymbol:methodTypeSymbol atOffset:(int)objcConstWriter.length+typeInMethodOffset];
         long impInMethodOffset=((void*)&(methods->methods[i].imp))-(void*)methods;
-        [objcConstWriter addRelocationEntryForSymbol:methodSymbols.symbolNames[i] atOffset:(int)impInMethodOffset];
+        [objcConstWriter addRelocationEntryForSymbol:methodSymbols.symbolNames[i] atOffset:(int)objcConstWriter.length + impInMethodOffset];
     }
     
     [objcConstWriter declareGlobalSymbol:methodListSymbol];
@@ -236,7 +238,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     [objcConstWriter appendBytes:theDefs length:sizeof *theDefs];
     for (int i=0;i<theDefs->count;i++) {
         NSString *symbol=[NSString stringWithFormat:@"_PP_%@_%d",self.nameOfClass,i];
-        [self.writer writeNSStringLiteral:[theDefs->defs[i].propertyPath stringValue] label:symbol];
+        [self.writer writeNSStringLiteral:[(id)(theDefs->defs[i].propertyPath) stringValue] label:symbol];
         [objcConstWriter addRelocationEntryForSymbol:symbol atOffset:(int)objcConstWriter.length];
         [objcConstWriter addRelocationEntryForSymbol:functionSymbols[i] atOffset:(int)objcConstWriter.length + 8 ];
         [objcConstWriter appendBytes:&zeroDef length:sizeof zeroDef];
