@@ -12,8 +12,8 @@ scheme Hello
    }
    -main:args
    {
-        self Stdout println: self GET_hi.
-        self Stdout println: (self performSelector: 'GET_hi/:p1' asSelector withObject: args lastObject) .
+        self Stdout println: (self at:'hi').
+        self Stdout println: (self at:('hi/' , args lastObject )).
         0.
    }
 }
