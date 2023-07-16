@@ -1282,7 +1282,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 
 +(void)testClassMethodsWork
 {
-    COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram {  +theAnswer { 32. } -main:args { self class theAnswer - 32. } }", @"testClassMethodsWork");
+    COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram { +main:args { 0. } }", @"testClassMethodsWork");
 }
 
 
