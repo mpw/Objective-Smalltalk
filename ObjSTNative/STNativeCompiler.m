@@ -1285,6 +1285,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram { +main:args { 0. } }", @"testClassMethodsWork");
 }
 
++(void)testMixingClassAndInstanceMethodsWorks
+{
+    COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram { +thirtytwo { 32. } -main:args { self class thirtytwo - 32. } }", @"testClassMethodsWork");
+}
+
 
 
 +(NSArray*)testSelectors
@@ -1325,7 +1330,8 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testStackBlocksCanBeUsed",
        @"testBlockCanAccessOutsideScopeVariables",
        @"testCanLoadNSArrayFromAFramework",
-//       @"testClassMethodsWork",
+       @"testClassMethodsWork",
+//       @"testMixingClassAndInstanceMethodsWorks",
 			];
 }
 
