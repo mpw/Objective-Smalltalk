@@ -90,7 +90,7 @@ int runSTMain( int argc, char *argv[], NSString *className ) {
         args = [args subarrayWithRange:NSMakeRange(1,args.count-1)];
     }
     id retval = [process main:args];
-    NSLog(@"object retval: %@",retval);
+//    NSLog(@"object retval: %@",retval);
     NSAssert( retval != nil, @"retval should not be nil");
     int retcode = [retval intValue];
     [process release];
