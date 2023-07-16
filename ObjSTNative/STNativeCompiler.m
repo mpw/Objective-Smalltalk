@@ -651,7 +651,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         PropertyPathDefs *getters=[aClass propertyPathDefsForVerb:MPWRESTVerbGET];
         NSAssert2(getters->count == propertyPathMethods.count, @"property path getter count %d not equal to method count %ld", getters->count,propertyPathMethods.count);
         NSString *propertyPathGetterListSymbol=[NSString stringWithFormat:@"_%@_PropertyPaths_get",aClass.name];
-//        [classwriter writePropertyDefStruct:getters symbolName:propertyPathGetterListSymbol functionSymbols:instanceMethods.symbolNames];
+        [classwriter writePropertyDefStruct:getters symbolName:propertyPathGetterListSymbol functionSymbols:instanceMethods.symbolNames];
     }
     
     [self compileMethodsInList:aClass.methods forClass:aClass info:instanceMethods classMethods:NO];
