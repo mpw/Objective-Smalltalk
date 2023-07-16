@@ -169,7 +169,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     
 }
 
--(void)writeMethodList:(STMethodSymbols*)methodSymbols methodListSymbol:(NSString*)methodListSymbol
+-(void)writeMethodList:(STMethodSymbols*)methodSymbols methodListSymbol:(NSString*)methodListSymbol kind:(NSString*)classOrInstance
 {
     int numberOfMethods = methodSymbols.methodNames.count;
 
@@ -183,8 +183,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 
     for (int i=0;i<numberOfMethods;i++) {
-        NSString *methodNameSymbol = [NSString stringWithFormat:@"__METHOD_NAME_%@_%d",self.nameOfClass,i];
-        NSString *methodTypeSymbol = [NSString stringWithFormat:@"__METHOD_TYPE_%@_%d",self.nameOfClass,i];
+        NSString *methodNameSymbol = [NSString stringWithFormat:@"__%@_METHOD_NAME_%@_%d",classOrInstance,self.nameOfClass,i];
+        NSString *methodTypeSymbol = [NSString stringWithFormat:@"__%@_METHOD_TYPE_%@_%d",classOrInstance,self.nameOfClass,i];
         
 
 
@@ -210,17 +210,21 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(void)writeInstanceMethodList:(STMethodSymbols*)methodSymbols
 {
-    NSString *methodListSymbol = [NSString stringWithFormat:@"__INSTANCEMETHOD_LIST_%@",self.nameOfClass];
-    self.instanceMethodListSymbol=methodListSymbol;
-    [self writeMethodList:methodSymbols methodListSymbol:methodListSymbol];
+    if ( methodSymbols.symbolNames.count ) {
+        NSString *methodListSymbol = [NSString stringWithFormat:@"__INSTANCEMETHOD_LIST_%@",self.nameOfClass];
+        self.instanceMethodListSymbol=methodListSymbol;
+        [self writeMethodList:methodSymbols methodListSymbol:methodListSymbol kind:@"INST"];
+    }
 }
 
 
 -(void)writeClassMethodList:(STMethodSymbols*)methodSymbols
 {
-    NSString *methodListSymbol = [NSString stringWithFormat:@"__CLASSMETHOD_LIST_%@",self.nameOfClass];
-    self.classMethodListSymbol=methodListSymbol;
-    [self writeMethodList:methodSymbols methodListSymbol:methodListSymbol];
+    if ( methodSymbols.symbolNames.count ) {
+        NSString *methodListSymbol = [NSString stringWithFormat:@"__CLASSMETHOD_LIST_%@",self.nameOfClass];
+        self.classMethodListSymbol=methodListSymbol;
+        [self writeMethodList:methodSymbols methodListSymbol:methodListSymbol kind:@"CLAS"];
+    }
 }
 
 -(void)writePropertyDefStruct:(PropertyPathDefs*)theDefs symbolName:(NSString*)symbolName functionSymbols:(NSArray <NSString*>*)functionSymbols
