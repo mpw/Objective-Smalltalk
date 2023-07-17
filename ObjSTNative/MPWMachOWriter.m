@@ -491,12 +491,23 @@
     [objcInfo appendBytes:data length:8];
 }
 
+-(void)writePlatformLoadCommand
+{
+    struct build_version_command cmd={
+        LC_BUILD_VERSION,
+        sizeof(struct build_version_command),
+        PLATFORM_MACOS
+        };
+    [self appendBytes:&cmd length:sizeof cmd];
+}
+
 -(void)writeFile
 {
-    self.numLoadCommands = 2;
-    self.loadCommandSize = sizeof(struct symtab_command) + [self segmentCommandSize];
+    self.numLoadCommands = 3;
+    self.loadCommandSize = sizeof(struct symtab_command) + sizeof(struct build_version_command)+[self segmentCommandSize];
 //    self.loadCommandSize += sizeof(struct section_64);
     [self writeHeader];
+    [self writePlatformLoadCommand];
     [self generateStringTable];
     [self writeSegmentLoadCommand];
     [self writeSymbolTableLoadCommand];
@@ -553,7 +564,7 @@
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     
     EXPECTTRUE([reader isHeaderValid],@"valid header");
-    INTEXPECT([reader numLoadCommands],2,@"number of load commands");
+    INTEXPECT([reader numLoadCommands],3,@"number of load commands");
     INTEXPECT([reader numSymbols],1,@"number of symbols");
     NSArray *strings = [reader stringTable];
     EXPECTTRUE([reader isSymbolGlobalAt:0],@"first symbol _add is global");
@@ -598,7 +609,7 @@
     
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-    INTEXPECT([[reader textSection] relocEntryOffset],304,@"offset of undefined symbol reloc entries");
+    INTEXPECT([[reader textSection] relocEntryOffset],328,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0],12,@"address");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");

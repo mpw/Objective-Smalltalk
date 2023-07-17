@@ -7,7 +7,7 @@ scheme Hello
    }
    /hi/:p1 {
       get { 
-	'GET property path /hi/:p1 with paramater: ' stringByAppendingString:p1.
+	p1.
      }
    }
    -main:args
