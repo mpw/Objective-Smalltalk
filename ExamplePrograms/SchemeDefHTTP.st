@@ -12,8 +12,9 @@ scheme Hello
    }
    -main:args
    {
-        self Stdout println: (self at:'hi').
-        self Stdout println: (self at:('hi/' , args lastObject )).
+        self Stdout println: self class superclass.
+        self serveOnPort: 8081 intValue.
+        class:NSRunLoop currentRunLoop run.
         0.
    }
 }
