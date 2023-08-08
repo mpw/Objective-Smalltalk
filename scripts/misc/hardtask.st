@@ -9,7 +9,7 @@ class Task {
 	-description { "Task: {this:title} done: {this:done}". }
 }
 
-taskList ← #( #Task{ #id: 1, #title: 'Clean Room', #done: false }, #Task{ #id: 2, #title: 'Check Twitter', #done: true } ).
+taskList ← #( #Task{ #title: 'Clean Room', #done: false }, #Task{ #title: 'Check Twitter', #done: true } ).
 
 scheme todo : MPWMappingStore {
 	var taskDict.
@@ -26,15 +26,15 @@ scheme todo : MPWMappingStore {
 		stdout println: this:taskDict.
 	}
 	/tasks { 
-		|= { 
+	   get { 
 			this:taskList.
 		}
 	}
 	/task/:id {
-		|= {
+		get {
 			this:taskDict at:id .
 		}
-		=| {
+		put {
 			this:taskDict at:id put:newValue.
 			self persist.
 		}
