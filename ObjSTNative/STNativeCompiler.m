@@ -813,7 +813,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( NSString *frameworkName in frameworks) {
         [command appendFormat:@" -framework %@ ",frameworkName];
     }
-    fprintf(stderr,"\n%s\n",[command UTF8String]);
+    if (self.logging) {
+        fprintf(stderr,"\n%s\n",[command UTF8String]);
+    }
     return command;
 }
 
@@ -1291,6 +1293,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram { +thirtytwo { 32. } -main:args { self class thirtytwo - 32. } }", @"testClassMethodsWork");
 }
 
++(void)testDeclarAndReturnNativeIntVariables
+{
+    // This currently "works" if I return "a intValue" instead of "a"
+    COMPILEANDRUN( @"class Hello  { +<int>main:args { var <int> a. a:= 0. a. }  } }", @"testDeclaredIntCanBeReturned");
+}
 
 
 +(NSArray*)testSelectors
@@ -1333,6 +1340,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testCanLoadNSArrayFromAFramework",
        @"testClassMethodsWork",
        @"testMixingClassAndInstanceMethodsWorks",
+//       @"testDeclarAndReturnNativeIntVariables",
 			];
 }
 
