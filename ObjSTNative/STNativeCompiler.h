@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STNativeCompiler : STCompiler
 
 @property (nonatomic, assign) bool jit;
+@property (nonatomic, assign) bool logging;
 
 +(instancetype)jitCompiler;
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir additionalFrameworks:(NSArray*)additionalFrameworks;
