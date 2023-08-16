@@ -7,7 +7,7 @@
 //
 
 #import "MPWMethodHeader.h"
-#import "MPWStScanner.h"
+#import "STScanner.h"
 #import "STVariableDefinition.h"
 #import "STTypeDescriptor.h"
 
@@ -148,7 +148,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 	return next;
 }
 
--initWithScanner:(MPWStScanner*)scanner
+-initWithScanner:(STScanner*)scanner
 {
     id optionalReturnType;
     self = [self init];
@@ -164,7 +164,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 
 -initWithString:(NSString*)aString
 {
-    return [self initWithScanner:[MPWStScanner scannerWithData:[(aString ?: @"") asData]]];
+    return [self initWithScanner:[STScanner scannerWithData:[(aString ?: @"") asData]]];
 }
 
 

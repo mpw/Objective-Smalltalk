@@ -2,7 +2,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@interface MPWStScanner : MPWScanner
+@interface STScanner : MPWScanner
 {
 	id	intClass,floatClass,stringClass;
 	id	tokens;

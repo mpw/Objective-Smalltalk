@@ -10,7 +10,7 @@
 #import "STEvaluator.h"
 #import <MPWFoundation/MPWByteStream.h>
 #import "MPWScheme.h"
-#import "MPWStScanner.h"
+#import "STScanner.h"
 
 @implementation MPWLiteralExpression
 

@@ -13,7 +13,7 @@
 #include <unistd.h>
 
 //#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
-#import <ObjectiveSmalltalk/MPWStScanner.h>
+#import <ObjectiveSmalltalk/STScanner.h>
 #import "MPWShellCompiler.h"
 #import "STScript.h"
 #import "MPWObjectMirror.h"
