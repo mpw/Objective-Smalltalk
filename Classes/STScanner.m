@@ -1,6 +1,6 @@
 /* MPWStScanner.m created by marcel on Tue 04-Jul-2000 */
 
-#import "MPWStScanner.h"
+#import "STScanner.h"
 
 
 @interface MPWStringLiteral()
@@ -119,7 +119,7 @@ objectAccessor(NSString*, realString, setRealString)
 
 @end
 
-@implementation MPWStScanner
+@implementation STScanner
 
 scalarAccessor( Class, intClass, setIntClass )
 scalarAccessor( Class, floatClass, setFloatClass )
@@ -501,7 +501,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 }
 @end
 
-@implementation MPWStScanner(testing)
+@implementation STScanner(testing)
 
 +scannerWithString:(NSString*)s
 {
@@ -510,14 +510,14 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 +(void)testDoubleStringEscape
 {
-    MPWStScanner *scanner = [self scannerWithString:@"'ab''c'"];
+    STScanner *scanner = [self scannerWithString:@"'ab''c'"];
     id string = [scanner nextToken];
     IDEXPECT( string, @"ab'c", @"should have turned double single quotes into single single quote" );
 }
 
 +(void)testConstraintEqual
 {
-    MPWStScanner *scanner = [self scannerWithString:@"a::=b"];
+    STScanner *scanner = [self scannerWithString:@"a::=b"];
     id a = [scanner nextToken];
     id eq = [scanner nextToken];
     id b = [scanner nextToken];
@@ -528,7 +528,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 +(void)testURLWithUnderscores
 {
-	MPWStScanner *scanner=[self scannerWithString:@"http://farm1.static.flickr.com/9/86383513_f52e2fbf92.jpg"];
+	STScanner *scanner=[self scannerWithString:@"http://farm1.static.flickr.com/9/86383513_f52e2fbf92.jpg"];
 	NSMutableArray *tokens=[NSMutableArray array];
 	id nextToken;
 	while ( nil != (nextToken=[scanner nextToken] )) {
@@ -539,27 +539,27 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 +(void)testLeftArrow
 {
-	MPWStScanner *scanner=[self scannerWithString:@"<-"];
+	STScanner *scanner=[self scannerWithString:@"<-"];
     IDEXPECT([scanner nextToken], @"<-", @"single left arrow");
     
 }
 
 +(void)testSimpleLiteralString
 {
-	MPWStScanner *scanner=[self scannerWithString:@"'literal string'"];
+	STScanner *scanner=[self scannerWithString:@"'literal string'"];
     IDEXPECT([scanner nextToken], @"literal string", @"literal string");
 }
 
 +(void)singleMinusString
 {
-	MPWStScanner *scanner=[self scannerWithString:@"'-'"];
+	STScanner *scanner=[self scannerWithString:@"'-'"];
     IDEXPECT([scanner nextToken], @"-", @"single minus sign");
     
 }
 
 +(void)testRightArrow
 {
-	MPWStScanner *scanner=[self scannerWithString:@"->"];
+	STScanner *scanner=[self scannerWithString:@"->"];
     IDEXPECT([scanner nextToken],@"->", @"single right arrow");
 }
 
@@ -567,7 +567,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 {
     unichar pival=960;
     NSString *pi_string=[NSString stringWithCharacters:&pival length:1];
-    MPWStScanner *scanner=[self scannerWithString:pi_string];
+    STScanner *scanner=[self scannerWithString:pi_string];
     NSString *token=[scanner nextToken];
     INTEXPECT([token length], 1, @"length of scanned token pi");
 
@@ -578,7 +578,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 +(void)testScanStringWithUnicodeQuotationMark
 {
     NSString *s=@"‘Hello’";
-    MPWStScanner *scanner=[self scannerWithString:s];
+    STScanner *scanner=[self scannerWithString:s];
     NSString *token=[[scanner nextToken] realString];
     NSLog(@"real string: %@/%@",[token class],token);
 
@@ -588,7 +588,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 +(void)testNewlineEscape
 {
-    MPWStScanner *scanner=[self scannerWithString:@"'\\n'"];
+    STScanner *scanner=[self scannerWithString:@"'\\n'"];
     NSString *scanned=[scanner nextToken];
     IDEXPECT(scanned,@"\n", @"newline");
     INTEXPECT( scanned.length,1,@"newline is a single char");

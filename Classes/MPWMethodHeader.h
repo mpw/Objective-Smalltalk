@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWStScanner,STVariableDefinition,STTypeDescriptor;
+@class STScanner,STVariableDefinition,STTypeDescriptor;
 
 @interface MPWMethodHeader : MPWObject {
 	NSString	*methodName;
@@ -23,7 +23,7 @@ objectAccessor_h(NSString*, methodName, setMethodName )
 
 +methodHeaderWithString:(NSString*)aString;
 -initWithString:(NSString*)aString;
--initWithScanner:(MPWStScanner*)scanner;
+-initWithScanner:(STScanner*)scanner;
 -(STTypeDescriptor*)returnType;
 -(NSString*)headerString;
 -typeString;

@@ -2,11 +2,11 @@
 
 #import <ObjectiveSmalltalk/STEvaluator.h>
 
-@class MPWMethodHeader,MPWStScanner,MPWMethodStore,MPWScriptedMethod,STClassDefinition;
+@class MPWMethodHeader,STScanner,MPWMethodStore,MPWScriptedMethod,STClassDefinition;
 
 @interface STCompiler : STEvaluator
 {
-    MPWStScanner *scanner;
+    STScanner *scanner;
     id tokens;
 	MPWMethodStore* methodStore;
     NSMutableDictionary *symbolTable;

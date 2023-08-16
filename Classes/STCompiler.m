@@ -1,7 +1,7 @@
 /* STCompiler.m created by marcel on Mon 03-Jul-2000 */
 
 #import "STCompiler.h"
-#import "MPWStScanner.h"
+#import "STScanner.h"
 #import "MPWMessageExpression.h"
 #import "MPWIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
@@ -78,7 +78,7 @@
 
 
 objectAccessor(NSMutableDictionary*, symbolTable, setSymbolTable)
-objectAccessor(MPWStScanner*, scanner, setScanner )
+objectAccessor(STScanner*, scanner, setScanner )
 objectAccessor(MPWMethodStore*, methodStore, setMethodStore )
 idAccessor( connectorMap, setConnectorMap );
 idAccessor(solver, setSolver)
@@ -1104,7 +1104,7 @@ idAccessor(solver, setSolver)
 	NSLog(@"tokens: %@",tokenArray);
 */
     [self resetSmbolTable];
-    [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
+    [self setScanner:[STScanner scannerWithData:[aString asData]]];
     expr = [self parseStatements];
 //    NSLog(@"expr = %@",expr);
     return expr;
@@ -1112,7 +1112,7 @@ idAccessor(solver, setSolver)
 
 -(MPWScriptedMethod*)parseMethodDefinition:aString
 {
-    [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
+    [self setScanner:[STScanner scannerWithData:[aString asData]]];
     return [self parseMethodDefinition];
 }
 
@@ -1167,7 +1167,7 @@ idAccessor(solver, setSolver)
 
 -(STClassDefinition*)parseClassDefinitionFromString:aString
 {
-    [self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
+    [self setScanner:[STScanner scannerWithData:[aString asData]]];
     return [self parseClassDefinition];
 }
 
