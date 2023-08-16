@@ -15,7 +15,7 @@ static void runTests()
                        @"STSimpleDataflowConstraint",
 					   @"MPWScriptedMethod",
                        @"MPWIdentifier",
-                       @"MPWStScanner",
+                       @"STScanner",
                        @"MPWScheme",
                        @"MPWInterval",
                        @"MPWMessage",

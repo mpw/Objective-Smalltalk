@@ -31,7 +31,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STExpression.m \
     Stsh/Classes/MPWExpression+autocomplete.m \
     Classes/MPWBindingLegacy.m \
-    Classes/MPWStScanner.m \
+    Classes/STScanner.m \
     Classes/MPWMessage.m \
     Classes/MPWMessage.m \
     Classes/MPWSelfContainedBinding.m \
