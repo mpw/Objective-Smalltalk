@@ -1097,7 +1097,7 @@ idAccessor(solver, setSolver)
 {
     id expr;
 /*
-	[self setScanner:[MPWStScanner scannerWithData:[aString asData]]];
+	[self setScanner:[STScanner scannerWithData:[aString asData]]];
 	while ( token=[self nextToken] ) {
 		[tokenArray addObject:token];
 	}

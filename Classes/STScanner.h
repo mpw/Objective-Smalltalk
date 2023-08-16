@@ -1,4 +1,4 @@
-/* MPWStScanner.h created by marcel on Tue 04-Jul-2000 */
+/* STScanner.h created by marcel on Tue 04-Jul-2000 */
 
 #import <MPWFoundation/MPWFoundation.h>
 

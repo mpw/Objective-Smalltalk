@@ -1,4 +1,4 @@
-/* MPWStScanner.m created by marcel on Tue 04-Jul-2000 */
+/* STScanner.m created by marcel on Tue 04-Jul-2000 */
 
 #import "STScanner.h"
 

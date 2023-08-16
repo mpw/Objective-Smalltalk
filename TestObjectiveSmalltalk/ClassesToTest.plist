@@ -63,7 +63,7 @@
 	MPWSetAccessor,
 	STCompiler,
 	MPWStName,
-	MPWStScanner,
+	STScanner,
 	MPWStTests,
 	MPWStatementList,
 	MPWStringLiteral,
