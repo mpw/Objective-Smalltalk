@@ -10,6 +10,7 @@
 @end
 
 
+#define stisspace(x)   (isspace(x) || (((unsigned int)x)==0xa0))
 
 @implementation MPWStName
 
@@ -163,7 +164,7 @@ boolAccessor( noNumbers, setNoNumbers )
             charSwitch[i]=(IDIMP0)[self methodForSelector:@selector(scanASCIIName)];
         } else if (isdigit(i) ) {
             charSwitch[i]=(IDIMP0)[self methodForSelector:@selector(scanNumber)];
-        } else if (isspace(i)  ) {
+        } else if (stisspace(i)  ) {
             charSwitch[i]=(IDIMP0)[self methodForSelector:@selector(skipSpace)];
 //        } else if (  i=='-' ) {
 //          charSwitch[i]=[self methodForSelector:@selector(scanNegativeNumber)];
@@ -171,9 +172,11 @@ boolAccessor( noNumbers, setNoNumbers )
             charSwitch[i]=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
         }
     }
+
     for (i=128;i<256;i++) {
         charSwitch[i]=(IDIMP0)[self methodForSelector:@selector(scanUTF8Name)];
     }
+//    charSwitch[0xa0]=(IDIMP0)[self methodForSelector:@selector(skipSpace)];
     charSwitch['\'']=(IDIMP0)[self methodForSelector:@selector(scanString)];
     charSwitch['\"']=(IDIMP0)[self methodForSelector:@selector(scanString)];
     charSwitch['<']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
@@ -243,7 +246,11 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             if ( theChar == 0x2018) {
                 NSString *restString=[self scanStringBodyWithStartChar:theChar];
                 return restString;
+            } else if ( theChar == 0xa0 ){
+                [self skipSpace];
+                return [self nextObject];
             }
+            
             [result appendFormat:@"%C",(unsigned short)theChar];
         }
     } while ( NO);
@@ -459,13 +466,13 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 -(BOOL)atSpace
 {
-	return SCANINBOUNDS(pos) && isspace(*pos);
+	return SCANINBOUNDS(pos) && stisspace(*pos);
 }
 
 -skipSpace
 {
     const char *cur=pos;
-    while ( SCANINBOUNDS(cur) && isspace(*cur) ) {
+    while ( SCANINBOUNDS(cur) && stisspace(*cur) ) {
 //        NSLog(@"skipSpace: %c %@",*cur,self);
         cur++;
     }
@@ -592,7 +599,15 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     NSString *scanned=[scanner nextToken];
     IDEXPECT(scanned,@"\n", @"newline");
     INTEXPECT( scanned.length,1,@"newline is a single char");
-   INTEXPECT([scanned characterAtIndex:0],10,@"newline, numeric");
+    INTEXPECT([scanned characterAtIndex:0],10,@"newline, numeric");
+}
+
++(void)testNonbreakingSpaceSeparatesLikeSpace
+{
+    NSString *twoTokensSeparatedByNBSP=@"a\u00a0b";
+    STScanner *scanner=[self scannerWithString:twoTokensSeparatedByNBSP];
+    IDEXPECT([scanner nextToken],@"a", @"a");
+    IDEXPECT([scanner nextToken],@"b", @"b");
 }
 
 +(NSArray*)testSelectors
@@ -608,6 +623,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"testScanUTF8Name",
             @"testScanStringWithUnicodeQuotationMark",
             @"testNewlineEscape",
+            @"testNonbreakingSpaceSeparatesLikeSpace",
         nil];
 }
 
