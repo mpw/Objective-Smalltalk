@@ -338,7 +338,7 @@ idAccessor( localVars, setLocalVars )
 
         MPWFastSuperMessage *supermsg = [MPWFastSuperMessage messageWithSelector:selector typestring:""];   // typestring isn't used
         supermsg.superclassOfTarget = [self.contextClass superclass];
-        NSLog(@"contextClass: %@, superclassOfTarget: %@",self.contextClass,supermsg.superclassOfTarget);
+//        NSLog(@"contextClass: %@, superclassOfTarget: %@",self.contextClass,supermsg.superclassOfTarget);
         message=supermsg;
     } else {
         message = [self messageForSelector:selector initialReceiver:evaluatedReceiver];

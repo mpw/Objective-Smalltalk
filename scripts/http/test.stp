@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example</title>
+    </head>
+    <body>
+
+        <?st
+            'Hello embedded ST: ', (3+4) stringValue.
+        ?>
+
+    </body>
+</html>
