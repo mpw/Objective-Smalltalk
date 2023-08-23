@@ -7,8 +7,9 @@
 
 #import "STMessageConnector.h"
 #import "STMessagePortDescriptor.h"
-@implementation STMessageConnector
 
+
+@implementation STMessageConnector
 
 -(BOOL)isCompatible
 {

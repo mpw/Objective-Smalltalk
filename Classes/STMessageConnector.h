@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STMessageConnector : STConnector
 
-@property (assign) SEL selector;
 @property (nonatomic,strong) id  protocol;
 
 @end

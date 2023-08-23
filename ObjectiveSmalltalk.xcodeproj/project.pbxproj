@@ -419,6 +419,10 @@
 		1FA85A1F1923739E00F52396 /* ShellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A1B1923739E00F52396 /* ShellView.m */; };
 		1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA85A241923746B00F52396 /* FSCommandHistory.h */; };
 		1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA85A251923746B00F52396 /* FSCommandHistory.m */; };
+		1FA9902D2A96310400DB6FF4 /* STPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA9902B2A96310400DB6FF4 /* STPort.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FA9902E2A96310400DB6FF4 /* STPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA9902B2A96310400DB6FF4 /* STPort.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FA9902F2A96310400DB6FF4 /* STPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA9902C2A96310400DB6FF4 /* STPort.m */; };
+		1FA990302A96310400DB6FF4 /* STPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA9902C2A96310400DB6FF4 /* STPort.m */; };
 		1FAB448619031343009EEE6D /* MPWCommandFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447D19031343009EEE6D /* MPWCommandFilter.h */; };
 		1FAB448819031343009EEE6D /* MPWEchoCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB447F19031343009EEE6D /* MPWEchoCommand.h */; };
 		1FAB448919031343009EEE6D /* MPWExternalCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448019031343009EEE6D /* MPWExternalCommand.h */; };
@@ -1198,6 +1202,8 @@
 		1FA85A1B1923739E00F52396 /* ShellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShellView.m; sourceTree = "<group>"; };
 		1FA85A241923746B00F52396 /* FSCommandHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCommandHistory.h; sourceTree = "<group>"; };
 		1FA85A251923746B00F52396 /* FSCommandHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCommandHistory.m; sourceTree = "<group>"; };
+		1FA9902B2A96310400DB6FF4 /* STPort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPort.h; sourceTree = "<group>"; };
+		1FA9902C2A96310400DB6FF4 /* STPort.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPort.m; sourceTree = "<group>"; };
 		1FAB447D19031343009EEE6D /* MPWCommandFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWCommandFilter.h; sourceTree = "<group>"; };
 		1FAB447F19031343009EEE6D /* MPWEchoCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEchoCommand.h; sourceTree = "<group>"; };
 		1FAB448019031343009EEE6D /* MPWExternalCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWExternalCommand.h; sourceTree = "<group>"; };
@@ -2282,6 +2288,8 @@
 				1F586CB527253B0C0078F9BC /* ViewBuilderPreviewNotification.h */,
 				1FA1B39F267CFCB500F463ED /* STAWK.h */,
 				1FA1B3A0267CFCB500F463ED /* STAWK.m */,
+				1FA9902B2A96310400DB6FF4 /* STPort.h */,
+				1FA9902C2A96310400DB6FF4 /* STPort.m */,
 				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
 				1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */,
 				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
@@ -2549,6 +2557,7 @@
 				1F5E505909B4B754000298D9 /* STEvaluator.h in Headers */,
 				1FC661F025D83BC700ED1BCB /* STObjectTemplate.h in Headers */,
 				1F321C67213334F3001BE6CC /* MPWPropertyPathMethod.h in Headers */,
+				1FA9902D2A96310400DB6FF4 /* STPort.h in Headers */,
 				1F5E505A09B4B754000298D9 /* MPWMethodCallBack.h in Headers */,
 				1F5E505B09B4B754000298D9 /* MPWMethodHeader.h in Headers */,
 				1F5E505F09B4B754000298D9 /* MPWSetAccessor.h in Headers */,
@@ -2814,6 +2823,7 @@
 				1F2EB8042111D1670086D540 /* MPWFilterDefinition.h in Headers */,
 				1F9BD24325665748006D7476 /* MPWStConnectorTests.h in Headers */,
 				1F5D778C25EBF53500DCC82F /* STTargetActionSenderPort.h in Headers */,
+				1FA9902E2A96310400DB6FF4 /* STPort.h in Headers */,
 				1FE37BCC1969612400C9A378 /* MPWVarScheme.h in Headers */,
 				1FE37B931969610600C9A378 /* MPWInstanceVariable.h in Headers */,
 				1FE37BA11969610600C9A378 /* MPWMethodHeader.h in Headers */,
@@ -3902,6 +3912,7 @@
 				1FD713D11522DA1D004A5E15 /* MPWClassMirror.m in Sources */,
 				1F9BD24425665748006D7476 /* MPWStConnectorTests.m in Sources */,
 				1F5D775A25EBF52100DCC82F /* STTargetActionSenderPort.m in Sources */,
+				1FA9902F2A96310400DB6FF4 /* STPort.m in Sources */,
 				1FD713DD1522DA96004A5E15 /* MPWMethodMirror.m in Sources */,
 				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
@@ -4132,6 +4143,7 @@
 				1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */,
 				1F6060202A249CF900783E17 /* MPWDyLibScheme.m in Sources */,
 				1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */,
+				1FA990302A96310400DB6FF4 /* STPort.m in Sources */,
 				1F1BCB4F2A19710000AE984C /* STConnectionDefinition.m in Sources */,
 				1FE37BC01969610800C9A378 /* MPWStTests.m in Sources */,
 				1FC661F325D83BC700ED1BCB /* STObjectTemplate.m in Sources */,
