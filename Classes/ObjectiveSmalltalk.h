@@ -34,6 +34,7 @@
 #import <ObjectiveSmalltalk/MPWFrameworkScheme.h>
 #import <ObjectiveSmalltalk/MPWGlobalVariableStore.h>
 #import <ObjectiveSmalltalk/MPWGetAccessor.h>
+#import <ObjectiveSmalltalk/STPort.h>
 #import <ObjectiveSmalltalk/STMessagePortDescriptor.h>
 #import <ObjectiveSmalltalk/MPWMethodCallBack.h>
 #import <ObjectiveSmalltalk/MPWMethodHeader.h>

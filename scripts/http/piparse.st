@@ -1,5 +1,7 @@
 #!env st
-class PHPProcessor { 
+#-<void>parsepi:<ref>doc
+
+class PSTProcessor { 
    var compiler.
    -init {
        super init.
@@ -15,5 +17,5 @@ class PHPProcessor {
      }
 }
 parser := MPWMAXParser parser
-parser setDelegate: PHPProcessor new.
-parser parse: file:test.stp 
+parser setDelegate: PSTProcessor new.
+parser parse: doc value.

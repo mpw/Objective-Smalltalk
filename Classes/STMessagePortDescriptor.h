@@ -6,11 +6,12 @@
 //
 //
 
+#import <ObjectiveSmalltalk/STPort.h>
 #import <MPWFoundation/MPWFoundation.h>
 
 @class MPWPropertyBinding;
 
-@interface STMessagePortDescriptor : NSObject
+@interface STMessagePortDescriptor : STPort
 {
     MPWPropertyBinding    *target;
     BOOL                isSettable;
