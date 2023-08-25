@@ -1,5 +1,5 @@
 //
-//  MPWStTests.h
+//  STTests.h
 //  Arch-S
 //
 //  Created by Marcel Weiher on 14/07/2005.
@@ -9,7 +9,7 @@
 #import <ObjectiveSmalltalk/STCompiler.h>
 
 
-@interface MPWStTests : STCompiler {
+@interface STTests : STCompiler {
 
 }
 

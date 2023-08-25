@@ -52,7 +52,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWFastSuperMessage.m \
     Classes/MPWInstanceVariable.m \
     Classes/MPWLiteralArrayExpression.m \
-    Classes/MPWProtocolDefinition.m \
+    Classes/STProtocolDefinition.m \
     Classes/MPWBlockExpression.m \
     Classes/MPWAssignmentExpression.m \
     Classes/STPostExpression.m \

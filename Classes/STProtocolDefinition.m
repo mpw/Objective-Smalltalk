@@ -1,15 +1,15 @@
 //
-//  MPWProtocolDefinition.m
+//  STProtocolDefinition.m
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 19.02.19.
 //
 
-#import "MPWProtocolDefinition.h"
+#import "STProtocolDefinition.h"
 #import "MPWMethodHeader.h"
 #import <objc/runtime.h>
 
-@implementation MPWProtocolDefinition
+@implementation STProtocolDefinition
 
 -(void)addMethodDefinitions:(Protocol*)p
 {

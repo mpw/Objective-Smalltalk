@@ -1,23 +1,23 @@
 //
-//  MPWStPropertyPathTests.m
+//  STPropertyPathTests.m
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 19.11.20.
 //
 
-#import "MPWStPropertyPathTests.h"
+#import "STPropertyPathTests.h"
 #import "MPWPropertyPathDefinition.h"
 #import "STClassDefinition.h"
-#import "MPWStTests.h"
+#import "STTests.h"
 
-@implementation MPWStPropertyPathTests
+@implementation STPropertyPathTests
 
 @end
 
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWStPropertyPathTests(testing) 
+@implementation STPropertyPathTests(testing) 
 
 
 +(void)testParseSimpleProperty
