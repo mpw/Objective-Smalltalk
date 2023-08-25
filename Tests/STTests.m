@@ -6,7 +6,7 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWStTests.h"
+#import "STTests.h"
 #import <ObjectiveSmalltalk/STExpression.h>
 #import <ObjectiveSmalltalk/MPWAssignmentExpression.h>
 #import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
@@ -31,7 +31,7 @@
 #import "STObjectTemplate.h"
 #import "MPWLiteralDictionaryExpression.h"
 #import "STTypeDescriptor.h"
-#import "MPWStTests.h"
+#import "STTests.h"
 
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
@@ -55,7 +55,7 @@
 
 @end
 
-@implementation MPWStTests
+@implementation STTests
 
 
 +(void)testexpr:expr expected:expected
@@ -1121,7 +1121,7 @@
 +(void)testProtocolDefSyntax
 {
     STCompiler *compiler=[STCompiler compiler];
-    MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyProtocol  { }"];
+    STProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyProtocol  { }"];
     IDEXPECT(proto.name, @"MyProtocol", @"name of protocol")
 }
 
@@ -1130,7 +1130,7 @@
     Protocol *p=objc_getProtocol("MyStTestProtocol");
     EXPECTNIL(p, @"shouldn't be there");
     STCompiler *compiler=[STCompiler compiler];
-    MPWProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyStTestProtocol  { -method1. -method2.}"];
+    STProtocolDefinition *proto=[compiler evaluateScriptString:@"protocol MyStTestProtocol  { -method1. -method2.}"];
     IDEXPECT(proto.name, @"MyStTestProtocol", @"name of protocol");
     INTEXPECT(proto.methods.count, 2, @"number of messages in protocol");
     IDEXPECT([proto.methods[0] methodName], @"method1", @"first message");

@@ -1,5 +1,5 @@
 //
-//  MPWProtocolDefinition.h
+//  STProtocolDefinition.h
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 19.02.19.
@@ -9,7 +9,7 @@
 
 @class MPWInstanceVariable,MPWScriptedMethod;
 
-@interface MPWProtocolDefinition : STConnectionDefinition
+@interface STProtocolDefinition : STConnectionDefinition
 
 
 

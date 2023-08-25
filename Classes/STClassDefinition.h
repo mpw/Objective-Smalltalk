@@ -6,9 +6,9 @@
 //
 //
 
-#import <ObjectiveSmalltalk/MPWProtocolDefinition.h>
+#import <ObjectiveSmalltalk/STProtocolDefinition.h>
 
-@interface STClassDefinition : MPWProtocolDefinition
+@interface STClassDefinition : STProtocolDefinition
 
 @property (nonatomic, readonly) Class classToDefine;
 @property (nonatomic, strong) NSString *superclassName;

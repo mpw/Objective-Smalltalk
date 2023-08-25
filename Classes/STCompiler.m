@@ -1032,13 +1032,10 @@ idAccessor(solver, setSolver)
         [self pushBack:next];
         return [self parseClassDefinition];
     } else if ( [next isEqual:@"protocol"]) {
-        [self pushBack:next];
-        return [self parseProtocolDefinitionWithClass:[MPWProtocolDefinition class]];
+        return [self parseProtocolDefinitionWithClass:[STProtocolDefinition class]];
     } else if ( [next isEqual:@"connector"]) {
-        [self pushBack:next];
         return [self parseProtocolDefinitionWithClass:[STConnectionDefinition class]];
     } else if ( [next isEqual:@"notification"]) {
-        [self pushBack:next];
         return [self parseProtocolDefinitionWithClass:[STNotificationDefinition class]];
     } else if ( [next isEqual:@"filter"]) {
         //        NSLog(@"found a class definition");
@@ -1363,14 +1360,9 @@ idAccessor(solver, setSolver)
     return classDef;
 }
 
--(MPWProtocolDefinition*)parseProtocolDefinitionWithClass:(Class)defClass
+-(STProtocolDefinition*)parseProtocolDefinitionWithClass:(Class)defClass
 {
-    NSString *s=[self nextToken];
-//    Class defClass=nil;
-//    if ( [s isEqualToString:@"protocol"] || [s isEqualToString:@"protocol"] ) {
-//        defClass=[MPWProtocolDefinition class];
-//    }
-    MPWProtocolDefinition *protoDef=[[defClass new] autorelease];
+    STProtocolDefinition *protoDef=[[defClass new] autorelease];
     if ( protoDef ) {
         NSString *name=[self nextToken];
         protoDef.name = name;
@@ -1577,9 +1569,10 @@ idAccessor(solver, setSolver)
 
 +(void)testBasicConnectionExpressionIsParsed
 {
+    NSString *prepForTestProgram =@"source ← #MPWFixedValueSource{}";
     NSString *testProgram =@"source → stdout";
     STCompiler *compiler=[self compiler];
-    [compiler evaluateScriptString:@"source ← #MPWFixedValueSource{}"];
+    [compiler evaluateScriptString:prepForTestProgram];
     id compiled = [compiler compile:testProgram];
     EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
 }

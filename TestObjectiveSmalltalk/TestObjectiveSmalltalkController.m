@@ -10,7 +10,7 @@
 #import <MPWTest/MPWLoggingTester.h>
 #import <ObjectiveSmalltalk/MPWClassMirror.h>
 #import <ObjectiveSmalltalk/STCompiler.h>
-#import <ObjectiveSmalltalk/MPWStTests.h>
+#import <ObjectiveSmalltalk/STTests.h>
 #import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/NSObjectScripting.h>
 
@@ -29,7 +29,7 @@
     MPWTestSuite* test;
     int exitCode=0;
     [STCompiler compiler];
-    [MPWStTests compiler];
+    [STTests compiler];
     NSString *testListPath=[[NSBundle mainBundle] pathForResource:@"ClassesToTest"
                                                            ofType:@"plist"];
     NSData *namePlist=[NSData dataWithContentsOfFile:testListPath];

@@ -1,15 +1,15 @@
 //
-//  MPWStConnectorTests.h
+//  STConnectorTests.h
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 19.11.20.
 //
 
-#import <ObjectiveSmalltalk/MPWStTests.h>
+#import <ObjectiveSmalltalk/STTests.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWStConnectorTests : MPWStTests
+@interface STConnectorTests : STTests
 
 @end
 

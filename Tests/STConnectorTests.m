@@ -1,22 +1,22 @@
 //
-//  MPWStConnectorTests.m
+//  STConnectorTests.m
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 19.11.20.
 //
 
-#import "MPWStConnectorTests.h"
+#import "STConnectorTests.h"
 #import "STExpression.h"
-#import "MPWStTests.h"
+#import "STTests.h"
 
-@implementation MPWStConnectorTests
+@implementation STConnectorTests
 
 @end
 
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWStConnectorTests(testing) 
+@implementation STConnectorTests(testing) 
 
 +(void)testConnectFilters
 {
