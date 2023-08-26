@@ -172,7 +172,7 @@
 
 -defaultInputPort
 {
-    return [[STMessagePortDescriptor alloc] initWithTarget:self key:@"path" protocol:nil sends:YES];
+    return [STMessagePortDescriptor inputPortWithKey:@"path" protocol:nil ];
 }
 
 

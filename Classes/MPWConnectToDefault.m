@@ -17,7 +17,8 @@
 idAccessor( rhs, setRhs )
 idAccessor( lhs, setLhs )
 
-id st_connect_components( id left, id right ) {
+id st_connect_components( id left, id right ) 
+{
     if ( [right isKindOfClass:[STConnector class]]) {
         STConnector *connector=(STConnector*)right;
         left=[left defaultComponentInstance];
@@ -26,9 +27,9 @@ id st_connect_components( id left, id right ) {
         [connector setSource:source];
         if ( [connector isCompatible]) {
             [connector connect];
-            return left;;
+            return left;
         } else {
-            return connector;
+            return nil;
         }
     } else if ( [left isKindOfClass:[STConnector class]]) {
         STConnector *connector=(STConnector*)left;
@@ -62,9 +63,8 @@ id st_connect_components( id left, id right ) {
         } else {
             NSLog(@"did not connect %@ to %@, lefports: %@ -> %@",target,source,leftPorts,rightPorts);
             return nil;
-        }    }
-    
-    
+        }
+    }
 }
 
 
@@ -99,9 +99,19 @@ id st_connect_components( id left, id right ) {
     return [[self new] autorelease];
 }
 
+-(Protocol*)defaultInputProtocol
+{
+    return nil;
+}
+
+-defaultMessageInPortWithProtocol:aProtocol
+{
+    return [STMessagePortDescriptor inputPortFor:self withProtocol:aProtocol];
+}
+
 -defaultInputPort
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:nil sends:NO] autorelease];
+    return [self defaultMessageInPortWithProtocol:[self defaultInputProtocol]];
 }
 
 -defaultOutputPort
@@ -112,12 +122,8 @@ id st_connect_components( id left, id right ) {
 -(NSDictionary*)ports
 {
     NSMutableDictionary *ports=[NSMutableDictionary dictionary];
-    if ( [self defaultInputPort]) {
-        ports[@"IN"]=[self defaultInputPort];
-    }
-    if ( [self defaultOutputPort]) {
-        ports[@"OUT"]=[self defaultOutputPort];
-    }
+    ports[@"IN"]=[self defaultInputPort];
+    ports[@"OUT"]=[self defaultOutputPort];
 //    NSLog(@"ports for %@: %@",self,ports);
     return ports;
 }
@@ -156,10 +162,9 @@ id st_connect_components( id left, id right ) {
 
 @implementation MPWWriteStream(connecting)
 
-
--defaultInputPort
+-(Protocol*)defaultInputProtocol
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+    return @protocol(Streaming);
 }
 
 +defaultComponentInstance

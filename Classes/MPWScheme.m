@@ -98,9 +98,9 @@
     return [self cachedBy:otherScheme];
 }
 
--defaultInputPort
+-defaultInputProtocol
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(MPWStorage) sends:NO] autorelease];
+    return @protocol(MPWStorage);
 }
 
 @end

@@ -19,7 +19,7 @@
             return [base ports];
         } else if ( components.count == 2) {
             SEL message=NSSelectorFromString(components.lastObject);
-            STMessagePortDescriptor *port=[[[STMessagePortDescriptor alloc] initWithTarget:base key:@"self" protocol:nil sends:NO] autorelease];
+            STMessagePortDescriptor *port=[STMessagePortDescriptor inputPortFor:base withProtocol:nil key:@"self"];
             port.message=message;
             return port;
         }

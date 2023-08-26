@@ -32,6 +32,16 @@ objectAccessor(Protocol*, messageProtocol, setMessageProtocol)
     return self;
 }
 
++(instancetype)inputPortFor:aTarget withProtocol:aProtocol key:aKey
+{
+    return [[[self alloc] initWithTarget:aTarget key:aKey protocol:aProtocol sends:NO] autorelease];
+}
+
++(instancetype)inputPortFor:aTarget withProtocol:aProtocol
+{
+    return [self inputPortFor:aTarget withProtocol:aProtocol key:nil];
+}
+
 -(id)targetObject
 {
     return [[self target] value];

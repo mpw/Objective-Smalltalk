@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 25.02.21.
 //
 
-#import <ObjectiveSmalltalk/MPWStTests.h>
+#import <ObjectiveSmalltalk/STTests.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STUITests : MPWStTests
+@interface STUITests : STTests
 
 @end
 
