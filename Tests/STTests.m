@@ -1439,6 +1439,18 @@
     TESTEXPR( @"d := #{ #a: 43 }. scheme:t := MPWTemplateMatchingStore store. scheme:t setTarget:d. t:value/:arg := d invocationForSelector: #objectForKey: . t:value/a", @(43));
 }
 
++(void)testComplexVarPathRefWorks
+{
+    TESTEXPR( @"p ← 2 @ 10. ref:var:p/x value.",@(2));
+}
+
++(void)testComplexVarPathWithoutRefWorks
+{
+    TESTEXPR( @"p ← 3 @ 12. var:p/x.",@(3));
+}
+
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1598,6 +1610,8 @@
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         @"testTemplateMatchingStoreCanUseBlocks",
         @"testTemplateMatchingStoreCanUseImpsViaFastInvocation",
+        @"testComplexVarPathRefWorks",
+        @"testComplexVarPathWithoutRefWorks",
         ];
 }
 
