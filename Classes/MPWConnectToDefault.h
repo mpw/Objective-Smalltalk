@@ -22,7 +22,9 @@
 
 -defaultComponentInstance;
 +defaultComponentInstance;
+-(Protocol*)defaultInputProtocol;
 -defaultInputPort;
+-defaultMessageInPortWithProtocol:aProtcol;
 -defaultOutputPort;
 
 -(NSDictionary*)ports;

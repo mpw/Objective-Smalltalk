@@ -19,6 +19,8 @@
     Protocol            *messageProtocol;
 }
 
++(instancetype)inputPortFor:aTarget withProtocol:aProtocol key:aKey;
++(instancetype)inputPortFor:aTarget withProtocol:aProtocol;
 -initWithTarget:aTarget key:aKey protocol:aProtocol sends:(BOOL)sends;
 
 boolAccessor_h(sendsMessages, setSendsMessages)

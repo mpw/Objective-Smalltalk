@@ -34,10 +34,11 @@
     self.objectValue = [source objectValue];
 }
 
--defaultInputPort
+-defaultInputProtocol
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+    return @protocol(Streaming);
 }
+
 
 -(NSString *)stringValue
 {
@@ -133,9 +134,9 @@
     self.objectValue = [source objectValue];
 }
 
--defaultInputPort
+-defaultInputProtocol
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+    return @protocol(Streaming);
 }
 
 

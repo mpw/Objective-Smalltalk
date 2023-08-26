@@ -35,11 +35,10 @@
 
 @implementation NSControl(streaming)
 
--defaultInputPort
+-defaultInputProtocol
 {
-    return [[[STMessagePortDescriptor alloc] initWithTarget:self key:nil protocol:@protocol(Streaming) sends:NO] autorelease];
+    return @protocol(Streaming);
 }
-
 
 -(void)writeObject:anObject
 {
