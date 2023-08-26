@@ -79,6 +79,30 @@
     return [[aContext schemeForName:[self schemeName]] bindingWithIdentifier:self withContext:aContext];
 }
 
+-(NSUInteger)length
+{
+    NSLog(@"-[MPWIdentifier length] on %@ -> %@",self,[NSThread callStackSymbols]);
+    return [[self name] length];
+}
+
+-(NSUInteger)lengthOfBytesUsingEncoding:(int)encoding
+{
+    NSLog(@"-[MPWIdentifier lengthOfBytesUsingEncoding:%d] on %@ -> %@",encoding,self,[NSThread callStackSymbols]);
+    return [[self name] lengthOfBytesUsingEncoding:encoding];
+}
+
+-(int)characterAtIndex:(NSUInteger)theIndex
+{
+    NSLog(@"-[MPWIdentifier characterAtIndex:%ld] on %@ -> %@",theIndex,self,[NSThread callStackSymbols]);
+    return [[self name] characterAtIndex:theIndex];
+}
+
+-(void)getCString:(char*)buffer maxLength:(NSUInteger)maxLen encoding:(int)encoding
+{
+    NSLog(@"-[MPWIdentifier getCString:maxLength:encoding:] on %@ -> %@",self,[NSThread callStackSymbols]);
+    [[self name] getCString:buffer maxLength:maxLen encoding:encoding];
+}
+
 -evaluatedIdentifierNameInContext:aContext
 {
 #if 0
