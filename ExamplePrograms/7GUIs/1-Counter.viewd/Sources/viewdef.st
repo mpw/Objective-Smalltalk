@@ -1,22 +1,8 @@
+count ← 1.
 
-class Counter {
-   var currentCount.
-   var countDisplay.
-   -<void>count:sender {
-           this:currentCount ← this:currentCount + 1.
-          this:countDisplay setIntValue: this:currentCount intValue.
-   }
-}.
-
-f ← #Label{  #intValue: 0 }.
 button ← #NSButton{ #title: 'count' }.
-counter ← #Counter{ #countDisplay: f }.
-button → port:counter/count: .
-counter setCurrentCount:0.
-stdout println: ref:var:counter/currentCount .
+button → { count ← count + 1. protocol:ModelDidChange notify. }.
 
-
-NSGridView gridViewWithSize: 150@140 views: #(   
- #( #Label{  #stringValue:'Counter: ' }
- ,f  ,button ),
-).
+NSGridView gridViewWithSize: 150@140 views:[   
+ [ #Label{ #stringValue:'Counter: ' }, #STTextField{ #ref: ref:var:count }, button ]
+].  
