@@ -13,7 +13,7 @@
 @implementation NSView(dictionary)
 
 
--(instancetype)initWithDictionary:(NSDictionary *)dict
+-(instancetype)initWithDictionary:(NSDictionary *)dict ignoringKeys:(NSSet*)ignoredKeys
 {
     NSRect frameRect=NSZeroRect;
     id frameObject=dict[@"frame"];
@@ -21,8 +21,9 @@
         frameRect=[[frameObject asRect] rectValue];
     }
     self=[self initWithFrame:frameRect];
+    NSSet *allIgnored=[ignoredKeys setByAddingObjectsFromSet:[NSSet setWithObjects:@"frame",@"subviews", nil]];
     for ( NSString *key in [dict allKeys]) {
-        if ( ![key isEqualToString:@"frame"] && ![key isEqualToString:@"subviews"] ) {
+        if ( ![allIgnored containsObject:key] ) {
             [self setValue:dict[key] forKey:key];
         }
     }
@@ -38,6 +39,26 @@
         } else {
             [self setSubviews:subviews];
         }
+    }
+    return self;
+}
+
+-(instancetype)initWithDictionary:(NSDictionary *)dict
+{
+    return [self initWithDictionary:dict ignoringKeys:[NSSet set]];
+}
+
+
+@end
+
+
+@implementation NSGridView(dictionary)
+
+-(instancetype)initWithDictionary:(NSDictionary *)dict
+{
+    self=[self initWithDictionary:dict ignoringKeys:[NSSet setWithObject:@"rows"]];
+    for ( id row in dict[@"rows"]) {
+        [self addRowWithViews:row];
     }
     return self;
 }
