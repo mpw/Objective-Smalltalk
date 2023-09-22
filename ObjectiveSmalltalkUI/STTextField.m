@@ -26,15 +26,26 @@
     [self updateFromRef];
 }
 
+-(void)validationDidChange:(NSNotification*)notification
+{
+    NSLog(@"text field validation changed: %@ from %@",notification,self.enabledRef);
+    if ( self.enabledRef ) {
+        self.enabled = [self.enabledRef.value boolValue];
+        NSLog(@"enabled now: %d",self.enabled);
+    }
+}
+
 -(void)updateFromRef
 {
     if ( self.ref && !self.inProcessing) {
         self.objectValue = self.ref.value;
     }
-    if ( self.enabledRef && !self.inProcessing) {
+    if ( self.enabledRef ) {
         self.enabled = [self.enabledRef.value boolValue];
     }
 }
+
+
 
 -(void)setText:(NSString*)text{
     self.stringValue=text;

@@ -182,7 +182,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
         [returnVal retain];
 //	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
     }
-       [executionContext setSchemes:nil];
+       [executionContext setSchemes:nil];           // manualy break cycle, fixes leak
+                                                    // less than ideal... FIXME
     }
 	return [returnVal autorelease];
 }

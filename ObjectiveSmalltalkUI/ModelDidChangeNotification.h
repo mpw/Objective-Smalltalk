@@ -16,4 +16,10 @@
 
 @end
 
+@protocol ValidationDidChange<MPWNotificationProtocol>
+
+-(void)validationDidChange:(NSNotification*)notification;
+
+@end
+
 #endif /* ModelDidChangeNotification_h */
