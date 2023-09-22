@@ -23,8 +23,14 @@
     [self updateFromRef];
 }
 
+-(void)validationDidChange:(NSNotification*)notification
+{
+    [self updateFromRef];
+}
+
 -(void)updateFromRef
 {
+    NSLog(@"updating button %@ with ref: %@ value: %@",self,self.enabledRef,[self.enabledRef value]);
     if ( self.enabledRef ) {
         self.enabled = [self.enabledRef.value boolValue];
     }

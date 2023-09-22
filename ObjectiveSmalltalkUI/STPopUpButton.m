@@ -9,7 +9,33 @@
 
 @implementation STPopUpButton
 
+-(instancetype)initWithDictionary:(NSDictionary *)dict ignoringKeys:(NSSet*)ignoredKeys
+{
+    BOOL pullsDown=NO;
+    NSRect frameRect=NSZeroRect;
+    id frameObject=dict[@"frame"];
+    if ( frameObject ) {
+        frameRect=[[frameObject asRect] rectValue];
+    }
+    NSNumber* pullsDownValue=dict[@"pullsDown"];
+    if ( pullsDownValue ) {
+        pullsDown = pullsDownValue.boolValue;
+    }
 
+    self=[self initWithFrame:frameRect pullsDown:pullsDown];
+    NSSet *allIgnored=[ignoredKeys setByAddingObjectsFromSet:[NSSet setWithObjects:@"frame",@"items",@"pullsDown", nil]];
+    for ( NSString *key in [dict allKeys]) {
+        if ( ![allIgnored containsObject:key] ) {
+            [self setValue:dict[key] forKey:key];
+        }
+    }
+    id items = dict[@"items"];
+    for (NSString* item in items) {
+        [self addItemWithTitle:item];
+    }
+    
+    return self;
+}
 
 -(BOOL)matchesRef:(id <MPWReferencing>)ref
 {
