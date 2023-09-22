@@ -9,6 +9,10 @@ object Label : #STTextField{
 
 }.
 
+object PopUp : #STPopUpButton{
+
+}.
+
 object Body : #STTextField{
     #bordered: false,
     #selectable: false,

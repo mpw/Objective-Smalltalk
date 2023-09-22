@@ -69,7 +69,7 @@
 
 +(void)testCanReadElfHeader
 {
-    MPWELFReader *reader=[self readerForTestFile:@"empty-function"];
+    MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
     EXPECTNOTNIL(reader.elfData, @"elf data");
     EXPECTTRUE(!strncmp([reader bytes],ELFMAG ,4), @"elf magic");
     IDEXPECT( [reader elfmagic], @"\177ELF",@"elf magice");
