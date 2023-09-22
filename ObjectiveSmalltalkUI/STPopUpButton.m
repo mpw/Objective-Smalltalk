@@ -1,20 +1,15 @@
 //
-//  STTextField.m
+//  STPopUpButton.m
 //  ObjectiveSmalltalkUI
 //
-//  Created by Marcel Weiher on 27.02.21.
+//  Created by Marcel Weiher on 22.09.23.
 //
 
-#import "STTextField.h"
+#import "STPopUpButton.h"
 
-@implementation STTextField
+@implementation STPopUpButton
 
--(instancetype)initWithFrame:(NSRect)frameRect
-{
-    self=[super initWithFrame:frameRect];
-    [self installProtocolNotifications];
-    return self;
-}
+
 
 -(BOOL)matchesRef:(id <MPWReferencing>)ref
 {
@@ -36,14 +31,6 @@
     }
 }
 
--(void)setText:(NSString*)text{
-    self.stringValue=text;
-}
-
--(NSString*)text {
-    return self.stringValue;
-}
-
 -(void)updateToRef
 {
     if (self.ref) {
@@ -57,7 +44,6 @@
     self.target = self;
     self.action = @selector(updateToRef);
 }
-
 
 
 @end

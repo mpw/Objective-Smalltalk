@@ -1,8 +1,8 @@
 //
-//  STTextField.h
+//  STPopUpButton.h
 //  ObjectiveSmalltalkUI
 //
-//  Created by Marcel Weiher on 27.02.21.
+//  Created by Marcel Weiher on 22.09.23.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -10,9 +10,10 @@
 #import "ModelDidChangeNotification.h"
 
 @protocol ModelDidChange;
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STTextField : NSTextField<ModelDidChange>
+@interface STPopUpButton : NSPopUpButton
 
 @property (nonatomic, strong)  MPWBinding *ref;
 @property (nonatomic, strong)  MPWBinding *enabledRef;
