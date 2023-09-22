@@ -460,7 +460,7 @@ idAccessor(solver, setSolver)
 //	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
 //	[identifierToAddNameTo setScheme:[self schemeForName:[identifierToAddNameTo schemeName]]];
 	[variable setIdentifier:identifier];
-	[variable setEvaluationEnvironment:self];
+//	[variable setEvaluationEnvironment:self];
 
 	return variable;
 }
@@ -489,7 +489,7 @@ idAccessor(solver, setSolver)
 	[identifier setPath:name];
 //	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
 	[variable setIdentifier:identifier];
-	[variable setEvaluationEnvironment:self];
+//	[variable setEvaluationEnvironment:self];
 	return variable;
 }
 

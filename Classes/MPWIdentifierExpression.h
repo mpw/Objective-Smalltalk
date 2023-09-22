@@ -13,13 +13,12 @@
 
 
 @interface MPWIdentifierExpression : STExpression {
-	id	evaluationEnvironment;
 	MPWIdentifier*  identifier;
 }
 
 //idAccessor_h( name, setName )
 //idAccessor_h( scheme, setScheme )
-idAccessor_h( evaluationEnvironment, setEvaluationEnvironment )
+@property (nonatomic, strong)  id evaluationEnvironment;
 objectAccessor_h(MPWIdentifier*, identifier, setIdentifier )
 -evaluateAssignmentOf:value in:aContext;
 

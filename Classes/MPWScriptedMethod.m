@@ -143,7 +143,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 -evaluateOnObject:target parameters:(NSArray*)parameters
 {
-	id returnVal=nil;
+    id returnVal=nil;
+   @autoreleasepool {
     id compiledMethod = [self compiledScript];
 	STEvaluator* executionContext = [self executionContext];
 //    NSLog(@"compiledExecutionContext: %@ schemes: %@",[self compiledInExecutionContext],[[self compiledInExecutionContext] schemes]);
@@ -180,6 +181,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     }
         [returnVal retain];
 //	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
+    }
+       [executionContext setSchemes:nil];
     }
 	return [returnVal autorelease];
 }
