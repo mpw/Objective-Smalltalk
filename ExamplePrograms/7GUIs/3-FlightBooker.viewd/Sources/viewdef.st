@@ -13,7 +13,6 @@ class Validator  {
    var enableTo.
    -init {
        self ← super init.
-       protocol:ModelDidChange installAsNotificationHandler:self.
       self.
    }
    -isReturn {
@@ -36,7 +35,7 @@ class Validator  {
           stdout println:'validating'.
           model:isReturn := self isReturn.
           model:canBook := self isFromValid and: self isToValid.
-          stdout println: model:canBook.
+          stdout println: model:flightType.
           stdout println:'validated'.
     }
 }.
@@ -66,6 +65,7 @@ toField setEnabled: false.
 button ←  #Button{ #title:  'Book', #enabledRef: ref:model:canBook }.
 popup setRef: ref:model:flightType.
 
+popup → { model:flightType ← popup object. validator validate. } 
 fromValidator ← { :string | model:from ← formatter objectValue: string. validator validate. }.
 toValidator ← { :string |  model:to ← formatter objectValue: string. validator validate. }.
 

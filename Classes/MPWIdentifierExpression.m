@@ -14,7 +14,6 @@
 @implementation MPWIdentifierExpression
 
 objectAccessor(MPWIdentifier*, identifier, setIdentifier )
-idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 
 -scheme
 {
@@ -88,7 +87,7 @@ idAccessor( evaluationEnvironment, setEvaluationEnvironment )
 //	[name release];
 //	[scheme release];
 	[identifier release];
-	[evaluationEnvironment release];
+	[_evaluationEnvironment release];
 	[super dealloc];
 }
 
