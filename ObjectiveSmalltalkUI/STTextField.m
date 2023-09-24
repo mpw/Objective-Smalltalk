@@ -28,10 +28,10 @@
 
 -(void)validationDidChange:(NSNotification*)notification
 {
-    NSLog(@"text field validation changed: %@ from %@",notification,self.enabledRef);
+//    NSLog(@"text field validation changed: %@ from %@",notification,self.enabledRef);
     if ( self.enabledRef ) {
         self.enabled = [self.enabledRef.value boolValue];
-        NSLog(@"enabled now: %d",self.enabled);
+//        NSLog(@"enabled now: %d",self.enabled);
     }
 }
 
