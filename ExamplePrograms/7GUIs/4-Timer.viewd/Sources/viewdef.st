@@ -14,7 +14,7 @@ class Timer {
 }.
  
 timer ← #Timer{ 
-      #duration: 20,
+      #duration: 15,
       #start: #NSDate{}
 }.
 stdout println: timer seconds.
@@ -25,14 +25,19 @@ source → (MPWNotificationStream alloc initWithNotificationProtocol: protocol:M
 button ← #Button{ #title: 'Reset' }.
 button → {  timer reset. }.
 
-slider ← NSSlider  sliderWithValue:10 minValue:0 maxValue:50 target: timer  action: #adjustMax: .
-
+slider ← #Slider{
+    #minValue: 0,
+    #maxValue: 20,
+    #doubleValue: 10,
+    #binding: ref:var:timer/duration
+}.  
+ 
 progress ← NSProgressIndicator alloc initWithFrame: ((200 @ 20 ) extent: (200 @ 20 )).
-progress setMinValue:10.
+progress setMinValue:0.
 progress setMaxValue:20.
+progress setDoubleValue:5.
 
-
-#Grid{ #rows: [   
+#Grid{ #frame: (400@500) ,  #rows: [   
  [ #Label{ #stringValue: 'Elapsed Time:'  },  ],
  [  progress ],
  [ #Label{ #ref:  ref:var:timer/seconds  },#Label{ #stringValue: 's'  } ], 
