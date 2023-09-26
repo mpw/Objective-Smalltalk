@@ -31,11 +31,18 @@ slider ← #Slider{
     #doubleValue: 10,
     #binding: ref:var:timer/duration
 }.  
+
+
  
-progress ← NSProgressIndicator alloc initWithFrame: ((200 @ 20 ) extent: (200 @ 20 )).
-progress setMinValue:0.
-progress setMaxValue:20.
-progress setDoubleValue:5.
+progress ← #ProgressIndicator{ #frame: (200 @ 20 ),
+     #minValue: 0,
+     #maxValue: 50,
+     #ref: ref:var:timer/seconds,
+ 
+
+}.
+
+"source start." .
 
 #Grid{ #frame: (400@500) ,  #rows: [   
  [ #Label{ #stringValue: 'Elapsed Time:'  },  ],
