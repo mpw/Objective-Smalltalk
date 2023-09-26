@@ -1,5 +1,5 @@
 //
-//  STSlider.h
+//  STProgressIndicator.h
 //  ObjectiveSmalltalkUI
 //
 //  Created by Marcel Weiher on 25.09.23.
@@ -11,10 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STSlider : NSSlider <ModelDidChange,ValidationDidChange>
+@interface STProgressIndicator : NSProgressIndicator
 
-@property (nonatomic, strong)  MPWBinding *ref;
-@property (nonatomic, strong)  MPWBinding *enabledRef;
+@property (nonatomic, strong)  MPWBinding *ref,*enabledRef,*minRef,*maxRef;
+
 
 @end
 

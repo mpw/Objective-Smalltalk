@@ -165,6 +165,8 @@
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F5A59A22AC1C26300670E75 /* STSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5A59A02AC1C26300670E75 /* STSlider.h */; };
 		1F5A59A32AC1C26300670E75 /* STSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A59A12AC1C26300670E75 /* STSlider.m */; };
+		1F5A59A62AC1CC2000670E75 /* STProgressIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5A59A42AC1CC2000670E75 /* STProgressIndicator.h */; };
+		1F5A59A72AC1CC2000670E75 /* STProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A59A52AC1CC2000670E75 /* STProgressIndicator.m */; };
 		1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */; };
 		1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F5BBA2929434BD600C3D345 /* use_st_block.mfile */; };
 		1F5BBA342943BC4000C3D345 /* use_class_with_if.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F5BBA332943BC4000C3D345 /* use_class_with_if.mfile */; };
@@ -1027,6 +1029,8 @@
 		1F59AD4329130D69009282D4 /* use_concatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_concatter.m; sourceTree = "<group>"; };
 		1F5A59A02AC1C26300670E75 /* STSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSlider.h; sourceTree = "<group>"; };
 		1F5A59A12AC1C26300670E75 /* STSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSlider.m; sourceTree = "<group>"; };
+		1F5A59A42AC1CC2000670E75 /* STProgressIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProgressIndicator.h; sourceTree = "<group>"; };
+		1F5A59A52AC1CC2000670E75 /* STProgressIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProgressIndicator.m; sourceTree = "<group>"; };
 		1F5BBA2929434BD600C3D345 /* use_st_block.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_st_block.mfile; sourceTree = "<group>"; };
 		1F5BBA332943BC4000C3D345 /* use_class_with_if.mfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = use_class_with_if.mfile; sourceTree = "<group>"; };
 		1F5BBA35294DEC1200C3D345 /* use_class.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = use_class.macho; sourceTree = "<group>"; };
@@ -2062,6 +2066,8 @@
 				1F5D76A425EA389200DCC82F /* STTextField.m */,
 				1F5A59A02AC1C26300670E75 /* STSlider.h */,
 				1F5A59A12AC1C26300670E75 /* STSlider.m */,
+				1F5A59A42AC1CC2000670E75 /* STProgressIndicator.h */,
+				1F5A59A52AC1CC2000670E75 /* STProgressIndicator.m */,
 				1F35AD3C2ABD917B00541C02 /* STPopUpButton.h */,
 				1F35AD3D2ABD917B00541C02 /* STPopUpButton.m */,
 				1FB13BEF2AA5F5BA006D85CC /* STButton.h */,
@@ -2718,6 +2724,7 @@
 				1F35AD3E2ABD917B00541C02 /* STPopUpButton.h in Headers */,
 				1F2B179A261C680D005D873F /* STViewScheme.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
+				1F5A59A62AC1CC2000670E75 /* STProgressIndicator.h in Headers */,
 				1F89EBA12241A175000A82D6 /* MPWProgramTextView.h in Headers */,
 				1FA749BD25F5508D001AA6A8 /* MPWColorStore.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
@@ -4035,6 +4042,7 @@
 				1F35AD3F2ABD917B00541C02 /* STPopUpButton.m in Sources */,
 				1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */,
 				1FA749BE25F5508D001AA6A8 /* MPWColorStore.m in Sources */,
+				1F5A59A72AC1CC2000670E75 /* STProgressIndicator.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
 				1F5D76A625EA389200DCC82F /* STTextField.m in Sources */,
 			);
