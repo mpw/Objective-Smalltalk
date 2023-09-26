@@ -12,6 +12,7 @@
 -(instancetype)initWithFrame:(NSRect)frameRect
 {
     self=[super initWithFrame:frameRect];
+    self.indeterminate=false;
     [self installProtocolNotifications];
     return self;
 }

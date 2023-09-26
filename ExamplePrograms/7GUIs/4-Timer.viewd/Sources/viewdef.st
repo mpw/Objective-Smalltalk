@@ -26,25 +26,25 @@ button ← #Button{ #title: 'Reset' }.
 button → {  timer reset. }.
 
 slider ← #Slider{
+    #frame: (200@20),
     #minValue: 0,
     #maxValue: 20,
     #doubleValue: 10,
     #binding: ref:var:timer/duration
 }.  
 
-
+  
  
 progress ← #ProgressIndicator{ #frame: (200 @ 20 ),
      #minValue: 0,
      #maxValue: 50,
-     #ref: ref:var:timer/seconds,
- 
-
+     #ref: ref:var:timer/seconds ,
+     #maxRef: ref:var:timer/duration ,
 }.
 
-"source start." .
+"source start".
 
-#Grid{ #frame: (400@500) ,  #rows: [   
+#Grid{ #frame: (400@140) ,  #rows: [   
  [ #Label{ #stringValue: 'Elapsed Time:'  },  ],
  [  progress ],
  [ #Label{ #ref:  ref:var:timer/seconds  },#Label{ #stringValue: 's'  } ], 
