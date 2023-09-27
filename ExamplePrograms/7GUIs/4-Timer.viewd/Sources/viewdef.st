@@ -17,36 +17,30 @@ timer ← #Timer{
       #duration: 15,
       #start: #NSDate{}
 }.
-stdout println: timer seconds.
-
 source ← #MPWFixedValueSource{ #values: [ '' ], #seconds: 1 }.
-source → (MPWNotificationStream alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false) autorelease.
 
 button ← #Button{ #title: 'Reset' }.
-button → {  timer reset. }.
-
 slider ← #Slider{
     #frame: (200@20),
     #minValue: 0,
     #maxValue: 20,
     #doubleValue: 10,
-    #binding: ref:var:timer/duration
 }.  
 
-  
- 
-progress ← #ProgressIndicator{ #frame: (200 @ 20 ),
-     #minValue: 0,
-     #maxValue: 50,
-     #ref: ref:var:timer/seconds ,
-     #maxRef: ref:var:timer/duration ,
-}.
+button →  {  timer reset. }.
+slider   →  {  var:timer/duration ← slider doubleValue intValue. timer reset }.
+source →  (MPWNotificationStream alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false) autorelease.
 
 "source start".
 
 #Grid{ #frame: (400@140) ,  #rows: [   
  [ #Label{ #stringValue: 'Elapsed Time:'  },  ],
- [  progress ],
+ [  #ProgressIndicator{ #frame: (200 @ 20 ),
+     #minValue: 0,
+     #maxValue: 50,
+     #ref: ref:var:timer/seconds ,
+     #maxRef: ref:var:timer/duration ,
+} ],
  [ #Label{ #ref:  ref:var:timer/seconds  },#Label{ #stringValue: 's'  } ], 
  [ #Label{#stringValue: 'Duration:'  } , slider ],
  [ button ],
