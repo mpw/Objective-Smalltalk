@@ -2,7 +2,7 @@ class Timer {
     var start.
     var duration.
     -seconds {
-          this:duration min: (NSDate now timeIntervalSinceReferenceDate - this:start timeIntervalSinceReferenceDate) intValue.
+          this:duration min: (NSDate now timeIntervalSinceReferenceDate - this:start timeIntervalSinceReferenceDate)  intValue.
     }
     -<void>reset {
            this:start ← NSDate now.
@@ -12,7 +12,7 @@ class Timer {
             self reset.
    }
 }.
- 
+    
 timer ← #Timer{ 
       #duration: 15,
       #start: #NSDate{}
@@ -27,13 +27,10 @@ slider ← #Slider{
     #doubleValue: 10,
 }.  
 
-button →  {  timer reset. }.
-slider   →  {  var:timer/duration ← slider doubleValue intValue. timer reset }.
-source →  (MPWNotificationStream alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false) autorelease.
 
 "source start".
 
-#Grid{ #frame: (400@140) ,  #rows: [   
+view := #Grid{ #frame: (400@140) ,  #rows: [   
  [ #Label{ #stringValue: 'Elapsed Time:'  },  ],
  [  #ProgressIndicator{ #frame: (200 @ 20 ),
      #minValue: 0,
@@ -45,6 +42,10 @@ source →  (MPWNotificationStream alloc initWithNotificationProtocol: protocol:
  [ #Label{#stringValue: 'Duration:'  } , slider ],
  [ button ],
 ] }.
+
+button →  {  timer reset. }.
+slider   →  {  var:timer/duration ← slider doubleValue intValue. timer reset }.
+source →  (MPWNotificationStream alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false) autorelease.
 
 
  
