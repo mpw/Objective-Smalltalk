@@ -92,6 +92,10 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 //    NSLog(@"==== freshExecutionContextForRealLocalVars ===");
 
 	STEvaluator *evaluator = [[[STCompiler alloc] initWithParent:nil] autorelease];
+    id parentStdout = [context valueOfVariableNamed:@"stdout"];
+    if ( parentStdout ) {
+        [evaluator bindValue:parentStdout toVariableNamed:@"stdout"];
+    }
 //    if ( self.classOfMethod == nil) {
 //        [NSException raise:@"nilcontextclass" format:@"classOfMethod is nil in scripted method"];
 //    }
@@ -148,6 +152,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     id compiledMethod = [self compiledScript];
 	STEvaluator* executionContext = [self executionContext];
 //    NSLog(@"compiledExecutionContext: %@ schemes: %@",[self compiledInExecutionContext],[[self compiledInExecutionContext] schemes]);
+    [executionContext bindValue:self toVariableNamed:@"thisMethod"];
     [executionContext bindValue:self toVariableNamed:@"thisMethod"];
     [executionContext bindValue:executionContext toVariableNamed:@"thisContext"];
     [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
