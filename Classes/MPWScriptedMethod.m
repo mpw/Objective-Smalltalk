@@ -92,6 +92,13 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 //    NSLog(@"==== freshExecutionContextForRealLocalVars ===");
 
 	STEvaluator *evaluator = [[[STCompiler alloc] initWithParent:nil] autorelease];
+    
+    // HACK:  make stdout available to method if it is present in the
+    //        context that defined the method.  This is a hard-coded
+    //        version of dynamic scope / environment / context
+    //        (see also:  https://openjdk.org/jeps/446 )
+    
+    
     id parentStdout = [context valueOfVariableNamed:@"stdout"];
     if ( parentStdout ) {
         [evaluator bindValue:parentStdout toVariableNamed:@"stdout"];
