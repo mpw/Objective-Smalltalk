@@ -17,7 +17,7 @@ init:timer ← #Timer{
       #duration: 15,
       #start: #NSDate{}
 }.
-source ← #MPWFixedValueSource{ #values: [ '' ], #seconds: 1 }.
+init:source ← #MPWFixedValueSource{ #values: [ '' ], #seconds: 1 }.
 
 button ← #Button{ #title: 'Reset' }.
 slider ← #Slider{
@@ -28,7 +28,7 @@ slider ← #Slider{
 }.  
  
 
-source start.
+model:source start.
 
 view := #Grid{ #frame: (400@140) ,  #rows: [   
  [ #Label{ #stringValue: 'Elapsed Time:'  },  ],
@@ -45,7 +45,6 @@ view := #Grid{ #frame: (400@140) ,  #rows: [
 
 button →  {  model:timer reset. }.
 slider   →  {  model:timer/duration ← slider doubleValue intValue. model:timer reset }.
-source →  (MPWNotificationStream alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false) autorelease.
-
+model:source →  (MPWNotificationStream alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false) autorelease.
 
  
