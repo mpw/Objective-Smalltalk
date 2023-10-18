@@ -6,8 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <MPWFoundation/MPWFoundation.h>
-#import <ObjectiveSmalltalkUI/ModelDidChangeNotification.h>
+#import <MPWFoundationUI/MPWFoundationUI.h>
 
 @protocol ModelDidChange;
 NS_ASSUME_NONNULL_BEGIN
