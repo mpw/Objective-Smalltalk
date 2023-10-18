@@ -17,16 +17,18 @@ people ← [
 table ← #MPWTableView{ #frame: (00@300) }.
 table setItems: people.
 table ← table  inScrollView:(200@400 extent: 500@600).
-button ← #Button{ #title: 'Reset' }.
-button → {  timer setStart: NSDate now.  }.
+create ← #Button{ #title: 'Create' }.
+update ← #Button{ #title: 'Update' }.
+delete ← #Button{ #title: 'Delete' }.
 
 #VStack{ #views: [   
  #HStack{ #views:[ #Label{ #stringValue: 'Filter prefix:'  }, #TextField{} ] }, 
   #HStack{ #views:[ table  , 
       #Grid{ #rows: [ 
-            [ #Label{ #text: 'First'} , #TextField{}] ,
-            [ #Label{ #text: 'Last'} , #TextField{}] ] } 
+            [ #Label{ #text: 'First:'} , #TextField{}] ,
+            [ #Label{ #text: 'Last:'} , #TextField{}] ] } 
     ] } , 
+   #HStack{ #views:[  create, update, delete ] },
 ] }.
 
-
+ 
