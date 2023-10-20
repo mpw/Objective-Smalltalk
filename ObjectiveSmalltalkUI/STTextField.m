@@ -37,6 +37,11 @@
 
 -(void)updateFromRef
 {
+//    NSLog(@"updateFromRef, self= %p ref=%p",self,self.ref);
+//    NSLog(@"updateFromRef, value=%p",self.ref.value);
+//    NSLog(@"updateFromRef, objectValue=%p/%@",self.objectValue,self.objectValue);
+    self.objectValue = nil;
+//    NSLog(@"updateFromRef after niling, objectValue=%p/%@",self.objectValue,self.objectValue);
     if ( self.ref && !self.inProcessing) {
         self.objectValue = self.ref.value;
     }

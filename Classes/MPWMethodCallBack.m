@@ -83,6 +83,7 @@ idAccessor( method, _setMethod )
 -invokeWithArgs:(va_list)args
 {
 	id target=va_arg(args,id);
+//    NSLog(@"target=%p",target);
 	return [self invokeWithTarget:target args:args];
 }
 
