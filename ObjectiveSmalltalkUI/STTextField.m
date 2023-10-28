@@ -63,8 +63,10 @@
 -(void)updateToRef
 {
     if (self.ref) {
+        NSLog(@"update to ref %@ -> %@",self.ref,self.objectValue);
         self.ref.value = self.objectValue;
-    }
+        NSLog(@"did update to ref %@ -> %@",self.ref.value,self.objectValue);
+   }
 }
 
 -(void)setBinding:(MPWBinding*)newBinding

@@ -12,15 +12,15 @@ class Person {
     }
 }.
     
-model:people ← [ 
+model:people ← #MPWArrayWithCursor[ 
    #Person{ #first: 'Marcel', #last: 'Weiher' } ,
    #Person{ #first: 'Steven', #last: 'Pinker' } ,
    #Person{ #first: 'Daniel', #last: 'Oschatz' } ,
    #Person{ #first: 'Alex', #last: 'Weiher' } ,
 ].
- 
-a := model:people at:0 | copyWithZone:nil.
-MPWByteStream Stderr println:a.  
+model:people setOffset:2.
+a := model:people/selectedObject.
+stdout println:a.  
 
 model:initialvalue := model:people firstObject.
 model:initialcursor := ref:model:initialvalue.
@@ -35,16 +35,13 @@ table ← table  inScrollView:(200@400 extent: 500@600).
 create ← #Button{ #title: 'Create' }.
 update ← #Button{ #title: 'Update' }.
 delete ← #Button{ #title: 'Delete' }.
- 
+
 #VStack{ #views: [   
  #HStack{ #views:[ #Label{ #stringValue: 'Filter prefix:'  }, #TextField{} ] }, 
   #HStack{ #views:[ table  , 
       #Grid{ #rows: [ 
-            [ #Label{ #text: 'First:'} , #TextField{}] ,
-            [ #Label{ #text: 'Last:'} , #TextField{}] ] } 
+            [ #Label{ #text: 'First:'} , #TextField{ #binding: ref:model:people/selectedObject/first  }] ,
+            [ #Label{ #text: 'Last:'} , #TextField{ #binding: ref:model:people/selectedObject/last }] ] } 
     ] } , 
    #HStack{ #views:[  create, update, delete ] },
-   #HStack{ #views:[  #Label{ #ref: theAlias } ] },
 ] }.
-
- 
