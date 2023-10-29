@@ -37,10 +37,9 @@
 
 -(void)updateFromRef
 {
-//    NSLog(@"updateFromRef, self= %p ref=%p",self,self.ref);
-//    NSLog(@"updateFromRef, value=%p",self.ref.value);
+//    NSLog(@"updateFromRef, self= %p ref=%p/%@",self,self.ref,self.ref);
+//    NSLog(@"updateFromRef, value=%p/%@",self.ref.value,self.ref.value);
 //    NSLog(@"updateFromRef, objectValue=%p/%@",self.objectValue,self.objectValue);
-    self.objectValue = nil;
 //    NSLog(@"updateFromRef after niling, objectValue=%p/%@",self.objectValue,self.objectValue);
     if ( self.ref && !self.inProcessing) {
         self.objectValue = self.ref.value;
@@ -63,9 +62,14 @@
 -(void)updateToRef
 {
     if (self.ref) {
-        NSLog(@"update to ref %@ -> %@",self.ref,self.objectValue);
-        self.ref.value = self.objectValue;
-        NSLog(@"did update to ref %@ -> %@",self.ref.value,self.objectValue);
+        @try {
+            self.inProcessing=YES;
+            NSLog(@"update to ref %@ -> %@",self.ref,self.objectValue);
+            self.ref.value = self.objectValue;
+            NSLog(@"did update to ref %@ -> %@",self.ref.value,self.objectValue);
+        } @finally {
+            self.inProcessing=NO;
+        }
    }
 }
 
