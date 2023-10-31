@@ -44,4 +44,4 @@ delete ← #Button{ #title: 'Delete' }.
             [ #Label{ #text: 'Last:'} , #TextField{ #binding: ref:model:people/selectedObject/last }] ] } 
     ] } , 
    #HStack{ #views:[  create, update, delete ] },
-] }.
+] }.  
