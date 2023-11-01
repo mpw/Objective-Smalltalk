@@ -4,36 +4,50 @@ extension MPWCGDrawingContext {
         self.
     }
 }.
-init:radius ← 10.
 
 class Circle {
     var center.
     var radius.
 }.
 
-init:circles ← #NSMutableArray[ #Circle{ #center: ( 40@10), #radius: 10 },  #Circle{ #center: (120@300), #radius: 40 },  #Circle{ #center: (150@300), #radius: 40 } ].
+class Circles {
+     var circles.
+     var currentRadius.
+     -init {
+        super init.
+        self setCircles: #NSMutableArray[]. 
+        self setCurrentRadius: 10.
+        self.
+     }
+     -<void>addCircleAt: location {
+           newCircle ← #Circle{ #center: location , #radius: (self currentRadius) }.
+           stdout println: self currentRadius.
+           newCircle setRadius: self currentRadius.
+           self circles addObject: newCircle.
+    }
+    -<void>drawOn: aContext {
+           aContext do circle: self circles each.
+    }
+}.
+
+
+init:circles ← #Circles{}.
 
 class CircleView  : MPWView {
     var circles.
-    var radius.
     -<void>drawOnContext:aContext {
-           stdout println:'should draw here'. 
            aContext setStrokeColor: (aContext colorRed:1 green:0 blue:0 alpha:1).
-           aCircle := self circles firstObject.
-           stdout println:aCircle radius.
-           aContext do circle: self circles each.
+           self circles drawOn: aContext.
     }
     -<void>mouseUp:event {
-           location := event locationInWindow.
-           location := self convertPoint: location fromView: nil.
+           location := self convertPoint: (event locationInWindow) fromView: nil.
            stdout println: location.
-           self circles addObject: #Circle{ #center: location , #radius: (self radius value) }.
+           self circles addCircleAt: location.
           self setNeedsDisplay: true.
     }
 -<bool>logDrawRect {
     true
    }
-
 }.
 
 slider ← #Slider{
@@ -41,10 +55,9 @@ slider ← #Slider{
     #minValue: 0,
     #maxValue: 200,
     #doubleValue: 10,
-    #binding: ref:model:radius 
+    #binding: ref:model:circles/currentRadius 
 }.  
- 
 
-#VStack{   #frame: (500 @ 400 ) ,  #views: [   
+#VStack{   #frame: (500 @400 ) ,  #views: [   
 slider,
-#CircleView{  #circles: model:circles , #radius: ref:model:radius } ] }.
+#CircleView{  #circles: model:circles } ] }.
