@@ -26,9 +26,6 @@ model:initialvalue := model:people firstObject.
 model:initialcursor := ref:model:initialvalue.
 model:cursor := ref:model:initialvalue.
 
-theAlias := MPWAlias new.
-theAlias setBase: ref:model:cursor.
-
 table ← #MPWTableView{ #frame: (00@300), #cursorRef: ref:model:cursor , #binding: ref:model:people   }.
 table setItems: model:people.
 table ← table  inScrollView:(200@400 extent: 500@600).
