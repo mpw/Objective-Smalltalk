@@ -1,9 +1,16 @@
 #!env st
+#-<void>testCircle
 
 class Circle {
     var center.
     var radius.
 }.
+
+extension MPWPoint {
+  -<int>isEqual:other {
+        self x = other x and: self y = other y.
+  }
+}
 
 
 class Circles {
@@ -17,13 +24,13 @@ class Circles {
      }
      -<void>addCircleAt: location {
            newCircle ← #Circle{ #center: location , #radius: (self currentRadius) }.
-           stdout println: self currentRadius.
            newCircle setRadius: self currentRadius.
            self circles addObject: newCircle.
     }
     -<void>drawOn: aContext {
            aContext do circle: self circles each.
     }
+    -at:anIndex { this:circles at:anIndex. }
     -description {
        count := this:circles count.
        "{count} circles". 
@@ -36,17 +43,21 @@ class Circles {
         circles count assertEqual:0 msg:'empty after creation'.
         circles addCircleAt: (125 @ 34 ).
         circles count assertEqual:1 msg:'1 after add'.
+	pt2 := 125@34.
+        (circles at:0 ) center assertEqual:pt2 msg:'location of added circle'.
+        (circles at:0 ) radius assertEqual:10  msg:'radius of added circle'.
 
     }
     +testSelectors { [
-         'testCanAddCircle',
+         'testCanAddCircles',
        ]. 
 
     }
 }.
 
 
-circles ← #Circles{}.
 
-Circles testCanAddCircles.
+Circles testSelectors do: { :selector |
+   Circles performSelector: selector .
+}.
 
