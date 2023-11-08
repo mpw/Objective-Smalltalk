@@ -115,7 +115,9 @@
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
+    NSLog(@"will show workspace");
     [self showWorkspace:nil];
+    NSLog(@"did show workspace");
     [[self programTextView] setString:[data stringValue]];
     return YES;
 }

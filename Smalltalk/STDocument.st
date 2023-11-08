@@ -7,6 +7,7 @@ extension STDocument {
   }
 
   -<void>showWorkspace:sender {
+      stdout println:'show workspace'.
       scrollView := NSScrollView alloc initWithFrame: (0@0 extent: 500@400) | autorelease.
       scrollView setAutoresizingMask: 18.
       scrollView setHasVerticalScroller: true.

@@ -28,7 +28,30 @@ class Circles {
     -<void>drawOn: aContext {
            aContext do circle: self circles each.
     }
-}.
+    -atIndex:anIndex { this:circles at:anIndex. }
+    -description {
+       count := this:circles count.
+       "{count} circles". 
+    }
+    -count {
+       this:circles count.
+    }
+    +testCanAddCircles {
+        circles := self new.
+        circles count assertEqual:0 msg:'empty after creation'.
+        circles addCircleAt: (125 @ 34 ).
+        circles count assertEqual:1 msg:'1 after add'.
+	pt2 := 125@34.
+        (circles atIndex:0 ) center assertEqual:pt2 msg:'location of added circle'.
+        (circles atIndex:0 ) radius assertEqual:10  msg:'radius of added circle'.
+
+    }
+    +testSelectors { [
+         'testCanAddCircles',
+       ]. 
+    }
+}. 
+ 
 
 
 init:circles ← #Circles{}.
@@ -61,3 +84,4 @@ slider ← #Slider{
 #VStack{   #frame: (500 @400 ) ,  #views: [   
 slider,
 #CircleView{  #circles: model:circles } ] }.
+Circles.

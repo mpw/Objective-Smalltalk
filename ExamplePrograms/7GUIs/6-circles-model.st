@@ -6,13 +6,6 @@ class Circle {
     var radius.
 }.
 
-extension MPWPoint {
-  -<int>isEqual:other {
-        self x = other x and: self y = other y.
-  }
-}
-
-
 class Circles {
      var circles.
      var currentRadius.
