@@ -40,7 +40,10 @@
         heapEvalResults=calloc( max, sizeof(id));
         evalResults=heapEvalResults;
     }
-    
+    if ( self.literalClassName && !finalClass ) {
+        [NSException raise:@"classnotfound" format:@"Class '%@ not found in literal array expression",self.literalClassName];
+    }
+
     for ( int i=0;i<max;i++) {
         evalResults[i]=[self.objects[i] evaluateIn:aContext];
     }
@@ -62,3 +65,5 @@
 }
 
 @end
+
+
