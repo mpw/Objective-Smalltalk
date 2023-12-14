@@ -106,8 +106,8 @@
         params=baseDictionary;
     }
     
-    if ( factory && factory != baseClass && [factory instancesRespondToSelector:@selector(initWithDictionary:)]) {
-        result=[[[factory alloc] initWithDictionary:params] autorelease];
+    if ( factory && factory != baseClass && [factory instancesRespondToSelector:@selector(initWithDictionaryAndConnect:)]) {
+        result=[[[factory alloc] initWithDictionaryAndConnect:params] autorelease];
     }
     return result;
 }

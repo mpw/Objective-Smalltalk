@@ -1449,6 +1449,23 @@
     TESTEXPR( @"p ← 3 @ 12. var:p/x.",@(3));
 }
 
++(void)testConnectComponents
+{
+    TESTEXPR( @"class STTestConnectComponents { -connectComponents { 'replacement'. } }. #STTestConnectComponents{} ",@"replacement");
+}
+
+
++(void)testRaiseIfLiteralArrayExpressionClassNotFound
+{
+    @try {
+        [[self compiler] evaluateScriptString:@" #SomeArray[ 1,2 ] "];
+    } @catch (id e) {
+        IDEXPECT( [e name], @"classnotfound", @"exception that should have been raised");
+        return ;
+    }
+    EXPECTTRUE(false,@"this should have raised but did not");
+}
+
 
 
 +(NSArray*)testSelectors
@@ -1612,6 +1629,8 @@
         @"testTemplateMatchingStoreCanUseImpsViaFastInvocation",
         @"testComplexVarPathRefWorks",
         @"testComplexVarPathWithoutRefWorks",
+        @"testConnectComponents",
+        @"testRaiseIfLiteralArrayExpressionClassNotFound",
         ];
 }
 

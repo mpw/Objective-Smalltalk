@@ -50,7 +50,7 @@ class Circles {
           foundIndex.
     }
     -count {
-       this:circles count.
+       this:circles/count.
     }
     +<void>testCanAddCircles {
         circles := #Circles{}.
@@ -65,7 +65,7 @@ class Circles {
         circles := #Circles{}.
         (circles atLocation: 126@2) assertEqual:-1 msg:'no circles, so not found'.
         circles addCircleAt: (125 @ 34 ).
-        (circles atLocation: 126@30) assertEqual:0 msg:'first circle found'.
+        (circles atLocation: 126@32) assertEqual:0 msg:'first circle found'.
     }
 
     +testSelectors { [
@@ -74,8 +74,8 @@ class Circles {
        ]. 
     }
 }. 
- 
 
+ 
 
 init:circles ← #Circles{}.
 
