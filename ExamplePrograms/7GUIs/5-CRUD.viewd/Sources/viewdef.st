@@ -18,6 +18,8 @@ model:people ← #MPWArrayWithCursor[
    #Person{ #first: 'Daniel', #last: 'Oschatz' } ,
    #Person{ #first: 'Alex', #last: 'Weiher' } ,
 ].
+
+
 model:people setOffset:2.
 a := model:people/selectedObject.
 stdout println:a.  
@@ -41,4 +43,4 @@ delete ← #Button{ #title: 'Delete' }.
             [ #Label{ #text: 'Last:'} , #TextField{ #binding: ref:model:people/selectedObject/last }] ] } 
     ] } , 
    #HStack{ #views:[  create, update, delete ] },
-] }.  
+] }. 
