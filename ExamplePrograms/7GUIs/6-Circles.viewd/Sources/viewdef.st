@@ -50,7 +50,7 @@ class Circles {
           foundIndex.
     }
     -count {
-       this:circles/count.
+       this:circles count.
     }
     +<void>testCanAddCircles {
         circles := #Circles{}.
@@ -107,4 +107,4 @@ slider ← #Slider{
 #VStack{   #frame: (500 @400 ) ,  #views: [   
 slider,
 #CircleView{  #circles: model:circles } ] }.
-Circles.
+Circles. 
