@@ -80,7 +80,8 @@ typedef struct {
     [schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
     [schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
     [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
-        
+    [schemes setSchemeHandler:[MPWEnsureNonNilStore storeWithSource:[schemes at:@"framework"]] forSchemeName:@"import"];
+
     return schemes;
 }
 
