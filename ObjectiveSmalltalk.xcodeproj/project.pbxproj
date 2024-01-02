@@ -13,6 +13,10 @@
 		1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */; };
 		1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F04243A28D1D09B00486831 /* MPWMachOWriter.h */; };
 		1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F04243B28D1D09B00486831 /* MPWMachOWriter.m */; };
+		1F05B53E2B441A00004C7772 /* STSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F05B53C2B441A00004C7772 /* STSystem.h */; };
+		1F05B53F2B441A00004C7772 /* STSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F05B53C2B441A00004C7772 /* STSystem.h */; };
+		1F05B5402B441A00004C7772 /* STSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F05B53D2B441A00004C7772 /* STSystem.m */; };
+		1F05B5412B441A00004C7772 /* STSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F05B53D2B441A00004C7772 /* STSystem.m */; };
 		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
 		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
 		1F0F13E618D18C86008B5E80 /* STShell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* STShell.h */; };
@@ -881,6 +885,8 @@
 		1F04A53521D25AF200E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = base.make; sourceTree = "<group>"; };
 		1F04A53E21D3D55A00E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; name = base.make; path = Stsh/base.make; sourceTree = SOURCE_ROOT; };
 		1F04A53F21D3D55A00E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; name = GNUmakefile; path = Stsh/GNUmakefile; sourceTree = SOURCE_ROOT; };
+		1F05B53C2B441A00004C7772 /* STSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSystem.h; sourceTree = "<group>"; };
+		1F05B53D2B441A00004C7772 /* STSystem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSystem.m; sourceTree = "<group>"; };
 		1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjSTNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F084A1216DCE6A200ED2517 /* ObjSTNative-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjSTNative-Info.plist"; sourceTree = "<group>"; };
 		1F084A1416DCE6A200ED2517 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2349,6 +2355,8 @@
 				1FA9902C2A96310400DB6FF4 /* STPort.m */,
 				1F5D767925E9838600DCC82F /* STTargetActionSenderPort.h */,
 				1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */,
+				1F05B53C2B441A00004C7772 /* STSystem.h */,
+				1F05B53D2B441A00004C7772 /* STSystem.m */,
 				1F60963725E786840018BB72 /* STTargetActionConnector.h */,
 				1F60963825E786840018BB72 /* STTargetActionConnector.m */,
 				1FCD360508D5D9B10098DA56 /* MPWAbstractInterpretedMethod.h */,
@@ -2623,6 +2631,7 @@
 				1F5E506109B4B754000298D9 /* MPWScriptedMethod.h in Headers */,
 				1F5E506209B4B754000298D9 /* MPWAbstractInterpretedMethod.h in Headers */,
 				1F5D768F25E98F6E00DCC82F /* STPortScheme.h in Headers */,
+				1F05B53E2B441A00004C7772 /* STSystem.h in Headers */,
 				1F5E506309B4B754000298D9 /* MPWMethodType.h in Headers */,
 				1F5E506609B4B754000298D9 /* STConnector.h in Headers */,
 				1F5E506709B4B754000298D9 /* MPWEvaluable.h in Headers */,
@@ -2852,6 +2861,7 @@
 				1F1BCB4D2A19710000AE984C /* STConnectionDefinition.h in Headers */,
 				1FA5963D2A20CD8900C4EB45 /* STPostExpression.h in Headers */,
 				1FE37BE11969612500C9A378 /* MPWSchemeScheme.h in Headers */,
+				1F05B53F2B441A00004C7772 /* STSystem.h in Headers */,
 				1FE37BDB1969612500C9A378 /* MPWEnvScheme.h in Headers */,
 				1FB7AE3124DB0F3000CCBE86 /* STBundle.h in Headers */,
 				1FE37BC11969610800C9A378 /* MPWTaggedFloat.h in Headers */,
@@ -3970,6 +3980,7 @@
 				1F5E507B09B4B754000298D9 /* MPWObjCGenerator.m in Sources */,
 				1FD0D4301A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */,
 				1F5E507C09B4B754000298D9 /* MPWInstanceVariable.m in Sources */,
+				1F05B5402B441A00004C7772 /* STSystem.m in Sources */,
 				1F5E507D09B4B754000298D9 /* MPWSetAccessor.m in Sources */,
 				1F5E507E09B4B754000298D9 /* MPWGetAccessor.m in Sources */,
 				1F5E507F09B4B754000298D9 /* MPWScriptedMethod.m in Sources */,
@@ -4209,6 +4220,7 @@
 				1FD6CAE525BB026500639458 /* MPWGlobalVariableStore.m in Sources */,
 				1FE37BA61969610700C9A378 /* MPWMethodStore.m in Sources */,
 				1FE37B8A1969610600C9A378 /* MPWFastMessage.m in Sources */,
+				1F05B5412B441A00004C7772 /* STSystem.m in Sources */,
 				1F5D771725EBF33900DCC82F /* STTargetActionConnector.m in Sources */,
 				1FE37BB41969610700C9A378 /* MPWScheme.m in Sources */,
 				1FD0D4321A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */,
