@@ -1466,6 +1466,11 @@
     EXPECTTRUE(false,@"this should have raised but did not");
 }
 
++(void)testSyntaxForSystemCreatesSTSystemSubclass
+{
+    TESTEXPR( @"system STTestSystemSyntaxClass { -connectComponents { 'replacement'. } }. STTestSystemSyntaxClass new superclass className.",@"STSystem");
+
+}
 
 
 +(NSArray*)testSelectors
@@ -1631,6 +1636,7 @@
         @"testComplexVarPathWithoutRefWorks",
         @"testConnectComponents",
         @"testRaiseIfLiteralArrayExpressionClassNotFound",
+        @"testSyntaxForSystemCreatesSTSystemSubclass",
         ];
 }
 

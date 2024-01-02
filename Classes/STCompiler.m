@@ -1041,6 +1041,14 @@ idAccessor(solver, setSolver)
         //        NSLog(@"found a class definition");
         [self pushBack:next];
         return [self parseClassDefinition];
+    } else if ( [next isEqual:@"system"]) {
+        //        NSLog(@"found a class definition");
+        [self pushBack:next];
+        STClassDefinition *schemeDef = [self parseClassDefinition];
+        if ( !schemeDef.superclassName ) {
+            schemeDef.superclassName=@"STSystem";
+        }
+        return schemeDef;
     } else if ( [next isEqual:@"scheme"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
@@ -1277,6 +1285,8 @@ idAccessor(solver, setSolver)
     if ( [s isEqualToString:@"class"] || [s isEqualToString:@"extension"]) {
         defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"scheme"]) {
+        defClass=[STClassDefinition class];
+    } else  if ( [s isEqualToString:@"system"]) {
         defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
         defClass=[MPWFilterDefinition class];
