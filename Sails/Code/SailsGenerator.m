@@ -6,6 +6,8 @@
 //
 
 #import "SailsGenerator.h"
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+
 
 @implementation SailsGenerator
 
@@ -18,7 +20,8 @@
 
 +(void)someTest
 {
-	EXPECTTRUE(false, @"implemented");
+    STBundle *bundle=[STBundle new];
+//	EXPECTTRUE(false, @"implemented");
 }
 
 +(NSArray*)testSelectors

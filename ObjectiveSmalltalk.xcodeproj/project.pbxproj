@@ -19,6 +19,16 @@
 		1F05B5412B441A00004C7772 /* STSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F05B53D2B441A00004C7772 /* STSystem.m */; };
 		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
 		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
+		1F096D322B4941B70072DD85 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
+		1F096D332B4942050072DD85 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F096D382B4943030072DD85 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1F096D3E2B4966540072DD85 /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
+		1F096D3F2B4966540072DD85 /* ObjectiveHTTPD.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F096D4C2B4966D40072DD85 /* Sails.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFCB56D2B431491002DC40A /* Sails.framework */; };
+		1F096D4D2B4966D40072DD85 /* Sails.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFCB56D2B431491002DC40A /* Sails.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F096D512B4966FA0072DD85 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F096D472B4966CD0072DD85 /* main.m */; };
+		1F096D522B4968050072DD85 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
+		1F096D532B4968050072DD85 /* StshFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F0F13E618D18C86008B5E80 /* STShell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* STShell.h */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
@@ -699,6 +709,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F096D352B4942050072DD85 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F5E504B09B4B754000298D9;
+			remoteInfo = ObjectiveSmalltalk;
+		};
+		1F096D4E2B4966D40072DD85 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFCB56C2B431491002DC40A;
+			remoteInfo = Sails;
+		};
+		1F096D542B4968050072DD85 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FAFD9741855BC5500EC5221;
+			remoteInfo = StshFramework;
+		};
 		1F2924DC26D8EC430070A458 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -779,6 +810,38 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		1F096D402B4966540072DD85 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F096D3F2B4966540072DD85 /* ObjectiveHTTPD.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F096D432B4966CC0072DD85 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1F096D502B4966D40072DD85 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F096D4D2B4966D40072DD85 /* Sails.framework in Embed Frameworks */,
+				1F096D532B4968050072DD85 /* StshFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F29D80B21B42E1700AB14D8 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -894,6 +957,9 @@
 		1F084A1716DCE6A200ED2517 /* ObjSTNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjSTNative.h; sourceTree = "<group>"; };
 		1F084A2316DCFB3300ED2517 /* llvmincludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llvmincludes.h; sourceTree = "<group>"; };
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F096D452B4966CC0072DD85 /* sl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sl; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F096D472B4966CD0072DD85 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1F096D562B49690D0072DD85 /* sl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sl.entitlements; sourceTree = "<group>"; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0F13E518D18C86008B5E80 /* STShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STShell.h; sourceTree = "<group>"; };
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
@@ -1424,6 +1490,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1F096D422B4966CC0072DD85 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F096D4C2B4966D40072DD85 /* Sails.framework in Frameworks */,
+				1F096D522B4968050072DD85 /* StshFramework.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F29D7EA21B42BE500AB14D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1625,6 +1700,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F096D382B4943030072DD85 /* MPWFoundation.framework in Frameworks */,
+				1F096D332B4942050072DD85 /* ObjectiveSmalltalk.framework in Frameworks */,
+				1F096D322B4941B70072DD85 /* Foundation.framework in Frameworks */,
+				1F096D3E2B4966540072DD85 /* ObjectiveHTTPD.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1699,6 +1778,14 @@
 				1F084A1616DCE6A200ED2517 /* ObjSTNative-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1F096D462B4966CD0072DD85 /* sl */ = {
+			isa = PBXGroup;
+			children = (
+				1F096D472B4966CD0072DD85 /* main.m */,
+			);
+			path = sl;
 			sourceTree = "<group>";
 		};
 		1F222C881394CB90007AE2FB /* Schemes */ = {
@@ -2288,6 +2375,7 @@
 		1FFCB56E2B431492002DC40A /* Sails */ = {
 			isa = PBXGroup;
 			children = (
+				1F096D462B4966CD0072DD85 /* sl */,
 				1FFCB57A2B43152E002DC40A /* Code */,
 				1FFCB56F2B431492002DC40A /* Sails.h */,
 				1FFCB5702B431492002DC40A /* Sails.docc */,
@@ -2307,6 +2395,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1F096D562B49690D0072DD85 /* sl.entitlements */,
 				1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */,
 				1FD236732641BC6C009C5E46 /* raspi */,
 				1F2B17AC2625F23D005D873F /* README.md */,
@@ -2527,6 +2616,7 @@
 				1F854E7428A11B7B0085034C /* stui */,
 				1F605FF52A2231D300783E17 /* PyObjS.framework */,
 				1FFCB56D2B431491002DC40A /* Sails.framework */,
+				1F096D452B4966CC0072DD85 /* sl */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2960,6 +3050,26 @@
 			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		1F096D442B4966CC0072DD85 /* sl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F096D492B4966CD0072DD85 /* Build configuration list for PBXNativeTarget "sl" */;
+			buildPhases = (
+				1F096D412B4966CC0072DD85 /* Sources */,
+				1F096D422B4966CC0072DD85 /* Frameworks */,
+				1F096D432B4966CC0072DD85 /* CopyFiles */,
+				1F096D502B4966D40072DD85 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F096D4F2B4966D40072DD85 /* PBXTargetDependency */,
+				1F096D552B4968050072DD85 /* PBXTargetDependency */,
+			);
+			name = sl;
+			productName = sl;
+			productReference = 1F096D452B4966CC0072DD85 /* sl */;
+			productType = "com.apple.product-type.tool";
+		};
 		1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F29D80221B42BE900AB14D8 /* Build configuration list for PBXNativeTarget "TestObjectiveSmalltalk" */;
@@ -3348,10 +3458,12 @@
 				1FFCB56A2B431491002DC40A /* Frameworks */,
 				1FFCB56B2B431491002DC40A /* Resources */,
 				1FFCB5792B4314D7002DC40A /* Run Tests */,
+				1F096D402B4966540072DD85 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1F096D362B4942050072DD85 /* PBXTargetDependency */,
 			);
 			name = Sails;
 			productName = Sails;
@@ -3367,6 +3479,9 @@
 				DefaultBuildSystemTypeForWorkspace = Latest;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
+					1F096D442B4966CC0072DD85 = {
+						CreatedOnToolsVersion = 15.1;
+					};
 					1F29D7EC21B42BE500AB14D8 = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = PE4436LT5M;
@@ -3474,6 +3589,7 @@
 				1F854E6728A11B7B0085034C /* stui */,
 				1F605FF42A2231D200783E17 /* PyObjS */,
 				1FFCB56C2B431491002DC40A /* Sails */,
+				1F096D442B4966CC0072DD85 /* sl */,
 			);
 		};
 /* End PBXProject section */
@@ -3879,7 +3995,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "tester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\n#codesign -s - $framework/`basename $framework .framework`\nif [ -x  ${tester}  ] ; then\n     if $tester ${framework}  ; then\n#         touch ${successfile}\n        echo success!\n     else\n         rm ${successfile}\n         exit 1\n     fi\nelse\n   echo \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+			shellScript = "tester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\nif [ -x  ${tester}  ] ; then\n     if $tester ${framework}  ; then\n#         touch ${successfile}\n        echo success!\n     else\n         rm ${successfile}\n         exit 1\n     fi\nelse\n   echo \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3904,6 +4020,14 @@
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F096D412B4966CC0072DD85 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F096D512B4966FA0072DD85 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4322,6 +4446,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1F096D362B4942050072DD85 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F5E504B09B4B754000298D9 /* ObjectiveSmalltalk */;
+			targetProxy = 1F096D352B4942050072DD85 /* PBXContainerItemProxy */;
+		};
+		1F096D4F2B4966D40072DD85 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFCB56C2B431491002DC40A /* Sails */;
+			targetProxy = 1F096D4E2B4966D40072DD85 /* PBXContainerItemProxy */;
+		};
+		1F096D552B4968050072DD85 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FAFD9741855BC5500EC5221 /* StshFramework */;
+			targetProxy = 1F096D542B4968050072DD85 /* PBXContainerItemProxy */;
+		};
 		1F2924DD26D8EC430070A458 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FE37B4C19695FA600C9A378 /* ObjectiveSmalltalkTouch */;
@@ -4569,6 +4708,83 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1F096D4A2B4966CD0072DD85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = sl.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+			};
+			name = Debug;
+		};
+		1F096D4B2B4966CD0072DD85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = sl.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -6785,14 +7001,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
+					/Library/Frameworks,
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -6840,14 +7057,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
+					/Library/Frameworks,
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -6870,6 +7088,15 @@
 			buildConfigurations = (
 				1F084A1B16DCE6A200ED2517 /* Debug */,
 				1F084A1C16DCE6A200ED2517 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F096D492B4966CD0072DD85 /* Build configuration list for PBXNativeTarget "sl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F096D4A2B4966CD0072DD85 /* Debug */,
+				1F096D4B2B4966CD0072DD85 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
