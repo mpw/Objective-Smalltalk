@@ -129,7 +129,8 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSDictionary*)readInfo
 {
-    return [NSJSONSerialization JSONObjectWithData:[self storeForSubDir:@"."][@"Info.json"] options:0 error:nil];
+    NSData *infoData = [self storeForSubDir:@"."][@"Info.json"];
+    return infoData ?  [NSJSONSerialization JSONObjectWithData:infoData options:0 error:nil] : nil;
 }
 
 -(void)configureInterpreter:(STCompiler*)newInterpreter
@@ -216,6 +217,8 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [self.cachedResources flush];
     NSFileManager *fm=[NSFileManager defaultManager];
     [fm createDirectoryAtURL:self.url withIntermediateDirectories:YES attributes:nil error:&outError];
+    NSDictionary *info=self.info ?: @{};
+    [[NSJSONSerialization dataWithJSONObject:info options:0 error:nil] writeToURL:[NSURL URLWithString:@"Info.json" relativeToURL:self.url] atomically:YES];
     if ( self.saveSource) {
         NSURL *sourcesDir=[NSURL URLWithString:@"Sources" relativeToURL:self.url];
         [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
@@ -310,6 +313,26 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     EXPECTFALSE(bundleThatDoesNotExist.isPresentOnDisk, @"isPresentOnDisk for one that does not exist");
 }
 
++(void)testWriteInfo
+{
+    NSString *newBundlePath=@"/tmp/testbundle.stb";
+    NSError *error=nil;
+    [[NSFileManager defaultManager] removeItemAtPath:newBundlePath error:&error];
+    NSLog(@"error before: %@",error);
+    STBundle *newBundle=[self bundleWithPath:newBundlePath];
+    EXPECTNIL( newBundle.info, @"info");
+    newBundle.info = @{ @"siteClass": @"MyTestSite "};
+    EXPECTNOTNIL( newBundle.info, @"info");
+    [newBundle save];
+    
+    STBundle *checkBundle = [STBundle bundleWithPath:newBundlePath];
+    EXPECTNOTNIL(checkBundle.info, @"info when checking");
+
+    NSLog(@"error after: %@",error);
+    
+
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -322,6 +345,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
         @"testGetInterpreter",
         @"testCompileSources",
         @"testExistsOnDisk",
+        @"testWriteInfo",
     ];
 }
 @end
