@@ -9,17 +9,21 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 #import "STShell.h"
-
+#import <Sails/STSiteBundle.h>
 
 int main (int argc, const char *argv[])
 {
     @autoreleasepool {
+        STSiteBundle* bundle=nil;
         NSMutableArray *args=[NSMutableArray array];
-        for (int i=1;i<argc;i++) {
-            [args addObject:[NSString stringWithUTF8String:argv[i]]];
-        }
         STShell *stsh=[[[STShell alloc] initWithArgs:args] autorelease];
         [stsh setCommandName:[NSString stringWithUTF8String:argv[0]]];
+        if ( argc > 1 ) {
+            NSString *path = [NSString stringWithUTF8String:argv[1]];
+            bundle = [STSiteBundle bundleWithPath:path];
+            [bundle runSite];
+            [[stsh evaluator] bindValue:bundle toVariableNamed:@"site"];
+        }
         [stsh run];
         exit(0);       // insure the process exit status is 0
     }

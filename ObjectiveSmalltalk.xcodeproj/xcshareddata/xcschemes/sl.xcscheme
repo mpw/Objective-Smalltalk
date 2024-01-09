@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F096D442B4966CC0072DD85"
-               BuildableName = "sl"
-               BlueprintName = "sl"
+               BuildableName = "sails"
+               BlueprintName = "sails"
                ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F096D442B4966CC0072DD85"
-            BuildableName = "sl"
-            BlueprintName = "sl"
+            BuildableName = "sails"
+            BlueprintName = "sails"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F096D442B4966CC0072DD85"
-            BuildableName = "sl"
-            BlueprintName = "sl"
+            BuildableName = "sails"
+            BlueprintName = "sails"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
