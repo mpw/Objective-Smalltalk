@@ -214,7 +214,6 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(void)save
 {
     NSError *outError=nil;
-    [self.cachedResources flush];
     NSFileManager *fm=[NSFileManager defaultManager];
     [fm createDirectoryAtURL:self.url withIntermediateDirectories:YES attributes:nil error:&outError];
     NSDictionary *info=self.info ?: @{};
@@ -224,6 +223,9 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
         [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
         [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
     }
+    NSURL *resourcesDir=[NSURL URLWithString:@"Resources" relativeToURL:self.url];
+    [fm createDirectoryAtURL:resourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
+    [self.cachedResources flush];
 }
 
 @end
@@ -315,7 +317,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 +(void)testWriteInfo
 {
-    NSString *newBundlePath=@"/tmp/testbundle.stb";
+    NSString *newBundlePath=@"/tmp/testinfobundle.stb";
     NSError *error=nil;
     [[NSFileManager defaultManager] removeItemAtPath:newBundlePath error:&error];
     NSLog(@"error before: %@",error);
@@ -327,10 +329,25 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     
     STBundle *checkBundle = [STBundle bundleWithPath:newBundlePath];
     EXPECTNOTNIL(checkBundle.info, @"info when checking");
-
-    NSLog(@"error after: %@",error);
     
+    NSLog(@"error after: %@",error);
+}
 
++(void)testWriteResources
+{
+    NSString *newBundlePath=@"/tmp/testresourcesbundle.stb";
+    NSError *error=nil;
+    [[NSFileManager defaultManager] removeItemAtPath:newBundlePath error:&error];
+    NSLog(@"error before: %@",error);
+    STBundle *newBundle=[self bundleWithPath:newBundlePath];
+    EXPECTNIL(newBundle.cachedResources[@"index.html"],@"index.html should be nil before" );
+    newBundle.cachedResources[@"index.html"]=@"Hello World!";
+    EXPECTNOTNIL(newBundle.cachedResources, @"should have a resources ")
+    [newBundle save];
+    
+    STBundle *checkBundle = [STBundle bundleWithPath:newBundlePath];
+    EXPECTNOTNIL(checkBundle.cachedResources[@"index.html"],@"index.html should now exist" );
+    NSLog(@"error after: %@",error);
 }
 
 +(NSArray*)testSelectors
@@ -346,6 +363,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
         @"testCompileSources",
         @"testExistsOnDisk",
         @"testWriteInfo",
+        @"testWriteResources",
     ];
 }
 @end
