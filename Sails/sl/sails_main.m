@@ -18,11 +18,29 @@ int main (int argc, const char *argv[])
         NSMutableArray *args=[NSMutableArray array];
         STShell *stsh=[[[STShell alloc] initWithArgs:args] autorelease];
         [stsh setCommandName:[NSString stringWithUTF8String:argv[0]]];
-        if ( argc > 1 ) {
-            NSString *path = [NSString stringWithUTF8String:argv[1]];
-            bundle = [STSiteBundle bundleWithPath:path];
-            [bundle runSite];
-            [[stsh evaluator] bindValue:bundle toVariableNamed:@"site"];
+
+        for (int i=1;i<=argc;i++) {
+            NSString *arg = [NSString stringWithUTF8String:argv[i]];
+            if ( [arg hasPrefix:@"-"]) {
+                if ( [arg isEqual:@"-run"]) {
+                    i++;
+                    NSString *path = [NSString stringWithUTF8String:argv[i]];
+                    bundle = [STSiteBundle bundleWithPath:path];
+                    [bundle runSite];
+                    [[stsh evaluator] bindValue:bundle toVariableNamed:@"site"];
+                    break;
+                } else if ( [arg isEqual:@"-generate"]) {
+                    i++;
+                    NSString *path = [NSString stringWithUTF8String:argv[i]];
+                    bundle = [STSiteBundle bundleWithPath:path];
+                    [bundle save];
+                    return 0;
+                }
+            } else {
+                break;
+            }
+
+            
         }
         [stsh run];
         exit(0);       // insure the process exit status is 0
