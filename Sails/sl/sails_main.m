@@ -9,7 +9,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 #import "STShell.h"
-#import <Sails/STSiteBundle.h>
+#import <Sails/Sails.h>
 
 int main (int argc, const char *argv[])
 {
@@ -32,8 +32,9 @@ int main (int argc, const char *argv[])
                 } else if ( [arg isEqual:@"-generate"]) {
                     i++;
                     NSString *path = [NSString stringWithUTF8String:argv[i]];
-                    bundle = [STSiteBundle bundleWithPath:path];
-                    [bundle save];
+                    SailsGenerator *generator = [[SailsGenerator new] autorelease];
+                    generator.path = path;
+                    [generator generate];
                     return 0;
                 }
             } else {

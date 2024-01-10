@@ -696,7 +696,7 @@
 		1FFC563B1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */; };
 		1FFCB5712B431492002DC40A /* Sails.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1FFCB5702B431492002DC40A /* Sails.docc */; };
 		1FFCB5722B431492002DC40A /* Sails.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB56F2B431492002DC40A /* Sails.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFCB57D2B43154E002DC40A /* SailsGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB57B2B43154E002DC40A /* SailsGenerator.h */; };
+		1FFCB57D2B43154E002DC40A /* SailsGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB57B2B43154E002DC40A /* SailsGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFCB57E2B43154E002DC40A /* SailsGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFCB57C2B43154E002DC40A /* SailsGenerator.m */; };
 		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };

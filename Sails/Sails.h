@@ -16,5 +16,6 @@ FOUNDATION_EXPORT const unsigned char SailsVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <Sails/PublicHeader.h>
 
 #import <Sails/STSiteBundle.h>
+#import <Sails/SailsGenerator.h>
 
 

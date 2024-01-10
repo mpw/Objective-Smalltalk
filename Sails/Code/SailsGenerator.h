@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SailsGenerator : NSObject
 
+@property (nonatomic,strong) NSString *path;
+
+-(BOOL)generate;
+
 @end
 
 NS_ASSUME_NONNULL_END
