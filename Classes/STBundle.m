@@ -209,22 +209,33 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     
 }
 
+-(NSURL*)urlAt:(NSString*)name
+{
+    return [NSURL URLWithString:name relativeToURL:self.url];
+}
 
+-(BOOL)writeData:(NSData*)data at:(NSString*)name
+{
+    return [data writeToURL:[self urlAt:name] atomically:YES];
+}
+
+-(BOOL)createDirectoryAt:(NSString*)name
+{
+    NSError *outError=nil;
+    NSURL *dir=[NSURL URLWithString:name relativeToURL:self.url];
+    return [[NSFileManager defaultManager] createDirectoryAtURL:dir withIntermediateDirectories:YES attributes:nil error:&outError];
+}
 
 -(void)save
 {
-    NSError *outError=nil;
-    NSFileManager *fm=[NSFileManager defaultManager];
-    [fm createDirectoryAtURL:self.url withIntermediateDirectories:YES attributes:nil error:&outError];
-    NSDictionary *info=self.info ?: @{};
-    [[NSJSONSerialization dataWithJSONObject:info options:0 error:nil] writeToURL:[NSURL URLWithString:@"Info.json" relativeToURL:self.url] atomically:YES];
+    [self createDirectoryAt:@""];
+    NSDictionary *localInfo=self.info ?: @{};
+    [self writeData:[NSJSONSerialization dataWithJSONObject:localInfo options:0 error:nil] at:@"Info.json"];
     if ( self.saveSource) {
-        NSURL *sourcesDir=[NSURL URLWithString:@"Sources" relativeToURL:self.url];
-        [fm createDirectoryAtURL:sourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
+        [self createDirectoryAt:@"Sources"];
         [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
     }
-    NSURL *resourcesDir=[NSURL URLWithString:@"Resources" relativeToURL:self.url];
-    [fm createDirectoryAtURL:resourcesDir withIntermediateDirectories:YES attributes:nil error:&outError];
+    [self createDirectoryAt:@"Resources"];
     [self.cachedResources flush];
 }
 
