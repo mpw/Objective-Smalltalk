@@ -7,9 +7,18 @@
 
 #import "SailsGenerator.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+#import "STSiteBundle.h"
+
 
 
 @implementation SailsGenerator
+
+-(BOOL)generate
+{
+    STSiteBundle *site=[STSiteBundle bundleWithPath:self.path];
+    [site save];
+    return YES;
+}
 
 @end
 
@@ -18,16 +27,18 @@
 
 @implementation SailsGenerator(testing) 
 
-+(void)someTest
++(void)testBasicGeneration
 {
-    STBundle *bundle=[STBundle new];
-//	EXPECTTRUE(false, @"implemented");
+    NSString *path=@"/tmp/generatortest.sited";
+    SailsGenerator *generator = [[self new] autorelease];
+    generator.path = path;
+    EXPECTTRUE([generator generate],@"generation succeeded");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-			@"someTest",
+			@"testBasicGeneration",
 			];
 }
 
