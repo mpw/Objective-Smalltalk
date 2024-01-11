@@ -341,6 +341,7 @@
 		1F71359A2B5017F900C961D6 /* picnic.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 1F7135822B5017F900C961D6 /* picnic.min.css */; };
 		1F71359B2B5017F900C961D6 /* DynamicSite.st in Resources */ = {isa = PBXBuildFile; fileRef = 1F7135842B5017F900C961D6 /* DynamicSite.st */; };
 		1F71359C2B5017F900C961D6 /* Info.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F7135852B5017F900C961D6 /* Info.json */; };
+		1F71359E2B502EFB00C961D6 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1F71359D2B502EFB00C961D6 /* index.html */; };
 		1F73288A2344B0D300379386 /* STImage.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F7328892344B0D200379386 /* STImage.icns */; };
 		1F73288D2344BEF300379386 /* MPWShellPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */; };
 		1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1235,6 +1236,7 @@
 		1F7135822B5017F900C961D6 /* picnic.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = picnic.min.css; sourceTree = "<group>"; };
 		1F7135842B5017F900C961D6 /* DynamicSite.st */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DynamicSite.st; sourceTree = "<group>"; };
 		1F7135852B5017F900C961D6 /* Info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Info.json; sourceTree = "<group>"; };
+		1F71359D2B502EFB00C961D6 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		1F7328892344B0D200379386 /* STImage.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = STImage.icns; sourceTree = "<group>"; };
 		1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWREPLViewPrinter.h; sourceTree = "<group>"; };
 		1F73288F2344C10000379386 /* MPWREPLViewPrinter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWREPLViewPrinter.m; sourceTree = "<group>"; };
@@ -2127,6 +2129,7 @@
 		1F7135692B5017F900C961D6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1F71359D2B502EFB00C961D6 /* index.html */,
 				1F71356A2B5017F900C961D6 /* dummy.css */,
 				1F71356B2B5017F900C961D6 /* bonsai-base.css */,
 				1F71356C2B5017F900C961D6 /* root.html */,
@@ -3967,6 +3970,7 @@
 				1F71359C2B5017F900C961D6 /* Info.json in Resources */,
 				1F71359A2B5017F900C961D6 /* picnic.min.css in Resources */,
 				1F71358E2B5017F900C961D6 /* hi.html in Resources */,
+				1F71359E2B502EFB00C961D6 /* index.html in Resources */,
 				1F7135872B5017F900C961D6 /* bonsai-base.css in Resources */,
 				1F7135862B5017F900C961D6 /* dummy.css in Resources */,
 			);
