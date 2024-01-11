@@ -35,7 +35,7 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
 {
     [self setClass:@"DynamicSite"];
     self.bundle.cachedSources[@"DynamicSite.st"]=[self frameworkResource:@"DynamicSite" category:@"st"];
-    self.bundle.cachedResources[@"root.html"]=[self frameworkResource:@"root" category:@"html"];
+    self.bundle.cachedResources[@"index.html"]=[self frameworkResource:@"index" category:@"html"];
 
 }
 
