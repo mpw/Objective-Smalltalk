@@ -12,11 +12,39 @@
 
 
 @implementation SailsGenerator
+{
+    STSiteBundle *bundle;
+}
+
+lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
+
+-(STSiteBundle*)createBundle
+{
+    return [STSiteBundle bundleWithPath:self.path];
+}
+
+
+-(void)setClass:(NSString*)className
+{
+    self.bundle.info = @{ @"site": className};
+}
+
+
+
+-(void)createSimpleDynamic
+{
+    [self setClass:@"DynamicSite"];
+    self.bundle.cachedSources[@"DynamicSite.st"]=[self frameworkResource:@"DynamicSite" category:@"st"];
+    self.bundle.cachedResources[@"root.html"]=[self frameworkResource:@"root" category:@"html"];
+
+}
 
 -(BOOL)generate
 {
-    STSiteBundle *site=[STSiteBundle bundleWithPath:self.path];
-    [site save];
+    [self createSimpleDynamic];
+    self.bundle.saveSource=YES;
+    [self.bundle methodDict];
+    [self.bundle save];
     return YES;
 }
 

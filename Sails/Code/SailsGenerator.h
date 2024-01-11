@@ -7,13 +7,17 @@
 
 #import <Foundation/Foundation.h>
 
+@class STSiteBundle;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SailsGenerator : NSObject
 
 @property (nonatomic,strong) NSString *path;
+@property (readonly) STSiteBundle *bundle;
 
 -(BOOL)generate;
+
 
 @end
 

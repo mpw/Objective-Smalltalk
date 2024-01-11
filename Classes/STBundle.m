@@ -32,6 +32,7 @@ lazyAccessor(STCompiler*, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary*, methodDict, setMethodDict, methodDictForSourceFiles)
 lazyAccessor(MPWWriteBackCache*, cachedResources, setCachedResources, createCachedResources)
 lazyAccessor(MPWWriteBackCache*, cachedSources, setCachedSources, createCachedSources)
+@dynamic info;
 
 CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 {
@@ -234,6 +235,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     if ( self.saveSource) {
         [self createDirectoryAt:@"Sources"];
         [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
+        [self.cachedSources flush];
     }
     [self createDirectoryAt:@"Resources"];
     [self.cachedResources flush];
