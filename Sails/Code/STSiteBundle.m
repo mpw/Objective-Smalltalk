@@ -95,7 +95,6 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [self methodDict];
     [self setupSite];
     [self startWebServerOnPort:8081];
-    [[self siteServer] enableCaching];
 }
 
 @end

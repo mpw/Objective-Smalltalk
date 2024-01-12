@@ -29,19 +29,31 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     self.bundle.info = @{ @"site": className};
 }
 
+-(void)copySources:(NSString*)name
+{
+    self.bundle.cachedSources[name]=[self frameworkResource:name category:@""];
+}
 
+-(void)copyResources:(NSString*)name
+{
+    self.bundle.cachedResources[name]=[self frameworkResource:name category:@""];
+}
 
--(void)createSimpleDynamic
+-(void)makeStatic
+{
+    [self setClass:@"StaticSite"];
+    [self copySources:@"StaticSite.st"];
+    [self copyResources:@"index.html"];
+    
+}
+-(void)makeDynamic
 {
     [self setClass:@"DynamicSite"];
-    self.bundle.cachedSources[@"DynamicSite.st"]=[self frameworkResource:@"DynamicSite" category:@"st"];
-    self.bundle.cachedResources[@"index.html"]=[self frameworkResource:@"index" category:@"html"];
-
+    [self copySources:@"DynamicSite.st"];
 }
 
 -(BOOL)generate
 {
-    [self createSimpleDynamic];
     self.bundle.saveSource=YES;
     [self.bundle methodDict];
     [self.bundle save];
@@ -60,6 +72,7 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     NSString *path=@"/tmp/generatortest.sited";
     SailsGenerator *generator = [[self new] autorelease];
     generator.path = path;
+    [generator makeStatic];
     EXPECTTRUE([generator generate],@"generation succeeded");
 }
 

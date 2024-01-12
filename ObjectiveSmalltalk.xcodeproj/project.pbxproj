@@ -449,6 +449,7 @@
 		1FA5F48B147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */; };
 		1FA5F490147CE04A007EE753 /* MPWTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5F48E147CE049007EE753 /* MPWTreeNode.h */; };
 		1FA5F493147CE04A007EE753 /* MPWTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F48F147CE049007EE753 /* MPWTreeNode.m */; };
+		1FA62D3E2B517B3B00E17994 /* StaticSite.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FA62D3D2B517B3B00E17994 /* StaticSite.st */; };
 		1FA749BD25F5508D001AA6A8 /* MPWColorStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA749BB25F5508D001AA6A8 /* MPWColorStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA749BE25F5508D001AA6A8 /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA749BC25F5508D001AA6A8 /* MPWColorStore.m */; };
 		1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA749DF25F55664001AA6A8 /* MPWFontStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1322,6 +1323,7 @@
 		1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTreeNodeScheme.m; sourceTree = "<group>"; };
 		1FA5F48E147CE049007EE753 /* MPWTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTreeNode.h; sourceTree = "<group>"; };
 		1FA5F48F147CE049007EE753 /* MPWTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTreeNode.m; sourceTree = "<group>"; };
+		1FA62D3D2B517B3B00E17994 /* StaticSite.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = StaticSite.st; sourceTree = "<group>"; };
 		1FA741A40886DAFB00121867 /* STTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTests.h; sourceTree = "<group>"; };
 		1FA741A50886DAFB00121867 /* STTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTests.m; sourceTree = "<group>"; };
 		1FA749BB25F5508D001AA6A8 /* MPWColorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWColorStore.h; sourceTree = "<group>"; };
@@ -2191,6 +2193,7 @@
 			isa = PBXGroup;
 			children = (
 				1F7135842B5017F900C961D6 /* DynamicSite.st */,
+				1FA62D3D2B517B3B00E17994 /* StaticSite.st */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -3952,6 +3955,7 @@
 				1F7135952B5017F900C961D6 /* bonsai-sample.html in Resources */,
 				1F71359B2B5017F900C961D6 /* DynamicSite.st in Resources */,
 				1F7135972B5017F900C961D6 /* style.css in Resources */,
+				1FA62D3E2B517B3B00E17994 /* StaticSite.st in Resources */,
 				1F7135942B5017F900C961D6 /* mustard-cart.html in Resources */,
 				1F7135932B5017F900C961D6 /* mustard-ui.min.css in Resources */,
 				1F7135892B5017F900C961D6 /* blog.html in Resources */,
