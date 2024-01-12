@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)startWebServerOnPort:(int)port;
 -(void)setupSite;
+-(void)runSite:(int)port;
 
 
 @property (readonly) MPWSiteServer *siteServer;
