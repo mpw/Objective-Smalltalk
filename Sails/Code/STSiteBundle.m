@@ -90,11 +90,16 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     return self.siteServer.renderer;
 }
 
--(void)runSite
+-(void)runSite:(int)port
 {
     [self methodDict];
     [self setupSite];
-    [self startWebServerOnPort:8081];
+    [self startWebServerOnPort:port];
+}
+
+-(void)runSite
+{
+    [self runSite:8081];
 }
 
 @end

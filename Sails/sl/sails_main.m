@@ -15,6 +15,7 @@ int main (int argc, const char *argv[])
 {
     @autoreleasepool {
         STSiteBundle* bundle=nil;
+        int port=8081;
         NSMutableArray *args=[NSMutableArray array];
         STShell *stsh=[[[STShell alloc] initWithArgs:args] autorelease];
         [stsh setCommandName:[NSString stringWithUTF8String:argv[0]]];
@@ -26,23 +27,25 @@ int main (int argc, const char *argv[])
                     i++;
                     NSString *path = [NSString stringWithUTF8String:argv[i]];
                     bundle = [STSiteBundle bundleWithPath:path];
-                    [bundle runSite];
+                    [bundle runSite:port];
                     [[stsh evaluator] bindValue:bundle toVariableNamed:@"site"];
                     break;
-                } else if ( [arg isEqual:@"-generate"]) {
-                    NSString *type=@"static";
+                } else if ( [arg isEqual:@"-port"]) {
                     i++;
-                    if ( argc == 4) {
-                        NSLog(@"argc was 4, get the type");
-                        type=[NSString stringWithUTF8String:argv[i]];
-                        NSLog(@"type: %@",type);
+                    port=atoi(argv[i]);
+                } else if ( [arg isEqual:@"-generate"]) {
+                    i++;
+                    NSString *type=@"-static";
+                    NSString *path = [NSString stringWithUTF8String:argv[i]];
+                    if ( [path hasPrefix:@"-"]) {
                         i++;
+                        type=path;
+                        path = [NSString stringWithUTF8String:argv[i]];
                     }
                     NSLog(@"type: %@",type);
-                    NSString *path = [NSString stringWithUTF8String:argv[i]];
                     SailsGenerator *generator = [[SailsGenerator new] autorelease];
                     generator.path = path;
-                    if ( [type isEqual:@"dynamic"] ) {
+                    if ( [type isEqual:@"-dynamic"] ) {
                         [generator makeDynamic];
                     } else {
                         [generator makeStatic];
