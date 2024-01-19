@@ -46,10 +46,20 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     [self copyResources:@"index.html"];
     
 }
+
 -(void)makeDynamic
 {
     [self setClass:@"DynamicSite"];
     [self copySources:@"DynamicSite.st"];
+}
+
+-(void)makeSiteOfType:(NSString*)siteType
+{
+    if ( [siteType isEqual:@"dynamic"]) {
+        [self makeDynamic];
+    } else {
+        [self makeStatic];
+    }
 }
 
 -(BOOL)generate

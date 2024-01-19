@@ -16,8 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString *path;
 @property (readonly) STSiteBundle *bundle;
 
--(void)makeStatic;
--(void)makeDynamic;
+-(void)makeSiteOfType:(NSString*)siteType;
 
 -(BOOL)generate;
 
