@@ -1,0 +1,21 @@
+
+scheme BlogSite {
+    var bundle.
+    -sitemap {
+       self.
+    }
+    -<void>setupSite {
+	self.
+    }
+    -<void>setRenderer:aRenderer {
+        self.
+    }
+    -createTemplater {
+	self.
+    }
+    
+    /*:p { get {
+          "This is the dynamic blog".
+       }
+    }
+}

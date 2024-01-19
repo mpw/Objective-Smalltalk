@@ -39,17 +39,12 @@ int main (int argc, const char *argv[])
                     NSString *path = [NSString stringWithUTF8String:argv[i]];
                     if ( [path hasPrefix:@"-"]) {
                         i++;
-                        type=path;
+                        type=[path substringFromIndex:1];
                         path = [NSString stringWithUTF8String:argv[i]];
                     }
-                    NSLog(@"type: %@",type);
                     SailsGenerator *generator = [[SailsGenerator new] autorelease];
                     generator.path = path;
-                    if ( [type isEqual:@"-dynamic"] ) {
-                        [generator makeDynamic];
-                    } else {
-                        [generator makeStatic];
-                    }
+                    [generator makeSiteOfType:type];
                     [generator generate];
                     return 0;
                 }
