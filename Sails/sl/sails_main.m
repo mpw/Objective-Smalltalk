@@ -27,7 +27,7 @@ int main (int argc, const char *argv[])
                     i++;
                     NSString *path = [NSString stringWithUTF8String:argv[i]];
                     bundle = [STSiteBundle bundleWithPath:path];
-                    [bundle runSite:port];
+                    [bundle runSimpleSite:port];
                     [[stsh evaluator] bindValue:bundle toVariableNamed:@"site"];
                     break;
                 } else if ( [arg isEqual:@"-port"]) {
