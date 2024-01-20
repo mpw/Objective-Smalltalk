@@ -56,6 +56,8 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [self siteServer];
 }
 
+
+
 -(MPWSiteServer*)createSiteServer
 {
     id sitemap = [[[[self siteClass] alloc] init] autorelease];
@@ -84,6 +86,13 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [self.siteServer disableCaching];
 }
 
+-(void)setupSimpleSite
+{
+    id sitemap = [[[[self siteClass] alloc] init] autorelease];
+    self.siteServer = [[[MPWHTTPServer alloc] init] autorelease];
+    [self.siteServer setDelegate:sitemap];
+}
+
 
 -(id)renderer
 {
@@ -95,6 +104,18 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [self methodDict];
     [self setupSite];
     [self startWebServerOnPort:port];
+}
+
+-(void)runSimpleSite:(int)port
+{
+    [self methodDict];
+    [self setupSimpleSite];
+    MPWHTTPServer *httpServer=self.siteServer;
+    [httpServer setType:@"_http._tcp."];
+    [httpServer setBonjourName:[self siteClassName]];
+    [httpServer setPort:port];
+    NSError *startError = nil;
+    [httpServer start:&startError];
 }
 
 -(void)runSite

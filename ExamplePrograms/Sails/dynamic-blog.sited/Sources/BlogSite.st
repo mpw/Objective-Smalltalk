@@ -1,18 +1,16 @@
 
 scheme BlogSite {
-    var bundle.
-    -sitemap {
+    var postsList.
+    -init {
+       this:postsList ← BlogList new.
        self.
     }
-    -<void>setupSite {
-	self.
+    -schemeNames { 
+	[ 'postsList' ].
     }
-    -<void>setRenderer:aRenderer {
-        self.
-    }
-    -createTemplater {
-	self.
-    }
+    /posts/*:rest { get {
+	postsList:{rest}.
+    }}
     
     /*:p { get {
           "This is the dynamic blog".
