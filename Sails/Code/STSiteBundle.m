@@ -81,6 +81,8 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [httpServer setType:@"_http._tcp."];
     [httpServer setBonjourName:[self siteClassName]];
     [httpServer setPort:port];
+    [httpServer setDefaultMimeType:@"text/html"];
+
     NSError *startError = nil;
     [httpServer start:&startError];
     [self.siteServer disableCaching];
@@ -91,6 +93,9 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     id sitemap = [[[[self siteClass] alloc] init] autorelease];
     self.siteServer = [[[MPWHTTPServer alloc] init] autorelease];
     [self.siteServer setDelegate:sitemap];
+    if ( [sitemap respondsToSelector:@selector(setBundle:)]) {
+        [sitemap setBundle:self];
+    }
 }
 
 
@@ -114,6 +119,7 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [httpServer setType:@"_http._tcp."];
     [httpServer setBonjourName:[self siteClassName]];
     [httpServer setPort:port];
+    [httpServer setDefaultMimeType:@"text/html"];
     NSError *startError = nil;
     [httpServer start:&startError];
 }

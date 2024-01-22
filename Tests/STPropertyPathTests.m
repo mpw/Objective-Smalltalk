@@ -9,6 +9,7 @@
 #import "MPWPropertyPathDefinition.h"
 #import "STClassDefinition.h"
 #import "STTests.h"
+#import "MPWScriptedMethod.h"
 
 @implementation STPropertyPathTests
 
@@ -149,6 +150,30 @@
     EXPECTFALSE([oldKeyValue isNotNil],@"nil or NSNil");
 }
 
++(void)testCompilePropertyPathPostSyntax
+{
+    STCompiler *compiler=[STCompiler compiler];
+    STClassDefinition* classdef = [compiler compile:@"class PropertyTestClass5b : MPWDictStore { /propertyB { post {  self dict setObject:(newValue + 12)  forKey:'variantOfPropertyB'. }}} "];
+    INTEXPECT( classdef.propertyPathDefinitions.count, 1, @"number of property path defs");
+    MPWPropertyPathDefinition *def=classdef.propertyPathDefinitions[0];
+    id path=def.propertyPath;
+    IDEXPECT( [path name], @"propertyB", @"path");
+    MPWScriptedMethod *method=[def methodForVerb:MPWRESTVerbPOST];
+    IDEXPECT( [method.header stringValue], @"<void>ref:theRef value:newValue", @"method");
+}
+
++(void)testCompileAndRunPropertyPathPostSyntax
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"class PropertyTestClass5c : MPWDictStore { /propertyB { post {  self dict setObject:(newValue + 12)  forKey:'variantOfPropertyB'. }}} "];
+    [compiler evaluateScriptString:@"a := PropertyTestClass5c scheme. scheme:p := a. p:propertyB += 13 ."];
+    id oldKeyValue = [compiler evaluateScriptString:@"a dict objectForKey:'propertyB'."];
+    
+    id result1=[compiler evaluateScriptString:@"a dict objectForKey:'variantOfPropertyB'."];
+    IDEXPECT(result1,@(25),@"did post properly");
+    EXPECTFALSE([oldKeyValue isNotNil],@"nil or NSNil");
+}
+
 +(void)testConstantPropertyPathGetterWorksWithPlainClass
 {
     STCompiler *compiler=[STCompiler compiler];
@@ -216,6 +241,8 @@
 //       @"testSimplePropertyPathSetterWorksWithPlainClass",
        @"testDefiningNoPropertyPathGettersAllowsSuperclassDefinitionToPrevail",
        @"testPropertyPathWildcardMatchesRoot",
+       @"testCompilePropertyPathPostSyntax",
+       @"testCompileAndRunPropertyPathPostSyntax",
 
 			];
 }

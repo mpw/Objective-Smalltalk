@@ -1225,11 +1225,13 @@ idAccessor(solver, setSolver)
         nextToken=[self nextToken];
 //        NSLog(@"get/set:  %@",nextToken);
         while ( [nextToken isEqualToString:@"|="] || [nextToken isEqualToString:@"=|"]
-               || [nextToken isEqualToString:@"=|="] || [nextToken isEqualToString:@"get"] || [nextToken isEqualToString:@"put"]) {
+               || [nextToken isEqualToString:@"=|="] || [nextToken isEqualToString:@"get"] || [nextToken isEqualToString:@"put"]|| [nextToken isEqualToString:@"post"]) {
             NSString *getOrSet=nextToken;
             MPWRESTVerb verb=MPWRESTVerbGET;
             if ( [getOrSet isEqual:@"put"] || [getOrSet isEqual:@"=|"] ) {
                 verb=MPWRESTVerbPUT;
+            } else  if ( [getOrSet isEqual:@"post"] || [getOrSet isEqual:@"+="] ) {
+                verb=MPWRESTVerbPOST;
             }
             STPropertyMethodHeader *header=[[[STPropertyMethodHeader alloc] initWithTemplate:path verb:verb] autorelease];
             
@@ -1243,7 +1245,10 @@ idAccessor(solver, setSolver)
 //                propertyDef.get=body;
             } else if ( [getOrSet isEqualToString:@"=|"] || [getOrSet isEqualToString:@"put"] ) {
                 [propertyDef setMethod:body forVerb:MPWRESTVerbPUT];
-//                propertyDef.set=body;
+                //                propertyDef.set=body;
+            } else if ( [getOrSet isEqualToString:@"post"] ) {
+                [propertyDef setMethod:body forVerb:MPWRESTVerbPOST];
+                //                propertyDef.set=body;
             } else {
             }
         }

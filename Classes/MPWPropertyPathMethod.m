@@ -35,10 +35,11 @@
     } defaults[] = {
         {MPWRESTVerbGET, 1,@"at:aReference" },
         {MPWRESTVerbPUT, 2,@"<void>at:aReference put:newValue"},
+        {MPWRESTVerbPOST, 2,@"<void>at:aReference post:newValue"},
     };
     if ( self=[super init] ) {
         int whichDefault=-1;
-        for (int i=0;i<2;i++) {
+        for (int i=0;i<3;i++) {
             if ( verb == defaults[i].verb) {
                 whichDefault=i;
                 break;

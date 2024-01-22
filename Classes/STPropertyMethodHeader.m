@@ -23,7 +23,7 @@
 {
     if ( self = [super init]) {
         verb=newVerb;
-        if (verb == MPWRESTVerbPUT) {
+        if (verb == MPWRESTVerbPUT || verb == MPWRESTVerbPOST) {
             self.returnType = [STTypeDescriptor voidType];
         } else {
             self.returnType = [STTypeDescriptor idType];
@@ -34,10 +34,13 @@
         }
         [self addParameterName:@"theRef" type:@"id" keyWord:@"ref:"];
         NSString *methodNameTemplate=nil;
-        if (verb == MPWRESTVerbPUT) {
+        if (verb == MPWRESTVerbPUT ) {
             [self addParameterName:@"newValue" type:@"id" keyWord:@"value:"];
             methodNameTemplate = @"PUT_%@:";
-        } else {
+        } else if (verb == MPWRESTVerbPOST ) {
+            [self addParameterName:@"newValue" type:@"id" keyWord:@"value:"];
+            methodNameTemplate = @"POST_%@:";
+        } else  {
             methodNameTemplate = @"GET_%@";
         }
         [self setMethodName:[NSString stringWithFormat:methodNameTemplate,[newTemplate name]]];

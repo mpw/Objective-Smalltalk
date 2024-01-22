@@ -3,8 +3,12 @@ scheme BlogList {
     var bundle.
 
     
-    /*:p { get {
+    /*:p {
+       get {
           "This is the blog list".
+       }
+       put { 
+	  "PUT something".
        }
     }
 }
