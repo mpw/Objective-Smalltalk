@@ -55,8 +55,8 @@
 -(NSArray*)generatedPropertyPathMethods
 {
     NSMutableArray *methods=[NSMutableArray array];
-    MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
-    for (int i=0;i<2;i++ ) {
+    MPWRESTVerb verbs[3]={ MPWRESTVerbGET, MPWRESTVerbPUT,MPWRESTVerbPOST};
+    for (int i=0;i<3;i++ ) {
         PropertyPathDefs *defs = [self propertyPathDefsForVerb:verbs[i]];
         if (defs) {
             [methods addObject:[[[MPWPropertyPathMethod alloc] initWithPropertyPaths:defs->defs count:defs->count verb:defs->verb] autorelease]];
@@ -69,8 +69,8 @@
 -(NSArray*)propertyPathImplementationMethods
 {
     NSMutableArray *methods=[NSMutableArray array];
-    MPWRESTVerb verbs[2]={ MPWRESTVerbGET, MPWRESTVerbPUT};
-    for (int i=0;i<2;i++ ) {
+    MPWRESTVerb verbs[3]={ MPWRESTVerbGET, MPWRESTVerbPUT,MPWRESTVerbPOST};
+    for (int i=0;i<3;i++ ) {
         MPWRESTVerb thisVerb=verbs[i];
         NSArray *definitions=[self propertyPathDefinitionsForVerb:thisVerb];
         for (long j=0,numDefinitions=definitions.count;j<numDefinitions;j++) {
@@ -96,8 +96,8 @@
 -(NSArray*)allImplementationMethods
 {
     NSArray *userDefinedMethods=self.methods;
-    NSArray *propertPathMethods=[self propertyPathImplementationMethods];
-    return [userDefinedMethods arrayByAddingObjectsFromArray:propertPathMethods];
+    NSArray *propertyPathMethods=[self propertyPathImplementationMethods];
+    return [userDefinedMethods arrayByAddingObjectsFromArray:propertyPathMethods];
 }
 
 -(NSArray *)allIvarNames

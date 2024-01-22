@@ -19,7 +19,6 @@ int main (int argc, const char *argv[])
         NSMutableArray *args=[NSMutableArray array];
         STShell *stsh=[[[STShell alloc] initWithArgs:args] autorelease];
         [stsh setCommandName:[NSString stringWithUTF8String:argv[0]]];
-        NSLog(@"argc: %d",argc);
         for (int i=1;i<=argc;i++) {
             NSString *arg = [NSString stringWithUTF8String:argv[i]];
             if ( [arg hasPrefix:@"-"]) {
