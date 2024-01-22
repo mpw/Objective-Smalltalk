@@ -6,7 +6,7 @@
 //
 
 #import "STPropertyPathTests.h"
-#import "MPWPropertyPathDefinition.h"
+#import "STPropertyPathDefinition.h"
 #import "STClassDefinition.h"
 #import "STTests.h"
 #import "MPWScriptedMethod.h"
@@ -155,7 +155,7 @@
     STCompiler *compiler=[STCompiler compiler];
     STClassDefinition* classdef = [compiler compile:@"class PropertyTestClass5b : MPWDictStore { /propertyB { post {  self dict setObject:(newValue + 12)  forKey:'variantOfPropertyB'. }}} "];
     INTEXPECT( classdef.propertyPathDefinitions.count, 1, @"number of property path defs");
-    MPWPropertyPathDefinition *def=classdef.propertyPathDefinitions[0];
+    STPropertyPathDefinition *def=classdef.propertyPathDefinitions[0];
     id path=def.propertyPath;
     IDEXPECT( [path name], @"propertyB", @"path");
     MPWScriptedMethod *method=[def methodForVerb:MPWRESTVerbPOST];

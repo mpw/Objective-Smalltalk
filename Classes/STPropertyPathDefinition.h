@@ -1,5 +1,5 @@
 //
-//  MPWPropertyPathDefinition.h
+//  STPropertyPathDefinition.h
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 8/6/18.
@@ -9,7 +9,7 @@
 
 @class MPWReferenceTemplate,MPWScriptedMethod;
 
-@interface MPWPropertyPathDefinition : NSObject
+@interface STPropertyPathDefinition : NSObject
 
 @property (nonatomic, strong)  MPWReferenceTemplate* propertyPath;
 
