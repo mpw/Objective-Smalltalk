@@ -1,13 +1,13 @@
 //
-//  MPWPropertyPathDefinition.m
+//  STPropertyPathDefinition.m
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 8/6/18.
 //
 
-#import "MPWPropertyPathDefinition.h"
+#import "STPropertyPathDefinition.h"
 
-@implementation MPWPropertyPathDefinition{
+@implementation STPropertyPathDefinition{
     MPWScriptedMethod *methods[MPWRESTVerbMAX];
 }
 

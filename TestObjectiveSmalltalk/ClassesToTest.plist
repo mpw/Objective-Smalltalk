@@ -47,7 +47,7 @@
 	MPWObjectMirror,
 	MPWPropertyPath,
 	"MPWPropertyPathComponent",
-	"MPWPropertyPathDefinition",
+	"STPropertyPathDefinition",
 	"MPWPropertyPathGetter",
 	"MPWRecursiveIdentifier",
 	MPWRefScheme,

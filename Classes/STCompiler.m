@@ -32,7 +32,7 @@
 #import "STClassDefinition.h"
 #import "MPWInstanceVariable.h"
 #import "MPWFilterDefinition.h"
-#import "MPWPropertyPathDefinition.h"
+#import "STPropertyPathDefinition.h"
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 #import "STTypeDescriptor.h"
@@ -1211,9 +1211,9 @@ idAccessor(solver, setSolver)
     return [self parseVariableDefinition:[STVariableDefinition class]];
 }
 
--(MPWPropertyPathDefinition *)parsePropertyPathDefinition
+-(STPropertyPathDefinition *)parsePropertyPathDefinition
 {
-   MPWPropertyPathDefinition *propertyDef=[[MPWPropertyPathDefinition new] autorelease];
+   STPropertyPathDefinition *propertyDef=[[STPropertyPathDefinition new] autorelease];
     MPWIdentifierExpression *pathExpression=[self makeComplexIdentifier:@"dummy:"];
     MPWGenericReference *ref=[[[MPWGenericReference alloc] initWithPath:[pathExpression name]] autorelease];
     MPWReferenceTemplate *path=[[[MPWReferenceTemplate alloc] initWithReference:ref] autorelease];
@@ -1342,7 +1342,7 @@ idAccessor(solver, setSolver)
                 } else if ( [next isEqualToString:@"}"]) {
                     break;
                 } else if ( [next isEqualToString:@"/"]) {
-                    MPWPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
+                    STPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
                     [self pushBack:next];

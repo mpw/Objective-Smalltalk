@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/MPWTemplateMatchingStore.h>
 
-@class MPWPropertyPathDefinition;
+@class STPropertyPathDefinition;
 
 @interface MPWPropertyPathMethod : MPWAbstractInterpretedMethod
 

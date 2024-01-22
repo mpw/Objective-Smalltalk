@@ -9,7 +9,7 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/MPWReferenceTemplate.h>
 #import <MPWFoundation/MPWTemplateMatchingStore.h>
-#import "MPWPropertyPathDefinition.h"
+#import "STPropertyPathDefinition.h"
 #import "MPWMethodHeader.h"
 
 @interface MPWPropertyPathMethod()

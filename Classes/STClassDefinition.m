@@ -12,7 +12,7 @@
 #import "MPWClassMethodStore.h"
 #import "STCompiler.h"
 #import "MPWPropertyPathMethod.h"
-#import "MPWPropertyPathDefinition.h"
+#import "STPropertyPathDefinition.h"
 #import <MPWFoundation/MPWFoundation.h>
 
 @interface NSObject(asReferenceTemplate)
@@ -26,7 +26,7 @@
 -(NSArray*)propertyPathDefinitionsForVerb:(MPWRESTVerb)verb
 {
     NSMutableArray *ppdefs=[NSMutableArray array];
-    for ( MPWPropertyPathDefinition *def in self.propertyPathDefinitions) {
+    for ( STPropertyPathDefinition *def in self.propertyPathDefinitions) {
         if ( [def methodForVerb:verb] ) {
             [ppdefs addObject:def];
         }
