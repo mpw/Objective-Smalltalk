@@ -1315,13 +1315,23 @@
 +(void)testConnectFiltersInRightOrderWorks
 {
     TESTEXPR(@"( (MPWFilter new) → (MPWWriteStream new) ) ≠ nil.", @(true));
-    TESTEXPR(@"((MPWWriteStream new) → (MPWFilter new)). ", (id)nil);
+    BOOL expectedExceptionDidNotOccur=NO;
+    @try {
+        TESTEXPR(@"((MPWWriteStream new) → (MPWFilter new)). ", (id)nil);
+        expectedExceptionDidNotOccur=YES;
+    } @catch ( id exception) { }
+    EXPECTFALSE(expectedExceptionDidNotOccur, @"trying to connect should have raised");
 }
 
 +(void)testConnectStoresInRightOrderWorks
 {
     TESTEXPR(@"( (MPWPathRelativeStore store) → (MPWDictStore store) ) ≠ nil.", @(true));
-    TESTEXPR(@"(MPWDictStore store) → (MPWPathRelativeStore store).", (id)nil);
+    BOOL expectedExceptionDidNotOccur=NO;
+    @try {
+        TESTEXPR(@"(MPWDictStore store) → (MPWPathRelativeStore store).", (id)nil);
+        expectedExceptionDidNotOccur=YES;
+    } @catch ( id exception) { }
+    EXPECTFALSE(expectedExceptionDidNotOccur, @"trying to connect should have raised");
 }
 
 +(void)testConnectViaConnectorManually
