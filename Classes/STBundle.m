@@ -333,7 +333,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     NSString *newBundlePath=@"/tmp/testinfobundle.stb";
     NSError *error=nil;
     [[NSFileManager defaultManager] removeItemAtPath:newBundlePath error:&error];
-    NSLog(@"error before: %@",error);
+//    NSLog(@"error before: %@",error);
     STBundle *newBundle=[self bundleWithPath:newBundlePath];
     EXPECTNIL( newBundle.info, @"info");
     newBundle.info = @{ @"siteClass": @"MyTestSite "};
@@ -343,7 +343,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     STBundle *checkBundle = [STBundle bundleWithPath:newBundlePath];
     EXPECTNOTNIL(checkBundle.info, @"info when checking");
     
-    NSLog(@"error after: %@",error);
+//    NSLog(@"error after: %@",error);
 }
 
 +(void)testWriteResources

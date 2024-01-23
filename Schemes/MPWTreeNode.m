@@ -254,9 +254,9 @@ idAccessor( content, setContent )
 
 
 	NSAssert( ![secondLevel isRoot], @"secondLevels knows it's not root" );
-	NSLog(@"firstlevel %p secondLevel parent: %p",firstLevel, [secondLevel parent]);
-	NSLog(@"[[secondLevel parent] isRoot]=%x",[[secondLevel parent] isRoot]);
-	NSLog(@"[firstLevel isRoot]=%x",[firstLevel isRoot]);
+//	NSLog(@"firstlevel %p secondLevel parent: %p",firstLevel, [secondLevel parent]);
+//	NSLog(@"[[secondLevel parent] isRoot]=%x",[[secondLevel parent] isRoot]);
+//	NSLog(@"[firstLevel isRoot]=%x",[firstLevel isRoot]);
 	NSAssert( ![[secondLevel parent] isRoot], @"first level knows it's not root" );
 
 }

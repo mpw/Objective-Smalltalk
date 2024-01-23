@@ -414,10 +414,10 @@ idAccessor( _signature, setSignature )
 
 +(void)testPointReturn
 {
-	NSLog(@"===testPointReturn===");
+//	NSLog(@"===testPointReturn===");
     MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nspointTester)];
     id result = [msg sendTo:self withArguments:nil ];
-	NSLog(@"after testPointReturn");
+//	NSLog(@"after testPointReturn");
     FLOATEXPECTTOLERANCE([result x], 3.12, 0.000001, @"x");
     FLOATEXPECTTOLERANCE([result y], 23.23, 0.000001, @"y");
 }

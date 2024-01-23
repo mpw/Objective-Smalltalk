@@ -61,7 +61,10 @@ id st_connect_components( id left, id right )
         if ( [source  connect:target]) {
             return [source sendsMessages] ? left : right;
         } else {
-            NSLog(@"did not connect %@ to %@, lefports: %@ -> %@",target,source,leftPorts,rightPorts);
+            NSString *failureReason=[NSString stringWithFormat:@"did not connect %@ to %@, lefports: %@ -> %@",target,source,leftPorts,rightPorts];
+            @throw [NSException exceptionWithName:@"notconnected" reason:failureReason  userInfo:@{
+                @"lhs": source }];
+
             return nil;
         }
     }
