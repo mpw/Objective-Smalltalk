@@ -351,7 +351,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     NSString *newBundlePath=@"/tmp/testresourcesbundle.stb";
     NSError *error=nil;
     [[NSFileManager defaultManager] removeItemAtPath:newBundlePath error:&error];
-    NSLog(@"error before: %@",error);
+//    NSLog(@"error before: %@",error);
     STBundle *newBundle=[self bundleWithPath:newBundlePath];
     EXPECTNIL(newBundle.cachedResources[@"index.html"],@"index.html should be nil before" );
     newBundle.cachedResources[@"index.html"]=@"Hello World!";
@@ -360,7 +360,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     
     STBundle *checkBundle = [STBundle bundleWithPath:newBundlePath];
     EXPECTNOTNIL(checkBundle.cachedResources[@"index.html"],@"index.html should now exist" );
-    NSLog(@"error after: %@",error);
+//    NSLog(@"error after: %@",error);
 }
 
 +(NSArray*)testSelectors

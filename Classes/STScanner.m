@@ -587,7 +587,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     NSString *s=@"‘Hello’";
     STScanner *scanner=[self scannerWithString:s];
     NSString *token=[[scanner nextToken] realString];
-    NSLog(@"real string: %@/%@",[token class],token);
+//    NSLog(@"real string: %@/%@",[token class],token);
 
     IDEXPECT(token,@"Hello",@"string with left quote");
     EXPECTNIL([[scanner nextToken] realString],@"should only have one string");

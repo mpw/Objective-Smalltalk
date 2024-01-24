@@ -197,8 +197,8 @@
 +(void)testNil
 {
     id result=[self evaluate:@"nil"];
-    NSLog(@"result %p",result);
-    NSLog(@"result class: %@",[result class]);
+//    NSLog(@"result %p",result);
+//    NSLog(@"result class: %@",[result class]);
     EXPECTNIL( result, @"result of evaluating nil");
 }
 
@@ -631,7 +631,6 @@
 +(void)testCreateSubclassWithInstanceVariablesUsingSyntax
 {
     id a=[self evaluate:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
-    NSLog(@"a=%@",a);
     Class aClass = NSClassFromString( @"__TestClassWithIVarsFromSyntax" );
     EXPECTNOTNIL(aClass, @"defined the class");
     NSArray <MPWInstanceVariable*>* variableDescriptions = [aClass instanceVariables];
@@ -888,9 +887,9 @@
         EXPECTTRUE(NO, @"should have gotten an exception here");
     }
     @catch (NSException *exception) {
-        NSLog(@"exception: %@",exception);
+//        NSLog(@"exception: %@",exception);
         IDEXPECT([exception name], @"argument missing", @"exception ");
-        NSLog(@"token: %@",[[exception userInfo] objectForKey:@"token"]);
+//        NSLog(@"token: %@",[[exception userInfo] objectForKey:@"token"]);
         IDEXPECT([[exception userInfo] objectForKey:@"token"], @"+", @"last token");
     }
 }
