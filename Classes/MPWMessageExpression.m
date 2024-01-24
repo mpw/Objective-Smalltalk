@@ -73,7 +73,7 @@ scalarAccessor( char , returnType, setReturnType )
         retval = [aContext sendMessage:selector to:receiver withArguments:args supersend:self.isSuperSend];
     } @catch (id exception) {
         exception=[self handleOffsetsInException:exception];
-        NSLog(@"exception sending message '%@': %@ offset: %@",NSStringFromSelector(selector) ,exception,[exception userInfo]);
+//        NSLog(@"exception sending message '%@': %@ offset: %@",NSStringFromSelector(selector) ,exception,[exception userInfo]);
         @throw  exception;
     }
     return retval;
