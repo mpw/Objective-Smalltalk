@@ -8,15 +8,20 @@ scheme BlogSite {
     -schemeNames { 
 	[ 'postsList' ].
     }
+    /posts {
+      get {
+	postsList:/.
+      }
+    }
     /posts/*:rest {
       get {
-	postsList:{rest}.
+        postsList:/{rest}.
       }
     }
     
     /*:p {
        get {
-          "This is the dynamic blog".
+          "This is the dynamic blog, fallback page".
        }
     }
 }
