@@ -40,7 +40,7 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 -(void)runSiteTests
 {
-    NSLog(@"run tests: %@",[self siteTests]);
+//    NSLog(@"run tests: %@",[self siteTests]);
     for (NSString *testName in [self siteTests]) {
         @try {
             id fixture=[self.siteClass testFixture];
