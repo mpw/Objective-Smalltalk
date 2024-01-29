@@ -1213,12 +1213,20 @@ idAccessor(solver, setSolver)
 
 -(STPropertyPathDefinition *)parsePropertyPathDefinition
 {
-   STPropertyPathDefinition *propertyDef=[[STPropertyPathDefinition new] autorelease];
-    MPWIdentifierExpression *pathExpression=[self makeComplexIdentifier:@"dummy:"];
-    MPWGenericReference *ref=[[[MPWGenericReference alloc] initWithPath:[pathExpression name]] autorelease];
+    NSString *nextToken  = [self nextToken];
+    NSString *pathDef = @"";
+    STPropertyPathDefinition *propertyDef=[[STPropertyPathDefinition new] autorelease];
+    if ( ![nextToken isEqualToString:@"{"]) {
+        [self pushBack:nextToken];
+        MPWIdentifierExpression *pathExpression=[self makeComplexIdentifier:@"dummy:"];
+        pathDef=[pathExpression name];
+        nextToken  = [self nextToken];
+    } else {
+        
+    }
+    MPWGenericReference *ref=[[[MPWGenericReference alloc] initWithPath:pathDef] autorelease];
     MPWReferenceTemplate *path=[[[MPWReferenceTemplate alloc] initWithReference:ref] autorelease];
     propertyDef.propertyPath=path;
-    NSString *nextToken  = [self nextToken];
 //    NSLog(@"nextToken after parse of property header: %@",nextToken);
     if ( [nextToken isEqualToString:@"{"]) {
 //        NSLog(@"parse get/set method body");
@@ -1342,6 +1350,7 @@ idAccessor(solver, setSolver)
                 } else if ( [next isEqualToString:@"}"]) {
                     break;
                 } else if ( [next isEqualToString:@"/"]) {
+                    NSLog(@"start of property path def: %@",[self scanner]);
                     STPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
