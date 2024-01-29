@@ -217,6 +217,18 @@
     IDEXPECT( [compiler evaluateScriptString:@" s:/ "],@"hello",@"root should be matched by wildcard");
 }
 
++(void)testCanHaveRootPropertyyPath
+{
+    STCompiler *compiler=[STCompiler compiler];
+    @try {
+        [compiler evaluateScriptString:@"scheme PropertyTestClass12  {  / { |= { 'hello' }}} "];
+    } @catch (id e) {
+        IDEXPECT(e,@"",@"should not have thrown");
+    }
+    [compiler evaluateScriptString:@"scheme:s := PropertyTestClass12 store."];
+    IDEXPECT( [compiler evaluateScriptString:@" s:/ "],@"hello",@"root should be matched by wildcard");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -243,6 +255,7 @@
        @"testPropertyPathWildcardMatchesRoot",
        @"testCompilePropertyPathPostSyntax",
        @"testCompileAndRunPropertyPathPostSyntax",
+       @"testCanHaveRootPropertyyPath",
 
 			];
 }
