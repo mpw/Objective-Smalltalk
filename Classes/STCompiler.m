@@ -929,9 +929,9 @@ idAccessor(solver, setSolver)
 //    NSLog(@"parseExpression: inLiteral %d",inLiteral);
 	id first=[self nextToken];
     while ( [first isComment] ) {
-        NSLog(@"got comment: %@",first);
+//        NSLog(@"got comment: %@",first);
         first=[self nextToken];
-        NSLog(@"next token after comment: %@",first);
+//        NSLog(@"next token after comment: %@",first);
     }
 //    NSLog(@"-parseExpressionInLiteral first: %@",first);
 	id second;

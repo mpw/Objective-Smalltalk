@@ -13,7 +13,7 @@ scheme BlogList {
     var entries.
     var entriesById.
 
-    -init {
+    -initWithBundle:aBundle {
 	self ← super init.
         this:entries ← [
               #BlogEntry{ #id: 1, #title: 'Sails is Cool' , #body:'Hello World'},
@@ -22,11 +22,17 @@ scheme BlogList {
         ].
         ids ← this:entries collect id.
         this:entriesById ← NSDictionary alloc initWithObjects: this:entries forKeys: ids.
+        this:bundle ← aBundle.
         self.
     }
+    -init {
+	self initWithBundle:nil.
+    }
+
     /  {
        get {
-          this:entries.
+          // a comment
+          this:bundle resources at:'BlogList.html'.
        }
     }
     

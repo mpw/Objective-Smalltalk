@@ -1,9 +1,14 @@
 
 scheme BlogSite {
     var postsList.
-    -init {
-       this:postsList ← BlogList new.
+    var bundle.
+    -initWithBundle:aBundle {
+       this:postsList ← BlogList alloc initWithBundle:aBundle | autorelease.
+       this:bundle ← aBundle.
        self.
+    }
+    -init {
+        self initWithBundle:nil.
     }
     -schemeNames { 
 	[ 'postsList' ].

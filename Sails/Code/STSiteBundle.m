@@ -90,12 +90,18 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 -(void)setupSimpleSite
 {
-    id sitemap = [[[[self siteClass] alloc] init] autorelease];
+    Class siteClass = [self siteClass];
+    id sitemap=nil;
+    if ( [siteClass instancesRespondToSelector:@selector(initWithBundle:)]) {
+        sitemap = [[[[self siteClass] alloc] initWithBundle:self] autorelease];
+    } else {
+        sitemap = [[[[self siteClass] alloc] init] autorelease];
+        if ( [sitemap respondsToSelector:@selector(setBundle:)]) {
+            [sitemap setBundle:self];
+        }
+    }
     self.siteServer = [[[MPWHTTPServer alloc] init] autorelease];
     [self.siteServer setDelegate:sitemap];
-    if ( [sitemap respondsToSelector:@selector(setBundle:)]) {
-        [sitemap setBundle:self];
-    }
 }
 
 
