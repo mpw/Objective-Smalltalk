@@ -24,7 +24,7 @@ scheme BlogList {
         this:entriesById ← NSDictionary alloc initWithObjects: this:entries forKeys: ids.
         self.
     }
-    /index  {
+    /  {
        get {
           this:entries.
        }

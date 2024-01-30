@@ -928,6 +928,11 @@ idAccessor(solver, setSolver)
 {
 //    NSLog(@"parseExpression: inLiteral %d",inLiteral);
 	id first=[self nextToken];
+    while ( [first isComment] ) {
+        NSLog(@"got comment: %@",first);
+        first=[self nextToken];
+        NSLog(@"next token after comment: %@",first);
+    }
 //    NSLog(@"-parseExpressionInLiteral first: %@",first);
 	id second;
 	if ( [first isToken] && ![first isEqual:@"-"]  ) {
@@ -1350,7 +1355,7 @@ idAccessor(solver, setSolver)
                 } else if ( [next isEqualToString:@"}"]) {
                     break;
                 } else if ( [next isEqualToString:@"/"]) {
-                    NSLog(@"start of property path def: %@",[self scanner]);
+//                    NSLog(@"start of property path def: %@",[self scanner]);
                     STPropertyPathDefinition *prop=[self parsePropertyPathDefinition];
                     [propertyDefinitions addObject:prop];
                     next=[self nextToken];
@@ -1703,6 +1708,12 @@ idAccessor(solver, setSolver)
     IDEXPECT( [self evaluate:@"0b1111"], @(15), @"binary constant");
 }
 
++(void)testCommentToEndOfLine
+{
+    IDEXPECT( [self evaluate:@"3. // 4"], @(3), @"to end of line");
+    IDEXPECT( [self evaluate:@"3. // 5 \n 4."], @(4), @"after new line");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1726,6 +1737,7 @@ idAccessor(solver, setSolver)
               @"testArrayAccessDoesNotStopEvaluation",
               @"testHexLiteral",
               @"testBinaryLiteral",
+              @"testCommentToEndOfLine",
     ];
 }
 

@@ -44,6 +44,11 @@ objectAccessor(NSString*, realString, setRealString)
     return NO;
 }
 
+-(BOOL)isComment
+{
+    return [self hasPrefix:@"//"];
+}
+
 -(BOOL)isEqualToString:(NSString *)aString
 {
     return [aString isEqualToString:[self realString]];
@@ -88,6 +93,11 @@ objectAccessor(NSString*, realString, setRealString)
     return NO;
 }
 
+-(BOOL)isComment
+{
+    return NO;
+}
+
 @end
 
 @implementation NSString(isKeyword)
@@ -96,6 +106,12 @@ objectAccessor(NSString*, realString, setRealString)
 {
     return [self hasSuffix:@":"];
 }
+
+-(BOOL)isComment
+{
+    return [self hasPrefix:@"//"];
+}
+
 
 -(BOOL)isBinary
 {
@@ -306,6 +322,15 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     }
 }
 
+-scanComment
+{
+    const char *cur=pos;
+    while ( SCANINBOUNDS(cur) && *cur != '\n' ) {
+        cur++;
+    }
+    return [self makeText:cur-pos];
+}
+
 -scanSpecial
 {
     const char *cur=pos;
@@ -320,6 +345,8 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
         len++;
     } else if ( *cur=='|' && SCANINBOUNDS(cur+1) && cur[1]=='{') {
         len++;
+    } else if ( *cur=='/' && SCANINBOUNDS(cur+1) && cur[1]=='/' && cur[-1]!=':') {
+        return [self scanComment];
     }
     return [self makeText:len];
 }
@@ -610,9 +637,26 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     IDEXPECT([scanner nextToken],@"b", @"b");
 }
 
++(void)testCommentToEndOfLine
+{
+    NSString *commentOnLine=@"a // some text";
+    STScanner *scanner=[self scannerWithString:commentOnLine];
+    IDEXPECT([scanner nextToken],@"a", @"a");
+    IDEXPECT([scanner nextToken],@"// some text", @"the comment");
+}
+
++(void)testNextLineAfterComment
+{
+    NSString *commentAndNextLine=@"a // some text\nb";
+    STScanner *scanner=[self scannerWithString:commentAndNextLine];
+    IDEXPECT([scanner nextToken],@"a", @"a");
+    IDEXPECT([scanner nextToken],@"// some text", @"commen");
+    IDEXPECT([scanner nextToken],@"b", @"b");
+}
+
 +(NSArray*)testSelectors
 {
-    return [NSArray arrayWithObjects:
+    return @[
         @"testDoubleStringEscape",
         @"testConstraintEqual",
             @"testURLWithUnderscores",
@@ -624,7 +668,9 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"testScanStringWithUnicodeQuotationMark",
             @"testNewlineEscape",
             @"testNonbreakingSpaceSeparatesLikeSpace",
-        nil];
+            @"testCommentToEndOfLine",
+            @"testNextLineAfterComment",
+        ];
 }
 
 @end
