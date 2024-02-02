@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STHypertextProcessor : NSObject
+@interface STHypertextProcessor : NSObject <NSXMLParserDelegate>
 
 @end
 
