@@ -409,6 +409,8 @@
 		1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8E81D01924229B00821570 /* MPWDocumentScheme.m */; };
 		1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */; };
 		1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */; };
+		1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */; };
+		1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9774582B6D096C0037DC95 /* STHypertextProcessor.m */; };
 		1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */ = {isa = PBXBuildFile; fileRef = 1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */; };
 		1F9AE9C528D75BC300671748 /* add.aarch64 in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9C428D75BC300671748 /* add.aarch64 */; };
 		1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9CA28E1E58600671748 /* MPWJittableData.h */; };
@@ -1293,6 +1295,8 @@
 		1F8E81D01924229B00821570 /* MPWDocumentScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDocumentScheme.m; sourceTree = "<group>"; };
 		1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMethodSymbols.h; sourceTree = "<group>"; };
 		1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMethodSymbols.m; sourceTree = "<group>"; };
+		1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STHypertextProcessor.h; sourceTree = "<group>"; };
+		1F9774582B6D096C0037DC95 /* STHypertextProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STHypertextProcessor.m; sourceTree = "<group>"; };
 		1F99D23829055D77009F0CE8 /* use_testclass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_testclass.m; sourceTree = "<group>"; };
 		1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hashPlus200.aarch64; sourceTree = "<group>"; };
 		1F9AE9C028D4957A00671748 /* Mach_O_Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mach_O_Structs.h; sourceTree = "<group>"; };
@@ -2533,6 +2537,8 @@
 				1FFCB57C2B43154E002DC40A /* SailsGenerator.m */,
 				1F096D5E2B49903C0072DD85 /* STSiteBundle.h */,
 				1F096D5D2B49903C0072DD85 /* STSiteBundle.m */,
+				1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */,
+				1F9774582B6D096C0037DC95 /* STHypertextProcessor.m */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -3167,6 +3173,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */,
 				1FFCB5722B431492002DC40A /* Sails.h in Headers */,
 				1FFCB57D2B43154E002DC40A /* SailsGenerator.h in Headers */,
 				1F096D602B49903C0072DD85 /* STSiteBundle.h in Headers */,
@@ -4610,6 +4617,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,
+				1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */,
 				1FFCB57E2B43154E002DC40A /* SailsGenerator.m in Sources */,
 				1FFCB5712B431492002DC40A /* Sails.docc in Sources */,
 			);
