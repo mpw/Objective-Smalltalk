@@ -311,6 +311,8 @@ idAccessor(solver, setSolver)
         id key=nil;
         if ( [token isEqual:@"#"]) {
             [self nextToken];
+        }
+        if (1) {
 //            NSLog(@"skipped over token in key, scanner now: %@",scanner);
             key=[[MPWLiteralExpression new] autorelease];
             [key setTheLiteral:[self nextToken]];
@@ -1317,11 +1319,11 @@ idAccessor(solver, setSolver)
         if ( [separator isEqualToString:@":"]) {
             NSString *superclassName=[self nextToken];
             if ( [superclassName isEqual:@"#"]) {
-                NSLog(@"== template class def ===");
+//                NSLog(@"== template class def ===");
 //              [self pushBack:superclassName];
-                NSLog(@"parse the literal ");
+//                NSLog(@"parse the literal ");
                 id result=[self parseLiteral];
-                NSLog(@"class with literal dict: %@",result);
+//                NSLog(@"class with literal dict: %@",result);
                 return result;
             }
             classDef.superclassName=superclassName;
@@ -1589,6 +1591,11 @@ idAccessor(solver, setSolver)
 }
 
 
++(void)testDictLiteralKeysDoNotRequireHash
+{
+    IDEXPECT( [self evaluate:@"#{ a: 12 } at:'a'."], @(12), @"");
+}
+
 +(void)testParseSimpleLiteralDictWithSimplifiedStringKey
 {
     NSDictionary *result=[[self compiler] evaluateScriptString:@"#{ #a: 3 }"];
@@ -1725,6 +1732,7 @@ idAccessor(solver, setSolver)
               @"testParseSimpleLiteralDictWithSimplifiedStringKey",
               @"testBasicConnectionExpressionIsParsed",
               @"testParsingObjectLiteral",
+              @"testDictLiteralKeysDoNotRequireHash",
               @"testParsingConnectedObjectLiterals",
               @"testObjectLiteralsCanBeUsedInSimpleArithmeticExpressions",
               @"testExpressionsInLiterals",
