@@ -60,7 +60,6 @@ CONVENIENCEANDINIT( processor, WithCompiler:(STCompiler*)aCompiler )
 
 -(void)parser:theParser foundCharacters:(nonnull NSString *)string
 {
-    NSLog(@"characters");
     [self.outstream writeObject:string];
 }
 
@@ -95,8 +94,15 @@ CONVENIENCEANDINIT( processor, WithCompiler:(STCompiler*)aCompiler )
 +(void)testHelloWorldFromWithinTemplate
 {
     STHypertextProcessor *shp=[[self new] autorelease];
-    id result=[shp resultOfProcessing:@"<?st stdout print:'Hello embedded ST: ', (3+4) stringValue.?>"];
-    IDEXPECT(result,@"Hello embedded ST: 7",@"3+4");
+    id result=[shp resultOfProcessing:@"<?st stdout print:'Hello printed embedded ST: ', (3+4) stringValue.?>"];
+    IDEXPECT(result,@"Hello printed embedded ST: 7",@"3+4");
+}
+
++(void)testHelloWorldValueFromWithinTemplate
+{
+    STHypertextProcessor *shp=[[self new] autorelease];
+    id result=[shp resultOfProcessing:@"<?st 'Hello value of embedded ST: ', (5+4). ?>"];
+    IDEXPECT(result,@"Hello value of embedded ST: 9",@"5+4");
 }
 
 +(void)testTemplateWithoutCodeGetsReproducedVerbating
@@ -111,6 +117,7 @@ CONVENIENCEANDINIT( processor, WithCompiler:(STCompiler*)aCompiler )
 {
    return @[
        @"testHelloWorldFromWithinTemplate",
+       @"testHelloWorldValueFromWithinTemplate",
        @"testTemplateWithoutCodeGetsReproducedVerbating",
 	];
 }
