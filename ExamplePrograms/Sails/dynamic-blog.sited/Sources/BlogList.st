@@ -32,7 +32,7 @@ scheme BlogList {
     /  {
        get {
           // a comment
-          this:bundle resources at:'BlogList.html'.
+          (this:bundle resources at:'BlogList.html' )  stringValue evaluateAsTemplateWith:#{ entries: this:entries }.
        }
     }
     
