@@ -30,6 +30,11 @@ objectAccessor(MPWIdentifier*, identifier, setIdentifier )
 	return [[self identifier] identifierName];
 }
 
+-theLiteral
+{
+    return [self name];
+}
+
 -bindingWithContext:aContext
 {
     return [[self identifier] bindingWithContext:aContext];
