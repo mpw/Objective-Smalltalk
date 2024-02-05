@@ -38,7 +38,7 @@ scheme BlogList {
     
     /:id {
        get {
-          this:entriesById objectForKey:id intValue.
+           (this:bundle resources at:'BlogEntry.html' ) stringValue evaluateAsTemplateWith: (this:entriesById objectForKey:id intValue).
        }
        put { 
 	  "PUT something".
