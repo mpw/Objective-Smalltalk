@@ -60,20 +60,26 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 -(MPWSiteServer*)createSiteServer
 {
-    id sitemap = [[[[self siteClass] alloc] init] autorelease];
-    NSLog(@"create siteServer with sitemap: %@",sitemap);
-    if ( [sitemap respondsToSelector:@selector(setBundle:)]) {
-        NSLog(@"will set bundle: %@",self);
-        NSLog(@"on sitemap: %p/%@",sitemap,sitemap);
-        [sitemap setBundle:self];
-        NSLog(@"sitemap's bundle: %@",[sitemap bundle]);
+    Class siteClass = [self siteClass];
+    id sitemap=nil;
+    if ( [siteClass instancesRespondToSelector:@selector(initWithBundle:)]) {
+        sitemap = [[[[self siteClass] alloc] initWithBundle:self] autorelease];
+    } else {
+        sitemap = [[[[self siteClass] alloc] init] autorelease];
+        if ( [sitemap respondsToSelector:@selector(setBundle:)]) {
+            [sitemap setBundle:self];
+        }
     }
-    MPWSiteServer *server = [[[MPWSiteServer alloc] initWithSite:sitemap siteDict:@{} interpreter:self.interpreter] autorelease];
-    [server setupSite];
 
-    [server disableCaching];
+    MPWSiteServer *server = [[[MPWSiteServer alloc] initWithSite:sitemap siteDict:@{} interpreter:self.interpreter] autorelease];
+    if ( [sitemap respondsToSelector:@selector(sitemap)]) {
+        [server setupSite];
+        [server disableCaching];
+    }
     return server;
 }
+
+
 
 -(void)startWebServerOnPort:(int)port
 {
