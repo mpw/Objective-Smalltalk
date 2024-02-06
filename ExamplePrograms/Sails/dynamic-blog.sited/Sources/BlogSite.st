@@ -26,7 +26,7 @@ scheme BlogSite {
     
     /*:p {
        get {
-          "This is the dynamic blog, fallback page".
+          "This is the dynamic blog, fallback page  and it is being called.".
        }
     }
 }

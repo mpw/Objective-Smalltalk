@@ -17,15 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 +(instancetype)bundleWithPath:(NSString*)path;
 
 -(id <MPWHierarchicalStorage>)resources;
--(id <MPWHierarchicalStorage>)sourceDir;
+-(id <MPWHierarchicalStorage>)sources;
 -(NSArray<NSString*>*)sourceNames;
 -(NSDictionary*)info;
 -(STCompiler*)interpreter;
 -(NSDictionary*)methodDict;
 -(id <MPWReferencing>)resourceRef;
 -(id <MPWReferencing>)sourceRef;
--(MPWWriteBackCache*)cachedResources;
--(MPWWriteBackCache*)cachedSources;
+-(id <MPWHierarchicalStorage>)cachedResources;
+-(id <MPWHierarchicalStorage>)cachedSources;
+-(id <MPWHierarchicalStorage>)rawResources;
+-(id <MPWHierarchicalStorage>)rawSources;
 -(void)save;
 
 -(id)resultOfCompilingSourceFileNamed:(NSString*)sourceName;
@@ -35,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) BOOL isPresentOnDisk;
 @property (assign) BOOL saveSource;           // should probably be a temp hack
+@property (assign) BOOL useCache;      // should probably be a temp hack
 @property (nonatomic,strong) NSDictionary *info;
 
 

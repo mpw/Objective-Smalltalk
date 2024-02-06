@@ -16,7 +16,7 @@ scheme BlogList {
     -initWithBundle:aBundle {
 	self ← super init.
         this:entries ← [
-          #BlogEntry{ id: 1, title: 'Sails is Cool' , body:'Sailing the Web'},
+          #BlogEntry{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
           #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
           #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
         ].

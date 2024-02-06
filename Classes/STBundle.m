@@ -69,14 +69,30 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [[self refForSubDir:subdir] asScheme];
 }
 
--(id <MPWHierarchicalStorage>)resources
+-(id <MPWHierarchicalStorage>)rawResources
 {
     return [self storeForSubDir:@"Resources"];
 }
 
--(id <MPWHierarchicalStorage>)sourceDir
+-(id <MPWHierarchicalStorage>)resources
+{
+    return self.useCache ? self.cachedResources : self.rawResources;
+}
+
+-(id <MPWHierarchicalStorage>)sources
+{
+    return self.useCache ? self.cachedSources : self.rawSources;
+}
+
+
+-(id <MPWHierarchicalStorage>)rawSources
 {
     return [self storeForSubDir:@"Sources"];
+}
+
+-(id <MPWHierarchicalStorage>)sourceDir
+{
+    return [self rawSources];          // compatibility
 }
 
 
@@ -107,7 +123,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(MPWWriteBackCache*)createCachedResources
 {
 
-    id <MPWStorage,MPWHierarchicalStorage> base = self.resources;
+    id <MPWStorage,MPWHierarchicalStorage> base = self.rawResources;
     MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
     cache.autoFlush=NO;
     return cache;
@@ -115,7 +131,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(MPWWriteBackCache*)createCachedSources
 {
-    id <MPWStorage,MPWHierarchicalStorage> base = self.sourceDir;
+    id <MPWStorage,MPWHierarchicalStorage> base = self.rawSources;
     MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
     cache.autoFlush=NO;
     return cache;
@@ -198,7 +214,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     target[@"Info.json"] = [self storeForSubDir:@"."][@"Info.json"];
     
     [self copySource:[self resources] to:[target relativeStoreAt:@"Resources"]];
-    [self copySource:[self sourceDir] to:[target relativeStoreAt:@"Sources"]];
+    [self copySource:[self sources] to:[target relativeStoreAt:@"Sources"]];
 
     //   fileout code, inactive and doesn't work with property paths
     //    if ( self.saveSource ) {

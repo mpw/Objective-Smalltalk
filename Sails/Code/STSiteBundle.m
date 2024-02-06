@@ -74,8 +74,8 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     MPWSiteServer *server = [[[MPWSiteServer alloc] initWithSite:sitemap siteDict:@{} interpreter:self.interpreter] autorelease];
     if ( [sitemap respondsToSelector:@selector(sitemap)]) {
         [server setupSite];
-        [server disableCaching];
     }
+    [server disableCaching];
     return server;
 }
 
