@@ -25,6 +25,9 @@ scheme BlogList {
         this:bundle ← aBundle.
         self.
     }
+    -applyContext:aContext toTemplateNamed:templateName {
+	(this:bundle resources at:templateName )  stringValue evaluateAsTemplateWith: aContext.
+    }
     -init {
 	self initWithBundle:nil.
     }
@@ -32,13 +35,13 @@ scheme BlogList {
     /  {
        get {
           // a comment
-          (this:bundle resources at:'BlogList.html' )  stringValue evaluateAsTemplateWith:#{ entries: this:entries }.
+          self applyContext: #{ entries: this:entries }  toTemplateNamed:'BlogList.html'.
        }
     }
     
     /:id {
        get {
-           (this:bundle resources at:'BlogEntry.html' ) stringValue evaluateAsTemplateWith: (this:entriesById objectForKey:id intValue).
+          self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEntry.html'.
        }
        put { 
 	  "PUT something".
