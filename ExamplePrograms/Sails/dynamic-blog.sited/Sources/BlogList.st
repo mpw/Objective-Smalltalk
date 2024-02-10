@@ -32,6 +32,12 @@ scheme BlogList {
 	self initWithBundle:nil.
     }
 
+    /:id/edit {
+       get {
+          stdout println:"edit: {id}".
+          self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEdit.html'.
+       }
+    }
     /  {
        get {
           // a comment
@@ -41,6 +47,7 @@ scheme BlogList {
     
     /:id {
        get {
+          stdout println:"get: {id}".
           self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEntry.html'.
        }
        put { 
