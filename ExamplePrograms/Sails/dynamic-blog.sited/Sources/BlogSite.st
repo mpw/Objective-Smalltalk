@@ -20,6 +20,7 @@ scheme BlogSite {
     }
     /posts/*:rest {
       get {
+	stdout println:"rest: {rest}".
         postsList:/{rest}.
       }
     }
