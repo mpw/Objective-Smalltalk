@@ -27,7 +27,9 @@ int main (int argc, const char *argv[])
                     NSString *path = [NSString stringWithUTF8String:argv[i]];
                     bundle = [STSiteBundle bundleWithPath:path];
                     [bundle runSimpleSite:port];
-                    [[stsh evaluator] bindValue:bundle toVariableNamed:@"site"];
+                    [[stsh evaluator] bindValue:bundle toVariableNamed:@"bundle"];
+                    [[stsh evaluator] bindValue:[[bundle siteServer] delegate] toVariableNamed:@"site"];
+                    [[stsh evaluator]  evaluateScriptString:@"scheme:site ← site."];
                     break;
                 } else if ( [arg isEqual:@"-port"]) {
                     i++;

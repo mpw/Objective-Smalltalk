@@ -20,8 +20,10 @@ scheme BlogSite {
     }
     /posts/*:rest {
       get {
-	stdout println:"rest: {rest}".
-        postsList:/{rest}.
+        // postsList:{rest}.               does not work, rest is treated as a single path component
+					// but actually contains multiple pathc components
+	// this:postsList at:rest.         also works
+	ref:postsList:{rest} value.
       }
     }
     
