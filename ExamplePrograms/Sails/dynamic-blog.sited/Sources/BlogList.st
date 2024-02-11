@@ -26,7 +26,8 @@ scheme BlogList {
         self.
     }
     -applyContext:aContext toTemplateNamed:templateName {
-	(this:bundle resources at:templateName )  stringValue evaluateAsTemplateWith: aContext.
+//	(this:bundle resources at:templateName )  stringValue evaluateAsTemplateWith: aContext.
+	templateName.
     }
     -init {
 	self initWithBundle:nil.
@@ -34,8 +35,9 @@ scheme BlogList {
 
     /:id/edit {
        get {
-          stdout println:"edit: {id}".
-          self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEdit.html'.
+//          stdout println:"edit: {id}".
+//          self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEdit.html'.
+	   'BlogEdit.html'.
        }
     }
     /  {
