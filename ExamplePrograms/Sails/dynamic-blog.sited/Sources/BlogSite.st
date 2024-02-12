@@ -29,7 +29,7 @@ scheme BlogSite {
     
     /*:p {
        get {
-          "This is the dynamic blog, fallback page  and it is being called.".
+          '<html><body>This is the dynamic blog, fallback page  and it is being called.<p><a href="posts/">Go to posts</a></body></html>'.
        }
     }
 }
