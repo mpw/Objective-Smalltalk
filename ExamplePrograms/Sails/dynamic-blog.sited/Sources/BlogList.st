@@ -34,10 +34,14 @@ scheme BlogList {
 
     /:id/edit {
        get {
-//          stdout println:"edit: {id}".
 	         self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEdit.html'.
        }
     }
+    -at:uri post:data {
+             stdout println:"POST of a blog post at {uri} data: {data}".
+	     "<html><body>Posted data to {id}  data: {data}</body></html>"
+    }
+    
     /  {
        get {
           // a comment
@@ -47,11 +51,16 @@ scheme BlogList {
     
     /:id {
        get {
-          stdout println:"get: {id}".
           self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEntry.html'.
        }
        put { 
 	  "PUT something".
        }
     }
+   /*:p {
+       get {
+          '<html><body>This posts fallback page: {p}.<p><a href="/posts/">Go to posts</a></body></html>'.
+       }
+    }
+
 }.

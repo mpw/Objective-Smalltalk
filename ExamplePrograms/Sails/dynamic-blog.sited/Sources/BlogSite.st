@@ -13,6 +13,10 @@ scheme BlogSite {
     -schemeNames { 
 	[ 'postsList' ].
     }
+    -at:ref  post:data {
+	stdout println:'post arrived at BlogSite'.
+	this:postsList at:ref post:data.
+      }
     /posts {
       get {
 	postsList:/.
