@@ -39,7 +39,15 @@ scheme BlogList {
     }
     -at:uri post:data {
              stdout println:"POST of a blog post at {uri} data: {data}".
-	     "<html><body>Posted data to {id}  data: {data}</body></html>"
+	     components := uri path componentsSeparatedByString:'/'.
+             id ← components[2].
+             stdout println:"update id: {id}".
+             thePost ← this:entriesById objectForKey:id intValue.
+             stdout println:"update post: {thePost}".
+	     data allKeys do: { :key | 
+                     thePost setValue: (data objectForKey:key) forKey:key.
+              }.
+	     "<html><body>Posted data to {id}  data: {data}</body></html>" asData.
     }
     
     /  {
