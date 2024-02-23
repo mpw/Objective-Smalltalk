@@ -58,6 +58,15 @@
     [[self import:@"yt_dlp"][@"_real_main"] call:@[ urlstring ]];
 }
 
+-(void)runBuiltinPythonScript:(NSString*)name
+{
+    [self runString:[[self frameworkResource:name category:@"py"] stringValue]];
+}
+
+-(void)runWebDAV
+{
+    [self runBuiltinPythonScript:@"constant-webdav"];
+}
 
 @end
 

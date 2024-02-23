@@ -56,7 +56,9 @@ scheme BlogList {
           self applyContext: #{ entries: this:entries }  toTemplateNamed:'BlogList.html'.
        }
     }
-    
+    /new { get {
+          self applyContext: ""  toTemplateNamed:'BlogNew.html'.
+    } }
     /:id {
        get {
           self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEntry.html'.
