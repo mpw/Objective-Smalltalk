@@ -19,9 +19,9 @@ scheme BlogList {
           #BlogEntry{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
           #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
           #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
-        ].
+        ] mutableCopy.
         ids ← this:entries collect id.
-        this:entriesById ← NSDictionary alloc initWithObjects: this:entries forKeys: ids.
+        this:entriesById ← NSMutableDictionary alloc initWithObjects: this:entries forKeys: ids.
         this:bundle ← aBundle.
         self.
     }
@@ -41,12 +41,23 @@ scheme BlogList {
              stdout println:"POST of a blog post at {uri} data: {data}".
 	     components := uri path componentsSeparatedByString:'/'.
              id ← components[2].
-             stdout println:"update id: {id}".
-             thePost ← this:entriesById objectForKey:id intValue.
-             stdout println:"update post: {thePost}".
-	     data allKeys do: { :key | 
+             id = 'post' ifTrue: {
+                   thePost ← BlogEntry new.
+                   newId ←  this:entriesById count + 1.
+                   thePost setId: newId. 
+	           data allKeys do: { :key | 
                      thePost setValue: (data objectForKey:key) forKey:key.
-              }.
+                    }.
+                    this:entriesById setObject:thePost forKey:newId .
+                    this:entries addObject:thePost.
+             } ifFalse: {
+                    stdout println:"update id: {id}".
+                    thePost ← this:entriesById objectForKey:id intValue.
+                    stdout println:"update post: {thePost}".
+	             data allKeys do: { :key | 
+                            thePost setValue: (data objectForKey:key) forKey:key.
+                     }.
+            }.
 	     "<html><body>Posted data to {id}  data: {data}</body></html>" asData.
     }
     
