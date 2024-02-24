@@ -32,6 +32,19 @@ scheme BlogList {
 	self initWithBundle:nil.
     }
 
+    /:id/delete {
+       get {
+            id ← id intValue.
+	    toDelete ← this:entriesById objectForKey: id.
+            toDelete ifNotNil: {
+	        this:entries removeObject:toDelete.
+                this:entriesById removeObjectForKey: id.
+            }.
+	    ref://posts/ .
+	    
+       }
+    }
+
     /:id/edit {
        get {
 	         self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEdit.html'.
@@ -81,7 +94,8 @@ scheme BlogList {
     }
    /*:p {
        get {
-          '<html><body>This posts fallback page: {p}.<p><a href="/posts/">Go to posts</a></body></html>'.
+//          "<html><body>This posts fallback page: {p}.<p><a href='/posts/'>Go to posts</a></body></html>".
+	     this:entriesById objectForKey:'key should not exist'.
        }
     }
 
