@@ -50,6 +50,7 @@ scheme BlogList {
                     }.
                     this:entriesById setObject:thePost forKey:newId .
                     this:entries addObject:thePost.
+                    id := newId.
              } ifFalse: {
                     stdout println:"update id: {id}".
                     thePost ← this:entriesById objectForKey:id intValue.
@@ -58,7 +59,7 @@ scheme BlogList {
                             thePost setValue: (data objectForKey:key) forKey:key.
                      }.
             }.
-	     "<html><body>Posted data to {id}  data: {data}</body></html>" asData.
+	    ref://posts/ .
     }
     
     /  {
