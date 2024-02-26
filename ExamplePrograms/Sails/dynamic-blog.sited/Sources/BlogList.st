@@ -100,8 +100,7 @@ scheme BlogList {
     }
    /*:p {
        get {
-//          "<html><body>This posts fallback page: {p}.<p><a href='/posts/'>Go to posts</a></body></html>".
-	     this:entriesById objectForKey:'key should not exist'.
+          "<html><body>This posts fallback page: {p}.<p><a href='/posts/'>Go to posts</a></body></html>".
        }
     }
 
