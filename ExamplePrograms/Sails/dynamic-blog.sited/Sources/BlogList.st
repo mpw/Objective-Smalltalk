@@ -12,6 +12,7 @@ scheme BlogList {
     var bundle.
     var entries.
     var entriesById.
+    var maxId.
 
     -initWithBundle:aBundle {
 	self ← super init.
@@ -20,10 +21,15 @@ scheme BlogList {
           #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
           #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
         ] mutableCopy.
+        this:maxId ← this:entries count.
         ids ← this:entries collect id.
         this:entriesById ← NSMutableDictionary alloc initWithObjects: this:entries forKeys: ids.
         this:bundle ← aBundle.
         self.
+    }
+    -nextId {
+        this:maxId ← this:maxId + 1.
+        this:maxId.
     }
     -applyContext:aContext toTemplateNamed:templateName {
 	(this:bundle resources at:templateName )  stringValue evaluateAsTemplateWith: aContext.
@@ -56,7 +62,7 @@ scheme BlogList {
              id ← components[2].
              id = 'post' ifTrue: {
                    thePost ← BlogEntry new.
-                   newId ←  this:entriesById count + 1.
+                   newId ←  self nextId.
                    thePost setId: newId. 
 	           data allKeys do: { :key | 
                      thePost setValue: (data objectForKey:key) forKey:key.
