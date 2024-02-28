@@ -102,3 +102,14 @@ objectAccessor(MPWIdentifier*, identifier, setIdentifier )
 }
 
 @end
+
+
+@implementation NSObject(isSuper)
+
+-(BOOL)isSuper
+{
+    NSLog(@"isSuper sent to %@/%@, call-stack: %@",[self class],self,[NSThread callStackSymbols]);
+    return NO;
+}
+
+@end
