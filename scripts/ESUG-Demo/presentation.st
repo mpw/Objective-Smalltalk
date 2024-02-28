@@ -1,4 +1,4 @@
-framework:Slides3D load.  
+framework:Slides3D load.   
 
 class ProgramVsSystem : ASCSlide {
    var code.
@@ -24,11 +24,9 @@ class ProgramVsSystem : ASCSlide {
        self setCode:code.
        boxer setPadding:20. 
 
-       system := boxer  box:'System' width:160 color:(NSColor blueColor).
-       self setSystem:system.
+       this:system := boxer  box:'System' width:160 color:(NSColor blueColor).
 
-       problem := boxer box:'Problem' width:160 color:(NSColor redColor).
-       self setProblem: problem.
+       this:problem := boxer box:'Problem' width:160 color:(NSColor redColor).
 
        shapeGroup do addChildNode: #( code, system, problem ) each.
  
@@ -83,7 +81,7 @@ class ProgramVsSystem : ASCSlide {
    }
 }
          
-    
+     
     
 class ImageSlide : ASCSlide { 
      var text.
@@ -111,128 +109,128 @@ class ImageSlide : ASCSlide {
      }
 }
 
-  
 
 controller := #ASCPresentationViewController{
-    #Name : 'ESUG Demo'.
-    #Slides : #(
+    Name: 'ESUG Demo'.
+    Slides: [
 
       #ASCChapterSlide { 
-               #text : 'Objective-SmallTalk'.
-               #subtitle : 'Marcel Weiher (@mpweiher)'
+               text: 'Objective-SmallTalk',
+               subtitle: 'Marcel Weiher (@mpweiher)'
          }  ,
 
-        #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk'.
-             #bullets : #( 
+      #ASCBulletSlide{ 
+             title: 'Objective-SmallTalk',
+             bullets: [
                 'Embeddable SmallTalk language (Mac, iOS, Linux, Windows)',
                 'Objective-C framework (peer/interop)',
                 'Generalizes Objects+Messages to Components+Connectors',
                 'Enable composition by solving Architectural Mismatch',
-             )
+             ]
         } ,
        #ASCChapterSlide { 
-               #text : 'Architectural Mismatch'.
-               #subtitle : 'Objective-SmallTalk'
+               text: 'Architectural Mismatch',
+               subtitle: 'Objective-SmallTalk'
          }    ,
 
 
         #ASCBulletSlide{ 
-             #title : 'Architectural Mismatch'.
-             #bullets : #( 
+             title: 'Architectural Mismatch',
+             bullets:  [
                 'Packaging mismatch',
                 'Interactive programs vs. programming languages',
                 'Programs vs. Systems, Computers do not compute',
-             )
+             ]
         } ,
         #ASCBulletSlide{ 
-             #title : 'Packaging Mismatch'.
-             #bullets : #( 
+             title: 'Packaging Mismatch',
+             bullets: [
                 'Garlan et al (''95)',
                 'Functionality available but not accessible',
                 'Who has the thread of control?',
                 '→ Minimize assumptions',
                 '→ (see also: Hexagonal, Ports/Adaptors, Naked Objects)',
-             )
+             ]
         } ,
+
         #ASCBulletSlide{ 
-             #title : 'Interactive Programs'.
-             #bullets : #( 
+             title: 'Interactive Programs',
+             bullets: [ 
                 '"Programs = Algorithms + Data Structurs + Architecture"',
                 'y = f(x)    v.   interactive programs',
                 'Transformational v. reactive',
                 'Temperature Converter Example (Modularity ''16)',
-             )
+             ]
         } ,
        #ASCBulletSlide{ 
-             #title : 'The Gentle Tyranny of Call/Return'.
-             #bullets : #( 
+             title: 'The Gentle Tyranny of Call/Return',
+             bullets: [
                 'Feymnan: we name everything just a little wrong',
                 'Multiparadigm: Procedural, OO and FP!',
-                "Guy Steele: it's no longer about completion",
-                "Oscar Nierstrasz: we were told we could just model the domain",
-                "Andrew Black: good OO students antropmorphise the objects",
-             )
+                'Guy Steele: it''s no longer about completion',
+                'Oscar Nierstrasz: we were told we could just model the domain',
+                'Andrew Black: good OO students antropmorphise the objects',
+            ]
         } ,
 
          #ProgramVsSystem { 
-              #lightIntensities : #( 0.2 , 0.7 )
+              lightIntensities: [ 0.2 , 0.7 ]
               
          }  ,
 
        #ASCBulletSlide{ 
-             #title : 'Solution Ideas'.
-             #bullets : #( 
+             title: 'Solution Ideas',
+             bullets: [
                 'Alan Kay: figure out the metasystem',
                 'Unicon:  connectors ←→ programming language metaystem',
                 'ST: decouple class hiearchy from implementation hierarchy',
                 '→ metasystem: conceptual class hierarchy of connectors',
-             )
+             ]
         } ,
 
        #ASCChapterSlide{ 
-               #subtitle : 'Objective-SmallTalk'.
-               #text : 'Approach'
+               subtitle: 'Objective-SmallTalk',
+               text: 'Approach'
          } ,
 
 
 
        #ASCBulletSlide{ 
-             #title : 'Objective-SmallTalk: Approach'.
-             #bullets : #( 
+             title: 'Objective-SmallTalk: Approach',
+             bullets: [
                 'Implement different architectural styles',
                 'Add language support',
                 'Inform the metasystem',
-             )
+             ]
         }  ,
 
        #ASCBulletSlide{ 
-             #title : 'Architectural Styles'.
-             #bullets : #( 
+             title: 'Architectural Styles',
+             bullets: [
                 'Objects and Messages',
                 'Pipes and Filters',
                 'Implicit Invocation',
                 '(In-process) REST',
-             )
+             ]
         } ,
 
        #ASCSlideWithFigure{ 
-             #delayInSeconds : 5.0.
-             #title : 'Objects and Messages'.
-             #bullets : #( 
+             delayInSeconds: 5.0.
+             title: 'Objects and Messages',
+             bullets: [
                 'Objective-C compatible semantics',
                 'Interpreted and native-compiled',
                 '"C" using type annotations',
                 'Higher Order Messaging',
                 'Framework-oriented development',
                 'Full platform integration',
-             )
+             ]
         } ,
   
 
        #ASCBulletSlide{ 
-             #title : 'Pipes and Filters'.
-             #bullets : #( 
+             title: 'Pipes and Filters',
+             bullets: [
                 'Polymorphic Write Streams (DLS ''19)',
                 '#writeObject:anObject',
                 'Triple Dispatch + Message chaining',
@@ -240,152 +238,164 @@ controller := #ASCPresentationViewController{
                 'Streaming / de-materialized objects',
                 'Serialisation, PDF/PS (Squeak), Wunderlist, MS , To Do',
                 'Outlook: filters generalise methods?',
-            )
+            ]
         } ,
        #ASCBulletSlide{ 
-             #title : 'Implicit Invocation'.
-             #bullets : #( 
+             title: 'Implicit Invocation',
+             bullets: [ 
                 'Notification Protocols',
                 'Class adopts a Protocol to register for notifications',
-             )
+             ]
         } ,
 
        #ASCBulletSlide{ 
-             #title : 'In-Process REST'.
-             #bullets : #( 
+             title: 'In-Process REST',
+             bullets: [
                 'What real large-scale networks use',
                 'Polymorphic Identifiers',
                 'Stores',
                 'Storage Combinators',
                 'Used in a number of applications',
-             )
+             ]
         } ,
 
 
+
+
        #ASCBulletSlide{ 
-             #title : 'Polymorphic Identifiers'.
-             #bullets : #( 
+             title: 'Polymorphic Identifiers',
+             bullets: [
                 'All identifiers are URIs',
                 "var:hello := 'World!",
                 'file:{env:HOME}/Downloads/site := http://objective.st',
                 'slider setValueHolder: ref:var:celsius',
-             )
+             ]
         } ,
 
        #ASCBulletSlide{ 
-             #title : 'Stores'.
-             #bullets : #( 
+             title: 'Stores',
+             bullets: [ 
                 'PIs are evaluated via stores',
                 'Like in-process REST servers',
                 'Or composable dictionaries',
                 'var:hello <-> (schemes at:''var'') at:''hello''',
-             )
+             ]
         }  ,
        #ASCBulletSlide{ 
-             #title : 'Example Stores'.
-             #bullets : #( 
+             title: 'Example Stores',
+             bullets: [
                 'Local variables, environment variables',
                 'Filesystems, HTTP',
                 'Databases: SQL/SQLite',
                 'Other applications (via Apple Events)',
                 'etc.',
-             )
+             ]
         }  ,
 
        #ASCBulletSlide{ 
-             #title : 'Storage Combinators'.
-             #bullets : #( 
+             title: 'Storage Combinators',
+             bullets: [ 
                 'Onward! ''19',
                 'Combinator exposes + consumes REST interfaces',
                 'Uniform interface (REST) enables pluggability',
                 'Narrow, semantically tight interface enables intermediaries',
                 '10x productivity/code improvments',
-             )
+             ]
         } ,
 
 
       #ImageSlide{ 
-               #text : 'Simple Composed Store'.
-               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/disk-cache-json-aligned.png'.
-               #xOffset : 2.0 .
-               #imageScale : 0.8
+               text: 'Simple Composed Store',
+               imageURL: '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/disk-cache-json-aligned.png',
+               xOffset: 2.0 ,
+               imageScale: 0.8
          }  , 
     #ImageSlide{ 
-               #text : 'Async Writer'.
-               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/async-writer.png'.
-               #xOffset : 2.0 .
-               #imageScale : 0.6
+               text: 'Async Writer',
+               imageURL: '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/async-writer.png',
+               xOffset: 2.0 ,
+               imageScale: 0.6
          }  , 
       #ImageSlide{ 
-               #text : 'To Do Store Hierarchy'.
-               #imageURL : '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/store-hierarchy-intermediate.png'.
-               #xOffset : 2.0 .
-               #imageScale : 0.34
+               text: 'To Do Store Hierarchy',
+               imageURL: '/Users/marcel/Documents/Writing/Dissertation/Papers/StorageCombinators/store-hierarchy-intermediate.png',
+               xOffset: 2.0 ,
+               imageScale: 0.34
          }  , 
 
        #ASCChapterSlide{ 
-               #subtitle : 'Objective-SmallTalk'.
-               #text : 'Language Support'
+               subtitle: 'Objective-SmallTalk',
+               text: 'Language Support'
          } ,
 
 
 
        #ASCBulletSlide{ 
-             #title : 'Language support'.
-             #bullets : #( 
+             title: 'Language support',
+             bullets: [
                 'Class, method, protocol syntax',
                 'Polymorphic Identifiers',
                 'Composition "operator" → ',
                 'Permanent Assignment |= ',
                 'Stores and Filters as class templates',
                 'Property Paths',
-             )
+             ]
         }  ,
 
        #ASCChapterSlide{ 
-               #subtitle : 'Objective-SmallTalk'.
-               #text : 'Demo'
+               subtitle: 'Objective-SmallTalk',
+               text: 'Demo'
          } ,
        #ASCChapterSlide{ 
-               #subtitle : 'Objective-SmallTalk'.
-               #text : 'Metasystem'
+               subtitle: 'Objective-SmallTalk',
+               text: 'Metasystem'
          } ,
       #ASCBulletSlide{ 
-             #title : 'Metasystem'.
-             #bullets : #( 
+             title: 'Metasystem',
+             bullets: [
                 'Apply/Eval → Connect/Run',
                 'Class is subclass of Component',
                 'Message, Interface etc. subclasses of Connector',
                 'Components have ports, connectors roles',
-             )
+             ]
         }  ,
 
        #ASCChapterSlide{ 
-               #subtitle : 'Objective-SmallTalk'.
-               #text : 'Outlook'
+               subtitle: 'Objective-SmallTalk',
+               text: 'Outlook'
          } ,
 
       #ASCBulletSlide{ 
-             #title : 'Outlook'.
-             #bullets : #( 
+             title: 'Outlook',
+             bullets: [
                 'Port Stores and Polymorphic Write Streams',
                 'Documentation / Sample Code',
                 'Improve native compiler',
                 'Tooling (Debugger)',
                 'You! (http://objective.st)',
-             )
+             ]
         }  ,
 
 
       #ASCChapterSlide { 
-               #text : 'Q&A   http://objective.st'.
-               #subtitle : 'Marcel Weiher (@mpweiher)'
+               text: 'Q&A   http://objective.st',
+               subtitle: 'Marcel Weiher (@mpweiher)'
          }  ,
-      )
-} 
-                       
- 
-controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'. 
+
+
+       ]
+}. 
+                
+
+controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'.   
+              text: 'Q&A   http://objective.st',
+               subtitle: 'Marcel Weiher (@mpweiher)'
+         }  ,
+     ]
+}. 
+                           
+      
+controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'.  
  
 file:/tmp/lastpage.tiff := (controller view snapshot)  
 
