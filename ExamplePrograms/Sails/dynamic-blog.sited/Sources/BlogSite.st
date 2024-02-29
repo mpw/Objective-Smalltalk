@@ -5,9 +5,11 @@ class Templater : MPWMappingStore {
 
 scheme BlogSite {
     var postsList.
+    var templateNames.
     var bundle.
     -initWithBundle:aBundle {
        list ← BlogList alloc initWithBundle:aBundle | autorelease.
+       this:templateNames ← TemplateNames store.
        templater ← Templater storeWithSource:list.
        this:postsList ← templater.
        this:bundle ← aBundle.
@@ -17,7 +19,7 @@ scheme BlogSite {
         self initWithBundle:nil.
     }
     -schemeNames { 
-	[ 'postsList' ].
+	[ 'postsList', 'templateNames' ].
     }
     -at:ref  post:data {
 	stdout println:'post arrived at BlogSite'.
@@ -25,7 +27,8 @@ scheme BlogSite {
       }
     /posts {
       get {
-	postsList:/.
+//	postsList:/.
+	templateNames:/.
       }
     }
     /posts/*:rest {
@@ -33,7 +36,8 @@ scheme BlogSite {
         // postsList:{rest}.               does not work, rest is treated as a single path component
 					// but actually contains multiple pathc components
 	// this:postsList at:rest.         also works
-	ref:postsList:{rest} value.
+	// ref:postsList:{rest} value.
+	ref:templateNames:{rest} value.
       }
     }
     
