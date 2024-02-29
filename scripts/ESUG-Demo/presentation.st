@@ -1,4 +1,4 @@
-framework:Slides3D load.   
+framework:Slides3D load.    
 
 class ProgramVsSystem : ASCSlide {
    var code.
@@ -81,7 +81,7 @@ class ProgramVsSystem : ASCSlide {
    }
 }
          
-     
+      
     
 class ImageSlide : ASCSlide { 
      var text.
@@ -109,7 +109,7 @@ class ImageSlide : ASCSlide {
      }
 }
 
-
+ 
 controller := #ASCPresentationViewController{
     Name: 'ESUG Demo'.
     Slides: [
@@ -385,17 +385,11 @@ controller := #ASCPresentationViewController{
 
        ]
 }. 
-                
+                 
 
-controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'.   
-              text: 'Q&A   http://objective.st',
-               subtitle: 'Marcel Weiher (@mpweiher)'
-         }  ,
-     ]
-}. 
-                           
+controller view openInWindow:'Objective-SmallTalk (HPI 2024)'.   
+
       
-controller view openInWindow:'Objective-SmallTalk (ESUG 2019)'.  
  
 file:/tmp/lastpage.tiff := (controller view snapshot)  
 
