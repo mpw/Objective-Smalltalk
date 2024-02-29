@@ -20,16 +20,22 @@ scheme BlogList {
     -entries  {
           this:entriesById allValues.
     }
-    -initWithBundle:aBundle {
-	self ← super init.
+
+    -initialData {
         entries ← [
           #BlogEntry{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
           #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
           #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
         ].
         this:maxId ← entries count.
-        ids ← entries collect id.
-        this:entriesById ← NSMutableDictionary alloc initWithObjects: entries forKeys: ids.
+        NSMutableDictionary alloc initWithObjects: entries forKeys: entries collect id | autorelease.
+    }
+
+
+    -initWithBundle:aBundle {
+	self ← super init.
+        this:entriesById ← self initialData.
+        this:maxId ← this:entriesById count.
         this:bundle ← aBundle.
         self.
     }
@@ -46,14 +52,8 @@ scheme BlogList {
 
     /:id/delete {
        get {
-            id ← id intValue.
-	    toDelete ← this:entriesById objectForKey: id.
-            toDelete ifNotNil: {
-	        this:entries removeObject:toDelete.
-                this:entriesById removeObjectForKey: id.
-            }.
-	    ref://posts/ .
-	    
+	    this:entriesById removeObjectForKey: id intValue.
+ 	    ref://posts/ .
        }
     }
 
