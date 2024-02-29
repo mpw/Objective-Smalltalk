@@ -1,4 +1,4 @@
-scheme Hello 
+scheme HelloServer 
 {
    /hi/:p1 {
       get { 

@@ -5,25 +5,31 @@ class BlogEntry {
         -description {
 	    "Entry '{this:title}' body '{this:body}'".
         }
+        +id:newId {
+             new ← self new autorelease.
+             new setId:newId.
+             new.
+        }
 }.
 
 
 scheme BlogList {
     var bundle.
-    var entries.
     var entriesById.
     var maxId.
-
+    -entries  {
+          this:entriesById allValues.
+    }
     -initWithBundle:aBundle {
 	self ← super init.
-        this:entries ← [
+        entries ← [
           #BlogEntry{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
           #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
           #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
-        ] mutableCopy.
-        this:maxId ← this:entries count.
-        ids ← this:entries collect id.
-        this:entriesById ← NSMutableDictionary alloc initWithObjects: this:entries forKeys: ids.
+        ].
+        this:maxId ← entries count.
+        ids ← entries collect id.
+        this:entriesById ← NSMutableDictionary alloc initWithObjects: entries forKeys: ids.
         this:bundle ← aBundle.
         self.
     }
@@ -60,24 +66,17 @@ scheme BlogList {
              stdout println:"POST of a blog post at {uri} data: {data}".
 	     components := uri path componentsSeparatedByString:'/'.
              id ← components[2].
+             thePost ←nil.
              id = 'post' ifTrue: {
-                   thePost ← BlogEntry new.
-                   newId ←  self nextId.
-                   thePost setId: newId. 
-	           data allKeys do: { :key | 
-                     thePost setValue: (data objectForKey:key) forKey:key.
-                    }.
-                    this:entriesById setObject:thePost forKey:newId .
-                    this:entries addObject:thePost.
-                    id := newId.
+                   thePost ← BlogEntry id: self nextId.
              } ifFalse: {
-                    stdout println:"update id: {id}".
                     thePost ← this:entriesById objectForKey:id intValue.
-                    stdout println:"update post: {thePost}".
-	             data allKeys do: { :key | 
-                            thePost setValue: (data objectForKey:key) forKey:key.
-                     }.
             }.
+            data allKeys do: { :key | 
+                 thePost setValue: (data objectForKey:key) forKey:key.
+            }.
+            this:entriesById setObject:thePost forKey: thePost id .
+
 	    ref://posts/ .
     }
     
