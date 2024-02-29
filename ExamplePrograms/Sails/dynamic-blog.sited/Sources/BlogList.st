@@ -59,7 +59,7 @@ scheme BlogList {
 
     /:id/edit {
        get {
-	         self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEdit.html'.
+	         this:entriesById objectForKey:id intValue.
        }
     }
     -at:uri post:data {
@@ -83,15 +83,16 @@ scheme BlogList {
     /  {
        get {
           // a comment
-          self applyContext: #{ entries: this:entries }  toTemplateNamed:'BlogList.html'.
+          // self applyContext: #{ entries: this:entries }  toTemplateNamed:'BlogList.html'.
+          this:entries.
        }
     }
     /new { get {
-          self applyContext: ""  toTemplateNamed:'BlogNew.html'.
+          "".
     } }
     /:id {
        get {
-          self applyContext: (this:entriesById objectForKey:id intValue)  toTemplateNamed:'BlogEntry.html'.
+          this:entriesById objectForKey:id intValue.
        }
        put { 
 	  "PUT something".

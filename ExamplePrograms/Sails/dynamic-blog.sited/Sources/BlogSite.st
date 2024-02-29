@@ -25,19 +25,40 @@ scheme BlogSite {
 	stdout println:'post arrived at BlogSite'.
 	this:postsList at:ref post:data.
       }
+    -applyContext:aContext toTemplateNamed:templateName {
+	templateString := (this:bundle resources at:templateName )  stringValue. 
+	templateString evaluateAsTemplateWith: aContext.
+    }
     /posts {
       get {
-//	postsList:/.
-	templateNames:/.
+	stdout println:'aux (base) forwarder'.
+	theObject ← postsList:/ .
+	template ← templateNames:/ .
+        self applyContext: theObject  toTemplateNamed:template.
       }
     }
     /posts/*:rest {
       get {
+        rest = '' ifTrue:{
+	   rest ← '/'.
+        }.
+	stdout println:"main forwarder: '{rest}'".
         // postsList:{rest}.               does not work, rest is treated as a single path component
 					// but actually contains multiple pathc components
 	// this:postsList at:rest.         also works
-	// ref:postsList:{rest} value.
-	ref:templateNames:{rest} value.
+	theObject ← ref:postsList:{rest} value.
+        stdout println:'got the object: ',theObject.
+	template ← this:templateNames at:rest.
+        stdout println:'name schemes: ',scheme:templateNames.
+        stdout println:template.
+        result ← nil.
+        (theObject isKindOfClass: MPWBinding class) ifTrue:{
+            result ← theObject. 
+        } ifFalse: {
+ 	    result ← self applyContext: theObject  toTemplateNamed:template.
+        }.
+	stdout println:'got result:', result.
+	result.
       }
     }
     
