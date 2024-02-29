@@ -1,8 +1,7 @@
 
-scheme Templater : MPWMappingStore {
-   
-}
+class Templater : MPWMappingStore {
 
+}.
 
 scheme BlogSite {
     var postsList.
@@ -43,4 +42,4 @@ scheme BlogSite {
           '<html><body>This is the dynamic blog, fallback page  and it is being called.<p><a href="posts/">Go to posts</a></body></html>'.
        }
     }
-}
+}.
