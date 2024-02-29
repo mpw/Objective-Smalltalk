@@ -9,6 +9,7 @@ scheme TemplateNames {
     
     /  {
        get {
+	  stdout println:'get root path'.
           'BlogList.html'.
        }
     }
@@ -22,7 +23,7 @@ scheme TemplateNames {
     }
    /*:p {
        get {
-          nil.
+          'BlogList.html'.
        }
     }
 
