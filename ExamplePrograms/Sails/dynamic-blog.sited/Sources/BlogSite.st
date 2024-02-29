@@ -1,10 +1,15 @@
 
+scheme Templater : MPWMappingStore {
+   
+}
+
+
 scheme BlogSite {
     var postsList.
     var bundle.
     -initWithBundle:aBundle {
        list ← BlogList alloc initWithBundle:aBundle | autorelease.
-       templater ← MPWMappingStore storeWithSource:list.
+       templater ← Templater storeWithSource:list.
        this:postsList ← templater.
        this:bundle ← aBundle.
        self.
