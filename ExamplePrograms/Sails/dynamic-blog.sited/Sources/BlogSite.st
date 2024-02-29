@@ -3,7 +3,9 @@ scheme BlogSite {
     var postsList.
     var bundle.
     -initWithBundle:aBundle {
-       this:postsList ← BlogList alloc initWithBundle:aBundle | autorelease.
+       list ← BlogList alloc initWithBundle:aBundle | autorelease.
+       templater ← MPWMappingStore storeWithSource:list.
+       this:postsList ← templater.
        this:bundle ← aBundle.
        self.
     }
