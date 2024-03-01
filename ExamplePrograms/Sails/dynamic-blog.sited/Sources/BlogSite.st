@@ -27,8 +27,9 @@ class Templater : MPWMappingStore {
 scheme BlogSite {
     var postsList.
     -initWithBundle:aBundle {
-       templateNames ← #RootMapper{} →  #TemplateNames{}.
-       this:postsList ← #Templater{ templateNames: templateNames, bundle: aBundle } → #BlogList{}.
+       this:postsList ← #Templater{
+       	                   templateNames: (#RootMapper{} →  #TemplateNames{}),
+	                   bundle: aBundle } → #BlogList{}.
        self.
     }
     -init {
@@ -38,7 +39,6 @@ scheme BlogSite {
 	[ 'postsList' ].
     }
     -at:ref  post:data {
-	stdout println:'post arrived at BlogSite'.
 	this:postsList at:ref post:data.
       }
     /posts {
