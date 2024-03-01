@@ -163,10 +163,9 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     [executionContext bindValue:self toVariableNamed:@"thisMethod"];
     [executionContext bindValue:executionContext toVariableNamed:@"thisContext"];
     [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
-       if ( [target conformsToProtocol:@protocol(MPWStorage)]) {
+    if ( [target conformsToProtocol:@protocol(MPWStorage)]) {
            [[executionContext schemes] setSchemeHandler:target forSchemeName:@"self"];
        }
-    [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
     if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
 //        NSLog(@"for %@, getting schemeNames: %@",[[self methodHeader] methodName],[target schemeNames]);
         for ( NSString *schemeName in [target schemeNames]) {

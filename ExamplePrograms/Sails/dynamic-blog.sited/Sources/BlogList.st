@@ -16,24 +16,23 @@ class BlogEntry {
 scheme BlogList {
     var entries.
     var maxId.
-    -entries  {
+    -entriesArray  {
           this:entries allValues.
     }
 
     -initialData {
-        entries ← [
+        [
           #BlogEntry{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
           #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
           #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
-        ].
-        this:maxId ← entries count.
-        NSMutableDictionary alloc initWithObjects: entries forKeys: entries collect id | autorelease.
+        ] mutableDictionaryByKey:'id'.
     }
 
 
     -initWithBundle:aBundle {
 	self ← super init.
         this:entries ← self initialData.
+        stdout println: this:entries class.
         this:maxId ← this:entries count.
         self.
     }
@@ -77,9 +76,7 @@ scheme BlogList {
     
     /  {
        get {
-          // a comment
-          // self applyContext: #{ entries: this:entries }  toTemplateNamed:'BlogList.html'.
-          this:entries.
+          this:entriesArray.
        }
     }
     /new { get {
