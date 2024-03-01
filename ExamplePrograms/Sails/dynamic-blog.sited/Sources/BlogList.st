@@ -14,10 +14,10 @@ class BlogEntry {
 
 
 scheme BlogList {
-    var entriesById.
+    var entries.
     var maxId.
     -entries  {
-          this:entriesById allValues.
+          this:entries allValues.
     }
 
     -initialData {
@@ -33,8 +33,8 @@ scheme BlogList {
 
     -initWithBundle:aBundle {
 	self ← super init.
-        this:entriesById ← self initialData.
-        this:maxId ← this:entriesById count.
+        this:entries ← self initialData.
+        this:maxId ← this:entries count.
         self.
     }
     -nextId {
@@ -47,14 +47,14 @@ scheme BlogList {
 
     /:id/delete {
        get {
-	    this:entriesById removeObjectForKey: id intValue.
+	    this:entries removeObjectForKey: id intValue.
  	    ref://posts/ .
        }
     }
 
     /:id/edit {
        get {
-	         this:entriesById objectForKey:id intValue.
+	         this:entries objectForKey:id intValue.
        }
     }
     -at:uri post:data {
@@ -63,14 +63,15 @@ scheme BlogList {
              id ← components[2].
              thePost ←nil.
              id = 'post' ifTrue: {
-                   thePost ← BlogEntry id: self nextId.
+                   id := self nextId.
+                   thePost ← BlogEntry id: id.
              } ifFalse: {
-                    thePost ← this:entriesById objectForKey:id intValue.
+                    thePost ← this:entries objectForKey:id intValue.
             }.
             data allKeys do: { :key | 
                  thePost setValue: (data objectForKey:key) forKey:key.
             }.
-	    self at:thePost id stringValue put:thePost.
+	    self:{id} :=  thePost.
 	    ref://posts/ .
     }
     
@@ -86,10 +87,10 @@ scheme BlogList {
     } }
     /:id {
        get {
-          this:entriesById objectForKey:id intValue.
+          this:entries objectForKey:id intValue.
        }
        put { 
-          this:entriesById setObject:newValue forKey: id intValue.
+          this:entries setObject:newValue forKey: id intValue.
        }
     }
    /*:p {
