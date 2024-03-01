@@ -14,7 +14,6 @@ class BlogEntry {
 
 
 scheme BlogList {
-    var bundle.
     var entriesById.
     var maxId.
     -entries  {
@@ -36,15 +35,11 @@ scheme BlogList {
 	self ← super init.
         this:entriesById ← self initialData.
         this:maxId ← this:entriesById count.
-        this:bundle ← aBundle.
         self.
     }
     -nextId {
         this:maxId ← this:maxId + 1.
         this:maxId.
-    }
-    -applyContext:aContext toTemplateNamed:templateName {
-	(this:bundle resources at:templateName )  stringValue evaluateAsTemplateWith: aContext.
     }
     -init {
 	self initWithBundle:nil.
@@ -75,8 +70,7 @@ scheme BlogList {
             data allKeys do: { :key | 
                  thePost setValue: (data objectForKey:key) forKey:key.
             }.
-            this:entriesById setObject:thePost forKey: thePost id .
-
+	    self at:thePost id stringValue put:thePost.
 	    ref://posts/ .
     }
     
@@ -95,7 +89,7 @@ scheme BlogList {
           this:entriesById objectForKey:id intValue.
        }
        put { 
-	  "PUT something".
+          this:entriesById setObject:newValue forKey: id intValue.
        }
     }
    /*:p {
