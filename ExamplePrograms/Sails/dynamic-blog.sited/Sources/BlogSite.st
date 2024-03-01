@@ -26,17 +26,9 @@ class Templater : MPWMappingStore {
 
 scheme BlogSite {
     var postsList.
-    var bundle.
     -initWithBundle:aBundle {
-       list ← BlogList store.
-       templateNames ← RootMapper storeWithSource: TemplateNames store.
-       templater ← Templater storeWithSource:list.
-       templater setTemplateNames: templateNames.
-       templater setBundle:aBundle.
-
-       this:postsList ← RootMapper storeWithSource: templater.
-       this:postsList ← templater.
-       this:bundle ← aBundle.
+       templateNames ← #RootMapper{} →  #TemplateNames{}.
+       this:postsList ← #Templater{ templateNames: templateNames, bundle: aBundle } → #BlogList{}.
        self.
     }
     -init {
