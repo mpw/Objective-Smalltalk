@@ -42,22 +42,11 @@ scheme BlogSite {
         rest = '' ifTrue:{
 	   rest ← '/'.
         }.
-	stdout println:"main forwarder: '{rest}'".
-        // postsList:{rest}.               does not work, rest is treated as a single path component
-					// but actually contains multiple pathc components
-	// this:postsList at:rest.         also works
-	theObject ← ref:postsList:{rest} value.
-        stdout println:'got the object: ',theObject.
+	result ← ref:postsList:{rest} value.
 	template ← this:templateNames at:rest.
-        stdout println:'name schemes: ',scheme:templateNames.
-        stdout println:template.
-        result ← nil.
-        (theObject isKindOfClass: MPWBinding class) ifTrue:{
-            result ← theObject. 
-        } ifFalse: {
- 	    result ← self applyContext: theObject  toTemplateNamed:template.
+        (result isKindOfClass: MPWBinding class) ifFalse:{
+ 	    result ← self applyContext: result  toTemplateNamed:template.
         }.
-	stdout println:'got result:', result.
 	result.
       }
     }
