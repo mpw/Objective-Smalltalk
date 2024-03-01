@@ -1,4 +1,4 @@
-class BlogEntry {
+class Post  {
 	var id.
 	var title.
 	var body.
@@ -22,9 +22,9 @@ scheme BlogList {
 
     -initialData {
         [
-          #BlogEntry{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
-          #BlogEntry{ id: 2, title: 'Architecture' , body:'for the win'},
-          #BlogEntry{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
+          #Post{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
+          #Post{ id: 2, title: 'Architecture' , body:'for the win'},
+          #Post{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
         ] mutableDictionaryByKey:'id'.
     }
 
@@ -59,7 +59,7 @@ scheme BlogList {
              thePost ←nil.
              id = 'post' ifTrue: {
                    id := self nextId.
-                   thePost ← BlogEntry id: id.
+                   thePost ← Post id: id.
              } ifFalse: {
                     thePost ← this:entries objectForKey:id intValue.
             }.
