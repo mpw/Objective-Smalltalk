@@ -1,6 +1,27 @@
 
-class Templater : MPWMappingStore {
+class RootMapper : MPWMappingStore {
+    -mapReference:ref {
+       ref path = '' ifTrue:{
+           ref ← ref:/ reference.
+        }.  
+	ref.
+    }
+}.
 
+class Templater : MPWMappingStore {
+    var templateNames.
+    var bundle.
+    -applyContext:aContext toTemplateNamed:templateName {
+	templateString := (this:bundle resources at:templateName )  stringValue. 
+	templateString evaluateAsTemplateWith: aContext.
+    }
+    -mapRetrievedObject:anObject forReference:ref {
+         template ← this:templateNames at:ref.
+         (anObject isKindOfClass: MPWBinding class) ifFalse:{
+            anObject ← self applyContext: anObject  toTemplateNamed:template.
+         }.
+  	 anObject.
+     }
 }.
 
 scheme BlogSite {
@@ -9,8 +30,12 @@ scheme BlogSite {
     var bundle.
     -initWithBundle:aBundle {
        list ← BlogList alloc initWithBundle:aBundle | autorelease.
-       this:templateNames ← TemplateNames store.
+       this:templateNames ← RootMapper storeWithSource: TemplateNames store.
        templater ← Templater storeWithSource:list.
+       templater setTemplateNames: this:templateNames.
+       templater setBundle:aBundle.
+
+       this:postsList ← RootMapper storeWithSource: templater.
        this:postsList ← templater.
        this:bundle ← aBundle.
        self.
@@ -25,29 +50,14 @@ scheme BlogSite {
 	stdout println:'post arrived at BlogSite'.
 	this:postsList at:ref post:data.
       }
-    -applyContext:aContext toTemplateNamed:templateName {
-	templateString := (this:bundle resources at:templateName )  stringValue. 
-	templateString evaluateAsTemplateWith: aContext.
-    }
     /posts {
       get {
-	stdout println:'aux (base) forwarder'.
-	theObject ← postsList:/ .
-	template ← templateNames:/ .
-        self applyContext: theObject  toTemplateNamed:template.
+        ref://posts/ .
       }
     }
     /posts/*:rest {
       get {
-        rest = '' ifTrue:{
-	   rest ← '/'.
-        }.
 	result ← ref:postsList:{rest} value.
-	template ← this:templateNames at:rest.
-        (result isKindOfClass: MPWBinding class) ifFalse:{
- 	    result ← self applyContext: result  toTemplateNamed:template.
-        }.
-	result.
       }
     }
     
