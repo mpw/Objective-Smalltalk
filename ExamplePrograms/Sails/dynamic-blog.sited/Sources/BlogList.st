@@ -29,19 +29,15 @@ scheme BlogList {
     }
 
 
-    -initWithBundle:aBundle {
+    -init {
 	self ← super init.
         this:entries ← self initialData.
-        stdout println: this:entries class.
         this:maxId ← this:entries count.
         self.
     }
     -nextId {
         this:maxId ← this:maxId + 1.
         this:maxId.
-    }
-    -init {
-	self initWithBundle:nil.
     }
 
     /:id/delete {

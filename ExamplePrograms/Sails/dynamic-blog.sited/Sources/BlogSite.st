@@ -29,7 +29,7 @@ scheme BlogSite {
     var templateNames.
     var bundle.
     -initWithBundle:aBundle {
-       list ← BlogList alloc initWithBundle:aBundle | autorelease.
+       list ← BlogList store.
        this:templateNames ← RootMapper storeWithSource: TemplateNames store.
        templater ← Templater storeWithSource:list.
        templater setTemplateNames: this:templateNames.
