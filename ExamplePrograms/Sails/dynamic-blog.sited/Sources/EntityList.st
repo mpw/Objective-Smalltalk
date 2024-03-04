@@ -1,38 +1,20 @@
-class Post  {
-	var id.
-	var title.
-	var body.
-        -description {
-	    "Entry '{this:title}' body '{this:body}'".
-        }
-        +id:newId {
-             new ← self new autorelease.
-             new setId:newId.
-             new.
-        }
-}.
 
-
-scheme BlogList {
+scheme EntityList {
     var entries.
     var maxId.
+    var entityClass.
     -entriesArray  {
           this:entries allValues.
     }
 
-    -initialData {
-        [
-          #Post{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
-          #Post{ id: 2, title: 'Architecture' , body:'for the win'},
-          #Post{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
-        ] mutableDictionaryByKey:'id'.
+    -<void>setInitialData:newEntries 
+    {
+       this:entries ← newEntries.
+       this:maxId ← newEntries count + 1.
     }
-
 
     -init {
 	self ← super init.
-        this:entries ← self initialData.
-        this:maxId ← this:entries count.
         self.
     }
     -nextId {
@@ -59,7 +41,7 @@ scheme BlogList {
              thePost ←nil.
              id = 'post' ifTrue: {
                    id := self nextId.
-                   thePost ← Post id: id.
+                   thePost ← this:entityClass id: id.
              } ifFalse: {
                     thePost ← this:entries objectForKey:id intValue.
             }.
