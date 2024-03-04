@@ -20,7 +20,7 @@ scheme TemplateNames {
           "{this:baseName}Entry.html".
        }
     }
-   /*:p {
+   /* {
        get {
 	 nil.
        }
