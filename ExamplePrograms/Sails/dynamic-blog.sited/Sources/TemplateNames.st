@@ -1,29 +1,28 @@
 
 scheme TemplateNames {
-
+   var baseName.
     /:id/edit {
        get {
-	 'BlogEdit.html'.
+	 "{this:baseName}Edit.html".
        }
     }
     
     /  {
        get {
-	  stdout println:'get root path'.
-          'BlogList.html'.
+	 "{this:baseName}List.html".
        }
     }
     /new { get {
-          'BlogNew.html'.
+           "{this:baseName}New.html".
     } }
     /:id {
        get {
-          'BlogEntry.html'.
+          "{this:baseName}Entry.html".
        }
     }
    /*:p {
        get {
-          'BlogList.html'.
+	 nil.
        }
     }
 

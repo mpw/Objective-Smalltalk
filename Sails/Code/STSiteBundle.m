@@ -44,7 +44,9 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     for (NSString *testName in [self siteTests]) {
         @try {
             id fixture=[self.siteClass testFixture];
-            [fixture doTest:testName withTest:nil];
+            if ( [fixture respondsToSelector:@selector(doTest:withTest:)]) {
+                [fixture doTest:testName withTest:nil];
+            }
         } @catch ( NSException *e ) {
             NSLog(@"test: %@ failed: %@",testName,e);
         }
