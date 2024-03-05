@@ -4,11 +4,11 @@ scheme BlogSite {
     var postsList.
     -initWithBundle:aBundle {
        this:postsList ← #STTemplateStore{
-       	                   templateNames: (#STRootMapper{} →  #TemplateNames{ baseName: 'Blog' }),
-	                   bundle: aBundle } → #EntityList{ entityClass: Post, initialData: (self initialData) }.
+       	                   templateNames: (#STRootMapper{} →  #TemplateNames{ baseName: 'Post' }),
+	                   bundle: aBundle
+                         } → #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts' }.
        self.
     }
-
 
     -initialData {
       [
@@ -27,11 +27,6 @@ scheme BlogSite {
     -at:ref  post:data {
 	this:postsList at:ref post:data.
       }
-    /posts {
-      get {
-        ref://posts/ .
-      }
-    }
     /posts/*:rest {
       get {
 	result ← ref:postsList:{rest} value.
@@ -40,7 +35,7 @@ scheme BlogSite {
     
     /*:p {
        get {
-          '<html><body>This is the dynamic blog, fallback page  and it is being called.<p><a href="/posts/">Go to posts</a></body></html>' asData.
+          "<html><body>This is the dynamic blog, fallback page  and it is being called via '{p}'.<p><a href='/posts/'>Go to posts</a></body></html>" asData.
        }
     }
     +testSelectors { [ 'testSomething' ]. }
