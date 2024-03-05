@@ -1,34 +1,10 @@
 
-class RootMapper : MPWMappingStore {
-    -mapReference:ref {
-       ref path = '' ifTrue:{
-           ref ← ref:/ reference.
-        }.  
-	ref.
-    }
-}.
-
-class Templater : MPWMappingStore {
-    var templateNames.
-    var bundle.
-    -applyContext:aContext toTemplateNamed:templateName {
-	templateString := (this:bundle resources at:templateName )  stringValue. 
-	templateString evaluateAsTemplateWith: aContext.
-    }
-    -mapRetrievedObject:anObject forReference:ref {
-         template ← this:templateNames at:ref.
-         (anObject isKindOfClass: MPWBinding class) ifFalse:{
-            anObject ← self applyContext: anObject  toTemplateNamed:template.
-         }.
-  	 anObject.
-     }
-}.
 
 scheme BlogSite {
     var postsList.
     -initWithBundle:aBundle {
-       this:postsList ← #Templater{
-       	                   templateNames: (#RootMapper{} →  #TemplateNames{ baseName: 'Blog' }),
+       this:postsList ← #STTemplateStore{
+       	                   templateNames: (#STRootMapper{} →  #TemplateNames{ baseName: 'Blog' }),
 	                   bundle: aBundle } → #EntityList{ entityClass: Post, initialData: (self initialData) }.
        self.
     }
