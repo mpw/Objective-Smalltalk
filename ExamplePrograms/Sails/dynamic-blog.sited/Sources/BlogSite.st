@@ -3,9 +3,10 @@
 scheme BlogSite {
     var postsList.
     -initWithBundle:aBundle {
-       this:postsList ← #STTemplateStore{
-	                   bundle: aBundle
-                         } → #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts/' }.
+
+       this:postsList ←  #STTemplateStore{ bundle:aBundle, templateName: 'Site.html' } →  
+                         #STTemplateStore{ bundle: aBundle } →
+                         #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts/' }.
        self.
     }
 
