@@ -7,6 +7,7 @@
 
 #import "STEntityList.h"
 #import "STEntity.h"
+#import "STPathToTemplateNameMapper.h"
 
 @interface STEntityList()
 
@@ -19,6 +20,13 @@
 @end
 
 @implementation STEntityList
+
+-(id <MPWStorage>)templateNameMapper
+{
+    STPathToTemplateNameMapper* mapper = [STPathToTemplateNameMapper store];
+    mapper.baseName = [[self entityClass] className];
+    return mapper;
+}
 
 -(long)nextId
 {

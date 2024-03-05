@@ -719,6 +719,8 @@
 		1FFA167A2B971564004E63ED /* STEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA16782B971564004E63ED /* STEntity.m */; };
 		1FFA167D2B9728D8004E63ED /* STEntityList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA167B2B9728D8004E63ED /* STEntityList.h */; };
 		1FFA167E2B9728D8004E63ED /* STEntityList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA167C2B9728D8004E63ED /* STEntityList.m */; };
+		1FFA16812B974F05004E63ED /* STPathToTemplateNameMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA167F2B974F05004E63ED /* STPathToTemplateNameMapper.h */; };
+		1FFA16822B974F05004E63ED /* STPathToTemplateNameMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA16802B974F05004E63ED /* STPathToTemplateNameMapper.m */; };
 		1FFA1B63288D3EDC0095A876 /* MPWCommandStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA1B61288D3EDC0095A876 /* MPWCommandStore.h */; };
 		1FFA1B64288D3EDC0095A876 /* MPWCommandStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA1B62288D3EDC0095A876 /* MPWCommandStore.m */; };
 		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1509,6 +1511,8 @@
 		1FFA16782B971564004E63ED /* STEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STEntity.m; sourceTree = "<group>"; };
 		1FFA167B2B9728D8004E63ED /* STEntityList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STEntityList.h; sourceTree = "<group>"; };
 		1FFA167C2B9728D8004E63ED /* STEntityList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STEntityList.m; sourceTree = "<group>"; };
+		1FFA167F2B974F05004E63ED /* STPathToTemplateNameMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPathToTemplateNameMapper.h; sourceTree = "<group>"; };
+		1FFA16802B974F05004E63ED /* STPathToTemplateNameMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPathToTemplateNameMapper.m; sourceTree = "<group>"; };
 		1FFA1B61288D3EDC0095A876 /* MPWCommandStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCommandStore.h; sourceTree = "<group>"; };
 		1FFA1B62288D3EDC0095A876 /* MPWCommandStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWCommandStore.m; sourceTree = "<group>"; };
 		1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDataflowConstraintExpression.h; sourceTree = "<group>"; };
@@ -2516,13 +2520,6 @@
 				1F096D462B4966CD0072DD85 /* sl */,
 				1FFCB57A2B43152E002DC40A /* Code */,
 				1F7135642B50123800C961D6 /* Resources */,
-				1FFCB56F2B431492002DC40A /* Sails.h */,
-				1FFA16732B970F8B004E63ED /* STRootMapper.h */,
-				1FFA16742B970F8B004E63ED /* STRootMapper.m */,
-				1FFA16772B971564004E63ED /* STEntity.h */,
-				1FFA16782B971564004E63ED /* STEntity.m */,
-				1FFA167B2B9728D8004E63ED /* STEntityList.h */,
-				1FFA167C2B9728D8004E63ED /* STEntityList.m */,
 				1FFCB5702B431492002DC40A /* Sails.docc */,
 			);
 			path = Sails;
@@ -2531,6 +2528,15 @@
 		1FFCB57A2B43152E002DC40A /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				1FFCB56F2B431492002DC40A /* Sails.h */,
+				1FFA16732B970F8B004E63ED /* STRootMapper.h */,
+				1FFA16742B970F8B004E63ED /* STRootMapper.m */,
+				1FFA16772B971564004E63ED /* STEntity.h */,
+				1FFA16782B971564004E63ED /* STEntity.m */,
+				1FFA167B2B9728D8004E63ED /* STEntityList.h */,
+				1FFA167C2B9728D8004E63ED /* STEntityList.m */,
+				1FFA167F2B974F05004E63ED /* STPathToTemplateNameMapper.h */,
+				1FFA16802B974F05004E63ED /* STPathToTemplateNameMapper.m */,
 				1FFCB57B2B43154E002DC40A /* SailsGenerator.h */,
 				1FFCB57C2B43154E002DC40A /* SailsGenerator.m */,
 				1F096D5E2B49903C0072DD85 /* STSiteBundle.h */,
@@ -3162,6 +3168,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FFA16812B974F05004E63ED /* STPathToTemplateNameMapper.h in Headers */,
 				1FFA16792B971564004E63ED /* STEntity.h in Headers */,
 				1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */,
 				1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */,
@@ -4559,6 +4566,7 @@
 				1FFA167E2B9728D8004E63ED /* STEntityList.m in Sources */,
 				1FFA167A2B971564004E63ED /* STEntity.m in Sources */,
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,
+				1FFA16822B974F05004E63ED /* STPathToTemplateNameMapper.m in Sources */,
 				1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */,
 				1FFA16762B970F8B004E63ED /* STRootMapper.m in Sources */,
 				1FFCB57E2B43154E002DC40A /* SailsGenerator.m in Sources */,

@@ -1,5 +1,5 @@
 //
-//  STEntityList.h
+//  STPathToTemplateNameMapper.h
 //  Sails
 //
 //  Created by Marcel Weiher on 05.03.24.
@@ -9,7 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STEntityList : MPWAbstractStore
+@interface STPathToTemplateNameMapper : MPWAbstractStore
+
+@property (nonatomic,strong) NSString *baseName;
 
 @end
 
