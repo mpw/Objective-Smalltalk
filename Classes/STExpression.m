@@ -33,7 +33,7 @@ longAccessor(len, setLen)
 
 -(NSException*)handleOffsetsInException:(NSException*)exception
 {
-//    NSLog(@"handleOffsetsInException: %@",exception);
+    NSLog(@"handleOffsetsInException: %@ %@",exception,[exception callStackSymbols]);
     id dict=[exception userInfo];
     if ( ![dict objectForKey:@"offset"]) {
         if (dict) {

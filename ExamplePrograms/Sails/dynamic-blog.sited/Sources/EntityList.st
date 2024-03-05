@@ -1,27 +1,5 @@
 
-scheme EntityList {
-    var entries.
-    var maxId.
-    var entityClass.
-    -entriesArray  {
-          this:entries allValues.
-    }
-
-    -<void>setInitialData:newEntries 
-    {
-       this:entries ← newEntries.
-       this:maxId ← newEntries count + 1.
-    }
-
-    -init {
-	self ← super init.
-        self.
-    }
-    -nextId {
-        this:maxId ← this:maxId + 1.
-        this:maxId.
-    }
-
+scheme EntityList : STEntityList {
     /:id/delete {
        get {
 	    this:entries removeObjectForKey: id intValue.
@@ -68,10 +46,4 @@ scheme EntityList {
           this:entries setObject:newValue forKey: id intValue.
        }
     }
-   /*:p {
-       get {
-          "<html><body>This posts fallback page: {p}.<p><a href='/posts/'>Go to posts</a></body></html>".
-       }
-    }
-
-}.
+}

@@ -48,4 +48,4 @@ scheme BlogSite {
     +<void>testSomething {
          3 assertEqual: 3 msg:'not'.
     }
-}.
+}
