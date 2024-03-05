@@ -1,0 +1,24 @@
+#!env st
+#-<void>compilebundle:source
+framework:ObjSTNative load.
+bundle := STBundle bundleWithPath:source.
+compiler := STNativeCompiler compiler.
+sources := bundle sourceNames.
+objects := #NSMutableArray[].
+stdout println:'files: '.
+stdout do println: bundle sourceNames each.
+sources do: { :sourceName |
+    stdout println:'compile: ',sourceName.
+    compiled := compiler compile: file:{sourceName}.
+    stdout println:'did compile: ',sourceName.
+    macho := compiler compileClassToMachoO: compiled.
+    stdout println:'did native compile: ',sourceName.
+    basename := sourceName stringValue stringByDeletingPathExtension.
+    objectFileName := basename , '.o'.
+    file:{objectFileName} := macho.
+    objects addObject: basename.
+}.
+fwkName :=  'out.dylib'
+#ref:file:. mkdir:fwkName.
+#binaryName := "{fwkName}/{basename}".
+compiler linkObjects: objects toSharedLibrary: fwkName inDir: nil withFrameworks:[ 'Sails', 'ObjectiveSmalltalk', 'MPWFoundation', 'Foundation' ].
