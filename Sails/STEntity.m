@@ -9,7 +9,7 @@
 
 @interface STEntity()
 
-@property (nonatomic,strong) id id;
+@property (nonatomic,assign) long id;
 
 
 @end
@@ -17,12 +17,12 @@
 
 @implementation STEntity
 
-+(instancetype)id:theId
++(instancetype)id:(long)theId
 {
     return [[[self alloc] initWithId:theId] autorelease];
 }
 
--(instancetype)initWithId:theId
+-(instancetype)initWithId:(long)theId
 {
     self=[super init];
     self.id = theId;
@@ -31,7 +31,6 @@
 
 -(void)dealloc
 {
-    [_id release];
     [super dealloc];
 }
 

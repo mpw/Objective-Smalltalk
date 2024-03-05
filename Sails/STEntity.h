@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STEntity : NSObject
 
++(instancetype)id:(long)newId;
+
 @end
 
 NS_ASSUME_NONNULL_END
