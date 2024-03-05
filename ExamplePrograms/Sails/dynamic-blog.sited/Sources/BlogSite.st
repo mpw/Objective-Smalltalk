@@ -4,9 +4,8 @@ scheme BlogSite {
     var postsList.
     -initWithBundle:aBundle {
        this:postsList ← #STTemplateStore{
-       	                   templateNames: (#STRootMapper{} →  #TemplateNames{ baseName: 'Post' }),
 	                   bundle: aBundle
-                         } → #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts' }.
+                         } → #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts/' }.
        self.
     }
 

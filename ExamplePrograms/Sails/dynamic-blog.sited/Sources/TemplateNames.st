@@ -17,7 +17,7 @@ scheme TemplateNames {
     } }
     /:id {
        get {
-          "{this:baseName}Entry.html".
+          "{this:baseName}Display.html".
        }
     }
 
