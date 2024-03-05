@@ -4,5 +4,4 @@ class Post : STEntity  {
         -description {
 	    "Post with title: '{this:title}' body '{this:body}'".
         }
-}.
-
+}

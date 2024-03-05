@@ -204,8 +204,8 @@ objectAccessor(NSString*, filename, setFilename )
 //        NSLog(@"no declared return");
     }
 	NS_HANDLER
-		[[MPWByteStream Stderr] println:[NSString stringWithFormat:@"Exception: %@ in line %d: '%@' ",
-					localException,line,exprString]];
+		[[MPWByteStream Stderr] println:[NSString stringWithFormat:@"Exception: %@ in line %d: '%@'\n%@",
+					localException,line,exprString,[localException callStackSymbols]]];
 	NS_ENDHANDLER
 }
 

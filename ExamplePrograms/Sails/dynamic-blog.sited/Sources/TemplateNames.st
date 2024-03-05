@@ -20,10 +20,5 @@ scheme TemplateNames {
           "{this:baseName}Entry.html".
        }
     }
-   /* {
-       get {
-	 nil.
-       }
-    }
 
-}.
+}
