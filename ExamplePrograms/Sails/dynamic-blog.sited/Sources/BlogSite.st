@@ -18,7 +18,6 @@ scheme BlogSite {
       ] mutableDictionaryByKey:'id'.
     }
 
-
     -init {
         self initWithBundle:nil.
     }

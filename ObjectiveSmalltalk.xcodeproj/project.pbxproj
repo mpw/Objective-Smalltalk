@@ -715,6 +715,8 @@
 		1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA166B2B970D8B004E63ED /* STTemplateStore.m */; };
 		1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
 		1FFA16762B970F8B004E63ED /* STRootMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA16742B970F8B004E63ED /* STRootMapper.m */; };
+		1FFA16792B971564004E63ED /* STEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16772B971564004E63ED /* STEntity.h */; };
+		1FFA167A2B971564004E63ED /* STEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA16782B971564004E63ED /* STEntity.m */; };
 		1FFA1B63288D3EDC0095A876 /* MPWCommandStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA1B61288D3EDC0095A876 /* MPWCommandStore.h */; };
 		1FFA1B64288D3EDC0095A876 /* MPWCommandStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA1B62288D3EDC0095A876 /* MPWCommandStore.m */; };
 		1FFC563A1B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1501,6 +1503,8 @@
 		1FFA166B2B970D8B004E63ED /* STTemplateStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTemplateStore.m; sourceTree = "<group>"; };
 		1FFA16732B970F8B004E63ED /* STRootMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STRootMapper.h; sourceTree = "<group>"; };
 		1FFA16742B970F8B004E63ED /* STRootMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STRootMapper.m; sourceTree = "<group>"; };
+		1FFA16772B971564004E63ED /* STEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STEntity.h; sourceTree = "<group>"; };
+		1FFA16782B971564004E63ED /* STEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STEntity.m; sourceTree = "<group>"; };
 		1FFA1B61288D3EDC0095A876 /* MPWCommandStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCommandStore.h; sourceTree = "<group>"; };
 		1FFA1B62288D3EDC0095A876 /* MPWCommandStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWCommandStore.m; sourceTree = "<group>"; };
 		1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDataflowConstraintExpression.h; sourceTree = "<group>"; };
@@ -2511,6 +2515,8 @@
 				1FFCB56F2B431492002DC40A /* Sails.h */,
 				1FFA16732B970F8B004E63ED /* STRootMapper.h */,
 				1FFA16742B970F8B004E63ED /* STRootMapper.m */,
+				1FFA16772B971564004E63ED /* STEntity.h */,
+				1FFA16782B971564004E63ED /* STEntity.m */,
 				1FFCB5702B431492002DC40A /* Sails.docc */,
 			);
 			path = Sails;
@@ -3150,6 +3156,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FFA16792B971564004E63ED /* STEntity.h in Headers */,
 				1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */,
 				1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */,
 				1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */,
@@ -4542,6 +4549,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */,
+				1FFA167A2B971564004E63ED /* STEntity.m in Sources */,
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,
 				1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */,
 				1FFA16762B970F8B004E63ED /* STRootMapper.m in Sources */,
