@@ -510,6 +510,7 @@
 		1FBAAC28184BDD8900086047 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FBFEBA218FD3DBB009D42E2 /* MPWFrameworkScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FBFEBA418FD3DBB009D42E2 /* MPWFrameworkScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */; };
+		1FC1D94E2B98C0E40011D583 /* Entity.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FC1D94D2B98C0E40011D583 /* Entity.st */; };
 		1FC2EEF3186B670F00B3D06F /* empty-class.llvm-templateasm in Resources */ = {isa = PBXBuildFile; fileRef = 1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */; };
 		1FC6616C25D7C5B900ED1BCB /* ObjectiveSmalltalkUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD6CA5F25B8340B00639458 /* ObjectiveSmalltalkUI.framework */; };
 		1FC6616D25D7C5B900ED1BCB /* ObjectiveSmalltalkUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD6CA5F25B8340B00639458 /* ObjectiveSmalltalkUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1399,6 +1400,7 @@
 		1FBAD8131436297C0050D6DE /* MPWFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundation.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Development/MPWFoundation.framework"; sourceTree = "<group>"; };
 		1FBFEBA018FD3DBB009D42E2 /* MPWFrameworkScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFrameworkScheme.h; sourceTree = "<group>"; };
 		1FBFEBA118FD3DBB009D42E2 /* MPWFrameworkScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFrameworkScheme.m; sourceTree = "<group>"; };
+		1FC1D94D2B98C0E40011D583 /* Entity.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = Entity.st; sourceTree = "<group>"; };
 		1FC2EEF1186B653000B3D06F /* empty-class.llvm-templateasm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "empty-class.llvm-templateasm"; path = "test-compiles/empty-class.llvm-templateasm"; sourceTree = "<group>"; };
 		1FC661EE25D83BC700ED1BCB /* STObjectTemplate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STObjectTemplate.h; sourceTree = "<group>"; };
 		1FC661EF25D83BC700ED1BCB /* STObjectTemplate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STObjectTemplate.m; sourceTree = "<group>"; };
@@ -2185,6 +2187,7 @@
 			isa = PBXGroup;
 			children = (
 				1F7135842B5017F900C961D6 /* DynamicSite.st */,
+				1FC1D94D2B98C0E40011D583 /* Entity.st */,
 				1FA62D3D2B517B3B00E17994 /* StaticSite.st */,
 			);
 			path = Sources;
@@ -3946,6 +3949,7 @@
 				1F71358F2B5017F900C961D6 /* skelet.html in Resources */,
 				1F71358D2B5017F900C961D6 /* photo-gallery.html in Resources */,
 				1F7135882B5017F900C961D6 /* root.html in Resources */,
+				1FC1D94E2B98C0E40011D583 /* Entity.st in Resources */,
 				1F71359C2B5017F900C961D6 /* Info.json in Resources */,
 				1F71359A2B5017F900C961D6 /* picnic.min.css in Resources */,
 				1F71358E2B5017F900C961D6 /* hi.html in Resources */,

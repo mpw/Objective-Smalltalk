@@ -43,120 +43,23 @@ controller := #ASCPresentationViewController{
         } ,
 
        #ASCChapterSlide{ 
-               subtitle: 'Objective-SmallTalk',
+               subtitle: 'Objective-S',
                text: 'Approach'
          } ,
 
 
-
-       #ASCBulletSlide{ 
-             title: 'Objective-SmallTalk: Approach',
-             bullets: [
-                'Implement different architectural styles',
-                'Add language support',
-                'Inform the metasystem',
-             ]
-        }  ,
-
-       #ASCBulletSlide{ 
-             title: 'Architectural Styles',
-             bullets: [
-                'Objects and Messages',
-                'Pipes and Filters',
-                'Implicit Invocation',
-                '(In-process) REST',
-             ]
-        } ,
-
+  
        #ASCSlideWithFigure{ 
              delayInSeconds: 5.0.
-             title: 'Objects and Messages',
+             title: 'Approach',
              bullets: [
-                'Objective-C compatible semantics',
-                'Interpreted and native-compiled',
-                '"C" using type annotations',
-                'Higher Order Messaging',
-                'Framework-oriented development',
-                'Full platform integration',
+                'Pipes/Filters',
+                'In-Process REST',
+                'ST-style OO',
+                'Objective-C Framework, platform',
              ]
         } ,
   
-
-       #ASCBulletSlide{ 
-             title: 'Pipes and Filters',
-             bullets: [
-                'Polymorphic Write Streams (DLS ''19)',
-                '#writeObject:anObject',
-                'Triple Dispatch + Message chaining',
-                'Asynchrony-agnostic',
-                'Streaming / de-materialized objects',
-                'Serialisation, PDF/PS (Squeak), Wunderlist, MS , To Do',
-                'Outlook: filters generalise methods?',
-            ]
-        } ,
-       #ASCBulletSlide{ 
-             title: 'Implicit Invocation',
-             bullets: [ 
-                'Notification Protocols',
-                'Class adopts a Protocol to register for notifications',
-             ]
-        } ,
-
-       #ASCBulletSlide{ 
-             title: 'In-Process REST',
-             bullets: [
-                'What real large-scale networks use',
-                'Polymorphic Identifiers',
-                'Stores',
-                'Storage Combinators',
-                'Used in a number of applications',
-             ]
-        } ,
-
-
-
-
-       #ASCBulletSlide{ 
-             title: 'Polymorphic Identifiers',
-             bullets: [
-                'All identifiers are URIs',
-                "var:hello := 'World!",
-                'file:{env:HOME}/Downloads/site := http://objective.st',
-                'slider setValueHolder: ref:var:celsius',
-             ]
-        } ,
-
-       #ASCBulletSlide{ 
-             title: 'Stores',
-             bullets: [ 
-                'PIs are evaluated via stores',
-                'Like in-process REST servers',
-                'Or composable dictionaries',
-                'var:hello <-> (schemes at:''var'') at:''hello''',
-             ]
-        }  ,
-       #ASCBulletSlide{ 
-             title: 'Example Stores',
-             bullets: [
-                'Local variables, environment variables',
-                'Filesystems, HTTP',
-                'Databases: SQL/SQLite',
-                'Other applications (via Apple Events)',
-                'etc.',
-             ]
-        }  ,
-
-       #ASCBulletSlide{ 
-             title: 'Storage Combinators',
-             bullets: [ 
-                'Onward! ''19',
-                'Combinator exposes + consumes REST interfaces',
-                'Uniform interface (REST) enables pluggability',
-                'Narrow, semantically tight interface enables intermediaries',
-                '10x productivity/code improvments',
-             ]
-        } ,
-
 
       #ASCImageSlide{ 
                text: 'Simple Composed Store',
@@ -177,22 +80,15 @@ controller := #ASCPresentationViewController{
                imageScale: 0.34
          }  , 
 
-       #ASCChapterSlide{ 
-               subtitle: 'Objective-SmallTalk',
-               text: 'Language Support'
-         } ,
-
-
-
        #ASCBulletSlide{ 
              title: 'Language support',
              bullets: [
-                'Class, method, protocol syntax',
+                'Updated ST + syntax',
                 'Polymorphic Identifiers',
-                'Composition "operator" → ',
-                'Permanent Assignment |= ',
-                'Stores and Filters as class templates',
                 'Property Paths',
+                'Object Literals',
+                'Connector → ',
+                'Permanent Assignment |= ',
              ]
         }  ,
 
@@ -202,47 +98,24 @@ controller := #ASCPresentationViewController{
          } ,
        #ASCChapterSlide{ 
                subtitle: 'Objective-SmallTalk',
-               text: 'Metasystem'
+               text: 'What''s new in 2022-2024'
          } ,
       #ASCBulletSlide{ 
-             title: 'Metasystem',
+             title: 'News',
              bullets: [
-                'Apply/Eval → Connect/Run',
-                'Class is subclass of Component',
-                'Message, Interface etc. subclasses of Connector',
-                'Components have ports, connectors roles',
+                 'Native Compiler',
+                 'STBundle',
+                 'GUI',
+                 'Cloud/sftp/Dropbox',
+                 'Sails',
              ]
         }  ,
-
-       #ASCChapterSlide{ 
-               subtitle: 'Objective-SmallTalk',
-               text: 'Outlook'
-         } ,
-
-      #ASCBulletSlide{ 
-             title: 'Outlook',
-             bullets: [
-                'Port Stores and Polymorphic Write Streams',
-                'Documentation / Sample Code',
-                'Improve native compiler',
-                'Tooling (Debugger)',
-                'You! (http://objective.st)',
-             ]
-        }  ,
-
-      #ASCChapterSlide { 
-               text: 'Q&A   http://objective.st',
-               subtitle: 'Marcel Weiher (@mpweiher)'
-         }  ,
-
 
        ]
 }. 
                   
-  
-controller view openInWindow:'Objective-SmallTalk (HPI 2024)'.   <NSWindow: 0x10fc0a340>
-
-      
+    
+controller view openInWindow:'Objective-S (HPI 2024)'.         <NSWindow: 0x138879c20> 
  
 file:/tmp/lastpage.tiff := (controller view snapshot)  
 
