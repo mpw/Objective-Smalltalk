@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) STSiteBundle *bundle;
 
 -(void)makeSiteOfType:(NSString*)siteType;
+-(NSString*)makeEntityNamed:(NSString*)entityName superclassName:(NSString*)superclassName ivarNames:(NSArray*)ivarnames;
 
 -(BOOL)generate;
 

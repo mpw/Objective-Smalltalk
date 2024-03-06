@@ -53,6 +53,16 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     [self copySources:@"DynamicSite.st"];
 }
 
+-(NSString*)makeEntityNamed:(NSString*)entityName superclassName:(NSString*)superclassName ivarNames:(NSArray*)ivarnames
+{
+    MPWStringTemplate *template=[MPWStringTemplate templateWithString:[[self frameworkResource:@"Entity" category:@"st"] stringValue]];
+    superclassName = superclassName ?: @"STEntity";
+    NSDictionary *templateParams = @{ @"class": entityName, @"superclass": superclassName,
+                                      @"ivars": ivarnames };
+    NSString *result = [template evaluateWith:templateParams];
+    return result;
+}
+
 -(void)makeSiteOfType:(NSString*)siteType
 {
     if ( [siteType isEqual:@"dynamic"]) {
@@ -86,10 +96,21 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     EXPECTTRUE([generator generate],@"generation succeeded");
 }
 
++(void)testCreateSimpleEntity
+{
+    NSString *path=@"/tmp/generatortest.sited";
+    SailsGenerator *generator = [[self new] autorelease];
+    generator.path = path;
+    NSString *expected = @"Post:STEntity {\n   var first. var last. \n}\n";
+    NSString *generated = [generator makeEntityNamed:@"Post" superclassName:nil ivarNames:@[ @{ @"name": @"first"},@{ @"name": @"last"}  ] ];
+    IDEXPECT(generated,expected, @"class for entity 'Post' with ivars 'first' and 'last'");
+}
+
 +(NSArray*)testSelectors
 {
    return @[
-			@"testBasicGeneration",
+       @"testBasicGeneration",
+       @"testCreateSimpleEntity",
 			];
 }
 
