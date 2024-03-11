@@ -1,10 +1,15 @@
-framework:Slides3D load.     
+framework:Slides3D load.         
 
 
  
 controller := #ASCPresentationViewController{
-    Name: 'HPI Demo'.
-    Slides: [
+    Name: 'HPI Demo',
+}. 
+    
+controller view openInWindow:'Objective-S (HPI 2024)'.     
+
+ 
+    controller setSlides: [
 
       #ASCChapterSlide { 
                text: 'Objective-S',
@@ -14,7 +19,7 @@ controller := #ASCPresentationViewController{
       #ASCBulletSlide{ 
              title: 'Objective-S',
              bullets: [
-                'Software Architecturual Programming (Language)',
+                'Software Architecturual (Language)',
                 'Generalizes Smalltalk',
                 'Objective-C framework (peer/interop)',
              ]
@@ -30,15 +35,8 @@ controller := #ASCPresentationViewController{
              bullets:  [
                 'Too much code',
                 'OO is still too ALGOL → Architectural Mismatch',
-             ]
-        } ,
-        #ASCBulletSlide{ 
-             title: 'Approach',
-             bullets: [
-                'Alan Kay: figure out the metasystem',
-                'Unicon:  connectors ←→ programming language metaystem',
-                'ST: decouple class hiearchy from implementation hierarchy',
-                '→ metasystem: conceptual class hierarchy of connectors',
+                'Composition and Refinement',
+                'Lots of industry experience',
              ]
         } ,
 
@@ -48,18 +46,54 @@ controller := #ASCPresentationViewController{
          } ,
 
 
-  
-       #ASCSlideWithFigure{ 
-             delayInSeconds: 5.0.
-             title: 'Approach',
+        #ASCBulletSlide{ 
+             title: 'The Approach',
              bullets: [
-                'Pipes/Filters',
+                '→ metasystem: class hierarchy of connectors',
+                'architectural polymorphism',
+                'language support',
+                'tooling',
+             ]
+        } ,
+  
+       #ASCBulletSlide{ 
+             title: 'Toolkit',
+             bullets: [
+                 'Pipes/Filters',
                 'In-Process REST',
                 'ST-style OO',
                 'Objective-C Framework, platform',
              ]
         } ,
   
+
+       #ASCBulletSlide{ 
+             title: 'Language support',
+             bullets: [
+                'Updated ST + syntax',
+                'Polymorphic Identifiers',
+                'Property Paths',
+                'Object Literals',
+                'Connector → ',
+                'Permanent Assignment |= ',
+             ]
+        }  ,
+       #ASCSlideWithFigure{ 
+             delayInSeconds: 5.0.
+             title: 'Artefacts',
+             bullets: [
+                'Platform frameworks',
+                'Smalltalk.app',
+                'stsh',
+                'CodeDraw, ViewBuilder',
+                'Sails, SiteBuider',
+             ]
+        } ,
+  
+       #ASCChapterSlide{ 
+               subtitle: 'Objective-S',
+               text: 'Storage Combinators'
+         } ,
 
       #ASCImageSlide{ 
                text: 'Simple Composed Store',
@@ -80,18 +114,6 @@ controller := #ASCPresentationViewController{
                imageScale: 0.34
          }  , 
 
-       #ASCBulletSlide{ 
-             title: 'Language support',
-             bullets: [
-                'Updated ST + syntax',
-                'Polymorphic Identifiers',
-                'Property Paths',
-                'Object Literals',
-                'Connector → ',
-                'Permanent Assignment |= ',
-             ]
-        }  ,
-
        #ASCChapterSlide{ 
                subtitle: 'Objective-SmallTalk',
                text: 'Demo'
@@ -111,12 +133,9 @@ controller := #ASCPresentationViewController{
              ]
         }  ,
 
-       ]
-}. 
-                  
-    
-controller view openInWindow:'Objective-S (HPI 2024)'.         <NSWindow: 0x138879c20> 
- 
+       ].
+   
+       
 file:/tmp/lastpage.tiff := (controller view snapshot)  
 
 controller view frame   
@@ -127,3 +146,4 @@ controller
     
 
 controller goToSlideAtIndex:0    
+ 
