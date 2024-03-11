@@ -4,9 +4,10 @@ scheme BlogSite {
     var postsList.
     -initWithBundle:aBundle {
 
-       this:postsList ←  #STTemplateStore{ bundle:aBundle, templateName: 'Site.html' } →  
-                         #STTemplateStore{ bundle: aBundle } →
-                         #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts/' }.
+       this:postsList ← 
+                #STTemplateStore{ bundle:aBundle, templateName: 'Site.html' } →  
+                #STTemplateStore{ bundle: aBundle } →
+                #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts/' }.
        self.
     }
 
@@ -41,6 +42,6 @@ scheme BlogSite {
     +testSelectors { [ 'testSomething' ]. }
 
     +<void>testSomething {
-         3 assertEqual: 3 msg:'not'.
+         3 assertEqual: 3 msg:'three should equal three'.
     }
 }

@@ -66,7 +66,7 @@ int main (int argc, const char *argv[])
 
 -main:args
 {
-    NSLog(@"window main:");
+//    NSLog(@"window main:");
     [[CLIApp sharedApplication] runFromCLI:self];
     return @(0);
 }

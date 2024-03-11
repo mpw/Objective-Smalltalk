@@ -1,30 +1,30 @@
 object VStack : #Stack {
-        #distribution: c:UIStackViewDistributionFillEqually ,
-        #axis: c:UILayoutConstraintAxisVertical
+        distribution: c:UIStackViewDistributionFillEqually ,
+        axis: c:UILayoutConstraintAxisVertical
 }.
 
 object HStack : #Stack {
-        #distribution: c:UIStackViewDistributionFillEqually ,
-        #axis: c:UILayoutConstraintAxisHorizontal
+        distribution: c:UIStackViewDistributionFillEqually ,
+        axis: c:UILayoutConstraintAxisHorizontal
 }.
 
 object Body : #Label{
-         #numberOfLines: 0,
-         #textColor: color:systemGray
+        numberOfLines: 0,
+        textColor: color:systemGray
 }.
 
 object Image : #UIImageView {
-        #contentMode: c:UIViewContentModeScaleAspectFit
+        contentMode: c:UIViewContentModeScaleAspectFit
 }.
 
 object Title : #Label{
-        #font: font:style/largeTitle ,
-        #textColor: color:white
+        font:      font:style/largeTitle ,
+        textColor: color:white
 }.
 
 object NumberField : #UITextField{
-     #textAlignment:  c:NSTextAlignmentRight ,
-     #borderStyle: c:UITextBorderStyleLine
+        textAlignment:  c:NSTextAlignmentRight ,
+        borderStyle:    c:UITextBorderStyleLine
 }.
 
 
