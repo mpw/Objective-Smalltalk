@@ -451,6 +451,7 @@
 		1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA749DF25F55664001AA6A8 /* MPWFontStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA749E225F55664001AA6A8 /* MPWFontStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA749E025F55664001AA6A8 /* MPWFontStore.m */; };
 		1FA79D57237B56830044D489 /* stapp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1FA79D56237B56830044D489 /* stapp.icns */; };
+		1FA7C16C2BA1A072007F869B /* objs-interop.py in Resources */ = {isa = PBXBuildFile; fileRef = 1FA7C1682BA1A072007F869B /* objs-interop.py */; };
 		1FA859BF1922320F00F52396 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */; };
 		1FA859EC1922A13B00F52396 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FA859F31923731900F52396 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2E6EFD142EF26E00B5C827 /* Cocoa.framework */; };
@@ -1335,6 +1336,7 @@
 		1FA749DF25F55664001AA6A8 /* MPWFontStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFontStore.h; sourceTree = "<group>"; };
 		1FA749E025F55664001AA6A8 /* MPWFontStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFontStore.m; sourceTree = "<group>"; };
 		1FA79D56237B56830044D489 /* stapp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = stapp.icns; sourceTree = "<group>"; };
+		1FA7C1682BA1A072007F869B /* objs-interop.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "objs-interop.py"; sourceTree = "<group>"; };
 		1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MPWExpression+autocomplete.m"; path = "../Stsh/Classes/MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
 		1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalkUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2197,6 +2199,7 @@
 			isa = PBXGroup;
 			children = (
 				1F75F7702B88B86B0075DE11 /* constant-webdav.py */,
+				1FA7C1682BA1A072007F869B /* objs-interop.py */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3828,6 +3831,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA7C16C2BA1A072007F869B /* objs-interop.py in Resources */,
 				1F75F7742B88B86B0075DE11 /* constant-webdav.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
