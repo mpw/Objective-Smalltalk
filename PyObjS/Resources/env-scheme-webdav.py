@@ -142,8 +142,15 @@ class DataArtifact(DAVNonCollection):
         return quote("path")
 
     def get_content(self):
-        return envscheme.at_(self.thePath)
-#        return io.BytesIO(b"Some data")
+#      return envscheme.at_(self.thePath)
+        print("get data for path {}",self.thePath)
+        stringVal = envscheme.at_(self.thePath)
+        print("string for path {} is {}",self.thePath,stringVal)
+        dataVal = stringVal.asData()
+        print("data for path {} is {}",self.thePath,dataVal)
+        pyData = io.BytesIO(dataVal)
+        print("python data for path {} is {}",self.thePath,pyData)
+        return pyData
 
 
 class DBResourceProvider(DAVProvider):
