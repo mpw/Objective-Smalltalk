@@ -5,5 +5,10 @@
 import objc
 from cheroot import wsgi
 from wsgidav.wsgidav_app import WsgiDAVApp
+from Cocoa import NSBundle
 
-print("Hello ObjS")
+objs = NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework")
+objs.load()
+
+envscheme = objc.lookUpClass("MPWEnvScheme").new()
+print(envscheme.at_("HOME"))
