@@ -1,14 +1,12 @@
-#!/opt/homebrew/opt/python@3.9/bin/python3.9
+#!env python3
+
 
 import re
 import sys
 
-sys.path.insert(0, '/opt/homebrew/lib/python3.9/site-packages/')
-sys.path.insert(0, '' )
 from cheroot import wsgi
 from wsgidav.wsgidav_app import WsgiDAVApp
 import logging
-import configargparse
 import os
 import io
 from urllib.parse import quote
