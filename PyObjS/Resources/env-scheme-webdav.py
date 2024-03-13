@@ -101,6 +101,7 @@ class DataArtifact(DAVNonCollection):
     def __init__(self, path, environ, db_collection):
         #        assert name in _artifactNames
         super().__init__(path, environ)
+        self.thePath = os.path.basename(os.path.normpath(path))
 
     def get_creation_date(self):
         return None
@@ -124,7 +125,9 @@ class DataArtifact(DAVNonCollection):
         return False
 
     def get_content_length(self):
-        return  9
+        print("path: ")
+        print(self.path)
+        return  envscheme.at_(self.thePath).length()
 
     def get_content_type(self):
         return "text/plain"
@@ -139,7 +142,8 @@ class DataArtifact(DAVNonCollection):
         return quote("path")
 
     def get_content(self):
-        return io.BytesIO(b"Some data")
+        return envscheme.at_(self.thePath)
+#        return io.BytesIO(b"Some data")
 
 
 class DBResourceProvider(DAVProvider):
