@@ -33,7 +33,8 @@ __docformat__ = "reStructuredText en"
 
 
 NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").load()
-envscheme = objc.lookUpClass("MPWEnvScheme").new()
+#envscheme = objc.lookUpClass("MPWEnvScheme").new()
+envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
 print(envscheme.at_("HOME"))
 
 class RootCollection(DAVCollection):
@@ -127,7 +128,7 @@ class DataArtifact(DAVNonCollection):
     def get_content_length(self):
         print("path: ")
         print(self.path)
-        return  envscheme.at_(self.thePath).length()
+        return  envscheme.at_(self.thePath).asData().length()
 
     def get_content_type(self):
         return "text/plain"
