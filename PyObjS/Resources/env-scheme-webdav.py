@@ -76,7 +76,7 @@ class DBCollection(DAVCollection):
         return {"type": "Category type"}
 
     def get_member_names(self):
-        return ['hello.txt']
+        return envscheme.at_(".").paths()
 
     def get_member(self, name):
         if name in self.get_member_names():
