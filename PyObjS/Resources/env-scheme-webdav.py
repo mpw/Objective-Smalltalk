@@ -3,8 +3,12 @@
 
 import re
 import sys
-import objc
+
+sys.path.append("/opt/homebrew/lib/python3.11/site-packages/")
+
+
 from Cocoa import NSBundle
+import objc
 
 from cheroot import wsgi
 from wsgidav.wsgidav_app import WsgiDAVApp
@@ -171,26 +175,28 @@ class DBResourceProvider(DAVProvider):
         return root.resolve("", path)
 
 
+def runServer():
 
-config = {
-    "host": "127.0.0.1",
-    "port": 8080,
-    "provider_mapping": {
-        "/": DBResourceProvider(
-            db_paths= ['env'],
-            allow_abspath=True
-        ),
-    },
-    "simple_dc": {"user_mapping": {"*": True}},
-    "http_authenticator": {},
-}
-app = WsgiDAVApp(config)
+    config = {
+        "host": "127.0.0.1",
+        "port": 8080,
+        "provider_mapping": {
+            "/": DBResourceProvider(
+                db_paths= ['env'],
+                allow_abspath=True
+            ),
+        },
+        "simple_dc": {"user_mapping": {"*": True}},
+        "http_authenticator": {},
+    }
+    app = WsgiDAVApp(config)
 
-server_args = {
-    "bind_addr": (config["host"], config["port"]),
-    "wsgi_app": app,
-    "timeout": 0.250,
-}
-server = wsgi.Server(**server_args)
-server.start()
+    server_args = {
+        "bind_addr": (config["host"], config["port"]),
+        "wsgi_app": app,
+        "timeout": 0.250,
+    }
+    server = wsgi.Server(**server_args)
+    server.start()
+
 

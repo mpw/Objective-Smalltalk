@@ -63,10 +63,29 @@
     [self runString:[[self frameworkResource:name category:@"py"] stringValue]];
 }
 
--(void)runWebDAV
+-(void)runConstantServingWebDAV
 {
     [self runBuiltinPythonScript:@"constant-webdav"];
 }
+
+-(void)loadSchemeWebDAV
+{
+    [self runBuiltinPythonScript:@"env-scheme-webdav"];
+}
+
+-mainModule
+{
+    PyObject* main_module = PyImport_AddModule("__main__");
+    return [STPythonObject pyObject:main_module];
+}
+
+
+-(void)runSchemeWebDAV
+{
+    [self loadSchemeWebDAV];
+    [[self mainModule][@"runServer"] call:nil];
+}
+
 
 @end
 
