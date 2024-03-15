@@ -2,4 +2,5 @@
 framework:PyObjS load
 py := STPython new.
 py loadSchemeWebDAV.
-py mainModule at:'runServer' | call:nil.
+stdout println: py mainModule asObject.
+py runWebDAV: scheme:defaults.

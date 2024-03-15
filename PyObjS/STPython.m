@@ -8,17 +8,28 @@
 #import "STPython.h"
 #import <Python/Python.h>
 #import "STPythonObject.h"
-
+#import "pyobjc-api.h"
 
 
 @implementation STPython
 {
+    PyObject *mainModule;
+}
+
+static NSMutableDictionary *params=nil;
+
+
++param:(NSString*)key
+{
+    return params[key];
 }
 
 -(instancetype)init
 {
     self=[super init];
     Py_Initialize();
+    mainModule=PyImport_AddModule("__main__");
+    params = [[NSMutableDictionary alloc] init];
     return self;
 }
 
@@ -75,14 +86,14 @@
 
 -mainModule
 {
-    PyObject* main_module = PyImport_AddModule("__main__");
-    return [STPythonObject pyObject:main_module];
+    return [STPythonObject pyObject:mainModule];
 }
 
 
--(void)runSchemeWebDAV
+-(void)runWebDAV:store
 {
     [self loadSchemeWebDAV];
+    params[@"store"]=store;
     [[self mainModule][@"runServer"] call:nil];
 }
 
