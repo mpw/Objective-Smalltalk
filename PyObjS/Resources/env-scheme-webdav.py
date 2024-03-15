@@ -41,6 +41,8 @@ NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").loa
 envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
 print(envscheme.at_("HOME"))
 
+scheme = None
+
 class RootCollection(DAVCollection):
     """Resolve top-level requests '/'."""
 
@@ -176,7 +178,9 @@ class DBResourceProvider(DAVProvider):
 
 
 def runServer():
-
+    global envscheme
+    st =  objc.lookUpClass("STPython")
+    envscheme = st.param_("store")
     config = {
         "host": "127.0.0.1",
         "port": 8080,

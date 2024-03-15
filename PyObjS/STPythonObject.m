@@ -72,6 +72,10 @@
         
         utf8=PyUnicode_AsUTF8AndSize(pyObject, &size);
         return [NSString stringWithUTF8String:utf8];
+    } else {
+        NSLog(@"other kind of object ");
+        PyObject *s=PyObject_Repr(pyObject);
+        return [[[self class] pyObject:s] asObject];
     }
     return nil;
 }
