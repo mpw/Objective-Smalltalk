@@ -68,6 +68,8 @@
 		1F23AD9C25BF45AE00F51B6F /* MPWColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */; };
 		1F23ADBF25C00E3900F51B6F /* MPWFontStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */; };
 		1F23ADC025C00E3900F51B6F /* MPWFontStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */; };
+		1F2588652BA452D800A59B61 /* pyobjc-compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2588602BA452D800A59B61 /* pyobjc-compat.h */; };
+		1F2588662BA452D800A59B61 /* pyobjc-api.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2588642BA452D800A59B61 /* pyobjc-api.h */; };
 		1F2924D726D69C380070A458 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2924D626D69C380070A458 /* MPWFoundation.framework */; };
 		1F2924DA26D8EC430070A458 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
 		1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7F021B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m */; };
@@ -1030,6 +1032,8 @@
 		1F23AD9A25BF45AE00F51B6F /* MPWColorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWColorStore.m; sourceTree = "<group>"; };
 		1F23ADBD25C00E3900F51B6F /* MPWFontStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFontStore.h; sourceTree = "<group>"; };
 		1F23ADBE25C00E3900F51B6F /* MPWFontStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFontStore.m; sourceTree = "<group>"; };
+		1F2588602BA452D800A59B61 /* pyobjc-compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pyobjc-compat.h"; sourceTree = "<group>"; };
+		1F2588642BA452D800A59B61 /* pyobjc-api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pyobjc-api.h"; sourceTree = "<group>"; };
 		1F27800120CB2D3D00D00AA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F2924D626D69C380070A458 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F29D7ED21B42BE500AB14D8 /* TestObjectiveSmalltalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestObjectiveSmalltalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2083,6 +2087,8 @@
 				1F6060022A22420700783E17 /* STPython.m */,
 				1F60600C2A2286E300783E17 /* STPythonObject.h */,
 				1F60600D2A2286E300783E17 /* STPythonObject.m */,
+				1F2588642BA452D800A59B61 /* pyobjc-api.h */,
+				1F2588602BA452D800A59B61 /* pyobjc-compat.h */,
 			);
 			path = PyObjS;
 			sourceTree = "<group>";
@@ -2949,6 +2955,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F60600E2A2286E300783E17 /* STPythonObject.h in Headers */,
+				1F2588652BA452D800A59B61 /* pyobjc-compat.h in Headers */,
+				1F2588662BA452D800A59B61 /* pyobjc-api.h in Headers */,
 				1F6060032A22420700783E17 /* STPython.h in Headers */,
 				1F605FFA2A2231D300783E17 /* PyObjS.h in Headers */,
 			);
