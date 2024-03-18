@@ -98,9 +98,7 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
 
 +(void)testCreateSimpleEntity
 {
-    NSString *path=@"/tmp/generatortest.sited";
     SailsGenerator *generator = [[self new] autorelease];
-    generator.path = path;
     NSString *expected = @"Post:STEntity {\n   var first. var last. \n}\n";
     NSString *generated = [generator makeEntityNamed:@"Post" superclassName:nil ivarNames:@[ @{ @"name": @"first"},@{ @"name": @"last"}  ] ];
     IDEXPECT(generated,expected, @"class for entity 'Post' with ivars 'first' and 'last'");
