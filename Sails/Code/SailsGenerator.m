@@ -7,6 +7,7 @@
 
 #import "SailsGenerator.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+#import <ObjectiveSmalltalk/MPWInstanceVariable.h>
 #import "STSiteBundle.h"
 
 
@@ -55,11 +56,18 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
 
 -(NSString*)makeEntityNamed:(NSString*)entityName superclassName:(NSString*)superclassName ivarNames:(NSArray*)ivarnames
 {
+    STClassDefinition *def=[[STClassDefinition new] autorelease];
+    def.name = entityName;
+    def.superclassName = superclassName ?: @"STEntity";
+    NSMutableArray *ivarDefs=[NSMutableArray array];
+    for ( NSString *name in ivarnames ) {
+        MPWInstanceVariable *vardef=[[MPWInstanceVariable new] autorelease];
+        vardef.name = name;
+        [ivarDefs addObject:vardef];
+    }
+    def.instanceVariableDescriptions=ivarDefs;
     MPWStringTemplate *template=[MPWStringTemplate templateWithString:[[self frameworkResource:@"Entity" category:@"st"] stringValue]];
-    superclassName = superclassName ?: @"STEntity";
-    NSDictionary *templateParams = @{ @"class": entityName, @"superclass": superclassName,
-                                      @"ivars": ivarnames };
-    NSString *result = [template evaluateWith:templateParams];
+    NSString *result = [template evaluateWith:def];
     return result;
 }
 
@@ -100,7 +108,7 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
 {
     SailsGenerator *generator = [[self new] autorelease];
     NSString *expected = @"Post:STEntity {\n   var first. var last. \n}\n";
-    NSString *generated = [generator makeEntityNamed:@"Post" superclassName:nil ivarNames:@[ @{ @"name": @"first"},@{ @"name": @"last"}  ] ];
+    NSString *generated = [generator makeEntityNamed:@"Post" superclassName:nil ivarNames:@[  @"first", @"last" ] ];
     IDEXPECT(generated,expected, @"class for entity 'Post' with ivars 'first' and 'last'");
 }
 

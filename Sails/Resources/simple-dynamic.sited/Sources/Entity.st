@@ -1,3 +1,3 @@
-{class}:{superclass} \{
-   {#ivars}var {name}. {/ivars}
+{name}:{superclassName} \{
+   {#instanceVariableDescriptions}var {name}. {/instanceVariableDescriptions}
 }
