@@ -89,6 +89,12 @@
 
 @end
 
+@implementation NSNumber(asPyObject)
+
+-asPythonObject {   return [STPythonObject pyObject:PyLong_FromLong(self.longValue)]; }
+
+@end
+
 @implementation NSString(asPyObject)
 
 -asPythonObject {   return [STPythonObject pyString:self]; }
