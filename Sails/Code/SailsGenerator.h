@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class STSiteBundle;
+@class STSiteBundle,STClassDefinition;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) STSiteBundle *bundle;
 
 -(void)makeSiteOfType:(NSString*)siteType;
+-(NSString*)createEntityCodeForClassDescription:(STClassDefinition*)def;
 -(NSString*)makeEntityNamed:(NSString*)entityName superclassName:(nullable NSString*)superclassName ivarNames:(NSArray*)ivarnames;
 
 -(BOOL)generate;

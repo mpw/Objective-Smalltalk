@@ -54,6 +54,12 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     [self copySources:@"DynamicSite.st"];
 }
 
+-(NSString*)createEntityCodeForClassDescription:(STClassDefinition*)def
+{
+    MPWStringTemplate *template=[MPWStringTemplate templateWithString:[[self frameworkResource:@"Entity" category:@"st"] stringValue]];
+    return [template evaluateWith:def];
+}
+
 -(NSString*)makeEntityNamed:(NSString*)entityName superclassName:(NSString*)superclassName ivarNames:(NSArray*)ivarnames
 {
     STClassDefinition *def=[[STClassDefinition new] autorelease];
@@ -66,9 +72,8 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
         [ivarDefs addObject:vardef];
     }
     def.instanceVariableDescriptions=ivarDefs;
-    MPWStringTemplate *template=[MPWStringTemplate templateWithString:[[self frameworkResource:@"Entity" category:@"st"] stringValue]];
-    NSString *result = [template evaluateWith:def];
-    return result;
+    
+    return [self createEntityCodeForClassDescription:def];
 }
 
 -(void)makeSiteOfType:(NSString*)siteType
