@@ -41,7 +41,7 @@ NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").loa
 envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
 print(envscheme.at_("HOME"))
 
-scheme = None
+scheme = envscheme
 
 class RootCollection(DAVCollection):
     """Resolve top-level requests '/'."""
@@ -177,13 +177,13 @@ class DBResourceProvider(DAVProvider):
         return root.resolve("", path)
 
 
-def runServer():
-    global envscheme
-    st =  objc.lookUpClass("STPython")
-    envscheme = st.param_("store")
+def runServer(port):
+#    global envscheme
+#    st =  objc.lookUpClass("STPython")
+#    envscheme = st.param_("store")
     config = {
         "host": "127.0.0.1",
-        "port": 8080,
+        "port": port,
         "provider_mapping": {
             "/": DBResourceProvider(
                 db_paths= ['env'],
@@ -201,6 +201,8 @@ def runServer():
         "timeout": 0.250,
     }
     server = wsgi.Server(**server_args)
-    server.start()
-
+    print("will start")
+    didStart = server.start()
+    printf("did start")
+    print(didStart)
 
