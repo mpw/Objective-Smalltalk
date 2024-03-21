@@ -41,7 +41,7 @@ NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").loa
 envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
 print(envscheme.at_("HOME"))
 
-scheme = envscheme
+scheme = None
 
 class RootCollection(DAVCollection):
     """Resolve top-level requests '/'."""
@@ -83,7 +83,7 @@ class DBCollection(DAVCollection):
         return {"type": "Category type"}
 
     def get_member_names(self):
-        return envscheme.at_(".").paths()
+        return scheme.at_(".").paths()
 
     def get_member(self, name):
         if name in self.get_member_names():
@@ -134,7 +134,7 @@ class DataArtifact(DAVNonCollection):
     def get_content_length(self):
         print("path: ")
         print(self.path)
-        return  envscheme.at_(self.thePath).asData().length()
+        return  scheme.at_(self.thePath).asData().length()
 
     def get_content_type(self):
         return "text/plain"
@@ -149,9 +149,9 @@ class DataArtifact(DAVNonCollection):
         return quote("path")
 
     def get_content(self):
-#      return envscheme.at_(self.thePath)
+#      return scheme.at_(self.thePath)
         print("get data for path {}",self.thePath)
-        stringVal = envscheme.at_(self.thePath)
+        stringVal = scheme.at_(self.thePath)
         print("string for path {} is {}",self.thePath,stringVal)
         dataVal = stringVal.asData()
         print("data for path {} is {}",self.thePath,dataVal)
@@ -178,9 +178,9 @@ class DBResourceProvider(DAVProvider):
 
 
 def runServer(port):
-#    global envscheme
-#    st =  objc.lookUpClass("STPython")
-#    envscheme = st.param_("store")
+    global scheme
+    st =  objc.lookUpClass("STPython")
+    scheme = st.param_("store")
     config = {
         "host": "127.0.0.1",
         "port": port,
