@@ -83,7 +83,7 @@ class DBCollection(DAVCollection):
         return {"type": "Category type"}
 
     def get_member_names(self):
-        return scheme.at_(".").paths()
+        return scheme.pathsAtReference_("/")
 
     def get_member(self, name):
         if name in self.get_member_names():
@@ -132,9 +132,10 @@ class DataArtifact(DAVNonCollection):
         return False
 
     def get_content_length(self):
-        print("path: ")
-        print(self.path)
-        return  scheme.at_(self.thePath).asData().length()
+        print("get size for path: ",self.thePath)
+        size =  scheme.at_(self.thePath).asData().length()
+        print("size: ",size)
+        return size
 
     def get_content_type(self):
         return "text/plain"
@@ -149,14 +150,12 @@ class DataArtifact(DAVNonCollection):
         return quote("path")
 
     def get_content(self):
-#      return scheme.at_(self.thePath)
-        print("get data for path {}",self.thePath)
-        stringVal = scheme.at_(self.thePath)
-        print("string for path {} is {}",self.thePath,stringVal)
-        dataVal = stringVal.asData()
-        print("data for path {} is {}",self.thePath,dataVal)
+        print("get data for path ",self.thePath)
+        baseVal = scheme.at_(self.thePath)
+        dataVal = baseVal.asData()
+        print("data retrieved has length ",dataVal.length)
         pyData = io.BytesIO(dataVal)
-        print("python data for path {} is {}",self.thePath,pyData)
+#        print("python data for path {} is {}",self.thePath,pyData)
         return pyData
 
 
