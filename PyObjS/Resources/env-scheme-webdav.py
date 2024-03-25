@@ -79,12 +79,13 @@ class DBCollection(DAVCollection):
         self, path, environ
     ):
         super().__init__(path, environ)
+        self.thePath = "/"
 
     def get_display_info(self):
         return {"type": "Category type"}
 
     def get_member_names(self):
-        return scheme.pathsAtReference_("/")
+        return scheme.pathsAtReference_(self.thePath)
 
     def get_member(self, name):
         if name in self.get_member_names():
@@ -202,7 +203,7 @@ def runServer(port):
         "timeout": 0.250,
     }
     server = wsgi.Server(**server_args)
-    print("will start")
+    print("will start at port: ",port)
     didStart = server.start()
     printf("did start")
     print(didStart)
