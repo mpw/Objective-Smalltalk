@@ -42,6 +42,7 @@ envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
 print(envscheme.at_("HOME"))
 
 scheme = None
+mountpoint = "env"
 
 class RootCollection(DAVCollection):
     """Resolve top-level requests '/'."""
@@ -51,7 +52,7 @@ class RootCollection(DAVCollection):
 
     @property
     def _member_names(self):
-        r = tuple([ "env"] )
+        r = tuple([ mountpoint ] )
         return r
 
     def get_member_names(self):
@@ -177,9 +178,10 @@ class DBResourceProvider(DAVProvider):
 
 
 def runServer(port):
-    global scheme
+    global scheme,mountpoint
     st =  objc.lookUpClass("STPython")
     scheme = st.param_("store")
+    mountpoint = st.param_("mountpoint")
     config = {
         "host": "127.0.0.1",
         "port": port,
