@@ -90,11 +90,11 @@ static NSMutableDictionary *params=nil;
 }
 
 
--(void)runWebDAV:store port:(int)portNo
+-(void)runWebDAV:store port:(int)portNo at:(NSString*)mountpoint
 {
     [self loadSchemeWebDAV];
     params[@"store"]=store;
-    params[@"mountpoint"]=@"fromst";
+    params[@"mountpoint"]=mountpoint;
     [[self mainModule][@"runServer"] call:@(portNo)];
 }
 
