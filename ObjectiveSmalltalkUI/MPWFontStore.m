@@ -73,7 +73,9 @@ lazyAccessor(NSDictionary*, styles, setStyles, createStyles)
 -(id)at:(id<MPWReferencing>)aReference
 {
     NSArray<NSString*> *path=[aReference relativePathComponents];
-    if ( path.count == 2 ) {
+    if ( [aReference isRoot] || path.count ==0 || (path.count == 1 && [path.firstObject isEqual:@"."] )) {
+        return [[NSFontManager sharedFontManager] availableFontFamilies];
+    } else if ( path.count == 2 ) {
         
         if ( [path[0] isEqual:@"style"]) {
             NSString *style=path[1];
@@ -91,9 +93,7 @@ lazyAccessor(NSDictionary*, styles, setStyles, createStyles)
             }
             return [NSFont fontWithName:name size:[path[1] floatValue]];
         }
-    } else if ( [aReference isRoot] || path.count ==0 || (path.count == 1 && [path.firstObject isEqual:@"."] )) {
-        return [[NSFontManager sharedFontManager] availableFontFamilies];
-    }
+    } 
     return nil;
 }
 
