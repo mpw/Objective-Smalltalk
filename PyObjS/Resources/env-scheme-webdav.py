@@ -85,13 +85,23 @@ class DBCollection(DAVCollection):
         return {"type": "Category type"}
 
     def get_member_names(self):
-        return scheme.pathsAtReference_(self.thePath)
+        paths = scheme.pathsAtReference_(self.thePath)
+        paths = list(filter( lambda x: not x.startswith("."), paths))
+        return paths
 
     def get_member(self, name):
         if name in self.get_member_names():
-            return DataArtifact(
-                path=join_uri(self.path, name), environ=self.environ, db_collection=self
-            )
+#            path=join_uri(self.path, name)
+            path=join_uri("", name)
+            print("combined path: ",path)
+            hasChildren = scheme.hasChildren_(path)
+            print("hasChildren: ",hasChildren)
+            if hasChildren:
+               return DBCollection(path=path, environ=self.environ)
+            else:
+               return DataArtifact(
+                   path=path, environ=self.environ, db_collection=self
+               )
         return None
 
 
@@ -105,7 +115,7 @@ class DBCollection(DAVCollection):
 
 
 class DataArtifact(DAVNonCollection):
-    """A virtual file, with hard-coded data """
+    """ Data  """
 
     def __init__(self, path, environ, db_collection):
         #        assert name in _artifactNames
