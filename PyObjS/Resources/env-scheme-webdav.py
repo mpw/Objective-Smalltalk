@@ -176,7 +176,7 @@ class DBResourceProvider(DAVProvider):
     DAV provider that serves a VirtualResource derived structure.
     """
 
-    def __init__(self, db_paths=[], allow_abspath=False):
+    def __init__(self, allow_abspath=False):
         print("simple DAVProvider init")
         self.allow_abspath=allow_abspath
         super().__init__()
@@ -198,7 +198,6 @@ def runServer(port):
         "port": port,
         "provider_mapping": {
             "/": DBResourceProvider(
-                db_paths= ['env'],
                 allow_abspath=True
             ),
         },
