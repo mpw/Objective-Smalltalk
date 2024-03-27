@@ -32,14 +32,15 @@ from wsgidav.util import join_uri
 # (c) 2024-2024 Adam Obeng
 # Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 
+logging.basicConfig(level=logging.ERROR)
 
 __docformat__ = "reStructuredText en"
 
 
-NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").load()
+#NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").load()
 #envscheme = objc.lookUpClass("MPWEnvScheme").new()
-envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
-print(envscheme.at_("HOME"))
+#envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
+#print(envscheme.at_("HOME"))
 
 scheme = None
 mountpoint = "env"
@@ -56,12 +57,10 @@ class RootCollection(DAVCollection):
         return r
 
     def get_member_names(self):
-        print("RootCollection get_member_names")
         r = self._member_names
         return r
 
     def get_member(self, name):
-        print("RootCollection get_member: ",name)
         if name in self._member_names:
             return DBCollection(
                 path=join_uri(self.path, name),
@@ -98,20 +97,13 @@ class DBCollection(DAVCollection):
         return paths
 
     def get_member(self, name):
-        print("get_member with name:",name)
-        print("for DBCollection with path:",self.path)
-        print("            processed path:",self.thePath)
         if name in self.get_member_names():
             path=join_uri(self.path, name)
             checkPath = path
             if ( len(checkPath) > len(mountpoint) + 1):
                  checkPath=removeMountpointFromPath(path)
 #            path=join_uri("", name)
-            print("combined path: ",path)
-            print("checkPath: ",checkPath)
-            print("combined path using thePath: ",join_uri(self.thePath, name))
             hasChildren = scheme.hasChildren_(checkPath)
-            print("hasChildren: ",hasChildren)
             if hasChildren:
                return DBCollection(path=path, environ=self.environ)
             else:
@@ -136,9 +128,7 @@ class DataArtifact(DAVNonCollection):
     def __init__(self, path, environ, db_collection):
         #        assert name in _artifactNames
         super().__init__(path, environ)
-        print("DataArtifact called with with path: ",path)
         self.thePath = removeMountpointFromPath( path )
-        print("DataArtifact thePath after removing mount point: ",self.thePath)
 
     def get_creation_date(self):
         return None
@@ -162,9 +152,7 @@ class DataArtifact(DAVNonCollection):
         return False
 
     def get_content_length(self):
-        print("get size for path: ",self.thePath)
         size =  scheme.at_(self.thePath).asData().length()
-        print("size: ",size)
         return size
 
     def get_content_type(self):
@@ -180,10 +168,8 @@ class DataArtifact(DAVNonCollection):
         return quote("path")
 
     def get_content(self):
-        print("get data for path ",self.thePath)
         baseVal = scheme.at_(self.thePath)
         dataVal = baseVal.asData()
-        print("data retrieved has length ",dataVal.length)
         pyData = io.BytesIO(dataVal)
 #        print("python data for path {} is {}",self.thePath,pyData)
         return pyData
@@ -195,18 +181,17 @@ class DBResourceProvider(DAVProvider):
     """
 
     def __init__(self, db_paths=[], allow_abspath=False):
-        print("simple DAVProvider init")
         self.allow_abspath=allow_abspath
         super().__init__()
 
     def get_resource_inst(self, path, environ):
-        print("get_resource_inst for path:", path)
         self._count_get_resource_inst += 1
         root = RootCollection(environ)
         return root.resolve("", path)
 
 
 def runServer(port):
+    logging.basicConfig(level=logging.ERROR)
     global scheme,mountpoint
     st =  objc.lookUpClass("STPython")
     scheme = st.param_("store")
@@ -221,6 +206,7 @@ def runServer(port):
             ),
         },
         "simple_dc": {"user_mapping": {"*": True}},
+        "verbose": 0,
         "http_authenticator": {},
     }
     app = WsgiDAVApp(config)
