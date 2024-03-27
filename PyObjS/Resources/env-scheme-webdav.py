@@ -79,7 +79,18 @@ class DBCollection(DAVCollection):
         self, path, environ
     ):
         super().__init__(path, environ)
-        self.thePath = "/"
+        print("================>>")
+        print("collection with path: ",path)
+        prefix = "/" + mountpoint
+        print("prefix:", prefix)
+        if  path.startswith(prefix):
+            print("removing prefix:", prefix)
+            path = path[len(prefix):]
+            print("path after removal:", path)
+        print("collection path after removing mountpoint:", path)
+        print("<<================")
+
+        self.thePath = path
 
     def get_display_info(self):
         return {"type": "Category type"}
