@@ -69,6 +69,12 @@ class RootCollection(DAVCollection):
             )
         return None
 
+def removeMountpointFromPath( path ):
+    prefix = "/" + mountpoint
+    if  path.startswith(prefix):
+        path = path[len(prefix):]
+    return path
+
 
 class DBCollection(DAVCollection):
     """Top level database, contains tables"""
@@ -79,18 +85,8 @@ class DBCollection(DAVCollection):
         self, path, environ
     ):
         super().__init__(path, environ)
-        print("================>>")
-        print("collection with path: ",path)
-        prefix = "/" + mountpoint
-        print("prefix:", prefix)
-        if  path.startswith(prefix):
-            print("removing prefix:", prefix)
-            path = path[len(prefix):]
-            print("path after removal:", path)
-        print("collection path after removing mountpoint:", path)
-        print("<<================")
+        self.thePath = removeMountpointFromPath(path)
 
-        self.thePath = path
 
     def get_display_info(self):
         return {"type": "Category type"}
@@ -98,9 +94,13 @@ class DBCollection(DAVCollection):
     def get_member_names(self):
         paths = scheme.pathsAtReference_(self.thePath)
         paths = list(filter( lambda x: not x.startswith("."), paths))
+        paths = map( os.path.basename, paths )
         return paths
 
     def get_member(self, name):
+        print("get_member with name:",name)
+        print("for DBCollection with path:",self.path)
+        print("            processed path:",self.thePath)
         if name in self.get_member_names():
             path=join_uri(self.path, name)
 #            path=join_uri("", name)
@@ -131,7 +131,9 @@ class DataArtifact(DAVNonCollection):
     def __init__(self, path, environ, db_collection):
         #        assert name in _artifactNames
         super().__init__(path, environ)
-        self.thePath = os.path.basename(os.path.normpath(path))
+        print("DataArtifact called with with path: ",path)
+        self.thePath = removeMountpointFromPath( path )
+        print("DataArtifact thePath after removing mount point: ",self.thePath)
 
     def get_creation_date(self):
         return None
