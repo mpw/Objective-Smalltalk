@@ -36,9 +36,9 @@ from wsgidav.util import join_uri
 __docformat__ = "reStructuredText en"
 
 
-NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").load()
+#NSBundle.bundleWithPath_("/Library/Frameworks/ObjectiveSmalltalk.framework").load()
 #envscheme = objc.lookUpClass("MPWEnvScheme").new()
-envscheme = objc.lookUpClass("MPWDefaultsScheme").new()
+envscheme = objc.lookUpClass("MPWEnvScheme").new()
 print(envscheme.at_("HOME"))
 
 scheme = None
@@ -48,7 +48,7 @@ class RootCollection(DAVCollection):
     """Resolve top-level requests '/'."""
 
     def __init__(self, environ):
-        super().__init__("/", environ)
+        super().__init__("", environ)
 
     @property
     def _member_names(self):
@@ -56,8 +56,8 @@ class RootCollection(DAVCollection):
         return r
 
     def get_member_names(self):
-        print("RootCollection get_member_names")
         r = self._member_names
+        print("RootCollection get_member_names: ",r)
         return r
 
     def get_member(self, name):
@@ -79,14 +79,16 @@ class DBCollection(DAVCollection):
         self, path, environ
     ):
         super().__init__(path, environ)
-        self.thePath = "/"
+        self.thePath = path
 
     def get_display_info(self):
         return {"type": "Category type"}
 
     def get_member_names(self):
         paths = scheme.pathsAtReference_(self.thePath)
-        paths = list(filter( lambda x: not x.startswith("."), paths))
+        print("paths from scheme: ",paths)
+#        paths = list(filter( lambda x: not x.startswith("."), paths))
+#        print("paths after filtering dotfiles: ",paths)
         return paths
 
     def get_member(self, name):
@@ -121,14 +123,18 @@ class DataArtifact(DAVNonCollection):
         #        assert name in _artifactNames
         super().__init__(path, environ)
         self.thePath = os.path.basename(os.path.normpath(path))
+#        self.thePath = path
 
     def get_creation_date(self):
+        print("get_creation_date for: ",self.thePath)
         return None
 
     def get_display_name(self):
+        print("get_display_name: ",self.name)
         return self.name
 
     def get_display_info(self):
+        print("get_display_info for: ",self.thePath)
         raise NotImplementedError
 
     def get_etag(self):
@@ -145,30 +151,40 @@ class DataArtifact(DAVNonCollection):
 
     def get_content_length(self):
         print("get size for path: ",self.thePath)
-        size =  scheme.at_(self.thePath).asData().length()
-        print("size: ",size)
+        data =  scheme.at_(self.thePath)
+        size = 0
+        if data != None:
+            size = data.asData().length()
+            print("size: ",size)
         return size
 
     def get_content_type(self):
+        print("get_content_type for: ",self.thePath)
         return "text/plain"
 
     def get_display_info(self):
+        print("get_display_info for: ",self.thePath)
         return {"type": "Virtual info file"}
 
     def prevent_locking(self):
+        print("prevent_locking for: ",self.thePath)
         return True
 
     def get_ref_url(self):
-        return quote("path")
+        print("get_ref_url for: ",quote(self.thePath))
+        return quote(self.path)
 
     def get_content(self):
         print("get data for path ",self.thePath)
         baseVal = scheme.at_(self.thePath)
-        dataVal = baseVal.asData()
-        print("data retrieved has length ",dataVal.length)
-        pyData = io.BytesIO(dataVal)
+        if baseVal != None:
+           dataVal = baseVal.asData()
+           print("data retrieved has length ",dataVal.length)
+           pyData = io.BytesIO(dataVal)
 #        print("python data for path {} is {}",self.thePath,pyData)
-        return pyData
+           return pyData
+        else:
+           return io.BytesIO(b"")
 
 
 class DBResourceProvider(DAVProvider):
@@ -182,9 +198,14 @@ class DBResourceProvider(DAVProvider):
         super().__init__()
 
     def get_resource_inst(self, path, environ):
+        global scheme
         print("get_resource_inst for path:", path)
         self._count_get_resource_inst += 1
+        if path.startswith( mountpoint ):
+            path = path[mountpoint.length:]
+
         root = RootCollection(environ)
+        
         return root.resolve("", path)
 
 
