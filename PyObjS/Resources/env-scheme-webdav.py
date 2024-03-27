@@ -103,9 +103,14 @@ class DBCollection(DAVCollection):
         print("            processed path:",self.thePath)
         if name in self.get_member_names():
             path=join_uri(self.path, name)
+            checkPath = path
+            if ( len(checkPath) > len(mountpoint) + 1):
+                 checkPath=removeMountpointFromPath(path)
 #            path=join_uri("", name)
             print("combined path: ",path)
-            hasChildren = scheme.hasChildren_(name)
+            print("checkPath: ",checkPath)
+            print("combined path using thePath: ",join_uri(self.thePath, name))
+            hasChildren = scheme.hasChildren_(checkPath)
             print("hasChildren: ",hasChildren)
             if hasChildren:
                return DBCollection(path=path, environ=self.environ)
