@@ -206,7 +206,7 @@ def runServer(port):
             ),
         },
         "simple_dc": {"user_mapping": {"*": True}},
-        "verbose": 0,
+        "verbose": 1,
         "http_authenticator": {},
     }
     app = WsgiDAVApp(config)
