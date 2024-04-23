@@ -5,29 +5,23 @@ class Task {
 	var id.
 	var <bool> done.
 	var title.
-
+        -stringId { this:id stringValue. }
 	-description { "Task: {this:title} done: {this:done}". }
 }
 
-taskList ← #( #Task{ title: 'Clean Room', done: false }, #Task{ title: 'Check Twitter', done: true } ).
+taskList ← #( #Task{ id:0, title: 'Clean Room', done: false }, #Task{ id:1, title: 'Check Twitter', done: true } ).
 
 scheme todo : MPWMappingStore {
 	var taskDict.
-	var taskList.
+        -taskList {
+           this:taskDict allValues.
+        }
 	-<void>setNewTaskList:aList {
-		d := NSMutableDictionary dictionary.
-		i := 0.
-		aList do: { :task |
-			task setId:i.  i := i+1.
-			d[task id stringValue] := task.
-		}.
-		this:taskDict := d.
-		this:taskList := aList.
-		stdout println: this:taskDict.
+		this:taskDict := aList mutableDictionaryByKey:'stringId'.
 	}
 	/tasks { 
 	   get { 
-			this:taskList.
+			self taskList.
 		}
 	}
 	/task/:id {
@@ -40,14 +34,14 @@ scheme todo : MPWMappingStore {
 		}
 	}
 	-<void>persist {
-		source:tasks := this:taskList.
+		source:tasks := self taskList.
 	}
 }.
 
-todo := #todo{ #newTaskList: taskList }.
-json := #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
+todo ← #todo{ #newTaskList: taskList }.
+json ← #MPWJSONConverterStore{  #up: true, #converterClass: class:Task }.
 json → todo → #MPWJSONConverterStore{  #converterClass: class:Task } → ref:file:/tmp/tasks/ asScheme.
-server := #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
+server ← #MPWSchemeHttpServer{ #scheme: json, #port: 8082 }.
 server start.
 stdout println:'number of tasks: ', todo taskList count stringValue.
 stdout println:'port: ', server port stringValue.
