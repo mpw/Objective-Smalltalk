@@ -3,4 +3,4 @@
 
 text ← #NSTextField{ frame:(180@24) }.
 
-text → { :hi | stdout println:hi. }.
+text → { stdout println:$0. }.
