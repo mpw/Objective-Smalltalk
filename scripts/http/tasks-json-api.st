@@ -9,7 +9,7 @@ class Task {
 	-description { "Task: {this:title} done: {this:done}". }
 }
 
-taskList ← #( #Task{ id:0, title: 'Clean Room', done: false }, #Task{ id:1, title: 'Check Twitter', done: true } ).
+taskList ← #( #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, title: 'Write code', done: true } ).
 
 scheme todo : MPWMappingStore {
 	var taskDict.

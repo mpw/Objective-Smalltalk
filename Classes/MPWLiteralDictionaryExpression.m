@@ -77,7 +77,10 @@
 
 }
 
-
+//---- FIXME:  the way the template chain is currently evaluated
+//             fields in parent templates have precedence
+//             this is almost certainly wrong, so fix to
+//             evaluate in reverse order
 
 -(id)evaluateIn:(id)aContext
 {
@@ -85,11 +88,14 @@
     MPWScheme *templates=[aContext schemeForName:@"template"];
     Class baseClass=[NSDictionary class];
     id factory=[self factoryForContext:aContext];
-    NSMutableDictionary *baseDictionary=nil;
-    MPWLiteralDictionaryExpression *template = [templates at:self.literalClassName];
-    if ( template ) {
+    NSMutableDictionary *baseDictionary=[NSMutableDictionary dictionary];
+    NSString *templateName = self.literalClassName;
+    MPWLiteralDictionaryExpression *template = [templates at:templateName];
+    while ( template ) {
         factory=[template factoryForContext:aContext];
-        baseDictionary=(NSMutableDictionary*)[template dictionaryForLiteralInContext:aContext class:[NSMutableDictionary class]];
+        [baseDictionary addEntriesFromDictionary:[template dictionaryForLiteralInContext:aContext class:[NSMutableDictionary class]]];
+        templateName = [template literalClassName];
+        template = [templates at:templateName];
     }
     if ( self.literalClassName && !factory ) {
         [NSException raise:@"classnotfound" format:@"Class '%@ not found in literal object expression",self.literalClassName];
@@ -120,3 +126,5 @@
 }
 
 @end
+
+
