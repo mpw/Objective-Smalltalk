@@ -17,7 +17,7 @@
 
 -(id)mapRetrievedObject:(id)anObject forReference:(id<MPWReferencing>)aReference
 {
-    NSLog(@"mapRetrievedObject: %@ forReference: %@",anObject,aReference);
+//    NSLog(@"mapRetrievedObject: %@ forReference: %@",anObject,aReference);
     anObject = [anObject performSelector:@selector(TIFFRepresentation)];
     return [UIImage imageWithData:anObject];
 }

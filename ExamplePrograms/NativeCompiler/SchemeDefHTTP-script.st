@@ -1,4 +1,4 @@
-#!env set
+#!env st
 framework:ObjectiveHTTPD load.
 scheme Hello 
 {

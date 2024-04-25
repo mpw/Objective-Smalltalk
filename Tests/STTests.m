@@ -1161,7 +1161,7 @@
 +(void)testNestedVarExprWithPathInMethod
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= { self:a/{param1}. }}} "];
+    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { get { param. }} /b/:param1  { get { self:a/{param1}. }}} "];
     [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
     id result=[compiler evaluateScriptString:@"n:a/test1"];
     IDEXPECT( result, @"test1", @"nested expr result1");
@@ -1172,7 +1172,7 @@
 +(void)testNestedVarExprWithPathInBlockInMethod
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { |= { param. }} /b/:param1  { |= {  { :blockparam |  self:a/{blockparam} } value:param1. }}} "];
+    [compiler evaluateScriptString:@"scheme NestedVarPaths {  /a/:param { get { param. }} /b/:param1  { get {  { :blockparam |  self:a/{blockparam} } value:param1. }}} "];
     [compiler evaluateScriptString:@"scheme:n := NestedVarPaths scheme."];
     id result=[compiler evaluateScriptString:@"n:a/test1"];
     IDEXPECT( result, @"test1", @"nested expr result1");
@@ -1183,7 +1183,7 @@
 +(void)testSelfSchemeInSchemeDefintions
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"scheme SelfSchemeTester { /a { |= { 3. } } /b { |= { self:a }}}"];
+    [compiler evaluateScriptString:@"scheme SelfSchemeTester { /a { get { 3. } } /b { get { self:a }}}"];
     [compiler evaluateScriptString:@"scheme:s := SelfSchemeTester scheme."];
     id result=[compiler evaluateScriptString:@"s:b."];
     IDEXPECT(result, @(3), @"b via self:a");
@@ -1397,7 +1397,7 @@
 +(void)testMappingStoreCanReferToSourceAsScheme
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"scheme PropertyTestClass10 : MPWMappingStore {  /propertyA { |= {  source:a. }}} "];
+    [compiler evaluateScriptString:@"scheme PropertyTestClass10 : MPWMappingStore {  /propertyA { get {  source:a. }}} "];
     [compiler evaluateScriptString:@"scheme:d := MPWDictStore store."];
     [compiler evaluateScriptString:@"scheme:m := PropertyTestClass10 storeWithSource: scheme:d."];
     [compiler evaluateScriptString:@"d:a := 3."];
