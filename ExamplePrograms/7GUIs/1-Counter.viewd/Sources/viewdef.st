@@ -1,9 +1,8 @@
-count ← 1.
-
+init:model:count ← 1.
 button ← #Button{ title: 'count' }.
-button → { count ← count + 1. protocol:ModelDidChange notify. }.
+button → { model:count ← model:count + 1. }.
 
 #Grid{ #rows: [   
- [ #Label{  ref:  ref:var:count  }, button ]
+ [ #Label{  ref:  ref:model:count  }, button ]
 ] }. 
-  
+   
