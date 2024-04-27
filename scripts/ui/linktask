@@ -1,0 +1,7 @@
+#!env st
+framework:ObjSTNative load.
+
+# link the Tasks.i file, compile with cc -c Tasks.m
+
+compiler := STNativeCompiler compiler.
+compiler linkObjects: [ 'Tasks' ] toSharedLibrary:'tasks.dylib' inDir: nil withFrameworks:[ 'Foundation' ]
