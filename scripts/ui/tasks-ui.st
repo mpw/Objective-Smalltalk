@@ -1,9 +1,8 @@
 #!env stui
 #-taskstable
-#dl:tasks.dylib load
 framework:Sails load
 
-class Task : STEntity {
+class Task : STEntity  {
    var title.
    var done.
 }
@@ -14,9 +13,6 @@ taskList ← #( #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, 
 stdout println:'hi'.
 stdout println: taskList.
 
-table :=  #MPWTableView{items: taskList }.
-stdout println:table.
-window ← #NSWindow{ frame:(600@300 extent:200@105),title:'Tasks', views:#[table]}.
-stdout println:window.
-app runFromCLI:window.
+table ← #MPWTableView{items: taskList  }.
 
+table inScrollView:(200@400 extent: 500@600).

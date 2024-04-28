@@ -29,6 +29,12 @@
     return self;
 }
 
+-allKeys
+{
+    NSArray *ivarNames =  [[[[self class] instanceVariables] collect] name];
+    return [ivarNames subarrayWithRange:NSMakeRange(2, ivarNames.count - 2 )];
+}
+
 -copyWithZone:aZone
 {
     return [self retain];
