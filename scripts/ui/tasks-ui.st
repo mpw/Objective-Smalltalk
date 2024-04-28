@@ -1,6 +1,12 @@
 #!env stui
 #-taskstable
-dl:tasks.dylib load
+#dl:tasks.dylib load
+framework:Sails load
+
+class Task : STEntity {
+   var title.
+   var done.
+}
 
 
 taskList ← #( #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, title: 'Write code', done: true } ).
