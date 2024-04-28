@@ -29,6 +29,11 @@
     return self;
 }
 
+-copyWithZone:aZone
+{
+    return [self retain];
+}
+
 -(void)dealloc
 {
     [super dealloc];
