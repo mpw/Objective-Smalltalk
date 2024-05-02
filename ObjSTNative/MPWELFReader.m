@@ -7,6 +7,7 @@
 
 #import "MPWELFReader.h"
 #import "MPWELFSection.h"
+#import <MPWFoundation/MPWFoundation.h>
 
 #include "elf.h"
 
@@ -17,6 +18,27 @@
 @end
 
 @implementation MPWELFReader
+{
+    MPWELFSection *stringTable;
+}
+
+lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
+
+-(MPWELFSection*)findStringTable
+{
+    MPWELFSection *theStringTable=nil;
+    @autoreleasepool {
+        for (int i=0,max=[self numSectionHeaders];i<max;i++) {
+            MPWELFSection *possibleStringTable=[self sectionAtIndex:i];
+            if ( [possibleStringTable sectionType]==SHT_STRTAB) {
+                theStringTable = [possibleStringTable retain];
+                break;
+            }
+        }
+    }
+
+    return [theStringTable autorelease];
+}
 
 -initWithData:(NSData*)newData
 {
@@ -86,10 +108,18 @@
     return !strncmp([self bytes],ELFMAG ,4);
 }
 
+-(const Elf64_Shdr*)sectionHeaderPointerAtIndex:(int)numSection
+{
+    return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [self bytes] + [self sectionHeaderOffset] + ([self sectionHeaderEntrySize] * numSection) : NULL;
+}
+
 -(MPWELFSection*)sectionAtIndex:(int)numSection
 {
-    return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [[[MPWELFSection alloc] initWithSectionHeaderPointer:[self bytes] + [self sectionHeaderOffset] + ([self sectionHeaderEntrySize] * numSection) ] autorelease] : nil;
+    return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [[[MPWELFSection alloc] initWithSectionHeaderPointer:[self sectionHeaderPointerAtIndex:numSection] ] autorelease] : nil;
 }
+
+
+
 
 @end
 
@@ -144,6 +174,13 @@
     EXPECTNIL( [reader sectionAtIndex:7], @"7 out of range");
 }
 
++(void)testFindStringTable
+{
+    MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
+    MPWELFSection *stringTable=[reader findStringTable];
+    INTEXPECT( [stringTable sectionType], SHT_STRTAB, @"found string table");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -151,6 +188,7 @@
 			@"testCanReadElfHeader",
             @"testCanIdentifyHeader",
             @"testSectionHeaders",
+            @"testFindStringTable",
 			];
 }
 
