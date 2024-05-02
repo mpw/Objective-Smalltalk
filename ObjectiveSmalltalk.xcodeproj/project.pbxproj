@@ -706,6 +706,8 @@
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
 		1FE8F22813802F0700B37A71 /* MPWResourceScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */; };
+		1FEA9C942BE3CCAD002D237B /* MPWELFSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */; };
+		1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */; };
 		1FEE11DA2386EAF20042B149 /* NSApplication.st in Copy Smalltalk files for finishLaunching */ = {isa = PBXBuildFile; fileRef = 1FEE11D92386EAF20042B149 /* NSApplication.st */; };
 		1FF142341B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF142371B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1496,6 +1498,8 @@
 		1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFastMessage.m; sourceTree = "<group>"; };
 		1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWResourceScheme.h; sourceTree = "<group>"; };
 		1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWResourceScheme.m; sourceTree = "<group>"; };
+		1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFSection.h; sourceTree = "<group>"; };
+		1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFSection.m; sourceTree = "<group>"; };
 		1FEE11D92386EAF20042B149 /* NSApplication.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = NSApplication.st; sourceTree = "<group>"; };
 		1FF142321B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBidirectionalDataflowConstraintExpression.h; sourceTree = "<group>"; };
 		1FF142331B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBidirectionalDataflowConstraintExpression.m; sourceTree = "<group>"; };
@@ -1818,6 +1822,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
+				1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */,
+				1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */,
 				1F9AE9E128EC696200671748 /* MPWMachOSection.h */,
 				1F9AE9E228EC696200671748 /* MPWMachOSection.m */,
 				1FDDE94428F1D487002A4AA4 /* MPWMachOClassReader.h */,
@@ -2817,6 +2823,7 @@
 				1F6060192A2481D100783E17 /* elf.h in Headers */,
 				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
 				1F9AE9CC28E1E58600671748 /* MPWJittableData.h in Headers */,
+				1FEA9C942BE3CCAD002D237B /* MPWELFSection.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4171,6 +4178,7 @@
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
+				1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
