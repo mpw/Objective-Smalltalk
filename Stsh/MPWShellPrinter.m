@@ -105,12 +105,9 @@
 
 -(void)writeFancyFileEntry:(MPWFileBinding*)binding
 {
-    NSFileManager *fm=[NSFileManager defaultManager];
-    NSString *path=(NSString*)[binding path];
     NSString *name=[binding fancyPath];
     if ( ![name hasPrefix:@"."]) {
-        NSDictionary *attributes=[fm attributesOfItemAtPath:path error:NULL];
-        NSNumber *size=[attributes objectForKey:NSFileSize];
+        NSNumber *size=[binding fileSize];
         NSString *formattedSize=[self formattedFileSize:[size longValue]];
         formattedSize=[formattedSize stringByReplacingOccurrencesOfString:@" bytes" withString:@"  B"];
         int numSpaces=10-(int)[formattedSize length];
