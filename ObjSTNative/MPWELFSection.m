@@ -22,6 +22,16 @@
     return self;
 }
 
+-(long)dataOffsetForOffset:(long)offset
+{
+    return sectionHeader->sh_offset + offset;
+}
+
+-(int)sectionNameOffset
+{
+    return sectionHeader->sh_name;
+}
+
 -(int)sectionType
 {
     return sectionHeader->sh_type;

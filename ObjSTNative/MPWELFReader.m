@@ -24,6 +24,17 @@
 
 lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
 
+-(const char*)cStringAtOffset:(long)offset
+{
+    MPWELFSection *table=[self stringTable];
+    return [[self elfData] bytes] + [table dataOffsetForOffset:offset];
+}
+
+-(NSString*)stringAtOffset:(long)offset
+{
+    return @([self cStringAtOffset:offset]);
+}
+
 -(MPWELFSection*)findStringTable
 {
     MPWELFSection *theStringTable=nil;
@@ -164,8 +175,10 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
     MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
     MPWELFSection *s0=[reader sectionAtIndex:0];
     INTEXPECT( [s0 sectionType], SHT_NULL, @"section 0 is a null section");
+    INTEXPECT( [s0 sectionNameOffset], 0, @"section 0 name offset");
     MPWELFSection *stringTable=[reader sectionAtIndex:1];
     INTEXPECT( [stringTable sectionType], SHT_STRTAB, @"section 1 is a string table");
+    INTEXPECT( [stringTable sectionNameOffset], 66, @"section 1  name");
     INTEXPECT( [[reader sectionAtIndex:2] sectionType], SHT_PROGBITS, @"section 2 is progbits");
     INTEXPECT( [[reader sectionAtIndex:3] sectionType], SHT_PROGBITS, @"section 3 is progbits");
     INTEXPECT( [[reader sectionAtIndex:4] sectionType], SHT_PROGBITS, @"section 4 is progbits");
@@ -173,6 +186,18 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
     INTEXPECT( [[reader sectionAtIndex:6] sectionType] , SHT_SYMTAB, @"section 6 is symtab");
     EXPECTNIL( [reader sectionAtIndex:7], @"7 out of range");
 }
+
++(void)testSectionHeaderNames
+{
+    MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
+    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:1] sectionNameOffset]], @".strtab",@"string table section name");
+    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:2] sectionNameOffset]], @".text",@"text section (2) name");
+    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:3] sectionNameOffset]], @".comment",@"comment section (3) name");
+    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:4] sectionNameOffset]], @".note.GNU-stack",@"stack section (4) name");
+    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:5] sectionNameOffset]], @".llvm_addrsig",@"llvm section (5) name");
+    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:6] sectionNameOffset]], @".symtab",@"symtab section (6) name");
+}
+
 
 +(void)testFindStringTable
 {
@@ -189,6 +214,7 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
             @"testCanIdentifyHeader",
             @"testSectionHeaders",
             @"testFindStringTable",
+            @"testSectionHeaderNames",
 			];
 }
 
