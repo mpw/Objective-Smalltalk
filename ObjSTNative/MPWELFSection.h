@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)sectionType;
 -(long)sectionOffset;
 -(long)sectionSize;
+-(long)sectionName;
 
 @end
 
