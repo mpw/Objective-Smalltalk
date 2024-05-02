@@ -53,6 +53,11 @@
     return [self header]->e_version;
 }
 
+-(BOOL)isHeaderValid
+{
+    return !strncmp([self bytes],ELFMAG ,4);
+}
+
 @end
 
 
@@ -78,10 +83,22 @@
     INTEXPECT( [reader elfVersion], 1, @"version");
 }
 
++(void)testCanIdentifyHeader
+{
+    MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
+    EXPECTTRUE([reader isHeaderValid], @"got the right header");
+    NSData *notelf = [@"Hello World!" asData];
+    reader=[[[self alloc] initWithData:notelf] autorelease];
+    EXPECTFALSE([reader isHeaderValid], @"not an ELF header");
+}
+
+
+
 +(NSArray*)testSelectors
 {
    return @[
 			@"testCanReadElfHeader",
+            @"testCanIdentifyHeader",
 			];
 }
 
