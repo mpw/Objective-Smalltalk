@@ -9,16 +9,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWELFReader;
+
 @interface MPWELFSection : NSObject
 
 
 
--(instancetype)initWithSectionHeaderPointer:(const void*)sectionHeaderPtr;
+-(instancetype)initWithSectionNumber:(int)secNo reader:(MPWELFReader*)sectionHeaderPtr;
 -(int)sectionType;
 -(long)sectionOffset;
 -(long)sectionSize;
--(long)sectionNameOffset;
+-(int)sectionNameOffset;
 -(long)dataOffsetForOffset:(long)offset;
+-(NSString*)sectionName;
 
 @end
 
