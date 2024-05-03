@@ -20,9 +20,11 @@
 @implementation MPWELFReader
 {
     MPWELFSection *stringTable;
+    MPWELFSection *symbolTable;
 }
 
 lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
+lazyAccessor(MPWELFSection*, symbolTable, setSymbolTable, findSymbolTable )
 
 -(const char*)cStringAtOffset:(long)offset
 {
@@ -47,9 +49,27 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
             }
         }
     }
-
+    
     return [theStringTable autorelease];
 }
+
+-(MPWELFSection*)findSymbolTable
+{
+    MPWELFSection *theSymbolTable=nil;
+    @autoreleasepool {
+        for (int i=0,max=[self numSectionHeaders];i<max;i++) {
+            MPWELFSection *possibleStringTable=[self sectionAtIndex:i];
+            if ( [possibleStringTable sectionType]==SHT_SYMTAB) {
+                theSymbolTable = [possibleStringTable retain];
+                break;
+            }
+        }
+    }
+    
+    return [theSymbolTable autorelease];
+}
+
+
 
 -initWithData:(NSData*)newData
 {
@@ -206,6 +226,13 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
     INTEXPECT( [stringTable sectionType], SHT_STRTAB, @"found string table");
 }
 
++(void)testFindSymbolTable
+{
+    MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
+    MPWELFSection *symbolTable=[reader findSymbolTable];
+    INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -213,8 +240,9 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
 			@"testCanReadElfHeader",
             @"testCanIdentifyHeader",
             @"testSectionHeaders",
-            @"testFindStringTable",
             @"testSectionHeaderNames",
+            @"testFindStringTable",
+            @"testFindSymbolTable",
 			];
 }
 
