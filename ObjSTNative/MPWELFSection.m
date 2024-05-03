@@ -7,6 +7,14 @@
 
 #import "MPWELFSection.h"
 #import "elf.h"
+#import "MPWELFReader.h"
+
+@interface MPWELFSection()
+
+@property (nonatomic,strong ) MPWELFReader *reader;
+@property (assign ) int sectionNumber;
+
+@end
 
 @implementation MPWELFSection
 {
@@ -14,10 +22,17 @@
     NSData *sectionData;
 }
 
--(instancetype)initWithSectionHeaderPointer:(const void*)sectionHeaderPtr
+-(NSString*)sectionName
+{
+    return [self.reader stringAtOffset:[self sectionNameOffset]];
+}
+
+-(instancetype)initWithSectionNumber:(int)secNo reader:(MPWELFReader*)newReader
 {
     if ( self=[super init]) {
-        sectionHeader=sectionHeaderPtr;
+        self.reader = newReader;
+        self.sectionNumber = secNo;
+        sectionHeader=[self.reader sectionHeaderPointerAtIndex:secNo];
     }
     return self;
 }

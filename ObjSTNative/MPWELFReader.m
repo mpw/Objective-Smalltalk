@@ -119,14 +119,14 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
     return !strncmp([self bytes],ELFMAG ,4);
 }
 
--(const Elf64_Shdr*)sectionHeaderPointerAtIndex:(int)numSection
+-(const void*)sectionHeaderPointerAtIndex:(int)numSection
 {
     return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [self bytes] + [self sectionHeaderOffset] + ([self sectionHeaderEntrySize] * numSection) : NULL;
 }
 
 -(MPWELFSection*)sectionAtIndex:(int)numSection
 {
-    return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [[[MPWELFSection alloc] initWithSectionHeaderPointer:[self sectionHeaderPointerAtIndex:numSection] ] autorelease] : nil;
+    return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [[[MPWELFSection alloc] initWithSectionNumber:numSection reader:self] autorelease] : nil;
 }
 
 
@@ -190,12 +190,12 @@ lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
 +(void)testSectionHeaderNames
 {
     MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
-    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:1] sectionNameOffset]], @".strtab",@"string table section name");
-    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:2] sectionNameOffset]], @".text",@"text section (2) name");
-    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:3] sectionNameOffset]], @".comment",@"comment section (3) name");
-    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:4] sectionNameOffset]], @".note.GNU-stack",@"stack section (4) name");
-    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:5] sectionNameOffset]], @".llvm_addrsig",@"llvm section (5) name");
-    IDEXPECT( [reader stringAtOffset:[[reader sectionAtIndex:6] sectionNameOffset]], @".symtab",@"symtab section (6) name");
+    IDEXPECT( [[reader sectionAtIndex:1] sectionName], @".strtab",@"string table section name");
+    IDEXPECT( [[reader sectionAtIndex:2] sectionName], @".text",@"text section (2) name");
+    IDEXPECT( [[reader sectionAtIndex:3] sectionName], @".comment",@"comment section (3) name");
+    IDEXPECT( [[reader sectionAtIndex:4] sectionName], @".note.GNU-stack",@"stack section (4) name");
+    IDEXPECT( [[reader sectionAtIndex:5] sectionName], @".llvm_addrsig",@"llvm section (5) name");
+    IDEXPECT( [[reader sectionAtIndex:6] sectionName], @".symtab",@"symtab section (6) name");
 }
 
 
