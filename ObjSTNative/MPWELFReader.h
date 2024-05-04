@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWELFReader : NSObject
 
 -(const void*)sectionHeaderPointerAtIndex:(int)numSection;
+
 @property (readonly) NSData *elfData;
 
 -(NSString*)stringAtOffset:(long)offset;

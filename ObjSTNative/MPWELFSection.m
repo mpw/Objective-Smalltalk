@@ -12,7 +12,6 @@
 @interface MPWELFSection()
 
 @property (nonatomic,strong ) MPWELFReader *reader;
-@property (assign ) int sectionNumber;
 
 @end
 
@@ -42,6 +41,7 @@
     return sectionHeader->sh_offset + offset;
 }
 
+
 -(int)sectionNameOffset
 {
     return sectionHeader->sh_name;
@@ -61,6 +61,17 @@
 {
     return sectionHeader->sh_size;
 }
+
+-(long)entrySize
+{
+    return sectionHeader->sh_entsize;
+}
+
+-(long)numEntries
+{
+    return sectionHeader->sh_entsize ?  sectionHeader->sh_size / sectionHeader->sh_entsize : 0;
+}
+
 
 @end
 

@@ -7,6 +7,8 @@
 
 #import "MPWELFReader.h"
 #import "MPWELFSection.h"
+#import "MPWELFSmybolTable.h"
+
 #import <MPWFoundation/MPWFoundation.h>
 
 #include "elf.h"
@@ -20,11 +22,11 @@
 @implementation MPWELFReader
 {
     MPWELFSection *stringTable;
-    MPWELFSection *symbolTable;
+    MPWELFSmybolTable *symbolTable;
 }
 
 lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
-lazyAccessor(MPWELFSection*, symbolTable, setSymbolTable, findSymbolTable )
+lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 -(const char*)cStringAtOffset:(long)offset
 {
@@ -37,13 +39,14 @@ lazyAccessor(MPWELFSection*, symbolTable, setSymbolTable, findSymbolTable )
     return @([self cStringAtOffset:offset]);
 }
 
--(MPWELFSection*)findStringTable
+
+-(MPWELFSection*)findElfSectionOfType:(int)type
 {
     MPWELFSection *theStringTable=nil;
     @autoreleasepool {
         for (int i=0,max=[self numSectionHeaders];i<max;i++) {
             MPWELFSection *possibleStringTable=[self sectionAtIndex:i];
-            if ( [possibleStringTable sectionType]==SHT_STRTAB) {
+            if ( [possibleStringTable sectionType]==type) {
                 theStringTable = [possibleStringTable retain];
                 break;
             }
@@ -53,20 +56,15 @@ lazyAccessor(MPWELFSection*, symbolTable, setSymbolTable, findSymbolTable )
     return [theStringTable autorelease];
 }
 
--(MPWELFSection*)findSymbolTable
+-(MPWELFSection*)findStringTable
 {
-    MPWELFSection *theSymbolTable=nil;
-    @autoreleasepool {
-        for (int i=0,max=[self numSectionHeaders];i<max;i++) {
-            MPWELFSection *possibleStringTable=[self sectionAtIndex:i];
-            if ( [possibleStringTable sectionType]==SHT_SYMTAB) {
-                theSymbolTable = [possibleStringTable retain];
-                break;
-            }
-        }
-    }
-    
-    return [theSymbolTable autorelease];
+    return [self findElfSectionOfType:SHT_STRTAB];
+}
+
+-(MPWELFSmybolTable*)findSymbolTable
+{
+    MPWELFSection *symbolSection = [self findElfSectionOfType:SHT_SYMTAB];
+    return [[[MPWELFSmybolTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
 }
 
 
@@ -233,6 +231,22 @@ lazyAccessor(MPWELFSection*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
 }
 
++(void)testFindSymbols
+{
+    MPWELFReader *reader=[self readerForTestFile:@"add"];
+    MPWELFSmybolTable *symbolTable=[reader symbolTable];
+    INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
+    EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSmybolTable class]], @"and it's an actual symbol table");
+    INTEXPECT( [symbolTable numEntries], 11, @"number of entries");
+    INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
+    
+    
+    IDEXPECT( [symbolTable symbolNameAtIndex:1], @"add.c", @"name of symbol table entry 1");
+    IDEXPECT( [symbolTable symbolNameAtIndex:5], @"$x", @"name of symbol table entry 5");
+    IDEXPECT( [symbolTable symbolNameAtIndex:7], @"$d", @"name of symbol table entry 7");
+    IDEXPECT( [symbolTable symbolNameAtIndex:10], @"add", @"name of symbol table entry 10");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -243,6 +257,7 @@ lazyAccessor(MPWELFSection*, symbolTable, setSymbolTable, findSymbolTable )
             @"testSectionHeaderNames",
             @"testFindStringTable",
             @"testFindSymbolTable",
+            @"testFindSymbols",
 			];
 }
 
