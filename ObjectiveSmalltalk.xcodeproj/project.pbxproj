@@ -32,6 +32,9 @@
 		1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F096D5D2B49903C0072DD85 /* STSiteBundle.m */; };
 		1F096D602B49903C0072DD85 /* STSiteBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F096D5E2B49903C0072DD85 /* STSiteBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F0F13E618D18C86008B5E80 /* STShell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* STShell.h */; };
+		1F1380012BE66C0300CD023C /* MPWELFSmybolTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1380002BE66C0300CD023C /* MPWELFSmybolTable.m */; };
+		1F1380022BE66C0300CD023C /* MPWELFSmybolTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F137FFF2BE66C0300CD023C /* MPWELFSmybolTable.h */; };
+		1F1380042BE6707A00CD023C /* add.elf-o in Resources */ = {isa = PBXBuildFile; fileRef = 1F1380032BE6707A00CD023C /* add.elf-o */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
 		1F1A64732971822A00B8776C /* use_class_that_creates_nsobject.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */; };
@@ -1004,6 +1007,9 @@
 		1F096D5E2B49903C0072DD85 /* STSiteBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STSiteBundle.h; sourceTree = "<group>"; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0F13E518D18C86008B5E80 /* STShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STShell.h; sourceTree = "<group>"; };
+		1F137FFF2BE66C0300CD023C /* MPWELFSmybolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFSmybolTable.h; sourceTree = "<group>"; };
+		1F1380002BE66C0300CD023C /* MPWELFSmybolTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFSmybolTable.m; sourceTree = "<group>"; };
+		1F1380032BE6707A00CD023C /* add.elf-o */ = {isa = PBXFileReference; lastKnownFileType = file; path = "add.elf-o"; sourceTree = "<group>"; };
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
 		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
 		1F1A646F2971822900B8776C /* use_class_that_creates_nsobject.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_class_that_creates_nsobject.mfile; sourceTree = "<group>"; };
@@ -1822,6 +1828,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
+				1F137FFF2BE66C0300CD023C /* MPWELFSmybolTable.h */,
+				1F1380002BE66C0300CD023C /* MPWELFSmybolTable.m */,
 				1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */,
 				1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */,
 				1F9AE9E128EC696200671748 /* MPWMachOSection.h */,
@@ -2014,6 +2022,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F1380032BE6707A00CD023C /* add.elf-o */,
 				1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */,
 				1F6060112A247FF000783E17 /* empty-function-clang.elf-o */,
 				1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */,
@@ -2816,6 +2825,7 @@
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
+				1F1380022BE66C0300CD023C /* MPWELFSmybolTable.h in Headers */,
 				1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
@@ -3782,6 +3792,7 @@
 				1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */,
 				1F5BBA342943BC4000C3D345 /* use_class_with_if.mfile in Resources */,
 				1F1A647D2976F72300B8776C /* use_class_with_two_strings.mfile in Resources */,
+				1F1380042BE6707A00CD023C /* add.elf-o in Resources */,
 				1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */,
 				1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */,
 				1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */,
@@ -4168,6 +4179,7 @@
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */,
 				1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */,
+				1F1380012BE66C0300CD023C /* MPWELFSmybolTable.m in Sources */,
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
 				1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */,
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,
