@@ -53,7 +53,7 @@
     [writer writeHeader];
     
     NSData *elf=[writer data];
-    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
+//    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
     MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT( [reader elfType], ET_REL, @"elf type");
