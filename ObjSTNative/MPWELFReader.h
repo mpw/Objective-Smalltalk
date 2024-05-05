@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSData *elfData;
 
 -(NSString*)stringAtOffset:(long)offset;
+-(NSString*)sectionNameAtOffset:(long)offset;
 -(instancetype)initWithData:(NSData*)newData;
 
 -(int)elfType;

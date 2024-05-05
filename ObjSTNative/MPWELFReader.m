@@ -22,11 +22,24 @@
 @implementation MPWELFReader
 {
     MPWELFSection *stringTable;
+    MPWELFSection *sectionStringTable;
     MPWELFSymbolTable *symbolTable;
 }
 
 lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
+lazyAccessor(MPWELFSection*, sectionStringTable, setSectionStringTable, findSectionStringTable )
 lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
+
+-(const char*)cSectionNameAtOffset:(long)offset
+{
+    MPWELFSection *table=[self sectionStringTable];
+    return [[self elfData] bytes] + [table dataOffsetForOffset:offset];
+}
+
+-(NSString*)sectionNameAtOffset:(long)offset
+{
+    return @([self cSectionNameAtOffset:offset]);
+}
 
 -(const char*)cStringAtOffset:(long)offset
 {
@@ -40,14 +53,16 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 }
 
 
--(MPWELFSection*)findElfSectionOfType:(int)type
+-(MPWELFSection*)findElfSectionOfType:(int)type name:(NSString*)name
 {
     MPWELFSection *theStringTable=nil;
     @autoreleasepool {
         for (int i=0,max=[self numSectionHeaders];i<max;i++) {
             MPWELFSection *possibleStringTable=[self sectionAtIndex:i];
-            if ( [possibleStringTable sectionType]==type) {
-                theStringTable = [possibleStringTable retain];
+            if ( [possibleStringTable sectionType]==type ) {
+                if ( !name || [name isEqual:[possibleStringTable sectionName]]) {
+                    theStringTable = [possibleStringTable retain];
+                }
                 break;
             }
         }
@@ -56,9 +71,19 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [theStringTable autorelease];
 }
 
+-(MPWELFSection*)findElfSectionOfType:(int)type
+{
+    return [self findElfSectionOfType:type name:nil];
+}
+
 -(MPWELFSection*)findStringTable
 {
-    return [self findElfSectionOfType:SHT_STRTAB];
+    return [self findElfSectionOfType:SHT_STRTAB name:@".strtab"];
+}
+
+-(MPWELFSection*)findSectionStringTable
+{
+    return [self sectionAtIndex:[self header]->e_shstrndx];
 }
 
 -(MPWELFSymbolTable*)findSymbolTable
@@ -167,7 +192,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@implementation MPWELFReader(testing) 
+@implementation MPWELFReader(testing)
 
 +(instancetype)readerForTestFile:(NSString*)name
 {
@@ -219,7 +244,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     EXPECTNIL( [reader sectionAtIndex:7], @"7 out of range");
 }
 
-+(void)testSectionHeaderNames
++(void)testSectionHeaderNamesOfEmpty
 {
     MPWELFReader *reader=[self readerForTestFile:@"empty-function-clang"];
     IDEXPECT( [[reader sectionAtIndex:1] sectionName], @".strtab",@"string table section name");
@@ -228,6 +253,21 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     IDEXPECT( [[reader sectionAtIndex:4] sectionName], @".note.GNU-stack",@"stack section (4) name");
     IDEXPECT( [[reader sectionAtIndex:5] sectionName], @".llvm_addrsig",@"llvm section (5) name");
     IDEXPECT( [[reader sectionAtIndex:6] sectionName], @".symtab",@"symtab section (6) name");
+}
+
++(void)testSectionHeaderNamesOfAdd
+{
+    MPWELFReader *reader=[self readerForTestFile:@"add"];
+    IDEXPECT( [[reader sectionAtIndex:1] sectionName], @".text",@"text section (1) name");
+    IDEXPECT( [[reader sectionAtIndex:2] sectionName], @".data",@"data section (2) name");
+    IDEXPECT( [[reader sectionAtIndex:3] sectionName], @".bss",@"bss section (3) name");
+    IDEXPECT( [[reader sectionAtIndex:4] sectionName], @".comment",@".commen section (4) name");
+    IDEXPECT( [[reader sectionAtIndex:5] sectionName], @".note.GNU-stack",@".note.GNU-stack section (5) name");
+    IDEXPECT( [[reader sectionAtIndex:6] sectionName], @".eh_frame",@"eh_frame section (6) name");
+    IDEXPECT( [[reader sectionAtIndex:7] sectionName], @".rela.eh_frame",@"rela.eh_frame section (7) name");
+    IDEXPECT( [[reader sectionAtIndex:8] sectionName], @".symtab",@"symtab section (8) name");
+    IDEXPECT( [[reader sectionAtIndex:9] sectionName], @".strtab",@"strtab section (9) name");
+    IDEXPECT( [[reader sectionAtIndex:10] sectionName], @".shstrtab",@"eh_frame section (10) name");
 }
 
 
@@ -254,6 +294,9 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT( [symbolTable numEntries], 11, @"number of entries");
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
+    for (int i=0,max=[symbolTable numEntries];i<max;i++) {
+        NSLog(@"symbol[%d]='%@'",i,[symbolTable symbolNameAtIndex:i]);
+    }
     
     IDEXPECT( [symbolTable symbolNameAtIndex:1], @"add.c", @"name of symbol table entry 1");
     IDEXPECT( [symbolTable symbolNameAtIndex:5], @"$x", @"name of symbol table entry 5");
@@ -265,6 +308,14 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT( [symbolTable symbolValueAtIndex:7], 20, @"$d offset should be 20");
 }
 
++(void)testExtractTextSection
+{
+    MPWELFReader *reader=[self readerForTestFile:@"add"];
+    MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:nil];
+    EXPECTNOTNIL(text, @"got a text section");
+    INTEXPECT([text sectionNumber],1,@"section number of text segment");
+//    IDEXPECT([text sectionName],@".text",@"text section");
+}
 
 +(NSArray*)testSelectors
 {
@@ -272,10 +323,12 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 			@"testCanReadElfHeader",
             @"testCanIdentifyHeader",
             @"testSectionHeaders",
-            @"testSectionHeaderNames",
+            @"testSectionHeaderNamesOfEmpty",
+            @"testSectionHeaderNamesOfAdd",
             @"testFindStringTable",
             @"testFindSymbolTable",
             @"testFindSymbols",
+            @"testExtractTextSection",
 			];
 }
 
