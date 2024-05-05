@@ -23,7 +23,7 @@
 
 -(NSString*)sectionName
 {
-    return [self.reader stringAtOffset:[self sectionNameOffset]];
+    return [self.reader sectionNameAtOffset:[self sectionNameOffset]];
 }
 
 -(instancetype)initWithSectionNumber:(int)secNo reader:(MPWELFReader*)newReader
