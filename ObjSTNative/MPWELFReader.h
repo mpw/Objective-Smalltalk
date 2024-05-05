@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithData:(NSData*)newData;
 
 -(int)elfType;
+-(int)elfClass;
+-(int)elfEndianness;
 -(int)elfMachine;
 -(int)elfVersion;
 -(int)numProgramHeaders;
