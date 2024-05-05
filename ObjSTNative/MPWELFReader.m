@@ -7,7 +7,7 @@
 
 #import "MPWELFReader.h"
 #import "MPWELFSection.h"
-#import "MPWELFSmybolTable.h"
+#import "MPWELFSymbolTable.h"
 
 #import <MPWFoundation/MPWFoundation.h>
 
@@ -22,11 +22,11 @@
 @implementation MPWELFReader
 {
     MPWELFSection *stringTable;
-    MPWELFSmybolTable *symbolTable;
+    MPWELFSymbolTable *symbolTable;
 }
 
 lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
-lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
+lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 -(const char*)cStringAtOffset:(long)offset
 {
@@ -61,15 +61,15 @@ lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [self findElfSectionOfType:SHT_STRTAB];
 }
 
--(MPWELFSmybolTable*)findSymbolTable
+-(MPWELFSymbolTable*)findSymbolTable
 {
     MPWELFSection *symbolSection = [self findElfSectionOfType:SHT_SYMTAB];
-    return [[[MPWELFSmybolTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
+    return [[[MPWELFSymbolTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
 }
 
 
 
--initWithData:(NSData*)newData
+-(instancetype)initWithData:(NSData*)newData
 {
     self=[super init];
     self.elfData=newData;
@@ -126,7 +126,7 @@ lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [self header]->e_shentsize;
 }
 
--(long int)sectionHeaderOffset
+-(long)sectionHeaderOffset
 {
     return [self header]->e_shoff;
 }
@@ -134,7 +134,7 @@ lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 -(BOOL)isHeaderValid
 {
-    return !strncmp([self bytes],ELFMAG ,4);
+    return [self.elfData length] >= sizeof(Elf64_Ehdr) && !strncmp([self bytes],ELFMAG ,4);
 }
 
 -(const void*)sectionHeaderPointerAtIndex:(int)numSection
@@ -234,9 +234,9 @@ lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
 +(void)testFindSymbols
 {
     MPWELFReader *reader=[self readerForTestFile:@"add"];
-    MPWELFSmybolTable *symbolTable=[reader symbolTable];
+    MPWELFSymbolTable *symbolTable=[reader symbolTable];
     INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
-    EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSmybolTable class]], @"and it's an actual symbol table");
+    EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
     INTEXPECT( [symbolTable numEntries], 11, @"number of entries");
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
