@@ -311,10 +311,14 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 +(void)testExtractTextSection
 {
     MPWELFReader *reader=[self readerForTestFile:@"add"];
-    MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:nil];
+    MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:@".text"];
     EXPECTNOTNIL(text, @"got a text section");
     INTEXPECT([text sectionNumber],1,@"section number of text segment");
-//    IDEXPECT([text sectionName],@".text",@"text section");
+    IDEXPECT([text sectionName],@".text",@"text section");
+    INTEXPECT([text sectionSize],8,@"text section size");
+    NSData *textData = [text data];
+    INTEXPECT(textData.length,8,@"text section size");
+    [textData writeToFile:@"/tmp/textsectiondata" atomically:YES];
 }
 
 +(NSArray*)testSelectors
