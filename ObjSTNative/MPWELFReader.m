@@ -106,6 +106,16 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [self header]->e_version;
 }
 
+-(int)elfClass
+{
+    return [self header]->e_ident[4];
+}
+
+-(int)elfEndianness
+{
+    return [self header]->e_ident[5];
+}
+
 -(int)numProgramHeaders
 {
     return [self header]->e_phnum;
@@ -134,7 +144,9 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 -(BOOL)isHeaderValid
 {
-    return [self.elfData length] >= sizeof(Elf64_Ehdr) && !strncmp([self bytes],ELFMAG ,4);
+    return [self.elfData length] >= sizeof(Elf64_Ehdr) 
+        && !strncmp([self bytes],ELFMAG ,4) &&
+    [self header]->e_ehsize == sizeof(Elf64_Ehdr);
 }
 
 -(const void*)sectionHeaderPointerAtIndex:(int)numSection
@@ -173,6 +185,8 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT( [reader elfType], ET_REL, @"elf type");
     INTEXPECT( [reader elfMachine], EM_AARCH64, @"machine type");
     INTEXPECT( [reader elfVersion], 1, @"version");
+    INTEXPECT( [reader elfClass], ELFCLASS64, @"class (64 bit)");
+    INTEXPECT( [reader elfEndianness], ELFDATA2LSB, @"little endian");
     INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
     INTEXPECT( [reader numSectionHeaders], 7 ,@"number of section headers");
     INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
