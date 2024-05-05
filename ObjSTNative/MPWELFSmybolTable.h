@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPWELFSmybolTable : MPWELFSection
 
 -(NSString*)symbolNameAtIndex:(int)anIndex;
+-(int)symbolInfoAtIndex:(int)anIndex;
+-(int)symbolTypeAtIndex:(int)anIndex;
+-(long)symbolValueAtIndex:(int)anIndex;
 
 
 
