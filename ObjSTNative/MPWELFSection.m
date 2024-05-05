@@ -72,6 +72,10 @@
     return sectionHeader->sh_entsize ?  sectionHeader->sh_size / sectionHeader->sh_entsize : 0;
 }
 
+-(NSData*)data
+{
+    return [self.reader.elfData subdataWithRange:NSMakeRange(self.sectionOffset,self.sectionSize)];
+}
 
 @end
 
