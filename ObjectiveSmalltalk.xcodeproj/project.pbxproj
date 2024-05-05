@@ -32,8 +32,8 @@
 		1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F096D5D2B49903C0072DD85 /* STSiteBundle.m */; };
 		1F096D602B49903C0072DD85 /* STSiteBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F096D5E2B49903C0072DD85 /* STSiteBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F0F13E618D18C86008B5E80 /* STShell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* STShell.h */; };
-		1F1380012BE66C0300CD023C /* MPWELFSmybolTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1380002BE66C0300CD023C /* MPWELFSmybolTable.m */; };
-		1F1380022BE66C0300CD023C /* MPWELFSmybolTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F137FFF2BE66C0300CD023C /* MPWELFSmybolTable.h */; };
+		1F1380012BE66C0300CD023C /* MPWELFSymbolTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1380002BE66C0300CD023C /* MPWELFSymbolTable.m */; };
+		1F1380022BE66C0300CD023C /* MPWELFSymbolTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F137FFF2BE66C0300CD023C /* MPWELFSymbolTable.h */; };
 		1F1380042BE6707A00CD023C /* add.elf-o in Resources */ = {isa = PBXBuildFile; fileRef = 1F1380032BE6707A00CD023C /* add.elf-o */; };
 		1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */; };
 		1F19EFB71EF2573900CB9E01 /* NSView+dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */; };
@@ -408,6 +408,8 @@
 		1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8E81D01924229B00821570 /* MPWDocumentScheme.m */; };
 		1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */; };
 		1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */; };
+		1F93FA5E2BE785FE0046C7C3 /* MPWELFWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F93FA5D2BE785FE0046C7C3 /* MPWELFWriter.m */; };
+		1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F93FA5C2BE785FE0046C7C3 /* MPWELFWriter.h */; };
 		1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */; };
 		1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9774582B6D096C0037DC95 /* STHypertextProcessor.m */; };
 		1F99D23E2906F39F009F0CE8 /* hashPlus200.aarch64 in Resources */ = {isa = PBXBuildFile; fileRef = 1F99D23D2906F39F009F0CE8 /* hashPlus200.aarch64 */; };
@@ -1007,8 +1009,8 @@
 		1F096D5E2B49903C0072DD85 /* STSiteBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STSiteBundle.h; sourceTree = "<group>"; };
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0F13E518D18C86008B5E80 /* STShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STShell.h; sourceTree = "<group>"; };
-		1F137FFF2BE66C0300CD023C /* MPWELFSmybolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFSmybolTable.h; sourceTree = "<group>"; };
-		1F1380002BE66C0300CD023C /* MPWELFSmybolTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFSmybolTable.m; sourceTree = "<group>"; };
+		1F137FFF2BE66C0300CD023C /* MPWELFSymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFSymbolTable.h; sourceTree = "<group>"; };
+		1F1380002BE66C0300CD023C /* MPWELFSymbolTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFSymbolTable.m; sourceTree = "<group>"; };
 		1F1380032BE6707A00CD023C /* add.elf-o */ = {isa = PBXFileReference; lastKnownFileType = file; path = "add.elf-o"; sourceTree = "<group>"; };
 		1F19EFB41EF2573900CB9E01 /* NSView+dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+dictionary.h"; sourceTree = "<group>"; };
 		1F19EFB51EF2573900CB9E01 /* NSView+dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+dictionary.m"; sourceTree = "<group>"; };
@@ -1309,6 +1311,8 @@
 		1F8E81D01924229B00821570 /* MPWDocumentScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWDocumentScheme.m; sourceTree = "<group>"; };
 		1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMethodSymbols.h; sourceTree = "<group>"; };
 		1F93D4702A5F326A00C9BA2A /* STMethodSymbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMethodSymbols.m; sourceTree = "<group>"; };
+		1F93FA5C2BE785FE0046C7C3 /* MPWELFWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFWriter.h; sourceTree = "<group>"; };
+		1F93FA5D2BE785FE0046C7C3 /* MPWELFWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFWriter.m; sourceTree = "<group>"; };
 		1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STHypertextProcessor.h; sourceTree = "<group>"; };
 		1F9774582B6D096C0037DC95 /* STHypertextProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STHypertextProcessor.m; sourceTree = "<group>"; };
 		1F99D23829055D77009F0CE8 /* use_testclass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_testclass.m; sourceTree = "<group>"; };
@@ -1828,8 +1832,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
-				1F137FFF2BE66C0300CD023C /* MPWELFSmybolTable.h */,
-				1F1380002BE66C0300CD023C /* MPWELFSmybolTable.m */,
+				1F137FFF2BE66C0300CD023C /* MPWELFSymbolTable.h */,
+				1F1380002BE66C0300CD023C /* MPWELFSymbolTable.m */,
 				1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */,
 				1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */,
 				1F9AE9E128EC696200671748 /* MPWMachOSection.h */,
@@ -1842,6 +1846,8 @@
 				1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */,
 				1F04243A28D1D09B00486831 /* MPWMachOWriter.h */,
 				1F04243B28D1D09B00486831 /* MPWMachOWriter.m */,
+				1F93FA5C2BE785FE0046C7C3 /* MPWELFWriter.h */,
+				1F93FA5D2BE785FE0046C7C3 /* MPWELFWriter.m */,
 				1FDDE95B29029887002A4AA4 /* MPWMachOClassWriter.h */,
 				1FDDE95C29029887002A4AA4 /* MPWMachOClassWriter.m */,
 				1FDDE95728F98CE4002A4AA4 /* MPWMachOSectionWriter.h */,
@@ -2817,6 +2823,7 @@
 				1FDDE95128F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h in Headers */,
 				1F6060152A24803800783E17 /* MPWELFReader.h in Headers */,
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
+				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
@@ -2825,7 +2832,7 @@
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
-				1F1380022BE66C0300CD023C /* MPWELFSmybolTable.h in Headers */,
+				1F1380022BE66C0300CD023C /* MPWELFSymbolTable.h in Headers */,
 				1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
@@ -4179,8 +4186,9 @@
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */,
 				1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */,
-				1F1380012BE66C0300CD023C /* MPWELFSmybolTable.m in Sources */,
+				1F1380012BE66C0300CD023C /* MPWELFSymbolTable.m in Sources */,
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
+				1F93FA5E2BE785FE0046C7C3 /* MPWELFWriter.m in Sources */,
 				1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */,
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,

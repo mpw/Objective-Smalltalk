@@ -1,16 +1,16 @@
 //
-//  MPWELFSmybolTable.m
+//  MPWELFSymbolTable.m
 //  ObjSTNative
 //
 //  Created by Marcel Weiher on 04.05.24.
 //
 
-#import "MPWELFSmybolTable.h"
+#import "MPWELFSymbolTable.h"
 #import "MPWELFReader.h"
 #import "elf.h"
 
 
-@implementation MPWELFSmybolTable
+@implementation MPWELFSymbolTable
 
 -(Elf64_Sym*)symbols
 {
@@ -45,7 +45,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWELFSmybolTable(testing) 
+@implementation MPWELFSymbolTable(testing) 
 
 
 

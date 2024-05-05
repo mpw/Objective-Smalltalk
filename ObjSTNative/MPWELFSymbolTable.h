@@ -1,5 +1,5 @@
 //
-//  MPWELFSmybolTable.h
+//  MPWELFSymbolTable.h
 //  ObjSTNative
 //
 //  Created by Marcel Weiher on 04.05.24.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWELFSmybolTable : MPWELFSection
+@interface MPWELFSymbolTable : MPWELFSection
 
 -(NSString*)symbolNameAtIndex:(int)anIndex;
 -(int)symbolInfoAtIndex:(int)anIndex;
