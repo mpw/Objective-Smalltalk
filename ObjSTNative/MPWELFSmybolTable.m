@@ -24,6 +24,22 @@
     return [self.reader stringAtOffset:[self symbols][anIndex].st_name];
 }
 
+
+-(int)symbolInfoAtIndex:(int)anIndex
+{
+    return [self symbols][anIndex].st_info;
+}
+
+-(int)symbolTypeAtIndex:(int)anIndex
+{
+    return ELF64_ST_TYPE([self symbols][anIndex].st_info);
+}
+
+-(long)symbolValueAtIndex:(int)anIndex
+{
+    return [self symbols][anIndex].st_value;
+}
+
 @end
 
 

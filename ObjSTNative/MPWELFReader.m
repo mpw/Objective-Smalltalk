@@ -245,6 +245,10 @@ lazyAccessor(MPWELFSmybolTable*, symbolTable, setSymbolTable, findSymbolTable )
     IDEXPECT( [symbolTable symbolNameAtIndex:5], @"$x", @"name of symbol table entry 5");
     IDEXPECT( [symbolTable symbolNameAtIndex:7], @"$d", @"name of symbol table entry 7");
     IDEXPECT( [symbolTable symbolNameAtIndex:10], @"add", @"name of symbol table entry 10");
+    
+    INTEXPECT( [symbolTable symbolTypeAtIndex:10], STT_FUNC, @"add should be function");
+    INTEXPECT( [symbolTable symbolValueAtIndex:10], 0, @"add offset should be zero");
+    INTEXPECT( [symbolTable symbolValueAtIndex:7], 20, @"$d offset should be 20");
 }
 
 
