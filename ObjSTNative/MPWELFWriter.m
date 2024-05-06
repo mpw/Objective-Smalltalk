@@ -8,10 +8,12 @@
 #import "MPWELFWriter.h"
 #import "elf.h"
 #import "MPWStringTableWriter.h"
+#import "MPWELFSectionWriter.h"
 
 @interface MPWELFWriter()
 
 @property (nonatomic, strong) MPWStringTableWriter *sectionNameStringTableWriter;
+@property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, assign) int sectionStringTableSection;
 
 
@@ -23,13 +25,19 @@
 {
     self=[super initWithTarget:aTarget];
     self.sectionNameStringTableWriter=[MPWStringTableWriter writer];
+    self.sections=[NSMutableArray array];
     return self;
+}
+
+-(void)addSection:(MPWELFSectionWriter*)section
+{
+    section.sectionNumber = (int)self.sections.count;
+    [self.sections addObject:section];
 }
 
 
 -(void)writeHeader
 {
-    
     unsigned char ident[EI_NIDENT]={ 0x7f, 'E', 'L' , 'F', ELFCLASS64,ELFDATA2LSB,1,0,0,0,0,0,0,0,0,0};
     Elf64_Ehdr header={};
     memcpy(&(header.e_ident), ident, 16);
@@ -38,13 +46,36 @@
     header.e_version = 1;
     header.e_shstrndx = self.sectionStringTableSection;
     header.e_ehsize = sizeof header;
+    header.e_shentsize = sizeof(Elf64_Shdr);
+    header.e_shnum = (int)self.sections.count;
+    header.e_shoff = sizeof header;  // for now 
     [self appendBytes:&header length:sizeof header];
 }
 
+-( void)addNullSection
+{
+    [self addSection:[MPWELFSectionWriter stream]];
+}
+
+-(void)addSectionHeaderStringTable
+{
+    MPWELFSectionWriter *stringTable=[MPWELFSectionWriter stream];
+    stringTable.sectionType = SHT_STRTAB;
+    [self addSection:stringTable];
+    self.sectionStringTableSection = stringTable.sectionNumber;
+}
+
+-(void)writeSectionHeaders
+{
+    for (MPWELFSectionWriter *section in self.sections) {
+        [section writeSctioHeaderOnWriter:self];
+    }
+}
 
 -(void)writeFile
 {
-    
+    [self writeHeader];
+    [self writeSectionHeaders];
 }
 
 -(NSData*)data
@@ -73,7 +104,7 @@
 +(void)testCanWriteHeader
 {
     MPWELFWriter *writer = [self stream];
-    [writer writeHeader];
+    [writer writeFile];
     
     NSData *elf=[writer data];
     //    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
@@ -101,21 +132,23 @@
     EXPECTNOTNIL(add_function_payload, @"got the payload");
     //    [writer addSection:]
     writer.sectionStringTableSection=1;
-    [writer writeHeader];
-    
+    [writer addNullSection];
+    [writer addSectionHeaderStringTable];
+    [writer writeFile];
+
     
     NSData *elf=[writer data];
+    INTEXPECT(elf.length,192,@"size of ELF");
     
     
-    
-    //    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
+   [elf writeToFile:@"/tmp/elfwithnull" atomically:YES];
     MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
     
     MPWELFSection *nullSection=[reader findElfSectionOfType:SHT_NULL name:nil];
     EXPECTNOTNIL(nullSection, @"got a NULL section");
-//    INTEXPECT( [reader numSectionHeaders], 2 ,@"number of section headers");
+    INTEXPECT( [reader numSectionHeaders], 2 ,@"number of section headers");
 //    INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
 //    INTEXPECT( [reader sectionHeaderOffset], 320 ,@"offset of section headers");
     //    INTEXPECT([reader filetype],MH_OBJECT,@"filetype");
