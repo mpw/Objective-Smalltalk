@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)sectionNameAtOffset:(long)offset;
 -(instancetype)initWithData:(NSData*)newData;
 
+-(BOOL)isHeaderValid;
 -(int)elfType;
 -(int)elfClass;
 -(int)elfEndianness;
