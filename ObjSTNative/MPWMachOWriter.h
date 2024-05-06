@@ -7,13 +7,13 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWARMObjectCodeGenerator.h"
-#import "MPWByteStreamWithSymbols.h"
+#import "MPWObjectFileWriter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MPWMachOSectionWriter;
 
-@interface MPWMachOWriter : MPWByteStream <SymbolWriter>
+@interface MPWMachOWriter : MPWObjectFileWriter <SymbolWriter>
 
 @property (nonatomic, readonly) MPWMachOSectionWriter *textSectionWriter;
 

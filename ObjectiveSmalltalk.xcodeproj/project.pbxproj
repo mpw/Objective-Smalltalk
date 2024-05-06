@@ -450,6 +450,8 @@
 		1FA5963F2A20CD8900C4EB45 /* STPostExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5963B2A20CD8900C4EB45 /* STPostExpression.m */; };
 		1FA5DF702BE8BFF8001E5231 /* MPWStringTableWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5DF6E2BE8BFF8001E5231 /* MPWStringTableWriter.h */; };
 		1FA5DF712BE8BFF8001E5231 /* MPWStringTableWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5DF6F2BE8BFF8001E5231 /* MPWStringTableWriter.m */; };
+		1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5DF752BE8CF57001E5231 /* MPWObjectFileWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FA5DF782BE8CF57001E5231 /* MPWObjectFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5DF762BE8CF57001E5231 /* MPWObjectFileWriter.m */; };
 		1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5F486147CDF34007EE753 /* MPWTreeNodeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FA5F48B147CDF34007EE753 /* MPWTreeNodeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */; };
 		1FA5F490147CE04A007EE753 /* MPWTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA5F48E147CE049007EE753 /* MPWTreeNode.h */; };
@@ -1345,6 +1347,8 @@
 		1FA5963B2A20CD8900C4EB45 /* STPostExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPostExpression.m; sourceTree = "<group>"; };
 		1FA5DF6E2BE8BFF8001E5231 /* MPWStringTableWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWStringTableWriter.h; sourceTree = "<group>"; };
 		1FA5DF6F2BE8BFF8001E5231 /* MPWStringTableWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWStringTableWriter.m; sourceTree = "<group>"; };
+		1FA5DF752BE8CF57001E5231 /* MPWObjectFileWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWObjectFileWriter.h; sourceTree = "<group>"; };
+		1FA5DF762BE8CF57001E5231 /* MPWObjectFileWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWObjectFileWriter.m; sourceTree = "<group>"; };
 		1FA5F486147CDF34007EE753 /* MPWTreeNodeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTreeNodeScheme.h; sourceTree = "<group>"; };
 		1FA5F487147CDF34007EE753 /* MPWTreeNodeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTreeNodeScheme.m; sourceTree = "<group>"; };
 		1FA5F48E147CE049007EE753 /* MPWTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWTreeNode.h; sourceTree = "<group>"; };
@@ -1848,6 +1852,8 @@
 				1FDDE94C28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m */,
 				1FDDE94F28F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h */,
 				1FDDE95028F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m */,
+				1FA5DF752BE8CF57001E5231 /* MPWObjectFileWriter.h */,
+				1FA5DF762BE8CF57001E5231 /* MPWObjectFileWriter.m */,
 				1F04243A28D1D09B00486831 /* MPWMachOWriter.h */,
 				1F04243B28D1D09B00486831 /* MPWMachOWriter.m */,
 				1FA5DF6E2BE8BFF8001E5231 /* MPWStringTableWriter.h */,
@@ -2832,6 +2838,7 @@
 				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
+				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
@@ -4202,6 +4209,7 @@
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,
 				1FDDE95E29029887002A4AA4 /* MPWMachOClassWriter.m in Sources */,
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
+				1FA5DF782BE8CF57001E5231 /* MPWObjectFileWriter.m in Sources */,
 				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
