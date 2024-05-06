@@ -15,6 +15,7 @@
 #import "Mach_O_Structs.h"
 #import "MPWMachOSection.h"
 #import "MPWMachOSectionWriter.h"
+#import "MPWStringTableWriter.h"
 
 @interface MPWMachOWriter()
 
@@ -23,8 +24,7 @@
 @property (nonatomic, assign) int filetype;
 @property (nonatomic, assign) int loadCommandSize;
 @property (nonatomic, assign) long totalSegmentSize;
-@property (nonatomic, strong) NSMutableDictionary *stringTableOffsets;
-@property (nonatomic, strong) MPWByteStream *stringTableWriter;
+@property (nonatomic, strong) MPWStringTableWriter *stringTableWriter;
 
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
 @property (nonatomic, strong) NSDictionary *externalSymbols;
@@ -108,9 +108,7 @@
     if ( self ) {
         self.cputype = CPU_TYPE_ARM64;
         self.filetype = MH_OBJECT;
-        self.stringTableWriter = [MPWByteStream stream];
-        [self.stringTableWriter appendBytes:"" length:1];
-        self.stringTableOffsets=[NSMutableDictionary dictionary];
+        self.stringTableWriter = [[MPWStringTableWriter new] autorelease];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
         self.classReferences=[NSMutableDictionary dictionary];
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
@@ -277,7 +275,7 @@
 
 -(void)writeStringTable
 {
-    [self writeData:(NSData*)[self.stringTableWriter target]];
+    [self writeData:[self.stringTableWriter data]];
 }
 
 -(MPWMachOSectionWriter*)cstringWriter
@@ -310,14 +308,7 @@
 
 -(int)stringTableOffsetOfString:(NSString*)theString
 {
-    int offset = [self.stringTableOffsets[theString] intValue];
-    if ( !offset ) {
-        offset=(int)[self.stringTableWriter length];
-        [self.stringTableWriter writeObject:theString];
-        [self.stringTableWriter appendBytes:"" length:1];
-        self.stringTableOffsets[theString]=@(offset);
-    }
-    return offset;
+    return [self.stringTableWriter stringTableOffsetOfString:theString];
 }
 
 -(void)generateStringTable
