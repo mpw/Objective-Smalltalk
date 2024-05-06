@@ -19,7 +19,7 @@
 -(instancetype)initWithTarget:(id)aTarget
 {
     self=[super initWithTarget:aTarget];
-    self.stringTableWriter = [[MPWStringTableWriter new] autorelease];
+    self.stringTableWriter = [MPWStringTableWriter writer];
     return self;
 }
 

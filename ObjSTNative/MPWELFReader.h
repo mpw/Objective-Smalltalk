@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)sectionHeaderEntrySize;
 -(long)sectionHeaderOffset;
 -(MPWELFSection*)sectionAtIndex:(int)numSection;
-
+-(MPWELFSection*)findElfSectionOfType:(int)type name:(nullable NSString*)name;
 
 @property (readonly) MPWELFSymbolTable* symbolTable;
 
