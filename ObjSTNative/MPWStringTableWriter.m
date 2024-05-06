@@ -18,6 +18,11 @@
 
 @implementation MPWStringTableWriter
 
++(instancetype)writer
+{
+    return [[[self alloc] init] autorelease];
+}
+
 -(instancetype)init
 {
     self=[super init];
