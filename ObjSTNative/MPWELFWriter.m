@@ -91,19 +91,57 @@
     //    INTEXPECT([reader filetype],MH_OBJECT,@"filetype");
     
 }
+
+
+
++(void)testCanWriteNullSection
+{
+    MPWELFWriter *writer = [self stream];
+    NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
+    EXPECTNOTNIL(add_function_payload, @"got the payload");
+    //    [writer addSection:]
+    writer.sectionStringTableSection=1;
+    [writer writeHeader];
+    
+    
+    NSData *elf=[writer data];
+    
+    
+    
+    //    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
+    MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
+    EXPECTTRUE([reader isHeaderValid], @"header valid");
+    INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
+    
+    MPWELFSection *nullSection=[reader findElfSectionOfType:SHT_NULL name:nil];
+    EXPECTNOTNIL(nullSection, @"got a NULL section");
+//    INTEXPECT( [reader numSectionHeaders], 2 ,@"number of section headers");
+//    INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
+//    INTEXPECT( [reader sectionHeaderOffset], 320 ,@"offset of section headers");
+    //    INTEXPECT([reader filetype],MH_OBJECT,@"filetype");
+    
+}
+
+
 +(void)testCanWriteTextSectionWithName
 {
     MPWELFWriter *writer = [self stream];
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     EXPECTNOTNIL(add_function_payload, @"got the payload");
-//    [writer addSection:]
+    //    [writer addSection:]
+    writer.sectionStringTableSection=1;
     [writer writeHeader];
+    
+    
     NSData *elf=[writer data];
+    
+    
+    
     //    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
     MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
-
+    
     MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:@".text"];
     EXPECTNOTNIL(text, @"got a text section");
     INTEXPECT( [reader numSectionHeaders], 2 ,@"number of section headers");
@@ -117,6 +155,7 @@
 {
    return @[
 			@"testCanWriteHeader",
+            @"testCanWriteNullSection",
 //          @"testCanWriteTextSectionWithName",     // in progress
 			];
 }
