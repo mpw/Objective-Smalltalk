@@ -53,7 +53,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 }
 
 
--(MPWELFSection*)findElfSectionOfType:(int)type name:(NSString*)name
+-(MPWELFSection*)findElfSectionOfType:(int)type name:(nullable NSString*)name
 {
     MPWELFSection *theStringTable=nil;
     @autoreleasepool {
@@ -81,9 +81,14 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [self findElfSectionOfType:SHT_STRTAB name:@".strtab"];
 }
 
+-(int)sectionStringTableSectionNumber
+{
+    return [self header]->e_shstrndx;
+}
+
 -(MPWELFSection*)findSectionStringTable
 {
-    return [self sectionAtIndex:[self header]->e_shstrndx];
+    return [self sectionAtIndex:self.sectionStringTableSectionNumber];
 }
 
 -(MPWELFSymbolTable*)findSymbolTable

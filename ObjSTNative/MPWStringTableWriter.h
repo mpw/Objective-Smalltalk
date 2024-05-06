@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWStringTableWriter : NSObject
 
++(instancetype)writer;
 -(int)stringTableOffsetOfString:(NSString*)theString;
 
 @property (readonly) long length;

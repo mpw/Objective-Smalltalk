@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWELFWriter : MPWObjectFileWriter
 
+
 @end
 
 NS_ASSUME_NONNULL_END
