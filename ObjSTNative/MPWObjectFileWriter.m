@@ -6,8 +6,35 @@
 //
 
 #import "MPWObjectFileWriter.h"
+#import "MPWStringTableWriter.h"
+
+@interface MPWObjectFileWriter()
+
+@property (nonatomic, strong) MPWStringTableWriter *stringTableWriter;
+
+@end
 
 @implementation MPWObjectFileWriter
+
+-(instancetype)initWithTarget:(id)aTarget
+{
+    self=[super initWithTarget:aTarget];
+    self.stringTableWriter = [[MPWStringTableWriter new] autorelease];
+    return self;
+}
+
+-(int)stringTableOffsetOfString:(NSString*)theString
+{
+    return [self.stringTableWriter stringTableOffsetOfString:theString];
+}
+
+
+
+-(void)dealloc
+{
+    [_stringTableWriter release];
+    [super dealloc];
+}
 
 @end
 
@@ -16,15 +43,18 @@
 
 @implementation MPWObjectFileWriter(testing) 
 
-+(void)someTest
++(void)testCanWriteStringsToStringTable
 {
-	EXPECTTRUE(false, @"implemented");
+    MPWObjectFileWriter *writer = [self stream];
+    INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"offset");
+    INTEXPECT( [writer stringTableOffsetOfString:@"_sub"],6,@"offset");
+    INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"repeat");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
+       @"testCanWriteStringsToStringTable",
 			];
 }
 

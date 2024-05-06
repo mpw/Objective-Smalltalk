@@ -24,7 +24,6 @@
 @property (nonatomic, assign) int filetype;
 @property (nonatomic, assign) int loadCommandSize;
 @property (nonatomic, assign) long totalSegmentSize;
-@property (nonatomic, strong) MPWStringTableWriter *stringTableWriter;
 
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
 @property (nonatomic, strong) NSDictionary *externalSymbols;
@@ -108,7 +107,6 @@
     if ( self ) {
         self.cputype = CPU_TYPE_ARM64;
         self.filetype = MH_OBJECT;
-        self.stringTableWriter = [[MPWStringTableWriter new] autorelease];
         self.globalSymbolOffsets=[NSMutableDictionary dictionary];
         self.classReferences=[NSMutableDictionary dictionary];
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
@@ -305,11 +303,6 @@
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__data" flags:0];
 }
 
-
--(int)stringTableOffsetOfString:(NSString*)theString
-{
-    return [self.stringTableWriter stringTableOffsetOfString:theString];
-}
 
 -(void)generateStringTable
 {
@@ -567,13 +560,6 @@
     IDEXPECT( [[reader textSection] sectionData],machineCode, @"machine code from text section");
 }
 
-+(void)testCanWriteStringsToStringTable
-{
-    MPWMachOWriter *writer = [self stream];
-    INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"offset");
-    INTEXPECT( [writer stringTableOffsetOfString:@"_sub"],6,@"offset");
-    INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"repeat");
-}
 
 +(void)testWriteLinkableAddFunction
 {
@@ -836,7 +822,6 @@
 {
    return @[
        @"testCanWriteHeader",
-       @"testCanWriteStringsToStringTable",
        @"testCanWriteGlobalSymboltable",
 //       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
