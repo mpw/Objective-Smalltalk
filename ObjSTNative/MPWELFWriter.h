@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 05.05.24.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import <ObjSTNative/MPWObjectFileWriter.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWELFWriter : MPWByteStream
+@interface MPWELFWriter : MPWObjectFileWriter
 
 @end
 
