@@ -13,8 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) int sectionType;
 @property (nonatomic, assign) int sectionNumber;
+@property (nonatomic, assign) long sectionOffset;
+@property (nonatomic, strong) NSData* sectionData;
+@property (readonly) long sectionLength;
 
--(void)writeSctioHeaderOnWriter:(MPWByteStream*)writer;
+-(void)writeSctionHeaderOnWriter:(MPWByteStream*)writer;
+-(void)writeSectionDataOnWriter:(MPWByteStream*)writer;
 
 
 @end

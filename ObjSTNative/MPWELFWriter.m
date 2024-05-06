@@ -35,6 +35,15 @@
     [self.sections addObject:section];
 }
 
+-(long)sectionHeaderOffset
+{
+    return sizeof(Elf64_Ehdr);
+}
+
+-(long)sectionOffset
+{
+    return [self sectionHeaderOffset] + self.sections.count * sizeof(Elf64_Shdr);
+}
 
 -(void)writeHeader
 {
@@ -48,11 +57,11 @@
     header.e_ehsize = sizeof header;
     header.e_shentsize = sizeof(Elf64_Shdr);
     header.e_shnum = (int)self.sections.count;
-    header.e_shoff = sizeof header;  // for now 
+    header.e_shoff = [self sectionHeaderOffset];  // would need to add the size of the progam header entries
     [self appendBytes:&header length:sizeof header];
 }
 
--( void)addNullSection
+-(void)addNullSection
 {
     [self addSection:[MPWELFSectionWriter stream]];
 }
@@ -65,17 +74,42 @@
     self.sectionStringTableSection = stringTable.sectionNumber;
 }
 
+-(void)addTextSection:(NSData*)textSectionData
+{
+    MPWELFSectionWriter *textSection=[MPWELFSectionWriter stream];
+    textSection.sectionType = SHT_PROGBITS;
+    textSection.sectionData = textSectionData;
+    [self addSection:textSection];
+}
+
+-(void)computeSectionOffsets
+{
+    long sectionOffset=[self sectionOffset];
+    for (MPWELFSectionWriter *section in self.sections) {
+        section.sectionOffset = sectionOffset;
+        sectionOffset += section.sectionLength;
+    }
+}
+
 -(void)writeSectionHeaders
 {
     for (MPWELFSectionWriter *section in self.sections) {
-        [section writeSctioHeaderOnWriter:self];
+        [section writeSctionHeaderOnWriter:self];
+    }
+}
+-(void)writeSectionData
+{
+    for (MPWELFSectionWriter *section in self.sections) {
+        [section writeSectionDataOnWriter:self];
     }
 }
 
 -(void)writeFile
 {
+    [self computeSectionOffsets];
     [self writeHeader];
     [self writeSectionHeaders];
+    [self writeSectionData];
 }
 
 -(NSData*)data
@@ -128,12 +162,9 @@
 +(void)testCanWriteNullSection
 {
     MPWELFWriter *writer = [self stream];
-    NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
-    EXPECTNOTNIL(add_function_payload, @"got the payload");
-    //    [writer addSection:]
-    writer.sectionStringTableSection=1;
     [writer addNullSection];
     [writer addSectionHeaderStringTable];
+
     [writer writeFile];
 
     
@@ -161,27 +192,32 @@
     MPWELFWriter *writer = [self stream];
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     EXPECTNOTNIL(add_function_payload, @"got the payload");
-    //    [writer addSection:]
-    writer.sectionStringTableSection=1;
-    [writer writeHeader];
+
+    [writer addNullSection];
+    [writer addSectionHeaderStringTable];
+    [writer addTextSection:add_function_payload];
+
+    [writer writeFile];
     
     
     NSData *elf=[writer data];
+    INTEXPECT(elf.length,264,@"size of ELF");
+
     
     
-    
-    //    [elf writeToFile:@"/tmp/emptyelf" atomically:YES];
+    [elf writeToFile:@"/tmp/add-generated.elfo" atomically:YES];
     MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
     
-    MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:@".text"];
-    EXPECTNOTNIL(text, @"got a text section");
-    INTEXPECT( [reader numSectionHeaders], 2 ,@"number of section headers");
+    INTEXPECT( [reader numSectionHeaders], 3 ,@"number of section headers");
     INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
-    INTEXPECT( [reader sectionHeaderOffset], 320 ,@"offset of section headers");
-    //    INTEXPECT([reader filetype],MH_OBJECT,@"filetype");
-    
+    INTEXPECT( [reader sectionHeaderOffset], 64 ,@"offset of section headers");
+    MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:nil];
+    EXPECTNOTNIL(text, @"got a text section");
+    INTEXPECT([text sectionOffset],256,@"text section offset");
+    NSData *textSectionData = [text data];
+    IDEXPECT(textSectionData,add_function_payload,@"got the same text section data out");
 }
 
 +(NSArray*)testSelectors
@@ -189,7 +225,7 @@
    return @[
 			@"testCanWriteHeader",
             @"testCanWriteNullSection",
-//          @"testCanWriteTextSectionWithName",     // in progress
+            @"testCanWriteTextSectionWithName",     // in progress
 			];
 }
 
