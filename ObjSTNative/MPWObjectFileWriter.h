@@ -9,7 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MPWStringTableWriter;
+
 @interface MPWObjectFileWriter : MPWByteStream
+
+-(int)stringTableOffsetOfString:(NSString*)theString;
+
+@property (readonly) MPWStringTableWriter *stringTableWriter;
 
 @end
 
