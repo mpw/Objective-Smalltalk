@@ -299,8 +299,8 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT( [symbolTable numEntries], 11, @"number of entries");
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
-    for (int i=0,max=[symbolTable numEntries];i<max;i++) {
-        NSLog(@"symbol[%d]='%@'",i,[symbolTable symbolNameAtIndex:i]);
+    for (long i=0,max=[symbolTable numEntries];i<max;i++) {
+        NSLog(@"symbol[%ld]='%@'",i,[symbolTable symbolNameAtIndex:i]);
     }
     
     IDEXPECT( [symbolTable symbolNameAtIndex:1], @"add.c", @"name of symbol table entry 1");
