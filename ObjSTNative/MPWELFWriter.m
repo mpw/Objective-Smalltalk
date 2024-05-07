@@ -19,6 +19,7 @@
 @property (nonatomic, assign) int sectionStringTableSection;
 @property (nonatomic, strong) MPWELFSectionWriter *textSection;
 @property (nonatomic, strong) MPWELFSectionWriter *symbolTable;
+@property (nonatomic, strong) MPWELFSectionWriter *stringTable;
 
 @end
 
@@ -112,10 +113,10 @@
 
 -(void)addStringTable
 {
-    MPWELFSectionWriter *stringTable=[MPWELFSectionWriter stream];
-    stringTable.sectionType = SHT_STRTAB;
-    stringTable.sectionData = self.stringTableWriter.data;
-    [self addSection:stringTable name:@".strtab"];
+    self.stringTable=[MPWELFSectionWriter stream];
+    self.stringTable.sectionType = SHT_STRTAB;
+    self.stringTable.sectionData = self.stringTableWriter.data;
+    [self addSection:self.stringTable name:@".strtab"];
 }
 
 -(void)addSymbolTable
@@ -123,6 +124,7 @@
     self.symbolTable=[MPWELFSectionWriter stream];
     self.symbolTable.sectionType = SHT_SYMTAB;
     self.symbolTable.entrySize = sizeof *symtab;
+    self.symbolTable.sectionLink = self.stringTable.sectionNumber;
     [self addSection:self.symbolTable name:@".symtab"];
 }
 
@@ -289,9 +291,9 @@
     [writer addTextSection:add_function_payload];
     [writer declareGlobalSymbol:@".text" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.textSection.sectionNumber];
     [writer declareGlobalSymbol:@".shstrtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.sectionStringTableSection];
-    [writer declareGlobalSymbol:@".symtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.symbolTable.sectionNumber];
 
     [writer declareGlobalSymbol:@"_add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
+    [writer declareGlobalSymbol:@".symtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.symbolTable.sectionNumber];
 
 
     
@@ -317,7 +319,7 @@
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:3], @"_add", @"name of symbol table entry 1");
+    IDEXPECT( [symbolTable symbolNameAtIndex:2], @"_add", @"name of symbol table entry 2");
 
     
 }
