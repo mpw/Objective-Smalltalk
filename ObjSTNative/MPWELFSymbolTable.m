@@ -40,6 +40,11 @@
     return [self symbols][anIndex].st_value;
 }
 
+-(int)symbolSectionAtIndex:(int)anIndex
+{
+    return [self symbols][anIndex].st_shndx;
+}
+
 @end
 
 

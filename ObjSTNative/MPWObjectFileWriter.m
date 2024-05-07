@@ -11,6 +11,7 @@
 @interface MPWObjectFileWriter()
 
 @property (nonatomic, strong) MPWStringTableWriter *stringTableWriter;
+@property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
 
 @end
 
@@ -20,12 +21,60 @@
 {
     self=[super initWithTarget:aTarget];
     self.stringTableWriter = [MPWStringTableWriter writer];
+    self.globalSymbolOffsets=[NSMutableDictionary dictionary];
     return self;
 }
 
 -(int)stringTableOffsetOfString:(NSString*)theString
 {
     return [self.stringTableWriter stringTableOffsetOfString:theString];
+}
+
+-(void)generateStringTable
+{
+    for (NSString* symbol in self.globalSymbolOffsets.allKeys) {
+        [self stringTableOffsetOfString:symbol];
+    }
+}
+
+-(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess
+{
+    [NSException raise:@"unimplemented" format:@"writeSymtabEntryOfType not implemented" arguments:nil];
+}
+
+-(void)growSymtab
+{
+    [NSException raise:@"unimplemented" format:@"growSymtab not implemented" arguments:nil];
+}
+
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
+{
+    int entryIndex = 0;
+    NSNumber *offsetEntry = self.globalSymbolOffsets[symbol];
+    if ( offsetEntry == nil ) {
+        entryIndex = symtabCount;
+        //        NSLog(@"symtab[%d]=%@",symtabCount,symbol);
+        self.globalSymbolOffsets[symbol]=@(symtabCount);
+        if ( symtabCount >= symtabCapacity ) {
+            [self growSymtab];
+        }
+        int stringOffset=[self stringTableOffsetOfString:symbol];
+        
+        [self writeSymtabEntryOfType:theType section:theSection stringOffset:stringOffset address:offset];
+    } else {
+        entryIndex = [offsetEntry intValue];
+    }
+    return entryIndex;
+}
+
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset
+{
+    return [self declareGlobalSymbol:symbol atOffset:offset type:0xf section:1];
+}
+
+-(int)declareExternalSymbol:(NSString*)symbol
+{
+    return [self declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
 }
 
 

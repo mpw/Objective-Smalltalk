@@ -16,11 +16,15 @@
 @property (nonatomic, strong) MPWStringTableWriter *sectionNameStringTableWriter;
 @property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, assign) int sectionStringTableSection;
-
+@property (nonatomic, strong) MPWELFSectionWriter *textSection;
+@property (nonatomic, strong) MPWELFSectionWriter *symbolTable;
 
 @end
 
 @implementation MPWELFWriter
+{
+    Elf64_Sym *symtab;
+}
 
 -(instancetype)initWithTarget:(id)aTarget
 {
@@ -37,6 +41,28 @@
         section.nameIndex = [self.sectionNameStringTableWriter stringTableOffsetOfString:name];
     }
     [self.sections addObject:section];
+}
+
+-(void)growSymtab
+{
+    symtabCapacity *= 2;
+    Elf64_Sym *newSymtab = calloc( symtabCapacity , sizeof *symtab);
+    if ( symtab ) {
+        memcpy( newSymtab, symtab, symtabCount * sizeof *symtab);
+        free(symtab);
+    }
+    symtab = newSymtab;
+}
+
+-(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess
+{
+    Elf64_Sym entry={};
+    entry.st_info = theType;                //  need a little more detail here?
+    entry.st_shndx = theSection;
+    entry.st_name = stringOffset;
+    //        NSLog(@"for symbol %@ offset is %d",symbol,offset);
+    entry.st_value = addreess;
+    symtab[symtabCount++]=entry;
 }
 
 
@@ -91,17 +117,18 @@
 
 -(void)addSymbolTable
 {
-    MPWELFSectionWriter *stringTable=[MPWELFSectionWriter stream];
-    stringTable.sectionType = SHT_SYMTAB;
-    [self addSection:stringTable name:@".symtab"];
+    self.symbolTable=[MPWELFSectionWriter stream];
+    self.symbolTable.sectionType = SHT_SYMTAB;
+    self.symbolTable.entrySize = sizeof *symtab;
+    [self addSection:self.symbolTable name:@".symtab"];
 }
 
 -(void)addTextSection:(NSData*)textSectionData
 {
-    MPWELFSectionWriter *textSection=[MPWELFSectionWriter stream];
-    textSection.sectionType = SHT_PROGBITS;
-    textSection.sectionData = textSectionData;
-    [self addSection:textSection name:@".text"];
+    self.textSection=[MPWELFSectionWriter stream];
+    self.textSection.sectionType = SHT_PROGBITS;
+    self.textSection.sectionData = textSectionData;
+    [self addSection:self.textSection name:@".text"];
 }
 
 -(void)computeSectionOffsets
@@ -128,7 +155,8 @@
 
 -(void)finalizeSectionData
 {
-    // don't 
+    [self generateStringTable];
+    self.symbolTable.sectionData=[NSData dataWithBytes:symtab length:symtabCount * sizeof *symtab];
 }
 
 -(void)writeFile
@@ -257,10 +285,11 @@
     [writer addStringTable];
     [writer addSymbolTable];
     [writer addTextSection:add_function_payload];
-    
+    [writer declareGlobalSymbol:@"_add" atOffset:0 type:0 section:writer.textSection.sectionNumber];
+
     
     NSData *elf=[writer data];
-    INTEXPECT(elf.length,440,@"size of ELF");
+    INTEXPECT(elf.length,464,@"size of ELF");
     
     
     
@@ -271,11 +300,11 @@
     MPWELFSymbolTable *symbolTable=[reader symbolTable];
     INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
     EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
-    INTEXPECT( [symbolTable numEntries], 11, @"number of entries");
+    INTEXPECT( [symbolTable numEntries], 1, @"number of entries");
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:1], @"add.c", @"name of symbol table entry 1");
+    IDEXPECT( [symbolTable symbolNameAtIndex:0], @"_add", @"name of symbol table entry 1");
 
     
 }
