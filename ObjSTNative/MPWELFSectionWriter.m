@@ -24,11 +24,8 @@
 
 -(int)padding
 {
-    NSLog(@"padding: alignment=%d",self.alignment);
     int leftover = self.sectionData.length % self.alignment;
-    NSLog(@"leftover=%d",leftover);
     int pad = leftover > 0 ? self.alignment - leftover : 0;
-    NSLog(@"pad=%d",pad);
     return pad;
 
 }
@@ -44,9 +41,12 @@
     Elf64_Shdr sectionHeader={0};
     sectionHeader.sh_name = [self nameIndex];
     sectionHeader.sh_type = self.sectionType;
+    sectionHeader.sh_info = self.sectionInfo;
+    sectionHeader.sh_link = self.sectionLink;
     sectionHeader.sh_offset = self.sectionOffset;
     sectionHeader.sh_size = self.sectionLength;
     sectionHeader.sh_entsize = self.entrySize;
+    sectionHeader.sh_addralign = self.alignment;
     [writer appendBytes:&sectionHeader length:sizeof sectionHeader];
 }
 

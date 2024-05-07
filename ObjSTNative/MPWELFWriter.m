@@ -10,6 +10,7 @@
 #import "MPWStringTableWriter.h"
 #import "MPWELFSectionWriter.h"
 #import "MPWELFSection.h"
+#import "MPWELFSymbolTable.h"
 
 @interface MPWELFWriter()
 
@@ -31,6 +32,8 @@
     self=[super initWithTarget:aTarget];
     self.sectionNameStringTableWriter=[MPWStringTableWriter writer];
     self.sections=[NSMutableArray array];
+    symtabCapacity = 10;
+    [self growSymtab];
     return self;
 }
 
@@ -56,7 +59,7 @@
 
 -(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess
 {
-    Elf64_Sym entry={};
+    Elf64_Sym entry={0};
     entry.st_info = theType;                //  need a little more detail here?
     entry.st_shndx = theSection;
     entry.st_name = stringOffset;
@@ -284,11 +287,18 @@
     [writer addStringTable];
     [writer addSymbolTable];
     [writer addTextSection:add_function_payload];
-    [writer declareGlobalSymbol:@"_add" atOffset:0 type:0 section:writer.textSection.sectionNumber];
+    [writer declareGlobalSymbol:@".text" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.textSection.sectionNumber];
+    [writer declareGlobalSymbol:@".shstrtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.sectionStringTableSection];
+    [writer declareGlobalSymbol:@".symtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.symbolTable.sectionNumber];
+
+    [writer declareGlobalSymbol:@"_add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
+
 
     
     NSData *elf=[writer data];
-    INTEXPECT(elf.length,464,@"size of ELF");
+    
+//    [writer.symbolTable.sectionData writeToFile:@"/tmp/symtab-add-written.elfosection" atomically:YES];
+//    INTEXPECT(elf.length,464,@"size of ELF");
     
     
     
@@ -301,11 +311,13 @@
     EXPECTNOTNIL([reader stringTable],@"need a string string table");
     INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
     EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
-    INTEXPECT( [symbolTable numEntries], 1, @"number of entries");
+//    [symbolTable.data writeToFile:@"/tmp/symtab-read.elfosection" atomically:YES];
+
+    INTEXPECT( [symbolTable numEntries], 4, @"number of entries");
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:0], @"_add", @"name of symbol table entry 1");
+    IDEXPECT( [symbolTable symbolNameAtIndex:3], @"_add", @"name of symbol table entry 1");
 
     
 }

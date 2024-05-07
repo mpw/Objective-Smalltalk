@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSMutableDictionary *globalSymbolOffsets;
 
 -(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess;
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection;
 
 @end
 
