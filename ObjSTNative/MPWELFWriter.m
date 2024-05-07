@@ -29,11 +29,16 @@
     return self;
 }
 
--(void)addSection:(MPWELFSectionWriter*)section
+-(void)addSection:(MPWELFSectionWriter*)section name:(NSString*)name
 {
     section.sectionNumber = (int)self.sections.count;
+    if (name) {
+        section.nameIndex = [self.sectionNameStringTableWriter stringTableOffsetOfString:name];
+    }
     [self.sections addObject:section];
 }
+
+
 
 -(long)sectionHeaderOffset
 {
@@ -63,14 +68,15 @@
 
 -(void)addNullSection
 {
-    [self addSection:[MPWELFSectionWriter stream]];
+    [self addSection:[MPWELFSectionWriter stream] name:nil];
 }
 
 -(void)addSectionHeaderStringTable
 {
     MPWELFSectionWriter *stringTable=[MPWELFSectionWriter stream];
     stringTable.sectionType = SHT_STRTAB;
-    [self addSection:stringTable];
+    stringTable.sectionData = self.sectionNameStringTableWriter.data;
+    [self addSection:stringTable name:@".shstrtab"];
     self.sectionStringTableSection = stringTable.sectionNumber;
 }
 
@@ -79,7 +85,7 @@
     MPWELFSectionWriter *textSection=[MPWELFSectionWriter stream];
     textSection.sectionType = SHT_PROGBITS;
     textSection.sectionData = textSectionData;
-    [self addSection:textSection];
+    [self addSection:textSection name:@".text"];
 }
 
 -(void)computeSectionOffsets
@@ -104,8 +110,14 @@
     }
 }
 
+-(void)finalizeSectionData
+{
+
+}
+
 -(void)writeFile
 {
+    [self finalizeSectionData];
     [self computeSectionOffsets];
     [self writeHeader];
     [self writeSectionHeaders];
@@ -169,7 +181,7 @@
 
     
     NSData *elf=[writer data];
-    INTEXPECT(elf.length,192,@"size of ELF");
+    INTEXPECT(elf.length,208,@"size of ELF");
     
     
    [elf writeToFile:@"/tmp/elfwithnull" atomically:YES];
@@ -198,10 +210,10 @@
     [writer addTextSection:add_function_payload];
 
     [writer writeFile];
-    
+
     
     NSData *elf=[writer data];
-    INTEXPECT(elf.length,264,@"size of ELF");
+    INTEXPECT(elf.length,288,@"size of ELF");
 
     
     
@@ -215,7 +227,7 @@
     INTEXPECT( [reader sectionHeaderOffset], 64 ,@"offset of section headers");
     MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:nil];
     EXPECTNOTNIL(text, @"got a text section");
-    INTEXPECT([text sectionOffset],256,@"text section offset");
+    INTEXPECT([text sectionOffset],280,@"text section offset");
     NSData *textSectionData = [text data];
     IDEXPECT(textSectionData,add_function_payload,@"got the same text section data out");
 }

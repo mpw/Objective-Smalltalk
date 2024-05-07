@@ -24,19 +24,20 @@
 
 -(int)padding
 {
-    int leftover = self.length % self.alignment;
-    return leftover > 0 ? self.alignment - leftover : 0;
+    NSLog(@"padding: alignment=%d",self.alignment);
+    int leftover = self.sectionData.length % self.alignment;
+    NSLog(@"leftover=%d",leftover);
+    int pad = leftover > 0 ? self.alignment - leftover : 0;
+    NSLog(@"pad=%d",pad);
+    return pad;
+
 }
 
 -(long)sectionLength
 {
-    return self.sectionData.length;
+    return self.sectionData.length + self.padding;
 }
 
--(int)nameIndex
-{
-    return 0;
-}
 
 -(void)writeSctionHeaderOnWriter:(MPWByteStream*)writer
 {
@@ -53,7 +54,6 @@
     const char paddingData[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     NSLog(@"write %ld bytes of section data (padded: %ld) for section %d",self.sectionData.length,self.sectionLength,self.sectionNumber);
     [writer appendBytes:self.sectionData.bytes length:self.sectionData.length];
-//    [writer writeData:self.sectionData];
     NSLog(@"write %d bytes of padding",self.padding);
     [writer appendBytes:paddingData length:self.padding];
 }
