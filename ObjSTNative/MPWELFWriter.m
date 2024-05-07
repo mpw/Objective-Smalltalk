@@ -155,7 +155,6 @@
 
 -(void)finalizeSectionData
 {
-    [self generateStringTable];
     self.symbolTable.sectionData=[NSData dataWithBytes:symtab length:symtabCount * sizeof *symtab];
 }
 
@@ -298,6 +297,8 @@
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     
     MPWELFSymbolTable *symbolTable=[reader symbolTable];
+    EXPECTNOTNIL([reader sectionStringTable],@"need a section string table");
+    EXPECTNOTNIL([reader stringTable],@"need a string string table");
     INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
     EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
     INTEXPECT( [symbolTable numEntries], 1, @"number of entries");
@@ -314,7 +315,7 @@
 			@"testCanWriteHeader",
             @"testCanWriteNullSection",
             @"testCanWriteTextSectionWithName",
-//            @"testCanWriteSymbolForTextSectionFunction",
+            @"testCanWriteSymbolForTextSectionFunction",
 			];
 }
 

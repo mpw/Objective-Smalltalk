@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)numSectionHeaders;
 -(int)sectionHeaderEntrySize;
 -(long)sectionHeaderOffset;
+-(MPWELFSection*)stringTable;
+-(MPWELFSection*)sectionStringTable;
 -(MPWELFSection*)sectionAtIndex:(int)numSection;
 -(MPWELFSection*)findElfSectionOfType:(int)type name:(nullable NSString*)name;
 
