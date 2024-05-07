@@ -43,8 +43,6 @@
 @implementation MPWMachOWriter
 {
     symtab_entry *symtab;
-    int symtabCount;
-    int symtabCapacity;
 }
 
 
@@ -93,9 +91,9 @@
 -(void)growSymtab
 {
     symtabCapacity *= 2;
-    symtab_entry *newSymtab = calloc( symtabCapacity , sizeof(symtab_entry));
+    symtab_entry *newSymtab = calloc( symtabCapacity , sizeof *symtab);
     if ( symtab ) {
-        memcpy( newSymtab, symtab, symtabCount * sizeof(symtab_entry));
+        memcpy( newSymtab, symtab, symtabCount * sizeof *symtab);
         free(symtab);
     }
     symtab = newSymtab;
@@ -107,7 +105,6 @@
     if ( self ) {
         self.cputype = CPU_TYPE_ARM64;
         self.filetype = MH_OBJECT;
-        self.globalSymbolOffsets=[NSMutableDictionary dictionary];
         self.classReferences=[NSMutableDictionary dictionary];
         self.textSectionWriter = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS];
         self.textSectionWriter.relocationType=ARM64_RELOC_BRANCH26;
@@ -304,12 +301,6 @@
 }
 
 
--(void)generateStringTable
-{
-    for (NSString* symbol in self.globalSymbolOffsets.allKeys) {
-        [self stringTableOffsetOfString:symbol];
-    }
-}
 
 -(void)writeNSStringLiteral:(NSString*)theString label:(NSString*)label
 {
@@ -417,40 +408,46 @@
     
 }
 
--(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
+-(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess
 {
-    int entryIndex = 0;
-    NSNumber *offsetEntry = self.globalSymbolOffsets[symbol];
-    if ( offsetEntry == nil ) {
-        entryIndex = symtabCount;
-//        NSLog(@"symtab[%d]=%@",symtabCount,symbol);
-        self.globalSymbolOffsets[symbol]=@(symtabCount);
-        symtab_entry entry={};
-        entry.type = theType;
-        entry.section = theSection;
-        entry.string_offset=[self stringTableOffsetOfString:symbol];
-//        NSLog(@"for symbol %@ offset is %d",symbol,offset);
-        entry.address = offset;
-        if ( symtabCount >= symtabCapacity ) {
-            [self growSymtab];
-        }
-        symtab[symtabCount++]=entry;
-
-    } else {
-        entryIndex = [offsetEntry intValue];
-    }
-    return entryIndex;
+    symtab_entry entry={};
+    entry.type = theType;
+    entry.section = theSection;
+    entry.string_offset=stringOffset;
+    //        NSLog(@"for symbol %@ offset is %d",symbol,offset);
+    entry.address = addreess;
+    symtab[symtabCount++]=entry;
 }
 
--(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset
-{
-    return [self declareGlobalSymbol:symbol atOffset:offset type:0xf section:1];
-}
-
--(int)declareExternalSymbol:(NSString*)symbol
-{
-    return [self declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
-}
+//-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
+//{
+//    int entryIndex = 0;
+//    NSNumber *offsetEntry = self.globalSymbolOffsets[symbol];
+//    if ( offsetEntry == nil ) {
+//        entryIndex = symtabCount;
+////        NSLog(@"symtab[%d]=%@",symtabCount,symbol);
+//        self.globalSymbolOffsets[symbol]=@(symtabCount);
+//        if ( symtabCount >= symtabCapacity ) {
+//            [self growSymtab];
+//        }
+//        int stringOffset=[self stringTableOffsetOfString:symbol];
+//
+//        [self writeSymtabEntryOfType:theType section:theSection stringOffset:stringOffset address:offset];
+//    } else {
+//        entryIndex = [offsetEntry intValue];
+//    }
+//    return entryIndex;
+//}
+//
+//-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset
+//{
+//    return [self declareGlobalSymbol:symbol atOffset:offset type:0xf section:1];
+//}
+//
+//-(int)declareExternalSymbol:(NSString*)symbol
+//{
+//    return [self declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
+//}
 
 -(void)writeSymbolTable
 {
