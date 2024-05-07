@@ -81,6 +81,21 @@
     self.sectionStringTableSection = stringTable.sectionNumber;
 }
 
+-(void)addStringTable
+{
+    MPWELFSectionWriter *stringTable=[MPWELFSectionWriter stream];
+    stringTable.sectionType = SHT_STRTAB;
+    stringTable.sectionData = self.stringTableWriter.data;
+    [self addSection:stringTable name:@".strtab"];
+}
+
+-(void)addSymbolTable
+{
+    MPWELFSectionWriter *stringTable=[MPWELFSectionWriter stream];
+    stringTable.sectionType = SHT_SYMTAB;
+    [self addSection:stringTable name:@".symtab"];
+}
+
 -(void)addTextSection:(NSData*)textSectionData
 {
     MPWELFSectionWriter *textSection=[MPWELFSectionWriter stream];
@@ -216,9 +231,6 @@
     NSData *elf=[writer data];
     INTEXPECT(elf.length,288,@"size of ELF");
 
-    
-    
-    [elf writeToFile:@"/tmp/add-generated.elfo" atomically:YES];
     MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
@@ -235,12 +247,45 @@
     IDEXPECT([[reader sectionStringTable] sectionName],@".shstrtab",@"section header string table name");
 }
 
++(void)testCanWriteSymbolForTextSectionFunction
+{
+    MPWELFWriter *writer = [self stream];
+    NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
+    
+    [writer addNullSection];
+    [writer addSectionHeaderStringTable];
+    [writer addStringTable];
+    [writer addSymbolTable];
+    [writer addTextSection:add_function_payload];
+    
+    
+    NSData *elf=[writer data];
+    INTEXPECT(elf.length,440,@"size of ELF");
+    
+    
+    
+    [elf writeToFile:@"/tmp/add-generated.elfo" atomically:YES];
+    MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
+    EXPECTTRUE([reader isHeaderValid], @"header valid");
+    
+    MPWELFSymbolTable *symbolTable=[reader symbolTable];
+    INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
+    EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
+    INTEXPECT( [symbolTable numEntries], 11, @"number of entries");
+    INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
+    
+    
+    IDEXPECT( [symbolTable symbolNameAtIndex:1], @"add.c", @"name of symbol table entry 1");
+
+    
+}
 +(NSArray*)testSelectors
 {
    return @[
 			@"testCanWriteHeader",
             @"testCanWriteNullSection",
-            @"testCanWriteTextSectionWithName",     // in progress
+            @"testCanWriteTextSectionWithName",
+//            @"testCanWriteSymbolForTextSectionFunction",
 			];
 }
 
