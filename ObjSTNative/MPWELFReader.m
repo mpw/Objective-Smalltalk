@@ -44,6 +44,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 -(const char*)cStringAtOffset:(long)offset
 {
     MPWELFSection *table=[self stringTable];
+    NSAssert(table != nil, @"string table not foud");
     return [[self elfData] bytes] + [table dataOffsetForOffset:offset];
 }
 
@@ -62,8 +63,8 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
             if ( [possibleStringTable sectionType]==type ) {
                 if ( !name || [name isEqual:[possibleStringTable sectionName]]) {
                     theStringTable = [possibleStringTable retain];
+                    break;
                 }
-                break;
             }
         }
     }
