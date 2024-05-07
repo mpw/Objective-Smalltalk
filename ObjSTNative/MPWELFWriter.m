@@ -292,7 +292,7 @@
     [writer declareGlobalSymbol:@".text" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.textSection.sectionNumber];
     [writer declareGlobalSymbol:@".shstrtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.sectionStringTableSection];
 
-    [writer declareGlobalSymbol:@"_add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
+    [writer declareGlobalSymbol:@"add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
     [writer declareGlobalSymbol:@".symtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.symbolTable.sectionNumber];
 
 
@@ -319,7 +319,7 @@
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:2], @"_add", @"name of symbol table entry 2");
+    IDEXPECT( [symbolTable symbolNameAtIndex:2], @"add", @"name of symbol table entry 2");
 
     
 }
