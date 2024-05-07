@@ -9,6 +9,7 @@
 #import "elf.h"
 #import "MPWStringTableWriter.h"
 #import "MPWELFSectionWriter.h"
+#import "MPWELFSection.h"
 
 @interface MPWELFWriter()
 
@@ -112,7 +113,7 @@
 
 -(void)finalizeSectionData
 {
-
+    // don't 
 }
 
 -(void)writeFile
@@ -230,6 +231,8 @@
     INTEXPECT([text sectionOffset],280,@"text section offset");
     NSData *textSectionData = [text data];
     IDEXPECT(textSectionData,add_function_payload,@"got the same text section data out");
+    IDEXPECT([text sectionName],@".text",@"text section name");
+    IDEXPECT([[reader sectionStringTable] sectionName],@".shstrtab",@"section header string table name");
 }
 
 +(NSArray*)testSelectors
