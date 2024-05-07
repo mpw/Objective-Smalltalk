@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(MPWELFSection*)findElfSectionOfType:(int)type name:(nullable NSString*)name;
 
 @property (readonly) MPWELFSymbolTable* symbolTable;
+@property (readonly) MPWELFSection* sectionStringTable;
 
 @end
 
