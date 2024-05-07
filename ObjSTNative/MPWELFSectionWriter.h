@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) int sectionType;
 @property (nonatomic, assign) int sectionNumber;
 @property (nonatomic, assign) int nameIndex;
+@property (nonatomic, assign) int entrySize;
 @property (nonatomic, assign) long sectionOffset;
 @property (nonatomic, strong) NSData* sectionData;
 @property (readonly) long sectionLength;

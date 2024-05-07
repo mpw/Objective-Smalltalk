@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)symbolInfoAtIndex:(int)anIndex;
 -(int)symbolTypeAtIndex:(int)anIndex;
 -(long)symbolValueAtIndex:(int)anIndex;
+-(int)symbolSectionAtIndex:(int)anIndex;
 
 
 

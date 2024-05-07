@@ -46,6 +46,7 @@
     sectionHeader.sh_type = self.sectionType;
     sectionHeader.sh_offset = self.sectionOffset;
     sectionHeader.sh_size = self.sectionLength;
+    sectionHeader.sh_entsize = self.entrySize;
     [writer appendBytes:&sectionHeader length:sizeof sectionHeader];
 }
 
