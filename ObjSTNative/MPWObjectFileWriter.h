@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess;
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection;
+-(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
+-(int)declareExternalSymbol:(NSString*)symbol;
 
 @end
 

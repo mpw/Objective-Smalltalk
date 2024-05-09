@@ -84,9 +84,20 @@
     return [self declareGlobalSymbol:symbol atOffset:offset type:[self globalFuncSymbolType] section:[self textSectionNumber]];
 }
 
+-(int)sectionNumberForExternalSymbols
+{
+    return 0;       // Mach-O, and should compute
+}
+
+-(int)typeForExternalSymbols
+{
+    return 0x1;       // Mach-O, and should compute
+}
+
+
 -(int)declareExternalSymbol:(NSString*)symbol
 {
-    return [self declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
+    return [self declareGlobalSymbol:symbol atOffset:0 type:self.typeForExternalSymbols section:self.sectionNumberForExternalSymbols];
 }
 
 

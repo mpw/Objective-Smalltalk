@@ -36,6 +36,9 @@
     symtabCapacity = 10;
     [self growSymtab];
     [self addNullSection];
+    [self addSectionHeaderStringTable];
+    [self addStringTable];
+    [self addSymbolTable];
     return self;
 }
 
@@ -233,13 +236,12 @@
 +(void)testCanWriteNullSection
 {
     MPWELFWriter *writer = [self stream];
-    [writer addSectionHeaderStringTable];
 
     [writer writeFile];
 
     
     NSData *elf=[writer data];
-    INTEXPECT(elf.length,208,@"size of ELF");
+    INTEXPECT(elf.length,360,@"size of ELF");
     
     
    [elf writeToFile:@"/tmp/elfwithnull" atomically:YES];
@@ -249,11 +251,9 @@
     
     MPWELFSection *nullSection=[reader findElfSectionOfType:SHT_NULL name:nil];
     EXPECTNOTNIL(nullSection, @"got a NULL section");
-    INTEXPECT( [reader numSectionHeaders], 2 ,@"number of section headers");
-//    INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
-//    INTEXPECT( [reader sectionHeaderOffset], 320 ,@"offset of section headers");
-    //    INTEXPECT([reader filetype],MH_OBJECT,@"filetype");
-    
+    INTEXPECT( [reader numSectionHeaders], 4 ,@"number of section headers");
+    INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
+    INTEXPECT( [reader sectionHeaderOffset], 64 ,@"offset of section headers");
 }
 
 
@@ -262,27 +262,20 @@
     MPWELFWriter *writer = [self stream];
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     EXPECTNOTNIL(add_function_payload, @"got the payload");
-
-    [writer addSectionHeaderStringTable];
+    
     [writer addTextSection:add_function_payload];
-
     [writer writeFile];
 
     
     NSData *elf=[writer data];
-    INTEXPECT(elf.length,288,@"size of ELF");
+    INTEXPECT(elf.length,440,@"size of ELF");
 
     MPWELFReader *reader = [[[MPWELFReader alloc] initWithData:elf] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
-    INTEXPECT( [reader numProgramHeaders], 0 ,@"number of program headers");
-    
-    INTEXPECT( [reader numSectionHeaders], 3 ,@"number of section headers");
-    INTEXPECT( [reader sectionHeaderEntrySize], 64 ,@"section header entry size");
-    INTEXPECT( [reader sectionHeaderOffset], 64 ,@"offset of section headers");
     MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:nil];
     EXPECTNOTNIL(text, @"got a text section");
-    INTEXPECT([text sectionOffset],280,@"text section offset");
     NSData *textSectionData = [text data];
+    INTEXPECT(textSectionData.length,8,@"size of function body is two instructions" );
     IDEXPECT(textSectionData,add_function_payload,@"got the same text section data out");
     IDEXPECT([text sectionName],@".text",@"text section name");
     IDEXPECT([[reader sectionStringTable] sectionName],@".shstrtab",@"section header string table name");
@@ -293,16 +286,8 @@
     MPWELFWriter *writer = [self stream];
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     
-    [writer addSectionHeaderStringTable];
-    [writer addStringTable];
-    [writer addSymbolTable];
     [writer addTextSection:add_function_payload];
-//    [writer declareGlobalSymbol:@".text" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.textSection.sectionNumber];
-//    [writer declareGlobalSymbol:@".shstrtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.sectionStringTableSection];
-
     [writer declareGlobalSymbol:@"add" atOffset:0];
-//    [writer declareGlobalSymbol:@"add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
-
 
     
     NSData *elf=[writer data];
