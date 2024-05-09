@@ -7,6 +7,7 @@
 
 #import "MPWJittableData.h"
 #import <MPWFoundation/MPWFoundation.h>
+#include <sys/mman.h>
 
 @implementation MPWJittableData
 {

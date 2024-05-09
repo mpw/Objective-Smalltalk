@@ -3,14 +3,14 @@
 
 OBJC_RUNTIME_LIB=ng
 
-#include $(GNUSTEP_MAKEFILES)/common.m \ake
+#include $(GNUSTEP_MAKEFILES)/common.make
 
 FRAMEWORK_NAME = ObjSTNative
 
-GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES=base.m \ake
+GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES=base.make
 GNUSTEP_BUILD_DIR = ~/Build/
 
-include $(GNUSTEP_MAKEFILES)/common.m \ake
+include $(GNUSTEP_MAKEFILES)/common.make
 
 
 LIBRARY_NAME = libObjSTNative
@@ -19,14 +19,14 @@ LIBRARY_NAME = libObjSTNative
 OBJCFLAGS += -g -Os -Wno-import 
 
 
-ObjectiveSmalltalk_HEADER_FILES = \
+ObjSTNative_HEADER_FILES = \
 
 
-ObjectiveSmalltalk_HEADER_FILES_INSTALL_DIR = /ObjSTNative
+ObjSTNative_HEADER_FILES_INSTALL_DIR = /ObjSTNative
 
 
-libObjectiveSmalltalk_OBJC_FILES = \
-	MPWARMObjectCodeGenerator.m \ 
+libObjSTNative_OBJC_FILES = \
+	MPWARMObjectCodeGenerator.m \
 	MPWByteStreamWithSymbols.m \
 	MPWCPUSimulator.m \
 	MPWELFReader.m \
@@ -51,7 +51,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
 
 
 
-libObjectiveSmalltalk_C_FILES = \
+libObjSTNative_C_FILES = \
 
 
 
@@ -61,10 +61,10 @@ LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base -lgnustep-corebase
 LDFLAGS += -L ${HOME}/Build/obj -L ~/Build/obj
 
 
-libObjectiveSmalltalk_INCLUDE_DIRS += -I.headers -I. -I../MPWFoundation/.headers/
+libObjSTNative_INCLUDE_DIRS += -I.headers -I. -I../.headers/ -I../../MPWFoundation/.headers/
 
 -include GNUmakefile.preamble
-include $(GNUSTEP_MAKEFILES)/library.m \ake
+include $(GNUSTEP_MAKEFILES)/library.make
 -include GNUmakefile.postamble
 
 before-all ::
