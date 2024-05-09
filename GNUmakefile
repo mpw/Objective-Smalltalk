@@ -69,7 +69,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STNotificationDefinition.m \
     Classes/STSimpleDataflowConstraint.m \
     Classes/MPWMethodType.m \
-    Classes/MPWPropertyPathGetter.m \
+    Classes/MPWPropertyPathMethod.m \
     Classes/MPWBlockContext.m \
     Classes/MPWAbstractInterpretedMethod.m \
     Classes/MPWClassMethodStore.m \
@@ -105,7 +105,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Schemes/STPortScheme.m \
     Schemes/STProtocolScheme.m \
     Schemes/MPWGlobalVariableStore.m \
-    Tests/MPWStTests.m \
+    Tests/STTests.m \
 
 
 

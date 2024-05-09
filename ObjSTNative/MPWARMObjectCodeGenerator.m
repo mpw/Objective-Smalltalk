@@ -392,7 +392,7 @@ typedef long (*VOIDPTR)(void);
     MPWARMObjectCodeGenerator *g=[self stream];
     block(g);
     [g generateReturn];
-    return [g generatedCode];
+    return (NSData*)[g generatedCode];
 }
 
 +(IMPINTINT)fnFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
@@ -401,11 +401,13 @@ typedef long (*VOIDPTR)(void);
     return (IMPINTINT)[d bytes];
 }
 
+typedef void (*voidvoidfun)(void);
+
 +(void)testGenerateReturn
 {
     NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {}];
     INTEXPECT(code.length,4,@"length of generated code");
-    IMP fn=(IMP)[code bytes];
+    voidvoidfun fn=(voidvoidfun)[code bytes];
     EXPECTTRUE(true, @"before call");
     fn();
     EXPECTTRUE(true, @"got here");
