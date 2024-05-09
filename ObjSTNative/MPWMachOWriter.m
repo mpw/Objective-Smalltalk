@@ -566,8 +566,7 @@
     [writer addTextSectionData:machineCode];
     [writer writeFile];
     NSData *macho=[writer data];
-    [macho writeToFile:@"/tmp/add.o" atomically:YES];
-    
+//    [macho writeToFile:@"/tmp/add.o" atomically:YES];
 }
 
 +(void)testWriteFunctionWithRelocationEntries
@@ -820,7 +819,7 @@
    return @[
        @"testCanWriteHeader",
        @"testCanWriteGlobalSymboltable",
-//       @"testWriteLinkableAddFunction",
+       @"testWriteLinkableAddFunction",
        @"testWriteFunctionWithRelocationEntries",
        @"testWriteClassPartsAndReadPartsManually",
        @"testRelocationEntriesComeAfterAllSegmentData",
