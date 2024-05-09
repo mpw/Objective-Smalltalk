@@ -39,12 +39,12 @@
 
 -(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess
 {
-    [NSException raise:@"unimplemented" format:@"writeSymtabEntryOfType not implemented" arguments:nil];
+    [NSException raise:@"unimplemented" format:@"writeSymtabEntryOfType not implemented"];
 }
 
 -(void)growSymtab
 {
-    [NSException raise:@"unimplemented" format:@"growSymtab not implemented" arguments:nil];
+    [NSException raise:@"unimplemented" format:@"growSymtab not implemented"];
 }
 
 

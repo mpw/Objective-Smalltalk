@@ -35,14 +35,6 @@ libObjSTNative_OBJC_FILES = \
 	MPWELFSymbolTable.m \
 	MPWELFWriter.m \
 	MPWJittableData.m \
-	MPWMachOClassReader.m \
-	MPWMachOClassWriter.m \
-	MPWMachOInSectionPointer.m \
-	MPWMachOReader.m \
-	MPWMachORelocationPointer.m \
-	MPWMachOSection.m \
-	MPWMachOSectionWriter.m \
-	MPWMachOWriter.m \
 	MPWMethodDescriptor.m \
 	MPWObjectFileWriter.m \
 	MPWStringTableWriter.m \
@@ -61,7 +53,7 @@ LIBRARIES_DEPEND_UPON +=  -lMPWFoundation -lgnustep-base -lgnustep-corebase
 LDFLAGS += -L ${HOME}/Build/obj -L ~/Build/obj
 
 
-libObjSTNative_INCLUDE_DIRS += -I.headers -I. -I../.headers/ -I../../MPWFoundation/.headers/
+libObjSTNative_INCLUDE_DIRS += -Imacho-headers -I.headers -I. -I../.headers/ -I../../MPWFoundation/.headers/
 
 -include GNUmakefile.preamble
 include $(GNUSTEP_MAKEFILES)/library.make
