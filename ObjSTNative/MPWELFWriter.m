@@ -35,6 +35,7 @@
     self.sections=[NSMutableArray array];
     symtabCapacity = 10;
     [self growSymtab];
+    [self addNullSection];
     return self;
 }
 
@@ -181,6 +182,16 @@
     return data;
 }
 
+-(int)globalFuncSymbolType
+{
+    return ELF64_ST_INFO(STB_GLOBAL, STT_FUNC );
+}
+
+-(int)textSectionNumber
+{
+    return self.textSection.sectionNumber;
+}
+
 -(void)dealloc
 {
     [_sectionNameStringTableWriter release];
@@ -222,7 +233,6 @@
 +(void)testCanWriteNullSection
 {
     MPWELFWriter *writer = [self stream];
-    [writer addNullSection];
     [writer addSectionHeaderStringTable];
 
     [writer writeFile];
@@ -253,7 +263,6 @@
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     EXPECTNOTNIL(add_function_payload, @"got the payload");
 
-    [writer addNullSection];
     [writer addSectionHeaderStringTable];
     [writer addTextSection:add_function_payload];
 
@@ -279,28 +288,24 @@
     IDEXPECT([[reader sectionStringTable] sectionName],@".shstrtab",@"section header string table name");
 }
 
-+(void)testCanWriteSymbolForTextSectionFunction
++(void)testWriteLinkableAddFunction
 {
     MPWELFWriter *writer = [self stream];
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     
-    [writer addNullSection];
     [writer addSectionHeaderStringTable];
     [writer addStringTable];
     [writer addSymbolTable];
     [writer addTextSection:add_function_payload];
-    [writer declareGlobalSymbol:@".text" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.textSection.sectionNumber];
-    [writer declareGlobalSymbol:@".shstrtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.sectionStringTableSection];
+//    [writer declareGlobalSymbol:@".text" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.textSection.sectionNumber];
+//    [writer declareGlobalSymbol:@".shstrtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.sectionStringTableSection];
 
-    [writer declareGlobalSymbol:@"add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
-    [writer declareGlobalSymbol:@".symtab" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_SECTION ) section:writer.symbolTable.sectionNumber];
+    [writer declareGlobalSymbol:@"add" atOffset:0];
+//    [writer declareGlobalSymbol:@"add" atOffset:0 type:ELF64_ST_INFO(STB_GLOBAL, STT_FUNC ) section:writer.textSection.sectionNumber];
 
 
     
     NSData *elf=[writer data];
-    
-//    [writer.symbolTable.sectionData writeToFile:@"/tmp/symtab-add-written.elfosection" atomically:YES];
-//    INTEXPECT(elf.length,464,@"size of ELF");
     
     
     
@@ -315,11 +320,11 @@
     EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
 //    [symbolTable.data writeToFile:@"/tmp/symtab-read.elfosection" atomically:YES];
 
-    INTEXPECT( [symbolTable numEntries], 4, @"number of entries");
+    INTEXPECT( [symbolTable numEntries], 1, @"number of entries");
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:2], @"add", @"name of symbol table entry 2");
+    IDEXPECT( [symbolTable symbolNameAtIndex:0], @"add", @"name of symbol table entry 2");
 
     
 }
@@ -329,7 +334,7 @@
 			@"testCanWriteHeader",
             @"testCanWriteNullSection",
             @"testCanWriteTextSectionWithName",
-            @"testCanWriteSymbolForTextSectionFunction",
+            @"testWriteLinkableAddFunction",
 			];
 }
 

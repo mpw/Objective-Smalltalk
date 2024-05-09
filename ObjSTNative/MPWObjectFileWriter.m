@@ -47,6 +47,8 @@
     [NSException raise:@"unimplemented" format:@"growSymtab not implemented" arguments:nil];
 }
 
+
+
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
 {
     int entryIndex = 0;
@@ -67,9 +69,19 @@
     return entryIndex;
 }
 
+-(int)globalFuncSymbolType
+{
+    return 0xf;     // Mach-O, overriden for ELF
+}
+
+-(int)textSectionNumber
+{
+    return 1;       // Mach-O, and should compute
+}
+
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset
 {
-    return [self declareGlobalSymbol:symbol atOffset:offset type:0xf section:1];
+    return [self declareGlobalSymbol:symbol atOffset:offset type:[self globalFuncSymbolType] section:[self textSectionNumber]];
 }
 
 -(int)declareExternalSymbol:(NSString*)symbol
