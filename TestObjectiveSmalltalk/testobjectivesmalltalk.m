@@ -11,7 +11,7 @@ static void runTests()
 	int success=0;
 	NSMutableArray *failures=[NSMutableArray array];
 	NSArray *classes=@[
-                       @"MPWStTests",
+                       @"STTests",
                        @"STSimpleDataflowConstraint",
 					   @"MPWScriptedMethod",
                        @"MPWIdentifier",

@@ -48,7 +48,6 @@
 }
 
 
-
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection
 {
     int entryIndex = 0;
@@ -91,7 +90,7 @@
 
 -(int)typeForExternalSymbols
 {
-    return 0x1;       // Mach-O, and should compute
+    return 0x1;       // Mach-O, and should compute this magic number somehow
 }
 
 
