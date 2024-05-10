@@ -28,6 +28,7 @@ ObjectiveSmalltalk_HEADER_FILES_INSTALL_DIR = /ObjectiveSmalltalk
 libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWIdentifier.m \
     Classes/MPWScheme.m \
+	Classes/STPropertyMethodHeader.m \
     Classes/STExpression.m \
     Stsh/Classes/MPWExpression+autocomplete.m \
     Classes/MPWBindingLegacy.m \
@@ -59,6 +60,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWStatementList.m \
     Classes/MPWDataflowConstraintExpression.m \
     Classes/MPWLiteralDictionaryExpression.m \
+    Classes/STPort.m \
     Classes/MPWConnectToDefault.m \
     Classes/STClassDefinition.m \
     Classes/MPWMethodStore.m \
@@ -142,4 +144,4 @@ test    : libObjectiveSmalltalk tester
 	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:${HOME}/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	$(CC) -g -fobjc-runtime=gnustep-2.1 -fblocks -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -L/usr/local/lib/ -lobjc
+	$(CC) -g -fobjc-runtime=gnustep-2.1 -fblocks -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc
