@@ -357,15 +357,17 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 +testSelectors
 {
-	return [NSArray arrayWithObjects:
+	return @[
+#if !GNUSTEP
             @"testLookupOfNilVariableInMethodWorks",
+#endif
             @"testThisSchemeReadsObject",
             @"testThisSchemeWritesObject",
             @"testComputeLocalVars",
 //            @"testSimpleBacktrace",                       // FIXME:  exceptions are currently swallowed
 //            @"testNestedBacktrace",
 //            @"testCombinedScriptedAndNativeBacktrace",
-		nil];
+		];
 }
 
 @end

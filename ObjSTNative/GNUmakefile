@@ -26,7 +26,6 @@ ObjSTNative_HEADER_FILES_INSTALL_DIR = /ObjSTNative
 
 
 libObjSTNative_OBJC_FILES = \
-	MPWARMObjectCodeGenerator.m \
 	MPWByteStreamWithSymbols.m \
 	MPWCPUSimulator.m \
 	MPWELFReader.m \
@@ -39,7 +38,6 @@ libObjSTNative_OBJC_FILES = \
 	MPWObjectFileWriter.m \
 	MPWStringTableWriter.m \
 	STMethodSymbols.m \
-	STNativeCompiler.m \
 
 
 
@@ -70,4 +68,11 @@ before-all ::
 
 after-clean ::
 	rm -rf .headers
+
+test    : libObjSTNative tester
+	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:${HOME}/Build/obj/  ./testelfnative
+
+
+tester  :
+	$(CC) -g -fobjc-runtime=gnustep-2.1 -fblocks -I../../MPWFoundation/.headers/ -I../.headers -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o testelfnative testelfnative.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/ -lObjSTNative -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc
 

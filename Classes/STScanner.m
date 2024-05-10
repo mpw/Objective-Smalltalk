@@ -611,7 +611,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 
 +(void)testScanStringWithUnicodeQuotationMark
 {
-    NSString *s=@"‘Hello’";
+    NSString *s=@"\u2018Hello\u2019";
     STScanner *scanner=[self scannerWithString:s];
     NSString *token=[[scanner nextToken] realString];
 //    NSLog(@"real string: %@/%@",[token class],token);
@@ -665,7 +665,9 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"testSimpleLiteralString",
             @"singleMinusString",
             @"testScanUTF8Name",
+#if !GNUSTEP
             @"testScanStringWithUnicodeQuotationMark",
+#endif
             @"testNewlineEscape",
             @"testNonbreakingSpaceSeparatesLikeSpace",
             @"testCommentToEndOfLine",
