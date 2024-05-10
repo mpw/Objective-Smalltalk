@@ -61,6 +61,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWDataflowConstraintExpression.m \
     Classes/MPWLiteralDictionaryExpression.m \
     Classes/STPort.m \
+    Classes/STSystem.m \
     Classes/MPWConnectToDefault.m \
     Classes/STClassDefinition.m \
     Classes/MPWMethodStore.m \

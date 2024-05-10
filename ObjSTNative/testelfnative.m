@@ -11,28 +11,8 @@ static void runTests()
 	int success=0;
 	NSMutableArray *failures=[NSMutableArray array];
 	NSArray *classes=@[
-                       @"STTests",
-                       @"STSimpleDataflowConstraint",
-					   @"MPWScriptedMethod",
-                       @"MPWIdentifier",
-                       @"STScanner",
-                       @"MPWScheme",
-                       @"MPWInterval",
-                       @"MPWMessage",
-                       @"MPWMethodHeader",
-                       @"MPWMethodStore",
-                       @"MPWMethodCallBack",
-//                       @"MPWPropertyPathGetter",
-//                       @"MPWPropertyPathComponent",
-//                       @"MPWFrameworkScheme",
-                       @"MPWSchemeScheme",
-//                       @"MPWVarScheme",
-                       @"MPWVARBinding",
-//                       @"MPWSelfContainedBindingsScheme",
-                       @"STCompiler",
-//                       @"MPWFilterDefinition",
-                       @"MPWMethodHeader",
-
+		@"MPWELFReader",
+		@"MPWELFWriter",
 	];
 
 	for (NSString *className in classes ) {
