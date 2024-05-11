@@ -13,7 +13,7 @@ static void runTests()
 	NSArray *classes=@[
 		@"MPWELFReader",
 		@"MPWELFWriter",
-		@"MPWARMObjectCodeGenerator",
+		@"STARMObjectCodeGenerator",
 	];
 
 	for (NSString *className in classes ) {
@@ -47,7 +47,7 @@ static void runTests()
 		}
 
 	}
-	printf("\n\033[91;3%dmtests: %d total,  %d successes %d failures\033[0m\n",failures.count > 0 ? 1:2,tests,success,failures.count);
+	printf("\n\033[91;3%dmtests: %d total,  %d successes %ld failures\033[0m\n",failures.count > 0 ? 1:2,tests,success,failures.count);
 	if (failures.count) {
 		printf("\n");
 		for (NSString *failure in failures) {

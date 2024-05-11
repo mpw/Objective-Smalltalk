@@ -68,7 +68,7 @@
     }
 }
 
--(long)length
+-(unsigned long)length
 {
     return length;
 }

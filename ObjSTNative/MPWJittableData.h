@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(const void*)bytes;
 -(void*)mutableBytes;
 -(void)appendBytes:(const void*)newBytes length:(long)newLength;
--(long)length;
+-(unsigned long)length;
 -(long)capacity;
 -(void)makeExecutable;
 -(void)makeWritable;

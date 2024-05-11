@@ -355,10 +355,10 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     NSString *methodSymbolName = @"-[TestClass method]";
 
     [writer.textSectionWriter declareGlobalTextSymbol:methodSymbolName];
-    MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
+    STARMObjectCodeGenerator *g=[STARMObjectCodeGenerator stream];
     g.symbolWriter = writer;
     g.relocationWriter = writer.textSectionWriter;
-    [g generateFunctionNamed:methodSymbolName body:^(MPWARMObjectCodeGenerator *gen) {
+    [g generateFunctionNamed:methodSymbolName body:^(STARMObjectCodeGenerator *gen) {
         [g generateMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
@@ -407,10 +407,10 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
         MPWMachOWriter *writer = [MPWMachOWriter stream];
         NSString *symbol=@"_propertyPathDef";
         NSString *functionSymbol=@"_theFunction";
-        MPWARMObjectCodeGenerator *g=[MPWARMObjectCodeGenerator stream];
+        STARMObjectCodeGenerator *g=[STARMObjectCodeGenerator stream];
         g.symbolWriter = writer;
         g.relocationWriter = writer.textSectionWriter;
-        [g generateFunctionNamed:functionSymbol body:^(MPWARMObjectCodeGenerator *gen) {
+        [g generateFunctionNamed:functionSymbol body:^(STARMObjectCodeGenerator *gen) {
             [gen generateAddDest:0 source:0 immediate:200];
         }];
         NSData *d=(NSData*)[g target];

@@ -53,9 +53,9 @@
 -(void)writeSectionDataOnWriter:(MPWByteStream*)writer
 {
     const char paddingData[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    NSLog(@"write %ld bytes of section data (padded: %ld) for section %d",self.sectionData.length,self.sectionLength,self.sectionNumber);
+//    NSLog(@"write %ld bytes of section data (padded: %ld) for section %d",self.sectionData.length,self.sectionLength,self.sectionNumber);
     [writer appendBytes:self.sectionData.bytes length:self.sectionData.length];
-    NSLog(@"write %d bytes of padding",self.padding);
+//    NSLog(@"write %d bytes of padding",self.padding);
     [writer appendBytes:paddingData length:self.padding];
 }
 
