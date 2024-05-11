@@ -6,6 +6,23 @@
 //
 
 #import "STNativeCompilerTestsMachO.h"
+#import "MPWMachOWriter.h"
+#import "MPWMachOClassWriter.h"
+
+@implementation STNativeCompiler(MachO)
+
+-createObjectFileWriter
+{
+    return [MPWMachOWriter stream];
+}
+
+-createClassWriter
+{
+    return [MPWMachOClassWriter writerWithWriter:[self writer]];
+}
+
+
+@end
 
 @implementation STNativeCompilerTestsMachO
 

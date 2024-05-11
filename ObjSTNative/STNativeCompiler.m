@@ -218,8 +218,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     self=[super init];
     if ( self ) {
-        self.writer = [MPWMachOWriter stream];
-        self.classwriter = [MPWMachOClassWriter writerWithWriter:writer];
+        self.writer = [self createObjectFileWriter];
+        self.classwriter = [self createClassWriter];
         self.codegen = [STObjectCodeGeneratorARM stream];
         
         self.localRegisterMin = 19;     // ARM min saved register
