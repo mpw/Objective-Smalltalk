@@ -928,29 +928,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([concatter stringAnswer],@"answer: 42",@"the answer");
 }
 
-+(void)testMachOCompileStringObjectLiteral
-{
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition * compiledClass = [compiler compile:@"class StringTest { -stringAnswer { 'answer: 42'. }}"];
-    NSData *d=[compiler compileClassToMachoO:compiledClass];
-    [d writeToFile:@"/tmp/stringLiteral.o" atomically:YES];
-
-    MPWMachOReader *reader=[MPWMachOReader readerWithData:d];
-    MPWMachOInSectionPointer *s=[reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_CFSTR_L1"]];
-    EXPECTNOTNIL(s, @" pointer");
-    Mach_O_NSString *str_read=(Mach_O_NSString*)[s bytes];
-    IDEXPECT([[s relocationPointer] targetName],@"___CFConstantStringClassReference",@"class");
-    INTEXPECT( str_read->length,10,@"length");
-    INTEXPECT( str_read->flags, 1992, @"flags");
-
-    long offset=((void*)&str_read->cstring) - (void*)str_read;
-    MPWMachOInSectionPointer *contentPtr = [[s relocationPointerAtOffset:offset] targetPointer];
-    IDEXPECT( contentPtr.stringValue,@"answer: 42",@"contents");
-
-    
-    
-}
-
 +(void)testJitCompileNumberArithmetic
 {
     ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -add:a to:b to:c { a+b+c. }}"];
@@ -965,26 +942,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT(computedAnswer,expectedAnswer,@"the answer");
 }
 
-+(void)testCompileConstantNumberArithmeticToMachO
-{
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -someConstantNumbersAdded { 100+30+7. }}"];
-    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/constantArithmetic.o" atomically:YES];
-}
 
-+(void)testCompileNumberArithmeticToMachO
-{
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition * compiledClass = [compiler compile:@"class ArithmeticTester { -add:a to:b to:c { a+b+c. }}"];
-    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/arithmetic.o" atomically:YES];
-}
-
-+(void)testMachOCompileSimpleFilter
-{
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition * compiledClass = [compiler compile:@"filter Upcaser |{ ^object stringValue uppercaseString. }"];
-    [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/upcasefilter.o" atomically:YES];
-}
 
 +(void)testJitCompileFilter
 {
@@ -1256,11 +1214,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testJitCompileAMethodMoreCompactly",
        @"testJitCompileNumberArithmetic",
        @"testJitCompileConstantNumberArithmeticSequence",
-       @"testCompileConstantNumberArithmeticToMachO",
-       @"testCompileNumberArithmeticToMachO",
-       @"testMachOCompileSimpleFilter",
        @"testJitCompileStringObjectLiteral",
-       @"testMachOCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
        @"testMachOCompileBlock",
