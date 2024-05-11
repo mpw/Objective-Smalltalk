@@ -115,6 +115,33 @@
     [[compiler compileClassToMachoO:compiledClass] writeToFile:@"/tmp/arithmetic.o" atomically:YES];
 }
 
++(void)testMachOCompileBlock
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ 3 }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockFromST.o" atomically:YES];
+}
+
++(void)testMachOCompileBlockWithArg
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArg.o" atomically:YES];
+}
+
++(void)testMachOCompileAndRunBlockWithArg
+{
+    STNativeCompiler *compiler = [self compiler];
+    MPWBlockExpression * compiledBlock = [compiler compile:@"{ :a | a + 3. }"];
+    [[compiler compileBlockToMachoO:compiledBlock] writeToFile:@"/tmp/blockWithArgToLink.o" atomically:YES];
+    [[self frameworkResource:@"use_st_block" category:@"mfile"] writeToFile:@"/tmp/use_st_block.m" atomically:YES];
+    int compileSucess = system("cd /tmp; cc -rpath /Library/Frameworks -O  -Wall -o use_st_block use_st_block.m blockWithArgToLink.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
+    INTEXPECT(compileSucess,0,@"compile worked");
+    int runSucess = system("cd /tmp; ./use_st_block");
+    INTEXPECT(runSucess,0,@"run worked");
+    
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -126,6 +153,9 @@
        @"testMachOCompileSimpleFilter",
        @"testCompileConstantNumberArithmeticToMachO",
        @"testCompileNumberArithmeticToMachO",
+       @"testMachOCompileBlock",
+       @"testMachOCompileBlockWithArg",
+       @"testMachOCompileAndRunBlockWithArg",
 			];
 }
 
