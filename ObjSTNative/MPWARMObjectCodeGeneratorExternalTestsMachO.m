@@ -22,10 +22,10 @@
 +(void)testGenerateMachOWithCallToExternalFunction
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
-    STARMObjectCodeGenerator *g=[self stream];
+    STObjectCodeGeneratorARM *g=[self stream];
     g.symbolWriter = writer;
     g.relocationWriter = writer.textSectionWriter;
-    [g generateFunctionNamed:@"_theFunction" body:^(STARMObjectCodeGenerator *gen) {
+    [g generateFunctionNamed:@"_theFunction" body:^(STObjectCodeGeneratorARM *gen) {
         [g generateCallToExternalFunctionNamed:@"_other"];
     }];
     [writer addTextSectionData:(NSData*)[g target]];
@@ -42,10 +42,10 @@
 +(void)testGenerateMachOWithMessageSend
 {
     MPWMachOWriter *writer = [MPWMachOWriter stream];
-    STARMObjectCodeGenerator *g=[self stream];
+    STObjectCodeGeneratorARM *g=[self stream];
     g.symbolWriter = writer;
     g.relocationWriter = writer.textSectionWriter;
-    [g generateFunctionNamed:@"_lengthOfString" body:^(STARMObjectCodeGenerator *gen) {
+    [g generateFunctionNamed:@"_lengthOfString" body:^(STObjectCodeGeneratorARM *gen) {
         [g generateMessageSendToSelector:@"length"];
     }];
     [writer addTextSectionData:(NSData*)[g target]];
@@ -59,8 +59,8 @@
 
 +(void)testGenerateMessageSendAndComputation
 {
-    STARMObjectCodeGenerator *g=[self stream];
-    [g generateFunctionNamed:@"_lengthOfString" body:^(STARMObjectCodeGenerator *gen) {
+    STObjectCodeGeneratorARM *g=[self stream];
+    [g generateFunctionNamed:@"_lengthOfString" body:^(STObjectCodeGeneratorARM *gen) {
         [g generateMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
