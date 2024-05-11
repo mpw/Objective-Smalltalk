@@ -8,7 +8,7 @@
 #import "STNativeCompiler.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 #import "MPWMachOWriter.h"
-#import "STARMObjectCodeGenerator.h"
+#import "STObjectCodeGeneratorARM.h"
 #import "MPWMachOClassWriter.h"
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
@@ -189,14 +189,14 @@
 
 @implementation STNativeCompiler
 {
-    STARMObjectCodeGenerator* codegen;
+    STObjectCodeGeneratorARM* codegen;
     MPWMachOWriter *writer;
     MPWMachOClassWriter *classwriter;
     int blockNo;
     int stringLiteralNo;
 }
 
-objectAccessor(STARMObjectCodeGenerator*, codegen, setCodegen)
+objectAccessor(STObjectCodeGeneratorARM*, codegen, setCodegen)
 objectAccessor(MPWMachOWriter*, writer, setWriter)
 objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
@@ -220,7 +220,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     if ( self ) {
         self.writer = [MPWMachOWriter stream];
         self.classwriter = [MPWMachOClassWriter writerWithWriter:writer];
-        self.codegen = [STARMObjectCodeGenerator stream];
+        self.codegen = [STObjectCodeGeneratorARM stream];
         
         self.localRegisterMin = 19;     // ARM min saved register
         self.localRegisterMax = 29;     // ARM min saved register
@@ -627,7 +627,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
     NSString *symbol = [NSString stringWithFormat:@"%@[%@ %@]",isClassMethod ? @"+":@"-", aClass.name,method.methodName];
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    [codegen generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(STARMObjectCodeGenerator * _Nonnull gen) {
+    [codegen generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
     return symbol;
@@ -715,7 +715,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     NSString *symbol = @"_main";
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    [codegen generateFunctionNamed:symbol body:^(STARMObjectCodeGenerator * _Nonnull gen) {
+    [codegen generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         [self generateStringLiteral:aClassName intoRegister:2];
 //        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
         [codegen generateCallToExternalFunctionNamed:@"_runSTMain"];
@@ -727,7 +727,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     self.currentBlock = aBlock;
     self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    [codegen generateFunctionNamed:symbol body:^(STARMObjectCodeGenerator * _Nonnull gen) {
+    [codegen generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         
         int returnRegister=0;
         NSArray *arguments=[aBlock arguments];

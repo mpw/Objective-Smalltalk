@@ -768,7 +768,7 @@
 +(void)testMachOWriteBlockStructures
 {
     MPWMachOWriter *writer = [self stream];
-    STARMObjectCodeGenerator *gen=[STARMObjectCodeGenerator stream];
+    STObjectCodeGeneratorARM *gen=[STObjectCodeGeneratorARM stream];
     [gen setRelocationWriter:writer];
     [gen setSymbolWriter:writer];
     [gen declareGlobalSymbol:@"_block_fn"];

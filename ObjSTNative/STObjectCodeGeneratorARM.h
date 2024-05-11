@@ -11,12 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MPWJittableData;
 
-@interface STARMObjectCodeGenerator : MPWByteStreamWithSymbols
+@interface STObjectCodeGeneratorARM : MPWByteStreamWithSymbols
 
 @property (nonatomic,assign) int defaultFunctionStackSpace;
 
--(void)generateFunctionNamed:(NSString*)name body:(void(^)(STARMObjectCodeGenerator* gen))block;
--(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(STARMObjectCodeGenerator* gen))block;
+-(void)generateFunctionNamed:(NSString*)name body:(void(^)(STObjectCodeGeneratorARM* gen))block;
+-(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(STObjectCodeGeneratorARM* gen))block;
 -(void)generateBranchAndLinkWithOffset:(int)offset;
 -(void)generateBranchAndLinkWithRegister:(int)theRegister;
 -(void)generateCallToExternalFunctionNamed:(NSString*)name;
