@@ -8,7 +8,7 @@
 //  https://weinholt.se/articles/arm-a64-instruction-set/
 //  
 
-#import "MPWARMObjectCodeGenerator.h"
+#import "STARMObjectCodeGenerator.h"
 #import "MPWJittableData.h"
 #import <objc/message.h>
 
@@ -22,7 +22,7 @@
 //   x30     link register
 //   x31     SP / zero register dependingon instruction
 
-@implementation MPWARMObjectCodeGenerator
+@implementation STARMObjectCodeGenerator
 
 -(instancetype)initWithTarget:(id)aTarget
 {
@@ -351,14 +351,14 @@
     [self generateReturn];
 }
 
--(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(MPWARMObjectCodeGenerator* gen))block
+-(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(STARMObjectCodeGenerator* gen))block
 {
     [self generateStartOfFunctionNamed:name stackSpace:stackSpace];
     block(self);
     [self generateEndOfFunctionStackSpace:stackSpace];
 }
 
--(void)generateFunctionNamed:(NSString*)name body:(void(^)(MPWARMObjectCodeGenerator* gen))block
+-(void)generateFunctionNamed:(NSString*)name body:(void(^)(STARMObjectCodeGenerator* gen))block
 {
     [self generateFunctionNamed:name stackSpace:self.defaultFunctionStackSpace body:block ];
 }
@@ -377,22 +377,22 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWARMObjectCodeGenerator(testing) 
+@implementation STARMObjectCodeGenerator(testing) 
 
 typedef long (*IMPINTINT)(long, long);
 typedef long (*IMPPTR)(long*);
 typedef long (*IMPPTRPTR)(long*,long*);
 typedef long (*VOIDPTR)(void);
 
-+(NSData*)codeFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
++(NSData*)codeFor:(void(^)(STARMObjectCodeGenerator* gen))block
 {
-    MPWARMObjectCodeGenerator *g=[self stream];
+    STARMObjectCodeGenerator *g=[self stream];
     block(g);
     [g generateReturn];
     return (NSData*)[g generatedCode];
 }
 
-+(IMPINTINT)fnFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
++(IMPINTINT)fnFor:(void(^)(STARMObjectCodeGenerator* gen))block
 {
     NSData *d=[self codeFor:block];
     return (IMPINTINT)[d bytes];
@@ -402,7 +402,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateReturn
 {
-    NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {}];
+    NSData *code=[self codeFor:^(STARMObjectCodeGenerator *gen) {}];
     INTEXPECT(code.length,4,@"length of generated code");
     voidvoidfun fn=(voidvoidfun)[code bytes];
     EXPECTTRUE(true, @"before call");
@@ -410,7 +410,7 @@ typedef void (*voidvoidfun)(void);
     EXPECTTRUE(true, @"got here");
 }
 
-+(unsigned int)instructionFor:(void(^)(MPWARMObjectCodeGenerator* gen))block
++(unsigned int)instructionFor:(void(^)(STARMObjectCodeGenerator* gen))block
 {
     NSData *code=[self codeFor:block];
     NSAssert1(code.length >= 4, @"Had only %ld bytes, need at least 4",code.length);
@@ -420,7 +420,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateAdd
 {
-    NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {
+    NSData *code=[self codeFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateAddDest:0 source1:0 source2:1];
     }];
     INTEXPECT(code.length,8,@"length of generated code");
@@ -431,7 +431,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateImmediateAdd
 {
-    NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {
+    NSData *code=[self codeFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateAddDest:0 source:0 immediate:4];
     }];
     IMPINTINT addfn=(IMPINTINT)[code bytes];
@@ -441,7 +441,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateImmediateSub
 {
-    NSData *code=[self codeFor:^(MPWARMObjectCodeGenerator *gen) {
+    NSData *code=[self codeFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSubDest:0 source:0 immediate:7];
     }];
     IMPINTINT addfn=(IMPINTINT)[code bytes];
@@ -452,7 +452,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateSub
 {
-    IMPINTINT subfn = [self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPINTINT subfn = [self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSubDest:0 source1:0 source2:1];
     }];
     long result=subfn(40,2);
@@ -461,7 +461,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateMul
 {
-    IMPINTINT mulfn = [self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPINTINT mulfn = [self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateMulDest:0 source1:0 source2:1];
     }];
     long result=mulfn(9,5);
@@ -470,7 +470,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateSubReverseOrder
 {
-    IMPINTINT subfn = [self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPINTINT subfn = [self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSubDest:0 source1:1 source2:0];
     }];
     long result=subfn(3,40);
@@ -479,11 +479,11 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateStoreMultiple
 {
-    unsigned int storeMultipleInstructionPre = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int storeMultipleInstructionPre = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:YES];
     }];
     INTEXPECT(storeMultipleInstructionPre, 0xa9bd7bfd, @"stp    x29, x30, [sp, #-0x30]!" );
-    unsigned int storeMultipleInstructionPost = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int storeMultipleInstructionPost = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSaveRegister:29 andRegister:30 relativeToRegister:31 offset:-0x30 rewrite:YES pre:NO];
     }];
     INTEXPECT(storeMultipleInstructionPost, 0xa8bd7bfd, @"stp    x29, x30, [sp #-0x30]!" );
@@ -491,7 +491,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateAddImmediate
 {
-    unsigned int addImmediate = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int addImmediate = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateAddDest:31 source:31 immediate:0x08];
     }];
     HEXEXPECT(addImmediate, 0x910023ff, @"add    sp, sp, #0x8" );
@@ -499,11 +499,11 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testReserveStackSpace
 {
-    unsigned int reserveStackx8 = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int reserveStackx8 = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen reserveStackSpace:0x08];
     }];
     HEXEXPECT(reserveStackx8, 0xd10023ff, @"sub    sp, sp, #0x8" );
-    unsigned int reserveStackx22 = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int reserveStackx22 = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen reserveStackSpace:0x22];
     }];
     HEXEXPECT(reserveStackx22, 0xd1008bff, @"sub    sp, sp, #0x22" );
@@ -513,7 +513,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateSubImmediate
 {
-    unsigned int addImmediate = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int addImmediate = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSubDest:31 source:31 immediate:0x08];
     }];
     HEXEXPECT(addImmediate, 0xd10023ff, @"sub    sp, sp, #0x8" );
@@ -521,7 +521,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateLoadPCRelative
 {
-    unsigned int loadPCRelative = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int loadPCRelative = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen loadRegister:0 pcRelative:0];
     }];
     HEXEXPECT(loadPCRelative, 0x58000000, @"l1: ldr    x0, l1" );
@@ -529,7 +529,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateLoadMultiple
 {
-    unsigned int loadMultipleInstruction = [self instructionFor:^(MPWARMObjectCodeGenerator *gen) {
+    unsigned int loadMultipleInstruction = [self instructionFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateLoadRegister:29 andRegister:30 relativeToRegister:31 offset:0x30 rewrite:YES pre:NO];
     }];
     NSAssert2(loadMultipleInstruction== 0xa8c37bfd,@"load multiple: got %x expected %x",loadMultipleInstruction,0xa8c37bfd );
@@ -538,7 +538,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateDereferencePointerPassedIn
 {
-    IMPPTR loadfn = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPPTR loadfn = (IMPPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen loadRegister:0 fromContentsOfAdressInRegister:0];
     }];
     long numberToLoad = 43267;
@@ -548,7 +548,7 @@ typedef void (*voidvoidfun)(void);
 
 +(void)testGenerateSubtractPointedAtLongs
 {
-    IMPPTRPTR subptrfn = (IMPPTRPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPPTRPTR subptrfn = (IMPPTRPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen loadRegister:1 fromContentsOfAdressInRegister:1];
         [gen loadRegister:0 fromContentsOfAdressInRegister:0];
         [gen generateSubDest:0 source1:0 source2:1];
@@ -563,7 +563,7 @@ typedef void (*voidvoidfun)(void);
 {
     long myData[2]={};
     long *dataptr = myData;
-    VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen loadRegister:0 fromContentsOfConstantAdress:dataptr];
         
     }];
@@ -581,7 +581,7 @@ static void callme() {
 
 +(void)testGenerateBranchToPointerPassedAsArg
 {
-    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateBranchWithRegister:0];
         
     }];
@@ -593,7 +593,7 @@ static void callme() {
 
 +(void)testGenerateCallToPointerPassedAsArg
 {
-    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateSaveLinkRegisterAndFramePtr:0x0];
         [gen generateBranchAndLinkWithRegister:0];
         [gen generateRestoreLinkRegisterAndFramePtr:0x0];
@@ -609,7 +609,7 @@ static void callme() {
  
 +(void)testCanGenerateReturnAddressProtection
 {
-    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    IMPPTR callPassedFun = (IMPPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen generateCreateReturnAddressProtectionHash];
         [gen generateSaveLinkRegisterAndFramePtr:0x0];
         [gen generateBranchAndLinkWithRegister:0];
@@ -628,8 +628,8 @@ typedef long (*IDPTR)(id,SEL);
 
 +(void)testJITMessageSendAndComputation
 {
-    MPWARMObjectCodeGenerator *g=[self stream];
-    [g generateFunctionNamed:@"-[TestClass method]" body:^(MPWARMObjectCodeGenerator *gen) {
+    STARMObjectCodeGenerator *g=[self stream];
+    [g generateFunctionNamed:@"-[TestClass method]" body:^(STARMObjectCodeGenerator *gen) {
         [g generateJittedMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
@@ -645,8 +645,8 @@ typedef long (*IDIDPTR)(id,SEL,id);
 
 +(void)testJITLengthOfPassedStringPlus3
 {
-    MPWARMObjectCodeGenerator *g=[self stream];
-    [g generateFunctionNamed:@"-[TestClass lengthOfStringPlus3]" body:^(MPWARMObjectCodeGenerator *gen) {
+    STARMObjectCodeGenerator *g=[self stream];
+    [g generateFunctionNamed:@"-[TestClass lengthOfStringPlus3]" body:^(STARMObjectCodeGenerator *gen) {
         [g generateMoveRegisterFrom:2 to:0];
         [g generateJittedMessageSendToSelector:@"length"];
         [gen generateAddDest:0 source:0 immediate:3];
@@ -667,7 +667,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
         longptr[i]=i;
     }
     for (int i=0;i<datalen;i++) {
-        VOIDPTR loadPtr = (VOIDPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+        VOIDPTR loadPtr = (VOIDPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
             [gen loadRegister:0 withConstantAdress:dataptr+(i*sizeof(long))];
         }];
         NSString *msg = [NSString stringWithFormat:@"address generated by adrp+add at offset %d (%x)",i,i];
@@ -677,7 +677,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
 
 +(void)testADRPGeneration
 {
-    MPWARMObjectCodeGenerator *gen=[self stream];
+    STARMObjectCodeGenerator *gen=[self stream];
     unsigned int adrp1=[gen adrpForRegister:0 address:0 pc:0];
     HEXEXPECT(adrp1,0x90000000,@"no offset register 0");    // 1001
     unsigned int adrp2=[gen adrpForRegister:0 address:4096 pc:0];
@@ -696,7 +696,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
 
 +(void)testLoadEmbeddedPointer
 {
-    VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(MPWARMObjectCodeGenerator *gen) {
+    VOIDPTR loadFromPtr = (VOIDPTR)[self fnFor:^(STARMObjectCodeGenerator *gen) {
         [gen loadRegister:0 withEmbeddedPointer:(void*)0x123456789abcdef];
         
     }];

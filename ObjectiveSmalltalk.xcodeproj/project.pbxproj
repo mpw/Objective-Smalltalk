@@ -118,8 +118,8 @@
 		1F321C69213334F3001BE6CC /* MPWPropertyPathMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F321C66213334F3001BE6CC /* MPWPropertyPathMethod.m */; };
 		1F321C6A213334F3001BE6CC /* MPWPropertyPathMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F321C66213334F3001BE6CC /* MPWPropertyPathMethod.m */; };
 		1F34669C28B0CFC1003257CB /* stsh_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F34669B28B0CFC1003257CB /* stsh_ui.m */; };
-		1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3466EA28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h */; };
-		1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3466EB28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m */; };
+		1F3466EC28C4FBF2003257CB /* STARMObjectCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3466EA28C4FBF2003257CB /* STARMObjectCodeGenerator.h */; };
+		1F3466ED28C4FBF2003257CB /* STARMObjectCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3466EB28C4FBF2003257CB /* STARMObjectCodeGenerator.m */; };
 		1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3466EE28CB10F7003257CB /* MPWMachOReader.h */; };
 		1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3466EF28CB10F7003257CB /* MPWMachOReader.m */; };
 		1F3466F428CB114E003257CB /* add.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F3466F328CB114E003257CB /* add.macho */; };
@@ -1105,8 +1105,8 @@
 		1F321C65213334F3001BE6CC /* MPWPropertyPathMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWPropertyPathMethod.h; sourceTree = "<group>"; };
 		1F321C66213334F3001BE6CC /* MPWPropertyPathMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathMethod.m; sourceTree = "<group>"; };
 		1F34669B28B0CFC1003257CB /* stsh_ui.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = stsh_ui.m; path = Stsh/stsh_ui.m; sourceTree = SOURCE_ROOT; };
-		1F3466EA28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWARMObjectCodeGenerator.h; sourceTree = "<group>"; };
-		1F3466EB28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWARMObjectCodeGenerator.m; sourceTree = "<group>"; };
+		1F3466EA28C4FBF2003257CB /* STARMObjectCodeGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STARMObjectCodeGenerator.h; sourceTree = "<group>"; };
+		1F3466EB28C4FBF2003257CB /* STARMObjectCodeGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STARMObjectCodeGenerator.m; sourceTree = "<group>"; };
 		1F3466EE28CB10F7003257CB /* MPWMachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOReader.h; sourceTree = "<group>"; };
 		1F3466EF28CB10F7003257CB /* MPWMachOReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOReader.m; sourceTree = "<group>"; };
 		1F3466F328CB114E003257CB /* add.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = add.macho; sourceTree = "<group>"; };
@@ -1828,8 +1828,8 @@
 				1F2F8DBA192C691900A5D1B5 /* MPWMethodDescriptor.m */,
 				1FDDE95328F98682002A4AA4 /* MPWByteStreamWithSymbols.h */,
 				1FDDE95428F98682002A4AA4 /* MPWByteStreamWithSymbols.m */,
-				1F3466EA28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h */,
-				1F3466EB28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m */,
+				1F3466EA28C4FBF2003257CB /* STARMObjectCodeGenerator.h */,
+				1F3466EB28C4FBF2003257CB /* STARMObjectCodeGenerator.m */,
 				1F032E1D2BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.h */,
 				1F032E1E2BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.m */,
 				1FB559EE290D61E0009AE4D0 /* STNativeCompiler.h */,
@@ -2849,7 +2849,7 @@
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
-				1F3466EC28C4FBF2003257CB /* MPWARMObjectCodeGenerator.h in Headers */,
+				1F3466EC28C4FBF2003257CB /* STARMObjectCodeGenerator.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
@@ -4213,7 +4213,7 @@
 				1FA5DF712BE8BFF8001E5231 /* MPWStringTableWriter.m in Sources */,
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
-				1F3466ED28C4FBF2003257CB /* MPWARMObjectCodeGenerator.m in Sources */,
+				1F3466ED28C4FBF2003257CB /* STARMObjectCodeGenerator.m in Sources */,
 				1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */,
 				1F1380012BE66C0300CD023C /* MPWELFSymbolTable.m in Sources */,
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,

@@ -6,7 +6,7 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
-#import "MPWARMObjectCodeGenerator.h"
+#import "STARMObjectCodeGenerator.h"
 #import "MPWObjectFileWriter.h"
 
 NS_ASSUME_NONNULL_BEGIN

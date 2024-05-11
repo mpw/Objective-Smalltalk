@@ -284,9 +284,9 @@
 +(void)testWriteLinkableAddFunction
 {
     MPWELFWriter *writer = [self stream];
-    NSLog(@"bundle for class: %@",[NSBundle bundleForClass:self]);
-    NSLog(@"path for class bundle: %@",[[NSBundle bundleForClass:self] bundlePath]);
-    NSLog(@"resource path for class bundle: %@",[[NSBundle bundleForClass:self] resourcePath]);
+//    NSLog(@"bundle for class: %@",[NSBundle bundleForClass:self]);
+//    NSLog(@"path for class bundle: %@",[[NSBundle bundleForClass:self] bundlePath]);
+//    NSLog(@"resource path for class bundle: %@",[[NSBundle bundleForClass:self] resourcePath]);
     NSData *add_function_payload=[self resourceWithName:@"add" type:@"aarch64"];
     
     [writer addTextSection:add_function_payload];
