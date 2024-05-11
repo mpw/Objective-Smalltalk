@@ -13,6 +13,7 @@ static void runTests()
 	NSArray *classes=@[
 		@"MPWELFReader",
 		@"MPWELFWriter",
+		@"MPWARMObjectCodeGenerator",
 	];
 
 	for (NSString *className in classes ) {
