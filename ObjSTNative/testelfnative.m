@@ -14,6 +14,7 @@ static void runTests()
 		@"MPWELFReader",
 		@"MPWELFWriter",
 		@"STObjectCodeGeneratorARM",
+		@"STNativeCompiler",
 	];
 
 	for (NSString *className in classes ) {
