@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) bool logging;
 
 +(instancetype)jitCompiler;
++(instancetype)stackBlockCompiler;      // for testing
 -(int)linkObjects:(NSArray*)objects toExecutable:(NSString*)executable inDir:(NSString*)dir additionalFrameworks:(NSArray*)additionalFrameworks;
 -(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks;
 -(NSData*)compileClassToMachoO:(STClassDefinition*)aClass;
