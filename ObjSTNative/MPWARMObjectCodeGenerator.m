@@ -11,7 +11,6 @@
 #import "MPWARMObjectCodeGenerator.h"
 #import "MPWJittableData.h"
 #import <objc/message.h>
-#import "MPWMachOSectionWriter.h"
 
 
 //   ARM64 register conventions: https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms
