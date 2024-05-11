@@ -200,6 +200,13 @@ objectAccessor(STARMObjectCodeGenerator*, codegen, setCodegen)
 objectAccessor(MPWMachOWriter*, writer, setWriter)
 objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
++(instancetype)stackBlockCompiler {
+    STNativeCompiler *stackBlockCompiler = [self compiler];
+    stackBlockCompiler.forceStackBlocks = true;
+    return stackBlockCompiler;
+}
+
+
 +(instancetype)jitCompiler
 {
     STNativeCompiler *compiler=[self compiler];
@@ -858,11 +865,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWMachOReader.h"
-#import "MPWMachOClassReader.h"
-#import "MPWMachORelocationPointer.h"
-#import "MPWMachOInSectionPointer.h"
-#import "Mach_O_Structs.h"
 
 @interface ConcatterTest1: NSObject
 @end
@@ -990,78 +992,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT( falseLiteral.theLiteral, @"falseBlock",@"false block literal");
 }
 
-+(void)testGenerateCodeForBlocksInMethod
-{
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition *theClass = [compiler compile:@"class TestClassIfTrueIfFalse { -tester:cond { cond ifTrue: { 3. } ifFalse:{ 2. }. } }"];
-    [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classWithIfTrueIfFalse.o" atomically:YES];
-    
-    
-    [[self frameworkResource:@"use_class_with_if" category:@"mfile"] writeToFile:@"/tmp/use_class_with_if.m" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -rpath /Library/Frameworks -O  -Wall -o use_class_with_if use_class_with_if.m classWithIfTrueIfFalse.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
-    INTEXPECT(compileSucess,0,@"compile worked");
-    int runSucess = system("cd /tmp; ./use_class_with_if");
-    INTEXPECT(runSucess,0,@"run worked");
-}
-
-+(void)testGenerateCodeForClassReference
-{
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition *theClass = [compiler compile:@"class TestClassWithClassRef { -tester { class:NSObject new. } }"];
-    [[compiler compileClassToMachoO:theClass] writeToFile:@"/tmp/classThatCreatesNSObjects.o" atomically:YES];
-    
-    
-    [[self frameworkResource:@"use_class_that_creates_nsobject" category:@"mfile"] writeToFile:@"/tmp/use_class_that_creates_nsobject.m" atomically:YES];
-    int compileSucess = system("cd /tmp; cc -rpath /Library/Frameworks -O  -Wall -o use_class_that_creates_nsobject use_class_that_creates_nsobject.m classThatCreatesNSObjects.o -F/Library/Frameworks -framework ObjectiveSmalltalk   -framework MPWFoundation -framework Foundation");
-    INTEXPECT(compileSucess,0,@"compile worked");
-    int runSucess = system("cd /tmp; ./use_class_that_creates_nsobject");
-    INTEXPECT(runSucess,0,@"run worked");
-}
-
-+(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename compiler:(STNativeCompiler *)compiler
-{
-    STClassDefinition *theClass = [compiler compile:objs];
-    
-    [[compiler compileProcessToMachoO:theClass] writeToFile:[NSString stringWithFormat:@"/tmp/%@.o",filename] atomically:YES];
-    int compileSuccess = [compiler linkObjects:@[ filename ] toExecutable:filename inDir:@"/tmp"];
-    if (compileSuccess!=0) {
-        return [NSString stringWithFormat:@"link of %@ failed with %d",filename,compileSuccess];
-    }
-    NSString *runCommmand=[NSString stringWithFormat:@"cd /tmp; ./%@",filename];
-    int runSucess = system([runCommmand UTF8String]);
-    if (runSucess!=0) {
-        return [NSString stringWithFormat:@"run of %@ failed with %d",filename,runSucess];
-    }
-    return @"No error";
-//    INTEXPECT(runSucess,0,@"run worked");
-}
-
-+(NSString*)errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename
-{
-    return [self errorCompilingAndRunning:(NSString*)objs filename:(NSString*)filename compiler:[self compiler]];
-}
-
-
-#define COMPILEANDRUN( str, theFilename )\
-NSString *msg=[self errorCompilingAndRunning:str filename:theFilename];\
-IDEXPECT(msg,@"No error",@"compile and run");\
-
-
-+(void)testGenerateMainThatCallsClassMethod
-{
-    COMPILEANDRUN( @"class TestHelloWorld : STProgram { -main:args { class:MPWByteStream Stdout println:'Hello World from auto-generated main'. 0. } }", @"selfContainedHelloWorld");
-}
-
-
-+(void)testTwoStringsInMachO
-{
-    COMPILEANDRUN( @"class TestClassTwoStrings : STProgram {  -method2 { self Stdout println:'2nd string'.  } -main:args { self Stdout println:'1st string'. self method2. 0. } }", @"classWithTwoStrings");
-}
-
-+(void)testLocalVariablesNotOverwrittenByNestedExpressionsRegression
-{
-    COMPILEANDRUN( @"class TestDoNotOverwriteLocalVar : STProgram {  -main:args {  var a. a := 10. var b. b := 20. (3+4) * a - 70.  a * 2 - 20.} }", @"TestDoNotOverwriteLocalVar");
-}
 
 static int notOnStack = 0;
 
@@ -1084,15 +1014,6 @@ static int notOnStack = 0;
     EXPECTFALSE([self isPointerOnStackAboveMe:staticBlock], @"block without captured var is not on stack");
 }
 
-+(instancetype)stackBlockCompiler {
-    STNativeCompiler *stackBlockCompiler = [self compiler];
-    stackBlockCompiler.forceStackBlocks = true;
-    return stackBlockCompiler;
-}
-
-#define COMPILEANDRUNSTACKBLOCKS( str, theFilename )\
-NSString *msg=[self errorCompilingAndRunning:str filename:theFilename compiler:[self stackBlockCompiler]];\
-IDEXPECT(msg,@"No error",@"compile and run");\
 
 
 +(void)testComputeStackSpaceForStackBlocks
@@ -1121,30 +1042,6 @@ IDEXPECT(msg,@"No error",@"compile and run");\
 }
 
 
-+(void)testNormalBlocksAreNotOnStack
-{
-    COMPILEANDRUN( @"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  class:NSObject isPointerOnStackAboveMeForST:{ 2. }. } }", @"TestStaticBlocksNotOnStack");
-}
-
-+(void)testForcedStackBlocksAreActuallyOnStack
-{
-    COMPILEANDRUNSTACKBLOCKS(@"class TestStaticBlocksNotOnStack : STProgram {  -main:args {  1 - (class:NSObject isPointerOnStackAboveMeForST:{ 2. }). } }",  @"TestStackBlocksAreOnStack")
-}
-
-+(void)testStackBlocksAreActuallyOnStack
-{
-    COMPILEANDRUN(@"class TestCapturedVarBlocksOnStack : STProgram {  -main:args { var a. a:=1.  1 - (class:NSObject isPointerOnStackAboveMeForST:{ a. }). } }",  @"TestCapturedVarBlocksOnStack")
-}
-
-+(void)testStackBlocksCanBeUsed
-{
-    COMPILEANDRUNSTACKBLOCKS(@"class TestStackBlocksCanBeUsed : STProgram {  -main:args {  { :stream | stream println:'Stack Block executing!'. 0. } value: self Stdout. } }",  @"TestStackBlocksCanBeUsed")
-}
-
-+(void)testBlockCanAccessOutsideScopeVariables
-{
-    COMPILEANDRUN( @"class TestAccessOutsideScopeVarsFromBlock : STNonNilTestProgram {  -main:args { var a. a := 10. { a - 10. } value.} }", @"TestAccessOutsideScopeVarsFromBlock");
-}
 
 +(void)testCanLoadNSArrayFromAFramework
 {
@@ -1162,21 +1059,6 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     IDEXPECT( array[1], @"string2",@"second element");
 }
 
-+(void)testClassMethodsWork
-{
-    COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram { +main:args { 0. } }", @"testClassMethodsWork");
-}
-
-+(void)testMixingClassAndInstanceMethodsWorks
-{
-    COMPILEANDRUN( @"class TestClassWithClassMethods : STNonNilTestProgram { +thirtytwo { 32. } -main:args { self class thirtytwo - 32. } }", @"testClassMethodsWork");
-}
-
-+(void)testDeclarAndReturnNativeIntVariables
-{
-    // This currently "works" if I return "a intValue" instead of "a"
-    COMPILEANDRUN( @"class Hello  { +<int>main:args { var <int> a. a:= 0. a. }  } }", @"testDeclaredIntCanBeReturned");
-}
 
 
 +(NSArray*)testSelectors
@@ -1192,24 +1074,11 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testJitCompileMethodWithLocalVariables",
        @"testJITCompileBlockWithArg",
        @"testFindBlocksInMethod",
-       @"testGenerateCodeForBlocksInMethod",
-       @"testGenerateCodeForClassReference",
-       @"testGenerateMainThatCallsClassMethod",
-       @"testTwoStringsInMachO",
-       @"testLocalVariablesNotOverwrittenByNestedExpressionsRegression",
        @"testPointerOnStackCheck",
        @"testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot",
        @"testComputeStackSpaceForStackBlocks",
        @"testComputeStackBlockOffsetsWithinFrame",
-       @"testNormalBlocksAreNotOnStack",
-       @"testForcedStackBlocksAreActuallyOnStack",
-       @"testStackBlocksAreActuallyOnStack",
-       @"testStackBlocksCanBeUsed",
-       @"testBlockCanAccessOutsideScopeVariables",
        @"testCanLoadNSArrayFromAFramework",
-       @"testClassMethodsWork",
-       @"testMixingClassAndInstanceMethodsWorks",
-//       @"testDeclarAndReturnNativeIntVariables",
 			];
 }
 
