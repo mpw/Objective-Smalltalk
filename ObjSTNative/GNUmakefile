@@ -28,6 +28,7 @@ ObjSTNative_HEADER_FILES_INSTALL_DIR = /ObjSTNative
 libObjSTNative_OBJC_FILES = \
 	MPWByteStreamWithSymbols.m \
 	STObjectCodeGeneratorARM.m \
+	STNativeCompiler.m \
 	MPWCPUSimulator.m \
 	MPWELFReader.m \
 	MPWELFSection.m \
