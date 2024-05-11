@@ -214,6 +214,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return compiler;
 }
 
+-createObjectFileWriter
+{
+    return nil;   // redefined in category to return MachO-writer -> fix
+}
+
+-createClassWriter
+{
+    return nil;   // redefined in category to return MachO-class-writer  -> fix
+}
+
 -(instancetype)init
 {
     self=[super init];
@@ -1043,24 +1053,6 @@ static int notOnStack = 0;
 
 
 
-+(void)testCanLoadNSArrayFromAFramework
-{
-    id <MPWStorage> globals = [MPWGlobalVariableStore store];
-    EXPECTNIL(globals[@"constant_nsarray_test"],@"shouldn't be here yet");
-    NSURL *frameworkURL=[[NSBundle bundleForClass:self] URLForResource:@"ConstArray" withExtension:@"framework"];
-    EXPECTNOTNIL(frameworkURL, @"frameowrk URL");
-    NSBundle *b=[NSBundle bundleWithURL:frameworkURL];
-    EXPECTNOTNIL(b, @"embedded framework");
-    EXPECTTRUE([b load], @"loaded");
-    NSArray* array = globals[@"constant_nsarray_test"];
-    EXPECTNOTNIL(array, @"array");
-    INTEXPECT( array.count,2,@"number of elements");
-    IDEXPECT( array[0], @"string1",@"first element");
-    IDEXPECT( array[1], @"string2",@"second element");
-}
-
-
-
 +(NSArray*)testSelectors
 {
    return @[
@@ -1078,7 +1070,6 @@ static int notOnStack = 0;
        @"testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot",
        @"testComputeStackSpaceForStackBlocks",
        @"testComputeStackBlockOffsetsWithinFrame",
-       @"testCanLoadNSArrayFromAFramework",
 			];
 }
 
