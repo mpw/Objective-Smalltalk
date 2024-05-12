@@ -119,6 +119,7 @@
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
+    NSLog(@"generate native code for %@",self);
     return [compiler generateMessageSend:self];
 }
 
@@ -387,6 +388,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
 {
     if (self.jit) {
+        [theString retain];
         [codegen loadRegister:regno withConstantAdress:theString];
         return regno;
     } else {
@@ -977,7 +979,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
 }
 
-+(void)testJITCompileBlockWithArg
++(void)testJITCompileBlockWithArg   //  I am not convinced this actually does a native compilation
 {
     STNativeCompiler *compiler = [self jitCompiler];
     MPWBlockInvocable * compiledBlock = [compiler evaluateScriptString:@"{ :a | a + 3. }"];
