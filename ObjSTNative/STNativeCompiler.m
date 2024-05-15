@@ -378,6 +378,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateBlockExpression:(MPWBlockExpression*)expr
 {
+    NSLog(@"generate native code for block expression");
     if ( [self shouldGenerateStackBlockForBlockExpression:expr]) {
         return [self generateStackBlockExpression:expr];
     } else {
@@ -628,7 +629,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return 0x120 + ((int)method.blocks.count * SIZE_OF_STACK_BLOCK);
 }
 
--(NSString*)compileMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass isClassMethod:(BOOL)isClassMethod
+-(NSString*)compileMethod:(MPWScriptedMethod*)method inClassNamed:className isClassMethod:(BOOL)isClassMethod
 {
     NSArray *blocks = method.blocks;
     blockNo=0;
@@ -637,17 +638,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         NSString *blockSymbol = [self compileBlock:block inMethod:method];
         block.symbol = blockSymbol;
     }
-    NSString *symbol = [NSString stringWithFormat:@"%@[%@ %@]",isClassMethod ? @"+":@"-", aClass.name,method.methodName];
-    self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    [codegen generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+    NSString *symbol = [NSString stringWithFormat:@"%@[%@ %@]",isClassMethod ? @"+":@"-", className,method.methodName];
+    [self generateFunctionNamed:symbol stackSpace:[self stackSpaceForMethod:method] body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         [self writeMethodBody:method];
     }];
     return symbol;
 }
 
--(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClass:(STClassDefinition*)aClass
+-(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClassNamed:aClass
 {
-    [self compileMethod:method inClass:aClass isClassMethod:NO];
+    [self compileMethod:method inClassNamed:aClass isClassMethod:NO];
     return self.codegen.generatedCode;
 }
 
@@ -656,7 +656,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( MPWScriptedMethod* method in methods) {
         [methodSymbols.methodNames addObject:method.methodName];
         [methodSymbols.methodTypes addObject:[[method header] typeString]];
-        [methodSymbols.symbolNames addObject:[self compileMethod:method inClass:aClass isClassMethod:classMethods]];
+        [methodSymbols.symbolNames addObject:[self compileMethod:method inClassNamed:aClass.name isClassMethod:classMethods]];
     }
     return methodSymbols;
 }
@@ -678,16 +678,24 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     STMethodSymbols *classMethods=[[STMethodSymbols new] autorelease];
     [self compileMethodsInList:aClass.classMethods forClass:aClass info:classMethods classMethods:YES];
     
-    [writer addTextSectionData:[codegen target]];
+    [writer addTextSectionData:(NSData*)[codegen target]];
     [classwriter writeInstanceMethodList:instanceMethods ];
     [classwriter writeClassMethodList:classMethods];
 }
 
 -(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
 {
-    MPWJittableData *methodData=[self compiledCodeForMethod:method inClass:compiledClass];
+    MPWJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:compiledClass.name];
     Class existingClass=NSClassFromString(compiledClass.name);
     NSAssert1(existingClass!=nil , @"Class not found: %@", compiledClass.name);
+    [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
+}
+
+-(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassNamed:(NSString*)className
+{
+    MPWJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
+    Class existingClass=NSClassFromString(className);
+    NSAssert1(existingClass!=nil , @"Class not found: %@", className);
     [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
 }
 
@@ -723,11 +731,22 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [writer writeFile];
 }
 
+-(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(STObjectCodeGeneratorARM* gen))block
+{
+    self.variableToRegisterMap = [NSMutableDictionary dictionary];
+    [codegen generateFunctionNamed:name stackSpace:stackSpace body:block];
+}
+
+-(void)generateFunctionNamed:(NSString*)name body:(void(^)(STObjectCodeGeneratorARM* gen))block
+{
+    [self generateFunctionNamed:name stackSpace:codegen.defaultFunctionStackSpace body:block];
+}
+
+
 -(void)compileMainCallingClass:(NSString*)aClassName
 {
     NSString *symbol = @"_main";
-    self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    [codegen generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+    [self generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         [self generateStringLiteral:aClassName intoRegister:2];
 //        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
         [codegen generateCallToExternalFunctionNamed:@"_runSTMain"];
@@ -738,8 +757,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(void)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
 {
     self.currentBlock = aBlock;
-    self.variableToRegisterMap = [NSMutableDictionary dictionary];
-    [codegen generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+    [self generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         
         int returnRegister=0;
         NSArray *arguments=[aBlock arguments];
@@ -767,6 +785,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
 {
+    NSLog(@"compileBlock:inMethod:");
     aBlock.stackOffset = self.currentBlockStackOffset;
     int blockOffset = SIZE_OF_STACK_BLOCK;
     if ( aBlock.hasCaptures){
@@ -898,7 +917,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     STNativeCompiler *compiler = [self jitCompiler];
     STClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
-    [compiler compileMethod:compiledClass.methods.firstObject inClass:compiledClass isClassMethod:NO];
+    [compiler compileMethod:compiledClass.methods.firstObject inClassNamed:compiledClass.name isClassMethod:NO];
     MPWJittableData *methodData = compiler.codegen.generatedCode;
     ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
     NSString* result=nil;
