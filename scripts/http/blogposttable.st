@@ -1,8 +1,11 @@
+#!env stui
+
 #!env st
 #-<void>blogger
-scheme:https setHeaders: #{ Content-Type: 'application/json' }.
 scheme:https setAccessToken: env:TOKEN .
 blogid ← '8397311766319215218'.
 theRef ← ref:https://www.googleapis.com/blogger/v3/blogs/{blogid}/ 
 scheme:blogger ← theRef asScheme
-shell runInteractiveLoop.
+a := (scheme:blogger at:'posts/?fields=kind%2Citems(title%2Cid)' ) at:'items'
+table ← #MPWTableView{items:(a)}.
+app runFromCLI:(table inScrollView:(200@400 extent: 500@600)).
