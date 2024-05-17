@@ -693,9 +693,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassNamed:(NSString*)className
 {
+    NSAssert1(method!=nil , @"no method to jit for class: %@", className);
     MPWJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
     Class existingClass=NSClassFromString(className);
     NSAssert1(existingClass!=nil , @"Class not found: %@", className);
+    NSAssert1(method.header.selector!=NULL , @"No selector for: %@", method);
+    NSAssert1(method.header.typeSignature!=NULL , @"No type signature for: %@", NSStringFromSelector(method.header.selector));
     [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
 }
 
