@@ -312,7 +312,7 @@
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:0], @"add", @"name of symbol table entry 2");
+    IDEXPECT( [symbolTable symbolNameAt:0], @"add", @"name of symbol table entry 2");
 
     
 }
