@@ -26,7 +26,18 @@ extension GeziraStar
     self.
   }
   -<void>renderWithParent:parent on:bitmap {
-
+     transform ← MPWTransformBeziers stream.
+     transform setMatrix: self transformationMatrix.
+     filters ← [
+         (parent strokeBezierWidth: this:penWidth miterLimit: this:miterLimit cap: this:penCap),
+         (parent clipToSize: this:windowSize),
+	 transform,
+         (parent clipToSize: bitmap pixelsWide @ bitmap pixelsHigh),
+         (parent rasterize),
+         (parent compositorImage: bitmap color: this:color ),
+     ].
+     pipeline ← parent pipeline:filters.
+     pipeline writeObject: self coords.
   }
 
 }
