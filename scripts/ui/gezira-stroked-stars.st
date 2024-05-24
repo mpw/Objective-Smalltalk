@@ -25,6 +25,9 @@ extension GeziraStar
     this:coords ← coords.
     self.
   }
+  -<void>renderWithParent:parent on:bitmap {
+
+  }
 
 }
 
