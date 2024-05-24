@@ -14,6 +14,9 @@ extension GeziraStar
     this:angle ← 0 to: 300 | random.
     this:dangle ← -0.5 to: 0.5 | random.
     this:windowSize ← size.
+    this:penWidth ← 5.
+    this:miterLimit ← 4.
+    this:penCap ← -1.
     this:color ← NSColor colorWithRed:(0.0 to: 1.0 | random)
                                 green:(0.0 to: 1.0 | random)
                                  blue:(0.0 to: 1.0 | random)
@@ -22,6 +25,7 @@ extension GeziraStar
     this:coords ← coords.
     self.
   }
+
 }
 
 coords ← #MPWRealArray[ 
