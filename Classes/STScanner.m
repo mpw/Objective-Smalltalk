@@ -337,6 +337,8 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     int len=1;
     if ( *cur=='<' && SCANINBOUNDS(cur+1) && cur[1]=='-' ) {
         len++;
+    } else if ( *cur=='<' && SCANINBOUNDS(cur+1) && cur[1]=='<') {
+        len++;
     } else if ( *cur=='-' && SCANINBOUNDS(cur+1) && cur[1]=='>') {
         len++;
     } else if ( *cur=='|' && SCANINBOUNDS(cur+1) && cur[1]=='=') {
@@ -654,6 +656,12 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     IDEXPECT([scanner nextToken],@"b", @"b");
 }
 
++(void)testCoutSyntaxIsSingleToken
+{
+    STScanner *scanner=[self scannerWithString:@"<<"];
+    IDEXPECT([scanner nextToken],@"<<", @"single right arrow");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -671,7 +679,8 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"testNewlineEscape",
             @"testNonbreakingSpaceSeparatesLikeSpace",
             @"testCommentToEndOfLine",
-            @"testNextLineAfterComment",
+        @"testNextLineAfterComment",
+        @"testCoutSyntaxIsSingleToken",
         ];
 }
 

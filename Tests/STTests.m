@@ -1481,6 +1481,11 @@
 
 }
 
++(void)testCoutLikeWriteObjectSyntax
+{
+    TESTEXPR( @"s ← MPWJSONWriter stream. s << #{ a: 42 }. s target stringValue.",@"{\"a\":42}");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1646,6 +1651,7 @@
         @"testConnectComponents",
         @"testRaiseIfLiteralArrayExpressionClassNotFound",
         @"testSyntaxForSystemCreatesSTSystemSubclass",
+        @"testCoutLikeWriteObjectSyntax",
         ];
 }
 
