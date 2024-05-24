@@ -190,7 +190,15 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return ((numSection >= 0) && (numSection < [self numSectionHeaders])) ? [[[MPWELFSection alloc] initWithSectionNumber:numSection reader:self] autorelease] : nil;
 }
 
+-(NSString*)symbolNameAt:(int)anIndex
+{
+    return [self.symbolTable symbolNameAt:anIndex];
+}
 
+-(BOOL)isSymbolUndefined:(int)anIndex
+{
+    return [self.symbolTable symbolSectionAtIndex:anIndex] == 0;
+}
 
 
 @end
@@ -205,6 +213,16 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     NSData *addmacho=[self frameworkResource:name category:@"elf-o"];
     MPWELFReader *reader=[[[self alloc] initWithData:addmacho] autorelease];
     return reader;
+}
+
++(instancetype)readerForAdd
+{
+    return [self readerForTestFile:@"add"];
+}
+
++(instancetype)readerForExternalFunction
+{
+    return [self readerForTestFile:@"call-external-fn"];
 }
 
 +(void)testCanReadElfHeader
@@ -263,7 +281,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 +(void)testSectionHeaderNamesOfAdd
 {
-    MPWELFReader *reader=[self readerForTestFile:@"add"];
+    MPWELFReader *reader=[self readerForAdd];
     IDEXPECT( [[reader sectionAtIndex:1] sectionName], @".text",@"text section (1) name");
     IDEXPECT( [[reader sectionAtIndex:2] sectionName], @".data",@"data section (2) name");
     IDEXPECT( [[reader sectionAtIndex:3] sectionName], @".bss",@"bss section (3) name");
@@ -293,7 +311,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 +(void)testFindSymbols
 {
-    MPWELFReader *reader=[self readerForTestFile:@"add"];
+    MPWELFReader *reader=[self readerForAdd];
     MPWELFSymbolTable *symbolTable=[reader symbolTable];
     INTEXPECT( [symbolTable sectionType], SHT_SYMTAB, @"found symbol table");
     EXPECTTRUE([symbolTable isKindOfClass:[MPWELFSymbolTable class]], @"and it's an actual symbol table");
@@ -301,10 +319,10 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT( [symbolTable entrySize], sizeof(Elf64_Sym),@"64 bit symbol table");
     [symbolTable.data writeToFile:@"/tmp/addelf.symtab" atomically:YES];
     
-    IDEXPECT( [symbolTable symbolNameAtIndex:1], @"add.c", @"name of symbol table entry 1");
-    IDEXPECT( [symbolTable symbolNameAtIndex:5], @"$x", @"name of symbol table entry 5");
-    IDEXPECT( [symbolTable symbolNameAtIndex:7], @"$d", @"name of symbol table entry 7");
-    IDEXPECT( [symbolTable symbolNameAtIndex:10], @"add", @"name of symbol table entry 10");
+    IDEXPECT( [symbolTable symbolNameAt:1], @"add.c", @"name of symbol table entry 1");
+    IDEXPECT( [symbolTable symbolNameAt:5], @"$x", @"name of symbol table entry 5");
+    IDEXPECT( [symbolTable symbolNameAt:7], @"$d", @"name of symbol table entry 7");
+    IDEXPECT( [symbolTable symbolNameAt:10], @"add", @"name of symbol table entry 10");
     
     INTEXPECT( [symbolTable symbolTypeAtIndex:10], STT_FUNC, @"add should be function");
     INTEXPECT( [symbolTable symbolValueAtIndex:10], 0, @"add offset should be zero");
@@ -313,7 +331,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 +(void)testExtractTextSection
 {
-    MPWELFReader *reader=[self readerForTestFile:@"add"];
+    MPWELFReader *reader=[self readerForAdd];
     MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:@".text"];
     EXPECTNOTNIL(text, @"got a text section");
     INTEXPECT([text sectionNumber],1,@"section number of text segment");
@@ -322,6 +340,28 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     NSData *textData = [text data];
     INTEXPECT(textData.length,8,@"text section size");
 }
+
++(void)testReadELFWithExternalSymbols
+{
+    MPWELFReader *reader=[self readerForExternalFunction];
+    for (int i=0;i<11;i++) {
+        NSLog(@"smybol[%d]=%@",i,[reader symbolNameAt:i]);
+    }
+    IDEXPECT( [reader symbolNameAt:10],@"fn",@"defined function");
+    IDEXPECT( [reader symbolNameAt:11],@"other",@"external function");
+    EXPECTFALSE( [reader isSymbolUndefined:10],@"fn should not be undefined");
+    EXPECTTRUE( [reader isSymbolUndefined:11],@"other should  be undefined");
+//    IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
+//    EXPECTTRUE( [reader isSymbolUndefined:3],@"_other should be undefined");
+//    INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
+//    INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
+//    INTEXPECT([[reader textSection] relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
+////    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
+//    IDEXPECT([[reader textSection] nameOfRelocEntryAt:0],@"_other",@"external symbol");
+//    INTEXPECT([[reader textSection] offsetOfRelocEntryAt:0],8,@"address");
+//    EXPECTTRUE([[reader textSection] isExternalRelocEntryAt:0],@"external");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -335,6 +375,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
             @"testFindSymbolTable",
             @"testFindSymbols",
             @"testExtractTextSection",
+            @"testReadELFWithExternalSymbols",
 			];
 }
 

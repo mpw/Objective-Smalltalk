@@ -381,6 +381,7 @@
 		1F81C08419699B6C0066DF43 /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
 		1F81C08719699BF20066DF43 /* MethodServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7E05A9144B3E22008F349D /* MethodServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F81C0891969BAF60066DF43 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
+		1F821AC02C01031E00D936E3 /* call-external-fn.elf-o in Resources */ = {isa = PBXBuildFile; fileRef = 1F821ABC2C01031D00D936E3 /* call-external-fn.elf-o */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -1305,6 +1306,7 @@
 		1F81C06419699AE10066DF43 /* MethodServerTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodServerTouch.h; sourceTree = "<group>"; };
 		1F81D90816DEBA7E00408D41 /* llvm.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = llvm.xcconfig; path = "llvm-config/llvm.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1F81D90A16DEBC6300408D41 /* llvm-components.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "llvm-components.txt"; path = "llvm-config/llvm-components.txt"; sourceTree = SOURCE_ROOT; };
+		1F821ABC2C01031D00D936E3 /* call-external-fn.elf-o */ = {isa = PBXFileReference; lastKnownFileType = file; path = "call-external-fn.elf-o"; sourceTree = "<group>"; };
 		1F8448AC19695B7F00CB8DD1 /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = ../../Build/Release/libMPWFoundationTouch.a; sourceTree = "<group>"; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
@@ -2058,6 +2060,7 @@
 		1F3466F228CB112E003257CB /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
+				1F821ABC2C01031D00D936E3 /* call-external-fn.elf-o */,
 				1F1380032BE6707A00CD023C /* add.elf-o */,
 				1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */,
 				1F6060112A247FF000783E17 /* empty-function-clang.elf-o */,
@@ -3833,6 +3836,7 @@
 				1F5BBA36294DEC1200C3D345 /* use_class.macho in Resources */,
 				1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */,
 				1F5BBA342943BC4000C3D345 /* use_class_with_if.mfile in Resources */,
+				1F821AC02C01031E00D936E3 /* call-external-fn.elf-o in Resources */,
 				1F1A647D2976F72300B8776C /* use_class_with_two_strings.mfile in Resources */,
 				1F1380042BE6707A00CD023C /* add.elf-o in Resources */,
 				1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */,

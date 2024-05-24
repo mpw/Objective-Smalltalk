@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWELFSymbolTable : MPWELFSection
 
--(NSString*)symbolNameAtIndex:(int)anIndex;
+-(NSString*)symbolNameAt:(int)anIndex;
 -(int)symbolInfoAtIndex:(int)anIndex;
 -(int)symbolTypeAtIndex:(int)anIndex;
 -(long)symbolValueAtIndex:(int)anIndex;
