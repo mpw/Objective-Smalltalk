@@ -623,6 +623,7 @@ idAccessor(solver, setSolver)
                               @"doAssign:", @"|=",
                               @"doAssign:", @"=|=",
                               @"doAssign:", @"<-",
+                              @"writeObject:", @"<<",
                               @"doAssign:", @"\u21e6",
                               @"doAssign:", @"\u2190",
 															  @"pointWith:",@"@",

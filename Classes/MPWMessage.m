@@ -395,13 +395,13 @@ idAccessor( _signature, setSignature )
 {
     MPWMessage* msg=[MPWMessage messageWithSelector:@selector(__nsrangeTester)];
     id result = [msg sendTo:self withArguments:nil ];
-    IDEXPECT(result, [MPWInterval intervalFrom:@(3) to:@(44)], @"nsrange to interval");
+    IDEXPECT(result, [MPWLongInterval intervalFrom:@(3) to:@(44)], @"nsrange to interval");
 }
 
 +(void)testNSRangeArgument
 {
     NSString *tester=@"Hello World!";
-    MPWInterval *trivial=[MPWInterval intervalFromInt:1 toInt:10];
+    MPWInterval *trivial=[MPWLongInterval intervalFromInt:1 toInt:10];
     MPWInterval *result=[[MPWMessage messageWithSelector:@selector(__nsrangeArgTester:)] sendTo:self withArguments:@[ trivial ]];
     
     IDEXPECT(result, trivial, @"trival");
