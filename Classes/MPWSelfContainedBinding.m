@@ -39,8 +39,12 @@
     return nil;
 }
 
+-(void)writeObject:anObject
+{
+    [self setValue:anObject];
+}
 
-+ (instancetype)bindingWithReference:(id)aReference inStore:(id)aStore { 
++ (instancetype)bindingWithReference:(id)aReference inStore:(id)aStore {
     return nil;
 }
 
