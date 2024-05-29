@@ -53,6 +53,9 @@ class  MyStar : GeziraShape
     m ← m matrixTranslatedBy:-250 y:-250.
     m.
    }
+   -<void>update {
+      this:y ← this:y + this:dy.
+   }
 }.
 coords ← #MPWRealArray[ 
     250.00000, 150.00000, 237.65650, 183.01064, 225.31301, 216.02128,
