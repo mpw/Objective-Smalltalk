@@ -2,8 +2,11 @@
 #-<void>gezira
 framework:Gezira load.
 
-extension GeziraStar 
+class  MyStar : GeziraShape
 {
+  var penWidth.
+  var penCap.
+  var miterLimit.
   -initWithCoords:coords windowSize:size
   {
     self ← super init.
@@ -37,11 +40,20 @@ extension GeziraStar
          (parent compositorImage: bitmap color: this:color ),
      ].
      pipeline ← parent pipeline:filters.
-     pipeline >> self coords.
+     pipeline writeObject: self coords.
   }
 
-}
+  -transformationMatrix {
 
+    var m.
+    m ← MPWMatrix matrixIdentity.
+    m ← m matrixTranslatedBy: this:x y: this:y.
+    m ← m matrixRotatedBy: this:angle.
+    m ← m matrixScaledBy: this:scale.
+    m ← m matrixTranslatedBy:-250 y:-250.
+    m.
+   }
+}.
 coords ← #MPWRealArray[ 
     250.00000, 150.00000, 237.65650, 183.01064, 225.31301, 216.02128,
     225.31301, 216.02128, 190.10368, 217.55979, 154.89434, 219.09830,
@@ -56,7 +68,7 @@ coords ← #MPWRealArray[
 ].
 
 
-demo ← #StrokeDemo{ numberOfStars: 100, starCoords: coords  }.
+demo ← #StrokeDemo{ numberOfShapes: 100, shapeCoords: coords, shapeClass: class:MyStar  }.
 view ← #NSImageView{ frame: (400@400) }.
 window ← view openInWindow:'Gezira'.
 demo run:view.
