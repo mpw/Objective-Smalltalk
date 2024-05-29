@@ -55,6 +55,10 @@ class  MyStar : GeziraShape
    }
    -<void>update {
       this:y ← this:y + this:dy.
+      this:angle ← this:angle + this:dangle.
+      (this:y > (this:windowSize y + 10)) ifTrue: {
+          this:y ← -10.
+      }.
    }
 }.
 coords ← #MPWRealArray[ 
