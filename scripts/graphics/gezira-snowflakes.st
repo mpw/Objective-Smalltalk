@@ -4,22 +4,16 @@ framework:Gezira load.
 
 class  Snowflake : GeziraShape
 {
-  var penWidth.
-  var penCap.
-  var miterLimit.
   -initWithCoords:coords windowSize:size
   {
     self ← super init.
     this:x ← 0 to: size x | random.
     this:y ← 0 to: size y | random.
     this:dy ← 0.5 to: 3.0  | random.
-    this:scale ← 0.1 to: 0.5 | random.
+    this:scale ← 0.2 to: 0.7 | random.
     this:angle ← 0 to: 300 | random.
-    this:dangle ← -0.5 to: 0.5 | random.
+    this:dangle ← -0.1 to: 0.1 | random.
     this:windowSize ← size.
-    this:penWidth ← 5.
-    this:miterLimit ← 4.
-    this:penCap ← -1.
     this:color ← NSColor colorWithRed: 0.8 green: 0.9 blue: 1.0 alpha: 0.7 .
     this:coords ← coords.
     self.
@@ -28,7 +22,6 @@ class  Snowflake : GeziraShape
      transform ← MPWTransformBeziers stream.
      transform setMatrix: self transformationMatrix.
      filters ← [
-         (parent clipToSize: this:windowSize),
 	 transform,
          (parent clipToSize: bitmap pixelsWide @ bitmap pixelsHigh),
          (parent rasterize),
@@ -45,7 +38,6 @@ class  Snowflake : GeziraShape
     m ← m matrixTranslatedBy: this:x y: this:y.
     m ← m matrixRotatedBy: this:angle.
     m ← m matrixScaledBy: this:scale.
-    m ← m matrixTranslatedBy:-250 y:-250.
     m.
    }
    -<void>update {
