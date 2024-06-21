@@ -29,6 +29,7 @@
 -retval;
 -(void)setRetval:newRetval;
 -(void)run;
+-(int)level;
 
 @property (nonatomic,strong) NSArray *args;
 @property (nonatomic,strong) NSMutableArray *history;

@@ -166,7 +166,7 @@ objectAccessor(NSString*, filename, setFilename )
 	[self processArgsFromExecutionContext:executionContext];
 	NS_DURING
     NSMutableString *accumulatedExpression=[NSMutableString string];
-    while ( nil != (exprString=[scriptSource nextObject]) ) {
+    while ( nil != (exprString=[scriptSource nextObject]) && [executionContext level] >= 0 ) {
 		id pool=[NSAutoreleasePool new];
         id expr = nil;
         id shellExpr = nil;

@@ -1,0 +1,12 @@
+#!env st
+#-<void>backup:destination
+scheme:cmd ← MPWCommandStore store.
+scheme:dests ← #MPWDictStore{ blue: '08F89A95-8A9E-4926-B240-D367FBE8C177', nahrat: 'CC0C9B9A-ACD8-4B11-A8FA-48843E2E72DF', defiant: 'A1C91C5F-A424-41FB-BFAC-70BDFAE30905' }.
+
+ref:dests:{destination} isBound ifFalse: {
+   d ← scheme:dests dict allKeys stringValue.
+   stdout println:"Invalid destination {destination} valid destinations are: {d}.".
+   shell exit.
+}.
+cmd:tmutil/startbackup/--destination/{dests:{destination}}.
+
