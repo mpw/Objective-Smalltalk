@@ -42,6 +42,7 @@
 @implementation STShell
 {
     EditLine *currentLine;
+    int level;
 }
 
 boolAccessor( readingFile, _setReadingFile )
@@ -271,7 +272,10 @@ static const char completionfun(EditLine *e, char ch) {
 }
 
 
-
+-(int)level
+{
+    return level;
+}
 
 idAccessor( retval, setRetval )
 
@@ -380,6 +384,11 @@ idAccessor( retval, setRetval )
     }
 }
 
+-(void)exit
+{
+    level--;
+}
+
 -(void)runInteractiveLoop
 {
     EditLine *el;
@@ -402,7 +411,7 @@ idAccessor( retval, setRetval )
     history(history_ptr, &event, H_SETSIZE, 800);
 	[self setEcho:YES];
     NSMutableString *currentInput=[NSMutableString string];
-    int level=1;
+    level=1;
     
     while (  level > 0) {
         [self setPrompt:[NSString stringWithFormat:@"%@] ",level>1 ? @"*":@""]];

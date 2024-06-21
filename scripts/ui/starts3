@@ -1,0 +1,2 @@
+#!/bin/sh
+fakes3 -r /tmp/fakes3root -p 10001
