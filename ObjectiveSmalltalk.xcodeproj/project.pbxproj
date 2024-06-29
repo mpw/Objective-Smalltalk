@@ -373,6 +373,8 @@
 		1F7E05CA144B417D008F349D /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CE144B4188008F349D /* Foundation.framework */; };
+		1F8027D42C2FD8FA00770B11 /* MPWELFRelocationTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8027D22C2FD8FA00770B11 /* MPWELFRelocationTable.h */; };
+		1F8027D52C2FD8FA00770B11 /* MPWELFRelocationTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8027D32C2FD8FA00770B11 /* MPWELFRelocationTable.m */; };
 		1F81C06519699AE10066DF43 /* MethodServerTouch.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F81C06419699AE10066DF43 /* MethodServerTouch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F81C07519699AE10066DF43 /* MethodServerTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F81C06019699AE00066DF43 /* MethodServerTouch.framework */; };
 		1F81C07619699AE10066DF43 /* MethodServerTouch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F81C06019699AE00066DF43 /* MethodServerTouch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -1301,6 +1303,8 @@
 		1F7E05C3144B3F9E008F349D /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = "../../Build/Development-iphoneos/libMPWFoundationTouch.a"; sourceTree = "<group>"; };
 		1F7E05CC144B417D008F349D /* MPWSideweb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWSideweb.framework; path = "../../../Library/Developer/Xcode/DerivedData/metaproducts-frbgyznjeqtcxocedsnxdniqbnzz/Build/Products/Release/MPWSideweb.framework"; sourceTree = "<group>"; };
 		1F7E05CE144B4188008F349D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		1F8027D22C2FD8FA00770B11 /* MPWELFRelocationTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFRelocationTable.h; sourceTree = "<group>"; };
+		1F8027D32C2FD8FA00770B11 /* MPWELFRelocationTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFRelocationTable.m; sourceTree = "<group>"; };
 		1F81C06019699AE00066DF43 /* MethodServerTouch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MethodServerTouch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F81C06319699AE10066DF43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F81C06419699AE10066DF43 /* MethodServerTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodServerTouch.h; sourceTree = "<group>"; };
@@ -1858,6 +1862,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
+				1F8027D22C2FD8FA00770B11 /* MPWELFRelocationTable.h */,
+				1F8027D32C2FD8FA00770B11 /* MPWELFRelocationTable.m */,
 				1F137FFF2BE66C0300CD023C /* MPWELFSymbolTable.h */,
 				1F1380002BE66C0300CD023C /* MPWELFSymbolTable.m */,
 				1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */,
@@ -2864,6 +2870,7 @@
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
+				1F8027D42C2FD8FA00770B11 /* MPWELFRelocationTable.h in Headers */,
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
 				1F04243C28D1D09B00486831 /* MPWMachOWriter.h in Headers */,
 				1FA5DF702BE8BFF8001E5231 /* MPWStringTableWriter.h in Headers */,
@@ -4231,6 +4238,7 @@
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
 				1F93FA5E2BE785FE0046C7C3 /* MPWELFWriter.m in Sources */,
 				1FA5DF7C2BE90F2E001E5231 /* MPWELFSectionWriter.m in Sources */,
+				1F8027D52C2FD8FA00770B11 /* MPWELFRelocationTable.m in Sources */,
 				1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */,
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,
 				1F9AE9CD28E1E58600671748 /* MPWJittableData.m in Sources */,

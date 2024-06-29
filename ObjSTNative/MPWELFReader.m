@@ -8,6 +8,7 @@
 #import "MPWELFReader.h"
 #import "MPWELFSection.h"
 #import "MPWELFSymbolTable.h"
+#import "MPWELFRelocationTable.h"
 
 #import <MPWFoundation/MPWFoundation.h>
 
@@ -96,6 +97,12 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 {
     MPWELFSection *symbolSection = [self findElfSectionOfType:SHT_SYMTAB];
     return [[[MPWELFSymbolTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
+}
+
+-(MPWELFRelocationTable*)findTextRelectionTable
+{
+    MPWELFSection *symbolSection = [self findElfSectionOfType:SHT_RELA name:@".rela.text"];
+    return [[[MPWELFRelocationTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
 }
 
 
@@ -195,7 +202,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [self.symbolTable symbolNameAt:anIndex];
 }
 
--(BOOL)isSymbolUndefined:(int)anIndex
+-(BOOL)isSymbolUndefinedAt:(int)anIndex
 {
     return [self.symbolTable symbolSectionAtIndex:anIndex] == 0;
 }
@@ -341,18 +348,46 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     INTEXPECT(textData.length,8,@"text section size");
 }
 
++(void)testFindRelocationTable
+{
+    MPWELFReader *reader=[self readerForExternalFunction];
+    INTEXPECT([reader numSectionHeaders],12, @"number of sections");
+    MPWELFRelocationTable *relocations=[reader findTextRelectionTable];
+    EXPECTNOTNIL(relocations, @"got relocations");
+    INTEXPECT( relocations.numEntries, 1, @"number of relocations");
+    INTEXPECT( relocations.sectionType, 4, @"section type");
+    INTEXPECT( relocations.sectionLink, 9, @"section link");
+    INTEXPECT( relocations.entrySize, sizeof(Elf64_Rela), @"size of relocation");
+}
+
+
 +(void)testReadELFWithExternalSymbols
 {
     MPWELFReader *reader=[self readerForExternalFunction];
-    for (int i=0;i<11;i++) {
-        NSLog(@"smybol[%d]=%@",i,[reader symbolNameAt:i]);
-    }
+    INTEXPECT([reader numSectionHeaders],12, @"number of sections");
+        for (int i=0;i<12;i++) {
+            NSLog(@"section[%d]=%@",i,[reader sectionAtIndex:i]);
+        }
     IDEXPECT( [reader symbolNameAt:10],@"fn",@"defined function");
     IDEXPECT( [reader symbolNameAt:11],@"other",@"external function");
-    EXPECTFALSE( [reader isSymbolUndefined:10],@"fn should not be undefined");
-    EXPECTTRUE( [reader isSymbolUndefined:11],@"other should  be undefined");
+    EXPECTFALSE( [reader isSymbolUndefinedAt:10],@"fn should not be undefined");
+    EXPECTTRUE( [reader isSymbolUndefinedAt:11],@"other should  be undefined");
+  
+//    Relocation entries 
+//    gnustep@06578dc4dea1[TestResources]readelf -r call-external-fn.elf-o
+//    
+//    Relocation section '.rela.text' at offset 0x208 contains 1 entry:
+//    Offset          Info           Type           Sym. Value    Sym. Name + Addend
+//    000000000010  000b0000011b R_AARCH64_CALL26  0000000000000000 other + 0
+//    
+//    Relocation section '.rela.eh_frame' at offset 0x220 contains 1 entry:
+//    Offset          Info           Type           Sym. Value    Sym. Name + Addend
+//    00000000001c  000200000105 R_AARCH64_PREL32  0000000000000000 .text + 0
+
+    
+    
 //    IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
-//    EXPECTTRUE( [reader isSymbolUndefined:3],@"_other should be undefined");
+//    EXPECTTRUE( [reader isSymbolUndefinedAt:3],@"_other should be undefined");
 //    INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
 //    INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
 //    INTEXPECT([[reader textSection] relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
@@ -375,6 +410,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
             @"testFindSymbolTable",
             @"testFindSymbols",
             @"testExtractTextSection",
+            @"testFindRelocationTable",
             @"testReadELFWithExternalSymbols",
 			];
 }
