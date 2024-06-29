@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWELFTextSection : MPWELFSection
 
+-(int)typeOfRelocEntryAt:(int)offset;
+-(int)offsetOfRelocEntryAt:(int)offset;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

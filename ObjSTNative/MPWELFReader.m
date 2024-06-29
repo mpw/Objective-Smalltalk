@@ -402,10 +402,12 @@ lazyAccessor(MPWELFRelocationTable*, textRelocationTable, setTextRelocationTable
 //    EXPECTTRUE( [reader isSymbolUndefinedAt:3],@"_other should be undefined");
 //    INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-//    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
-//    IDEXPECT([[reader textSection] nameOfRelocEntryAt:0],@"_other",@"external symbol");
-//    INTEXPECT([[reader textSection] offsetOfRelocEntryAt:0],8,@"address");
-//    EXPECTTRUE([[reader textSection] isExternalRelocEntryAt:0],@"external");
+    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],R_AARCH64_CALL26,@"reloc entry type");
+    INTEXPECT([[reader textSection] offsetOfRelocEntryAt:0],16,@"reloc entry offset");
+    int symbolOffset=[[[reader textSection] relocationTable] symbolIndexAtOffset:0];
+    INTEXPECT(symbolOffset,11,@"symbolOffset");
+    IDEXPECT( [reader symbolNameAt:symbolOffset],@"other",@"external function name");
+    EXPECTTRUE( [reader isSymbolUndefinedAt:symbolOffset],@"should be undefined (= external)");
 }
 
 

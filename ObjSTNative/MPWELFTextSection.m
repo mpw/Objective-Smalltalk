@@ -7,12 +7,31 @@
 
 #import "MPWELFTextSection.h"
 #import "MPWELFReader.h"
+#import "MPWELFRelocationTable.h"
+
 
 @implementation MPWELFTextSection
 
+-(MPWELFRelocationTable*)relocationTable
+{
+    return [[self reader] textRelocationTable];
+}
+
+
 -(long)numRelocEntries
 {
-    return [[[self reader] textRelocationTable] numEntries];
+    return [[self relocationTable] numEntries];
+}
+
+
+-(int)typeOfRelocEntryAt:(int)offset
+{
+    return [[self relocationTable] typeOfRelocEntryAt:offset];
+}
+
+-(int)offsetOfRelocEntryAt:(int)offset
+{
+    return [[self relocationTable] offsetOfRelocEntryAt:offset];
 }
 
 @end
