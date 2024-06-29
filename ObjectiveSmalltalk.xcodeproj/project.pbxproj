@@ -715,6 +715,8 @@
 		1FE5CFDD221C4A2B003E11DC /* STProtocolDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE5CFDA221C4A2B003E11DC /* STProtocolDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE5CFDE221C4A2B003E11DC /* STProtocolDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5CFDB221C4A2B003E11DC /* STProtocolDefinition.m */; };
 		1FE5CFDF221C4A2B003E11DC /* STProtocolDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5CFDB221C4A2B003E11DC /* STProtocolDefinition.m */; };
+		1FE5D6E02C3080890018B09C /* MPWELFTextSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE5D6DE2C3080890018B09C /* MPWELFTextSection.h */; };
+		1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5D6DF2C3080890018B09C /* MPWELFTextSection.m */; };
 		1FE63E0621061BE20066B335 /* MPWCSourceKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE63E0421061BE20066B335 /* MPWCSourceKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE63E0C21061C0F0066B335 /* MPWClangImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE63E0A21061C0F0066B335 /* MPWClangImporter.h */; };
 		1FE63E0D21061C0F0066B335 /* MPWClangImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE63E0B21061C0F0066B335 /* MPWClangImporter.m */; };
@@ -1523,6 +1525,8 @@
 		1FE37C011969744C00C9A378 /* MPWFoundationTouch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MPWFoundationTouch.framework; path = "../../Build/Release-iphoneos/MPWFoundationTouch.framework"; sourceTree = "<group>"; };
 		1FE5CFDA221C4A2B003E11DC /* STProtocolDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProtocolDefinition.h; sourceTree = "<group>"; };
 		1FE5CFDB221C4A2B003E11DC /* STProtocolDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProtocolDefinition.m; sourceTree = "<group>"; };
+		1FE5D6DE2C3080890018B09C /* MPWELFTextSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFTextSection.h; sourceTree = "<group>"; };
+		1FE5D6DF2C3080890018B09C /* MPWELFTextSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFTextSection.m; sourceTree = "<group>"; };
 		1FE63E0221061BE10066B335 /* MPWCSourceKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPWCSourceKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE63E0421061BE20066B335 /* MPWCSourceKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWCSourceKit.h; sourceTree = "<group>"; };
 		1FE63E0521061BE20066B335 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1862,6 +1866,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
+				1FE5D6DE2C3080890018B09C /* MPWELFTextSection.h */,
+				1FE5D6DF2C3080890018B09C /* MPWELFTextSection.m */,
 				1F8027D22C2FD8FA00770B11 /* MPWELFRelocationTable.h */,
 				1F8027D32C2FD8FA00770B11 /* MPWELFRelocationTable.m */,
 				1F137FFF2BE66C0300CD023C /* MPWELFSymbolTable.h */,
@@ -2868,6 +2874,7 @@
 				1F3466EC28C4FBF2003257CB /* STObjectCodeGeneratorARM.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
+				1FE5D6E02C3080890018B09C /* MPWELFTextSection.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F8027D42C2FD8FA00770B11 /* MPWELFRelocationTable.h in Headers */,
@@ -4250,6 +4257,7 @@
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
+				1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */,
 				1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
 			);
