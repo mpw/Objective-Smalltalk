@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)sectionNameOffset;
 -(long)dataOffsetForOffset:(long)offset;
 -(NSString*)sectionName;
+-(long)sectionLink;
 
 @property (nonatomic, assign) int sectionNumber;
 @property (readonly) MPWELFReader* reader;

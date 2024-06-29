@@ -52,6 +52,11 @@
     return sectionHeader->sh_type;
 }
 
+-(long)sectionLink
+{
+    return sectionHeader->sh_link;
+}
+
 -(long)sectionOffset
 {
     return sectionHeader->sh_offset;
@@ -75,6 +80,11 @@
 -(NSData*)data
 {
     return [self.reader.elfData subdataWithRange:NSMakeRange(self.sectionOffset,self.sectionSize)];
+}
+
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: name: %@ type: %d numEntries: %ld entrySize: %ld>",self.class,self,self.sectionName,self.sectionType,self.numEntries,self.entrySize];
 }
 
 @end
