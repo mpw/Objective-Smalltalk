@@ -9,6 +9,7 @@
 #import "MPWELFSection.h"
 #import "MPWELFSymbolTable.h"
 #import "MPWELFRelocationTable.h"
+#import "MPWELFTextSection.h"
 
 #import <MPWFoundation/MPWFoundation.h>
 
@@ -25,11 +26,15 @@
     MPWELFSection *stringTable;
     MPWELFSection *sectionStringTable;
     MPWELFSymbolTable *symbolTable;
+    MPWELFTextSection *textSection;
+    MPWELFRelocationTable *textRelocationTable;
 }
 
 lazyAccessor(MPWELFSection*, stringTable, setStringTable, findStringTable )
 lazyAccessor(MPWELFSection*, sectionStringTable, setSectionStringTable, findSectionStringTable )
+lazyAccessor(MPWELFTextSection*, textSection, setTextSection, findTextSection )
 lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
+lazyAccessor(MPWELFRelocationTable*, textRelocationTable, setTextRelocationTable, findTextRelocationTable )
 
 -(const char*)cSectionNameAtOffset:(long)offset
 {
@@ -57,25 +62,32 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 
 -(MPWELFSection*)findElfSectionOfType:(int)type name:(nullable NSString*)name
 {
-    MPWELFSection *theStringTable=nil;
+    MPWELFSection *theSection=nil;
     @autoreleasepool {
         for (int i=0,max=[self numSectionHeaders];i<max;i++) {
-            MPWELFSection *possibleStringTable=[self sectionAtIndex:i];
-            if ( [possibleStringTable sectionType]==type ) {
-                if ( !name || [name isEqual:[possibleStringTable sectionName]]) {
-                    theStringTable = [possibleStringTable retain];
+            MPWELFSection *possibleSection=[self sectionAtIndex:i];
+            if ( [possibleSection sectionType]==type ) {
+                if ( !name || [name isEqual:[possibleSection sectionName]]) {
+                    theSection = [possibleSection retain];
                     break;
                 }
             }
         }
     }
     
-    return [theStringTable autorelease];
+    return [theSection autorelease];
 }
 
 -(MPWELFSection*)findElfSectionOfType:(int)type
 {
     return [self findElfSectionOfType:type name:nil];
+}
+
+-(MPWELFTextSection*)findTextSection
+{
+    MPWELFSection *section=[self findElfSectionOfType:SHT_PROGBITS name:@".text"];
+    return [[[MPWELFTextSection alloc] initWithSectionNumber:[section sectionNumber] reader:self] autorelease];
+
 }
 
 -(MPWELFSection*)findStringTable
@@ -99,7 +111,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
     return [[[MPWELFSymbolTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
 }
 
--(MPWELFRelocationTable*)findTextRelectionTable
+-(MPWELFRelocationTable*)findTextRelocationTable
 {
     MPWELFSection *symbolSection = [self findElfSectionOfType:SHT_RELA name:@".rela.text"];
     return [[[MPWELFRelocationTable alloc] initWithSectionNumber:symbolSection.sectionNumber reader:self] autorelease];
@@ -339,7 +351,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 +(void)testExtractTextSection
 {
     MPWELFReader *reader=[self readerForAdd];
-    MPWELFSection *text=[reader findElfSectionOfType:SHT_PROGBITS name:@".text"];
+    MPWELFTextSection *text=[reader textSection];
     EXPECTNOTNIL(text, @"got a text section");
     INTEXPECT([text sectionNumber],1,@"section number of text segment");
     IDEXPECT([text sectionName],@".text",@"text section");
@@ -352,7 +364,7 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 {
     MPWELFReader *reader=[self readerForExternalFunction];
     INTEXPECT([reader numSectionHeaders],12, @"number of sections");
-    MPWELFRelocationTable *relocations=[reader findTextRelectionTable];
+    MPWELFRelocationTable *relocations=[reader findTextRelocationTable];
     EXPECTNOTNIL(relocations, @"got relocations");
     INTEXPECT( relocations.numEntries, 1, @"number of relocations");
     INTEXPECT( relocations.sectionType, 4, @"section type");
@@ -389,9 +401,8 @@ lazyAccessor(MPWELFSymbolTable*, symbolTable, setSymbolTable, findSymbolTable )
 //    IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
 //    EXPECTTRUE( [reader isSymbolUndefinedAt:3],@"_other should be undefined");
 //    INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
-//    INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
-//    INTEXPECT([[reader textSection] relocEntryOffset],0x1c0,@"offset of undefined symbol reloc entries");
-////    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
+    INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
+//    INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],ARM64_RELOC_BRANCH26,@"reloc entry type");
 //    IDEXPECT([[reader textSection] nameOfRelocEntryAt:0],@"_other",@"external symbol");
 //    INTEXPECT([[reader textSection] offsetOfRelocEntryAt:0],8,@"address");
 //    EXPECTTRUE([[reader textSection] isExternalRelocEntryAt:0],@"external");

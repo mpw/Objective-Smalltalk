@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWELFSection,MPWELFSymbolTable;
+@class MPWELFSection,MPWELFSymbolTable,MPWELFRelocationTable;
 
 @interface MPWELFReader : NSObject
 
@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) MPWELFSymbolTable* symbolTable;
 @property (readonly) MPWELFSection* sectionStringTable;
+@property (readonly) MPWELFRelocationTable* textRelocationTable;
 
 @end
 
