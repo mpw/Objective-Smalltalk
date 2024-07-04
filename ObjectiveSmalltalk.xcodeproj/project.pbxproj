@@ -292,8 +292,8 @@
 		1F635617179EB38500D2DE58 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635616179EB38500D2DE58 /* libz.dylib */; };
 		1F635618179EB68000D2DE58 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F63561A179EB68900D2DE58 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
-		1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */; };
-		1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
+		1F68D1D715D2D659005C7BF5 /* STConnectionDefiner.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1D515D2D659005C7BF5 /* STConnectionDefiner.h */; };
+		1F68D1DA15D2D659005C7BF5 /* STConnectionDefiner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* STConnectionDefiner.m */; };
 		1F68D1DF15D2DCEB005C7BF5 /* STMessagePortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1DD15D2DCEB005C7BF5 /* STMessagePortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F68D1E215D2DCEB005C7BF5 /* STMessagePortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1DE15D2DCEB005C7BF5 /* STMessagePortDescriptor.m */; };
 		1F697A8025E15D1600D015DB /* STMessageConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F697A7E25E15D1600D015DB /* STMessageConnector.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -616,8 +616,8 @@
 		1FE37B7D1969610600C9A378 /* MPWClassMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713CB1522DA1D004A5E15 /* MPWClassMirror.m */; };
 		1FE37B801969610600C9A378 /* STConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FCEB7EA099C03ED00867A95 /* STConnector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B811969610600C9A378 /* STConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCEB7EB099C03ED00867A95 /* STConnector.m */; };
-		1FE37B821969610600C9A378 /* MPWConnectToDefault.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37B831969610600C9A378 /* MPWConnectToDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */; };
+		1FE37B821969610600C9A378 /* STConnectionDefiner.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F68D1D515D2D659005C7BF5 /* STConnectionDefiner.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE37B831969610600C9A378 /* STConnectionDefiner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F68D1D615D2D659005C7BF5 /* STConnectionDefiner.m */; };
 		1FE37B841969610600C9A378 /* MPWEvaluable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B851969610600C9A378 /* STEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F45D541075D37A200D924C3 /* STEvaluator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B861969610600C9A378 /* STEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F45D542075D37A200D924C3 /* STEvaluator.m */; };
@@ -1218,8 +1218,8 @@
 		1F635616179EB38500D2DE58 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1F635619179EB68900D2DE58 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1F6810311E117A9F006CE0D1 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWConnectToDefault.h; sourceTree = "<group>"; };
-		1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWConnectToDefault.m; sourceTree = "<group>"; };
+		1F68D1D515D2D659005C7BF5 /* STConnectionDefiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STConnectionDefiner.h; sourceTree = "<group>"; };
+		1F68D1D615D2D659005C7BF5 /* STConnectionDefiner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConnectionDefiner.m; sourceTree = "<group>"; };
 		1F68D1DD15D2DCEB005C7BF5 /* STMessagePortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STMessagePortDescriptor.h; sourceTree = "<group>"; };
 		1F68D1DE15D2DCEB005C7BF5 /* STMessagePortDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STMessagePortDescriptor.m; sourceTree = "<group>"; };
 		1F697A7E25E15D1600D015DB /* STMessageConnector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMessageConnector.h; sourceTree = "<group>"; };
@@ -2714,11 +2714,11 @@
 				1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */,
 				1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */,
 				1FCEB7EA099C03ED00867A95 /* STConnector.h */,
+				1FCEB7EB099C03ED00867A95 /* STConnector.m */,
 				1F697A7E25E15D1600D015DB /* STMessageConnector.h */,
 				1F697A7F25E15D1600D015DB /* STMessageConnector.m */,
-				1FCEB7EB099C03ED00867A95 /* STConnector.m */,
-				1F68D1D515D2D659005C7BF5 /* MPWConnectToDefault.h */,
-				1F68D1D615D2D659005C7BF5 /* MPWConnectToDefault.m */,
+				1F68D1D515D2D659005C7BF5 /* STConnectionDefiner.h */,
+				1F68D1D615D2D659005C7BF5 /* STConnectionDefiner.m */,
 				1FFC56381B1B99CE00BE3884 /* MPWDataflowConstraintExpression.h */,
 				1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */,
 				1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */,
@@ -3022,7 +3022,7 @@
 				1F9BD24225665748006D7476 /* STConnectorTests.h in Headers */,
 				1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */,
 				1FD48C4C15B7241000BDCECA /* MPWTaggedFloat.h in Headers */,
-				1F68D1D715D2D659005C7BF5 /* MPWConnectToDefault.h in Headers */,
+				1F68D1D715D2D659005C7BF5 /* STConnectionDefiner.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3150,7 +3150,7 @@
 			files = (
 				1FE37B8D1969610600C9A378 /* MPWGetAccessor.h in Headers */,
 				1F7AFACD260F78E5002DC530 /* MPWFastSuperMessage.h in Headers */,
-				1FE37B821969610600C9A378 /* MPWConnectToDefault.h in Headers */,
+				1FE37B821969610600C9A378 /* STConnectionDefiner.h in Headers */,
 				1F50461C2118658F00073E1E /* STPropertyPathDefinition.h in Headers */,
 				1F2B6650268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */,
 				1FE37B761969610600C9A378 /* MPWBlockContext.h in Headers */,
@@ -4410,7 +4410,7 @@
 				1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */,
 				1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */,
 				1FD48C4D15B7241000BDCECA /* MPWTaggedFloat.m in Sources */,
-				1F68D1DA15D2D659005C7BF5 /* MPWConnectToDefault.m in Sources */,
+				1F68D1DA15D2D659005C7BF5 /* STConnectionDefiner.m in Sources */,
 				1FE5CFDE221C4A2B003E11DC /* STProtocolDefinition.m in Sources */,
 				1F68D1E215D2DCEB005C7BF5 /* STMessagePortDescriptor.m in Sources */,
 			);
@@ -4591,7 +4591,7 @@
 				1FE37B7B1969610600C9A378 /* MPWBridgeReader.m in Sources */,
 				1FE37B861969610600C9A378 /* STEvaluator.m in Sources */,
 				1FE37BC21969610800C9A378 /* MPWTaggedFloat.m in Sources */,
-				1FE37B831969610600C9A378 /* MPWConnectToDefault.m in Sources */,
+				1FE37B831969610600C9A378 /* STConnectionDefiner.m in Sources */,
 				1FE37BB61969610700C9A378 /* MPWScriptedMethod.m in Sources */,
 				1F5096B22A5195AA0022E8DB /* STPropertyMethodHeader.m in Sources */,
 				1F1BCB582A19746B00AE984C /* STNotificationDefinition.m in Sources */,

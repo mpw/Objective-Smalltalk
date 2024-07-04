@@ -19,7 +19,7 @@
 #import "MPWDefaultsScheme.h"
 #import "MPWEnvScheme.h"
 #import "MPWSchemeScheme.h"
-#import "MPWConnectToDefault.h"
+#import "STConnectionDefiner.h"
 #import <MPWFoundation/NSNil.h>
 #import "MPWLiteralExpression.h"
 #import "MPWCascadeExpression.h"
@@ -97,9 +97,9 @@ idAccessor(solver, setSolver)
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u21e6"];
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"\u2190"];
 	[self defineConnectorClass:[MPWAssignmentExpression class] forConnectorSymbol:@"<-"];
-	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"->"];
-	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"\u21e8"];
-	[self defineConnectorClass:[MPWConnectToDefault class] forConnectorSymbol:@"\u2192"];
+	[self defineConnectorClass:[STConnectionDefiner class] forConnectorSymbol:@"->"];
+	[self defineConnectorClass:[STConnectionDefiner class] forConnectorSymbol:@"\u21e8"];
+	[self defineConnectorClass:[STConnectionDefiner class] forConnectorSymbol:@"\u2192"];
 }
 
 -initWithParent:newParent
@@ -1611,7 +1611,7 @@ idAccessor(solver, setSolver)
     STCompiler *compiler=[self compiler];
     [compiler evaluateScriptString:prepForTestProgram];
     id compiled = [compiler compile:testProgram];
-    EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
+    EXPECTTRUE([compiled isKindOfClass:[STConnectionDefiner class]], @"connector expr. should be top level");
 }
 
 +(void)testParsingConnectedObjectLiterals
@@ -1621,7 +1621,7 @@ idAccessor(solver, setSolver)
 
     STCompiler *compiler=[self compiler];
     id compiled = [compiler compile:testProgram];
-    EXPECTTRUE([compiled isKindOfClass:[MPWConnectToDefault class]], @"connector expr. should be top level");
+    EXPECTTRUE([compiled isKindOfClass:[STConnectionDefiner class]], @"connector expr. should be top level");
 }
 
 +(void)testObjectLiteralsCanBeUsedInSimpleArithmeticExpressions

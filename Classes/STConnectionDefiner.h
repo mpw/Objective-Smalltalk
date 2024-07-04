@@ -1,5 +1,5 @@
 //
-//  MPWConnectToDefault.h
+//  STConnectionDefiner.h
 //  Arch-S
 //
 //  Created by Marcel Weiher on 8/8/12.
@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@interface MPWConnectToDefault : STExpression
+@interface STConnectionDefiner : STExpression
 {
     id lhs,rhs;
 }

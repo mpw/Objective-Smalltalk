@@ -1,18 +1,18 @@
 //
-//  MPWConnectToDefault.m
+//  STConnectionDefiner.m
 //  Arch-S
 //
 //  Created by Marcel Weiher on 8/8/12.
 //
 //
 
-#import "MPWConnectToDefault.h"
+#import "STConnectionDefiner.h"
 #import "STMessagePortDescriptor.h"
 #import <MPWFoundation/MPWStreamSource.h>
 #import "MPWScheme.h"
 #import "STMessageConnector.h"
 
-@implementation MPWConnectToDefault
+@implementation STConnectionDefiner
 
 idAccessor( rhs, setRhs )
 idAccessor( lhs, setLhs )
