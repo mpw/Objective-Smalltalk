@@ -12,7 +12,7 @@
 	MPWClassMirror,
 	"MPWClassMirrorSubclassForTesting",
 	MPWClassScheme,
-	MPWConnectToDefault,
+	STConnectionDefiner,
 	MPWConnector,
 	"MPWDataflowConstraintExpression",
 	MPWDefaultsScheme,

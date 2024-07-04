@@ -62,7 +62,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWLiteralDictionaryExpression.m \
     Classes/STPort.m \
     Classes/STSystem.m \
-    Classes/MPWConnectToDefault.m \
+    Classes/STConnectionDefiner.m \
     Classes/STClassDefinition.m \
     Classes/MPWMethodStore.m \
     Classes/MPWObjCGenerator.m \

@@ -398,9 +398,6 @@ lazyAccessor(MPWELFRelocationTable*, textRelocationTable, setTextRelocationTable
 
     
     
-//    IDEXPECT( [reader symbolNameAt:3],@"_other",@"referenced function");
-//    EXPECTTRUE( [reader isSymbolUndefinedAt:3],@"_other should be undefined");
-//    INTEXPECT([reader symbolOffsetAt:3],0,@"offset of undefined symbols is 0");
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
     INTEXPECT([[reader textSection] typeOfRelocEntryAt:0],R_AARCH64_CALL26,@"reloc entry type");
     INTEXPECT([[reader textSection] offsetOfRelocEntryAt:0],16,@"reloc entry offset");
@@ -411,7 +408,7 @@ lazyAccessor(MPWELFRelocationTable*, textRelocationTable, setTextRelocationTable
 }
 
 
-+(NSArray*)testSelectors
++(NSArray*)testSelectors 
 {
    return @[
 			@"testCanReadElfHeader",

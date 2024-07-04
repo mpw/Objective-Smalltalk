@@ -18,7 +18,7 @@
 #import <mach-o/arm64/reloc.h>
 #import "MPWClassScheme.h"
 #import "MPWIdentifier.h"
-#import "MPWConnectToDefault.h"
+#import "STConnectionDefiner.h"
 #import "STMethodSymbols.h"
 
 
@@ -82,7 +82,7 @@
 
 @end
 
-@implementation MPWConnectToDefault(nativeCodeGenertion)
+@implementation STConnectionDefiner(nativeCodeGenertion)
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
