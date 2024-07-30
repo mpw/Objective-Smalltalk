@@ -70,7 +70,7 @@ NSDictionary *styles;
 
 lazyAccessor(NSDictionary*, styles, setStyles, createStyles)
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSArray<NSString*> *path=[aReference relativePathComponents];
     if ( [aReference isRoot] || path.count ==0 || (path.count == 1 && [path.firstObject isEqual:@"."] )) {

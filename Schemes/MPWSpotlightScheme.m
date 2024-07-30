@@ -15,7 +15,7 @@
 }
 
 @property (nonatomic,strong) NSMetadataQuery *query;
-@property (nonatomic,strong) MPWGenericReference *originalReference;
+@property (nonatomic,strong) MPWGenericIdentifier *originalReference;
 
 
 
@@ -55,7 +55,7 @@
 @implementation MPWSpotlightScheme
 
 
--(id)at:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericIdentifier*)aReference
 {
     NSDictionary *queryStrings=@{
                              @"type": @"kMDItemContentTypeTree == %@",

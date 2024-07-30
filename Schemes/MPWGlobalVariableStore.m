@@ -14,7 +14,7 @@
 
 @implementation MPWGlobalVariableStore
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSString *s=[aReference path];
     const char *symbol=[s UTF8String];

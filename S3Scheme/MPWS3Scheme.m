@@ -145,7 +145,7 @@
     }
 }
 
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
+-(NSArray<MPWIdentifier*>*)childrenOfReference:(MPWIdentifier*)aReference
 {
 //    NSLog(@"childrenOfReference: %@",[aReference name]);
     NSArray *children=[self at:aReference];

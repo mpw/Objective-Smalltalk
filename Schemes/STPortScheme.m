@@ -10,7 +10,7 @@
 
 @implementation STPortScheme
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSArray *components=[aReference pathComponents];
     if ( components.count >= 1  ) {

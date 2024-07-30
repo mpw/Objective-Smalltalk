@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MPWHierarchicalStorage,MPWReferencing;
+@protocol MPWHierarchicalStorage,MPWIdentifying;
 @class STCompiler,MPWWriteBackCache;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSDictionary*)info;
 -(STCompiler*)interpreter;
 -(NSDictionary*)methodDict;
--(id <MPWReferencing>)resourceRef;
--(id <MPWReferencing>)sourceRef;
+-(id <MPWIdentifying>)resourceRef;
+-(id <MPWIdentifying>)sourceRef;
 -(id <MPWHierarchicalStorage>)cachedResources;
 -(id <MPWHierarchicalStorage>)cachedSources;
 -(id <MPWHierarchicalStorage>)rawResources;

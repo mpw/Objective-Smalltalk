@@ -9,10 +9,10 @@
 
 @implementation STRootMapper
 
--(id<MPWReferencing>)mapReference:(id<MPWReferencing>)ref
+-(id<MPWIdentifying>)mapReference:(id<MPWIdentifying>)ref
 {
     if ( [ref.path isEqual:@""] ) {
-        ref = [MPWGenericReference referenceWithPath:@"/"];
+        ref = [MPWGenericIdentifier referenceWithPath:@"/"];
     }
     return ref;
 }

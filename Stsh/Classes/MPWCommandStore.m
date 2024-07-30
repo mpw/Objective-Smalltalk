@@ -11,7 +11,7 @@
 
 @implementation MPWCommandStore
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     return [[self bindingForReference:aReference inContext:nil] value];
 }

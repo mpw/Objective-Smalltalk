@@ -43,7 +43,7 @@
     [self setUIForMethodHeader:@"" body:@""];
 }
 
--(void)loadMethodFromPath:(id <MPWReferencing>)ref
+-(void)loadMethodFromPath:(id <MPWIdentifying>)ref
 {
     if ( [self isReferencingMethod:ref]) {
         NSString *methodBodyString=self.mappedStore[ref];
@@ -54,7 +54,7 @@
     }
 }
 
--(id <MPWReferencing>)selectedReference
+-(id <MPWIdentifying>)selectedReference
 {
     return methodBrowser.currentReference;
 }
@@ -69,7 +69,7 @@
     return [[instanceClassSelector selectedCell] tag] == 2;
 }
 
--(BOOL)isReferencingMethod:(id <MPWReferencing>)ref
+-(BOOL)isReferencingMethod:(id <MPWIdentifying>)ref
 {
     return ![self.mappedStore hasChildren:ref];
 }
@@ -139,7 +139,7 @@
 
 -(IBAction)saveMethodBody
 {
-    id <MPWReferencing> ref=[[self selectedReference] reference];
+    id <MPWIdentifying> ref=[[self selectedReference] reference];
     if ( [self isReferencingMethod:ref]) {
         NSString *body=[self uiMethodBodyString];
         id <MPWStorage> s=self.mappedStore;
@@ -152,7 +152,7 @@
 
 -(IBAction)delete:(MPWBrowser*)sender
 {
-    id <MPWReferencing> ref=[sender currentReference];
+    id <MPWIdentifying> ref=[sender currentReference];
     if ( [self isReferencingMethod:ref]) {
         [self.mappedStore deleteAt:ref];
         [self clearMethodFromUI];

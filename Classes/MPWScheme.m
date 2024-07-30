@@ -28,7 +28,7 @@
 
 -bindingWithIdentifier:(STIdentifier*)anIdentifier withContext:aContext
 {
-    id <MPWReferencing> ref=[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]];
+    id <MPWIdentifying> ref=[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]];
     ref.schemeName=anIdentifier.schemeName;
     return [self bindingForReference:ref inContext:aContext];
 }
@@ -62,10 +62,10 @@
         prefix=@".";
     }
     //    NSLog(@"prefix: '%@' suffix: '%@'",prefix,suffix);
-    id <MPWReferencing> ref=[self referenceForPath:prefix];
+    id <MPWIdentifying> ref=[self referenceForPath:prefix];
     NSArray *potentialChildren=[self childrenOfReference:ref];
     NSMutableArray *names=[NSMutableArray array];
-    for ( MPWGenericReference *reference in potentialChildren) {
+    for ( MPWGenericIdentifier *reference in potentialChildren) {
         NSString *name = [reference path];
         if ( [name hasPrefix:@"./"]) {
              name=[name substringFromIndex:2];

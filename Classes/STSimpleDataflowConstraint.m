@@ -19,11 +19,11 @@ CONVENIENCEANDINIT( constraint, WithSource:source target:target)
 
 -(void)writeObject:(MPWRESTOperation*)op
 {
-    MPWReference *ref=op.reference;
+    MPWIdentifier *ref=op.reference;
     [self refDidChange:ref];
 }
 
--(void)refDidChange:(id <MPWReferencing>)aRef
+-(void)refDidChange:(id <MPWIdentifying>)aRef
 {
     if ( [self.source isAffectedBy:aRef]) {
         [self update];

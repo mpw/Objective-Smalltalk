@@ -15,7 +15,7 @@
 @implementation MPWFileSchemeResolver
 
 
--directoryForReference:(MPWGenericReference*)aReference
+-directoryForReference:(MPWGenericIdentifier*)aReference
 {
     MPWDirectoryBinding *dir=[super directoryForReference:aReference];
     return [[[MPWDirectoryBinding alloc] initWithContents:(NSArray*)[[self collect] bindingForReference:dir.contents.each inContext:nil]] autorelease];

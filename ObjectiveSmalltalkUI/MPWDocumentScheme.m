@@ -81,7 +81,7 @@ idAccessor(currentDocument, setCurrentDocument)
     return nil;
 }
 
--(BOOL)hasChildren:(id<MPWReferencing>)aReference
+-(BOOL)hasChildren:(id<MPWIdentifying>)aReference
 {
     return [aReference isRoot];
 }

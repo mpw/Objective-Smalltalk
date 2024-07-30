@@ -15,7 +15,7 @@
 
 @implementation UIImageFromData
 
--(id)mapRetrievedObject:(id)anObject forReference:(id<MPWReferencing>)aReference
+-(id)mapRetrievedObject:(id)anObject forReference:(id<MPWIdentifying>)aReference
 {
 //    NSLog(@"mapRetrievedObject: %@ forReference: %@",anObject,aReference);
     anObject = [anObject performSelector:@selector(TIFFRepresentation)];
@@ -69,7 +69,7 @@ lazyAccessor( MPWByteStream*, consoleStream, setConsoleStream, createConsoleStre
 {
     NSData *script=userInfo[@"ProgramText"];
     NSString *resourceURIString=userInfo[@"Resources"];
-    MPWURLSchemeResolver *resourceLoader = [MPWPathRelativeStore storeWithSource:[MPWURLSchemeResolver store] reference:[MPWGenericReference referenceWithPath:resourceURIString]];
+    MPWURLSchemeResolver *resourceLoader = [MPWPathRelativeStore storeWithSource:[MPWURLSchemeResolver store] reference:[MPWGenericIdentifier referenceWithPath:resourceURIString]];
     UIImageFromData *mapper = [UIImageFromData storeWithSource:resourceLoader];
     [self.compiler bindValue:mapper toVariableNamed:@"imageMapper"];
     [self.compiler bindValue:resourceLoader toVariableNamed:@"resourceLoader"];

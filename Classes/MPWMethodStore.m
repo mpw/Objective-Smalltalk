@@ -254,7 +254,7 @@ scalarAccessor( id , compiler , setCompiler )
 {
     for (NSString *className in [[self classes] allKeys]) {
         NSString *filename=[className stringByAppendingPathExtension:@"st"];
-        MPWGenericReference *ref=[MPWGenericReference referenceWithPath:filename];
+        MPWGenericIdentifier *ref=[MPWGenericIdentifier referenceWithPath:filename];
         MPWByteStream *s=[MPWByteStream stream];
         [self fileoutClass:className toStream:s];
         [s close];
@@ -356,8 +356,8 @@ scalarAccessor( id , compiler , setCompiler )
     [store fileoutToStore:sourceStore];
     INTEXPECT([d count],2,@"number of classes stored");
 
-    NSData *d1=[sourceStore at:[MPWGenericReference referenceWithPath:@"MPWMethodWriterTestClass3.st"]];
-    NSData *d2=[sourceStore at:[MPWGenericReference referenceWithPath:@"MPWMethodWriterTestClass5.st"]];
+    NSData *d1=[sourceStore at:[MPWGenericIdentifier referenceWithPath:@"MPWMethodWriterTestClass3.st"]];
+    NSData *d2=[sourceStore at:[MPWGenericIdentifier referenceWithPath:@"MPWMethodWriterTestClass5.st"]];
 
     NSString *expected1=@"class MPWMethodWriterTestClass3 : NSObject\n{\n-answer { 42. }\n\n}.\n";
     NSString *expected2=@"class MPWMethodWriterTestClass5 : NSObject\n{\n-answer { 43. }\n\n}.\n";

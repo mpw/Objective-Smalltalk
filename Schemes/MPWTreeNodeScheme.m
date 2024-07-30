@@ -27,12 +27,12 @@ idAccessor( root, setRoot )
     return [root nodeForPathEnumerator:[pathArray objectEnumerator]];
 }
 
--nodeForReference:(MPWGenericReference*)aReference
+-nodeForReference:(MPWGenericIdentifier*)aReference
 {
     return [self nodeForPath:[aReference relativePathComponents]];
 }
 
--(id)at:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericIdentifier*)aReference
 {
     MPWTreeNode *node = [self nodeForReference:aReference];
     id content = [node content];
@@ -50,12 +50,12 @@ idAccessor( root, setRoot )
 }
 
 
--(BOOL)hasChildren:(MPWGenericReference *)aReference
+-(BOOL)hasChildren:(MPWGenericIdentifier *)aReference
 {
     return [[self nodeForReference:aReference] hasChildren];
 }
 
--(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
+-(NSArray*)childrenOfReference:(MPWGenericIdentifier*)aReference
 {
     return [[[[[[self nodeForPath:[aReference relativePathComponents]] children] collect] path] collect] lastPathComponent];
 }
@@ -119,7 +119,7 @@ idAccessor( root, setRoot )
 +(void)testLeafHasNoChildren
 {
     MPWTreeNodeScheme *site=[self store];
-    id <MPWReferencing> ref=[site referenceForPath:@"hello"];
+    id <MPWIdentifying> ref=[site referenceForPath:@"hello"];
     site[ref]=@"world";
     MPWBinding *binding=[site bindingForReference:ref inContext:nil];
     IDEXPECT( ref, binding.reference, @"binding has same ref");

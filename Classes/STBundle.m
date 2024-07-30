@@ -45,7 +45,7 @@ CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     MPWDiskStore *ds=[MPWDiskStore store];
-    MPWBinding *binding=[ds bindingForReference:[MPWGenericReference referenceWithPath:newPath] inContext:nil];
+    MPWBinding *binding=[ds bindingForReference:[MPWGenericIdentifier referenceWithPath:newPath] inContext:nil];
     return [self initWithBinding:binding];
 }
 
@@ -107,14 +107,14 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     }
 }
 
--(id <MPWReferencing>)sourceRef
+-(id <MPWIdentifying>)sourceRef
 {
     return [self refForSubDir:@"Sources"];
 //    NSString *path=[[self path] stringByAppendingPathComponent:@"Resources"];
 //    return path;
 }
 
--(id <MPWReferencing>)resourceRef
+-(id <MPWIdentifying>)resourceRef
 {
     NSString *path=[[self path] stringByAppendingPathComponent:@"Resources"];
     return path;

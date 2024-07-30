@@ -142,7 +142,7 @@ idAccessor( content, setContent )
 
 -asReference
 {
-    return [MPWGenericReference referenceWithPath:[self path]];
+    return [MPWGenericIdentifier referenceWithPath:[self path]];
 }
 
 -fileSystemPath

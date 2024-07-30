@@ -66,7 +66,7 @@
 
 lazyAccessor(NSDictionary*, styles, setStyles, createStyles)
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSArray<NSString*> *path=[aReference relativePathComponents];
     if ( path.count == 2 ) {

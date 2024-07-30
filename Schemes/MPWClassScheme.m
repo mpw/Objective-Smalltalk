@@ -52,7 +52,7 @@
 }
 
 
--(NSArray*)childrenOfReference:(MPWGenericReference*)aReference
+-(NSArray*)childrenOfReference:(MPWGenericIdentifier*)aReference
 {
 //    NSLog(@"childrenOf with binding '%@'",[binding name]);
 //    if ( [[binding name] isEqualToString:@"/"]  || [[binding name] isEqualToString:@"."]) {
@@ -65,7 +65,7 @@
     return [[[self collect] referenceForMirror:[[self allClassMirrors] each]] subarrayWithRange:NSMakeRange(0,100)];
 }
 
--(BOOL)hasChildren:(id<MPWReferencing>)aReference
+-(BOOL)hasChildren:(id<MPWIdentifying>)aReference
 {
     return [self childrenOfReference:aReference] > 0;
 }
@@ -78,7 +78,7 @@
 +(void)testSimpleClassResolve
 {
 	id resolver=[[self new] autorelease];
-    INTEXPECT( [resolver at:[MPWGenericReference referenceWithPath:@"NSString"]], [NSString class] , @"class resolver for NSString");
+    INTEXPECT( [resolver at:[MPWGenericIdentifier referenceWithPath:@"NSString"]], [NSString class] , @"class resolver for NSString");
 }
 
 +testSelectors
