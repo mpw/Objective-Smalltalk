@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWCommandBinding : MPWStreamableBinding
+@interface MPWCommandBinding : MPWStreamableReference
 
 @end
 

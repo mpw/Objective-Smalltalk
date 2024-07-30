@@ -8,7 +8,7 @@
 
 #import "MPWEnvScheme.h"
 #import <MPWFoundation/DebugMacros.h>
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWGenericIdentifier.h>
 
 @implementation MPWEnvScheme
 
@@ -67,7 +67,7 @@ extern char **environ;
 
 -(void)setValue:newValue forBinding:aBinding
 {
-	if ( [newValue isKindOfClass:[MPWBinding class]] ) {
+	if ( [newValue isKindOfClass:[MPWReference class]] ) {
 		newValue=[newValue value];
 	}
 	newValue=[newValue stringValue];
@@ -134,7 +134,7 @@ extern char **environ;
 +(void)testEnvironmentList
 {
 //	NSArray *allEnvVars=[self linesFromCommand:@"env"];
-	MPWBinding *rootEnv=[STCompiler evaluate:@"ref:env:/"];
+	MPWReference *rootEnv=[STCompiler evaluate:@"ref:env:/"];
     EXPECTTRUE([rootEnv hasChildren],@"root should have children");
 
 //    INTEXPECT( [[rootEnv childNames] count],[allEnvVars count],@"number of environment variables");

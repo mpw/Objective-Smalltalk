@@ -135,7 +135,7 @@
 
 -(NSArray*)completionsForString:(NSString*)s withEvaluator:(STEvaluator*)evaluator resultName:(NSString **)resultName
 {
-    MPWBinding* binding=[[evaluator localVars] objectForKey:[self name]];
+    MPWReference* binding=[[evaluator localVars] objectForKey:[self name]];
     id value=[binding value];
     NSArray *completions;
     if ( value ) {

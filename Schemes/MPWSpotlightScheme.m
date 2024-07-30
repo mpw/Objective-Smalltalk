@@ -9,7 +9,7 @@
 #import <CoreServices/CoreServices.h>
 #import <MPWFoundation/MPWFoundation.h>
 
-@interface MPWSpotlightSearchBinding : MPWDirectoryBinding
+@interface MPWSpotlightSearchBinding : MPWDirectoryReference
 {
     
 }
@@ -28,7 +28,7 @@
 
     for ( NSMetadataItem *item in [[self.query.results copy] autorelease]  ) {
         NSString *path=[item valueForAttribute:(NSString*)kMDItemPath];
-        MPWFileBinding *f=[[[MPWFileBinding alloc] initWithPath:path] autorelease];
+        MPWFileReference *f=[[[MPWFileReference alloc] initWithPath:path] autorelease];
         f.parentPath = [self name];
         [contents addObject:f];
     }

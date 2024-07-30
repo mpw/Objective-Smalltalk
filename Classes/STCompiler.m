@@ -1475,12 +1475,12 @@ idAccessor(solver, setSolver)
     return NO;
 }
 
--(MPWBinding*)bindingForIdentifier:(STIdentifier*)anIdentifier
+-(MPWReference*)bindingForIdentifier:(STIdentifier*)anIdentifier
 {
 	return [[self schemeForName:[anIdentifier schemeName]] bindingWithIdentifier:anIdentifier withContext:self];
 }
 
--(MPWBinding*)bindingForString:(NSString*)fullPath
+-(MPWReference*)bindingForString:(NSString*)fullPath
 {
     STIdentifier *identifier=nil;
 	NSArray *parts=[fullPath componentsSeparatedByString:@":"];

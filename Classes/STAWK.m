@@ -51,7 +51,7 @@
 @end
 
 
-@implementation MPWStreamableBinding(awk)
+@implementation MPWStreamableReference(awk)
 
 -(void)withSeparator:(NSString*)separator awk:block
 {

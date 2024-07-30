@@ -121,7 +121,7 @@ idAccessor( root, setRoot )
     MPWTreeNodeScheme *site=[self store];
     id <MPWIdentifying> ref=[site referenceForPath:@"hello"];
     site[ref]=@"world";
-    MPWBinding *binding=[site bindingForReference:ref inContext:nil];
+    MPWReference *binding=[site bindingForReference:ref inContext:nil];
     IDEXPECT( ref, binding.reference, @"binding has same ref");
     IDEXPECT( site[ref], @"world", @"store get");
     IDEXPECT( [binding value], @"world", @"binding value");

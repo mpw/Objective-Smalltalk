@@ -509,7 +509,7 @@ idAccessor( retval, setRetval )
     [[stream do] print:[self.history each]];
 }
 
--(void)writeHistoryTo:(MPWFileBinding*)ref
+-(void)writeHistoryTo:(MPWFileReference*)ref
 {
     MPWByteStream *s=[ref writeStream];
     [self writeHistoryOn:s];

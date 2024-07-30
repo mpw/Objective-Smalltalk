@@ -1,5 +1,5 @@
 //
-//  MPWBinding.m
+//  MPWReference.m
 //  Arch-S
 //
 //  Created by Marcel Weiher on 11/22/04.
@@ -7,7 +7,7 @@
 //
 #import "MPWBindingLegacy.h"
 
-@implementation MPWBinding(legacy)
+@implementation MPWReference(legacy)
 
 
 -(void)setIdentifier:newIdentifier

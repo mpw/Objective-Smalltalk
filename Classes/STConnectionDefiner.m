@@ -153,7 +153,7 @@ id st_connect_components( id left, id right )
 
 @end
 
-@implementation MPWBinding(connecting)
+@implementation MPWReference(connecting)
 
 
 -defaultInputPort
@@ -190,7 +190,7 @@ id st_connect_components( id left, id right )
 
 
 
-@implementation MPWFileBinding(connecting)
+@implementation MPWFileReference(connecting)
 
 -defaultOutputPort
 {

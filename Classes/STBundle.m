@@ -12,7 +12,7 @@
 
 @interface STBundle()
 
-@property (nonatomic,strong) MPWBinding *binding;
+@property (nonatomic,strong) MPWReference *binding;
 @property (readonly) NSString *path;
 
 @end
@@ -45,7 +45,7 @@ CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
 CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     MPWDiskStore *ds=[MPWDiskStore store];
-    MPWBinding *binding=[ds bindingForReference:[MPWGenericIdentifier referenceWithPath:newPath] inContext:nil];
+    MPWReference *binding=[ds bindingForReference:[MPWGenericIdentifier referenceWithPath:newPath] inContext:nil];
     return [self initWithBinding:binding];
 }
 
@@ -59,7 +59,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [NSURL fileURLWithPath:self.path];
 }
 
--(MPWBinding*)refForSubDir:(NSString*)subdir
+-(MPWReference*)refForSubDir:(NSString*)subdir
 {
     return [[self binding] referenceByAppendingReference:subdir];
 }
@@ -98,7 +98,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(BOOL)isPresentOnDisk
 {
-    MPWBinding *binding=[self binding];
+    MPWReference *binding=[self binding];
     @try {
         BOOL exists = [binding isBound];
         return exists;

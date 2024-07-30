@@ -17,17 +17,17 @@
 
 -directoryForReference:(MPWGenericIdentifier*)aReference
 {
-    MPWDirectoryBinding *dir=[super directoryForReference:aReference];
-    return [[[MPWDirectoryBinding alloc] initWithContents:(NSArray*)[[self collect] bindingForReference:dir.contents.each inContext:nil]] autorelease];
+    MPWDirectoryReference *dir=[super directoryForReference:aReference];
+    return [[[MPWDirectoryReference alloc] initWithContents:(NSArray*)[[self collect] bindingForReference:dir.contents.each inContext:nil]] autorelease];
 }
 
 -bindingForReference:aReference inContext:aContext
 {
-    return [MPWFileBinding bindingWithReference:aReference inStore:self];
+    return [MPWFileReference bindingWithReference:aReference inStore:self];
 }
 
 #ifndef GS_API_LATEST
--(void)startWatching:(MPWFileBinding*)binding
+-(void)startWatching:(MPWFileReference*)binding
 {
     NSString *path=[binding path];
     NSString *dir=[path stringByDeletingLastPathComponent];
@@ -100,7 +100,7 @@
 
 +(void)testGetDirContents
 {
-    MPWDirectoryBinding* dirContents =[STCompiler evaluate:@"file:/"];
+    MPWDirectoryReference* dirContents =[STCompiler evaluate:@"file:/"];
     EXPECTTRUE(dirContents.contents.count> 15, @"got directory contents");
     
 }

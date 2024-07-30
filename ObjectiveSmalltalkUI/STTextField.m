@@ -73,7 +73,7 @@
    }
 }
 
--(void)setBinding:(MPWBinding*)newBinding
+-(void)setBinding:(MPWReference*)newBinding
 {
     self.ref = newBinding;
     self.target = self;

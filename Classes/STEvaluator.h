@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWBinding,MPWScheme,MPWSchemeScheme;
+@class MPWReference,MPWScheme,MPWSchemeScheme;
 
 @interface STEvaluator : MPWObject {
 	id localVars;
@@ -31,12 +31,12 @@
 @property (nonatomic, assign) Class contextClass;
 
 -valueOfVariableNamed:aName;
--(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName;
--(MPWBinding*)cachedBindingForName:aName;
--(void)cacheBinding:(MPWBinding*)binding forName:aName;
+-(MPWReference*)bindingForLocalVariableNamed:(NSString*)localVarName;
+-(MPWReference*)cachedBindingForName:aName;
+-(void)cacheBinding:(MPWReference*)binding forName:aName;
 
 //-valueOfVariableNamed:aName withScheme:scheme;
--(MPWBinding*)createLocalBindingForName:(NSString*)variableName;
+-(MPWReference*)createLocalBindingForName:(NSString*)variableName;
 -(NSString*)defaultScheme;
 
 -valueForUndefinedVariableNamed:aName;

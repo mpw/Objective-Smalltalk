@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STButton : NSButton <ModelDidChange,ValidationDidChange>
 
-@property (nonatomic, strong)  MPWBinding *enabledRef;
+@property (nonatomic, strong)  MPWReference *enabledRef;
 
 @end
 

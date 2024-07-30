@@ -60,7 +60,7 @@ idAccessor_h( commandStore, setCommandStore)
 -(id<MPWStorage>)httpBased:(NSString*)scheme port:(int)port
 {
     MPWURLSchemeResolver* baseStore=[MPWURLSchemeResolver store];
-    MPWURLReference *baseRef=[[[MPWURLReference alloc] initWithPathComponents:@[@"/"] host:self.name scheme:scheme] autorelease];
+    MPWURI *baseRef=[[[MPWURI alloc] initWithPathComponents:@[@"/"] host:self.name scheme:scheme] autorelease];
     baseRef.port = port;
     return [baseStore relativeStoreAt:baseRef];
 }

@@ -6,7 +6,7 @@
 //  Copyright 2004 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWFoundation/MPWBinding.h>
+#import <MPWFoundation/MPWReference.h>
 
 @class MPWScheme,STIdentifier,STEvaluator;
 

@@ -78,7 +78,7 @@ static void CatchException(NSException *exception)
     NSSetUncaughtExceptionHandler (&CatchException);
 }
 
--(id)deserializeData:(NSData*)inputData at:(MPWBinding*)aBinding
+-(id)deserializeData:(NSData*)inputData at:(MPWReference*)aBinding
 {
 //    if ( [[aBinding name] isEqual:@"methods"] ) {
 //        return [self dictionaryFromData:inputData];
