@@ -42,7 +42,7 @@ extern char **environ;
 
 
 
--(id)at:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericIdentifier*)aReference
 {
     NSString *path=[aReference path];
     if ( [aReference isRoot] || [path length]==0 || [path isEqualToString:@"."]) {
@@ -78,7 +78,7 @@ extern char **environ;
 	}
 }
 
--(BOOL)hasChildren:(id <MPWReferencing>)reference
+-(BOOL)hasChildren:(id <MPWIdentifying>)reference
 {
     NSString *path=[reference path];
     return ([path length]==0 || [path isEqual:@"/"]);

@@ -9,7 +9,7 @@
 
 @implementation STProtocolScheme
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     return objc_getProtocol( [[aReference path] UTF8String]);
 }

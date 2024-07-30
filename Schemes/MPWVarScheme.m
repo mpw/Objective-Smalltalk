@@ -60,7 +60,7 @@
 }
 
 
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
+-(NSArray<MPWIdentifier*>*)childrenOfReference:(MPWIdentifier*)aReference
 {
     NSArray *allNames=[[self.context localVars] allKeys];
     NSMutableArray *bindings=[NSMutableArray array];
@@ -104,12 +104,12 @@
 
 @implementation NSObject(Storage)
 
--at:(id <MPWReferencing>)aReference
+-at:(id <MPWIdentifying>)aReference
 {
     return [self valueForKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];
 }
 
--(void)at:(id <MPWReferencing>)aReference put:anObject
+-(void)at:(id <MPWIdentifying>)aReference put:anObject
 {
 //    NSLog(@"NSObject at:%@ put:%@",aReference,anObject);
     [self setValue:anObject forKeyPath:[[aReference relativePathComponents] componentsJoinedByString:@"."]];

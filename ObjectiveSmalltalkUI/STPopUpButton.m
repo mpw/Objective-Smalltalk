@@ -37,7 +37,7 @@
     return self;
 }
 
--(BOOL)matchesRef:(id <MPWReferencing>)ref
+-(BOOL)matchesRef:(id <MPWIdentifying>)ref
 {
     return YES;
 }

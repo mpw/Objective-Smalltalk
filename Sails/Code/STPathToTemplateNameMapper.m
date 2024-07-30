@@ -10,7 +10,7 @@
 
 @implementation STPathToTemplateNameMapper
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSString *path = [aReference path];
     if ( [path hasSuffix:@"/edit"]) {

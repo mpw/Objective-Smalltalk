@@ -174,7 +174,7 @@ idAccessor( localVars, setLocalVars )
         scheme=components.firstObject;
         aPath=components.lastObject;
     }
-    return [[[MPWGenericReference alloc] initWithPathComponents:[aPath componentsSeparatedByString:@"/"] scheme:scheme] autorelease];
+    return [[[MPWGenericIdentifier alloc] initWithPathComponents:[aPath componentsSeparatedByString:@"/"] scheme:scheme] autorelease];
 }
 
 -(void)cacheBinding:aBinding forName:aName

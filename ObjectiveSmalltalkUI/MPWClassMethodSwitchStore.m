@@ -11,7 +11,7 @@
 @implementation MPWClassMethodSwitchStore
 
 
--(id<MPWReferencing>)mapReference:(id<MPWReferencing>)aReference
+-(id<MPWIdentifying>)mapReference:(id<MPWIdentifying>)aReference
 {
     aReference=[aReference asReference];
     NSArray *path=[aReference relativePathComponents];

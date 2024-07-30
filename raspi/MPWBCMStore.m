@@ -53,7 +53,7 @@
 	return 0;
 }
 
--(int)pinForAddress:(id <MPWReferencing>)address
+-(int)pinForAddress:(id <MPWIdentifying>)address
 {
     NSArray<NSString*> *pathComponents=[address pathComponents];
     if ( pathComponents.count == 1 ) {
@@ -64,12 +64,12 @@
     }
 }
 
--(id)at:(id <MPWReferencing>)address 
+-(id)at:(id <MPWIdentifying>)address 
 {
     return @([self readPin:[self pinForAddress:address]]);
 }
 
--(void)at:(id <MPWReferencing>)address put:value
+-(void)at:(id <MPWIdentifying>)address put:value
 {
     int pinValue = [value intValue] ? HIGH : LOW;
     [self writePin:[self pinForAddress:address] value:pinValue];

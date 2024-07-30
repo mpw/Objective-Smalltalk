@@ -10,7 +10,7 @@
 
 @implementation MPWColorStore
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSString* name=[aReference path];
     NSString *msg=[name stringByAppendingString:@"Color"];

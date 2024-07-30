@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(instancetype)constraintWithSource:source target:target;
 -(instancetype)initWithSource:source target:target;
 
--(void)refDidChange:(id <MPWReferencing>)aRef;
+-(void)refDidChange:(id <MPWIdentifying>)aRef;
 -(void)update;
 
 

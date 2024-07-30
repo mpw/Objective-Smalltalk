@@ -1232,7 +1232,7 @@ idAccessor(solver, setSolver)
     } else {
         
     }
-    MPWGenericReference *ref=[[[MPWGenericReference alloc] initWithPath:pathDef] autorelease];
+    MPWGenericIdentifier *ref=[[[MPWGenericIdentifier alloc] initWithPath:pathDef] autorelease];
     MPWReferenceTemplate *path=[[[MPWReferenceTemplate alloc] initWithReference:ref] autorelease];
     propertyDef.propertyPath=path;
 //    NSLog(@"nextToken after parse of property header: %@",nextToken);

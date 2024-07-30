@@ -28,7 +28,7 @@ CONVENIENCEANDINIT(scheme, WithView:(NSView*)aView )
 }
 
 
--(id)at:(id<MPWReferencing>)aReference
+-(id)at:(id<MPWIdentifying>)aReference
 {
     NSView *result=self.baseView;
     NSArray *pathComponents=[aReference pathComponents];
@@ -46,12 +46,12 @@ CONVENIENCEANDINIT(scheme, WithView:(NSView*)aView )
     return result;
 }
 
--(NSArray<MPWReference *> *)childrenOfReference:(id<MPWReferencing>)aReference
+-(NSArray<MPWIdentifier *> *)childrenOfReference:(id<MPWIdentifying>)aReference
 {
      return [[[[self at:aReference] subviews] collect] accessibilityIdentifier];
 }
 
--(BOOL)hasChildren:(id<MPWReferencing>)aReference
+-(BOOL)hasChildren:(id<MPWIdentifying>)aReference
 {
     return [[[self at:aReference] subviews] count] > 0;
 }

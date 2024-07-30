@@ -43,7 +43,7 @@
     return self.entries.allValues;
 }
 
--(void)at:(id<MPWReferencing>)aReference put:(id)theObject
+-(void)at:(id<MPWIdentifying>)aReference put:(id)theObject
 {
     NSString *idString=[[aReference relativePathComponents] lastObject];
     self.entries[@(idString.intValue)]=theObject;
@@ -51,10 +51,10 @@
 
 -redirectToList
 {
-    return [MPWBinding bindingWithReference:[MPWGenericReference referenceWithPath:self.location] inStore:self];
+    return [MPWBinding bindingWithReference:[MPWGenericIdentifier referenceWithPath:self.location] inStore:self];
 }
 
--at:(id<MPWReferencing>)aReference post:(NSDictionary*)data
+-at:(id<MPWIdentifying>)aReference post:(NSDictionary*)data
 {
     NSLog(@"POST at %@",aReference);
     NSArray *pathComponents=[aReference relativePathComponents];
@@ -77,7 +77,7 @@
 }
 
 
--at:(id<MPWReferencing>)aReference
+-at:(id<MPWIdentifying>)aReference
 {
     if ( [aReference isRoot] || aReference.path.length==0) {
         return self.entriesArray;

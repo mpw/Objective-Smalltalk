@@ -129,7 +129,7 @@ typedef struct {
 	return [[self schemes] objectForKey:aKey];
 }
 
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
+-(NSArray<MPWIdentifier*>*)childrenOfReference:(MPWIdentifier*)aReference
 {
     NSArray *allNames=[[self schemes] allKeys];
     NSMutableArray *reference=[NSMutableArray array];

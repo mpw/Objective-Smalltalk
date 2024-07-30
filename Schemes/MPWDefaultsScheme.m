@@ -10,12 +10,12 @@
 
 @implementation MPWDefaultsScheme
 
--(NSArray<MPWReferencing>*)childrenOfReference:(id <MPWReferencing>)aReference
+-(NSArray<MPWIdentifying>*)childrenOfReference:(id <MPWIdentifying>)aReference
 {
     return [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys];
 }
 
--(BOOL)hasChildren:(id <MPWReferencing>)aReference
+-(BOOL)hasChildren:(id <MPWIdentifying>)aReference
 {
     NSString *path=[aReference path];
 

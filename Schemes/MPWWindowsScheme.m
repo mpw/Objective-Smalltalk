@@ -82,7 +82,7 @@
     return nil;
 }
 
--(id)at:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericIdentifier*)aReference
 {
     NSArray* resultArray=nil;
 

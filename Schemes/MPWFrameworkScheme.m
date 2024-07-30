@@ -38,7 +38,7 @@
     [self.paths insertObject:path atIndex:0];
 }
 
--(id)at:(id <MPWReferencing>)aReference
+-(id)at:(id <MPWIdentifying>)aReference
 {
     NSString *name=[aReference path];
     NSBundle *result=nil;
@@ -66,7 +66,7 @@
     return [self frameworksIn:[self basePaths][0]];
 }
 
--(NSArray<MPWReference*>*)childrenOfReference:(MPWReference*)aReference
+-(NSArray<MPWIdentifier*>*)childrenOfReference:(MPWIdentifier*)aReference
 {
     return (NSArray *)[[self collect] referenceForPath:[[self allFrameworks] each]];
 }

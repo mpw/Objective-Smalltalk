@@ -146,13 +146,13 @@ objectAccessor(NSMutableArray*, exceptions, setExceptions)
 }
 
 
--(id)at:(MPWGenericReference*)aReference
+-(id)at:(MPWGenericIdentifier*)aReference
 {
     return [self contentForPath:[aReference relativePathComponents]];
 }
 
 
--(void)put:newValue at:(MPWGenericReference*)aReference
+-(void)put:newValue at:(MPWGenericIdentifier*)aReference
 {
     NSString *uri=[aReference path];
 //    NSLog(@"setValue to %@",uri);
