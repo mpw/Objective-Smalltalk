@@ -12,7 +12,7 @@
 #import "MPWMachOClassWriter.h"
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
-#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+#import <ObjectiveSmalltalk/STIdentifierExpression.h>
 #import <ObjectiveSmalltalk/STSubscriptExpression.h>
 #import "MPWJittableData.h"
 #import <mach-o/arm64/reloc.h>
@@ -26,7 +26,7 @@
 
 -(int)generateCodeForExpression:(STExpression*)expression;
 -(int)generateCodeFor:(STExpression*)someExpression;
--(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr;
+-(int)generateIdentifierExpression:(STIdentifierExpression*)expr;
 -(int)generateMessageSendOf:(NSString*)selectorString to:receiver with:args;
 -(int)generateMessageSend:(MPWMessageExpression*)expr;
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
@@ -126,7 +126,7 @@
 
 @end
 
-@implementation MPWIdentifierExpression(nativeCode)
+@implementation STIdentifierExpression(nativeCode)
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
@@ -247,7 +247,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return [self.variableToRegisterMap[name] intValue];     // local registers aren't 0, so 0 is an ok sentinel
 }
  
--(int)generateIdentifierExpression:(MPWIdentifierExpression*)expr
+-(int)generateIdentifierExpression:(STIdentifierExpression*)expr
 {
     NSString *name=[[expr identifier] stringValue];
     int registerNumber =  [self registerForLocalVar:name];
@@ -431,7 +431,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr
 {
     STExpression *rhs = [expr rhs];
-    STIdentifier *lhs = [(MPWIdentifierExpression*)[expr lhs] identifier];;
+    STIdentifier *lhs = [(STIdentifierExpression*)[expr lhs] identifier];;
 
     int registerForRHS = [self generateCodeFor:rhs];
     

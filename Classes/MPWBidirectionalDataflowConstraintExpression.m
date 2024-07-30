@@ -7,7 +7,7 @@
 //
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import "STIdentifier.h"
 
 @implementation MPWBidirectionalDataflowConstraintExpression
@@ -16,8 +16,8 @@
 {
     id lhobject=[lhs evaluateIn:aContext];
     if ( [lhobject  respondsToSelector:@selector(setBinding:)]) {
-        if ( [rhs isKindOfClass:[MPWIdentifierExpression class]] ) {
-            MPWIdentifierExpression *r=(MPWIdentifierExpression*)rhs;
+        if ( [rhs isKindOfClass:[STIdentifierExpression class]] ) {
+            STIdentifierExpression *r=(STIdentifierExpression*)rhs;
             MPWBinding *b=[[r identifier] bindingWithContext:aContext];
 
             // check/ensure that RHS binding has a notification mechanism

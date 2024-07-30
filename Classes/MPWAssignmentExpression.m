@@ -8,7 +8,7 @@
 
 #import "MPWAssignmentExpression.h"
 #import "STCompiler.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import "STIdentifier.h"
 
 

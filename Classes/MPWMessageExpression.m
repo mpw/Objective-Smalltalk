@@ -3,7 +3,7 @@
 #import "MPWMessageExpression.h"
 #import "STEvaluator.h"
 #import "MPWObjCGenerator.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import "STIdentifier.h"
 #ifndef GNUSTEP
 #include <objc/runtime.h>
@@ -43,7 +43,7 @@ scalarAccessor( char , returnType, setReturnType )
     self=[super init];
     self.isSuperSend = newReceiver.isSuper;
     if ( self.isSuperSend) {
-        MPWIdentifierExpression *ie=[[[MPWIdentifierExpression alloc] init] autorelease];
+        STIdentifierExpression *ie=[[[STIdentifierExpression alloc] init] autorelease];
         [ie setIdentifier:[STIdentifier identifierWithName:@"self"]];
         newReceiver=ie;
     }

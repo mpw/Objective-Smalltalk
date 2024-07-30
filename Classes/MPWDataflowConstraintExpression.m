@@ -8,12 +8,12 @@
 
 #import "MPWDataflowConstraintExpression.h"
 #import "STSimpleDataflowConstraint.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 
-@implementation MPWIdentifierExpression(constraintCreation)
+@implementation STIdentifierExpression(constraintCreation)
 
 
--(id)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
+-(id)syncToTarget:(STIdentifierExpression*)target inContext:aContext
 {
     STSimpleDataflowConstraint* constraint=nil;
     MPWBinding *sourceBinding=[[self identifier] bindingWithContext:aContext];
@@ -35,7 +35,7 @@
 
 @implementation STExpression(constraintCreation)
 
--(STSimpleDataflowConstraint*)syncToTarget:(MPWIdentifierExpression*)target inContext:aContext
+-(STSimpleDataflowConstraint*)syncToTarget:(STIdentifierExpression*)target inContext:aContext
 {
      [NSException raise:@"unsupported" format:@"Constraints on expressions not supperted yet"];
     return nil;
@@ -49,7 +49,7 @@
 
 -(id)evaluateIn:(id)aContext
 {
-    if ( [lhs isKindOfClass:[MPWIdentifierExpression class]] ) {
+    if ( [lhs isKindOfClass:[STIdentifierExpression class]] ) {
         return [rhs syncToTarget:lhs inContext:aContext];
     }  else {
         [NSException raise:@"typecheck" format:@"LHS of |= dataflow constraint must be identifier"];

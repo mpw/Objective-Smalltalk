@@ -8,7 +8,7 @@
 
 #import "MPWExpression+autocomplete.h"
 #import "MPWMessageExpression.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
 #import "MPWStatementList.h"
 #import "MPWScheme.h"
@@ -113,7 +113,7 @@
 
 @end
 
-@implementation MPWIdentifierExpression(completion)
+@implementation STIdentifierExpression(completion)
 
 
 

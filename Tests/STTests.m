@@ -9,12 +9,12 @@
 #import "STTests.h"
 #import <ObjectiveSmalltalk/STExpression.h>
 #import <ObjectiveSmalltalk/MPWAssignmentExpression.h>
-#import <ObjectiveSmalltalk/MPWIdentifierExpression.h>
+#import <ObjectiveSmalltalk/STIdentifierExpression.h>
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 #import "MPWMethodHeader.h"
 #import "MPWInstanceVariable.h"
 #import "NSObjectScripting.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import <objc/runtime.h>
 #import "MPWObjCGenerator.h"
 #import <MPWFoundation/NSNil.h>
@@ -790,7 +790,7 @@
 {
     id compiler = [[[self alloc] init] autorelease];
 	id fileExpr = [@"file:hello.st" compileIn:compiler];
-	IDEXPECT( [fileExpr class], [MPWIdentifierExpression class], @"class of complex file ref");
+	IDEXPECT( [fileExpr class], [STIdentifierExpression class], @"class of complex file ref");
 	IDEXPECT( [[@"http://www.metaobject.com/Blog/" compileIn:compiler] name], @"//www.metaobject.com/Blog/", @"scheme of http identifier");
 }
 
@@ -990,10 +990,10 @@
 {
     STCompiler *compiler = [STCompiler compiler];
     MPWAssignmentExpression *e=[compiler compile:@"a:=a"];
-    MPWIdentifierExpression *lhs=[e lhs];
-    MPWIdentifierExpression *rhs=[e rhs];
-    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifier expression")
-    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifier expression")
+    STIdentifierExpression *lhs=[e lhs];
+    STIdentifierExpression *rhs=[e rhs];
+    EXPECTTRUE([lhs isKindOfClass:[STIdentifierExpression class]], @"lhs is identifier expression")
+    EXPECTTRUE([rhs isKindOfClass:[STIdentifierExpression class]], @"rhs is identifier expression")
     
     EXPECTTRUE( lhs == rhs, @"lhs should be identical to rhs");
     
@@ -1003,10 +1003,10 @@
 {
     STCompiler *compiler = [STCompiler compiler];
     MPWAssignmentExpression *e=[compiler compile:@"var:a := var:a"];
-    MPWIdentifierExpression *lhs=[e lhs];
-    MPWIdentifierExpression *rhs=[e rhs];
-    EXPECTTRUE([lhs isKindOfClass:[MPWIdentifierExpression class]], @"lhs is identifier expression")
-    EXPECTTRUE([rhs isKindOfClass:[MPWIdentifierExpression class]], @"rhs is identifier expression")
+    STIdentifierExpression *lhs=[e lhs];
+    STIdentifierExpression *rhs=[e rhs];
+    EXPECTTRUE([lhs isKindOfClass:[STIdentifierExpression class]], @"lhs is identifier expression")
+    EXPECTTRUE([rhs isKindOfClass:[STIdentifierExpression class]], @"rhs is identifier expression")
     
     EXPECTTRUE( lhs == rhs, @"lhs should be identical to rhs");
     
