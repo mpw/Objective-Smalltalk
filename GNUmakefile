@@ -26,7 +26,7 @@ ObjectiveSmalltalk_HEADER_FILES_INSTALL_DIR = /ObjectiveSmalltalk
 
 
 libObjectiveSmalltalk_OBJC_FILES = \
-    Classes/MPWIdentifier.m \
+    Classes/STIdentifier.m \
     Classes/MPWScheme.m \
 	Classes/STPropertyMethodHeader.m \
     Classes/STExpression.m \
@@ -44,7 +44,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWRecursiveIdentifier.m \
     Classes/MPWFilterDefinition.m \
     Classes/MPWBidirectionalDataflowConstraintExpression.m \
-    Classes/MPWIdentifierExpression.m \
+    Classes/STIdentifierExpression.m \
     Classes/MPWScriptedMethod.m \
     Classes/MPWMethodHeader.m \
     Classes/MPWLiteralExpression.m \

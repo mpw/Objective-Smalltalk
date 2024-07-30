@@ -12,7 +12,7 @@
 
 
 
-@interface MPWIdentifierExpression : STExpression {
+@interface STIdentifierExpression : STExpression {
 	STIdentifier*  identifier;
 }
 

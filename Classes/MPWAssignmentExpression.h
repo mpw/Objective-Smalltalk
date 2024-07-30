@@ -8,10 +8,10 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@class MPWIdentifierExpression;
+@class STIdentifierExpression;
 
 @interface MPWAssignmentExpression : STExpression {
-	MPWIdentifierExpression* lhs;
+	STIdentifierExpression* lhs;
 	id context;
 	STExpression* rhs;
 }

@@ -6,12 +6,12 @@
 //  Copyright (c) 2001 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import "STEvaluator.h"
 #import "MPWObjCGenerator.h"
 #import "STIdentifier.h"
 
-@implementation MPWIdentifierExpression
+@implementation STIdentifierExpression
 
 objectAccessor(STIdentifier*, identifier, setIdentifier )
 

@@ -3,7 +3,7 @@
 #import "STCompiler.h"
 #import "STScanner.h"
 #import "MPWMessageExpression.h"
-#import "MPWIdentifierExpression.h"
+#import "STIdentifierExpression.h"
 #import "MPWAssignmentExpression.h"
 #import "MPWStatementList.h"
 #import "MPWBlockExpression.h"
@@ -403,7 +403,7 @@ idAccessor(solver, setSolver)
 
 -makeComplexIdentifier:aToken
 {
-	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
+	STIdentifierExpression* variable=[[[STIdentifierExpression alloc] init] autorelease];
 	STIdentifier *identifier=[[[STIdentifier alloc] init] autorelease];
 	STIdentifier *identifierToAddNameTo=identifier;
 	NSString *scheme=[aToken stringValue];
@@ -469,7 +469,7 @@ idAccessor(solver, setSolver)
 
 -lookupComplexIdentifier:aToken
 {
-    MPWIdentifierExpression *parsedExpression = [self makeComplexIdentifier:aToken];
+    STIdentifierExpression *parsedExpression = [self makeComplexIdentifier:aToken];
     STIdentifier *identifier=[parsedExpression identifier];
     NSString *varName = [NSString stringWithFormat:@"%@:%@",[identifier schemeName],[identifier identifierName]];
 //    NSLog(@"parsedExpression name: '%@' (expr: %@)",varName,parsedExpression);
@@ -483,7 +483,7 @@ idAccessor(solver, setSolver)
 
 -makeLocalVar:aToken
 {
-	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
+	STIdentifierExpression* variable=[[[STIdentifierExpression alloc] init] autorelease];
     [variable setTextOffset:[scanner offset]];
     [variable setLen:1];
 	STIdentifier *identifier=[[[STIdentifier alloc] init] autorelease];
@@ -997,7 +997,7 @@ idAccessor(solver, setSolver)
 -(id)parseSendResult
 {
     id result=[self parseExpression];
-    MPWIdentifierExpression* selfReceiver=[[[MPWIdentifierExpression alloc] init] autorelease];
+    STIdentifierExpression* selfReceiver=[[[STIdentifierExpression alloc] init] autorelease];
     STIdentifier *selfIdentifier=[STIdentifier identifierWithName:@"self"];
     [selfReceiver setIdentifier:selfIdentifier];
 
@@ -1226,7 +1226,7 @@ idAccessor(solver, setSolver)
     STPropertyPathDefinition *propertyDef=[[STPropertyPathDefinition new] autorelease];
     if ( ![nextToken isEqualToString:@"{"]) {
         [self pushBack:nextToken];
-        MPWIdentifierExpression *pathExpression=[self makeComplexIdentifier:@"dummy:"];
+        STIdentifierExpression *pathExpression=[self makeComplexIdentifier:@"dummy:"];
         pathDef=[pathExpression name];
         nextToken  = [self nextToken];
     } else {
@@ -1554,8 +1554,8 @@ idAccessor(solver, setSolver)
 +(void)testSchemeWithDot
 {
     STCompiler *compiler=[self compiler];
-    MPWIdentifierExpression *expr=[compiler compile:@"doc:."];
-    EXPECTTRUE([expr isKindOfClass:[MPWIdentifierExpression class]], @"var:. parses to identifier expression");
+    STIdentifierExpression *expr=[compiler compile:@"doc:."];
+    EXPECTTRUE([expr isKindOfClass:[STIdentifierExpression class]], @"var:. parses to identifier expression");
     STIdentifier *identifier=[expr identifier];
     IDEXPECT([identifier schemeName], @"doc", @"scheme");
     IDEXPECT([identifier identifierName], @".", @"path");
