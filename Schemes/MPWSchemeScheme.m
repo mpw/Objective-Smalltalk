@@ -9,7 +9,7 @@
 #import "MPWSchemeScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import "MPWVARBinding.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import <MPWFoundation/MPWGenericReference.h>
 #import "STPortScheme.h"
 #import "STProtocolScheme.h"

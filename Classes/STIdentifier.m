@@ -6,11 +6,11 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "STEvaluator.h"
 #import "MPWScheme.h"
 
-@implementation MPWIdentifier
+@implementation STIdentifier
 
 
 
@@ -60,7 +60,7 @@
 			NSString *nested=[component substringWithRange:NSMakeRange(1, [component length]-2)];
 
 #if 0
-            MPWIdentifier *nestedIdentifier=[MPWIdentifier identifierWithName:nested];
+            STIdentifier *nestedIdentifier=[STIdentifier identifierWithName:nested];
             evaluatedComponent=[aContext at:nestedIdentifier];
 #else
             evaluatedComponent=[aContext evaluateScriptString:nested];
@@ -81,25 +81,25 @@
 
 -(NSUInteger)length
 {
-    NSLog(@"-[MPWIdentifier length] on %@ -> %@",self,[NSThread callStackSymbols]);
+    NSLog(@"-[STIdentifier length] on %@ -> %@",self,[NSThread callStackSymbols]);
     return [[self name] length];
 }
 
 -(NSUInteger)lengthOfBytesUsingEncoding:(int)encoding
 {
-    NSLog(@"-[MPWIdentifier lengthOfBytesUsingEncoding:%d] on %@ -> %@",encoding,self,[NSThread callStackSymbols]);
+    NSLog(@"-[STIdentifier lengthOfBytesUsingEncoding:%d] on %@ -> %@",encoding,self,[NSThread callStackSymbols]);
     return [[self name] lengthOfBytesUsingEncoding:encoding];
 }
 
 -(int)characterAtIndex:(NSUInteger)theIndex
 {
-    NSLog(@"-[MPWIdentifier characterAtIndex:%ld] on %@ -> %@",theIndex,self,[NSThread callStackSymbols]);
+    NSLog(@"-[STIdentifier characterAtIndex:%ld] on %@ -> %@",theIndex,self,[NSThread callStackSymbols]);
     return [[self name] characterAtIndex:theIndex];
 }
 
 -(void)getCString:(char*)buffer maxLength:(NSUInteger)maxLen encoding:(int)encoding
 {
-    NSLog(@"-[MPWIdentifier getCString:maxLength:encoding:] on %@ -> %@",self,[NSThread callStackSymbols]);
+    NSLog(@"-[STIdentifier getCString:maxLength:encoding:] on %@ -> %@",self,[NSThread callStackSymbols]);
     [[self name] getCString:buffer maxLength:maxLen encoding:encoding];
 }
 
@@ -114,7 +114,7 @@
 
 -resolveRescursiveIdentifierWithContext:aContext
 {
-    MPWIdentifier *evaluatedIdentifier = [[[[self class] alloc] initWithPathComponents:[self evaluatedPathComponentsInContext:aContext] scheme:[self schemeName]] autorelease];
+    STIdentifier *evaluatedIdentifier = [[[[self class] alloc] initWithPathComponents:[self evaluatedPathComponentsInContext:aContext] scheme:[self schemeName]] autorelease];
 //    [evaluatedIdentifier setScheme:[self scheme]];
     return evaluatedIdentifier;
 }
@@ -129,7 +129,7 @@
         [NSException raise:@"unknownscheme" format:@"scheme with name '%@' not found",[self schemeName]];
     }
     
-    MPWIdentifier *evaluatedIdentifier = [self resolveRescursiveIdentifierWithContext:aContext];
+    STIdentifier *evaluatedIdentifier = [self resolveRescursiveIdentifierWithContext:aContext];
 //    NSLog(@"evaluatedScheme: %@ evaluatedIdentifier:  %@ context: %@",evaluatedScheme,evaluatedIdentifier,aContext);
 	return [evaluatedScheme evaluateIdentifier:evaluatedIdentifier withContext:aContext];
 }
@@ -161,7 +161,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWIdentifier(testing)
+@implementation STIdentifier(testing)
 
 +(void)testNestedIdentifierPathComponents
 {

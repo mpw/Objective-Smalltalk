@@ -8,18 +8,18 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@class MPWIdentifier;
+@class STIdentifier;
 
 
 
 @interface MPWIdentifierExpression : STExpression {
-	MPWIdentifier*  identifier;
+	STIdentifier*  identifier;
 }
 
 //idAccessor_h( name, setName )
 //idAccessor_h( scheme, setScheme )
 @property (nonatomic, strong)  id evaluationEnvironment;
-objectAccessor_h(MPWIdentifier*, identifier, setIdentifier )
+objectAccessor_h(STIdentifier*, identifier, setIdentifier )
 -evaluateAssignmentOf:value in:aContext;
 
 -scheme;

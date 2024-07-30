@@ -16,7 +16,7 @@
 
 -bindingForReference:(MPWRecursiveIdentifier*)anIdentifier inContext:(STEvaluator*)aContext
 {
-    MPWIdentifier* nextIdentifier = [anIdentifier nextIdentifier];
+    STIdentifier* nextIdentifier = [anIdentifier nextIdentifier];
 //    NSAssert1( [nextIdentifier scheme], @"nextIdentifier", nil );
     MPWScheme *originalScheme=[aContext schemeForName:[nextIdentifier schemeName]];
     id originalBinding = [originalScheme bindingWithIdentifier:nextIdentifier withContext:aContext];

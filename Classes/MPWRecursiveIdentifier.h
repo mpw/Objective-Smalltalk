@@ -6,13 +6,13 @@
 //  Copyright 2010 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 
 
-@interface MPWRecursiveIdentifier : MPWIdentifier {
-	MPWIdentifier *nextIdentifier;
+@interface MPWRecursiveIdentifier : STIdentifier {
+	STIdentifier *nextIdentifier;
 }
 
-objectAccessor_h(MPWIdentifier*, nextIdentifier, setNextIdentifier )
+objectAccessor_h(STIdentifier*, nextIdentifier, setNextIdentifier )
 
 @end

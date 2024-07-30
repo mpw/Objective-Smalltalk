@@ -8,7 +8,7 @@
 
 #import "MPWScheme.h"
 #import "MPWBindingLegacy.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/NSNil.h>
 #import "STEvaluator.h"
@@ -26,7 +26,7 @@
     return [MPWBinding bindingWithReference:aReference inStore:self];
 }
 
--bindingWithIdentifier:(MPWIdentifier*)anIdentifier withContext:aContext
+-bindingWithIdentifier:(STIdentifier*)anIdentifier withContext:aContext
 {
     id <MPWReferencing> ref=[self referenceForPath:[anIdentifier evaluatedIdentifierNameInContext:aContext]];
     ref.schemeName=anIdentifier.schemeName;

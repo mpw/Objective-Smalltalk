@@ -17,7 +17,7 @@
 #import "MPWJittableData.h"
 #import <mach-o/arm64/reloc.h>
 #import "MPWClassScheme.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "STConnectionDefiner.h"
 #import "STMethodSymbols.h"
 
@@ -49,7 +49,7 @@
 
 @interface MPWScheme(nativeCodeGenertion)
 
--(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler;
+-(int)generateLoadForIdentifier:(STIdentifier*)identifier on:(STNativeCompiler*)compiler;
 
 @end
 
@@ -62,7 +62,7 @@
 
 @implementation MPWAbstractStore(nativeCodeGenertion)
 
--(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler
+-(int)generateLoadForIdentifier:(STIdentifier*)identifier on:(STNativeCompiler*)compiler
 {
     return [compiler generateLoadIdentifier:identifier.path withScheme:identifier.schemeName];
 //    NSString *msg=[NSString stringWithFormat:@"generating code for identifier '%@' scheme: '%@' not implemented",
@@ -75,7 +75,7 @@
 
 @implementation MPWClassScheme(nativeCodeGenertion)
 
--(int)generateLoadForIdentifier:(MPWIdentifier*)identifier on:(STNativeCompiler*)compiler
+-(int)generateLoadForIdentifier:(STIdentifier*)identifier on:(STNativeCompiler*)compiler
 {
     return [compiler generateLoadClassReference:[identifier stringValue]];
 }
@@ -360,7 +360,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [self generateLoadSymbolicAddress:block.blockDescriptorSymbol intoRegister:11];  // class ptr
     [codegen generateSaveRegister:10 andRegister:11 relativeToRegister:0 offset:16 rewrite:NO pre:NO];
 
-    for ( MPWIdentifier *capturedIdentifier in block.capturedVariables) {
+    for ( STIdentifier *capturedIdentifier in block.capturedVariables) {
         NSString *idName = [capturedIdentifier path];
         int blockOffset = [[block capturedVariableOffets][idName] intValue];
         int sourceRegister = [self registerForLocalVar:idName];
@@ -431,7 +431,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr
 {
     STExpression *rhs = [expr rhs];
-    MPWIdentifier *lhs = [(MPWIdentifierExpression*)[expr lhs] identifier];;
+    STIdentifier *lhs = [(MPWIdentifierExpression*)[expr lhs] identifier];;
 
     int registerForRHS = [self generateCodeFor:rhs];
     
@@ -794,7 +794,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     if ( aBlock.hasCaptures){
         NSMutableDictionary *capturedOffsets=[NSMutableDictionary dictionary];
 
-        for ( MPWIdentifier *identifier in aBlock.capturedVariables) {
+        for ( STIdentifier *identifier in aBlock.capturedVariables) {
             capturedOffsets[identifier.path]=@(blockOffset);
             blockOffset += (8 * aBlock.numberOfCaptures);
         }

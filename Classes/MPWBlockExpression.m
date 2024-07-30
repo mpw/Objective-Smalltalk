@@ -9,7 +9,7 @@
 #import "MPWBlockExpression.h"
 #import "MPWBlockContext.h"
 #import <MPWFoundation/NSNil.h>
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "MPWStatementList.h"
 #import "MPWScriptedMethod.h"
 
@@ -64,7 +64,7 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 -(NSArray*)implicitUsedArguments
 {
     NSMutableArray *implicits=[NSMutableArray array];
-    for ( MPWIdentifier *identifier in [self variablesRead]) {
+    for ( STIdentifier *identifier in [self variablesRead]) {
         if ( [[identifier identifierName] hasPrefix:@"$"] ) {
             [implicits addObject:[identifier identifierName]];
         }

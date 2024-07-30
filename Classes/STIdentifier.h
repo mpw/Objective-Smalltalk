@@ -11,7 +11,7 @@
 
 @class MPWBinding;
 
-@interface MPWIdentifier : MPWGenericReference {
+@interface STIdentifier : MPWGenericReference {
 }
 
 
