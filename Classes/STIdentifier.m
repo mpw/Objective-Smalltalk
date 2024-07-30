@@ -74,7 +74,7 @@
 	
 }
 
--(MPWBinding*)bindingWithContext:aContext
+-(MPWReference*)bindingWithContext:aContext
 {
     return [[aContext schemeForName:[self schemeName]] bindingWithIdentifier:self withContext:aContext];
 }

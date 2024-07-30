@@ -16,7 +16,7 @@
 	MPWConnector,
 	"MPWDataflowConstraintExpression",
 	MPWDefaultsScheme,
-	MPWDirectoryBinding,
+	"MPWDirectoryReference",
 	MPWEvaluator,
 	MPWExpression,
 	"MPWFallbackBridgeReader",

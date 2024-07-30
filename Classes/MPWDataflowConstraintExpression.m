@@ -16,8 +16,8 @@
 -(id)syncToTarget:(STIdentifierExpression*)target inContext:aContext
 {
     STSimpleDataflowConstraint* constraint=nil;
-    MPWBinding *sourceBinding=[[self identifier] bindingWithContext:aContext];
-    MPWBinding *targetBinding=[[target identifier] bindingWithContext:aContext];
+    MPWReference *sourceBinding=[[self identifier] bindingWithContext:aContext];
+    MPWReference *targetBinding=[[target identifier] bindingWithContext:aContext];
     if ( [[sourceBinding value] conformsToProtocol:@protocol(MPWStorage) ]) {
         return [[sourceBinding value] syncToTarget:[targetBinding value]];
     }

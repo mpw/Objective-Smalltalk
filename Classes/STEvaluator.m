@@ -19,7 +19,7 @@
 #import "MPWVarScheme.h"
 #import "MPWFrameworkScheme.h"
 #import "MPWSelfContainedBinding.h"
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWGenericIdentifier.h>
 #import "STProtocolScheme.h"
 #import "STPortScheme.h"
 #import "MPWFastSuperMessage.h"
@@ -138,7 +138,7 @@ idAccessor( localVars, setLocalVars )
     return [expr evaluateIn:self];
 }
 
--(MPWBinding*)cachedBindingForName:aName
+-(MPWReference*)cachedBindingForName:aName
 {
     return [bindingCache objectForKey:aName];
 }
@@ -151,7 +151,7 @@ idAccessor( localVars, setLocalVars )
     id value = [s at:aReference];
 //    NSLog(@"value: %@",value);
     if (!value) {
-        MPWBinding *binding=[self cachedBindingForName:[aReference path]];
+        MPWReference *binding=[self cachedBindingForName:[aReference path]];
         if ( binding) {
             value=[binding value];
         }
@@ -184,9 +184,9 @@ idAccessor( localVars, setLocalVars )
     }
 }
 
--(MPWBinding*)bindingForLocalVariableNamed:(NSString*)localVarName
+-(MPWReference*)bindingForLocalVariableNamed:(NSString*)localVarName
 {
-    MPWBinding *binding=nil;
+    MPWReference *binding=nil;
     if ( [localVarName isEqualToString:@"context"]) {
         binding=[[self bindingClass] bindingWithValue:self];
     } else {
@@ -213,9 +213,9 @@ idAccessor( localVars, setLocalVars )
     return [[[self bindingClass] new] autorelease];
 }
 
--(MPWBinding*)createLocalBindingForName:(NSString*)variableName
+-(MPWReference*)createLocalBindingForName:(NSString*)variableName
 {
-    MPWBinding *binding = [self makeLocalBindingNamed:variableName];
+    MPWReference *binding = [self makeLocalBindingNamed:variableName];
     [localVars setObject:binding forKey:variableName];
     [self cacheBinding:binding forName:variableName];
 
@@ -226,7 +226,7 @@ idAccessor( localVars, setLocalVars )
 {
     MPWScheme* scheme=[self schemeForName:schemeName];
     if ( [scheme isKindOfClass:[MPWVarScheme class]]) {   // legacy workaround, FIXME
-        MPWBinding* binding=[scheme bindingForName:variableName inContext:self];
+        MPWReference* binding=[scheme bindingForName:variableName inContext:self];
         if ( !binding ) {
             binding = [self createLocalBindingForName:variableName];
         }

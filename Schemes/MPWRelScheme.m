@@ -8,7 +8,7 @@
 
 #import "MPWRelScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWGenericIdentifier.h>
 #import "STIdentifier.h"
 #import "MPWBindingLegacy.h"
 #import "MPWVarScheme.h"
@@ -21,7 +21,7 @@
     return [super initWithSource:aScheme reference:[self referenceForPath:str]];
 }
 
--initWithRef:(MPWBinding*)aBinding
+-initWithRef:(MPWReference*)aBinding
 {
     return [self initWithSource:[aBinding store] reference:[aBinding reference]];
 }

@@ -8,13 +8,13 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWFileBinding;
+@class MPWFileReference;
 
 @interface MPWFileSchemeResolver : MPWDiskStore {
 
 }
 
 
--(void)startWatching:(MPWFileBinding*)binding;
+-(void)startWatching:(MPWFileReference*)binding;
 
 @end

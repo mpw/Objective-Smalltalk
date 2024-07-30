@@ -8,11 +8,11 @@
 
 #import <MPWFoundation/MPWPathRelativeStore.h>
 
-@class MPWBinding;
+@class MPWReference;
 
 @interface MPWRelScheme : MPWPathRelativeStore {
 }
 
--initWithRef:(MPWBinding*)aBinding;
+-initWithRef:(MPWReference*)aBinding;
 
 @end

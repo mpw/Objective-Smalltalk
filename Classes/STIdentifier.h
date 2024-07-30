@@ -7,9 +7,9 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWGenericIdentifier.h>
 
-@class MPWBinding;
+@class MPWReference;
 
 @interface STIdentifier : MPWGenericIdentifier {
 }
@@ -18,7 +18,7 @@
 +identifierWithName:(NSString*)name;
 -evaluatedIdentifierNameInContext:aContext;
 
--(MPWBinding*)bindingWithContext:aContext;
+-(MPWReference*)bindingWithContext:aContext;
 
 -resolveRescursiveIdentifierWithContext:aContext;
 

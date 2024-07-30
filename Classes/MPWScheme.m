@@ -23,7 +23,7 @@
 
 -bindingForReference:aReference inContext:aContext
 {
-    return [MPWBinding bindingWithReference:aReference inStore:self];
+    return [MPWReference bindingWithReference:aReference inStore:self];
 }
 
 -bindingWithIdentifier:(STIdentifier*)anIdentifier withContext:aContext

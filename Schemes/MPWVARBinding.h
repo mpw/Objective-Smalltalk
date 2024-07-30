@@ -9,7 +9,7 @@
 #import <ObjectiveSmalltalk/MPWBindingLegacy.h>
 
 
-@interface MPWVARBinding : MPWBinding {
+@interface MPWVARBinding : MPWReference {
 	id			baseObject;
     BOOL        isObserving;
 }

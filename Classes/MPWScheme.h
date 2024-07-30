@@ -8,12 +8,12 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWBinding,STIdentifier;
+@class MPWReference,STIdentifier;
 
 @protocol Scheme <NSObject>
 
--(MPWBinding*)bindingWithIdentifier:(STIdentifier*)anIdentifier withContext:aContext;
--(MPWBinding*)bindingForName:(NSString*)variableName inContext:aContext;
+-(MPWReference*)bindingWithIdentifier:(STIdentifier*)anIdentifier withContext:aContext;
+-(MPWReference*)bindingForName:(NSString*)variableName inContext:aContext;
 -bindingForReference:aReference inContext:aContext;
 
 @end

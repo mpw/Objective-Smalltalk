@@ -51,7 +51,7 @@
 
 -redirectToList
 {
-    return [MPWBinding bindingWithReference:[MPWGenericIdentifier referenceWithPath:self.location] inStore:self];
+    return [MPWReference bindingWithReference:[MPWGenericIdentifier referenceWithPath:self.location] inStore:self];
 }
 
 -at:(id<MPWIdentifying>)aReference post:(NSDictionary*)data

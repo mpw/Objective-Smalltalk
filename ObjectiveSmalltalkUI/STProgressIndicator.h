@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STProgressIndicator : NSProgressIndicator <ModelDidChange,ValidationDidChange>
 
-@property (nonatomic, strong)  MPWBinding *ref,*enabledRef,*minRef,*maxRef;
+@property (nonatomic, strong)  MPWReference *ref,*enabledRef,*minRef,*maxRef;
 
 
 @end

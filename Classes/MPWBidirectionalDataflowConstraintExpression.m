@@ -18,7 +18,7 @@
     if ( [lhobject  respondsToSelector:@selector(setBinding:)]) {
         if ( [rhs isKindOfClass:[STIdentifierExpression class]] ) {
             STIdentifierExpression *r=(STIdentifierExpression*)rhs;
-            MPWBinding *b=[[r identifier] bindingWithContext:aContext];
+            MPWReference *b=[[r identifier] bindingWithContext:aContext];
 
             // check/ensure that RHS binding has a notification mechanism
             // check/ensure that LHS is hooked up to notification mechanism

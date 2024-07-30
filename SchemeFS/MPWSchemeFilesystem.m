@@ -21,7 +21,7 @@ static NSString *helloPath = @"/hello.txt";
 @end
 
 
-@implementation MPWBinding(childNames)
+@implementation MPWReference(childNames)
 
 -childNames
 {

@@ -9,7 +9,7 @@
 #import "MPWBundleScheme.h"
 #import "STCompiler.h"
 #import <MPWFoundation/AccessorMacros.h>
-#import <MPWFoundation/MPWGenericReference.h>
+#import <MPWFoundation/MPWGenericIdentifier.h>
 #import "MPWScheme.h"
 #include <unistd.h>
 

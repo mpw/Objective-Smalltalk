@@ -5,9 +5,9 @@
 //  Created by Marcel Weiher on 5/22/18.
 //
 
-#import <MPWFoundation/MPWBinding.h>
+#import <MPWFoundation/MPWReference.h>
 
-@interface MPWSelfContainedBinding : NSObject<MPWBinding>
+@interface MPWSelfContainedBinding : NSObject<MPWReferencing>
 
 @property (nonatomic, strong)  id value;
 

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STSimpleDataflowConstraint : NSObject <Streaming>
 
-@property (nonatomic,strong)  MPWBinding *source,*target;
+@property (nonatomic,strong)  MPWReference *source,*target;
 
 +(instancetype)constraintWithSource:source target:target;
 -(instancetype)initWithSource:source target:target;

@@ -45,7 +45,7 @@
 
 -mapRetrievedObject:anObject forReference:ref {
     MPWStringTemplate *template = [self templateNameForRef:ref];
-    if (![anObject isKindOfClass: [MPWBinding class]] ) {
+    if (![anObject isKindOfClass: [MPWReference class]] ) {
         anObject = [self applyContext: anObject  toTemplateNamed:template];
     } else {
 //        NSLog(@"got a binding: %@",anObject);

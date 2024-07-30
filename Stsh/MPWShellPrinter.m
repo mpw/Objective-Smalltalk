@@ -7,8 +7,8 @@
 //
 
 #import "MPWShellPrinter.h"
-#import <MPWFoundation/MPWDirectoryBinding.h>
-#import <MPWFoundation/MPWFileBinding.h>
+#import <MPWFoundation/MPWDirectoryReference.h>
+#import <MPWFoundation/MPWFileReference.h>
 #import <histedit.h>
 #include <readline/readline.h>
  #include <sys/ioctl.h>
@@ -103,7 +103,7 @@
 }
 #endif
 
--(void)writeFancyFileEntry:(MPWFileBinding*)binding
+-(void)writeFancyFileEntry:(MPWFileReference*)binding
 {
     NSString *name=[binding fancyPath];
     if ( ![name hasPrefix:@"."]) {
@@ -117,10 +117,10 @@
     }
 }
 
--(void)writeDirectory:(MPWDirectoryBinding*)aBinding
+-(void)writeDirectory:(MPWDirectoryReference*)aBinding
 {
     NSMutableArray *names=[NSMutableArray array];
-    for ( MPWFileBinding *binding in [aBinding contents]) {
+    for ( MPWFileReference *binding in [aBinding contents]) {
         NSString *name=[(NSString*)[binding path] lastPathComponent];
         if ( ![name hasPrefix:@"."]) {
             if ( [binding hasChildren]) {
@@ -132,9 +132,9 @@
     [self printNames:names limit:1000];
 }
 
--(void)writeFancyDirectory:(MPWDirectoryBinding*)aBinding
+-(void)writeFancyDirectory:(MPWDirectoryReference*)aBinding
 {
-    for ( MPWFileBinding *binding in [aBinding contents]) {
+    for ( MPWFileReference *binding in [aBinding contents]) {
         [self writeFancyFileEntry:binding];
     }
 }

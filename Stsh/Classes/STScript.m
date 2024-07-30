@@ -101,7 +101,7 @@ objectAccessor(NSString*, filename, setFilename )
 //    NSLog(@"arg: %@",strarg);
 //    strarg=[@"ref:" stringByAppendingString:strarg];
 //    NSLog(@"arg: %@",strarg);
-    MPWBinding *binding=[[executionContext evaluator] bindingForString:strarg];
+    MPWReference *binding=[[executionContext evaluator] bindingForString:strarg];
 //    NSLog(@"binding: %@",binding);
 //    NSLog(@"binding path: %@",[binding path]);
 //    NSLog(@"binding url: %@",[binding URL]);

@@ -108,7 +108,7 @@
         }
     }
     if ( resultArray ) {
-        MPWDirectoryBinding * result = [[[MPWDirectoryBinding alloc] initWithContents:resultArray] autorelease];
+        MPWDirectoryReference * result = [[[MPWDirectoryReference alloc] initWithContents:resultArray] autorelease];
         return result;
     }
     return nil;

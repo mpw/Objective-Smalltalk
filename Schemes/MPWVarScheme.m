@@ -20,7 +20,7 @@
 -bindingForReference:aReference inContext:aContext
 {
     NSString *variableName=[aReference path];
-    MPWBinding *binding = [aContext cachedBindingForName:variableName];
+    MPWReference *binding = [aContext cachedBindingForName:variableName];
     if (!binding)  {
         binding=[self createBindingForName:variableName inContext:aContext];
         [aContext cacheBinding:binding forName:variableName];
@@ -32,7 +32,7 @@
 -createBindingForName:(NSString*)variableName inContext:(STEvaluator*)aContext
 {
     NSString *firstName=variableName;
-    MPWBinding *theBinding=nil;
+    MPWReference *theBinding=nil;
     NSString *remainder=nil;
     NSRange firstPathSeparator=[variableName rangeOfString:@"/"];
     BOOL isCompound = firstPathSeparator.location !=  NSNotFound;
