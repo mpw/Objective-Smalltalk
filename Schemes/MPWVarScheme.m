@@ -9,7 +9,7 @@
 #import "MPWVarScheme.h"
 #import "MPWVARBinding.h"
 #import "STEvaluator.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 
 @implementation MPWVarScheme
 -(Class)bindingClass
@@ -41,7 +41,7 @@
         remainder=[variableName substringFromIndex:firstPathSeparator.location+1];
     }
     theBinding=[aContext bindingForLocalVariableNamed:firstName];
-    [theBinding setReference:[MPWIdentifier identifierWithName:firstName]];
+    [theBinding setReference:[STIdentifier identifierWithName:firstName]];
     if ( isCompound) {
         theBinding= [[[[self bindingClass] alloc] initWithBaseObject:[theBinding value] path:remainder] autorelease];
     }

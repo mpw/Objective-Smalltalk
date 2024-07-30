@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 #import "STCompiler.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 
 @implementation STExpression
 
@@ -73,7 +73,7 @@ longAccessor(len, setLen)
     NSSet *written = [self variablesRead];
     NSMutableSet *names = [NSMutableSet set];
 //    NSLog(@"read identifiers: %@",written);
-    for ( MPWIdentifier *identifier in written) {
+    for ( STIdentifier *identifier in written) {
         [names addObject:[identifier identifierName]];
     }
     //    NSArray *names=[[written collect] identifierName];
@@ -86,7 +86,7 @@ longAccessor(len, setLen)
     NSSet *written = [self variablesWritten];
     NSMutableSet *names = [NSMutableSet set];
 //    NSLog(@"written identifiers: %@",written);
-    for ( MPWIdentifier *identifier in written) {
+    for ( STIdentifier *identifier in written) {
         [names addObject:[identifier identifierName]];
     }
 //    NSArray *names=[[written collect] identifierName];

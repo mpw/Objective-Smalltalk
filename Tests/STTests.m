@@ -18,7 +18,7 @@
 #import <objc/runtime.h>
 #import "MPWObjCGenerator.h"
 #import <MPWFoundation/NSNil.h>
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "MPWScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "MPWBlockExpression.h"

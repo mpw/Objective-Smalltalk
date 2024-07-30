@@ -9,7 +9,7 @@
 #import "MPWBlockExpression.h"
 #import <MPWFoundation/MPWInterval.h>
 #import "MPWMethodStore.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "MPWRecursiveIdentifier.h"
 //#import "MPWURLSchemeResolver.h"
 #import "MPWFileSchemeResolver.h"
@@ -404,8 +404,8 @@ idAccessor(solver, setSolver)
 -makeComplexIdentifier:aToken
 {
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
-	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
-	MPWIdentifier *identifierToAddNameTo=identifier;
+	STIdentifier *identifier=[[[STIdentifier alloc] init] autorelease];
+	STIdentifier *identifierToAddNameTo=identifier;
 	NSString *scheme=[aToken stringValue];
     [variable setTextOffset:[scanner offset]];
     [variable setLen:1];
@@ -416,7 +416,7 @@ idAccessor(solver, setSolver)
 		//--- have a scheme
 		[identifier setSchemeName:scheme];
 		if ( [scheme isEqual:@"ref"] ) {
-			MPWIdentifier *nextIdentifier=identifier;
+			STIdentifier *nextIdentifier=identifier;
             MPWRecursiveIdentifier *thisIdentifier=[[[MPWRecursiveIdentifier alloc] init] autorelease];
             identifier=thisIdentifier;
 			[thisIdentifier setSchemeName:scheme];
@@ -470,7 +470,7 @@ idAccessor(solver, setSolver)
 -lookupComplexIdentifier:aToken
 {
     MPWIdentifierExpression *parsedExpression = [self makeComplexIdentifier:aToken];
-    MPWIdentifier *identifier=[parsedExpression identifier];
+    STIdentifier *identifier=[parsedExpression identifier];
     NSString *varName = [NSString stringWithFormat:@"%@:%@",[identifier schemeName],[identifier identifierName]];
 //    NSLog(@"parsedExpression name: '%@' (expr: %@)",varName,parsedExpression);
     id identifierExpression = [symbolTable objectForKey:varName];
@@ -486,7 +486,7 @@ idAccessor(solver, setSolver)
 	MPWIdentifierExpression* variable=[[[MPWIdentifierExpression alloc] init] autorelease];
     [variable setTextOffset:[scanner offset]];
     [variable setLen:1];
-	MPWIdentifier *identifier=[[[MPWIdentifier alloc] init] autorelease];
+	STIdentifier *identifier=[[[STIdentifier alloc] init] autorelease];
 	NSString* name = [aToken stringValue];
 	[identifier setPath:name];
 //	[identifier setScheme:[self schemeForName:[identifier schemeName]]];
@@ -998,7 +998,7 @@ idAccessor(solver, setSolver)
 {
     id result=[self parseExpression];
     MPWIdentifierExpression* selfReceiver=[[[MPWIdentifierExpression alloc] init] autorelease];
-    MPWIdentifier *selfIdentifier=[MPWIdentifier identifierWithName:@"self"];
+    STIdentifier *selfIdentifier=[STIdentifier identifierWithName:@"self"];
     [selfReceiver setIdentifier:selfIdentifier];
 
     MPWMessageExpression *forward=[[[MPWMessageExpression alloc] initWithReceiver:selfReceiver] autorelease];
@@ -1475,14 +1475,14 @@ idAccessor(solver, setSolver)
     return NO;
 }
 
--(MPWBinding*)bindingForIdentifier:(MPWIdentifier*)anIdentifier
+-(MPWBinding*)bindingForIdentifier:(STIdentifier*)anIdentifier
 {
 	return [[self schemeForName:[anIdentifier schemeName]] bindingWithIdentifier:anIdentifier withContext:self];
 }
 
 -(MPWBinding*)bindingForString:(NSString*)fullPath
 {
-    MPWIdentifier *identifier=nil;
+    STIdentifier *identifier=nil;
 	NSArray *parts=[fullPath componentsSeparatedByString:@":"];
 	NSString *schemeName = @"default";
 	NSString *path=fullPath;
@@ -1490,7 +1490,7 @@ idAccessor(solver, setSolver)
 		schemeName = [parts objectAtIndex:0];
         path=[path substringFromIndex:[schemeName length]+1];
 	}
-    identifier=[MPWIdentifier identifierWithName:path];
+    identifier=[STIdentifier identifierWithName:path];
 
     [identifier setSchemeName:schemeName];
 	return [self bindingForIdentifier:identifier];
@@ -1556,7 +1556,7 @@ idAccessor(solver, setSolver)
     STCompiler *compiler=[self compiler];
     MPWIdentifierExpression *expr=[compiler compile:@"doc:."];
     EXPECTTRUE([expr isKindOfClass:[MPWIdentifierExpression class]], @"var:. parses to identifier expression");
-    MPWIdentifier *identifier=[expr identifier];
+    STIdentifier *identifier=[expr identifier];
     IDEXPECT([identifier schemeName], @"doc", @"scheme");
     IDEXPECT([identifier identifierName], @".", @"path");
 }

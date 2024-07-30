@@ -9,7 +9,7 @@
 #import "MPWRelScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <MPWFoundation/MPWGenericReference.h>
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "MPWBindingLegacy.h"
 #import "MPWVarScheme.h"
 

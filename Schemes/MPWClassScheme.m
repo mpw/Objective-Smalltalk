@@ -8,7 +8,7 @@
 
 #import "MPWClassScheme.h"
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 #import "MPWClassMirror.h"
 
 @implementation MPWClassScheme

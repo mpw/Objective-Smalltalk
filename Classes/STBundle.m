@@ -184,11 +184,14 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(void)compileAllSourceFiles
 {
+    NSLog(@"=== compile all source files ===");
     for ( NSString *filename in [self sourceNames] ) {
         @autoreleasepool {
+            NSLog(@"compile %@",filename);
             [self compileSourceFile:filename];
         }
     }
+    NSLog(@"=== done compiling ===");
 }
 
 -(NSDictionary*)methodDictForSourceFiles

@@ -8,7 +8,7 @@
 
 #import "MPWBidirectionalDataflowConstraintExpression.h"
 #import "MPWIdentifierExpression.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 
 @implementation MPWBidirectionalDataflowConstraintExpression
 

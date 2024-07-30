@@ -9,11 +9,11 @@
 #import "MPWIdentifierExpression.h"
 #import "STEvaluator.h"
 #import "MPWObjCGenerator.h"
-#import "MPWIdentifier.h"
+#import "STIdentifier.h"
 
 @implementation MPWIdentifierExpression
 
-objectAccessor(MPWIdentifier*, identifier, setIdentifier )
+objectAccessor(STIdentifier*, identifier, setIdentifier )
 
 -scheme
 {

@@ -42,7 +42,7 @@
 //    NSLog(@"updateFromRef, objectValue=%p/%@",self.objectValue,self.objectValue);
 //    NSLog(@"updateFromRef after niling, objectValue=%p/%@",self.objectValue,self.objectValue);
     if ( self.ref && !self.inProcessing) {
-        self.objectValue = self.ref.value;
+        self.objectValue = [self.ref.value stringValue];
     }
     if ( self.enabledRef ) {
         self.enabled = [self.enabledRef.value boolValue];

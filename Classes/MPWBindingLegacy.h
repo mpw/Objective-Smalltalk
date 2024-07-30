@@ -8,5 +8,5 @@
 
 #import <MPWFoundation/MPWBinding.h>
 
-@class MPWScheme,MPWIdentifier,STEvaluator;
+@class MPWScheme,STIdentifier,STEvaluator;
 

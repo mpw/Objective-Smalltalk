@@ -30,6 +30,7 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 -(Class)siteClass
 {
+    NSLog(@"siteClassNam %@ class %p",[self siteClassName],NSClassFromString([self siteClassName]));
     return NSClassFromString([self siteClassName]);
 }
 
@@ -63,21 +64,28 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 -(MPWSiteServer*)createSiteServer
 {
     Class siteClass = [self siteClass];
+    NSAssert(siteClass != nil, @"should have a siteClass at this point");
+    NSLog(@"siteClass: %@",siteClass);
     id sitemap=nil;
     if ( [siteClass instancesRespondToSelector:@selector(initWithBundle:)]) {
         sitemap = [[[[self siteClass] alloc] initWithBundle:self] autorelease];
+        NSLog(@"sitemap: %@ initWithBundle",sitemap);
+        NSAssert(sitemap != nil, @"should have a sitemap with initWithBundle:");
     } else {
         sitemap = [[[[self siteClass] alloc] init] autorelease];
         if ( [sitemap respondsToSelector:@selector(setBundle:)]) {
             [sitemap setBundle:self];
         }
+        NSLog(@"sitemap: %@ setBundle",sitemap);
+        NSAssert(sitemap != nil, @"should have a sitemap with setBundle:");
     }
-
+    NSAssert(sitemap != nil, @"should have a sitemap at this point");
     MPWSiteServer *server = [[[MPWSiteServer alloc] initWithSite:sitemap siteDict:@{} interpreter:self.interpreter] autorelease];
-    if ( [sitemap respondsToSelector:@selector(sitemap)]) {
+    if ( [server respondsToSelector:@selector(setupSite)]) {
         [server setupSite];
     }
     [server disableCaching];
+    NSLog(@"created server %@ withe sitemap %@",server,sitemap);
     return server;
 }
 
