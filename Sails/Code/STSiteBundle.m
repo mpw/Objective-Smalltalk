@@ -30,7 +30,7 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 -(Class)siteClass
 {
-    NSLog(@"siteClassNam %@ class %p",[self siteClassName],NSClassFromString([self siteClassName]));
+//    NSLog(@"siteClassName %@ class %p",[self siteClassName],NSClassFromString([self siteClassName]));
     return NSClassFromString([self siteClassName]);
 }
 

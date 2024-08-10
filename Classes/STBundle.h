@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSDictionary*)info;
 -(STCompiler*)interpreter;
 -(NSDictionary*)methodDict;
+
+-(id <MPWHierarchicalStorage>)soreForSubDir:(NSString*)subdir;
+
 -(id <MPWIdentifying>)resourceRef;
 -(id <MPWIdentifying>)sourceRef;
 -(id <MPWHierarchicalStorage>)cachedResources;

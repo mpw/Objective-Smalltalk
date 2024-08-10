@@ -64,14 +64,21 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [[self binding] referenceByAppendingReference:subdir];
 }
 
--(id <MPWHierarchicalStorage>)storeForSubDir:(NSString*)subdir
+-(id <MPWHierarchicalStorage>)rawStoreForSubDir:(NSString*)subdir
 {
     return [[self refForSubDir:subdir] asScheme];
 }
 
+-(id <MPWHierarchicalStorage>)storeForSubDir:(NSString*)subdir
+{
+    id base = [self rawStoreForSubDir:subdir];
+    return self.useCache ? [self cacheForBase:base] : base;
+
+}
+
 -(id <MPWHierarchicalStorage>)rawResources
 {
-    return [self storeForSubDir:@"Resources"];
+    return [self rawStoreForSubDir:@"Resources"];
 }
 
 -(id <MPWHierarchicalStorage>)resources
@@ -87,7 +94,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(id <MPWHierarchicalStorage>)rawSources
 {
-    return [self storeForSubDir:@"Sources"];
+    return [self rawStoreForSubDir:@"Sources"];
 }
 
 -(id <MPWHierarchicalStorage>)sourceDir
@@ -120,21 +127,21 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return path;
 }
 
--(MPWWriteBackCache*)createCachedResources
+-(MPWWriteBackCache*)cacheForBase:(id <MPWStorage,MPWHierarchicalStorage>) base
 {
-
-    id <MPWStorage,MPWHierarchicalStorage> base = self.rawResources;
     MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
     cache.autoFlush=NO;
     return cache;
 }
 
+-(MPWWriteBackCache*)createCachedResources
+{
+    return [self cacheForBase:self.rawResources];
+}
+
 -(MPWWriteBackCache*)createCachedSources
 {
-    id <MPWStorage,MPWHierarchicalStorage> base = self.rawSources;
-    MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
-    cache.autoFlush=NO;
-    return cache;
+    return [self cacheForBase:self.rawSources];
 }
 
 
@@ -146,7 +153,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSDictionary*)readInfo
 {
-    NSData *infoData = [self storeForSubDir:@"."][@"Info.json"];
+    NSData *infoData = [self rawStoreForSubDir:@"."][@"Info.json"];
     return infoData ?  [NSJSONSerialization JSONObjectWithData:infoData options:0 error:nil] : nil;
 }
 
@@ -214,7 +221,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [target mkdirAt:@""];
     [target mkdirAt:@"Sources"];
     [target mkdirAt:@"Resources"];
-    target[@"Info.json"] = [self storeForSubDir:@"."][@"Info.json"];
+    target[@"Info.json"] = [self rawStoreForSubDir:@"."][@"Info.json"];
     
     [self copySource:[self resources] to:[target relativeStoreAt:@"Resources"]];
     [self copySource:[self sources] to:[target relativeStoreAt:@"Sources"]];
