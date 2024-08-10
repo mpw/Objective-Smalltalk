@@ -2,7 +2,7 @@
 #-<void>oauth
 framework:ObjectiveHTTPD load.
 
-rtoken ← keychain:password/blogger.com/blogger_refresh stringValue.
+rtoken ← keychain:password/blogger.com/refresh_token stringValue.
 scope ← 'https%3A//www.googleapis.com/auth/blogger'.
 id ← keychain:password/blogger.com/client_id stringValue.
 
