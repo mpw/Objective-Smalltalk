@@ -6,7 +6,7 @@
 //
 
 #import "STDocument.h"
-#import "MPWProgramTextView.h"
+#import "STProgramTextView.h"
 
 @interface STDocument(st)
 
@@ -62,9 +62,9 @@
 }
 
 
--(MPWProgramTextView*)programTextView
+-(STProgramTextView*)programTextView
 {
-    return (MPWProgramTextView*)[[self workspaces] anyObject];       // FIXME: allow only a single text view
+    return (STProgramTextView*)[[self workspaces] anyObject];       // FIXME: allow only a single text view
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {

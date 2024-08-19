@@ -8,7 +8,7 @@
 #import "STAppDelegate.h"
 #import "CLIView.h"
 #import "STCompiler.h"
-#import "MPWProgramTextView.h"
+#import "STProgramTextView.h"
 
 @interface STAppDelegate ()
 
