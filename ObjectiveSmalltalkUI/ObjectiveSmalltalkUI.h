@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 #import <ObjectiveSmalltalkUI/MPWMethodBrowser.h>
-#import <ObjectiveSmalltalkUI/MPWProgramTextView.h>
+#import <ObjectiveSmalltalkUI/STProgramTextView.h>
 #import <ObjectiveSmalltalkUI/MPWColorStore.h>
 #import <ObjectiveSmalltalkUI/MPWFontStore.h>
 #import <ObjectiveSmalltalkUI/STTextField.h>
