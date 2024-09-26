@@ -13,34 +13,34 @@ class Person {
 }.
     
 model:people ← #MPWArrayWithCursor[ 
-   #Person{ #first: 'Marcel', #last: 'Weiher' } ,
-   #Person{ #first: 'Steven', #last: 'Pinker' } ,
-   #Person{ #first: 'Daniel', #last: 'Oschatz' } ,
-   #Person{ #first: 'Alex', #last: 'Weiher' } ,
+   #{ first: 'Marcel', last: 'Weiher' } ,
+   #{ first: 'Steven', last: 'Pinker' } ,
+   #{ first: 'Daniel', last: 'Oschatz' } ,
+   #{ first: 'Alex', last: 'Weiher' } , 
 ].
 
 
 model:people setOffset:2.
 a := model:people/selectedObject.
-stdout println:a.  
 
-model:initialvalue := model:people firstObject.
-model:initialcursor := ref:model:initialvalue.
-model:cursor := ref:model:initialvalue.
+model:cursor := MPWArrayCursor alloc initWithArray: model:people.
+current ← #MPWInstanceVarStore{ baseReference: model:cursor }.
+scheme:cur ← current.
 
-table ← #MPWTableView{ #frame: (00@300), #cursorRef: ref:model:cursor , #binding: ref:model:people   }.
+
+table ← #MPWTableView{ #frame: (00@300), #cursor: model:cursor , #binding: ref:model:people   }.
 table setItems: model:people.
 table ← table  inScrollView:(200@400 extent: 500@600).
 create ← #Button{ #title: 'Create' }.
 update ← #Button{ #title: 'Update' }.
 delete ← #Button{ #title: 'Delete' }.
 
-#VStack{ #views: [   
- #HStack{ #views:[ #Label{ #stringValue: 'Filter prefix:'  }, #TextField{} ] }, 
-  #HStack{ #views:[ table  , 
-      #Grid{ #rows: [ 
-            [ #Label{ #text: 'First:'} , #TextField{ #binding: ref:model:people/selectedObject/first  }] ,
-            [ #Label{ #text: 'Last:'} , #TextField{ #binding: ref:model:people/selectedObject/last }] ] } 
+#VStack{ views: [   
+ #HStack{ views:[ #Label{ #stringValue: 'Filter prefix:'  }, #TextField{} ] }, 
+  #HStack{ views:[ table  , 
+      #Grid{ rows: [ 
+            [ #Label{ #text: 'First:'} , #TextField{ binding: ref:cur:first  }] ,
+            [ #Label{ #text: 'Last:'} , #TextField{ binding: ref:cur:last }] ] } 
     ] } , 
    #HStack{ #views:[  create, update, delete ] },
 ] }. 
