@@ -12,7 +12,18 @@
 -(instancetype)initWithFrame:(NSRect)frameRect
 {
     self=[super initWithFrame:frameRect];
+    NSLog(@"%@:%@ will install protocol notifications",self.class,self);
     [self installProtocolNotifications];
+    NSLog(@"%@:%@ did install protocol notifications",self.class,self);
+    return self;
+}
+
+-(instancetype)initWithDictionary:aDict
+{
+    self=[super initWithDictionary:aDict];
+    NSLog(@"%@:%@ will install protocol notifications",self.class,self);
+    [self installProtocolNotifications];
+    NSLog(@"%@:%@ did install protocol notifications",self.class,self);
     return self;
 }
 
