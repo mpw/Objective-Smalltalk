@@ -11,7 +11,7 @@
 @protocol ModelDidChange;
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STTextField : NSTextField<ModelDidChange,ValidationDidChange>
+@interface STTextField : NSTextField<ModelDidChange,ValidationDidChange,SelectionDidChange>
 
 @property (nonatomic, strong)  MPWReference *ref;
 @property (nonatomic, strong)  MPWReference *enabledRef;

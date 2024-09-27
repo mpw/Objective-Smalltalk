@@ -26,6 +26,11 @@
     [self updateFromRef];
 }
 
+-(void)selectionDidChange:(NSNotification*)notification
+{
+    [self updateFromRef];
+}
+
 -(void)validationDidChange:(NSNotification*)notification
 {
 //    NSLog(@"text field validation changed: %@ from %@",notification,self.enabledRef);
