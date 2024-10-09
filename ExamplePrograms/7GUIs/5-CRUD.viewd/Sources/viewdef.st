@@ -1,50 +1,32 @@
-class Person {
-    var first.
-    var last.
-    -fullName {  this:first , ' ', this:last. }
-    -allKeys {  [ 'fullName' ]. }
-    -description { self fullName. }
-    -copyWithZone:<int>aZone {
-        copy ← self class new.
-        copy setFirst: self first.
-        copy setLast: self last.
-        copy.
-    }
-}.
-model:people ← #MPWArrayWithCursor[ 
+  
+model:people ← [ 
    #{ first: 'Marcel', last: 'Weiher' } ,
    #{ first: 'Steven', last: 'Pinker' } ,
    #{ first: 'Daniel', last: 'Oschatz' } ,
    #{ first: 'Alex', last: 'Weiher' } , 
 ].
 
-model:people setOffset:2.
-a := model:people/selectedObject.
+ 
+model:filtered ← model:people.
 
 model:cursor := MPWArrayCursor alloc initWithArray: model:people.
-current ← #MPWInstanceVarStore{ baseReference: model:cursor }.
-scheme:cur ← current.
+scheme:cur ← #MPWInstanceVarStore{ baseReference: model:cursor }.
  
 model:cursor setSelectionChanges: protocol:ModelDidChange. 
-model:cursor setModelChanges: protocol:ModelDidChange. 
+table ← #MPWTableView{ frame: (200@300), cursor: model:cursor , binding: ref:model:filtered   }.
 
-table ← #MPWTableView{ #frame: (00@300), #cursor: model:cursor , #binding: ref:model:people   }.
-table setItems: model:people.
-table ← table  inScrollView:(200@400 extent: 500@600).
-create ← #Button{ #title: 'Create' }.
-update ← #Button{ #title: 'Update' }.
-delete ← #Button{ #title: 'Delete' }.
+prefixField ← #TextField{}. 
+prefixField → { :filterValue | model:filtered ← model:people select: { :dict | (dict at:'first') containsString:filterValue  .  }.  stdout println: model:filtered. table setItems:model:filtered. table reloadData. }.
 
+table setItems: model:filtered.
  
-f1 ←  #TextField{ binding: ref:cur:first  }.
-f2 ←  #TextField{ binding: ref:cur:last  }.
-
+>>>>>>> 81b74bcc6685e58b3c96479ed97e4dba598fe08c
 #VStack{ views: [   
- #HStack{ views:[ #Label{ #stringValue: 'Filter prefix:'  }, #TextField{} ] }, 
-  #HStack{ views:[ table  , 
+ #HStack{ views:[ #Label{ #stringValue: 'Filter prefix:'  }, prefixField ] }, 
+  #HStack{ views:[ (table  inScrollView:(200@400 extent: 500@600))  , 
       #Grid{ rows: [ 
-            [ #Label{ #text: 'First:'} , f1 ] ,
-            [ #Label{ #text: 'Last:'} , f2 ] ] } 
+            [ #Label{ #text: 'First:'} , #TextField{ binding: ref:cur:first  } ] ,
+            [ #Label{ #text: 'Last:'} , #TextField{ binding: ref:cur:last  } ] ] } 
     ] } , 
-   #HStack{ #views:[  create, update, delete ] },
+   #HStack{ #views:[  #Button{ title: 'Create' }, #Button{ title: 'Update' }, #Button{ title: 'Delete' } ] },
 ] }. 
