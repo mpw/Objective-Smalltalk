@@ -16,7 +16,7 @@
 
 @implementation STJittedMethod(testing) 
 
-+(void)someTest
++(void)testCanJitSimpleMethod
 {
 //    	EXPECTTRUE(false, @"implemented");
 }
@@ -24,7 +24,7 @@
 +(NSArray*)testSelectors
 {
    return @[
-			@"someTest",
+			@"testCanJitSimpleMethod",
 			];
 }
 
