@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWJittableData;
+@class STJittableData;
 
 @interface STObjectCodeGeneratorARM : MPWByteStreamWithSymbols
 
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
--(MPWJittableData*)generatedCode;
+-(STJittableData*)generatedCode;
 
 @end
 

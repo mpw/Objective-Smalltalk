@@ -8,7 +8,7 @@
 #import "MPWARMObjectCodeGeneratorExternalTestsMachO.h"
 #import "MPWMachOWriter.h"
 #import "MPWMachOReader.h"
-#import "MPWJittableData.h"
+#import "STJittableData.h"
 
 @implementation MPWARMObjectCodeGeneratorExternalTestsMachO
 
@@ -64,7 +64,7 @@
         [g generateMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
-    MPWJittableData *d=[g generatedCode];
+    STJittableData *d=[g generatedCode];
     NSData *code=[NSData dataWithBytes:d.bytes length:d.length];
     [code writeToFile:@"/tmp/hashPlus200.code" atomically:YES];
 }

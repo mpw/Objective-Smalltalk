@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWJittableData : NSObject
+@interface STJittableData : NSObject
 
 -(instancetype)initWithCapacity:(long)initialCapacity;
 -(const void*)bytes;

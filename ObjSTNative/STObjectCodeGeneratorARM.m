@@ -9,7 +9,7 @@
 //  
 
 #import "STObjectCodeGeneratorARM.h"
-#import "MPWJittableData.h"
+#import "STJittableData.h"
 #import <objc/message.h>
 
 
@@ -33,12 +33,12 @@
 
 +(id)defaultTarget
 {
-    return [[[MPWJittableData alloc] initWithCapacity:16384] autorelease];
+    return [[[STJittableData alloc] initWithCapacity:16384] autorelease];
 }
 
--(MPWJittableData*)generatedCode
+-(STJittableData*)generatedCode
 {
-    MPWJittableData *data=(MPWJittableData*)[self target];
+    STJittableData *data=(STJittableData*)[self target];
     [data makeExecutable];
     return data;
 }
@@ -633,7 +633,7 @@ typedef long (*IDPTR)(id,SEL);
         [g generateJittedMessageSendToSelector:@"hash"];
         [gen generateAddDest:0 source:0 immediate:200];
     }];
-    MPWJittableData *d=[g generatedCode];
+    STJittableData *d=[g generatedCode];
     IDPTR fn = (IDPTR)[d bytes];
     long myHash = [self hash];
     long hashPlus200 = fn( self, @selector(hash));
@@ -651,7 +651,7 @@ typedef long (*IDIDPTR)(id,SEL,id);
         [g generateJittedMessageSendToSelector:@"length"];
         [gen generateAddDest:0 source:0 immediate:3];
     }];
-    MPWJittableData *d=[g generatedCode];
+    STJittableData *d=[g generatedCode];
     IDIDPTR fn = (IDIDPTR)[d bytes];
     long lengthPlush3 = fn( self , @selector(length), @"Test String");
     INTEXPECT( lengthPlush3, 14, @"length of string plus 3");

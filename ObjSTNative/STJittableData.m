@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 26.09.22.
 //
 
-#import "MPWJittableData.h"
+#import "STJittableData.h"
 #import <MPWFoundation/MPWFoundation.h>
 #include <sys/mman.h>
 
-@implementation MPWJittableData
+@implementation STJittableData
 {
     unsigned char *bytes;
     long capacity;
@@ -92,18 +92,18 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWJittableData(testing) 
+@implementation STJittableData(testing) 
 
 +(void)testCanWriteSomeBytes
 {
-    MPWJittableData *data=[[[self alloc] initWithCapacity:4096] autorelease];
+    STJittableData *data=[[[self alloc] initWithCapacity:4096] autorelease];
     [data appendBytes:"Hello World!" length:12];
     EXPECTTRUE( strncmp( [data bytes],"Hello World!",12)==0, @"written bytes match");
 }
 
 +(void)testCanStreamBytes
 {
-    MPWJittableData *data=[[[self alloc] initWithCapacity:4096] autorelease];
+    STJittableData *data=[[[self alloc] initWithCapacity:4096] autorelease];
     MPWByteStream *s=[MPWByteStream streamWithTarget:data];
     [s writeString:@"Hello World!"];
     EXPECTTRUE( strncmp( [data bytes],"Hello World!",12)==0, @"written bytes match");

@@ -14,7 +14,7 @@
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 #import <ObjectiveSmalltalk/STIdentifierExpression.h>
 #import <ObjectiveSmalltalk/STSubscriptExpression.h>
-#import "MPWJittableData.h"
+#import "STJittableData.h"
 #import <mach-o/arm64/reloc.h>
 #import "MPWClassScheme.h"
 #import "STIdentifier.h"
@@ -645,7 +645,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return symbol;
 }
 
--(MPWJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClassNamed:aClass
+-(STJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClassNamed:aClass
 {
     [self compileMethod:method inClassNamed:aClass isClassMethod:NO];
     return self.codegen.generatedCode;
@@ -685,7 +685,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
 {
-    MPWJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:compiledClass.name];
+    STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:compiledClass.name];
     Class existingClass=NSClassFromString(compiledClass.name);
     NSAssert1(existingClass!=nil , @"Class not found: %@", compiledClass.name);
     [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
@@ -694,7 +694,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 -(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassNamed:(NSString*)className
 {
     NSAssert1(method!=nil , @"no method to jit for class: %@", className);
-    MPWJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
+    STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
     Class existingClass=NSClassFromString(className);
     NSAssert1(existingClass!=nil , @"Class not found: %@", className);
     NSAssert1(method.header.selector!=NULL , @"No selector for: %@", method);
@@ -921,7 +921,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     STNativeCompiler *compiler = [self jitCompiler];
     STClassDefinition * compiledClass = [compiler compile:@"extension ConcatterTest1 { -concat:a and:b { a, b. }}"];
     [compiler compileMethod:compiledClass.methods.firstObject inClassNamed:compiledClass.name isClassMethod:NO];
-    MPWJittableData *methodData = compiler.codegen.generatedCode;
+    STJittableData *methodData = compiler.codegen.generatedCode;
     ConcatterTest1* concatter=[[ConcatterTest1 new] autorelease];
     NSString* result=nil;
     NSException *didRaise=nil;
