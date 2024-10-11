@@ -15,6 +15,7 @@
 	STExpression*		methodBody;
     NSArray*			localVars;
 	id					contextClass;
+    
 }
 
 objectAccessor_h(STExpression*, methodBody, setMethodBody )

@@ -67,6 +67,7 @@
 #import <ObjectiveSmalltalk/STVariableDefinition.h>
 #import <ObjectiveSmalltalk/ViewBuilderPreviewNotification.h>
 #import <ObjectiveSmalltalk/STProgram.h>
+#import <ObjectiveSmalltalk/STJittableData.h>
 
 
 #endif /* ObjectiveSmalltalk_h */
