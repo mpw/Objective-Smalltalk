@@ -912,6 +912,74 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 @implementation STNativeCompiler(testing) 
 
 
++(void)testFindBlocksInMethod
+{
+    STNativeCompiler *compiler = [self compiler];
+    STClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
+    STScriptedMethod *firstMethod = [[theClass methods] firstObject];
+    IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
+    NSArray *blocks = firstMethod.blocks;
+    INTEXPECT(blocks.count, 2,@"number of blocks in method");
+    MPWBlockExpression *trueBlock = blocks.firstObject;
+    MPWBlockExpression *falseBlock = blocks.lastObject;
+    MPWLiteralExpression *trueLiteral = [[trueBlock statementArray] firstObject];
+    MPWLiteralExpression *falseLiteral = [[falseBlock statementArray] lastObject];
+    EXPECTNOTNIL( trueBlock.method ,@"trueBlock should have method");
+    EXPECTNOTNIL( falseBlock.method ,@"trueBlock should have method");
+    IDEXPECT( trueLiteral.theLiteral, @"trueBlock",@"true block literal");
+    IDEXPECT( falseLiteral.theLiteral, @"falseBlock",@"false block literal");
+}
+
+
+static int notOnStack = 0;
+
++(void)testPointerOnStackCheck
+{
+    void *ptr_to_something_on_stack = &_cmd;
+    
+    EXPECTTRUE([self isPointerOnStackAboveMe:ptr_to_something_on_stack], @"_cmd is on stack");
+    EXPECTFALSE([self isPointerOnStackAboveMe:&notOnStack], @"static is not stack");
+    IDEXPECT( [self isPointerOnStackAboveMeForST:&ptr_to_something_on_stack],@(true),@"on stack");
+    IDEXPECT( [self isPointerOnStackAboveMeForST:&notOnStack],@(false),@"not on stack");
+}
+
++(void)testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot
+{
+    id staticBlock=^{ return 2; };
+    int a=2;
+    id stackBlock=^{ return a+2; };
+    EXPECTTRUE([self isPointerOnStackAboveMe:stackBlock], @"block with captured var is on stack");
+    EXPECTFALSE([self isPointerOnStackAboveMe:staticBlock], @"block without captured var is not on stack");
+}
+
+
+
++(void)testComputeStackSpaceForStackBlocks
+{
+    STNativeCompiler *compiler=[self stackBlockCompiler];
+    STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
+    NSArray <STScriptedMethod*>* methods=classWithBlocks.methods;
+    INTEXPECT(methods.count,3,@"number of methods");
+    INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x120,@"0 blocks");
+    INTEXPECT([compiler stackSpaceForMethod:methods[1]],0x160,@"1 block");
+    INTEXPECT([compiler stackSpaceForMethod:methods[2]],0x1a0,@"2 blocks");
+}
+
++(void)testComputeStackBlockOffsetsWithinFrame
+{
+    STNativeCompiler *compiler=[self stackBlockCompiler];
+    STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -two { { 2. }. { 3. }. } } "];
+    NSArray <STScriptedMethod*>* methods=classWithBlocks.methods;
+    INTEXPECT(methods.count,1,@"number of methods");
+    INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x1a0,@"2 blocks");
+    NSArray <MPWBlockExpression*>*  blocks=methods[0].blocks;
+    [compiler compileBlock:blocks[0] inMethod:methods[0]];
+    INTEXPECT(blocks[0].stackOffset,0x0,@"first block stack offset");
+    [compiler compileBlock:blocks[1] inMethod:methods[0]];
+    INTEXPECT(blocks[1].stackOffset,0x40,@"second block stack offset");
+}
+
+
 +(void)testJitCompileAMethod
 {
     STNativeCompiler *compiler = [self jitCompiler];
@@ -997,79 +1065,38 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
 }
 
-
-+(void)testFindBlocksInMethod
++(void)testJitCompileClassReference
 {
-    STNativeCompiler *compiler = [self compiler];
-    STClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
-    STScriptedMethod *firstMethod = [[theClass methods] firstObject];
-    IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
-    NSArray *blocks = firstMethod.blocks;
-    INTEXPECT(blocks.count, 2,@"number of blocks in method");
-    MPWBlockExpression *trueBlock = blocks.firstObject;
-    MPWBlockExpression *falseBlock = blocks.lastObject;
-    MPWLiteralExpression *trueLiteral = [[trueBlock statementArray] firstObject];
-    MPWLiteralExpression *falseLiteral = [[falseBlock statementArray] lastObject];
-    EXPECTNOTNIL( trueBlock.method ,@"trueBlock should have method");
-    EXPECTNOTNIL( falseBlock.method ,@"trueBlock should have method");
-    IDEXPECT( trueLiteral.theLiteral, @"trueBlock",@"true block literal");
-    IDEXPECT( falseLiteral.theLiteral, @"falseBlock",@"false block literal");
+    STNativeCompiler *compiler = [self jitCompiler];
+    STClassDefinition *theClass = [compiler compile:@"class JitCompilerTestClassWithClassRef { -returnNSObjectInstance { class:NSObject new. } }"];
+
+    Class testClass = NSClassFromString(@"JitCompilerTestClassWithClassRef");
+    [theClass defineJustTheClass];
+    EXPECTNIL(testClass, @"should not be defined before I defined it");
+    [compiler compileAndAddMethodsForClassDefinition:theClass];
+    testClass = NSClassFromString(@"JitCompilerTestClassWithClassRef");
+    EXPECTNOTNIL(testClass, @"should be defined after I define it");
+    id myObject = [testClass new];
+    IDEXPECT( [myObject className], @"JitCompilerTestClassWithClassRef", @"class");
+    NSLog(@"Before");
+    EXPECTTRUE(false, @"the genereated code does not work, stop before I get a SEGFAULT");
+    NSObject *n=[myObject returnNSObjectInstance];
+    NSLog(@"after");
+    EXPECTTRUE(false, @"class worked");
+
 }
 
-
-static int notOnStack = 0;
-
-+(void)testPointerOnStackCheck
-{
-    void *ptr_to_something_on_stack = &_cmd;
-    
-    EXPECTTRUE([self isPointerOnStackAboveMe:ptr_to_something_on_stack], @"_cmd is on stack");
-    EXPECTFALSE([self isPointerOnStackAboveMe:&notOnStack], @"static is not stack");
-    IDEXPECT( [self isPointerOnStackAboveMeForST:&ptr_to_something_on_stack],@(true),@"on stack");
-    IDEXPECT( [self isPointerOnStackAboveMeForST:&notOnStack],@(false),@"not on stack");
-}
-
-+(void)testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot
-{
-    id staticBlock=^{ return 2; };
-    int a=2;
-    id stackBlock=^{ return a+2; };
-    EXPECTTRUE([self isPointerOnStackAboveMe:stackBlock], @"block with captured var is on stack");
-    EXPECTFALSE([self isPointerOnStackAboveMe:staticBlock], @"block without captured var is not on stack");
-}
-
-
-
-+(void)testComputeStackSpaceForStackBlocks
-{
-    STNativeCompiler *compiler=[self stackBlockCompiler];
-    STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
-    NSArray <STScriptedMethod*>* methods=classWithBlocks.methods;
-    INTEXPECT(methods.count,3,@"number of methods");
-    INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x120,@"0 blocks");
-    INTEXPECT([compiler stackSpaceForMethod:methods[1]],0x160,@"1 block");
-    INTEXPECT([compiler stackSpaceForMethod:methods[2]],0x1a0,@"2 blocks");
-}
-
-+(void)testComputeStackBlockOffsetsWithinFrame
-{
-    STNativeCompiler *compiler=[self stackBlockCompiler];
-    STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -two { { 2. }. { 3. }. } } "];
-    NSArray <STScriptedMethod*>* methods=classWithBlocks.methods;
-    INTEXPECT(methods.count,1,@"number of methods");
-    INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x1a0,@"2 blocks");
-    NSArray <MPWBlockExpression*>*  blocks=methods[0].blocks;
-    [compiler compileBlock:blocks[0] inMethod:methods[0]];
-    INTEXPECT(blocks[0].stackOffset,0x0,@"first block stack offset");
-    [compiler compileBlock:blocks[1] inMethod:methods[0]];
-    INTEXPECT(blocks[1].stackOffset,0x40,@"second block stack offset");
-}
 
 
 
 +(NSArray*)testSelectors
 {
    return @[
+       @"testFindBlocksInMethod",
+       @"testPointerOnStackCheck",
+       @"testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot",
+       @"testComputeStackSpaceForStackBlocks",
+       @"testComputeStackBlockOffsetsWithinFrame",
        @"testJitCompileAMethod",
        @"testJitCompileNumberObjectLiteral",
        @"testJitCompileAMethodMoreCompactly",
@@ -1078,12 +1105,8 @@ static int notOnStack = 0;
        @"testJitCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
-//       @"testJITCompileBlockWithArg",
-       @"testFindBlocksInMethod",
-       @"testPointerOnStackCheck",
-       @"testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot",
-       @"testComputeStackSpaceForStackBlocks",
-       @"testComputeStackBlockOffsetsWithinFrame",
+//       @"testJitCompileClassReference",
+       
 			];
 }
 

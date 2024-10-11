@@ -18,6 +18,7 @@
 @property (readonly) NSArray *allImplementationMethods;
 
 -(PropertyPathDefs*)propertyPathDefsForVerb:(MPWRESTVerb)thisVerb;
+-(BOOL)defineJustTheClass;
 
 
 

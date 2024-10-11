@@ -127,11 +127,19 @@
     }
 }
 
--(void)defineClass
+-(BOOL)defineJustTheClass
 {
     Class superclass=NSClassFromString([self superclassNameToUse]);
     if ( superclass ) {
         [superclass createSubclassWithName:self.name instanceVariableArray:[self instanceVariableDescriptions]];
+        return YES;
+    }
+    return NO;
+}
+
+-(void)defineClass
+{
+    if ([self defineJustTheClass]) {
         [self generateAccessors];
     }
 }
