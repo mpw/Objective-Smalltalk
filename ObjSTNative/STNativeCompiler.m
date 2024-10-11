@@ -685,15 +685,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileAndAddMethod:(STScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
 {
+    NSAssert1(method!=nil , @"no method to jit for class: %@", compiledClass.name);
     STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:compiledClass.name];
+    method.nativeCode = methodData;
     Class existingClass=NSClassFromString(compiledClass.name);
-    NSAssert1(existingClass!=nil , @"Class not found: %@", compiledClass.name);
-    [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
+    method.classOfMethod = existingClass;
+    [method installNativeCode];
 }
 
 -(void)compileAndAddMethod:(STScriptedMethod*)method forClassNamed:(NSString*)className
 {
-    NSAssert(false, @"bozo");
     NSAssert1(method!=nil , @"no method to jit for class: %@", className);
     STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
     method.nativeCode = methodData;
