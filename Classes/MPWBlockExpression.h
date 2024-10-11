@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@class MPWScriptedMethod;
+@class STScriptedMethod;
 
 @interface MPWBlockExpression : STExpression {
 	NSArray* statements;
@@ -27,7 +27,7 @@
 @property (nonatomic, strong ) NSString *blockDescriptorSymbol;
 @property (nonatomic, strong ) NSString *blockFunctionSymbol;
 @property (nonatomic, strong ) NSDictionary *capturedVariableOffets;
-@property (nonatomic, assign) MPWScriptedMethod *method;    // FIXME: should be weak, but crashes
+@property (nonatomic, assign) STScriptedMethod *method;    // FIXME: should be weak, but crashes
 @property (readonly ) NSArray *capturedVariables;
 @property (readonly ) int numberOfCaptures;
 @property (readonly ) bool hasCaptures;

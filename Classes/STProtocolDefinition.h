@@ -7,7 +7,7 @@
 
 #import <ObjectiveSmalltalk/STConnectionDefinition.h>
 
-@class MPWInstanceVariable,MPWScriptedMethod;
+@class MPWInstanceVariable,STScriptedMethod;
 
 @interface STProtocolDefinition : STConnectionDefinition
 

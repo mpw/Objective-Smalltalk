@@ -255,8 +255,8 @@ scalarAccessor(id, delegate, setDelegate)
 
 @end
 
-//#import <ObjectiveSmalltalk/MPWScriptedMethod.h>
-//@implementation MPWScriptedMethod(wantToDefineSchemesInMethods)
+//#import <ObjectiveSmalltalk/STScriptedMethod.h>
+//@implementation STScriptedMethod(wantToDefineSchemesInMethods)
 //
 //-freshExecutionContextForRealLocalVars
 //{

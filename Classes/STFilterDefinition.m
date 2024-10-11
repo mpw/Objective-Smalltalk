@@ -1,13 +1,13 @@
 //
-//  MPWFilterDefinition.m
+//  STFilterDefinition.m
 //  ObjectiveSmalltalk
 //
 //  Created by Marcel Weiher on 8/1/18.
 //
 
-#import "MPWFilterDefinition.h"
+#import "STFilterDefinition.h"
 
-@implementation MPWFilterDefinition
+@implementation STFilterDefinition
 
 
 -(NSString*)defaultSuperclassName

@@ -13,7 +13,7 @@ static void runTests()
 	NSArray *classes=@[
                        @"STTests",
                        @"STSimpleDataflowConstraint",
-					   @"MPWScriptedMethod",
+					   @"STScriptedMethod",
                        @"STIdentifier",
                        @"STScanner",
                        @"MPWScheme",
@@ -30,7 +30,7 @@ static void runTests()
                        @"MPWVARBinding",
 //                       @"MPWSelfContainedBindingsScheme",
                        @"STCompiler",
-//                       @"MPWFilterDefinition",
+//                       @"STFilterDefinition",
                        @"MPWMethodHeader",
 
 	];

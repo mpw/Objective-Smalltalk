@@ -11,7 +11,7 @@
 #import <MPWFoundation/NSNil.h>
 #import "STIdentifier.h"
 #import "MPWStatementList.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 
 @implementation MPWBlockExpression
 {
@@ -104,7 +104,7 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
     [blocks addObject:self];
 }
 
--(NSArray*)capturedVariablesFromMethod:(MPWScriptedMethod*)method
+-(NSArray*)capturedVariablesFromMethod:(STScriptedMethod*)method
 {
     MPWStatementList *s=[self statements];
     NSMutableSet *variablesReferencedInBlock=[NSMutableSet set];
@@ -173,7 +173,7 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 {
     
     STClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -main:args {  var a. a := 10. { a - 10. } value. } }"];
-    MPWScriptedMethod *method=theClass.methods.firstObject;
+    STScriptedMethod *method=theClass.methods.firstObject;
     EXPECTNOTNIL( method, @"got a method");
     NSArray *blocks = method.blocks;
     INTEXPECT(blocks.count, 1, @"numbr of blocks");
@@ -187,8 +187,8 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 {
     STClassDefinition *theClass = [self _classDefinitionFor:@"class __STTestBlockCaptureComputation1 {  -first {  { 10. } value. }  -second:a { { a -10. } value. } }"];
     INTEXPECT(theClass.methods.count,2,@"number of methods");
-    MPWScriptedMethod *first=theClass.methods.firstObject;
-    MPWScriptedMethod *second=theClass.methods.lastObject;
+    STScriptedMethod *first=theClass.methods.firstObject;
+    STScriptedMethod *second=theClass.methods.lastObject;
     MPWBlockExpression *noCaptureBlock = first.blocks.firstObject;
     MPWBlockExpression *captureBlock = second.blocks.firstObject;
     EXPECTFALSE( noCaptureBlock.hasCaptures, @"first block has no captures");

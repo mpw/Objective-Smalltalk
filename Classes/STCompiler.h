@@ -2,7 +2,7 @@
 
 #import <ObjectiveSmalltalk/STEvaluator.h>
 
-@class MPWMethodHeader,STScanner,MPWMethodStore,MPWScriptedMethod,STClassDefinition;
+@class MPWMethodHeader,STScanner,MPWMethodStore,STScriptedMethod,STClassDefinition;
 
 @interface STCompiler : STEvaluator
 {
@@ -17,7 +17,7 @@
 +compiler;
 +evaluate:aString;
 -evaluateScriptString:aString;
--(MPWScriptedMethod*)parseMethodDefinition:aString;
+-(STScriptedMethod*)parseMethodDefinition:aString;
 -(STClassDefinition*)parseClassDefinitionFromString:aString;
 
 -compile:aString;

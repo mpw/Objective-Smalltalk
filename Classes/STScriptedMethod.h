@@ -1,5 +1,5 @@
 //
-//  MPWScriptedMethod.h
+//  STScriptedMethod.h
 //  Arch-S
 //
 //  Created by Marcel Weiher on 12/09/2005.
@@ -10,7 +10,7 @@
 
 @class MPWMethodHeader,MPWBlockExpression;
 
-@interface MPWScriptedMethod : MPWAbstractInterpretedMethod {
+@interface STScriptedMethod : MPWAbstractInterpretedMethod {
 	id					script;
 	STExpression*		methodBody;
     NSArray*			localVars;

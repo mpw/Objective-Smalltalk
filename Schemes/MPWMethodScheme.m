@@ -10,7 +10,7 @@
 #import "STCompiler.h"
 #import "MPWMethodStore.h"
 #import "MPWClassMirror.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 
 @implementation MPWMethodScheme
 

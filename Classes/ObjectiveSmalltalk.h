@@ -30,7 +30,7 @@
 #import <ObjectiveSmalltalk/MPWExpression+autocomplete.h>
 #import <ObjectiveSmalltalk/STExpression.h>
 #import <ObjectiveSmalltalk/MPWFileSchemeResolver.h>
-#import <ObjectiveSmalltalk/MPWFilterDefinition.h>
+#import <ObjectiveSmalltalk/STFilterDefinition.h>
 #import <ObjectiveSmalltalk/MPWFrameworkScheme.h>
 #import <ObjectiveSmalltalk/MPWGlobalVariableStore.h>
 #import <ObjectiveSmalltalk/MPWGetAccessor.h>
@@ -50,7 +50,7 @@
 #import <ObjectiveSmalltalk/MPWResourceScheme.h>
 #import <ObjectiveSmalltalk/MPWScheme.h>
 #import <ObjectiveSmalltalk/MPWSchemeScheme.h>
-#import <ObjectiveSmalltalk/MPWScriptedMethod.h>
+#import <ObjectiveSmalltalk/STScriptedMethod.h>
 #import <ObjectiveSmalltalk/MPWScriptingBridgeScheme.h>
 #import <ObjectiveSmalltalk/MPWSelfContainedBindingsScheme.h>
 #import <ObjectiveSmalltalk/MPWSetAccessor.h>

@@ -7,14 +7,14 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWReferenceTemplate,MPWScriptedMethod;
+@class MPWReferenceTemplate,STScriptedMethod;
 
 @interface STPropertyPathDefinition : NSObject
 
 @property (nonatomic, strong)  MPWReferenceTemplate* propertyPath;
 
--(void)setMethod:(MPWScriptedMethod*)method forVerb:(MPWRESTVerb)verb;
--(MPWScriptedMethod*)methodForVerb:(MPWRESTVerb)verb;
+-(void)setMethod:(STScriptedMethod*)method forVerb:(MPWRESTVerb)verb;
+-(STScriptedMethod*)methodForVerb:(MPWRESTVerb)verb;
 
 
 @end

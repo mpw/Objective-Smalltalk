@@ -1,12 +1,12 @@
 //
-//  MPWScriptedMethod.m
+//  STScriptedMethod.m
 //  Arch-S
 //
 //  Created by Marcel Weiher on 12/09/2005.
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "STEvaluator.h"
 #import "STCompiler.h"
 #import "MPWMethodHeader.h"
@@ -21,7 +21,7 @@
 @end
 
 
-@implementation MPWScriptedMethod
+@implementation STScriptedMethod
 {
     NSArray <MPWBlockExpression*>* blocks;
 }
@@ -144,7 +144,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     int exceptionSourceOffset=[[[exception userInfo] objectForKey:@"offset"] intValue];
     NSString *frameDescription=[NSString stringWithFormat:@"%s[%@ %@] + %d",targetClass==target?"+":"-",targetClass,[self methodHeader],exceptionSourceOffset];
     [newException addScriptFrame: frameDescription];
-    NSString *myselfInTrace=    @"-[MPWScriptedMethod evaluateOnObject:parameters:]";    
+    NSString *myselfInTrace=    @"-[STScriptedMethod evaluateOnObject:parameters:]";    
     NSLog(@"addCombinedFrame: %@",frameDescription);
     [newException addCombinedFrame:frameDescription frameToReplace:myselfInTrace previousTrace:[exception callStackSymbols]];
     NSLog(@"exception: %@/%@ in %@ with backtrace: %@",[exception name],[exception reason],frameDescription,[newException combinedStackTrace]);
@@ -242,7 +242,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 @end
 
-@interface MPWScriptedMethod(fakeTestingInterfaces)
+@interface STScriptedMethod(fakeTestingInterfaces)
 
 -xxxSimpleNilTestMethod;
 -xxxSimpleMethodThatRaises;
@@ -259,7 +259,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 #import "STClassDefinition.h"
 
-@implementation MPWScriptedMethod(testing)
+@implementation STScriptedMethod(testing)
 
 +(void)testLookupOfNilVariableInMethodWorks
 {
@@ -330,8 +330,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 +(void)testThisSchemeReadsObject
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"extension MPWScriptedMethod { -getTheText { this:script. } }." ];
-    MPWScriptedMethod *tester=[MPWScriptedMethod new];
+    [compiler evaluateScriptString:@"extension STScriptedMethod { -getTheText { this:script. } }." ];
+    STScriptedMethod *tester=[STScriptedMethod new];
     tester.script=@"The Answer";
     NSString *result=[tester getTheText];
     IDEXPECT( result, @"The Answer",@"property via self: property-scheme");
@@ -340,8 +340,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 +(void)testThisSchemeWritesObject
 {
     STCompiler *compiler=[STCompiler compiler];
-    [compiler evaluateScriptString:@"extension MPWScriptedMethod { -<void>setText:someText { this:script := someText. } }." ];
-    MPWScriptedMethod *tester=[MPWScriptedMethod new];
+    [compiler evaluateScriptString:@"extension STScriptedMethod { -<void>setText:someText { this:script := someText. } }." ];
+    STScriptedMethod *tester=[STScriptedMethod new];
     [tester setText:@"some script text"];
     IDEXPECT( [tester script] , @"some script text",@"property via self: property-scheme");
 }
@@ -350,7 +350,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 {
     STCompiler *compiler=[STCompiler compiler];
     STClassDefinition *classDef = [compiler compile:@"class TestClass { -<void>setText:someText { var a. var b. 3. } }" ];
-    MPWScriptedMethod *method=classDef.methods.firstObject;
+    STScriptedMethod *method=classDef.methods.firstObject;
     NSArray *localVarNames = [method localVars];
     INTEXPECT(localVarNames.count, 2, @"number of local vars");
 }

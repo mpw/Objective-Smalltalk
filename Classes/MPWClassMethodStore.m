@@ -9,7 +9,7 @@
 #import "MPWClassMethodStore.h"
 #import "MPWMethodCallBack.h"
 //#import "MPWAbstractInterpretedMethod.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "MPWClassMirror.h"
 
@@ -49,15 +49,15 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
     return methodCallback;
 }
 
--(MPWScriptedMethod*)methodForName:(NSString*)name
+-(STScriptedMethod*)methodForName:(NSString*)name
 {
-    return (MPWScriptedMethod*)[[self callbackForName:name] method];
+    return (STScriptedMethod*)[[self callbackForName:name] method];
 }
 
 
 #ifndef __clang_analyzer__
 
--(MPWMethodCallBack*)addMethod:(MPWScriptedMethod*)method
+-(MPWMethodCallBack*)addMethod:(STScriptedMethod*)method
 {
     NSString* methodName = [[method methodHeader] methodName];
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
@@ -70,7 +70,7 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
     return methodCallback;
 }
 
--(MPWMethodCallBack*)addClassMethod:(MPWScriptedMethod*)method
+-(MPWMethodCallBack*)addClassMethod:(STScriptedMethod*)method
 {
     NSString* methodName = [[method methodHeader] methodName];
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
@@ -106,7 +106,7 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
 
 -methodWithHeaderString:header bodyString:body
 {
-    MPWScriptedMethod* method = [[[MPWScriptedMethod alloc] init] autorelease];
+    STScriptedMethod* method = [[[STScriptedMethod alloc] init] autorelease];
     [method setContext:[self compiler]];
     [method setScript:body];
     [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:header]];
@@ -148,7 +148,7 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
     for ( NSString *methodName in [self allMethodNames] ) {
 //        NSLog(@"class %@ methodName %@",[[self classMirror] name],methodName);
         MPWMethodCallBack *callback=[self methodCallbacks][methodName];
-        MPWScriptedMethod *method=(MPWScriptedMethod*)[callback method];
+        STScriptedMethod *method=(STScriptedMethod*)[callback method];
         NSString *headerString=[[method methodHeader] headerString];
         if ( headerString ) {
             d[headerString]=[method script];

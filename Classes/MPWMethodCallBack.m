@@ -16,7 +16,7 @@
 
 #import "MPWMethodCallBack.h"
 #import "MPWMethodHeader.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "STCompiler.h"
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 #import <objc/objc.h>
@@ -35,7 +35,7 @@ idAccessor( method, _setMethod )
 
 -script
 {
-	return [(MPWScriptedMethod*)[self method] script];
+	return [(STScriptedMethod*)[self method] script];
 }
 
 -header
@@ -228,7 +228,7 @@ static int debugMsgSend=NO;
 	MPWMethodCallBack* callback=[[[self alloc] init] autorelease];
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	SEL selector;
-    MPWScriptedMethod* method = [[[MPWScriptedMethod alloc] init] autorelease];
+    STScriptedMethod* method = [[[STScriptedMethod alloc] init] autorelease];
     method.classOfMethod = [__MPWMethodCallBackDummyTestClass class];
 //	[method setContext:target];
 	[callback setMethod:method];
@@ -245,7 +245,7 @@ static int debugMsgSend=NO;
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	id returnValue;
 	id expectedReturn = @(45); // [target evaluateScript:@"45" onObject:target];
- 	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+ 	id method = [[[STScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
  	[method setScript:@"45"];
 	[callback setMethod:method];
@@ -260,7 +260,7 @@ static int debugMsgSend=NO;
 	MPWMethodCallBack* callback=[[[self alloc] init] autorelease];
 	id target =[[[__MPWMethodCallBackDummyTestClass alloc] init] autorelease];
 	id returnValue;
-	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+	id method = [[[STScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
 	[method setScript:@"'dummyReturnValueInsteadOfActualMethodBody'"];
 	[callback setMethod:method];
@@ -277,7 +277,7 @@ static int debugMsgSend=NO;
 	id returnValue;
 	id initialReturn = (id)[target answerToEverything];
     id expectedReturnAfterOverride = @"45"; [target evaluateScript:@"45" onObject:target];
-	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+	id method = [[[STScriptedMethod alloc] init] autorelease];
 //	[method setContext:target];
 	[method setScript:@"45"];
 //	[method setContext:target];
@@ -301,7 +301,7 @@ static int debugMsgSend=NO;
 	id returnValue;
 	id expectedReturn = @(45); // [target evaluateScript:@"45" onObject:target];
 	IMP0 function;
-	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+	id method = [[[STScriptedMethod alloc] init] autorelease];
 //    [method setClassOfMethod:[__MPWMethodCallBackDummyTestClass class]];
 //	[method setContext:target];
 	[method setScript:@"45"];
@@ -323,7 +323,7 @@ static int debugMsgSend=NO;
 	id expectedReturn = @(47); // [target evaluateScript:@"45" onObject:target];
 	id expectedSuperclassReturn = @"43"; // [target evaluateScript:@"45" onObject:target];
 //	IMP function;
-	id method = [[[MPWScriptedMethod alloc] init] autorelease];
+	id method = [[[STScriptedMethod alloc] init] autorelease];
     //	[method setContext:target];
 	[method setScript:@"47"];
     [method setMethodHeader:[MPWMethodHeader methodHeaderWithString:@"answerToEverythingWillOverrideInSubclass"]];

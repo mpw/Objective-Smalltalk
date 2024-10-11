@@ -8,16 +8,16 @@
 #import "STPropertyPathDefinition.h"
 
 @implementation STPropertyPathDefinition{
-    MPWScriptedMethod *methods[MPWRESTVerbMAX];
+    STScriptedMethod *methods[MPWRESTVerbMAX];
 }
 
--(void)setMethod:(MPWScriptedMethod*)method forVerb:(MPWRESTVerb)verb
+-(void)setMethod:(STScriptedMethod*)method forVerb:(MPWRESTVerb)verb
 {
     [methods[verb] release];
     methods[verb]=[method retain];
 }
 
--(MPWScriptedMethod*)methodForVerb:(MPWRESTVerb)verb
+-(STScriptedMethod*)methodForVerb:(MPWRESTVerb)verb
 {
     return methods[verb];
 }

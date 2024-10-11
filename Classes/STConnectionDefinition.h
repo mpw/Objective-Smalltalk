@@ -7,7 +7,7 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@class MPWInstanceVariable,MPWScriptedMethod;
+@class MPWInstanceVariable,STScriptedMethod;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSArray<MPWInstanceVariable*>  *instanceVariableDescriptions;
-@property (nonatomic, strong) NSArray<MPWScriptedMethod*>    *methods;
-@property (nonatomic, strong) NSArray<MPWScriptedMethod*>    *classMethods;
+@property (nonatomic, strong) NSArray<STScriptedMethod*>    *methods;
+@property (nonatomic, strong) NSArray<STScriptedMethod*>    *classMethods;
 @property (nonatomic, strong) NSArray                        *propertyPathDefinitions;
 
 

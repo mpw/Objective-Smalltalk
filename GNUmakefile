@@ -42,10 +42,10 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STEvaluator.m \
     Classes/MPWMessageExpression.m \
     Classes/MPWRecursiveIdentifier.m \
-    Classes/MPWFilterDefinition.m \
+    Classes/STFilterDefinition.m \
     Classes/MPWBidirectionalDataflowConstraintExpression.m \
     Classes/STIdentifierExpression.m \
-    Classes/MPWScriptedMethod.m \
+    Classes/STScriptedMethod.m \
     Classes/MPWMethodHeader.m \
     Classes/MPWLiteralExpression.m \
     Classes/MPWComplexLiteralExpression.m \

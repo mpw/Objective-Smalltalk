@@ -19,7 +19,7 @@
 #import "MPWObjCGenerator.h"
 #import <MPWFoundation/NSNil.h>
 #import "STIdentifier.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "MPWBlockExpression.h"
 #import "MPWStatementList.h"
@@ -322,7 +322,7 @@
 {
     NSString *methodText=@"-lengthMultipliedBy:a  { self length * a. }";
     id compiler=[self compiler];
-    MPWScriptedMethod *method=[compiler parseMethodDefinition:methodText];
+    STScriptedMethod *method=[compiler parseMethodDefinition:methodText];
     MPWMethodHeader *header=[method header];
     
     IDEXPECT( [header methodName], @"lengthMultipliedBy:", @"method name");
@@ -337,7 +337,7 @@
 {
     NSString *methodText=@"-lengthMultipliedBy5  { self length * 5. }";
     id compiler=[self compiler];
-    MPWScriptedMethod *method=[compiler parseMethodDefinition:methodText];
+    STScriptedMethod *method=[compiler parseMethodDefinition:methodText];
     MPWMethodHeader *header=[method header];
     
     IDEXPECT( [header methodName], @"lengthMultipliedBy5", @"method name");
@@ -1056,7 +1056,7 @@
     IDEXPECT(classDef.superclassName,@"NSNumber",@"name of superclass" );
     NSArray *methods=classDef.methods;
     INTEXPECT( methods.count,1 , @"number of methods");
-    MPWScriptedMethod *method=methods.firstObject;
+    STScriptedMethod *method=methods.firstObject;
     MPWMethodHeader *header=method.methodHeader;
     IDEXPECT( header.methodName, @"multiplyByNumber:", @"method name");
     INTEXPECT( header.numArguments, 1, @"number parameters name");

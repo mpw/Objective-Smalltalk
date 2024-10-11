@@ -13,7 +13,7 @@
 #import <MPWFoundation/MPWMapFilter.h>
 #import "MPWBindingLegacy.h"
 #import "MPWMethodHeader.h"
-#import "MPWScriptedMethod.h"    // for stack-trace 
+#import "STScriptedMethod.h"    // for stack-trace 
 
 //#include <Block.h>
 #import <objc/runtime.h>

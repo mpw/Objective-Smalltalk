@@ -26,12 +26,12 @@
 #import "MPWDataflowConstraintExpression.h"
 #import "MPWLiteralDictionaryExpression.h"
 #import "MPWLiteralArrayExpression.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "MPWMethodHeader.h"
 #import "STPropertyMethodHeader.h"
 #import "STClassDefinition.h"
 #import "MPWInstanceVariable.h"
-#import "MPWFilterDefinition.h"
+#import "STFilterDefinition.h"
 #import "STPropertyPathDefinition.h"
 #import "STObjectTemplate.h"
 #import "MPWBidirectionalDataflowConstraintExpression.h"
@@ -1123,15 +1123,15 @@ idAccessor(solver, setSolver)
     return expr;
 }
 
--(MPWScriptedMethod*)parseMethodDefinition:aString
+-(STScriptedMethod*)parseMethodDefinition:aString
 {
     [self setScanner:[STScanner scannerWithData:[aString asData]]];
     return [self parseMethodDefinition];
 }
 
--(MPWScriptedMethod*)parseMethodBodyWithHeader:(MPWMethodHeader*)header
+-(STScriptedMethod*)parseMethodBodyWithHeader:(MPWMethodHeader*)header
 {
-    MPWScriptedMethod *method=[[MPWScriptedMethod new] autorelease];
+    STScriptedMethod *method=[[STScriptedMethod new] autorelease];
     [method setMethodHeader:header];
     long startPos=[[self scanner] currentOffset];
     NSString *bodyStart=[self nextToken];
@@ -1146,9 +1146,9 @@ idAccessor(solver, setSolver)
     return method;
 }
 
--(MPWScriptedMethod*)parseMethodDefinition
+-(STScriptedMethod*)parseMethodDefinition
 {
-    MPWScriptedMethod *method=nil;
+    STScriptedMethod *method=nil;
     NSString *s=[self nextToken];
     if ( [s isEqualToString:@"-"] || [s isEqualToString:@"+"]) {
         MPWMethodHeader *header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
@@ -1252,7 +1252,7 @@ idAccessor(solver, setSolver)
             STPropertyMethodHeader *header=[[[STPropertyMethodHeader alloc] initWithTemplate:path verb:verb] autorelease];
             
             
-            MPWScriptedMethod* body=[self parseMethodBodyWithHeader:header];
+            STScriptedMethod* body=[self parseMethodBodyWithHeader:header];
 //            NSLog(@"did parse body: %@",body);
             nextToken=[self nextToken];
             
@@ -1310,7 +1310,7 @@ idAccessor(solver, setSolver)
     } else  if ( [s isEqualToString:@"system"]) {
         defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
-        defClass=[MPWFilterDefinition class];
+        defClass=[STFilterDefinition class];
     }
     STClassDefinition *classDef=[[defClass new] autorelease];
     if ( classDef ) {
@@ -1340,11 +1340,11 @@ idAccessor(solver, setSolver)
 //                NSLog(@"token: %@",next);
                 if ( [next isEqualToString:@"-"]) {
                     [self pushBack:next];
-                    MPWScriptedMethod *method=[self parseMethodDefinition];
+                    STScriptedMethod *method=[self parseMethodDefinition];
                     [methods addObject:method];
                 } else if ( [next isEqualToString:@"+"]) {
                     [self pushBack:next];
-                    MPWScriptedMethod *method=[self parseMethodDefinition];
+                    STScriptedMethod *method=[self parseMethodDefinition];
                     [classMethods addObject:method];
                 } else if ( [next isEqualToString:@"var"]) {
                     [self pushBack:next];
@@ -1378,7 +1378,7 @@ idAccessor(solver, setSolver)
         } else if ( [separator isEqualToString:@"|{"]) {
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
             [self pushBack:@"{"];
-            MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
+            STScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
 //            NSLog(@"parsed: %@",filterMethod);
             [methods addObject:filterMethod];
             classDef.methods=methods;
@@ -1445,7 +1445,7 @@ idAccessor(solver, setSolver)
         } else if ( [separator isEqualToString:@"|{"]) {
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
             [self pushBack:@"{"];
-            MPWScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
+            STScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
             //            NSLog(@"parsed: %@",filterMethod);
             [methods addObject:filterMethod];
             protoDef.methods=methods;
@@ -1499,11 +1499,11 @@ idAccessor(solver, setSolver)
 -(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
     MPWClassMethodStore* store= [self classStoreForName:classDefinition.name];
-    for ( MPWScriptedMethod *method in [classDefinition allMethods]) {
+    for ( STScriptedMethod *method in [classDefinition allMethods]) {
         [store installMethod:method];
     }
     if ( classDefinition.classMethods.count) {
-        for ( MPWScriptedMethod *method in [classDefinition classMethods]) {
+        for ( STScriptedMethod *method in [classDefinition classMethods]) {
             [store installClassMethod:method];
         }
     }
@@ -1565,7 +1565,7 @@ idAccessor(solver, setSolver)
 {
     STCompiler *compiler=[self compiler];
     [compiler evaluateScriptString:@"class  MPWMethodSourceCompilerTestClass1 : NSObject { -answer { 42. } }. "];
-    MPWScriptedMethod *method=[[compiler methodStore] methodForClass:@"MPWMethodSourceCompilerTestClass1" name:@"answer"];
+    STScriptedMethod *method=[[compiler methodStore] methodForClass:@"MPWMethodSourceCompilerTestClass1" name:@"answer"];
     EXPECTNOTNIL(method, @"got a method");
     IDEXPECT([method script], @" 42. ",@"body");
 }

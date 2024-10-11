@@ -592,7 +592,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
--(void)saveLocalRegistersAndMoveArgs:(MPWScriptedMethod*)method
+-(void)saveLocalRegistersAndMoveArgs:(STScriptedMethod*)method
 {
     NSArray *localVars = [method localVars];
     NSMutableArray *arguments =[[@[ @"self" , @"_cmd"] mutableCopy] autorelease];
@@ -611,7 +611,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
--(int)writeMethodBody:(MPWScriptedMethod*)method
+-(int)writeMethodBody:(STScriptedMethod*)method
 {
     self.currentLocalRegStack=self.localRegisterMin;
     self.savedRegisterMax=self.localRegisterMin;
@@ -624,12 +624,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 #define SIZE_OF_STACK_BLOCK 64
 
--(int)stackSpaceForMethod:(MPWScriptedMethod*)method
+-(int)stackSpaceForMethod:(STScriptedMethod*)method
 {
     return 0x120 + ((int)method.blocks.count * SIZE_OF_STACK_BLOCK);
 }
 
--(NSString*)compileMethod:(MPWScriptedMethod*)method inClassNamed:className isClassMethod:(BOOL)isClassMethod
+-(NSString*)compileMethod:(STScriptedMethod*)method inClassNamed:className isClassMethod:(BOOL)isClassMethod
 {
     NSArray *blocks = method.blocks;
     blockNo=0;
@@ -645,15 +645,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return symbol;
 }
 
--(STJittableData*)compiledCodeForMethod:(MPWScriptedMethod*)method inClassNamed:aClass
+-(STJittableData*)compiledCodeForMethod:(STScriptedMethod*)method inClassNamed:aClass
 {
     [self compileMethod:method inClassNamed:aClass isClassMethod:NO];
     return self.codegen.generatedCode;
 }
 
--(STMethodSymbols*)compileMethodsInList:(NSArray<MPWScriptedMethod*>*)methods forClass:(STClassDefinition*)aClass info:(STMethodSymbols *)methodSymbols classMethods:(BOOL)classMethods
+-(STMethodSymbols*)compileMethodsInList:(NSArray<STScriptedMethod*>*)methods forClass:(STClassDefinition*)aClass info:(STMethodSymbols *)methodSymbols classMethods:(BOOL)classMethods
 {
-    for ( MPWScriptedMethod* method in methods) {
+    for ( STScriptedMethod* method in methods) {
         [methodSymbols.methodNames addObject:method.methodName];
         [methodSymbols.methodTypes addObject:[[method header] typeString]];
         [methodSymbols.symbolNames addObject:[self compileMethod:method inClassNamed:aClass.name isClassMethod:classMethods]];
@@ -683,7 +683,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [classwriter writeClassMethodList:classMethods];
 }
 
--(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
+-(void)compileAndAddMethod:(STScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
 {
     STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:compiledClass.name];
     Class existingClass=NSClassFromString(compiledClass.name);
@@ -691,7 +691,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
 }
 
--(void)compileAndAddMethod:(MPWScriptedMethod*)method forClassNamed:(NSString*)className
+-(void)compileAndAddMethod:(STScriptedMethod*)method forClassNamed:(NSString*)className
 {
     NSAssert1(method!=nil , @"no method to jit for class: %@", className);
     STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
@@ -704,7 +704,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileAndAddMethodsForClassDefinition:(STClassDefinition*)aClass
 {
-    for ( MPWScriptedMethod* method in aClass.methods) {
+    for ( STScriptedMethod* method in aClass.methods) {
         [self compileAndAddMethod:method forClassDefinition:aClass];
     }
 }
@@ -757,7 +757,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }];
 }
 
--(void)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
+-(void)compileBlockInvocatinFunction:(MPWBlockExpression*)aBlock inMethod:(STScriptedMethod*)method blockFunctionSymbol:(NSString*)symbol
 {
     self.currentBlock = aBlock;
     [self generateFunctionNamed:symbol body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
@@ -786,7 +786,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 
 
--(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(MPWScriptedMethod*)method
+-(NSString*)compileBlock:(MPWBlockExpression*)aBlock inMethod:(STScriptedMethod*)method
 {
     NSLog(@"compileBlock:inMethod:");
     aBlock.stackOffset = self.currentBlockStackOffset;
@@ -1001,18 +1001,12 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
 }
 
-+(void)testJITCompileBlockWithArg   //  I am not convinced this actually does a native compilation
-{
-    STNativeCompiler *compiler = [self jitCompiler];
-    MPWBlockInvocable * compiledBlock = [compiler evaluateScriptString:@"{ :a | a + 3. }"];
-    IDEXPECT( [compiledBlock value:@(12)],@(15),@"jitted block");
-}
 
 +(void)testFindBlocksInMethod
 {
     STNativeCompiler *compiler = [self compiler];
     STClassDefinition *theClass = [compiler compile:@"class Hi { -tester:cond { cond ifTrue: { 'trueBlock'. } ifFalse:{ 'falseBlock'. }. } }"];
-    MPWScriptedMethod *firstMethod = [[theClass methods] firstObject];
+    STScriptedMethod *firstMethod = [[theClass methods] firstObject];
     IDEXPECT( [firstMethod methodName],@"tester:", @"method name");
     NSArray *blocks = firstMethod.blocks;
     INTEXPECT(blocks.count, 2,@"number of blocks in method");
@@ -1054,7 +1048,7 @@ static int notOnStack = 0;
 {
     STNativeCompiler *compiler=[self stackBlockCompiler];
     STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -zero { 2. } -one {  { 2. }. } -two { { 2. }. { 3. }. } } "];
-    NSArray <MPWScriptedMethod*>* methods=classWithBlocks.methods;
+    NSArray <STScriptedMethod*>* methods=classWithBlocks.methods;
     INTEXPECT(methods.count,3,@"number of methods");
     INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x120,@"0 blocks");
     INTEXPECT([compiler stackSpaceForMethod:methods[1]],0x160,@"1 block");
@@ -1065,7 +1059,7 @@ static int notOnStack = 0;
 {
     STNativeCompiler *compiler=[self stackBlockCompiler];
     STClassDefinition *classWithBlocks=[compiler compile:@"class StackBlockMethods {  -two { { 2. }. { 3. }. } } "];
-    NSArray <MPWScriptedMethod*>* methods=classWithBlocks.methods;
+    NSArray <STScriptedMethod*>* methods=classWithBlocks.methods;
     INTEXPECT(methods.count,1,@"number of methods");
     INTEXPECT([compiler stackSpaceForMethod:methods[0]],0x1a0,@"2 blocks");
     NSArray <MPWBlockExpression*>*  blocks=methods[0].blocks;
@@ -1088,7 +1082,7 @@ static int notOnStack = 0;
        @"testJitCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
-       @"testJITCompileBlockWithArg",
+//       @"testJITCompileBlockWithArg",
        @"testFindBlocksInMethod",
        @"testPointerOnStackCheck",
        @"testObjectiveCBlocksWithCapturesAreOnStackAndWithoutCapturesNot",

@@ -9,7 +9,7 @@
 #import "STPropertyPathDefinition.h"
 #import "STClassDefinition.h"
 #import "STTests.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 
 @implementation STPropertyPathTests
 
@@ -158,7 +158,7 @@
     STPropertyPathDefinition *def=classdef.propertyPathDefinitions[0];
     id path=def.propertyPath;
     IDEXPECT( [path name], @"propertyB", @"path");
-    MPWScriptedMethod *method=[def methodForVerb:MPWRESTVerbPOST];
+    STScriptedMethod *method=[def methodForVerb:MPWRESTVerbPOST];
     IDEXPECT( [method.header stringValue], @"<void>ref:theRef value:newValue", @"method");
 }
 

@@ -10,7 +10,7 @@
 
 #import "MPWMethodHeader.h"
 #import "MPWMethodCallBack.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "MPWMethodType.h"
 #import "MPWMethod.h"
 #import "STCompiler.h"
@@ -32,7 +32,7 @@ scalarAccessor( id , compiler , setCompiler )
 
 -(void)initializeMethodTypes
 {
-	[self addMethodType:[MPWMethodType methodTypeWithName:@"Smalltalk" className:@"MPWScriptedMethod"]];
+	[self addMethodType:[MPWMethodType methodTypeWithName:@"Smalltalk" className:@"STScriptedMethod"]];
     
 }
 
@@ -170,29 +170,29 @@ scalarAccessor( id , compiler , setCompiler )
 
 
 
--(MPWScriptedMethod*)scriptedMethodWithHeader:header body:body
+-(STScriptedMethod*)scriptedMethodWithHeader:header body:body
 {
-	return [self methodWithClass:[MPWScriptedMethod class] header:header body:body];
+	return [self methodWithClass:[STScriptedMethod class] header:header body:body];
 }
 
 
--(void)installMethod:(MPWScriptedMethod*)method inClass:(NSString*)className
+-(void)installMethod:(STScriptedMethod*)method inClass:(NSString*)className
 {
     [[self classStoreForName:className] installMethod:method];
 }
 
--(void)installMethod:(MPWScriptedMethod*)method inMetaClass:(NSString*)className
+-(void)installMethod:(STScriptedMethod*)method inMetaClass:(NSString*)className
 {
     [[self metaClassStoreForName:className] installMethod:method];
 }
 
 
--(void)addMethodOnly:(MPWScriptedMethod*)method forClass:(NSString*)className
+-(void)addMethodOnly:(STScriptedMethod*)method forClass:(NSString*)className
 {
     [[self classStoreForName:className] addMethod:method];
 }
 
--(void)addMethod:(MPWScriptedMethod*)method forClass:(NSString*)className
+-(void)addMethod:(STScriptedMethod*)method forClass:(NSString*)className
 {
 //	[self addMethodOnly:method forClass:className];
 	[self installMethod:method inClass:className];
@@ -232,7 +232,7 @@ scalarAccessor( id , compiler , setCompiler )
         [s writeString:@".\n"];
     }
     for ( NSString *methodName in methodNames) {
-        MPWScriptedMethod *method=[self methodForClass:className name:methodName];
+        STScriptedMethod *method=[self methodForClass:className name:methodName];
         MPWMethodHeader *header=[method methodHeader];
         [s writeString:@"-"];
         [s writeString:[header headerString]];

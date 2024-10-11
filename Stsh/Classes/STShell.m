@@ -25,7 +25,7 @@
 #import "MPWScheme.h"
 #import <MPWFoundation/MPWByteStream.h>
 #import "MPWAbstractShellCommand.h"
-#import "MPWScriptedMethod.h"
+#import "STScriptedMethod.h"
 #import "MPWExpression+autocomplete.h"
 #import "MPWShellPrinter.h"
 
