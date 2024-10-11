@@ -693,13 +693,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileAndAddMethod:(STScriptedMethod*)method forClassNamed:(NSString*)className
 {
+    NSAssert(false, @"bozo");
     NSAssert1(method!=nil , @"no method to jit for class: %@", className);
     STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
-    Class existingClass=NSClassFromString(className);
-    NSAssert1(existingClass!=nil , @"Class not found: %@", className);
-    NSAssert1(method.header.selector!=NULL , @"No selector for: %@", method);
-    NSAssert1(method.header.typeSignature!=NULL , @"No type signature for: %@", NSStringFromSelector(method.header.selector));
-    [existingClass addMethod:methodData.bytes forSelector:method.header.selector types:method.header.typeSignature];
+    method.nativeCode = methodData;
+    [method installNativeCode];
 }
 
 -(void)compileAndAddMethodsForClassDefinition:(STClassDefinition*)aClass

@@ -8,14 +8,13 @@
 
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
 
-@class MPWMethodHeader,MPWBlockExpression;
+@class MPWMethodHeader,MPWBlockExpression,STJittableData;
 
 @interface STScriptedMethod : MPWAbstractInterpretedMethod {
 	id					script;
 	STExpression*		methodBody;
     NSArray*			localVars;
 	id					contextClass;
-    
 }
 
 objectAccessor_h(STExpression*, methodBody, setMethodBody )
@@ -24,7 +23,9 @@ objectAccessor_h(NSArray*, localVars, setLocalVars )
 idAccessor_h( script, setScript )
 
 @property (nonatomic,assign) Class classOfMethod;
+@property (nonatomic, strong) STJittableData *nativeCode;
 
+-(void)installNativeCode;
 
 @end
 

@@ -13,6 +13,7 @@
 #import "MPWVarScheme.h"
 #import "MPWSchemeScheme.h"
 #import "MPWBlockExpression.h"
+#import "STJittableData.h"
 
 @interface NSObject(MethodServeraddException)
 
@@ -232,11 +233,22 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 //    return self;
 //}
 
+-(void)installNativeCode
+{
+    NSAssert( _nativeCode != nil, @"must have native code to install it");
+    NSAssert( _classOfMethod != nil , @"must have class to install into");
+    NSAssert1(self.header.selector!=NULL , @"No selector for: %@", self);
+    NSAssert1(self.header.typeSignature!=NULL , @"No type signature for: %@", NSStringFromSelector(self.header.selector));
+    [_classOfMethod addMethod:self.nativeCode.bytes forSelector:self.header.selector types:self.header.typeSignature];
+
+}
+
 -(void)dealloc 
 {
     [localVars release];
 	[methodBody release];
 	[script release];
+    [_nativeCode release];
 	[super dealloc];
 }
 
