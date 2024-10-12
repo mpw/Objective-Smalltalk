@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)linkObjects:(NSArray*)objects toSharedLibrary:(NSString*)executable inDir:(NSString*)dir withFrameworks:(NSArray*)frameworks;
 -(NSData*)compileClassToMachoO:(STClassDefinition*)aClass;
 -writer;
+-(STJittableData*)generatedCode;
 
 @end
 
