@@ -6,13 +6,67 @@
 //
 
 #import "STNativeJitCompiler.h"
+#import "STObjectCodeGeneratorARM.h"
 
 @implementation STNativeJitCompiler
 
--(bool)jit
+-(void)generateMessageSendToSelector:(NSString*)selector
 {
-    return true;
+    [self.codegen generateJittedMessageSendToSelector:selector];
 }
+
+
+-(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
+{
+    [theString retain];
+    [[self codegen] loadRegister:regno withConstantAdress:theString];
+    return regno;
+}
+
+-(void)generateCallToCreateObjectFromInteger
+{
+    [self.codegen loadRegister:9 withConstantAdress:MPWCreateInteger];
+    [self.codegen generateBranchAndLinkWithRegister:9];
+}
+
+
+
+-(int)generateLoadClassReference:(NSString*)className intoRegister:(int)regno
+{
+    Class theClass = NSClassFromString(className);
+    NSAssert1( theClass != nil, @"class %@ not found",className);
+    [[self codegen] loadRegister:regno withConstantAdress:theClass];
+    return regno;
+}
+
+
+-(void)compileAndAddMethod:(STScriptedMethod*)method forClassNamed:(NSString*)className
+{
+    NSAssert1(method!=nil , @"no method to jit for class: %@", className);
+    STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
+    method.classOfMethod=NSClassFromString(className);
+    method.nativeCode = methodData;
+    [method installNativeCode];
+}
+
+-(void)compileAndAddMethod:(STScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
+{
+    [self compileAndAddMethod:method forClassNamed:compiledClass.name];
+}
+
+-(void)compileAndAddMethodsForClassDefinition:(STClassDefinition*)aClass
+{
+    for ( STScriptedMethod* method in aClass.methods) {
+        [self compileAndAddMethod:method forClassDefinition:aClass];
+    }
+}
+
+
+-(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
+{
+    [self compileAndAddMethodsForClassDefinition:classDefinition];
+}
+
 
 @end
 
@@ -122,22 +176,19 @@
 
 +(void)testJitCompileClassReference
 {
-    STNativeCompiler *compiler = [self jitCompiler];
+    STNativeJitCompiler *compiler = [self jitCompiler];
     STClassDefinition *theClass = [compiler compile:@"class JitCompilerTestClassWithClassRef { -returnNSObjectInstance { class:NSObject new. } }"];
     
     Class testClass = NSClassFromString(@"JitCompilerTestClassWithClassRef");
     [theClass defineJustTheClass];
     EXPECTNIL(testClass, @"should not be defined before I defined it");
-    NSLog(@"Before jit compiling code with class reference");
     [compiler compileAndAddMethodsForClassDefinition:theClass];
-    NSLog(@"After jit compiling code with class reference");
     testClass = NSClassFromString(@"JitCompilerTestClassWithClassRef");
     EXPECTNOTNIL(testClass, @"should be defined after I define it");
     id myObject = [testClass new];
     IDEXPECT( [myObject className], @"JitCompilerTestClassWithClassRef", @"class");
     //    EXPECTTRUE(false, @"the genereated code does not work, stop before I get a SEGFAULT");
     NSObject *n=[myObject returnNSObjectInstance];
-    NSLog(@"after");
     IDEXPECT( [n className],@"NSObject",@"the created method generated an NSObject");
     
 }
@@ -155,7 +206,7 @@
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
        @"testJitCompileClassReference",
-			];
+    ];
 }
 
 @end

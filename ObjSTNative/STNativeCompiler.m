@@ -207,10 +207,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return stackBlockCompiler;
 }
 
--(bool)jit
-{
-    return false;
-}
 
 +(instancetype)jitCompiler
 {
@@ -333,15 +329,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateLoadClassReference:(NSString*)className intoRegister:(int)regno
 {
-    if ( self.jit) {
-        Class *theClass = NSClassFromString(className);
-        NSAssert1( theClass != nil, @"class %@ not found",className);
-        [codegen loadRegister:regno withConstantAdress:theClass];
-        return regno;
-    } else {
-        NSString *classRefLabel = [writer addClassReferenceForClass:className];
-        return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:regno];
-    }
+    NSString *classRefLabel = [writer addClassReferenceForClass:className];
+    return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:regno];
 }
 
 -(int)generateLoadClassReference:(NSString*)className
@@ -399,22 +388,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
 {
-    if (self.jit) {
-        [theString retain];
-        [codegen loadRegister:regno withConstantAdress:theString];
-        return regno;
-    } else {
-        stringLiteralNo++;
-        NSString *literalSymbol=[NSString stringWithFormat:@"_CFSTR_L%d",stringLiteralNo];
-        [writer writeNSStringLiteral:theString label:literalSymbol];
-        [self generateLoadSymbolicAddress:literalSymbol intoRegister:regno];
-    }
+    stringLiteralNo++;
+    NSString *literalSymbol=[NSString stringWithFormat:@"_CFSTR_L%d",stringLiteralNo];
+    [writer writeNSStringLiteral:theString label:literalSymbol];
+    [self generateLoadSymbolicAddress:literalSymbol intoRegister:regno];
     return regno;
 }
 
 -(int)generateStringLiteral:(NSString*)theString
 {
     return [self generateStringLiteral:theString intoRegister:0];
+}
+
+-(void)generateCallToCreateObjectFromInteger
+{
+    [codegen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
 }
 
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr
@@ -424,12 +412,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         int value = [theLiteral intValue];
         if ( value <= 0xffff) {
             [codegen generateMoveConstant:value to:0];
-            if (self.jit) {
-                [codegen loadRegister:9 withConstantAdress:MPWCreateInteger];
-                [codegen generateBranchAndLinkWithRegister:9];
-            } else {
-                [codegen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
-            }
+            [self generateCallToCreateObjectFromInteger];
             return 0;
         }
     } else  if ( [theLiteral isKindOfClass:[NSString class]] ) {
@@ -484,6 +467,11 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 //        NSLog(@"%d != %d, generate the move via %@",source,dest,codegen);
         [codegen generateMoveRegisterFrom:source to:dest];
     }
+}
+
+-(void)generateMessageSendToSelector:(NSString*)selector
+{
+    [self.codegen generateMessageSendToSelector:selector];
 }
 
 -(int)generateMessageSendOf:(NSString*)selectorString to:receiver with:args
@@ -543,12 +531,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
             [self moveRegister:evaluatedRegister toRegister:i >= 1 ? i+1 : i];
         }
 
-        if ( self.jit ) {
-            [codegen generateJittedMessageSendToSelector:selectorString];
-        } else {
-            [codegen generateMessageSendToSelector:selectorString];
-        }
-        
+        [self generateMessageSendToSelector:selectorString];
+
         self.currentLocalRegStack=currentRegs;
         return 0;
     }
@@ -700,34 +684,9 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 }
 
 
--(void)compileAndAddMethod:(STScriptedMethod*)method forClassNamed:(NSString*)className
-{
-    NSAssert1(method!=nil , @"no method to jit for class: %@", className);
-    STJittableData *methodData=[self compiledCodeForMethod:method inClassNamed:className];
-    method.classOfMethod=NSClassFromString(className);
-    method.nativeCode = methodData;
-    [method installNativeCode];
-}
-
--(void)compileAndAddMethod:(STScriptedMethod*)method forClassDefinition:(STClassDefinition*)compiledClass
-{
-    [self compileAndAddMethod:method forClassNamed:compiledClass.name];
-}
-
--(void)compileAndAddMethodsForClassDefinition:(STClassDefinition*)aClass
-{
-    for ( STScriptedMethod* method in aClass.methods) {
-        [self compileAndAddMethod:method forClassDefinition:aClass];
-    }
-}
-
 -(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
-    if (self.jit) {
-        [self compileAndAddMethodsForClassDefinition:classDefinition];
-    } else {
-        [self compileMethodsForClass:classDefinition];
-    }
+    [self compileMethodsForClass:classDefinition];
 }
 
 

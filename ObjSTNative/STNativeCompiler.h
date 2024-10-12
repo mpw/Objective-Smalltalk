@@ -9,6 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STObjectCodeGeneratorARM;
+
 @interface STNativeCompiler : STCompiler
 
 @property (readonly) bool jit;
@@ -21,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSData*)compileClassToMachoO:(STClassDefinition*)aClass;
 -writer;
 -(STJittableData*)generatedCode;
+
+objectAccessor_h(STObjectCodeGeneratorARM*, codegen, setCodegen)
 
 @end
 
