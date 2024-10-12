@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 11.05.24.
 //
 
-#import "STNativeCompiler.h"
+#import "STNativeMachOCompiler.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STNativeCompilerTestsMachO : STNativeCompiler
+@interface STNativeCompilerTestsMachO : STNativeMachOCompiler
 
 @end
 

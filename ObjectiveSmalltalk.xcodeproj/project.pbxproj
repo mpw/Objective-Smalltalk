@@ -559,6 +559,10 @@
 		1FD0D4321A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */; };
 		1FD22E1B2CB9231E0064490A /* STJittableData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AE9CB28E1E58600671748 /* STJittableData.m */; };
 		1FD22E1C2CB9232B0064490A /* STJittableData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9CA28E1E58600671748 /* STJittableData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FD22E2B2CBA8F3F0064490A /* STNativeMachOCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD22E2A2CBA8F3F0064490A /* STNativeMachOCompiler.m */; };
+		1FD22E2C2CBA8F3F0064490A /* STNativeMachOCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD22E292CBA8F3F0064490A /* STNativeMachOCompiler.h */; };
+		1FD22E2F2CBA8F730064490A /* STNativeJitCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD22E2E2CBA8F730064490A /* STNativeJitCompiler.m */; };
+		1FD22E302CBA8F730064490A /* STNativeJitCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD22E2D2CBA8F730064490A /* STNativeJitCompiler.h */; };
 		1FD405C0293267F5000F4122 /* function-calling-block.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FD405BE293267F5000F4122 /* function-calling-block.macho */; };
 		1FD405C1293267F5000F4122 /* function-passing-block.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FD405BF293267F5000F4122 /* function-passing-block.macho */; };
 		1FD405C329334F6F000F4122 /* function-passing-nsstring.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FD405C229334F6F000F4122 /* function-passing-nsstring.macho */; };
@@ -1474,6 +1478,10 @@
 		1FCEB7EB099C03ED00867A95 /* STConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConnector.m; sourceTree = "<group>"; };
 		1FD0D42B1A935F8D006CA1D7 /* MPWClassMethodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMethodStore.h; sourceTree = "<group>"; };
 		1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMethodStore.m; sourceTree = "<group>"; };
+		1FD22E292CBA8F3F0064490A /* STNativeMachOCompiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STNativeMachOCompiler.h; sourceTree = "<group>"; };
+		1FD22E2A2CBA8F3F0064490A /* STNativeMachOCompiler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STNativeMachOCompiler.m; sourceTree = "<group>"; };
+		1FD22E2D2CBA8F730064490A /* STNativeJitCompiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STNativeJitCompiler.h; sourceTree = "<group>"; };
+		1FD22E2E2CBA8F730064490A /* STNativeJitCompiler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STNativeJitCompiler.m; sourceTree = "<group>"; };
 		1FD236742641BC6C009C5E46 /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
 		1FD236752641BC6C009C5E46 /* stsh_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = stsh_main.m; sourceTree = "<group>"; };
 		1FD236762641BC6C009C5E46 /* MPWBCMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWBCMStore.m; sourceTree = "<group>"; };
@@ -1852,6 +1860,10 @@
 				1F032E1E2BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.m */,
 				1FB559EE290D61E0009AE4D0 /* STNativeCompiler.h */,
 				1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */,
+				1FD22E2D2CBA8F730064490A /* STNativeJitCompiler.h */,
+				1FD22E2E2CBA8F730064490A /* STNativeJitCompiler.m */,
+				1FD22E292CBA8F3F0064490A /* STNativeMachOCompiler.h */,
+				1FD22E2A2CBA8F3F0064490A /* STNativeMachOCompiler.m */,
 				1F032E352BEF9A140000183E /* STNativeCompilerTestsMachO.h */,
 				1F032E362BEF9A140000183E /* STNativeCompilerTestsMachO.m */,
 				1F93D46F2A5F326A00C9BA2A /* STMethodSymbols.h */,
@@ -2873,6 +2885,7 @@
 				1FDDE95D29029887002A4AA4 /* MPWMachOClassWriter.h in Headers */,
 				1FDDE95128F2E0DF002A4AA4 /* MPWMachOInSectionPointer.h in Headers */,
 				1F6060152A24803800783E17 /* MPWELFReader.h in Headers */,
+				1FD22E2C2CBA8F3F0064490A /* STNativeMachOCompiler.h in Headers */,
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
@@ -2896,6 +2909,7 @@
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
 				1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */,
 				1F6060192A2481D100783E17 /* elf.h in Headers */,
+				1FD22E302CBA8F730064490A /* STNativeJitCompiler.h in Headers */,
 				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
 				1FEA9C942BE3CCAD002D237B /* MPWELFSection.h in Headers */,
 				1F032E202BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.h in Headers */,
@@ -4241,6 +4255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD22E2F2CBA8F730064490A /* STNativeJitCompiler.m in Sources */,
 				1F2F8DBC192C691900A5D1B5 /* MPWMethodDescriptor.m in Sources */,
 				1FA5DF712BE8BFF8001E5231 /* MPWStringTableWriter.m in Sources */,
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
@@ -4260,6 +4275,7 @@
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 				1FA5DF782BE8CF57001E5231 /* MPWObjectFileWriter.m in Sources */,
 				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
+				1FD22E2B2CBA8F3F0064490A /* STNativeMachOCompiler.m in Sources */,
 				1F032E1F2BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,

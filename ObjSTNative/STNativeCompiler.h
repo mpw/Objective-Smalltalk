@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STNativeCompiler : STCompiler
 
-@property (nonatomic, assign) bool jit;
+@property (readonly) bool jit;
 @property (nonatomic, assign) bool logging;
 
 +(instancetype)jitCompiler;

@@ -20,7 +20,7 @@
 #import "STIdentifier.h"
 #import "STConnectionDefiner.h"
 #import "STMethodSymbols.h"
-
+#import "STNativeJitCompiler.h"
 
 @interface STNativeCompiler()
 
@@ -207,11 +207,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return stackBlockCompiler;
 }
 
+-(bool)jit
+{
+    return false;
+}
 
 +(instancetype)jitCompiler
 {
-    STNativeCompiler *compiler=[self compiler];
-    compiler.jit=true;
+    STNativeCompiler *compiler=[STNativeJitCompiler compiler];
+ //   compiler.jit=true;
     return compiler;
 }
 
