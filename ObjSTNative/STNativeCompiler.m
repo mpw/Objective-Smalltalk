@@ -329,8 +329,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateLoadClassReference:(NSString*)className intoRegister:(int)regno
 {
-    NSString *classRefLabel = [writer addClassReferenceForClass:className];
-    return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:regno];
+    if ( self.jit) {
+        Class *theClass = NSClassFromString(className);
+        NSAssert1( theClass != nil, @"class %@ not found",className);
+        [codegen loadRegister:regno withConstantAdress:theClass];
+        return regno;
+    } else {
+        NSString *classRefLabel = [writer addClassReferenceForClass:className];
+        return [self generateLoadFromSymbolicAddress:classRefLabel intoRegister:regno];
+    }
 }
 
 -(int)generateLoadClassReference:(NSString*)className
@@ -1073,16 +1080,17 @@ static int notOnStack = 0;
     Class testClass = NSClassFromString(@"JitCompilerTestClassWithClassRef");
     [theClass defineJustTheClass];
     EXPECTNIL(testClass, @"should not be defined before I defined it");
+    NSLog(@"Before jit compiling code with class reference");
     [compiler compileAndAddMethodsForClassDefinition:theClass];
+    NSLog(@"After jit compiling code with class reference");
     testClass = NSClassFromString(@"JitCompilerTestClassWithClassRef");
     EXPECTNOTNIL(testClass, @"should be defined after I define it");
     id myObject = [testClass new];
     IDEXPECT( [myObject className], @"JitCompilerTestClassWithClassRef", @"class");
-    NSLog(@"Before");
-    EXPECTTRUE(false, @"the genereated code does not work, stop before I get a SEGFAULT");
+//    EXPECTTRUE(false, @"the genereated code does not work, stop before I get a SEGFAULT");
     NSObject *n=[myObject returnNSObjectInstance];
     NSLog(@"after");
-    EXPECTTRUE(false, @"class worked");
+    IDEXPECT( [n className],@"NSObject",@"the created method generated an NSObject");
 
 }
 
@@ -1105,7 +1113,7 @@ static int notOnStack = 0;
        @"testJitCompileStringObjectLiteral",
        @"testJitCompileFilter",
        @"testJitCompileMethodWithLocalVariables",
-//       @"testJitCompileClassReference",
+       @"testJitCompileClassReference",
        
 			];
 }
