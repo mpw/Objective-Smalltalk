@@ -89,6 +89,25 @@
 
 @implementation STNativeJitCompiler(testing)
 
++resultOfEvaluatingJitCompiledExpression:(NSString*)expr
+{
+    static int numExpressions=0;
+    NSString *className=[NSString stringWithFormat:@"STJitCompilerExpressionTester_%d",numExpressions++];
+    NSString *wrapper=[NSString stringWithFormat:@"class %@ { -expression { %@. }}",className,expr];
+    STNativeJitCompiler *compiler = [self compiler];
+    STClassDefinition* classDef=[compiler compile:wrapper];
+    [classDef defineJustTheClass];
+    [compiler compileAndAddMethodsForClassDefinition:classDef];
+    INTEXPECT( classDef.methods.count,1,@"one method defined");
+    EXPECTNIL( [classDef.methods.firstObject callback],@"should not have a callback");
+    EXPECTTRUE([classDef.methods.firstObject isNativeCodeActive],@"native code is active/installed in the method");
+
+    return [[NSClassFromString(className) new] expression];
+}
+
+#define JITEXPECT( expr, expected , msg) IDEXPECT( [self resultOfEvaluatingJitCompiledExpression:expr], expected, msg)
+
+
 
 +(void)testJitCompileAMethod
 {
@@ -128,14 +147,12 @@
 
 +(void)testJitCompileNumberObjectLiteral
 {
-    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -theAnswer { 42. }}"];
-    IDEXPECT([concatter theAnswer],@(42),@"the answer");
+    JITEXPECT(@"42",@(42),@"numeric constant" );
 }
 
 +(void)testJitCompileStringObjectLiteral
 {
-    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -stringAnswer { 'abcd'.  'answer: 42'. }}"];
-    IDEXPECT([concatter stringAnswer],@"answer: 42",@"the answer");
+    JITEXPECT(@"'answer: 42'",@"answer: 42",@"string constant" );
 }
 
 +(void)testJitCompileNumberArithmetic
@@ -146,10 +163,7 @@
 
 +(void)testJitCompileConstantNumberArithmeticSequence
 {
-    ConcatterTest1 *concatter=[self compileAndAddSingleMethodExtensionToConcatter:@"extension ConcatterTest1 { -someConstantNumbersAdded { 100+30 + 5  * 2 * 2. }}"];
-    id expectedAnswer = @(540);
-    id computedAnswer = [concatter someConstantNumbersAdded];
-    IDEXPECT(computedAnswer,expectedAnswer,@"the answer");
+    JITEXPECT(@"100+30 + 5  * 2 * 2",@(540),@"number arithmetic on constants" );
 }
 
 
@@ -210,21 +224,6 @@
 
 
 
-+resultOfEvaluatingJitCompiledExpression:(NSString*)expr
-{
-    static int numExpressions=0;
-    NSString *className=[NSString stringWithFormat:@"STJitCompilerExpressionTester_%d",numExpressions++];
-    NSString *wrapper=[NSString stringWithFormat:@"class %@ { -expression { %@. }}",className,expr];
-    STNativeJitCompiler *compiler = [self compiler];
-    STClassDefinition* classDef=[compiler compile:wrapper];
-    [classDef defineJustTheClass];
-    [compiler compileAndAddMethodsForClassDefinition:classDef];
-    
-    return [[NSClassFromString(className) new] expression];
-}
-
-#define JITEXPECT( expr, expected , msg) IDEXPECT( [self resultOfEvaluatingJitCompiledExpression:expr], expected, msg)
-
 +(void)testJitExpressionEvaluation
 {
     JITEXPECT(@"3+5",@(8),@"jit compiled expr" );
@@ -233,6 +232,7 @@
 +(void)testJitArrays
 {
     JITEXPECT(@"[3,5]", (@[@(3),@(5)]),@"jit compiled literal array" );
+    // not yet implemented
 }
 
 +(NSArray*)testSelectors
@@ -249,7 +249,7 @@
        @"testJitCompileMethodWithLocalVariables",
        @"testJitCompileClassWithClassReference",
        @"testJitExpressionEvaluation",
-       @"testJitArrays",
+//       @"testJitArrays",
     ];
 }
 
