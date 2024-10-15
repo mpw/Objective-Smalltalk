@@ -63,6 +63,7 @@ scalarAccessor( STCompiler *, compiler, setCompiler)
     MPWMethodCallBack *methodCallback = [self callbackForName:methodName];
     method.classOfMethod = classMirror.theClass;
     [methodCallback setMethod:method];
+    [method setCallback:methodCallback];
 //    NSLog(@"addMethod class %@ methodName: %@ callback: %@ method %@",[[self classMirror] name],methodName,methodCallback,method);
     if (  [self compiler] ) {
         [method setContext:[self compiler]];

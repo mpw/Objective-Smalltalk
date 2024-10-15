@@ -130,6 +130,7 @@
 -(BOOL)defineJustTheClass
 {
     Class superclass=NSClassFromString([self superclassNameToUse]);
+    NSAssert1( NSClassFromString(self.name) == nil, @"Class '%@' should not exist when I try to defien it",self.name);
     if ( superclass ) {
         [superclass createSubclassWithName:self.name instanceVariableArray:[self instanceVariableDescriptions]];
         return YES;

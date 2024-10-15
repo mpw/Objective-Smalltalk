@@ -686,7 +686,8 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
-    [self compileMethodsForClass:classDefinition];
+    self.classes[classDefinition.name]=classDefinition;
+   [self compileMethodsForClass:classDefinition];
 }
 
 

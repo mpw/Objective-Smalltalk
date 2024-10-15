@@ -8,7 +8,7 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@class MPWMethodHeader;
+@class MPWMethodHeader,MPWMethodCallBack;
 
 @interface MPWAbstractInterpretedMethod : STExpression {
 	MPWMethodHeader*	methodHeader;
@@ -19,6 +19,8 @@
 objectAccessor_h(MPWMethodHeader*, methodHeader, setMethodHeader )
 idAccessor_h( context, setContext )
 idAccessor_h( methodType, setMethodType )
+
+@property (nonatomic, weak) MPWMethodCallBack *callback;
 
 -evaluateOnObject:target parameters:(NSArray*)parameters;
 -(MPWMethodHeader*)header;

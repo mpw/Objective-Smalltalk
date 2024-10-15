@@ -50,5 +50,9 @@
 
 idAccessor_h(solver, setSolver)
 
+@property (readonly) NSMutableDictionary <NSString*,STClassDefinition*> *classes;
+
+-(STClassDefinition*)classForName:(NSString*)className;
+
 @end
 

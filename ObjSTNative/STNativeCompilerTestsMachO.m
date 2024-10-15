@@ -324,7 +324,7 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testBlockCanAccessOutsideScopeVariables",
        @"testClassMethodsWork",
        @"testMixingClassAndInstanceMethodsWorks",
-       //       @"testDeclarAndReturnNativeIntVariables",
+//       @"testDeclarAndReturnNativeIntVariables",
        @"testCanLoadNSArrayFromAFramework",
 			];
 }

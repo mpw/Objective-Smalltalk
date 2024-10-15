@@ -73,6 +73,12 @@
 
 @end
 
+@interface STCompiler()
+
+@property (nonatomic, strong) NSMutableDictionary <NSString*,STClassDefinition*> *classes;
+
+@end
+
 
 @implementation STCompiler
 
@@ -110,9 +116,14 @@ idAccessor(solver, setSolver)
     [self setSolver:[newParent solver]];
 	[self defineBuiltInConnectors];
     [self resetSmbolTable];
+    self.classes = [NSMutableDictionary dictionary];
 	return self;
 }
 
+-(STClassDefinition*)classForName:(NSString *)className
+{
+    return self.classes[className];
+}
 
 #pragma mark MethodDictionary compatibility
 
@@ -1498,6 +1509,7 @@ idAccessor(solver, setSolver)
 
 -(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
+    self.classes[classDefinition.name]=classDefinition;
     MPWClassMethodStore* store= [self classStoreForName:classDefinition.name];
     for ( STScriptedMethod *method in [classDefinition allMethods]) {
         [store installMethod:method];

@@ -64,6 +64,7 @@
 
 -(void)defineMethodsForClassDefinition:(STClassDefinition*)classDefinition
 {
+    self.classes[classDefinition.name]=classDefinition;
     [self compileAndAddMethodsForClassDefinition:classDefinition];
 }
 
@@ -157,9 +158,22 @@
 {
     STNativeCompiler *compiler = [self jitCompiler];
     Class testClass1 = [compiler evaluateScriptString:@"filter TestDowncaser |{ ^object lowercaseString. }"];
+    STClassDefinition *def=[compiler classForName:@"TestDowncaser"];
+    INTEXPECT( def.methods.count,1,@"one method defined");
+    EXPECTNIL( [def.methods.firstObject callback],@"should not have a callback");
     MPWFilter *filter = [testClass1 stream];
     [filter writeObject:@"Some Upper CASE string Data"];
     IDEXPECT([(NSArray*)[filter target] firstObject],@"some upper case string data",@"Filter result (should be lowercase)");
+    
+}
+
++(void)testNonJitFilterHasCallback
+{
+    STNativeCompiler *compiler = [STCompiler compiler];
+    [compiler evaluateScriptString:@"filter TestDowncaserInterpreted |{ ^object lowercaseString. }"];
+    STClassDefinition *def=[compiler classForName:@"TestDowncaserInterpreted"];
+    INTEXPECT( def.methods.count,1,@"one method defined");
+    EXPECTNOTNIL( [def.methods.firstObject callback],@"should not have a callback");
     
 }
 
@@ -174,7 +188,7 @@
     IDEXPECT([(NSArray*)[filter target] lastObject],testData,@"second filter result");
 }
 
-+(void)testJitCompileClassReference
++(void)testJitCompileClassWithClassReference
 {
     STNativeJitCompiler *compiler = [self jitCompiler];
     STClassDefinition *theClass = [compiler compile:@"class JitCompilerTestClassWithClassRef { -returnNSObjectInstance { class:NSObject new. } }"];
@@ -190,7 +204,6 @@
     //    EXPECTTRUE(false, @"the genereated code does not work, stop before I get a SEGFAULT");
     NSObject *n=[myObject returnNSObjectInstance];
     IDEXPECT( [n className],@"NSObject",@"the created method generated an NSObject");
-    
 }
 
 
@@ -204,8 +217,9 @@
        @"testJitCompileConstantNumberArithmeticSequence",
        @"testJitCompileStringObjectLiteral",
        @"testJitCompileFilter",
+       @"testNonJitFilterHasCallback",
        @"testJitCompileMethodWithLocalVariables",
-       @"testJitCompileClassReference",
+       @"testJitCompileClassWithClassReference",
     ];
 }
 
