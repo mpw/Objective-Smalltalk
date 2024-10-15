@@ -230,6 +230,11 @@
     JITEXPECT(@"3+5",@(8),@"jit compiled expr" );
 }
 
++(void)testJitArrays
+{
+    JITEXPECT(@"[3,5]", (@[@(3),@(5)]),@"jit compiled literal array" );
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -244,6 +249,7 @@
        @"testJitCompileMethodWithLocalVariables",
        @"testJitCompileClassWithClassReference",
        @"testJitExpressionEvaluation",
+       @"testJitArrays",
     ];
 }
 
