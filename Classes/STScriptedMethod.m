@@ -240,10 +240,15 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     NSAssert1(self.header.selector!=NULL , @"No selector for: %@", self);
     NSAssert1(self.header.typeSignature!=NULL , @"No type signature for: %@", NSStringFromSelector(self.header.selector));
     [_classOfMethod addMethod:self.nativeCode.bytes forSelector:self.header.selector types:self.header.typeSignature];
-
 }
 
--(void)dealloc 
+-(BOOL)isNativeCodeActive
+{
+    IMP theImp=[self.classOfMethod instanceMethodForSelector:[self.methodHeader selector]];
+    return (theImp != nil) && (self.nativeCode.bytes != nil) && theImp == self.nativeCode.bytes;
+}
+
+-(void)dealloc
 {
     [localVars release];
 	[methodBody release];

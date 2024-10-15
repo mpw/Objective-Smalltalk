@@ -26,6 +26,7 @@ idAccessor_h( script, setScript )
 @property (nonatomic, strong) STJittableData *nativeCode;
 
 -(void)installNativeCode;
+-(BOOL)isNativeCodeActive;
 
 @end
 

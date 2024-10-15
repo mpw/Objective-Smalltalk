@@ -161,6 +161,7 @@
     STClassDefinition *def=[compiler classForName:@"TestDowncaser"];
     INTEXPECT( def.methods.count,1,@"one method defined");
     EXPECTNIL( [def.methods.firstObject callback],@"should not have a callback");
+    EXPECTTRUE([def.methods.firstObject isNativeCodeActive],@"native code is active/installed in the method");
     MPWFilter *filter = [testClass1 stream];
     [filter writeObject:@"Some Upper CASE string Data"];
     IDEXPECT([(NSArray*)[filter target] firstObject],@"some upper case string data",@"Filter result (should be lowercase)");
@@ -173,7 +174,8 @@
     [compiler evaluateScriptString:@"filter TestDowncaserInterpreted |{ ^object lowercaseString. }"];
     STClassDefinition *def=[compiler classForName:@"TestDowncaserInterpreted"];
     INTEXPECT( def.methods.count,1,@"one method defined");
-    EXPECTNOTNIL( [def.methods.firstObject callback],@"should not have a callback");
+    EXPECTNOTNIL( [def.methods.firstObject callback],@"interpreted should have a callback");
+    EXPECTFALSE( [def.methods.firstObject isNativeCodeActive],@"native code not active");
     
 }
 
