@@ -209,6 +209,27 @@
 }
 
 
+
++resultOfEvaluatingJitCompiledExpression:(NSString*)expr
+{
+    static int numExpressions=0;
+    NSString *className=[NSString stringWithFormat:@"STJitCompilerExpressionTester_%d",numExpressions++];
+    NSString *wrapper=[NSString stringWithFormat:@"class %@ { -expression { %@. }}",className,expr];
+    STNativeJitCompiler *compiler = [self compiler];
+    STClassDefinition* classDef=[compiler compile:wrapper];
+    [classDef defineJustTheClass];
+    [compiler compileAndAddMethodsForClassDefinition:classDef];
+    
+    return [[NSClassFromString(className) new] expression];
+}
+
+#define JITEXPECT( expr, expected , msg) IDEXPECT( [self resultOfEvaluatingJitCompiledExpression:expr], expected, msg)
+
++(void)testJitExpressionEvaluation
+{
+    JITEXPECT(@"3+5",@(8),@"jit compiled expr" );
+}
+
 +(NSArray*)testSelectors
 {
    return @[
@@ -222,6 +243,7 @@
        @"testNonJitFilterHasCallback",
        @"testJitCompileMethodWithLocalVariables",
        @"testJitCompileClassWithClassReference",
+       @"testJitExpressionEvaluation",
     ];
 }
 
