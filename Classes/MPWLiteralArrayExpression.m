@@ -23,6 +23,10 @@
     }
 }
 
+-(NSArray*)evaluated
+{
+    
+}
 
 -evaluateIn:aContext
 {

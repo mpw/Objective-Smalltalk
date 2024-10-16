@@ -12,6 +12,7 @@
 #import "MPWMachOClassWriter.h"
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
+#import <ObjectiveSmalltalk/MPWLiteralArrayExpression.h>
 #import <ObjectiveSmalltalk/STIdentifierExpression.h>
 #import <ObjectiveSmalltalk/STSubscriptExpression.h>
 #import "STJittableData.h"
@@ -32,6 +33,7 @@
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr;
 -(int)generateAssignmentExpression:(MPWAssignmentExpression*)expr;
 -(int)generateBlockExpression:(MPWBlockExpression*)expr;
+-(int)generateLiteralArrayExpression:(MPWLiteralArrayExpression*)expr;
 -(int)generateLoadClassReference:(NSString*)className;
 -(int)generateConnectionFrom:(id)left to:(id)right;
 -(int)generateLoadIdentifier:(NSString*)identifierName withScheme:(NSString*)scheme;
@@ -167,6 +169,15 @@
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
     return [compiler generateMessageSendOf:@"at:" to:self.receiver with:@[ self.subscript]];
+}
+
+@end
+
+@implementation MPWLiteralArrayExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateLiteralArrayExpression:self];
 }
 
 @end
@@ -457,7 +468,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateCodeForExpression:(STExpression*)expression
 {
-    [NSException raise:@"unknown" format:@"Can't yet compile code for %@/%@",expression.class,expression];
+    [NSException raise:@"unknown" format:@"Can't generate code for %@/%@ yet",expression.class,expression];
     return 0;
 }
 
@@ -550,6 +561,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     return [someExpression generateNativeCodeOn:self];
 }
+
+-(int)generateLiteralArrayExpression:(MPWLiteralArrayExpression*)expression
+{
+    [NSException raise:@"unknown" format:@"Can't generate code literal array %@/%@ yet",expression.class,expression];
+    return 0;
+}
+
 
 -(void)saveRegisters
 {

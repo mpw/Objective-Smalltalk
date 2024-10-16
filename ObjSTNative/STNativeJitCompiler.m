@@ -7,6 +7,7 @@
 
 #import "STNativeJitCompiler.h"
 #import "STObjectCodeGeneratorARM.h"
+#import "MPWLiteralArrayExpression.h"
 
 @implementation STNativeJitCompiler
 
@@ -15,12 +16,28 @@
     [self.codegen generateJittedMessageSendToSelector:selector];
 }
 
+-(int)loadObjectPointer:someObject intoRegister:(int)regno
+{
+    [someObject retain];
+    [[self codegen] loadRegister:regno withConstantAdress:someObject];
+    return regno;
+}
+
+
+
 
 -(int)generateStringLiteral:(NSString*)theString intoRegister:(int)regno
 {
-    [theString retain];
-    [[self codegen] loadRegister:regno withConstantAdress:theString];
-    return regno;
+    return [self loadObjectPointer:theString intoRegister:regno];
+}
+
+-(int)generateLiteralArrayExpression:(MPWLiteralArrayExpression*)theArray
+{
+    NSMutableArray *evaluated = [NSMutableArray arrayWithCapacity:theArray.objects.count];
+    for ( id expr in theArray.objects ) {
+        [evaluated addObject:[expr evaluateIn:self]];
+    }
+    return [self loadObjectPointer:evaluated intoRegister:0];
 }
 
 -(void)generateCallToCreateObjectFromInteger
@@ -67,6 +84,7 @@
     self.classes[classDefinition.name]=classDefinition;
     [self compileAndAddMethodsForClassDefinition:classDefinition];
 }
+
 
 
 @end
@@ -229,7 +247,7 @@
     JITEXPECT(@"3+5",@(8),@"jit compiled expr" );
 }
 
-+(void)testJitArrays
++(void)testJitLiteralArrays
 {
     JITEXPECT(@"[3,5]", (@[@(3),@(5)]),@"jit compiled literal array" );
     // not yet implemented
@@ -249,7 +267,7 @@
        @"testJitCompileMethodWithLocalVariables",
        @"testJitCompileClassWithClassReference",
        @"testJitExpressionEvaluation",
-//       @"testJitArrays",
+       @"testJitLiteralArrays",
     ];
 }
 

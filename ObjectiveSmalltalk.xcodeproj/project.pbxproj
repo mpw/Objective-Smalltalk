@@ -131,8 +131,8 @@
 		1F35095E262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */; };
 		1F35AD3E2ABD917B00541C02 /* STPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F35AD3C2ABD917B00541C02 /* STPopUpButton.h */; };
 		1F35AD3F2ABD917B00541C02 /* STPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35AD3D2ABD917B00541C02 /* STPopUpButton.m */; };
-		1F3C6E691E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; };
-		1F3C6E6A1E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; };
+		1F3C6E691E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F3C6E6A1E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
 		1F3C6E6C1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
 		1F3C6E6F1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */; };
