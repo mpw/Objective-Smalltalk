@@ -135,8 +135,8 @@
 		1F3C6E6A1E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
 		1F3C6E6C1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
-		1F3C6E6F1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */; };
-		1F3C6E701E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */; };
+		1F3C6E6F1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F3C6E701E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E6D1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F3C6E711E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E6E1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m */; };
 		1F3C6E721E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E6E1E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m */; };
 		1F406E5810F527180054957A /* STIdentifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F406E5610F527180054957A /* STIdentifier.h */; };

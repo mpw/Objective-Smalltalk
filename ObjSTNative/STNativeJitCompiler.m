@@ -8,6 +8,7 @@
 #import "STNativeJitCompiler.h"
 #import "STObjectCodeGeneratorARM.h"
 #import "MPWLiteralArrayExpression.h"
+#import "MPWLiteralDictionaryExpression.h"
 
 @implementation STNativeJitCompiler
 
@@ -33,9 +34,27 @@
 
 -(int)generateLiteralArrayExpression:(MPWLiteralArrayExpression*)theArray
 {
+    // FIXME:  does not currently support dynamically generated values
+    //         or custom classes
+    //         for dynamic literal expressions, must create a new array
+    //         on the heap every time, generate code for filling it
+    //         probably:  call a method that interacts well with compiled
+    //         code (so do the array creation + looping + checking if dynamic
+    //         code is needed as a method that just gets called)
     NSMutableArray *evaluated = [NSMutableArray arrayWithCapacity:theArray.objects.count];
     for ( id expr in theArray.objects ) {
         [evaluated addObject:[expr evaluateIn:self]];
+    }
+    // FIXME:  I don't know if just loading into register 0 is OK here
+    return [self loadObjectPointer:evaluated intoRegister:0];
+}
+
+-(int)generateLiteralDictionaryExpression:(MPWLiteralDictionaryExpression*)theDict
+{
+    NSArray *keys=[theDict keys],*values=[theDict values];
+    NSMutableDictionary *evaluated = [NSMutableDictionary dictionaryWithCapacity:keys.count];
+    for (long i=0,max=keys.count;i<max;i++ ) {
+        evaluated[[keys[i] evaluateIn:self]]=[values[i] evaluateIn:self];
     }
     return [self loadObjectPointer:evaluated intoRegister:0];
 }
@@ -247,9 +266,15 @@
     JITEXPECT(@"3+5",@(8),@"jit compiled expr" );
 }
 
-+(void)testJitLiteralArrays
++(void)testJitPlainLiteralArrays
 {
     JITEXPECT(@"[3,5]", (@[@(3),@(5)]),@"jit compiled literal array" );
+    // not yet implemented
+}
+
++(void)testJitPlainLiteralDicts
+{
+    JITEXPECT(@"#{ a: 3, b:5}", (@{@"a": @(3), @"b": @(5)}),@"jit compiled literal dict" );
     // not yet implemented
 }
 
@@ -267,7 +292,8 @@
        @"testJitCompileMethodWithLocalVariables",
        @"testJitCompileClassWithClassReference",
        @"testJitExpressionEvaluation",
-       @"testJitLiteralArrays",
+       @"testJitPlainLiteralArrays",
+       @"testJitPlainLiteralDicts",
     ];
 }
 

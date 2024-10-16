@@ -13,6 +13,7 @@
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralExpression.h>
 #import <ObjectiveSmalltalk/MPWLiteralArrayExpression.h>
+#import <ObjectiveSmalltalk/MPWLiteralDictionaryExpression.h>
 #import <ObjectiveSmalltalk/STIdentifierExpression.h>
 #import <ObjectiveSmalltalk/STSubscriptExpression.h>
 #import "STJittableData.h"
@@ -178,6 +179,15 @@
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
     return [compiler generateLiteralArrayExpression:self];
+}
+
+@end
+
+@implementation MPWLiteralDictionaryExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateLiteralDictionaryExpression:self];
 }
 
 @end
@@ -567,6 +577,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [NSException raise:@"unknown" format:@"Can't generate code literal array %@/%@ yet",expression.class,expression];
     return 0;
 }
+
+-(int)generateLiteralDictionaryExpression:(MPWLiteralDictionaryExpression*)expression
+{
+    [NSException raise:@"unknown" format:@"Can't generate code for literal dict %@/%@ yet",expression.class,expression];
+    return 0;
+}
+
 
 
 -(void)saveRegisters
