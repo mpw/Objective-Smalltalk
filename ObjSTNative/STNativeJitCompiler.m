@@ -269,13 +269,17 @@
 +(void)testJitPlainLiteralArrays
 {
     JITEXPECT(@"[3,5]", (@[@(3),@(5)]),@"jit compiled literal array" );
-    // not yet implemented
 }
 
 +(void)testJitPlainLiteralDicts
 {
     JITEXPECT(@"#{ a: 3, b:5}", (@{@"a": @(3), @"b": @(5)}),@"jit compiled literal dict" );
-    // not yet implemented
+}
+
++(void)testJitAccessEnv
+{
+    // FIXME:  this hangs (presumably in evaluation)
+    JITEXPECT(@"env:HOME", @"/Ussrs/marcel/",@"jit compiled access to env scheme" );
 }
 
 +(NSArray*)testSelectors
@@ -294,6 +298,7 @@
        @"testJitExpressionEvaluation",
        @"testJitPlainLiteralArrays",
        @"testJitPlainLiteralDicts",
+//       @"testJitAccessEnv",				hangs so disabled
     ];
 }
 
