@@ -31,8 +31,8 @@
 #import "STObjectTemplate.h"
 #import "MPWLiteralDictionaryExpression.h"
 #import "STTypeDescriptor.h"
-#import "STTests.h"
-
+#import "STSubscriptExpression.h"
+#import "STQueryExpression.h"
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
@@ -1491,6 +1491,14 @@
     TESTEXPR( @"a ← 20. ref:a << 5. a.",@(5));
 }
 
++(void)testParseSimpleQuery
+{
+    STCompiler *compiler=[STCompiler compiler];
+    id query=[compiler compile:@"a[{age>3.}]"];
+    EXPECTNOTNIL(query,@"query");
+    EXPECTTRUE([query isKindOfClass:[STQueryExpression class]], @"parsed a query expression");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1658,6 +1666,7 @@
         @"testSyntaxForSystemCreatesSTSystemSubclass",
         @"testCoutLikeWriteObjectSyntax",
         @"testCoutLikeWriteToVariable",
+        @"testParseSimpleQuery",
         ];
 }
 

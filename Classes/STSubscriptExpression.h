@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) STExpression *subscript;
 
 -evaluateAssignmentOf:value in:aContext;
+-convertToQueryIfNecessary;
 
 
 @end

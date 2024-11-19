@@ -931,7 +931,7 @@ idAccessor(solver, setSolver)
         STSubscriptExpression *expr=[[STSubscriptExpression new] autorelease];
         expr.receiver=first;
         expr.subscript=indexExpr;
-        first=expr;
+        first=[expr convertToQueryIfNecessary]; 
     } else {
         PARSEERROR(@"indexExpression not closed by ']'", closeBrace);
     }

@@ -7,6 +7,7 @@
 
 #import "STSubscriptExpression.h"
 #import "MPWMessageExpression.h"
+#import "STQueryExpression.h"
 
 @interface STSubscriptExpression()
 
@@ -57,6 +58,21 @@ lazyAccessor(MPWMessageExpression*, setter, setSetter, computeSetter)
 {
     [self.receiver addToVariablesRead:variableList];
     [self.subscript addToVariablesRead:variableList];
+}
+
+-convertToQueryIfNecessary
+{
+    id possibleQuery = self.subscript;
+    if ( [possibleQuery isKindOfClass:[MPWStatementList class]]) {
+        possibleQuery=[[possibleQuery statements] firstObject];
+    }
+    if ( [possibleQuery isKindOfClass:[MPWBlockExpression class]]) {
+        STQueryExpression *query=[[STQueryExpression new] autorelease];
+        query.predicate=possibleQuery;
+        query.receiver=self.receiver;
+        return query;
+    }
+    return self;
 }
 
 -(void)dealloc

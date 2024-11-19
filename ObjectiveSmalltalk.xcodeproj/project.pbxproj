@@ -762,6 +762,10 @@
 		1FFCB5722B431492002DC40A /* Sails.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB56F2B431492002DC40A /* Sails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFCB57D2B43154E002DC40A /* SailsGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB57B2B43154E002DC40A /* SailsGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFCB57E2B43154E002DC40A /* SailsGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFCB57C2B43154E002DC40A /* SailsGenerator.m */; };
+		1FFCBD512CECCF880043BFC1 /* STQueryExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFCBD502CECCF880043BFC1 /* STQueryExpression.m */; };
+		1FFCBD522CECCF880043BFC1 /* STQueryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCBD4F2CECCF880043BFC1 /* STQueryExpression.h */; };
+		1FFCBD532CECCF880043BFC1 /* STQueryExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFCBD502CECCF880043BFC1 /* STQueryExpression.m */; };
+		1FFCBD542CECCF880043BFC1 /* STQueryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCBD4F2CECCF880043BFC1 /* STQueryExpression.h */; };
 		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
@@ -1588,6 +1592,8 @@
 		1FFCB5702B431492002DC40A /* Sails.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Sails.docc; sourceTree = "<group>"; };
 		1FFCB57B2B43154E002DC40A /* SailsGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SailsGenerator.h; sourceTree = "<group>"; };
 		1FFCB57C2B43154E002DC40A /* SailsGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SailsGenerator.m; sourceTree = "<group>"; };
+		1FFCBD4F2CECCF880043BFC1 /* STQueryExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STQueryExpression.h; sourceTree = "<group>"; };
+		1FFCBD502CECCF880043BFC1 /* STQueryExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STQueryExpression.m; sourceTree = "<group>"; };
 		1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
 		1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralExpression.h; sourceTree = "<group>"; };
 		1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralExpression.m; sourceTree = "<group>"; };
@@ -2827,6 +2833,8 @@
 				F5A74ABD00F0A61B015ADD82 /* STCompiler.m */,
 				1F1A64742975C47600B8776C /* STProgram.h */,
 				1F1A64752975C47600B8776C /* STProgram.m */,
+				1FFCBD4F2CECCF880043BFC1 /* STQueryExpression.h */,
+				1FFCBD502CECCF880043BFC1 /* STQueryExpression.m */,
 				1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */,
 				1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */,
 				1FC661EE25D83BC700ED1BCB /* STObjectTemplate.h */,
@@ -2947,6 +2955,7 @@
 				1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */,
 				1FA1B3A1267CFCB500F463ED /* STAWK.h in Headers */,
 				1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */,
+				1FFCBD522CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */,
 				1F5E505509B4B754000298D9 /* MPWStatementList.h in Headers */,
 				1F5D777B25EBF52900DCC82F /* STTargetActionSenderPort.h in Headers */,
@@ -3197,6 +3206,7 @@
 				1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */,
 				1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */,
 				1FE37BCB1969612400C9A378 /* MPWRefScheme.h in Headers */,
+				1FFCBD542CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */,
 				1F2B665C268E3E2C00DE4416 /* STVariableDefinition.h in Headers */,
 				1FE37B721969610600C9A378 /* MPWAssignmentExpression.h in Headers */,
@@ -4357,6 +4367,7 @@
 				1F5E507509B4B754000298D9 /* MPWBlockContext.m in Sources */,
 				1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */,
 				1FC661F225D83BC700ED1BCB /* STObjectTemplate.m in Sources */,
+				1FFCBD512CECCF880043BFC1 /* STQueryExpression.m in Sources */,
 				1FF142381B1F6C680010350B /* MPWBidirectionalDataflowConstraintExpression.m in Sources */,
 				1FA1B3A3267CFCB500F463ED /* STAWK.m in Sources */,
 				1F5E507709B4B754000298D9 /* STEvaluator.m in Sources */,
@@ -4670,6 +4681,7 @@
 				1FE37BAE1969610700C9A378 /* MPWObjectMirror.m in Sources */,
 				1FE37BD41969612500C9A378 /* MPWFileSchemeResolver.m in Sources */,
 				1FE37B8E1969610600C9A378 /* MPWGetAccessor.m in Sources */,
+				1FFCBD532CECCF880043BFC1 /* STQueryExpression.m in Sources */,
 				1FE37C001969612800C9A378 /* MPWFrameworkScheme.m in Sources */,
 				1FE37B731969610600C9A378 /* MPWAssignmentExpression.m in Sources */,
 				1F22E0241A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.m in Sources */,
