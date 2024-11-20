@@ -9,6 +9,20 @@
 
 @implementation STQueryExpression
 
+-(id)evaluateIn:(id)aContext
+{
+    NSArray* receiver = (NSArray*)[self.receiver evaluateIn:aContext];
+    id predicateBlock = [self.predicate evaluateIn:aContext];
+    NSMutableArray *result=[NSMutableArray array];
+    for ( id anObject in receiver) {
+        if ( [[predicateBlock value:anObject] intValue]) {
+            [result addObject:anObject];
+        }
+    }
+    return result;
+}
+
+
 @end
 
 

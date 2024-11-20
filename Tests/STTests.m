@@ -1500,6 +1500,19 @@
 }
 
 
++(void)testExecuteSimpleQuery
+{
+    STCompiler *compiler=[STCompiler compiler];
+
+    [compiler evaluateScriptString:@"class Person { var age. var name. }"];
+    [compiler evaluateScriptString:@"p← [ #Person{ name:'Mike', age:22}, #Person{ name:'Linda', age:24 } ]."];
+    [compiler evaluateScriptString:@"o ← p[{ $0 age > 23.}]"];
+    IDEXPECT( [compiler evaluateScriptString:@"o count"],@(1), @"number of matches" );
+
+}
+
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1667,6 +1680,7 @@
         @"testCoutLikeWriteObjectSyntax",
         @"testCoutLikeWriteToVariable",
         @"testParseSimpleQuery",
+        @"testExecuteSimpleQuery",
         ];
 }
 
