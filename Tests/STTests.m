@@ -1499,16 +1499,15 @@
     EXPECTTRUE([query isKindOfClass:[STQueryExpression class]], @"parsed a query expression");
 }
 
-
-+(void)testExecuteSimpleQuery
++(void)testExecuteSimpleQueryWithContextVars
 {
     STCompiler *compiler=[STCompiler compiler];
-
+    
     [compiler evaluateScriptString:@"class Person { var age. var name. }"];
     [compiler evaluateScriptString:@"p← [ #Person{ name:'Mike', age:22}, #Person{ name:'Linda', age:24 } ]."];
-    [compiler evaluateScriptString:@"o ← p[{ $0 age > 23.}]"];
-    IDEXPECT( [compiler evaluateScriptString:@"o count"],@(1), @"number of matches" );
-
+    NSArray* olderPeople =  [compiler evaluateScriptString:@"p[{age<23.}]"];
+    INTEXPECT( olderPeople.count, 1, @"number of matches" );
+    IDEXPECT( [olderPeople.firstObject name],@"Mike", @"name of person older than 22" );
 }
 
 
@@ -1680,7 +1679,7 @@
         @"testCoutLikeWriteObjectSyntax",
         @"testCoutLikeWriteToVariable",
         @"testParseSimpleQuery",
-        @"testExecuteSimpleQuery",
+        @"testExecuteSimpleQueryWithContextVars",
         ];
 }
 
