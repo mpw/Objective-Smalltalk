@@ -635,6 +635,7 @@ idAccessor(solver, setSolver)
                               @"doAssign:", @"=|=",
                               @"doAssign:", @"<-",
                               @"writeObject:", @"!",
+                              @"sendmsg", @"!!",
                               @"doAssign:", @"\u21e6",
                               @"doAssign:", @"\u2190",
 															  @"pointWith:",@"@",

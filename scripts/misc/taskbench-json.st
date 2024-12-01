@@ -35,7 +35,7 @@ scheme todo : MPWAbstractStore {
 		stdout println: taskList count.
 		1 to:1 do: {
 			writer := MPWJSONWriter streamWithTarget:(MPWByteStream fileName:'/tmp/json').
-			writer writeObject:taskList.
+			writer ! taskList.
 			writer close.
 		}.
 	}

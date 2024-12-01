@@ -40,7 +40,7 @@ class  MyStar : GeziraShape
          (parent compositorImage: bitmap color: this:color ),
      ].
      pipeline ← parent pipeline:filters.
-     pipeline writeObject: self coords.
+     pipeline ! self coords.
   }
 
   -transformationMatrix {
