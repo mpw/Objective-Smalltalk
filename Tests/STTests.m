@@ -1483,12 +1483,12 @@
 
 +(void)testCoutLikeWriteObjectSyntax
 {
-    TESTEXPR( @"s ← MPWJSONWriter stream. s << #{ a: 42 }. s target stringValue.",@"{\"a\":42}");
+    TESTEXPR( @"s ← MPWJSONWriter stream. s ! #{ a: 42 }. s target stringValue.",@"{\"a\":42}");
 }
 
 +(void)testCoutLikeWriteToVariable
 {
-    TESTEXPR( @"a ← 20. ref:a << 5. a.",@(5));
+    TESTEXPR( @"a ← 20. ref:a ! 5. a.",@(5));
 }
 
 +(void)testParseSimpleQuery
