@@ -116,8 +116,14 @@ objectAccessor(NSString*, realString, setRealString)
 -(BOOL)isBinary
 {
     unichar start=[self characterAtIndex:0];
+    if ( start == '!' ) {
+        if (self.length == 2 ) {
+            return NO;
+        }
+        return YES;
+    }
     return start=='@' || start=='+' || start=='-' ||
-        start=='*' || start=='/' || start==',' || start=='>' || start=='<' || start=='=' || start > 256;
+    start=='*' || start=='/' || start==',' || start=='>' || start=='<' || start=='=' || start > 256;
 }
 
 -(BOOL)isScheme
@@ -198,6 +204,7 @@ boolAccessor( noNumbers, setNoNumbers )
     charSwitch['<']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['+']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['[']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
+    charSwitch['!']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['-']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch[':']=(IDIMP0)[self methodForSelector:@selector(scanPossibleAssignment)];
     charSwitch['=']=(IDIMP0)[self methodForSelector:@selector(scanPossibleEquals)];
@@ -335,20 +342,24 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 {
     const char *cur=pos;
     int len=1;
-    if ( *cur=='<' && SCANINBOUNDS(cur+1) && cur[1]=='-' ) {
-        len++;
-    } else if ( *cur=='<' && SCANINBOUNDS(cur+1) && cur[1]=='<') {
-        len++;
-    } else if ( *cur=='-' && SCANINBOUNDS(cur+1) && cur[1]=='>') {
-        len++;
-    } else if ( *cur=='|' && SCANINBOUNDS(cur+1) && cur[1]=='=') {
-        len++;
-    } else if ( *cur=='+' && SCANINBOUNDS(cur+1) && cur[1]=='=') {
-        len++;
-    } else if ( *cur=='|' && SCANINBOUNDS(cur+1) && cur[1]=='{') {
-        len++;
-    } else if ( *cur=='/' && SCANINBOUNDS(cur+1) && cur[1]=='/' && cur[-1]!=':') {
-        return [self scanComment];
+    if ( SCANINBOUNDS(cur+1) ) {
+        if ( *cur=='<'  && cur[1]=='-' ) {
+            len++;
+        } else if ( *cur=='<'  && cur[1]=='<') {
+            len++;
+        } else if ( *cur=='-'  && cur[1]=='>') {
+            len++;
+        } else if ( *cur=='|'  && cur[1]=='=') {
+            len++;
+        } else if ( *cur=='+'  && cur[1]=='=') {
+            len++;
+        } else if ( *cur=='|'  && cur[1]=='{') {
+            len++;
+        } else if ( *cur=='!'  && cur[1]=='!') {
+            len++;
+        } else if ( *cur=='/' && SCANINBOUNDS(cur+1) && cur[1]=='/' && cur[-1]!=':') {
+            return [self scanComment];
+        }
     }
     return [self makeText:len];
 }
@@ -662,6 +673,16 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     IDEXPECT([scanner nextToken],@"<<", @"single right arrow");
 }
 
++(void)testBangBangIsUnary
+{
+    EXPECTFALSE( [@"!!" isBinary],@"bang bang is a HOM, so unary");
+}
+
++(void)testBangIsBinary
+{
+    EXPECTTRUE( [@"!" isBinary],@"bang writeObject:, so binary");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -681,6 +702,8 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
             @"testCommentToEndOfLine",
         @"testNextLineAfterComment",
         @"testCoutSyntaxIsSingleToken",
+        @"testBangBangIsUnary",
+        @"testBangIsBinary",
         ];
 }
 

@@ -675,10 +675,8 @@ idAccessor(solver, setSolver)
 {
 //    NSLog(@"parseUnary");
     id expr=[self parseArgument];
-//    NSLog(@"argument: %@",expr);
-  id next=nil;
+    id next=nil;
     while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]&& ![next isEqual:@"["]) {
-//        NSLog(@"part of parseUnary, token: %@",next);
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
@@ -696,7 +694,6 @@ idAccessor(solver, setSolver)
             [self pushBack:next];
         }
     }
-//    NSLog(@"parseUnary -> %@",expr);
     return expr;
 }
 
@@ -768,6 +765,11 @@ idAccessor(solver, setSolver)
             //            NSLog(@"single ':' as selector");
             [self pushBack:selector];
             return [expr receiver];
+        } else if ([selector isEqualToString:@"!!"]){
+            //            NSLog(@"single ':' as selector");
+            [expr setSelector:[self mapSelectorString:selector]];
+            [expr setArgs:@[]];
+            return expr;
         } else {
             if ( [selector isEqual:@"["]) {
                 NSLog(@"selector shouldn't be open bracket:\%@",[NSThread callStackSymbols]);
