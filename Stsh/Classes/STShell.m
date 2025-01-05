@@ -445,7 +445,7 @@ idAccessor( retval, setRetval )
 
                 }
             } @catch ( NSException *exception) {
-//                NSLog(@"might need more input, exception: %@",exception);
+                NSLog(@"might need more input, exception: %@, %@",exception,[exception callStackSymbols]);
                 if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
                     level=2;
                     continue;
@@ -554,11 +554,16 @@ idAccessor( retval, setRetval )
     
 }
 
++(void)testNewlineLiterals
+{
+    MPWShellCompiler *compiler=[MPWShellCompiler compiler];
+}
 
 +(NSArray*)testSelectors
 {
     return @[
-      @"testHasScriptArgs",
+        @"testHasScriptArgs",
+        @"testNewlineLiterals",
     ];
 }
 

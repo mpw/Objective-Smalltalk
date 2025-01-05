@@ -1510,6 +1510,18 @@
     IDEXPECT( [olderPeople.firstObject name],@"Mike", @"name of person older than 22" );
 }
 
++(void)testNewlinesInStringConstants
+{
+    NSString *lfLiteral=@"'\\n'";
+    INTEXPECT(lfLiteral.length,4,@"length of literal expr as ObjC String");
+    STCompiler *compiler = [STCompiler compiler];
+    NSString* result=[compiler evaluateScriptString:lfLiteral];
+    INTEXPECT( result.length,1,@"linefeed literal length");
+    IDEXPECT( result,@"\n",@"linefeed literal ");
+    NSString *moreThanJustLfLiteral=@"'Hello World\\n'";
+    NSString* longerResult=[compiler evaluateScriptString:moreThanJustLfLiteral];
+//    IDEXPECT( longerResult,@"Hello World\n",@"linefeed literal ");
+}
 
 
 +(NSArray*)testSelectors
@@ -1680,6 +1692,7 @@
         @"testCoutLikeWriteToVariable",
         @"testParseSimpleQuery",
         @"testExecuteSimpleQueryWithContextVars",
+        @"testNewlinesInStringConstants",
         ];
 }
 

@@ -259,7 +259,7 @@ idAccessor(solver, setSolver)
 
 -parseLiteralArray:(NSString*)closeArrayToken
 {
-//    NSLog(@"parseLiteralArray");
+    NSLog(@"parseLiteralArray");
     NSMutableArray *array=[NSMutableArray array];
     id token=nil;
     do {
@@ -279,7 +279,7 @@ idAccessor(solver, setSolver)
                 
 //                NSLog(@"result of parseExpression: '%@'",object );
             }
-//            NSLog(@"will add parsed object: '%@'",object );
+            NSLog(@"will add parsed object: '%@'",object );
             [self untangleConcatsForArrayLiteral:object into:array];
 //            NSLog(@"did add parsed object: '%@'",array );
             token=[self nextToken];
@@ -803,7 +803,7 @@ idAccessor(solver, setSolver)
 
 -parseMessageExpression:receiver
 {
-    
+//    NSLog(@"parseMessageExpression: receiver = '%@'",receiver);
     id expr=receiver;
     id next;
     id prev=nil;
@@ -882,6 +882,7 @@ idAccessor(solver, setSolver)
 
 -parseMessageExpressionOrCascade:receiver
 {
+//    NSLog(@" parseMessageExpressionOrCascade, receiver: %@",receiver);
     id firstExpression = [self parseMessageExpression:receiver];
 //    NSLog(@"after parseMessageExpression, looking for cascades: %@",[scanner tokens]);
     id separator=[self nextToken];
@@ -982,16 +983,16 @@ idAccessor(solver, setSolver)
             return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];
         }
     }
-    if (second )  {		//	potential message expression
+    if (second && [second length] > 0)  {		//	potential message expression
 //		NSLog(@"potential message expression got first %@ second %@",first,second);
-//		first = [self objectifyScanned:first];
+		first = [self objectifyScanned:first];
         [self pushBack:second];
         if ( inLiteral && [second isEqualToString:@","]) {
 //            NSLog(@"comma encountered when in literal, return");
 //            NSLog(@"comma encountered when in literal, return: %@",first);
             return first;
         }
-        if ( ![second isEqual:@"."] && ![second isEqual:@"("] && ![second isEqual:@"["] ) {
+        if (  ![second isEqual:@"."] && ![second isEqual:@"("] && ![second isEqual:@"["] ) {
             return [self parseMessageExpressionOrCascade:first];
         } else {
             if ( ![second isEqual:@"."]) {

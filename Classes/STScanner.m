@@ -416,9 +416,14 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
                     break;
                 }
             } else if ( *cur=='\\'  ) {
+                string=[self makeString:cur-pos];
+                if ( partialStrings == nil ) {
+                    partialStrings = [NSMutableArray array];
+                }
+                [partialStrings addObject:string];
                 if ( SCANINBOUNDS(cur+1) && cur[1] == 'n' ) {
                     cur+=2;
-                    string=@"\n";
+                    [partialStrings addObject:@"\n"];
                     UPDATEPOSITION(cur);
                     break;
                 }
@@ -683,6 +688,19 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     EXPECTTRUE( [@"!" isBinary],@"bang writeObject:, so binary");
 }
 
++(void)testSoleLinefeed
+{
+    STScanner *scanner=[self scannerWithString:@"'\\n'"];
+    IDEXPECT([scanner nextToken],@"\n", @"linefeed");
+}
+
++(void)testLinefeedInLiteral
+{
+    STScanner *scanner=[self scannerWithString:@"'Hello World\\n'"];
+    IDEXPECT([scanner nextToken],@"Hello World\n", @"linefeed after text");
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -704,6 +722,8 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
         @"testCoutSyntaxIsSingleToken",
         @"testBangBangIsUnary",
         @"testBangIsBinary",
+        @"testSoleLinefeed",
+        @"testLinefeedInLiteral",
         ];
 }
 
