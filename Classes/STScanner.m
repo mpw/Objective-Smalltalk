@@ -422,7 +422,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
                 }
                 [partialStrings addObject:string];
                 if ( SCANINBOUNDS(cur+1) && cur[1] == 'n' ) {
-                    cur+=2;
+                    cur+=3;
                     [partialStrings addObject:@"\n"];
                     UPDATEPOSITION(cur);
                     break;
@@ -692,12 +692,14 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
 {
     STScanner *scanner=[self scannerWithString:@"'\\n'"];
     IDEXPECT([scanner nextToken],@"\n", @"linefeed");
+    EXPECTNIL( [scanner nextToken],@"nothing after");
 }
 
 +(void)testLinefeedInLiteral
 {
     STScanner *scanner=[self scannerWithString:@"'Hello World\\n'"];
     IDEXPECT([scanner nextToken],@"Hello World\n", @"linefeed after text");
+    EXPECTNIL( [scanner nextToken],@"nothing after");
 }
 
 
