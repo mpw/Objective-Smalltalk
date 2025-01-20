@@ -34,7 +34,7 @@ class LoanBroker {
        self.
     }
     -apply: theApplication {
-        approved ← this:banks firstObject apply: theApplication .
+        approved ← this:banks collect  apply: theApplication .
         approved.
     }
     -description { "Loan broker with banks: {this:banks}." }
