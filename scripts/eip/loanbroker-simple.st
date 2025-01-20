@@ -13,6 +13,9 @@ class LoanOffer {
    var interest.
    var amount.
    var ssn.
+   -<int>compare: other {
+       self interest compare: other interest.
+   }
    -description { "Offer for {this:amount} to:{this:ssn} at:{this:interest} for: {this:duration} years}". }
 }.
 
@@ -35,6 +38,9 @@ class LoanBroker {
     }
 
     -selectBestOffer: loans {
+       loans sorted lastObject.
+    }
+    -selectBestOfferComplex: loans {
        bestOffer ← loans firstObject.
        loans do: { :aLoan | 
            aLoan interest < bestOffer interest ifTrue: {
@@ -43,9 +49,12 @@ class LoanBroker {
        }.
        bestOffer.
     }
+    -getOffers: theApplication {
+        this:banks collect  apply: theApplication .
+    }
     -apply: theApplication {
-        allApproved ← this:banks collect  apply: theApplication .
-        stdout println: allApproved.
+        allApproved ← self getOffers: theApplication.
+        stdout println: allApproved sorted.
         self selectBestOffer: allApproved.
     }
     -description { "Loan broker with banks: {this:banks}." }
@@ -53,15 +62,7 @@ class LoanBroker {
 
 
 
-banks ← #[ #Bank{ name: 'Bank 1' } , #Bank{ name:'Bank 2'} , #Bank{ name:'Bank 3' }].
-
 broker ← #LoanBroker{} .
-
-stdout println: broker.
-
 application ← #LoanApplication{ ssn: '123123', amount: 2000}.
-
-stdout println: application.
-
 stdout println: (broker apply: application).
 
