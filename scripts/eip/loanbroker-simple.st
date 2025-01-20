@@ -33,9 +33,20 @@ class LoanBroker {
        this:banks ← #[ #Bank{ name: 'Bank 1' } , #Bank{ name:'Bank 2'} , #Bank{ name:'Bank 3' }].
        self.
     }
+
+    -selectBestOffer: loans {
+       bestOffer ← loans firstObject.
+       loans do: { :aLoan | 
+           aLoan interest < bestOffer interest ifTrue: {
+              bestOffer ← aLoan.
+           }.
+       }.
+       bestOffer.
+    }
     -apply: theApplication {
-        approved ← this:banks collect  apply: theApplication .
-        approved.
+        allApproved ← this:banks collect  apply: theApplication .
+        stdout println: allApproved.
+        self selectBestOffer: allApproved.
     }
     -description { "Loan broker with banks: {this:banks}." }
 }
