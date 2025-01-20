@@ -259,7 +259,7 @@ idAccessor(solver, setSolver)
 
 -parseLiteralArray:(NSString*)closeArrayToken
 {
-    NSLog(@"parseLiteralArray");
+//    NSLog(@"parseLiteralArray");
     NSMutableArray *array=[NSMutableArray array];
     id token=nil;
     do {
@@ -279,7 +279,7 @@ idAccessor(solver, setSolver)
                 
 //                NSLog(@"result of parseExpression: '%@'",object );
             }
-            NSLog(@"will add parsed object: '%@'",object );
+//            NSLog(@"will add parsed object: '%@'",object );
             [self untangleConcatsForArrayLiteral:object into:array];
 //            NSLog(@"did add parsed object: '%@'",array );
             token=[self nextToken];
