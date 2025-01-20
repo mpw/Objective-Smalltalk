@@ -18,15 +18,39 @@ class LoanOffer {
 
 class Bank {
    var name.
-   -apply:application {
-      #LoanOffer{ ssn: (application ssn), amount: (application amount), application:application, duration:10, interest:4 }. 
+   -interest {
+	1.2 to: 4.4 | random.
+   }
+   -apply:thisApplication {
+      #LoanOffer{ ssn: (thisApplication ssn), amount: (thisApplication amount), application:thisApplication, duration:10, interest: (self interest )  }. 
    }
 }
 
+class LoanBroker {
+    var banks.
+    -init { 
+       self ← super init.
+       this:banks ← #[ #Bank{ name: 'Bank 1' } , #Bank{ name:'Bank 2'} , #Bank{ name:'Bank 3' }].
+       self.
+    }
+    -apply: theApplication {
+        approved ← this:banks firstObject apply: theApplication .
+        approved.
+    }
+    -description { "Loan broker with banks: {this:banks}." }
+}
 
-bank1 ← #Bank{ name:'Bank 1' }.
+
 
 banks ← #[ #Bank{ name: 'Bank 1' } , #Bank{ name:'Bank 2'} , #Bank{ name:'Bank 3' }].
 
-stdout ! (banks collect apply: #LoanApplication{ ssn: '123123', amount: 2000}).
+broker ← #LoanBroker{} .
+
+stdout println: broker.
+
+application ← #LoanApplication{ ssn: '123123', amount: 2000}.
+
+stdout println: application.
+
+stdout println: (broker apply: application).
 
