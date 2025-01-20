@@ -26,5 +26,7 @@ class Bank {
 
 bank1 ← #Bank{ name:'Bank 1' }.
 
-stdout ! (bank1 apply: #LoanApplication{ ssn: '123123', amount: 2000}).
+banks ← #[ #Bank{ name: 'Bank 1' } , #Bank{ name:'Bank 2'} , #Bank{ name:'Bank 3' }].
+
+stdout ! (banks collect apply: #LoanApplication{ ssn: '123123', amount: 2000}).
 
