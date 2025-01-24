@@ -2,7 +2,7 @@
 <body>
 Here is some text.<p>
 
-<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+<script src="/htmx"></script>
   <!-- have a button POST a click via AJAX -->
   <button hx-get="/clicked" hx-swap="outerHTML">
     Click Me

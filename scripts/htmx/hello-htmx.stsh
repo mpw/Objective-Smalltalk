@@ -1,0 +1,10 @@
+#!/usr/local/bin/stsh
+framework:ObjectiveHTTPD load.
+
+scheme SiteMap {
+  /htmx { get { file:htmx.js  } }
+  /hello { get { file:clickme.htmx  } }
+  /clicked { get { 'Clicked!'  } }
+}.
+SiteMap serveOnPort:8090.
+shell runInteractiveLoop.
