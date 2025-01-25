@@ -2,9 +2,15 @@
 framework:ObjectiveHTTPD load.
 
 scheme SiteMap {
+  var count.
+  -init {
+     self ← super init.
+     this:count ← 0.
+     self.
+  }
   /htmx { get { file:htmx.js  } }
   /hello { get { file:clickme.htmx  } }
-  /clicked { get { 'Clicked!'  } }
+  /clicked { get { this:count ← this:count + 1. "Clicked count: {this:count}".   } }
 }.
 SiteMap serveOnPort:8090.
 shell runInteractiveLoop.
