@@ -26,7 +26,7 @@ scheme Bank {
    }
    /loanFor/:ssn/rating/:rating/amount/:amount { get { 
       rating floatValue > this:minRating ifTrue: { 
-	    #LoanOffer{ ssn:ssn, amount: amount , duration:10, interest: (self interest )  }.
+	    #LoanOffer{ ssn:ssn, amount: (amount intValue) , duration:10, interest: (self interest )  }.
          } ifFalse: {
 	    #LoanOffer{ ssn:ssn, amount: 0 , duration:0, interest: 100  }.
          }.
@@ -39,7 +39,7 @@ scheme Bank {
 
 
 bank ← #Bank{ minRating: 300 }.
-json ← #MPWJSONConverterStore{  #up: true  }.
+json ← #MPWJSONConverterStore{  #up: true, converterClass: class:LoanOffer  }.
 
 stdout println: bank.
 stdout println: json.

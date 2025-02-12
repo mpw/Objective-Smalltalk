@@ -29,10 +29,8 @@
 		1F096D3E2B4966540072DD85 /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
 		1F096D3F2B4966540072DD85 /* ObjectiveHTTPD.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F096D4C2B4966D40072DD85 /* Sails.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFCB56D2B431491002DC40A /* Sails.framework */; };
-		1F096D4D2B4966D40072DD85 /* Sails.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFCB56D2B431491002DC40A /* Sails.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F096D512B4966FA0072DD85 /* sails_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F096D472B4966CD0072DD85 /* sails_main.m */; };
 		1F096D522B4968050072DD85 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
-		1F096D532B4968050072DD85 /* StshFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F096D5D2B49903C0072DD85 /* STSiteBundle.m */; };
 		1F096D602B49903C0072DD85 /* STSiteBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F096D5E2B49903C0072DD85 /* STSiteBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F0F13E618D18C86008B5E80 /* STShell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0F13E518D18C86008B5E80 /* STShell.h */; };
@@ -375,6 +373,8 @@
 		1F7E05CA144B417D008F349D /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F7E05CB144B417D008F349D /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F7E05CF144B4188008F349D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E05CE144B4188008F349D /* Foundation.framework */; };
+		1F7F89352D5CEFC7006ED77E /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1F7F89362D5CEFDC006ED77E /* ObjectiveHTTPD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB7F59016AC6E47001BF2EB /* ObjectiveHTTPD.framework */; };
 		1F8027D42C2FD8FA00770B11 /* MPWELFRelocationTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8027D22C2FD8FA00770B11 /* MPWELFRelocationTable.h */; };
 		1F8027D52C2FD8FA00770B11 /* MPWELFRelocationTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8027D32C2FD8FA00770B11 /* MPWELFRelocationTable.m */; };
 		1F81C06519699AE10066DF43 /* MethodServerTouch.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F81C06419699AE10066DF43 /* MethodServerTouch.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -900,18 +900,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		1F096D502B4966D40072DD85 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1F096D4D2B4966D40072DD85 /* Sails.framework in Embed Frameworks */,
-				1F096D532B4968050072DD85 /* StshFramework.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1F29D80B21B42E1700AB14D8 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1031,7 +1019,7 @@
 		1F084A1716DCE6A200ED2517 /* ObjSTNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjSTNative.h; sourceTree = "<group>"; };
 		1F084A2316DCFB3300ED2517 /* llvmincludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llvmincludes.h; sourceTree = "<group>"; };
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F096D452B4966CC0072DD85 /* sails */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sails; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F096D452B4966CC0072DD85 /* sails_command */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sails_command; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F096D472B4966CD0072DD85 /* sails_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sails_main.m; sourceTree = "<group>"; };
 		1F096D562B49690D0072DD85 /* sl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sl.entitlements; sourceTree = "<group>"; };
 		1F096D5D2B49903C0072DD85 /* STSiteBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STSiteBundle.m; sourceTree = "<group>"; };
@@ -1633,8 +1621,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F096D4C2B4966D40072DD85 /* Sails.framework in Frameworks */,
+				1F7F89362D5CEFDC006ED77E /* ObjectiveHTTPD.framework in Frameworks */,
 				1F096D522B4968050072DD85 /* StshFramework.framework in Frameworks */,
+				1F7F89352D5CEFC7006ED77E /* ObjectiveSmalltalk.framework in Frameworks */,
+				1F096D4C2B4966D40072DD85 /* Sails.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2878,7 +2868,7 @@
 				1F854E7428A11B7B0085034C /* stui */,
 				1F605FF52A2231D300783E17 /* PyObjS.framework */,
 				1FFCB56D2B431491002DC40A /* Sails.framework */,
-				1F096D452B4966CC0072DD85 /* sails */,
+				1F096D452B4966CC0072DD85 /* sails_command */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3327,14 +3317,13 @@
 			productReference = 1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		1F096D442B4966CC0072DD85 /* sails */ = {
+		1F096D442B4966CC0072DD85 /* sails_command */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F096D492B4966CD0072DD85 /* Build configuration list for PBXNativeTarget "sails" */;
+			buildConfigurationList = 1F096D492B4966CD0072DD85 /* Build configuration list for PBXNativeTarget "sails_command" */;
 			buildPhases = (
 				1F096D412B4966CC0072DD85 /* Sources */,
 				1F096D422B4966CC0072DD85 /* Frameworks */,
 				1F096D432B4966CC0072DD85 /* CopyFiles */,
-				1F096D502B4966D40072DD85 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3342,9 +3331,9 @@
 				1F096D4F2B4966D40072DD85 /* PBXTargetDependency */,
 				1F096D552B4968050072DD85 /* PBXTargetDependency */,
 			);
-			name = sails;
+			name = sails_command;
 			productName = sl;
-			productReference = 1F096D452B4966CC0072DD85 /* sails */;
+			productReference = 1F096D452B4966CC0072DD85 /* sails_command */;
 			productType = "com.apple.product-type.tool";
 		};
 		1F29D7EC21B42BE500AB14D8 /* TestObjectiveSmalltalk */ = {
@@ -3841,7 +3830,7 @@
 				1F854E6728A11B7B0085034C /* stui */,
 				1F605FF42A2231D200783E17 /* PyObjS */,
 				1FFCB56C2B431491002DC40A /* Sails */,
-				1F096D442B4966CC0072DD85 /* sails */,
+				1F096D442B4966CC0072DD85 /* sails_command */,
 			);
 		};
 /* End PBXProject section */
@@ -5019,7 +5008,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5055,9 +5044,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -7227,6 +7217,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.Sails;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -7248,7 +7239,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F096D492B4966CD0072DD85 /* Build configuration list for PBXNativeTarget "sails" */ = {
+		1F096D492B4966CD0072DD85 /* Build configuration list for PBXNativeTarget "sails_command" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F096D4A2B4966CD0072DD85 /* Debug */,
