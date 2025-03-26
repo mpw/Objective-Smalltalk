@@ -19,7 +19,7 @@ CONVENIENCEANDINIT( constraint, WithSource:source target:target)
 
 -(void)writeObject:(MPWRESTOperation*)op
 {
-    MPWIdentifier *ref=op.reference;
+    MPWIdentifier *ref=op.identifier;
     [self refDidChange:ref];
 }
 

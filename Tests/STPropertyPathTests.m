@@ -99,7 +99,7 @@
     STCompiler *compiler=[STCompiler compiler];
     [compiler evaluateScriptString:@"class PropertyTestClass1a : MPWScheme { /property { get {  theRef.}  }}."];
     id result = [compiler evaluateScriptString:@"a := PropertyTestClass1a new. scheme:p := a. p:property."];
-    id ref = [compiler evaluateScriptString:@"ref:p:property reference."];
+    id ref = [compiler evaluateScriptString:@"ref:p:property identifier."];
     IDEXPECT(result,ref,@"evaluating a simple property");
 }
 

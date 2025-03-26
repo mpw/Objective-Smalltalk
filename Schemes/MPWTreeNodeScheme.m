@@ -122,7 +122,7 @@ idAccessor( root, setRoot )
     id <MPWIdentifying> ref=[site referenceForPath:@"hello"];
     site[ref]=@"world";
     MPWReference *binding=[site bindingForReference:ref inContext:nil];
-    IDEXPECT( ref, binding.reference, @"binding has same ref");
+    IDEXPECT( ref, binding.identifier, @"binding has same ref");
     IDEXPECT( site[ref], @"world", @"store get");
     IDEXPECT( [binding value], @"world", @"binding value");
     EXPECTFALSE([binding hasChildren], @"children of binding");

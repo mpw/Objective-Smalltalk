@@ -10,10 +10,10 @@
 @implementation MPWReference(legacy)
 
 
--(void)setIdentifier:newIdentifier
-{
-    [self setReference:newIdentifier];
-}
+//-(void)setIdentifier:newIdentifier
+//{
+//    [self setReference:newIdentifier];
+//}
 
 -(void)setScheme:newScheme
 {
@@ -25,10 +25,10 @@
     return self.store;
 }
 
--identifier
-{
-    return [self reference];
-}
+//-identifier
+//{
+//    return [self reference];
+//}
 
 -(void)setDefaultContext:newContext
 {

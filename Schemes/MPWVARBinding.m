@@ -34,7 +34,7 @@ idAccessor( baseObject, setBaseObject )
 -initWithBaseObject:newBase pathComponents:(NSArray*)newPathComponents
 {
 	self=[super init];
-    self.reference = [[[MPWGenericIdentifier alloc] initWithPathComponents:newPathComponents scheme:nil] autorelease];
+    self.identifier = [[[MPWGenericIdentifier alloc] initWithPathComponents:newPathComponents scheme:nil] autorelease];
 	[self setBaseObject:newBase];
 	return self;
 	
@@ -47,7 +47,7 @@ idAccessor( baseObject, setBaseObject )
 
 -pathComponents
 {
-    return [(MPWGenericIdentifier*)self.reference pathComponents];
+    return [(MPWGenericIdentifier*)self.identifier pathComponents];
 }
 
 -initWithBaseObject:newBase path:newPath

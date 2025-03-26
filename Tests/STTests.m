@@ -1390,7 +1390,7 @@
 
 +(void)testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths
 {
-    TESTEXPR( @"scheme:d := MPWDictStore store.  da := ref:d:a. db := ref:d:b.  db reference path.",
+    TESTEXPR( @"scheme:d := MPWDictStore store.  da := ref:d:a. db := ref:d:b.  db identifier path.",
              @"b");
 }
 
