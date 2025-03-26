@@ -37,7 +37,7 @@
     
 }
 #else
--(void)startWatching:(MPWFileBinding*)binding
+-(void)startWatching:(MPWFileReference*)binding
 {}
 #endif
 
