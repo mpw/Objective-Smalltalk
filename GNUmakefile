@@ -57,6 +57,7 @@ libObjectiveSmalltalk_OBJC_FILES = \
     Classes/MPWBlockExpression.m \
     Classes/MPWAssignmentExpression.m \
     Classes/STPostExpression.m \
+    Classes/STQueryExpression.m \
     Classes/MPWStatementList.m \
     Classes/MPWDataflowConstraintExpression.m \
     Classes/MPWLiteralDictionaryExpression.m \
