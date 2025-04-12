@@ -25,7 +25,7 @@
 
 -(NSArray*)evaluated
 {
-    
+    return nil;
 }
 
 -evaluateIn:aContext

@@ -66,8 +66,9 @@
 #import <ObjectiveSmalltalk/STBundle.h>
 #import <ObjectiveSmalltalk/STVariableDefinition.h>
 #import <ObjectiveSmalltalk/ViewBuilderPreviewNotification.h>
+#ifndef TARGET_OS_IPHONE
 #import <ObjectiveSmalltalk/STProgram.h>
 #import <ObjectiveSmalltalk/STJittableData.h>
-
+#endif
 
 #endif /* ObjectiveSmalltalk_h */

@@ -704,7 +704,6 @@
 		1FE37BE91969612600C9A378 /* MPWBundleScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA3886313910FA6007B5CC9 /* MPWBundleScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BEA1969612600C9A378 /* MPWBundleScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3886413910FA6007B5CC9 /* MPWBundleScheme.m */; };
 		1FE37BEB1969612600C9A378 /* MPWScriptingBridgeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222C8A1394CBEB007AE2FB /* MPWScriptingBridgeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37BEC1969612600C9A378 /* MPWScriptingBridgeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222C8B1394CBEB007AE2FB /* MPWScriptingBridgeScheme.m */; };
 		1FE37BED1969612600C9A378 /* MPWScriptingBridgeBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F222CA61394D817007AE2FB /* MPWScriptingBridgeBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BEE1969612600C9A378 /* MPWScriptingBridgeBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F222CA71394D817007AE2FB /* MPWScriptingBridgeBinding.m */; };
 		1FE37BEF1969612600C9A378 /* MPWDefaultsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -4591,7 +4590,6 @@
 				1FE37B811969610600C9A378 /* STConnector.m in Sources */,
 				1FE37BDD1969612500C9A378 /* MPWClassScheme.m in Sources */,
 				1FE37BBA1969610700C9A378 /* MPWStatementList.m in Sources */,
-				1FE37BEC1969612600C9A378 /* MPWScriptingBridgeScheme.m in Sources */,
 				1FE37BEE1969612600C9A378 /* MPWScriptingBridgeBinding.m in Sources */,
 				1FE37BE21969612600C9A378 /* MPWSchemeScheme.m in Sources */,
 				1FE37B9A1969610600C9A378 /* MPWMessageExpression.m in Sources */,

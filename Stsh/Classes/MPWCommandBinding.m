@@ -12,7 +12,7 @@
 
 -stream
 {
-    NSArray *components = [self.reference pathComponents];
+    NSArray *components = [self.identifier pathComponents];
     NSString *name=[components firstObject];
     NSArray *args = [components subarrayWithRange:NSMakeRange(1,components.count-1)];
     MPWShellProcess *process=[MPWShellProcess processWithName:name];
