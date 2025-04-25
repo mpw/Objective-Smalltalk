@@ -294,14 +294,14 @@
 		1F61AE502DBBDF13003E8229 /* STHypertextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9774582B6D096C0037DC95 /* STHypertextProcessor.m */; };
 		1F61AE512DBBDF13003E8229 /* STEntityList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA167C2B9728D8004E63ED /* STEntityList.m */; };
 		1F61AE522DBBDF13003E8229 /* STEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16772B971564004E63ED /* STEntity.h */; };
-		1F61AE532DBBDF13003E8229 /* SailsGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB57B2B43154E002DC40A /* SailsGenerator.h */; };
+		1F61AE532DBBDF13003E8229 /* SailsGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB57B2B43154E002DC40A /* SailsGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F61AE542DBBDF13003E8229 /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
 		1F61AE552DBBDF13003E8229 /* STPathToTemplateNameMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA167F2B974F05004E63ED /* STPathToTemplateNameMapper.h */; };
 		1F61AE562DBBDF13003E8229 /* STHypertextProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */; };
 		1F61AE572DBBDF13003E8229 /* STEntityList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA167B2B9728D8004E63ED /* STEntityList.h */; };
-		1F61AE582DBBDF13003E8229 /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; };
-		1F61AE592DBBDF13003E8229 /* Sails.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB56F2B431492002DC40A /* Sails.h */; };
-		1F61AE5A2DBBDF13003E8229 /* STSiteBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F096D5E2B49903C0072DD85 /* STSiteBundle.h */; };
+		1F61AE582DBBDF13003E8229 /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F61AE592DBBDF13003E8229 /* Sails.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCB56F2B431492002DC40A /* Sails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F61AE5A2DBBDF13003E8229 /* STSiteBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F096D5E2B49903C0072DD85 /* STSiteBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F61AE5C2DBBDF2B003E8229 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F61AE5B2DBBDF2B003E8229 /* MPWFoundation.framework */; };
 		1F61AE5F2DBBDF34003E8229 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */; };
 		1F61AE682DBBF493003E8229 /* STSiteServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F61AE662DBBF493003E8229 /* STSiteServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1229,7 +1229,7 @@
 		1F60963825E786840018BB72 /* STTargetActionConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionConnector.m; sourceTree = "<group>"; };
 		1F60964D25E788FC0018BB72 /* STUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STUITests.h; sourceTree = "<group>"; };
 		1F60964E25E788FC0018BB72 /* STUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUITests.m; sourceTree = "<group>"; };
-		1F61AE422DBBDEF6003E8229 /* SailsTouch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SailsTouch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F61AE422DBBDEF6003E8229 /* Sails.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sails.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F61AE5B2DBBDF2B003E8229 /* MPWFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MPWFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F61AE662DBBF493003E8229 /* STSiteServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSiteServer.h; sourceTree = "<group>"; };
 		1F61AE672DBBF493003E8229 /* STSiteServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSiteServer.m; sourceTree = "<group>"; };
@@ -1628,7 +1628,7 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		1F61AE462DBBDEF6003E8229 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			publicHeaders = (
+			membershipExceptions = (
 				SailsTouch.h,
 			);
 			target = 1F61AE412DBBDEF6003E8229 /* SailsTouch */;
@@ -2915,7 +2915,7 @@
 				1F605FF52A2231D300783E17 /* PyObjS.framework */,
 				1FFCB56D2B431491002DC40A /* Sails.framework */,
 				1F096D452B4966CC0072DD85 /* sails_command */,
-				1F61AE422DBBDEF6003E8229 /* SailsTouch.framework */,
+				1F61AE422DBBDEF6003E8229 /* Sails.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3540,7 +3540,7 @@
 			packageProductDependencies = (
 			);
 			productName = SailsTouch;
-			productReference = 1F61AE422DBBDEF6003E8229 /* SailsTouch.framework */;
+			productReference = 1F61AE422DBBDEF6003E8229 /* Sails.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		1F6C792A2187468D00071DAC /* ObjectiveSwift */ = {
@@ -5812,12 +5812,13 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = PE4436LT5M;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -5835,7 +5836,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5848,7 +5849,8 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.SailsTouch;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Sails;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -5873,12 +5875,13 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = PE4436LT5M;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -5891,7 +5894,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5904,7 +5907,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.SailsTouch;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Sails;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

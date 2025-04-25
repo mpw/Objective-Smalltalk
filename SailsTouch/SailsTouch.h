@@ -14,3 +14,5 @@ FOUNDATION_EXPORT double SailsTouchVersionNumber;
 FOUNDATION_EXPORT const unsigned char SailsTouchVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <SailsTouch/PublicHeader.h>
+#import <Sails/STSiteServer.h>
+
