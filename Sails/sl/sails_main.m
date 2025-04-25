@@ -29,7 +29,7 @@ int main (int argc, const char *argv[])
                     [bundle runSimpleSite:port];
                     [[stsh evaluator] bindValue:bundle toVariableNamed:@"bundle"];
                     [[stsh evaluator] bindValue:[[bundle siteServer] delegate] toVariableNamed:@"site"];
-                    [[stsh evaluator]  evaluateScriptString:@"scheme:site ← site."];
+                    [[stsh evaluator] evaluateScriptString:@"scheme:site ← site."];
                     break;
                 } else if ( [arg isEqual:@"-port"]) {
                     i++;

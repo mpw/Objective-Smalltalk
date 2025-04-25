@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWSiteServer;
+@class STSiteServer;
 
 @interface STSiteBundle : STBundle
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)runSite:(int)port;
 
 
-@property (readonly) MPWSiteServer *siteServer;
+@property (readonly) STSiteServer *siteServer;
 @property (readonly) id renderer;
 
 @end

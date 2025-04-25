@@ -7,19 +7,19 @@
 
 #import "STSiteBundle.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
-#import <ObjectiveHTTPD/MPWSiteServer.h>
-#import <ObjectiveHTTPD/MPWHTTPServer.h>
+#import "STSiteServer.h"
+//#import <ObjectiveHTTPD/MPWHTTPServer.h>
 
 
 
 @implementation STSiteBundle
 {
-    MPWSiteServer *siteServer;
+    STSiteServer *siteServer;
 ;
 }
 
 
-lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
+lazyAccessor(STSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 
 
@@ -59,10 +59,16 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [self siteServer];
 }
 
-
-
--(MPWSiteServer*)createSiteServer
+-(Class)siteServerClass
 {
+    return NSClassFromString(@"STSiteServer");
+}
+
+
+
+-(STSiteServer*)createSiteServer
+{
+    NSAssert([self siteServerClass]!=nil, @"MPWSiteServer not linked into program, can't set up a site");
     Class siteClass = [self siteClass];
     NSAssert(siteClass != nil, @"should have a siteClass at this point");
     NSLog(@"siteClass: %@",siteClass);
@@ -80,7 +86,7 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
         NSAssert(sitemap != nil, @"should have a sitemap with setBundle:");
     }
     NSAssert(sitemap != nil, @"should have a sitemap at this point");
-    MPWSiteServer *server = [[[MPWSiteServer alloc] initWithSite:sitemap siteDict:@{} interpreter:self.interpreter] autorelease];
+    STSiteServer *server = [[[[self siteServerClass] alloc] initWithSite:sitemap siteDict:@{} interpreter:self.interpreter] autorelease];
     if ( [server respondsToSelector:@selector(setupSite)]) {
         [server setupSite];
     }
@@ -104,8 +110,14 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
     [self.siteServer disableCaching];
 }
 
+-(Class)httpServerClass
+{
+    return NSClassFromString(@"MPWHTTPServer");
+}
+
 -(void)setupSimpleSite
 {
+    NSAssert([self httpServerClass]!=nil, @"MPWHTTPServer not linked into program, can't start site");
     Class siteClass = [self siteClass];
     id sitemap=nil;
     if ( [siteClass instancesRespondToSelector:@selector(initWithBundle:)]) {
@@ -116,7 +128,7 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
             [sitemap setBundle:self];
         }
     }
-    self.siteServer = [[[MPWHTTPServer alloc] init] autorelease];
+    self.siteServer = [[[[self httpServerClass] alloc] init] autorelease];
     [self.siteServer setDelegate:sitemap];
 }
 
@@ -137,7 +149,9 @@ lazyAccessor(MPWSiteServer*, siteServer, setSiteServer, createSiteServer)
 {
     [self methodDict];
     [self setupSimpleSite];
-    MPWHTTPServer *httpServer=self.siteServer;
+    // FIXME:  this really does return an MPWHTTPServer
+    //         so why is the type for self.siteServer wrong?
+    MPWHTTPServer *httpServer=(MPWHTTPServer*)self.siteServer;
     [httpServer setType:@"_http._tcp."];
     [httpServer setBonjourName:[self siteClassName]];
     [httpServer setPort:port];
