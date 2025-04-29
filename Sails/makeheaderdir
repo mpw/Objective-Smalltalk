@@ -1,0 +1,8 @@
+#!/bin/sh
+mkdir -p .headers
+cd .headers
+for header in `find .. -type f -name '*.h' ` 
+do
+  ln -s $header
+done
+ln -s .  Sails
