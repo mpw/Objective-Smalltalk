@@ -150,7 +150,8 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSArray<NSString*>*)sourceNames
 {
-    NSArray<NSString*>* allFiles = (NSArray<NSString*>*)[[(NSArray<NSString*>*)[[[[[self sourceDir] at:@"."] contents] collect] path] collect] lastPathComponent];
+    
+    NSArray<NSString*>* allFiles = (NSArray<NSString*>*)[[(NSArray<NSString*>*)[[[[[self sourceDir] at:@""] contents] collect] path] collect] lastPathComponent];
     return [[allFiles select] __hasSuffix:@"st"];
 }
 
