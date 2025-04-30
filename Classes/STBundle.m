@@ -61,7 +61,11 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(MPWReference*)refForSubDir:(NSString*)subdir
 {
-    return [[self binding] referenceByAppendingReference:subdir];
+    if ( subdir.length > 0) {
+        return [[self binding] referenceByAppendingReference:subdir];
+    } else {
+        return [self binding];
+    }
 }
 
 -(id <MPWHierarchicalStorage>)rawStoreForSubDir:(NSString*)subdir
@@ -157,7 +161,10 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(NSDictionary*)readInfo
 {
-    NSData *infoData = [self rawStoreForSubDir:@"."][@"Info.json"];
+    NSString *path = [self.path stringByAppendingPathComponent:@"Info.json"];
+    NSData *infoData = [NSData dataWithContentsOfFile:path];
+    // FIXME:  the following does not work on Android/GNUstep
+    // NSLog(@"data via stores: %@",[[self rawStoreForSubDir:@""][@"Info.json"] stringValue]);
     return infoData ?  [NSJSONSerialization JSONObjectWithData:infoData options:0 error:nil] : nil;
 }
 
@@ -226,7 +233,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [target mkdirAt:@""];
     [target mkdirAt:@"Sources"];
     [target mkdirAt:@"Resources"];
-    target[@"Info.json"] = [self rawStoreForSubDir:@"."][@"Info.json"];
+    target[@"Info.json"] = [self rawStoreForSubDir:@""][@"Info.json"];
     
     [self copySource:[self resources] to:[target relativeStoreAt:@"Resources"]];
     [self copySource:[self sources] to:[target relativeStoreAt:@"Sources"]];
