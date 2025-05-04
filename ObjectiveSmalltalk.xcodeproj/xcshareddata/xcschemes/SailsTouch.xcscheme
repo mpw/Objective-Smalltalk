@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F61AE412DBBDEF6003E8229"
-               BuildableName = "SailsTouch.framework"
+               BuildableName = "Sails.framework"
                BlueprintName = "SailsTouch"
                ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F61AE412DBBDEF6003E8229"
-            BuildableName = "SailsTouch.framework"
+            BuildableName = "Sails.framework"
             BlueprintName = "SailsTouch"
             ReferencedContainer = "container:ObjectiveSmalltalk.xcodeproj">
          </BuildableReference>

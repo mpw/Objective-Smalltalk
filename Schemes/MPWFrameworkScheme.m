@@ -8,6 +8,7 @@
 
 #import "MPWFrameworkScheme.h"
 #import <MPWFoundation/MPWFoundation.h>
+#import "STBundle.h"
 
 
 @interface MPWFrameworkScheme()
@@ -69,6 +70,25 @@
 -(NSArray<MPWIdentifier*>*)childrenOfReference:(MPWIdentifier*)aReference
 {
     return (NSArray *)[[self collect] referenceForPath:[[self allFrameworks] each]];
+}
+
+@end
+
+#include <dlfcn.h>
+#import <MPWFoundation/MPWCFunction.h>
+
+@implementation NSBundle(SymbolLoading)
+
+-(MPWCFunction*)functionNamed:(NSString*)fname
+{
+    const char *symbol=[fname UTF8String];
+    void *handle = dlopen([[self executablePath] UTF8String], RTLD_LAZY);
+    void* ptr=dlsym( handle, symbol );
+    if ( ptr )  {
+        return [[[MPWCFunction alloc] initWithPointer:ptr] autorelease];
+    } else {
+        return nil;
+    }
 }
 
 @end
