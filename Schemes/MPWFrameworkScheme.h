@@ -11,3 +11,11 @@
 @interface MPWFrameworkScheme : MPWScheme
 
 @end
+
+@class MPWCFunction;
+
+@interface NSBundle(SymbolLoading)
+
+-(MPWCFunction*)functionNamed:(NSString*)fname;
+
+@end
