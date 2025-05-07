@@ -599,7 +599,7 @@ idAccessor(solver, setSolver)
 {
     id object=[self nextToken];
 	object = [self objectifyScanned:object];
-//    NSLog(@"parseArgument -> %@",object);
+    NSLog(@"parseArgument -> %@",object);
 	return object;
 }
 
@@ -635,6 +635,7 @@ idAccessor(solver, setSolver)
                               @"doAssign:", @"=|=",
                               @"doAssign:", @"<-",
                               @"writeObject:", @"!",
+                              @"nextObject", @"?",
                               @"sendmsg", @"!!",
                               @"doAssign:", @"\u21e6",
                               @"doAssign:", @"\u2190",
@@ -673,13 +674,15 @@ idAccessor(solver, setSolver)
 
 -parseUnary
 {
-//    NSLog(@"parseUnary");
+//    NSLog(@"parseUnary, scanner: %@",scanner);
     id expr=[self parseArgument];
+//    NSLog(@"parseUnary expr: %@ scanner: %@",expr,scanner);
     id next=nil;
     while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]&& ![next isEqual:@"["]) {
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
+        NSLog(@"found unary");
         NSAssert1( ![next isEqual:@"["],@"selector shouldn't be open bracket: %@",next);
         [expr setSelector:[self mapSelectorString:next]];
 		expr=[self mapConnector:expr];
@@ -699,7 +702,7 @@ idAccessor(solver, setSolver)
 
 -parseSelectorAndArgs:expr
 {
-//    NSLog(@"entry parseSelectorAndArgs:");
+//    NSLog(@"entry parseSelectorAndArgs: %@",scanner);
     id selector=[self parseKeywordOrUnary];
     id args=nil;
 //    NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
@@ -767,6 +770,10 @@ idAccessor(solver, setSolver)
             return [expr receiver];
         } else if ([selector isEqualToString:@"!!"]){
             //            NSLog(@"single ':' as selector");
+            [expr setSelector:[self mapSelectorString:selector]];
+            [expr setArgs:@[]];
+            return expr;
+        } else if ([selector isEqualToString:@"?"]){
             [expr setSelector:[self mapSelectorString:selector]];
             [expr setArgs:@[]];
             return expr;

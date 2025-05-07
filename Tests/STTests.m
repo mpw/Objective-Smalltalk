@@ -1523,6 +1523,19 @@
 //    IDEXPECT( longerResult,@"Hello World\n",@"linefeed literal ");
 }
 
++(void)testCanCompileQuery
+{
+    NSString *expr=@"a ?";
+    STCompiler *compiler = [STCompiler compiler];
+    STCompiler *compiled = [compiler compile:expr];
+    EXPECTNOTNIL(compiled, @"compiled");
+}
+
++(void)testEvaluateQueryAsNextObject
+{
+    TESTEXPR( @"[ 'a', 'b'] each ? ",@"a");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1693,6 +1706,8 @@
         @"testParseSimpleQuery",
         @"testExecuteSimpleQueryWithContextVars",
         @"testNewlinesInStringConstants",
+        @"testCanCompileQuery",
+        @"testEvaluateQueryAsNextObject",
         ];
 }
 

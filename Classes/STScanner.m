@@ -205,6 +205,7 @@ boolAccessor( noNumbers, setNoNumbers )
     charSwitch['+']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['[']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['!']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
+    charSwitch['?']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch['-']=(IDIMP0)[self methodForSelector:@selector(scanSpecial)];
     charSwitch[':']=(IDIMP0)[self methodForSelector:@selector(scanPossibleAssignment)];
     charSwitch['=']=(IDIMP0)[self methodForSelector:@selector(scanPossibleEquals)];
@@ -683,6 +684,11 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
     EXPECTFALSE( [@"!!" isBinary],@"bang bang is a HOM, so unary");
 }
 
++(void)testQueryIsUnary
+{
+    EXPECTFALSE( [@"?" isBinary],@"query is unary");
+}
+
 +(void)testBangIsBinary
 {
     EXPECTTRUE( [@"!" isBinary],@"bang writeObject:, so binary");
@@ -723,6 +729,7 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
         @"testNextLineAfterComment",
         @"testCoutSyntaxIsSingleToken",
         @"testBangBangIsUnary",
+        @"testQueryIsUnary",
         @"testBangIsBinary",
         @"testSoleLinefeed",
         @"testLinefeedInLiteral",
