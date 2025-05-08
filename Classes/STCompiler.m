@@ -599,7 +599,7 @@ idAccessor(solver, setSolver)
 {
     id object=[self nextToken];
 	object = [self objectifyScanned:object];
-    NSLog(@"parseArgument -> %@",object);
+//    NSLog(@"parseArgument -> %@",object);
 	return object;
 }
 
@@ -682,7 +682,7 @@ idAccessor(solver, setSolver)
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
-        NSLog(@"found unary");
+//        NSLog(@"found unary");
         NSAssert1( ![next isEqual:@"["],@"selector shouldn't be open bracket: %@",next);
         [expr setSelector:[self mapSelectorString:next]];
 		expr=[self mapConnector:expr];
