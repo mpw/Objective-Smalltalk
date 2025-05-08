@@ -229,6 +229,15 @@ idAccessor(solver, setSolver)
 //    return [self evaluateScript:scriptString onObject:receiver];
 //}
 
+-(void)trace:(NSString*)msg obj:(id)token selector:(SEL)sel
+{
+    if (self.trace) {
+        NSString *errstr = [NSString stringWithFormat:@"%@ in '%@' %@/%@ context %@",msg,NSStringFromSelector(sel),token,[token class],scanner];
+        NSLog(@"%@",errstr);
+    }
+}
+
+
 -(void)parseError:(NSString*)msg token:(id)token selector:(SEL)sel
 {
     NSString *errstr = [NSString stringWithFormat:@"%@ in '%@' %@/%@ from %@",msg,NSStringFromSelector(sel),token,[token class],scanner];
@@ -244,6 +253,7 @@ idAccessor(solver, setSolver)
 }
 
 #define PARSEERROR( msg, theToken )  [self parseError:msg token:theToken selector:_cmd]
+#define TRACE( msg, theObjArg )  [self trace:msg obj:theObjArg selector:_cmd]
 
 -(void)untangleConcatsForArrayLiteral:(MPWMessageExpression *)e into:(NSMutableArray *)result
 {
@@ -259,7 +269,7 @@ idAccessor(solver, setSolver)
 
 -parseLiteralArray:(NSString*)closeArrayToken
 {
-//    NSLog(@"parseLiteralArray");
+    TRACE( @"enter with closeToken", closeArrayToken );
     NSMutableArray *array=[NSMutableArray array];
     id token=nil;
     do {
@@ -521,6 +531,8 @@ idAccessor(solver, setSolver)
 
 -objectifyScanned:object
 {
+    TRACE( @"enter with object: ", object );
+
 //	NSLog(@"objectifyScanned: %@",object);
     if ( [object isEqual:@"#"]  ) {
         object = [self parseLiteral];
@@ -547,6 +559,8 @@ idAccessor(solver, setSolver)
         [e setTheLiteral:object];
         object = e;
     }
+    TRACE( @"return with object: ", object );
+
     return object;
 }
 
@@ -951,22 +965,21 @@ idAccessor(solver, setSolver)
 
 -parseExpressionInLiteral:(BOOL)inLiteral
 {
-//    NSLog(@"parseExpression: inLiteral %d",inLiteral);
+    TRACE(@"start inLiteral", @(inLiteral));
 	id first=[self nextToken];
     while ( [first isComment] ) {
 //        NSLog(@"got comment: %@",first);
         first=[self nextToken];
 //        NSLog(@"next token after comment: %@",first);
     }
-//    NSLog(@"-parseExpressionInLiteral first: %@",first);
+    TRACE(@"first", first);
 	id second;
 	if ( [first isToken] && ![first isEqual:@"-"]  ) {
-//        NSLog(@"get first via objectifyScanned: %@",first);
+
 		first = [self objectifyScanned:first];
-//        NSLog(@"got first: %@",first);
-//        NSLog(@"fetch second");
+        TRACE(@"first via objectifyScanned", first);
 		second = [self nextToken];
-//        NSLog(@"second: %@",second);
+        TRACE(@"second", second);
 		if (  [self isAssignmentLikeToken:second]  ) {
 //			NSLog(@"assignmentLikeToken: %@",second);
 			return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];
@@ -977,7 +990,7 @@ idAccessor(solver, setSolver)
 		first = [self objectifyScanned:first];
 	}
 //	NSLog(@"in parseExpression, about to objectifyScanned:");
-	first = [self objectifyScanned:first];
+	first = [self objectifyScanned:first];      // is this correct?
 	second=[self nextToken];
     if ( [second isLiteral] && [first isEqual:@"-"]  && [second isKindOfClass:[NSNumber class]] ) {
         first = [first negated];
@@ -991,12 +1004,11 @@ idAccessor(solver, setSolver)
         }
     }
     if (second && [second length] > 0)  {		//	potential message expression
-//		NSLog(@"potential message expression got first %@ second %@",first,second);
+        TRACE(@"potential message expression",second);
 		first = [self objectifyScanned:first];
         [self pushBack:second];
         if ( inLiteral && [second isEqualToString:@","]) {
-//            NSLog(@"comma encountered when in literal, return");
-//            NSLog(@"comma encountered when in literal, return: %@",first);
+            TRACE(@"comma encountered when in literal, return: ",first);
             return first;
         }
         if (  ![second isEqual:@"."] && ![second isEqual:@"("] && ![second isEqual:@"["] ) {

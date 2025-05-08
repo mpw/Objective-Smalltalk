@@ -1494,6 +1494,7 @@
 +(void)testParseSimpleQuery
 {
     STCompiler *compiler=[STCompiler compiler];
+    compiler.trace = true;
     id query=[compiler compile:@"a[{age>3.}]"];
     EXPECTNOTNIL(query,@"query");
     EXPECTTRUE([query isKindOfClass:[STQueryExpression class]], @"parsed a query expression");

@@ -51,6 +51,7 @@
 idAccessor_h(solver, setSolver)
 
 @property (readonly) NSMutableDictionary <NSString*,STClassDefinition*> *classes;
+@property (nonatomic, assign) bool trace;
 
 -(STClassDefinition*)classForName:(NSString*)className;
 

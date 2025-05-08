@@ -37,6 +37,11 @@ idAccessor(theLiteral, setTheLiteral)
     return result;
 }
 
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"<Literal: '%@'>",theLiteral];
+}
+
 -negated
 {
     return [[self theLiteral] negated];
