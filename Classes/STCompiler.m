@@ -688,11 +688,12 @@ idAccessor(solver, setSolver)
 
 -parseUnary
 {
+    TRACE(@"enter",@"");
 //    NSLog(@"parseUnary, scanner: %@",scanner);
     id expr=[self parseArgument];
 //    NSLog(@"parseUnary expr: %@ scanner: %@",expr,scanner);
     id next=nil;
-    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]&& ![next isEqual:@"["]) {
+    while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]&& ![next isEqual:@"}"]&& ![next isEqual:@"["]) {
         expr=[[MPWMessageExpression alloc] initWithReceiver:expr];
         [expr setTextOffset:[scanner offset]];
         [expr setLen:1];
@@ -711,18 +712,20 @@ idAccessor(solver, setSolver)
             [self pushBack:next];
         }
     }
+    TRACE(@"return",expr);
+
     return expr;
 }
 
 -parseSelectorAndArgs:expr
 {
-//    NSLog(@"entry parseSelectorAndArgs: %@",scanner);
+    TRACE(@"entry expr:",expr);
     id selector=[self parseKeywordOrUnary];
     id args=nil;
-//    NSLog(@"parseSelectorAndArgs, selector: '%@'",selector);
+    TRACE(@"selector:",selector);
 
     if ( selector && isalpha( [selector characterAtIndex:0] )) {
-//        NSLog(@"possibly keyword: '%@'",selector);
+        TRACE(@"possibly keyword:",selector);
         NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
         BOOL isKeyword =[selector isKeyword];
         if ( isKeyword   ) {
@@ -733,7 +736,7 @@ idAccessor(solver, setSolver)
                 id arg=[self parseUnary];
                 //--- issue:  the above should have been a full expression parse
 				id keyword=nil;
-//				NSLog(@"in keyword, parsed component: %@",arg);
+                TRACE(@"in keyword, parsed component:",arg);
                 if (arg) {
                     [args addObject:arg];
                     keyword=[self parseKeywordOrUnary];
@@ -742,13 +745,13 @@ idAccessor(solver, setSolver)
                     break;
                 }
                 if ( isKeyword ) {
-//					NSLog(@"got more of a keyword: %@",keyword);
+                    TRACE(@"got more of a keyword:",keyword);
                     [selector appendString:keyword];
                 } else {
-//					NSLog(@"got more of a non-keyword: %@",keyword);
+                    TRACE(@"got more of a non-keyword (push back):",keyword);
 					[self pushBack:keyword];
                     if ( [self isSpecialSelector:keyword] ) {
-//                        NSLog(@"special selector '%@' encountered, parsing subexpression",keyword);
+                        TRACE(@"special selector:",keyword);
                         id subExpr = [[[MPWMessageExpression alloc] initWithReceiver:arg] autorelease];
                         [subExpr setTextOffset:[scanner offset]];
                         [subExpr setLen:1];
@@ -783,11 +786,12 @@ idAccessor(solver, setSolver)
             [self pushBack:selector];
             return [expr receiver];
         } else if ([selector isEqualToString:@"!!"]){
-            //            NSLog(@"single ':' as selector");
+            TRACE(@"!! for expr",expr);
             [expr setSelector:[self mapSelectorString:selector]];
             [expr setArgs:@[]];
             return expr;
         } else if ([selector isEqualToString:@"?"]){
+            TRACE(@"? for expr",expr);
             [expr setSelector:[self mapSelectorString:selector]];
             [expr setArgs:@[]];
             return expr;
@@ -796,9 +800,9 @@ idAccessor(solver, setSolver)
                 NSLog(@"selector shouldn't be open bracket:\%@",[NSThread callStackSymbols]);
                 PARSEERROR(@"selector shouldn't be open bracket", selector);
             }
-//            NSLog(@"binary: %@",selector);
+            TRACE(@"binary",selector);
             id arg=[self parseUnary];
-//            NSLog(@"arg to binary: %@",arg);
+            TRACE(@"arg to binary",arg);
             if ( arg ) {
                 args=[NSArray arrayWithObject:arg];
             } else {
@@ -811,7 +815,7 @@ idAccessor(solver, setSolver)
     NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
     [expr setSelector:[self mapSelectorString:selector]];
     [expr setArgs:args];
-//    NSLog(@"return expr from parseSelectorAndArgs: %@",expr);
+    TRACE(@"return",expr);
     return expr;
 }
 

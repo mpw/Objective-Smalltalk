@@ -1494,8 +1494,7 @@
 +(void)testParseSimpleQuery
 {
     STCompiler *compiler=[STCompiler compiler];
-    compiler.trace = true;
-    id query=[compiler compile:@"a[{age>3.}]"];
+    id query=[compiler compile:@"a[{age>3}]"];
     EXPECTNOTNIL(query,@"query");
     EXPECTTRUE([query isKindOfClass:[STQueryExpression class]], @"parsed a query expression");
 }
@@ -1506,7 +1505,7 @@
     
     [compiler evaluateScriptString:@"class Person { var age. var name. }"];
     [compiler evaluateScriptString:@"p← [ #Person{ name:'Mike', age:22}, #Person{ name:'Linda', age:24 } ]."];
-    NSArray* olderPeople =  [compiler evaluateScriptString:@"p[{age<23.}]"];
+    NSArray* olderPeople =  [compiler evaluateScriptString:@"p[{age<23}]"];
     INTEXPECT( olderPeople.count, 1, @"number of matches" );
     IDEXPECT( [olderPeople.firstObject name],@"Mike", @"name of person older than 22" );
 }
