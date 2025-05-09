@@ -79,7 +79,9 @@
     NSString *selector = [expression nonMappedMessageName];
     NSString *receiverName = [[expression receiver] name];
     NSString *argument = [[[expression args] objectAtIndex:0] theLiteral];
-
+    if ( [argument isKindOfClass:[NSString class]]) {
+        argument=[NSString stringWithFormat:@"\"%@\"",argument];
+    }
     NSString *sqlQuery = [NSString stringWithFormat:@"%@ %@ %@",receiverName,selector,argument];
     return [self selectWhere:sqlQuery];
 }
