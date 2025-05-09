@@ -17,4 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol Querying
+
+-(NSArray*)evaluateQuery:(STQueryExpression*)query inContext:aContext;
+
+@end
+
+
+@interface NSArray(querying) <Querying>
+
+@end
+
 NS_ASSUME_NONNULL_END

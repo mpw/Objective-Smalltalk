@@ -12,8 +12,12 @@
 -(id)evaluateIn:(STEvaluator*)aContext
 {
     NSArray* receiver = (NSArray*)[self.receiver evaluateIn:aContext];
+    return [receiver evaluateQuery:self inContext:aContext];
+}
+
+-(id)runAgainstArray:(NSArray*)receiver inContext:aContext
+{
     id predicateBlock = [self.predicate evaluateIn:aContext];
-    id oldQ = [aContext schemeForName:@"q"];
     id oldDefault = [aContext schemeForName:@"default"];
     NSMutableArray *result=[NSMutableArray array];
     @try {
@@ -36,6 +40,15 @@
 @end
 
 
+@implementation NSArray(querying)
+
+-(NSArray*)evaluateQuery:(STQueryExpression*)query inContext:aContext
+{
+    return [query runAgainstArray:self inContext:aContext];
+}
+
+@end
+
 #import <MPWFoundation/DebugMacros.h>
 
 @implementation STQueryExpression(testing) 
@@ -51,5 +64,25 @@
 //			@"someTest",
 			];
 }
+
+@end
+
+#import "MPWMessageExpression.h"
+
+@implementation MPWSQLiteTable(query)
+
+-(NSArray*)evaluateQuery:(STQueryExpression*)query inContext:aContext
+{
+//    NSLog(@"table %@ evaluate query: %@",self.name, query);
+//    NSLog(@"predicate: %@",query.predicate);
+    MPWMessageExpression* expression=[query.predicate statements];
+    NSString *selector = [expression nonMappedMessageName];
+    NSString *receiverName = [[expression receiver] name];
+    NSString *argument = [[[expression args] objectAtIndex:0] theLiteral];
+
+    NSString *sqlQuery = [NSString stringWithFormat:@"%@ %@ %@",receiverName,selector,argument];
+    return [self selectWhere:sqlQuery];
+}
+
 
 @end

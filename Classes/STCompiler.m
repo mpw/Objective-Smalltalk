@@ -690,7 +690,7 @@ idAccessor(solver, setSolver)
 {
     TRACE(@"enter",@"");
 //    NSLog(@"parseUnary, scanner: %@",scanner);
-    id expr=[self parseArgument];
+    MPWMessageExpression* expr=[self parseArgument];
 //    NSLog(@"parseUnary expr: %@ scanner: %@",expr,scanner);
     id next=nil;
     while ( nil!=(next=[self nextToken]) && ![next isLiteral] && ![next isKeyword] && ![next isBinary] && ![next isEqual:@")"] && ![next isEqual:@"."] &&![next isEqual:@";"] &&![next isEqual:@"|"] && ![next isEqual:@"]"]&& ![next isEqual:@"}"]&& ![next isEqual:@"["]) {
@@ -700,6 +700,7 @@ idAccessor(solver, setSolver)
 //        NSLog(@"found unary");
         NSAssert1( ![next isEqual:@"["],@"selector shouldn't be open bracket: %@",next);
         [expr setSelector:[self mapSelectorString:next]];
+        [expr setNonMappedMessageName:next];
 		expr=[self mapConnector:expr];
 //        NSLog(@"part of parseUnary: %@",expr);
     }
@@ -788,11 +789,13 @@ idAccessor(solver, setSolver)
         } else if ([selector isEqualToString:@"!!"]){
             TRACE(@"!! for expr",expr);
             [expr setSelector:[self mapSelectorString:selector]];
+            [expr setNonMappedMessageName:selector];
             [expr setArgs:@[]];
             return expr;
         } else if ([selector isEqualToString:@"?"]){
             TRACE(@"? for expr",expr);
             [expr setSelector:[self mapSelectorString:selector]];
+            [expr setNonMappedMessageName:selector];
             [expr setArgs:@[]];
             return expr;
         } else {
@@ -814,6 +817,7 @@ idAccessor(solver, setSolver)
 //	NSLog(@"got selector: %@ args: %@",selector,args);
     NSAssert1( ![selector isEqual:@"["],@"selector shouldn't be open bracket: %@",selector);
     [expr setSelector:[self mapSelectorString:selector]];
+    [expr setNonMappedMessageName:selector];
     [expr setArgs:args];
     TRACE(@"return",expr);
     return expr;
@@ -1041,6 +1045,7 @@ idAccessor(solver, setSolver)
 
     MPWMessageExpression *forward=[[[MPWMessageExpression alloc] initWithReceiver:selfReceiver] autorelease];
     [forward setSelector:@selector(forward:)];
+    [forward setNonMappedMessageName:@"forward"];
     [forward setArgs:@[ result ]];
     return forward;
 }

@@ -23,6 +23,7 @@ objectAccessor_h(NSArray*, args, setArgs )
 -(NSString*)messageNameForCompletion;
 
 @property (nonatomic, assign) BOOL isSuperSend;
+@property (nonatomic, strong) NSString* nonMappedMessageName;
 
 
 @end
