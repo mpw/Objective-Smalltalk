@@ -80,7 +80,14 @@
     NSString *receiverName = [[expression receiver] name];
     NSString *argument = [[[expression args] objectAtIndex:0] theLiteral];
     if ( [argument isKindOfClass:[NSString class]]) {
-        argument=[NSString stringWithFormat:@"\"%@\"",argument];
+        if ( [selector isEqual:@"="]) {
+            argument=[NSString stringWithFormat:@"\"%@\"",argument];
+        } else if ( [selector isEqual:@"hasPrefix:"]) {
+            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
+            selector=@"LIKE";
+        } else {
+            @throw [NSException exceptionWithName:@"unsupportedquery" reason:@"Unsupported Query" userInfo:@{}];
+        }
     }
     NSString *sqlQuery = [NSString stringWithFormat:@"%@ %@ %@",receiverName,selector,argument];
     return [self selectWhere:sqlQuery];
