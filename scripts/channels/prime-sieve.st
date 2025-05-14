@@ -1,5 +1,11 @@
 #!env st
 
+
+filter source {
+    var max.
+    -<void> run {  2 to: this:max do: { :num | this:target ! num. }. }
+}
+
 filter filterdiv  {
    var divisor.
    |{ ((object mod: this:divisor ) = 0 ) ifFalse: { ^object.  }. }
@@ -20,11 +26,8 @@ filter sievefilter  {
         this:currentfilter ← newfilter.
      }
      |{  self addFilterForNumber:object.  ^object.  }
-     -<void>filterTo: max {
-	this:currentfilter do ! (2 to:max) each.
-     }
 }.
 
 
-s ← #sievefilter{ target: (#MPWPrintLiner{} → stdout) }.
-s filterTo:200.
+s ← #source{ max:2000 } →  (#sievefilter{} currentfilter)  → #MPWPrintLiner{} → stdout.
+s run.
