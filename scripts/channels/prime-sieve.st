@@ -1,6 +1,6 @@
 #!env st
 
-class filterdiv : MPWFilter {
+filter filterdiv  {
    var divisor.
    |{
        ((object mod: this:divisor ) = 0 ) ifFalse: {
@@ -12,7 +12,7 @@ class filterdiv : MPWFilter {
 
 stdout println:'did define filterdiv.'.
 
-class sievefilter : MPWFilter {
+filter sievefilter  {
      var currentfilter.
      var lastfilter.
      |{
