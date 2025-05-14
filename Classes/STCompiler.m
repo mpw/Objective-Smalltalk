@@ -1407,6 +1407,14 @@ idAccessor(solver, setSolver)
                     next=[self nextToken];
                     [self pushBack:next];
 //                    NSLog(@"nextToken after property parse of %@: %@",[[prop propertyPath] name],next);
+                } else if ( [next isEqualToString:@"|{"]) {
+                    MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
+                    [self pushBack:@"{"];
+                    STScriptedMethod *filterMethod=[self parseMethodBodyWithHeader:header];
+                    //            NSLog(@"parsed: %@",filterMethod);
+                    [methods addObject:filterMethod];
+                    classDef.methods=methods;
+                    //            NSLog(@"methods: %@",methods);
                 } else {
                     PARSEERROR(@"unexpected symbol in class def, expected method, var or val",next);
                 }

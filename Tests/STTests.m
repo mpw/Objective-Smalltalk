@@ -1236,6 +1236,15 @@
 }
 
 
++(void)testFilterDefSyntaxInClassDef
+{
+    STCompiler *compiler=[STCompiler compiler];
+    [compiler evaluateScriptString:@"filter LowerFilter { |{  self forward:object lowercaseString. }}"];
+    id result=[[compiler evaluateScriptString:@" LowerFilter process:'SHOULD BE LOWER'."] firstObject];
+    IDEXPECT( result, @"should be lower", @"nested expr result");
+}
+
+
 +(void)testCanParseInterpolatableString
 {
     STCompiler *compiler=[STCompiler compiler];
@@ -1672,6 +1681,7 @@
         @"testSimpleFilterDefSyntax",
         @"testUseStReturnAsForward",
         @"testFilterDefWithNormalMethods",
+        @"testFilterDefSyntaxInClassDef",
 #endif
         @"testCanParseInterpolatableString",
         @"testCanInterpolateString",

@@ -71,7 +71,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(id <MPWHierarchicalStorage>)rawStoreForSubDir:(NSString*)subdir
 {
     id scheme =  [[self refForSubDir:subdir] asScheme];
-    NSLog(@"raw scheme for subdir '%@' is %@",subdir,scheme);
+//    NSLog(@"raw scheme for subdir '%@' is %@",subdir,scheme);
     return scheme;
 }
 
@@ -137,7 +137,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     MPWWriteBackCache *cache=[MPWWriteBackCache storeWithSource:base];
     cache.autoFlush=NO;
-    NSLog(@"cache for base %@ is %@",base,cache);
+//    NSLog(@"cache for base %@ is %@",base,cache);
     return cache;
 }
 
@@ -171,7 +171,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(void)configureInterpreter:(STCompiler*)newInterpreter
 {
     [[newInterpreter schemes] setSchemeHandler:self.cachedResources   forSchemeName:@"rsrc"];
-    NSLog(@"configuring interpreter %@ with rsrc scheme: %@",newInterpreter,[newInterpreter evaluateScriptString:@"scheme:rsrc"]);
+//    NSLog(@"configuring interpreter %@ with rsrc scheme: %@",newInterpreter,[newInterpreter evaluateScriptString:@"scheme:rsrc"]);
     [newInterpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
 }
 
