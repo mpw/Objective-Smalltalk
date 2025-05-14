@@ -2,9 +2,9 @@
 
 class filterdiv : MPWFilter {
    var divisor.
-   -<void>writeObject:aNumber sender:s {
-       ((aNumber mod: this:divisor ) = 0 ) ifFalse: {
-	 ^aNumber.
+   |{
+       ((object mod: this:divisor ) = 0 ) ifFalse: {
+	 ^object.
        }. 
    }
     -description { "filter for {this:divisor} target: {this:target}". }
@@ -15,11 +15,11 @@ stdout println:'did define filterdiv.'.
 class sievefilter : MPWFilter {
      var currentfilter.
      var lastfilter.
-     -<void>writeObject:aNumber sender:sender  {
-        newfilter ← #filterdiv{ divisor: aNumber, target: this:self }.
+     |{
+        newfilter ← #filterdiv{ divisor: object, target: this:self }.
         this:currentfilter setTarget:newfilter.
         this:currentfilter ← newfilter.
-        ^aNumber. 
+        ^object. 
      }
 }.
 
