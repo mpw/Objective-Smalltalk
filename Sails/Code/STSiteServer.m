@@ -10,7 +10,6 @@
 //#import <MethodServer/MethodServer.h>
 #import <ObjectiveSmalltalk/STCompiler.h>
 #import <ObjectiveSmalltalk/MPWMethodStore.h>
-//#import "MPWHTMLRenderScheme.h"
 //#import "MPWHTTPServer.h"
 
 @implementation STSiteServer

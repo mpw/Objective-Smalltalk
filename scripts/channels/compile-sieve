@@ -1,0 +1,1 @@
+cc -rpath /Library/Frameworks  -o prime-sieve-long prime-sieve-long.m -F/Library/Frameworks  -framework MPWFoundation -framework Foundation
