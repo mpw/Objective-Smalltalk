@@ -39,6 +39,11 @@
     return nil;
 }
 
+-nextObject
+{
+    return self.value;
+}
+
 -(void)writeObject:anObject
 {
     [self setValue:anObject];

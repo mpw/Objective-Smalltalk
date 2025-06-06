@@ -89,7 +89,9 @@ static void CatchException(NSException *exception)
 -(void)setupWithInterpreter:anInterpreter
 {
     [self setInterpreter:anInterpreter];
-    [[self interpreter] bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
+    id ststdout = [MPWByteStream Stdout];
+    [newInterpreter bindValue:ststdout toVariableNamed:@"stdout"];
+    [newInterpreter bindValue:[MPWPrintLiner streamWithTarget:ststdout] toVariableNamed:@"stdline"];
     [[self interpreter] bindValue:self toVariableNamed:@"methodServer"];
 //    NSLog(@"PATH: %@",[STCompiler evaluate:@"env:PATH"]);
     [self setMethodDict:[self externalMethodsDict]];

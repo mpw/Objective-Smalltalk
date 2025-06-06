@@ -113,7 +113,8 @@ idAccessor( localVars, setLocalVars )
     if ( !newStdout) {
         newStdout=[MPWByteStream Stdout];
     }
-	[self bindValue:newStdout toVariableNamed:@"stdout"];
+    [self bindValue:newStdout toVariableNamed:@"stdout"];
+    [self bindValue:[parent bindingForLocalVariableNamed:@"stdline"] toVariableNamed:@"stdline"];
     bindingCache=[NSMutableDictionary new];
 	parent = aParent;
     return self;

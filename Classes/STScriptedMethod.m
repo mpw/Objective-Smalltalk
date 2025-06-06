@@ -104,6 +104,10 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     if ( parentStdout ) {
         [evaluator bindValue:parentStdout toVariableNamed:@"stdout"];
     }
+    id parentStdline = [context valueOfVariableNamed:@"stdline"];
+    if ( parentStdout ) {
+        [evaluator bindValue:parentStdline toVariableNamed:@"stdline"];
+    }
 //    if ( self.classOfMethod == nil) {
 //        [NSException raise:@"nilcontextclass" format:@"classOfMethod is nil in scripted method"];
 //    }

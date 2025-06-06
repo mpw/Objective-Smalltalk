@@ -497,6 +497,7 @@ static BOOL useMaxSize;
 -(void)setupStdioForCommandHandler
 {
     standardOut=[[MPWREPLViewPrinter streamWithTarget:[[self textStorage] mutableString] ] retain];
+    [newInterpreter bindValue:[MPWPrintLiner streamWithTarget:standardOut] toVariableNamed:@"stdline"];
     [commandHandler bindValue:standardOut toVariableNamed:@"stdout"];
 
 }

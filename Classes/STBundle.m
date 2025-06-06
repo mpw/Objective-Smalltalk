@@ -172,7 +172,9 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 {
     [[newInterpreter schemes] setSchemeHandler:self.cachedResources   forSchemeName:@"rsrc"];
 //    NSLog(@"configuring interpreter %@ with rsrc scheme: %@",newInterpreter,[newInterpreter evaluateScriptString:@"scheme:rsrc"]);
-    [newInterpreter bindValue:[MPWByteStream Stdout] toVariableNamed:@"stdout"];
+    id ststdout = [MPWByteStream Stdout];
+    [newInterpreter bindValue:ststdout toVariableNamed:@"stdout"];
+    [newInterpreter bindValue:[MPWPrintLiner streamWithTarget:ststdout] toVariableNamed:@"stdline"];
 }
 
 -(STCompiler*)createInterpreter

@@ -92,6 +92,7 @@
     id Stdin=[MPWFDStreamSource fd:0];
     [self bindValue:Rawstdout toVariableNamed:@"rawstdout"];
     [self bindValue:Stdout toVariableNamed:@"stdout"];
+    [self bindValue:[MPWPrintLiner streamWithTarget:Stdout] toVariableNamed:@"stdline"];
     [self bindValue:Stderr toVariableNamed:@"stderr"];
     [self bindValue:Stdin toVariableNamed:@"stdin"];
     [self bindValue:@"\n" toVariableNamed:@"newline"];
