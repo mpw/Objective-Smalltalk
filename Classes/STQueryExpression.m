@@ -67,6 +67,8 @@
 
 @end
 
+#ifndef GNUSTEP
+
 #import "MPWMessageExpression.h"
 
 @implementation MPWSQLiteTable(query)
@@ -95,3 +97,6 @@
 
 
 @end
+
+#endif
+
