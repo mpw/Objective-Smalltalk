@@ -23,7 +23,7 @@
 
 -bindingForReference:aReference inContext:aContext
 {
-    return [MPWFileReference bindingWithReference:aReference inStore:self];
+    return [MPWFileReference referenceWithIdentifier:aReference inStore:self];
 }
 
 #ifndef GS_API_LATEST

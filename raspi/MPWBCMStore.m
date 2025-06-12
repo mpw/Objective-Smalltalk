@@ -77,7 +77,7 @@
 
 -(MPWBinding*)bindingForReference:aReference inContext:aContext
 {
-	return [MPWGPIOPin bindingWithReference:aReference inStore:self];
+	return [MPWGPIOPin referenceWithIdentifier:aReference inStore:self];
 }
 
 -(void)dealloc

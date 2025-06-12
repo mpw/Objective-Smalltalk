@@ -18,7 +18,7 @@
 
 -(MPWCommandBinding *)bindingForReference:(id)aReference inContext:(id)aContext
 {
-    return [MPWCommandBinding bindingWithReference:aReference inStore:self];
+    return [MPWCommandBinding referenceWithIdentifier:aReference inStore:self];
 }
 
 @end

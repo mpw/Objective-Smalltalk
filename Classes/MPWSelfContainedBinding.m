@@ -49,7 +49,7 @@
     [self setValue:anObject];
 }
 
-+ (instancetype)bindingWithReference:(id)aReference inStore:(id)aStore {
++ (instancetype)referenceWithIdentifier:(id)aReference inStore:(id)aStore {
     return nil;
 }
 
