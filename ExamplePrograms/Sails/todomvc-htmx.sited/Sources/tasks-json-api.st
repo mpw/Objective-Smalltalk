@@ -1,5 +1,3 @@
-#!env stsh
-framework:ObjectiveHTTPD load.
 
 class Task {
 	var id.
