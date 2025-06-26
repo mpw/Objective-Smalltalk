@@ -1,3 +1,4 @@
+#!env st
 
 class Task {
 	var id.

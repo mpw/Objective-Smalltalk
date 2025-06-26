@@ -8,7 +8,7 @@
 #import "STCompiler.h"
 #import "MPWExpression+autocomplete.h"
 #import "MPWShellPrinter.h"
-
+#import "MPWREPLViewPrinter.h"
 
 #define RETURN_CHAR    0x0D
 #define BACKSPACE_CHAR 0x7F  // Note SHIFT + BACKSPACE gives 0x08
@@ -497,7 +497,7 @@ static BOOL useMaxSize;
 -(void)setupStdioForCommandHandler
 {
     standardOut=[[MPWREPLViewPrinter streamWithTarget:[[self textStorage] mutableString] ] retain];
-    [newInterpreter bindValue:[MPWPrintLiner streamWithTarget:standardOut] toVariableNamed:@"stdline"];
+    [commandHandler bindValue:[MPWPrintLiner streamWithTarget:standardOut] toVariableNamed:@"stdline"];
     [commandHandler bindValue:standardOut toVariableNamed:@"stdout"];
 
 }
