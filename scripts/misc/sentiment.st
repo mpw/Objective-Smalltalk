@@ -1,3 +1,3 @@
 #!env stsh
 #-sentiment:text
-(ref:http://text-processing.com/api/sentiment/ postForm: #{ #text: text }) 
+(ref:https://text-processing.com/api/sentiment/ post: #{ #text: text }) 
