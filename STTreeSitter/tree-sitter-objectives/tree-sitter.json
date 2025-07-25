@@ -1,0 +1,39 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "objectives",
+      "camelcase": "ObjectiveS",
+      "title": "Objective-S",
+      "scope": "source.objectives",
+      "file-types": [
+        "st"
+      ],
+      "injection-regex": "^objectives$",
+      "class-name": "TreeSitterObjectives"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Parser for Objective-S",
+    "authors": [
+      {
+        "name": "Marcel Weiher",
+        "email": "marcel@metaobject.com"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/tree-sitter/tree-sitter-objectives"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}
