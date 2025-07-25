@@ -747,6 +747,8 @@
 		1FE63E0C21061C0F0066B335 /* MPWClangImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE63E0A21061C0F0066B335 /* MPWClangImporter.h */; };
 		1FE63E0D21061C0F0066B335 /* MPWClangImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE63E0B21061C0F0066B335 /* MPWClangImporter.m */; };
 		1FE63E1A210620F60066B335 /* clang-c in Resources */ = {isa = PBXBuildFile; fileRef = 1FE63E19210620F60066B335 /* clang-c */; };
+		1FE6BCC02E33E9B800E40B6D /* libtree-sitter.0.26.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 1FE6BCBF2E33E9B800E40B6D /* libtree-sitter.0.26.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		1FE6BCD22E33EDA800E40B6D /* libtree-sitter.0.26.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE6BCBF2E33E9B800E40B6D /* libtree-sitter.0.26.dylib */; };
 		1FE7879624C0B440005ED5D4 /* MPWWindowsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE7B41B0AB3C45300475AFD /* MPWFastMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */; };
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
@@ -996,6 +998,17 @@
 				1FBAAC1E184BDC6400086047 /* stsh.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1FE6BCB72E33D46100E40B6D /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1FE6BCC02E33E9B800E40B6D /* libtree-sitter.0.26.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1FEE11DB2386F3040042B149 /* Copy Smalltalk files for finishLaunching */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -1560,6 +1573,9 @@
 		1FE63E19210620F60066B335 /* clang-c */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "clang-c"; sourceTree = "<group>"; };
 		1FE63E1B210626B60066B335 /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = ../../../../../Applications/Xcode.app/Contents/Frameworks/libclang.dylib; sourceTree = "<group>"; };
 		1FE6BC3F2E33C9E400E40B6D /* STTreeSitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = STTreeSitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FE6BCB92E33D4BE00E40B6D /* libtree-sitter.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libtree-sitter.0.0.dylib"; path = "../../../../../usr/local/lib/libtree-sitter.0.0.dylib"; sourceTree = "<group>"; };
+		1FE6BCBC2E33D4ED00E40B6D /* libtree-sitter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libtree-sitter.a"; path = "../../../../../usr/local/lib/libtree-sitter.a"; sourceTree = "<group>"; };
+		1FE6BCBF2E33E9B800E40B6D /* libtree-sitter.0.26.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libtree-sitter.0.26.dylib"; path = "../../../../../usr/local/lib/libtree-sitter.0.26.dylib"; sourceTree = "<group>"; };
 		1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWFastMessage.h; sourceTree = "<group>"; };
 		1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFastMessage.m; sourceTree = "<group>"; };
 		1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWResourceScheme.h; sourceTree = "<group>"; };
@@ -1873,6 +1889,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FE6BCD22E33EDA800E40B6D /* libtree-sitter.0.26.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2092,6 +2109,8 @@
 		1F2E6EFC142EF26E00B5C827 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1FE6BCBC2E33D4ED00E40B6D /* libtree-sitter.a */,
+				1FE6BCB92E33D4BE00E40B6D /* libtree-sitter.0.0.dylib */,
 				1F61AE5B2DBBDF2B003E8229 /* MPWFoundation.framework */,
 				1F6060082A2244D300783E17 /* Python.framework */,
 				1F6060062A22449800783E17 /* Python3.framework */,
@@ -2709,6 +2728,7 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
+				1FE6BCBF2E33E9B800E40B6D /* libtree-sitter.0.26.dylib */,
 				1F096D562B49690D0072DD85 /* sl.entitlements */,
 				1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */,
 				1FD236732641BC6C009C5E46 /* raspi */,
@@ -3821,6 +3841,8 @@
 				1FE6BC3B2E33C9E400E40B6D /* Sources */,
 				1FE6BC3C2E33C9E400E40B6D /* Frameworks */,
 				1FE6BC3D2E33C9E400E40B6D /* Resources */,
+				1FE6BCB72E33D46100E40B6D /* Embed Libraries */,
+				1FE6BCB42E33D2D900E40B6D /* Run Tests */,
 			);
 			buildRules = (
 			);
@@ -4390,6 +4412,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\n\nif  [ test -n ${tester} ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+		};
+		1FE6BCB42E33D2D900E40B6D /* Run Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Tests";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "tester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\nbinary=`basename ${FULL_PRODUCT_NAME} .framework`\ncodesign -s - $framework/`basename $framework .framework`\nif [ -x  ${tester}  ] ; then\n     if $tester ${framework}  ; then\n        echo succes\n     else\n        echo fail\n         exit 1\n     fi\nelse\n   echo \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 		1FFCB5792B4314D7002DC40A /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5992,7 +6032,6 @@
 		1F6C79302187468D00071DAC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -6049,7 +6088,6 @@
 		1F6C79312187468D00071DAC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -6782,7 +6820,6 @@
 		1FAFD98B1855BC5500EC5221 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -6837,7 +6874,6 @@
 		1FAFD98C1855BC5500EC5221 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -7457,7 +7493,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7468,12 +7504,21 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					/usr/local/include/,
+				);
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/STTreeSitter/tree-sitter-objectives",
+					/usr/local/lib,
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
@@ -7487,6 +7532,7 @@
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -7519,17 +7565,26 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					/usr/local/include/,
+				);
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/STTreeSitter/tree-sitter-objectives",
+					/usr/local/lib,
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
@@ -7543,6 +7598,7 @@
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
