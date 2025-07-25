@@ -22,7 +22,7 @@
 enum ts_symbol_identifiers {
   anon_sym_EQ = 1,
   anon_sym_SEMI = 2,
-  sym_identifier = 3,
+  sym_identifier1 = 3,
   sym_number = 4,
   sym_source_file = 5,
   sym_statement = 6,
@@ -33,7 +33,7 @@ static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
   [anon_sym_EQ] = "=",
   [anon_sym_SEMI] = ";",
-  [sym_identifier] = "identifier",
+  [sym_identifier1] = "identifier1",
   [sym_number] = "number",
   [sym_source_file] = "source_file",
   [sym_statement] = "statement",
@@ -44,7 +44,7 @@ static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
   [anon_sym_EQ] = anon_sym_EQ,
   [anon_sym_SEMI] = anon_sym_SEMI,
-  [sym_identifier] = sym_identifier,
+  [sym_identifier1] = sym_identifier1,
   [sym_number] = sym_number,
   [sym_source_file] = sym_source_file,
   [sym_statement] = sym_statement,
@@ -64,7 +64,7 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = false,
   },
-  [sym_identifier] = {
+  [sym_identifier1] = {
     .visible = true,
     .named = true,
   },
@@ -131,7 +131,7 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
       ACCEPT_TOKEN(anon_sym_SEMI);
       END_STATE();
     case 4:
-      ACCEPT_TOKEN(sym_identifier);
+      ACCEPT_TOKEN(sym_identifier1);
       if (('0' <= lookahead && lookahead <= '9') ||
           ('A' <= lookahead && lookahead <= 'Z') ||
           lookahead == '_' ||
@@ -163,7 +163,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [ts_builtin_sym_end] = ACTIONS(1),
     [anon_sym_EQ] = ACTIONS(1),
     [anon_sym_SEMI] = ACTIONS(1),
-    [sym_identifier] = ACTIONS(1),
+    [sym_identifier1] = ACTIONS(1),
     [sym_number] = ACTIONS(1),
   },
   [STATE(1)] = {
@@ -171,14 +171,14 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_statement] = STATE(2),
     [aux_sym_source_file_repeat1] = STATE(2),
     [ts_builtin_sym_end] = ACTIONS(3),
-    [sym_identifier] = ACTIONS(5),
+    [sym_identifier1] = ACTIONS(5),
   },
 };
 
 static const uint16_t ts_small_parse_table[] = {
   [0] = 3,
     ACTIONS(5), 1,
-      sym_identifier,
+      sym_identifier1,
     ACTIONS(7), 1,
       ts_builtin_sym_end,
     STATE(3), 2,
@@ -188,14 +188,14 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(9), 1,
       ts_builtin_sym_end,
     ACTIONS(11), 1,
-      sym_identifier,
+      sym_identifier1,
     STATE(3), 2,
       sym_statement,
       aux_sym_source_file_repeat1,
   [22] = 1,
     ACTIONS(14), 2,
       ts_builtin_sym_end,
-      sym_identifier,
+      sym_identifier1,
   [27] = 1,
     ACTIONS(16), 1,
       anon_sym_EQ,

@@ -24,7 +24,7 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "identifier1",
           "named": true
         },
         {
@@ -43,7 +43,7 @@
     "named": false
   },
   {
-    "type": "identifier",
+    "type": "identifier1",
     "named": true
   },
   {
