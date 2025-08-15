@@ -11,6 +11,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
+#define __USE_GNU
+#include <pthread.h>
+
 
 #import <ObjectiveSmalltalk/STScanner.h>
 #import "MPWShellCompiler.h"
@@ -280,7 +283,11 @@ idAccessor( retval, setRetval )
 
 -(void)executeFromFileName:(NSString*)filename
 {
+#if !GS_API_LATEST
     pthread_setname_np( [filename UTF8String] );
+#else
+    pthread_setname_np( pthread_self(), [filename UTF8String] );
+#endif
 	id script = [STScript scriptWithContentsOfFile:filename];
     [[self evaluator] bindValue:filename toVariableNamed:@"argv0" withScheme:@"var"];
 	[script executeInContext:self];

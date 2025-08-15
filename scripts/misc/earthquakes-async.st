@@ -6,6 +6,8 @@ stream do: { :theLine |
     latitude ← values[1].
     longitude ← values[2].
     magnitude ← values[4].
+    magnitude doubleValue > 6 ifTrue:{
 	stdout println:"Quake: magnitude {magnitude} on {time} at {latitude} {longitude}".
+    }.
 }. 
 stream awaitResultForSeconds:20.

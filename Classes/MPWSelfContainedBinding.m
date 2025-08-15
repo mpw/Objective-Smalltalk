@@ -67,6 +67,11 @@
 }
 
 
+-(Protocol*)defaultInputProtocol
+{
+    return @protocol(Streaming);
+}
+
 
 
 

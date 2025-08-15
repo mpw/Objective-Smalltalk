@@ -1545,6 +1545,10 @@
     TESTEXPR( @"[ 'a', 'b'] each ? ",@"a");
 }
 
++(void)testCanConnectFilterToSelfContainedBinding
+{
+    TESTEXPR( @"filter toupper_test_selfcontaind |{ ^object uppercaseString. }. a := 20. (toupper_test_selfcontaind → ref:a) ! 'hello world'. a.",@"HELLO WORLD");
+}
 
 +(NSArray*)testSelectors
 {
@@ -1718,6 +1722,7 @@
         @"testNewlinesInStringConstants",
         @"testCanCompileQuery",
         @"testEvaluateQueryAsNextObject",
+        @"testCanConnectFilterToSelfContainedBinding",
         ];
 }
 

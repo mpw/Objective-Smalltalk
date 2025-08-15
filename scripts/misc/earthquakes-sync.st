@@ -1,4 +1,4 @@
-#!env stsh
+#!env st
 data ← https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv.
 lines ← data processedWith: MPWBytesToLines.
 lines ← lines subarrayWithRange: (1 to: lines count - 1).
