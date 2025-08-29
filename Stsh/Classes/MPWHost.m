@@ -18,6 +18,8 @@
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *user;
+@property (nonatomic, assign) int port;
+
 objectAccessor_h(id<SSHConnection>, connection, setConnection)
 idAccessor_h( commandStore, setCommandStore)
 @end
@@ -136,13 +138,23 @@ lazyAccessor(MPWCommandStore*, commandStore, setCommandStore, createCommandStore
 
 @implementation MPWRemoteHost
 
++(int)defaultPort
+{
+    return 22;
+}
 
--(instancetype)initWithName:(NSString*)newName user:(NSString*)newUser
+-(instancetype)initWithName:(NSString*)newName user:(NSString*)newUser port:(int)newPort
 {
     self=[super init];
     self.name=newName;
     self.user=newUser;
+    self.port=newPort;
     return self;
+}
+
+-(instancetype)initWithName:(NSString*)newName user:(NSString*)newUser
+{
+    return [self initWithName:newName user:newUser port:[[self class] defaultPort]];
 }
 
 -(BOOL)loadSSHFramework
@@ -164,6 +176,7 @@ lazyAccessor(MPWCommandStore*, commandStore, setCommandStore, createCommandStore
     id <SSHConnection> s=[[[NSClassFromString(@"SSHConnection") alloc] init] autorelease];
     s.host = self.name;
     s.user = self.user;
+    s.port = self.port;
     return s;
 }
 
