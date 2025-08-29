@@ -1,0 +1,4 @@
+#!env st
+#-drls 
+r  ← MPWRemoteHost alloc initWithName:'localhost' user:'root' port:2222 
+r run:'ls /' .
