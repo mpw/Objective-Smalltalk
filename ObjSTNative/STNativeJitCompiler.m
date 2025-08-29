@@ -9,6 +9,7 @@
 #import "STObjectCodeGeneratorARM.h"
 #import "MPWLiteralArrayExpression.h"
 #import "MPWLiteralDictionaryExpression.h"
+#import <ObjectiveSmalltalk/STJittableData.h>
 
 @implementation STNativeJitCompiler
 
