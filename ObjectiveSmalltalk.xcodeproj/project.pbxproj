@@ -1249,6 +1249,7 @@
 		1F61AE672DBBF493003E8229 /* STSiteServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSiteServer.m; sourceTree = "<group>"; };
 		1F635616179EB38500D2DE58 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1F635619179EB68900D2DE58 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1F660FFC2E7473EC0066D017 /* STZ3.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = STZ3.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F6810311E117A9F006CE0D1 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		1F68D1D515D2D659005C7BF5 /* STConnectionDefiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STConnectionDefiner.h; sourceTree = "<group>"; };
 		1F68D1D615D2D659005C7BF5 /* STConnectionDefiner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConnectionDefiner.m; sourceTree = "<group>"; };
@@ -1652,6 +1653,13 @@
 			);
 			target = 1F61AE412DBBDEF6003E8229 /* SailsTouch */;
 		};
+		1F6610022E7473EC0066D017 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			publicHeaders = (
+				STZ3.h,
+			);
+			target = 1F660FFB2E7473EC0066D017 /* STZ3 */;
+		};
 		1FE6BC452E33C9E400E40B6D /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
@@ -1663,6 +1671,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1F61AE432DBBDEF6003E8229 /* SailsTouch */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1F61AE462DBBDEF6003E8229 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SailsTouch; sourceTree = "<group>"; };
+		1F660FFD2E7473EC0066D017 /* STZ3 */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1F6610022E7473EC0066D017 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = STZ3; sourceTree = "<group>"; };
 		1FE6BC402E33C9E400E40B6D /* STTreeSitter */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1FE6BC452E33C9E400E40B6D /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = STTreeSitter; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -1753,6 +1762,13 @@
 			files = (
 				1F61AE5F2DBBDF34003E8229 /* ObjectiveSmalltalk.framework in Frameworks */,
 				1F61AE5C2DBBDF2B003E8229 /* MPWFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F660FF92E7473EC0066D017 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2761,6 +2777,7 @@
 				1FFCB56E2B431492002DC40A /* Sails */,
 				1F61AE432DBBDEF6003E8229 /* SailsTouch */,
 				1FE6BC402E33C9E400E40B6D /* STTreeSitter */,
+				1F660FFD2E7473EC0066D017 /* STZ3 */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
 				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
@@ -2957,6 +2974,7 @@
 				1F096D452B4966CC0072DD85 /* sails_command */,
 				1F61AE422DBBDEF6003E8229 /* Sails.framework */,
 				1FE6BC3F2E33C9E400E40B6D /* STTreeSitter.framework */,
+				1F660FFC2E7473EC0066D017 /* STZ3.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3160,6 +3178,13 @@
 				1F61AE582DBBDF13003E8229 /* STTemplateStore.h in Headers */,
 				1F61AE592DBBDF13003E8229 /* Sails.h in Headers */,
 				1F61AE5A2DBBDF13003E8229 /* STSiteBundle.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F660FF72E7473EC0066D017 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3591,6 +3616,30 @@
 			productReference = 1F61AE422DBBDEF6003E8229 /* Sails.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		1F660FFB2E7473EC0066D017 /* STZ3 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F6610032E7473EC0066D017 /* Build configuration list for PBXNativeTarget "STZ3" */;
+			buildPhases = (
+				1F660FF72E7473EC0066D017 /* Headers */,
+				1F660FF82E7473EC0066D017 /* Sources */,
+				1F660FF92E7473EC0066D017 /* Frameworks */,
+				1F660FFA2E7473EC0066D017 /* Resources */,
+				1F66100B2E748B530066D017 /* Run Tests */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1F660FFD2E7473EC0066D017 /* STZ3 */,
+			);
+			name = STZ3;
+			packageProductDependencies = (
+			);
+			productName = STZ3;
+			productReference = 1F660FFC2E7473EC0066D017 /* STZ3.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		1F6C792A2187468D00071DAC /* ObjectiveSwift */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F6C79322187468D00071DAC /* Build configuration list for PBXNativeTarget "ObjectiveSwift" */;
@@ -3920,6 +3969,9 @@
 					1F61AE412DBBDEF6003E8229 = {
 						CreatedOnToolsVersion = 16.3;
 					};
+					1F660FFB2E7473EC0066D017 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 					1F6C792A2187468D00071DAC = {
 						CreatedOnToolsVersion = 10.0;
 						LastSwiftMigration = 1000;
@@ -4000,6 +4052,7 @@
 				1F096D442B4966CC0072DD85 /* sails_command */,
 				1F61AE412DBBDEF6003E8229 /* SailsTouch */,
 				1FE6BC3E2E33C9E400E40B6D /* STTreeSitter */,
+				1F660FFB2E7473EC0066D017 /* STZ3 */,
 			);
 		};
 /* End PBXProject section */
@@ -4116,6 +4169,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1F61AE402DBBDEF6003E8229 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F660FFA2E7473EC0066D017 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4366,6 +4426,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\n\nif  [ -f ${tester}  ]  ; then\n$tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
+		};
+		1F66100B2E748B530066D017 /* Run Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Tests";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\ntester=/usr/local/bin/testlogger\nframework=${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\ncodesign -s - $framework/`basename $framework .framework`\n\nif  [ -f ${tester}  ]  ; then\n     $tester ${framework}\nelse\necho \"projectfile:0:1: warning: $tester or  $framework  not found, tests not run\"\nfi\n";
 		};
 		1F6FBE8F23040F9700025C80 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4665,6 +4743,13 @@
 				1F61AE6A2DBBF493003E8229 /* STSiteServer.m in Sources */,
 				1F61AE502DBBDF13003E8229 /* STHypertextProcessor.m in Sources */,
 				1F61AE512DBBDF13003E8229 /* STEntityList.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F660FF82E7473EC0066D017 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6024,6 +6109,135 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		1F6610002E7473EC0066D017 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					/opt/homebrew/include/,
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib/;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-lz3";
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.STZ3;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		1F6610012E7473EC0066D017 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PE4436LT5M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					/opt/homebrew/include/,
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib/;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-lz3";
+				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.STZ3;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -7792,6 +8006,15 @@
 			buildConfigurations = (
 				1F61AE482DBBDEF6003E8229 /* Debug */,
 				1F61AE492DBBDEF6003E8229 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F6610032E7473EC0066D017 /* Build configuration list for PBXNativeTarget "STZ3" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F6610002E7473EC0066D017 /* Debug */,
+				1F6610012E7473EC0066D017 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

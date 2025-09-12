@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *user;
+@property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *identityKeyPath;
 @property (nonatomic, assign) int port;
 
@@ -178,6 +179,7 @@ lazyAccessor(MPWCommandStore*, commandStore, setCommandStore, createCommandStore
     s.host = self.name;
     s.user = self.user;
     s.port = self.port;
+    s.password = self.password;
     s.identityKeyPath = self.identityKeyPath;
     return s;
 }
