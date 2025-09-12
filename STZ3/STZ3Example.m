@@ -12,6 +12,7 @@
 {
     Z3_config cfg;
     Z3_context ctx;
+    Z3_solver solver;
     Z3_sort int_sort;
 }
 
@@ -21,6 +22,8 @@
     if (self=[super init]) {
         cfg = Z3_mk_config();
         ctx = Z3_mk_context(cfg);
+        solver = Z3_mk_solver(ctx);
+        Z3_solver_inc_ref(ctx, solver);
         int_sort = Z3_mk_int_sort(ctx);
     }
     return self;;
@@ -52,31 +55,36 @@
     return Z3_mk_gt(ctx, lhs, rhs );
 }
 
+-(void)assert:(Z3_ast)expr
+{
+    Z3_solver_assert(ctx, solver, expr);
+}
 
 
 -(BOOL)example
 {
     Z3_ast x = [self makeConst:"x"];
     Z3_ast y = [self makeConst:"y"];
-
     
     
     // Create solver
-    Z3_solver solver = Z3_mk_solver(ctx);
-    Z3_solver_inc_ref(ctx, solver);
-    Z3_solver_assert(ctx, solver, [self make:[self make:x plus:y] eq: [self makeIntConst:10]]);
-    Z3_solver_assert(ctx, solver, [self make:x gt: [self makeIntConst:0]]);
-    
-    // Check
-    if (Z3_solver_check(ctx, solver) == Z3_L_TRUE) {
-        printf("SAT\n");
+    [self assert:[self make:[self make:x plus:y] eq: [self makeIntConst:10]]];
+    [self assert:[self make:x gt: [self makeIntConst:1]]];
+    [self assert:[self make:y gt: [self makeIntConst:0]]];
+
+    return Z3_solver_check(ctx, solver) == Z3_L_TRUE ;
+}
+
+-(NSString*)modelDescription
+{
+    if ( Z3_solver_check(ctx, solver) == Z3_L_TRUE ) {
         Z3_model model = Z3_solver_get_model(ctx, solver);
         Z3_model_inc_ref(ctx, model);
-        printf("%s\n", Z3_model_to_string(ctx, model));
+        return @(Z3_model_to_string(ctx, model));
     } else {
-        printf("UNSAT\n");
+        return @"Not satisfied";
     }
-    return Z3_solver_check(ctx, solver) ;
+ 
 }
 
 -(void)dealloc
@@ -96,8 +104,10 @@
 +(void)someTest
 {
     STZ3Example *example=[self new];
+    BOOL satisfied = [example example];
+    NSLog(@"model:\n%@",[example modelDescription]);
  
-	EXPECTTRUE([example example], @"satisfied");
+	EXPECTTRUE(satisfied, @"satisfied");
 }
 
 +(NSArray*)testSelectors
