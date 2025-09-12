@@ -37,6 +37,21 @@
     return Z3_mk_int(ctx, value, int_sort);
 }
 
+-(Z3_ast)make:(Z3_ast)lhs plus:(Z3_ast)rhs
+{
+    return Z3_mk_add(ctx, 2, (Z3_ast[]){lhs, rhs });
+}
+
+-(Z3_ast)make:(Z3_ast)lhs eq:(Z3_ast)rhs
+{
+    return Z3_mk_eq(ctx, lhs, rhs );
+}
+
+-(Z3_ast)make:(Z3_ast)lhs gt:(Z3_ast)rhs
+{
+    return Z3_mk_gt(ctx, lhs, rhs );
+}
+
 
 
 -(BOOL)example
@@ -45,21 +60,12 @@
     Z3_ast y = [self makeConst:"y"];
 
     
-    // x + y == 10
-    Z3_ast ten = [self makeIntConst:10];
-//    Z3_ast ten = Z3_mk_int(ctx, 10, int_sort);
-    Z3_ast x_plus_y = Z3_mk_add(ctx, 2, (Z3_ast[]){x, y});
-    Z3_ast constraint1 = Z3_mk_eq(ctx, x_plus_y, ten);
-    
-    // x > 0
-    Z3_ast zero = Z3_mk_int(ctx, 0, int_sort);
-    Z3_ast constraint2 = Z3_mk_gt(ctx, x, zero);
     
     // Create solver
     Z3_solver solver = Z3_mk_solver(ctx);
     Z3_solver_inc_ref(ctx, solver);
-    Z3_solver_assert(ctx, solver, constraint1);
-    Z3_solver_assert(ctx, solver, constraint2);
+    Z3_solver_assert(ctx, solver, [self make:[self make:x plus:y] eq: [self makeIntConst:10]]);
+    Z3_solver_assert(ctx, solver, [self make:x gt: [self makeIntConst:0]]);
     
     // Check
     if (Z3_solver_check(ctx, solver) == Z3_L_TRUE) {
