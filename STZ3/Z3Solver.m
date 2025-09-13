@@ -8,7 +8,19 @@
 #import "Z3Solver.h"
 #include <z3.h>
 
-@interface Z3Ast : NSObject {}
+@class Z3Ast;
+
+@protocol Z3Able
+
+-(Z3Ast*)asZ3:solver;
+
+@end
+
+@interface NSNumber(Z3Able) <Z3Able>
+@end
+
+
+@interface Z3Ast : NSObject <Z3Able> {}
 
 -(instancetype)initWithAst:(Z3_ast)new_ast;
 
@@ -24,6 +36,11 @@
     if ( self=[super init]) {
         ast=new_ast;
     }
+    return self;
+}
+
+-asZ3:solver
+{
     return self;
 }
 
@@ -70,22 +87,22 @@
 
 -(Z3Ast*)make:(Z3Ast*)lhs plus:(Z3Ast*)rhs
 {
-    return [Z3Ast ast:Z3_mk_add(ctx, 2, (Z3_ast[]){[lhs ast], [rhs ast] })];
+    return [Z3Ast ast:Z3_mk_add(ctx, 2, (Z3_ast[]){[[lhs asZ3:self] ast], [[rhs asZ3:self] ast] })];
 }
 
--(Z3Ast*)make:(Z3Ast*)lhs eq:(Z3Ast*)rhs
+-(Z3Ast*)make:(Z3Ast*)lhs eq:(id <Z3Able>)rhs
 {
-    return [Z3Ast ast:Z3_mk_eq(ctx, [lhs ast], [rhs ast] )];
+    return [Z3Ast ast:Z3_mk_eq(ctx, [[lhs asZ3:self] ast], [[rhs asZ3:self] ast] )];
 }
 
--(Z3Ast*)make:(Z3Ast*)lhs gt:(Z3Ast*)rhs
+-(Z3Ast*)make:(Z3Ast*)lhs gt:(id <Z3Able>)rhs
 {
-    return [Z3Ast ast:Z3_mk_gt(ctx, [lhs ast], [rhs ast] )];
+    return [Z3Ast ast:Z3_mk_gt(ctx, [[lhs asZ3:self] ast], [[rhs asZ3:self] ast] )];
 }
 
 -(void)assert:(Z3Ast*)expr
 {
-    Z3_solver_assert(ctx, solver, [expr ast]);
+    Z3_solver_assert(ctx, solver, [[expr asZ3:self] ast]);
 }
 
 
@@ -126,9 +143,9 @@
     Z3Ast* x = [example makeConst:@"x"];
     Z3Ast* y = [example makeConst:@"y"];
     
-    [example assert:[example make:[example make:x plus:y] eq: [example makeIntConst:50]]];
-    [example assert:[example make:x gt: [example makeIntConst:1]]];
-    [example assert:[example make:y gt: [example makeIntConst:0]]];
+    [example assert:[example make:[example make:x plus:y] eq: @(50)]];
+    [example assert:[example make:x gt: @(1)]];
+    [example assert:[example make:y gt: @(0)]];
     
 
     BOOL satisfied = [example isSatisfied];
@@ -145,3 +162,12 @@
 }
 
 @end
+
+
+@implementation NSNumber(Z3)
+
+-asZ3:solver  {  return [solver makeIntConst:[self intValue]]; }
+
+@end
+
+
