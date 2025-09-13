@@ -1,5 +1,5 @@
 //
-//  STZ3Example.h
+//  Z3Solver.h
 //  STZ3
 //
 //  Created by Marcel Weiher on 12.09.25.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STZ3Example : NSObject
+@interface Z3Solver : NSObject
 
 @end
 
