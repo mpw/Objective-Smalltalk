@@ -149,7 +149,7 @@
     
 
     BOOL satisfied = [example isSatisfied];
-    NSLog(@"model:\n%@",[example modelDescription]);
+//    NSLog(@"model:\n%@",[example modelDescription]);
  
 	EXPECTTRUE(satisfied, @"satisfied");
 }
