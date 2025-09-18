@@ -40,4 +40,9 @@ func runSieve(limit: Int) async {
     }
 }
 
-await runSieve(limit: 100)
+var limit = 600
+
+if let inputNumber = Int(CommandLine.arguments[1]) {
+   limit=inputNumber
+}
+await runSieve(limit: limit)

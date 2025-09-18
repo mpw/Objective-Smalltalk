@@ -4,6 +4,8 @@ package main
 
 import (
     "fmt"
+    "os"
+    "strconv"
 )
 
 // Send the sequence 2, 3, 4, ... to channel 'ch'.
@@ -26,9 +28,13 @@ func Filter(in <-chan int, out chan<- int, prime int) {
 
 // The prime sieve: Daisy-chain Filter processes.
 func main() {
+        var numPrimes = 20
+        if len(os.Args) > 1 { 
+	   numPrimes,_ = strconv.Atoi( os.Args[1] )
+        }
 	ch := make(chan int) // Create a new channel.
 	go Generate(ch)      // Launch Generate goroutine.
-	for i := 0; i < 9591; i++ {
+	for i := 0; i < numPrimes; i++ {
 		prime := <-ch
 		fmt.Println(prime)
 		ch1 := make(chan int)

@@ -43,6 +43,8 @@ longAccessor( divisor, setDivisor )
 @interface Sievefilter : MPWFilter {
      id currentfilter;
      id lastfilter;
+     int maxPrimes;
+     int numPrimes;
 }
 
 idAccessor_h( currentfilter, setCurrentfilter )
@@ -53,6 +55,7 @@ idAccessor_h( currentfilter, setCurrentfilter )
 
 
 idAccessor( currentfilter, setCurrentfilter )
+intAccessor( maxPrimes, setMaxPrimes )
 
   -initWithTarget:aTarget {
 	self = [super initWithTarget:aTarget];
@@ -70,19 +73,25 @@ idAccessor( currentfilter, setCurrentfilter )
      -(void)writeObject:aNumberObject {
         long aNumber=[aNumberObject longValue];
         [self addFilterForNumber:aNumber];
+	numPrimes++;
+	if ( numPrimes >= maxPrimes ) {
+            exit(0);
+        } 
         [self.target writeObject:aNumberObject];
     }
 
 @end
 
 int main(int argc, char *argv[]) { 
-    int max=2000;
+    int max=200;
     id source = [Source new];
     if ( argc > 1 ) {
 	max=atoi(argv[1]);
     }
-    [source setMax:max];
+    [source setMax:INT_MAX];
     id sieve  = [Sievefilter new];
+    [sieve setMaxPrimes:max];
+    [[MPWByteStream Stdout] println:@"2"];
     [sieve setTarget:[[MPWPrintLiner alloc] initWithTarget:[MPWByteStream Stdout]]]; 
     [source setTarget:[sieve currentfilter]];
     [source run];
