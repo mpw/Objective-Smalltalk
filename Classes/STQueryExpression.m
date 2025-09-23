@@ -19,7 +19,7 @@
     return [receiver evaluateQuery:self inContext:aContext];
 }
 
--(id)runAgainstArray:(NSArray*)receiver inContext:aContext
+-(id)runAgainstArray_direct:(NSArray*)receiver inContext:aContext
 {
     id predicateBlock = [self.predicate evaluateIn:aContext];
     id oldDefault = [aContext schemeForName:@"default"];
@@ -40,6 +40,11 @@
     return result;
 }
 
+-(id)runAgainstArray:(NSArray*)receiver inContext:aContext
+{
+    return [receiver filteredArrayUsingPredicate:[self.predicate asNSPredicate]];
+}
+
 
 @end
 
@@ -50,6 +55,7 @@
 {
     return [query runAgainstArray:self inContext:aContext];
 }
+
 
 @end
 
@@ -66,15 +72,17 @@
 
 @implementation STQueryExpression(testing) 
 
-+(void)someTest
++(void)testQueryToNSPredicate
 {
-	EXPECTTRUE(false, @"implemented");
+    STQueryExpression *query = [[STCompiler compiler] compile:@"table[{a>20}]"];
+    NSPredicate *predicate = [query.predicate asNSPredicate];
+    EXPECTTRUE([predicate isKindOfClass:[NSComparisonPredicate class]], @"is a NSComparisonPredicate");
 }
 
 +(NSArray*)testSelectors
 {
    return @[
-//			@"someTest",
+			@"testQueryToNSPredicate",
 			];
 }
 

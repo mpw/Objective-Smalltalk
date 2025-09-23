@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STQueryPredicate : MPWBlockExpression
 
+-(NSPredicate*)asNSPredicate;
+
 @end
 
 NS_ASSUME_NONNULL_END
