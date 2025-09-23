@@ -7,6 +7,10 @@
 
 #import "STQueryExpression.h"
 
+@interface STQueryBuilder : NSObject
+{}
+@end
+
 @implementation STQueryExpression
 
 -(id)evaluateIn:(STEvaluator*)aContext
@@ -49,6 +53,15 @@
 
 @end
 
+@implementation STQueryBuilder
+
+-evaluateQuery:(STQueryExpression*)query inContext:aContext
+{
+    return query;
+}
+
+@end
+
 #import <MPWFoundation/DebugMacros.h>
 
 @implementation STQueryExpression(testing) 
@@ -87,6 +100,12 @@
         } else if ( [selector isEqual:@"hasPrefix:"]) {
             argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
             selector=@"LIKE";
+        } else if ( [selector isEqual:@"isGreaterThan:"]) {
+            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
+            selector=@">";
+        } else if ( [selector isEqual:@"isLessThan:"]) {
+            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
+            selector=@"<";
         } else {
             @throw [NSException exceptionWithName:@"unsupportedquery" reason:@"Unsupported Query" userInfo:@{}];
         }

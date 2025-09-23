@@ -1508,6 +1508,17 @@
     EXPECTTRUE([query isKindOfClass:[STQueryExpression class]], @"parsed a query expression");
 }
 
++(void)testQueryBuilderReturnsQuery
+{
+    TESTEXPR( @"#STQueryBuilder{}[{a>3}] class",[STQueryExpression class]);
+}
+
++(void)testCanGetQueryPredicate
+{
+    TESTEXPR( @"#STQueryBuilder{}[{a>3}] predicate class",[STQueryPredicate class]);
+}
+
+
 +(void)testExecuteSimpleQueryWithContextVars
 {
     STCompiler *compiler=[STCompiler compiler];
@@ -1718,6 +1729,8 @@
         @"testCoutLikeWriteObjectSyntax",
         @"testCoutLikeWriteToVariable",
         @"testParseSimpleQuery",
+        @"testQueryBuilderReturnsQuery",
+        @"testCanGetQueryPredicate",
         @"testExecuteSimpleQueryWithContextVars",
         @"testNewlinesInStringConstants",
         @"testCanCompileQuery",

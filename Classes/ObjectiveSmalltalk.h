@@ -56,6 +56,8 @@
 #import <ObjectiveSmalltalk/MPWSetAccessor.h>
 #import <ObjectiveSmalltalk/MPWSpotlightScheme.h>
 #import <ObjectiveSmalltalk/STCompiler.h>
+#import <ObjectiveSmalltalk/STQueryExpression.h>
+#import <ObjectiveSmalltalk/STQueryPredicate.h>
 #import <ObjectiveSmalltalk/MPWTreeNodeScheme.h>
 #import <ObjectiveSmalltalk/MPWStatementList.h>
 //#import <ObjectiveSmalltalk/MPWURLBinding.h>

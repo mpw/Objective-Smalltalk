@@ -754,6 +754,10 @@
 		1FE7B41C0AB3C45300475AFD /* MPWFastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */; };
 		1FE8F22813802F0700B37A71 /* MPWResourceScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE8F22913802F0700B37A71 /* MPWResourceScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */; };
+		1FE9D8C12E8276FA001AE4C7 /* STQueryPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9D8C02E8276FA001AE4C7 /* STQueryPredicate.m */; };
+		1FE9D8C22E8276FA001AE4C7 /* STQueryPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE9D8BF2E8276FA001AE4C7 /* STQueryPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE9D8C32E8276FA001AE4C7 /* STQueryPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9D8C02E8276FA001AE4C7 /* STQueryPredicate.m */; };
+		1FE9D8C42E8276FA001AE4C7 /* STQueryPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE9D8BF2E8276FA001AE4C7 /* STQueryPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FEA9C942BE3CCAD002D237B /* MPWELFSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */; };
 		1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */; };
 		1FEB291E2DD745F100E37021 /* htmx.js in Resources */ = {isa = PBXBuildFile; fileRef = 1FEB291D2DD745F100E37021 /* htmx.js */; };
@@ -1581,6 +1585,8 @@
 		1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWFastMessage.m; sourceTree = "<group>"; };
 		1FE8F22613802F0700B37A71 /* MPWResourceScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWResourceScheme.h; sourceTree = "<group>"; };
 		1FE8F22713802F0700B37A71 /* MPWResourceScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWResourceScheme.m; sourceTree = "<group>"; };
+		1FE9D8BF2E8276FA001AE4C7 /* STQueryPredicate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STQueryPredicate.h; sourceTree = "<group>"; };
+		1FE9D8C02E8276FA001AE4C7 /* STQueryPredicate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STQueryPredicate.m; sourceTree = "<group>"; };
 		1FEA9C922BE3CCAD002D237B /* MPWELFSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFSection.h; sourceTree = "<group>"; };
 		1FEA9C932BE3CCAD002D237B /* MPWELFSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFSection.m; sourceTree = "<group>"; };
 		1FEB291D2DD745F100E37021 /* htmx.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = htmx.js; sourceTree = "<group>"; };
@@ -2928,6 +2934,8 @@
 				1F1A64752975C47600B8776C /* STProgram.m */,
 				1FFCBD4F2CECCF880043BFC1 /* STQueryExpression.h */,
 				1FFCBD502CECCF880043BFC1 /* STQueryExpression.m */,
+				1FE9D8BF2E8276FA001AE4C7 /* STQueryPredicate.h */,
+				1FE9D8C02E8276FA001AE4C7 /* STQueryPredicate.m */,
 				1F22EC8026B321DE00087E8D /* STSubscriptExpression.h */,
 				1F22EC8126B321DE00087E8D /* STSubscriptExpression.m */,
 				1FC661EE25D83BC700ED1BCB /* STObjectTemplate.h */,
@@ -3106,6 +3114,7 @@
 				1F5D779D25EBF53900DCC82F /* STTargetActionConnector.h in Headers */,
 				1FA3886913910FA6007B5CC9 /* MPWBundleScheme.h in Headers */,
 				1FA421411451F9F000F7A277 /* MPWMethodScheme.h in Headers */,
+				1FE9D8C22E8276FA001AE4C7 /* STQueryPredicate.h in Headers */,
 				1F575D9D20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */,
 				1FA5F488147CDF34007EE753 /* MPWTreeNodeScheme.h in Headers */,
 				1F5EE2BC25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */,
@@ -3329,6 +3338,7 @@
 				1FFCBD542CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */,
 				1F2B665C268E3E2C00DE4416 /* STVariableDefinition.h in Headers */,
+				1FE9D8C42E8276FA001AE4C7 /* STQueryPredicate.h in Headers */,
 				1FE37B721969610600C9A378 /* MPWAssignmentExpression.h in Headers */,
 				1F9BD22D2566505F006D7476 /* STPropertyPathTests.h in Headers */,
 				1FE37B971969610600C9A378 /* MPWMessage.h in Headers */,
@@ -4677,6 +4687,7 @@
 				1FFD20DF19278611009052B1 /* MPWLiteralExpression.m in Sources */,
 				1F406E7B10F52CAC0054957A /* MPWScheme.m in Sources */,
 				1F406EBF10F5354C0054957A /* MPWRecursiveIdentifier.m in Sources */,
+				1FE9D8C12E8276FA001AE4C7 /* STQueryPredicate.m in Sources */,
 				1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */,
 				1F2B665D268E3E2C00DE4416 /* STVariableDefinition.m in Sources */,
 				1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */,
@@ -4889,6 +4900,7 @@
 				1F697A8325E15D1600D015DB /* STMessageConnector.m in Sources */,
 				1F407E8B1A3B0DBB00DC8081 /* MPWFileWatcher.m in Sources */,
 				1F407E8A1A3B0DAF00DC8081 /* MPWCascadeExpression.m in Sources */,
+				1FE9D8C32E8276FA001AE4C7 /* STQueryPredicate.m in Sources */,
 				1FE37BA81969610700C9A378 /* MPWMethodType.m in Sources */,
 				1F3C6E721E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m in Sources */,
 				1FE37B811969610600C9A378 /* STConnector.m in Sources */,

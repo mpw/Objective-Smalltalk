@@ -62,13 +62,13 @@ lazyAccessor(MPWMessageExpression*, setter, setSetter, computeSetter)
 
 -convertToQueryIfNecessary
 {
-    id possibleQuery = self.subscript;
+    MPWBlockExpression* possibleQuery = (MPWBlockExpression*)(self.subscript);
     if ( [possibleQuery isKindOfClass:[MPWStatementList class]]) {
-        possibleQuery=[[possibleQuery statements] firstObject];
+        possibleQuery=[[(MPWStatementList*)possibleQuery statements] firstObject];
     }
     if ( [possibleQuery isKindOfClass:[MPWBlockExpression class]]) {
         STQueryExpression *query=[[STQueryExpression new] autorelease];
-        query.predicate=possibleQuery;
+        query.predicate=[STQueryPredicate blockWithStatements:[possibleQuery statements] arguments:[possibleQuery arguments]];
         query.receiver=self.receiver;
         return query;
     }

@@ -998,7 +998,7 @@ idAccessor(solver, setSolver)
 		first = [self objectifyScanned:first];
 	}
 //	NSLog(@"in parseExpression, about to objectifyScanned:");
-	first = [self objectifyScanned:first];      // is this correct?
+	first = [self objectifyScanned:first]; 
 	second=[self nextToken];
     if ( [second isLiteral] && [first isEqual:@"-"]  && [second isKindOfClass:[NSNumber class]] ) {
         first = [first negated];
