@@ -40,12 +40,6 @@
     return result;
 }
 
--(id)runAgainstArray:(NSArray*)receiver inContext:aContext
-{
-    return [receiver filteredArrayUsingPredicate:[self.predicate asNSPredicate]];
-}
-
-
 @end
 
 
@@ -53,7 +47,7 @@
 
 -(NSArray*)evaluateQuery:(STQueryExpression*)query inContext:aContext
 {
-    return [query runAgainstArray:self inContext:aContext];
+    return [query.predicate runAgainstArray:self inContext:aContext];
 }
 
 
@@ -94,33 +88,33 @@
 
 @implementation MPWSQLiteTable(query)
 
--(NSArray*)evaluateQuery:(STQueryExpression*)query inContext:aContext
-{
-//    NSLog(@"table %@ evaluate query: %@",self.name, query);
-//    NSLog(@"predicate: %@",query.predicate);
-    MPWMessageExpression* expression=[query.predicate statements];
-    NSString *selector = [expression nonMappedMessageName];
-    NSString *receiverName = [[expression receiver] name];
-    NSString *argument = [[[expression args] objectAtIndex:0] theLiteral];
-    if ( [argument isKindOfClass:[NSString class]]) {
-        if ( [selector isEqual:@"="]) {
-            argument=[NSString stringWithFormat:@"\"%@\"",argument];
-        } else if ( [selector isEqual:@"hasPrefix:"]) {
-            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
-            selector=@"LIKE";
-        } else if ( [selector isEqual:@"isGreaterThan:"]) {
-            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
-            selector=@">";
-        } else if ( [selector isEqual:@"isLessThan:"]) {
-            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
-            selector=@"<";
-        } else {
-            @throw [NSException exceptionWithName:@"unsupportedquery" reason:@"Unsupported Query" userInfo:@{}];
-        }
-    }
-    NSString *sqlQuery = [NSString stringWithFormat:@"%@ %@ %@",receiverName,selector,argument];
-    return [self selectWhere:sqlQuery];
-}
+//-(NSArray*)evaluateQuery:(STQueryExpression*)query inContext:aContext
+//{
+////    NSLog(@"table %@ evaluate query: %@",self.name, query);
+////    NSLog(@"predicate: %@",query.predicate);
+//    MPWMessageExpression* expression=[query.predicate statements];
+//    NSString *selector = [expression nonMappedMessageName];
+//    NSString *receiverName = [[expression receiver] name];
+//    NSString *argument = [[[expression args] objectAtIndex:0] theLiteral];
+//    if ( [argument isKindOfClass:[NSString class]]) {
+//        if ( [selector isEqual:@"="]) {
+//            argument=[NSString stringWithFormat:@"\"%@\"",argument];
+//        } else if ( [selector isEqual:@"hasPrefix:"]) {
+//            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
+//            selector=@"LIKE";
+//        } else if ( [selector isEqual:@"isGreaterThan:"]) {
+//            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
+//            selector=@">";
+//        } else if ( [selector isEqual:@"isLessThan:"]) {
+//            argument=[NSString stringWithFormat:@"\"%@%%\"",argument];
+//            selector=@"<";
+//        } else {
+//            @throw [NSException exceptionWithName:@"unsupportedquery" reason:@"Unsupported Query" userInfo:@{}];
+//        }
+//    }
+//    NSString *sqlQuery = [NSString stringWithFormat:@"%@ %@ %@",receiverName,selector,argument];
+//    return [self selectWhere:sqlQuery];
+//}
 
 
 @end

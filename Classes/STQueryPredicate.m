@@ -37,6 +37,14 @@
 
 }
 
+-(id)runAgainstArray:(NSArray*)receiver inContext:aContext
+{
+    return [receiver filteredArrayUsingPredicate:[self asNSPredicate]];
+}
+
+
+
+
 @end
 
 
