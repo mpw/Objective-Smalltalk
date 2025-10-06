@@ -452,7 +452,7 @@ idAccessor( retval, setRetval )
 
                 }
             } @catch ( NSException *exception) {
-                NSLog(@"might need more input, exception: %@, %@",exception,[exception callStackSymbols]);
+//                NSLog(@"might need more input, exception: %@, %@",exception,[exception callStackSymbols]);
                 if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
                     level=2;
                     continue;

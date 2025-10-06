@@ -321,8 +321,9 @@ idAccessor(solver, setSolver)
 
 -parseLiteralDict
 {
+    BOOL closed=NO;
     id token=[self nextToken];
-//    NSLog(@"parseLiteralDict first token: %@",token);
+    TRACE( @"first token", token );
     MPWLiteralDictionaryExpression *dictLit=[[MPWLiteralDictionaryExpression new] autorelease];
 //    NSLog(@"before pushback: %@",scanner);
     [self pushBack:token];
@@ -379,10 +380,21 @@ idAccessor(solver, setSolver)
             [self pushBack:token];
         }
     }
+    if ( [token isEqual:@"}"]) {
+        closed=YES;
+    }
     token = [self nextToken];               // sometimes we haven't consumed to closing brace
+    TRACE(@"closing token",token);
     if ( ![token isEqualToString:@"}"]) {
         [self pushBack:token];
+    } else {
+        closed = YES;
     }
+    if (!closed) {
+        PARSEERROR(@"literal expression should be closed", token);
+    }
+
+    
 //    NSLog(@"return literal dict: %@ scanner now: %@",dictLit,[self scanner]);
     return dictLit;
 }
@@ -532,8 +544,6 @@ idAccessor(solver, setSolver)
 -objectifyScanned:object
 {
     TRACE( @"enter with object: ", object );
-
-//	NSLog(@"objectifyScanned: %@",object);
     if ( [object isEqual:@"#"]  ) {
         object = [self parseLiteral];
     } else if ( [object isEqual:@"["] ) {
@@ -1774,6 +1784,19 @@ idAccessor(solver, setSolver)
     IDEXPECT( [self evaluate:@"3. // 5 \n 4."], @(4), @"after new line");
 }
 
++(void)testUnclosedDictionaryLiteralThrowsCompilerException
+{
+    STCompiler *compiler = [self compiler];
+    NSString *incompleteDictLiteral=@" #{ a: 2, b: 3  ";
+    BOOL didThrow=NO;
+    @try {
+        [compiler compile:incompleteDictLiteral];
+    } @catch (id e) {
+        didThrow=YES;
+    }
+    EXPECTTRUE(didThrow, @"should have thrown a parse exception");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1799,6 +1822,7 @@ idAccessor(solver, setSolver)
               @"testHexLiteral",
               @"testBinaryLiteral",
               @"testCommentToEndOfLine",
+              @"testUnclosedDictionaryLiteralThrowsCompilerException",
     ];
 }
 
