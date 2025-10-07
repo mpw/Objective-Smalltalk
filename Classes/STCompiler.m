@@ -1772,6 +1772,12 @@ idAccessor(solver, setSolver)
     IDEXPECT( [self evaluate:@"0x1a"], @(26), @"hex constant");
 }
 
++(void)testOctalLiteral
+{
+    IDEXPECT( [self evaluate:@"0o1"], @(1), @"octal constant");
+    IDEXPECT( [self evaluate:@"0o10"], @(8), @"octal constant");
+}
+
 +(void)testBinaryLiteral
 {
     IDEXPECT( [self evaluate:@"0b1001"], @(9), @"binary constant");
@@ -1819,6 +1825,7 @@ idAccessor(solver, setSolver)
               @"testSquareBracketLiteralArraysCanHaveCustomClasses",
               @"testCanAccessArraysWithSquareBrackets",
               @"testArrayAccessDoesNotStopEvaluation",
+              @"testOctalLiteral",
               @"testHexLiteral",
               @"testBinaryLiteral",
               @"testCommentToEndOfLine",

@@ -477,7 +477,17 @@ static inline int decodeUTF8FirstByte( int ch, int *numChars)
         }
         pos=cur;
         return [self createInt:value];
-    } if ( SCANINBOUNDS(cur+1) && cur[0]=='0' && tolower(cur[1])=='b') {
+    } else if ( SCANINBOUNDS(cur+1) && cur[0]=='0' && tolower(cur[1])=='o') {
+        cur+=2;
+        long value=0;
+        while ( SCANINBOUNDS(cur) && isdigit(*cur)) {
+            value<<=3;
+            value+=*cur - '0';
+            cur++;
+        }
+        pos=cur;
+        return [self createInt:value];
+    } else if ( SCANINBOUNDS(cur+1) && cur[0]=='0' && tolower(cur[1])=='b') {
         cur+=2;
         long value=0;
         while ( SCANINBOUNDS(cur) && (*cur=='1' || *cur=='0')) {
