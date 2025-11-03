@@ -275,7 +275,7 @@ idAccessor(solver, setSolver)
 
 -parseLiteralArray:(NSString*)closeArrayToken
 {
-    TRACE( @"enter with closeToken", closeArrayToken );
+    ENTER1(closeArrayToken);
     NSMutableArray *array=[NSMutableArray array];
     id token=nil;
     do {
@@ -1068,6 +1068,7 @@ idAccessor(solver, setSolver)
 
 -(id)parseStatement
 {
+    ENTER;
     id next=[self nextToken];
 
     if ( [next isEqual:@"|"]) {
@@ -1076,7 +1077,7 @@ idAccessor(solver, setSolver)
         while ( next && ![next isEqual:@"|"]) {
             next=[self nextToken];
         }
-
+        return [self parseExpression];
     } else if ( [next isEqual:@"^"]) {
         return [self parseSendResult];
     } else if ( [next isEqual:@"class"]) {
@@ -1126,6 +1127,7 @@ idAccessor(solver, setSolver)
         return schemeDef;
     } else {
         [self pushBack:next];
+        return [self parseExpression];
     }
 
     return [self parseExpression];
@@ -1136,10 +1138,12 @@ idAccessor(solver, setSolver)
 	id first;
 	id next;
 	id expression;
+    ENTER;
 	first = [self parseStatement];
 	expression=first;
 	next = [self nextToken];
 	if ( next && ([next isEqual:@"."] || [first isKindOfClass:[NSArray class]]) ) {
+        TRACE(@"next statement top of loop",next);
 		id statements=[MPWStatementList statementList];
 		expression=statements;
 		[statements addStatement:first];
@@ -1162,11 +1166,13 @@ idAccessor(solver, setSolver)
 //		NSLog(@"parseStatement done, pushing back: %@",next);
 		[self pushBack:next];
 	}
+    LEAVE1(expression);
 	return expression;
 }
 
 -compile:aString
 {
+    ENTER;
     id expr;
 /*
 	[self setScanner:[STScanner scannerWithData:[aString asData]]];
@@ -1179,6 +1185,7 @@ idAccessor(solver, setSolver)
     [self setScanner:[STScanner scannerWithData:[aString asData]]];
     expr = [self parseStatements];
 //    NSLog(@"expr = %@",expr);
+    LEAVE1(expr);
     return expr;
 }
 
