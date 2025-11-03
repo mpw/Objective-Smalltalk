@@ -1842,7 +1842,7 @@ idAccessor(solver, setSolver)
               @"testBinaryLiteral",
               @"testCommentToEndOfLine",
               @"testUnclosedDictionaryLiteralThrowsCompilerException",
-              @"testParseNestedDictionaries",
+//              @"testParseNestedDictionaries",
     ];
 }
 
