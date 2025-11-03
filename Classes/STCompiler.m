@@ -327,6 +327,7 @@ idAccessor(solver, setSolver)
 
 -parseLiteralDict
 {
+    ENTER;
     BOOL closed=NO;
     id token=[self nextToken];
     TRACE( @"first token", token );
@@ -389,7 +390,7 @@ idAccessor(solver, setSolver)
     if ( [token isEqual:@"}"]) {
         closed=YES;
     }
-    token = [self nextToken];               // sometimes we haven't consumed to closing brace
+    token = [self nextToken];               // HACK (that actually breaks things) sometimes we haven't consumed to closing brace
     TRACE(@"closing token",token);
     if ( ![token isEqualToString:@"}"]) {
         [self pushBack:token];
@@ -400,8 +401,7 @@ idAccessor(solver, setSolver)
         PARSEERROR(@"literal expression should be closed", token);
     }
 
-    
-//    NSLog(@"return literal dict: %@ scanner now: %@",dictLit,[self scanner]);
+    LEAVE1( dictLit );
     return dictLit;
 }
 
@@ -945,7 +945,9 @@ idAccessor(solver, setSolver)
 
 -parseAssignmentLikeExpression:lhs withExpressionClass:(Class)assignmentExpressionClass
 {
+    ENTER1( lhs );
 	id rhs = [self parseExpression];
+    TRACE(@"did parse potential RHS", rhs );
     id assignment = [[[assignmentExpressionClass alloc] init] autorelease];
     [assignment setTextOffset:[scanner offset]];
     [assignment setLen:1];
@@ -989,10 +991,10 @@ idAccessor(solver, setSolver)
 
 -parseExpressionInLiteral:(BOOL)inLiteral
 {
-    TRACE(@"start inLiteral", @(inLiteral));
+    ENTER1(@(inLiteral));
 	id first=[self nextToken];
     while ( [first isComment] ) {
-//        NSLog(@"got comment: %@",first);
+        TRACE(@"comment",first);
         first=[self nextToken];
 //        NSLog(@"next token after comment: %@",first);
     }
@@ -1013,23 +1015,26 @@ idAccessor(solver, setSolver)
 	} else {
 		first = [self objectifyScanned:first];
 	}
-//	NSLog(@"in parseExpression, about to objectifyScanned:");
-	first = [self objectifyScanned:first]; 
+	first = [self objectifyScanned:first];
+    TRACE(@"first tokeen converted to object",first);
 	second=[self nextToken];
+    TRACE(@"second token",second);
     if ( [second isLiteral] && [first isEqual:@"-"]  && [second isKindOfClass:[NSNumber class]] ) {
         first = [first negated];
         second = [self nextToken];
+        TRACE(@"negation",first);
     }
     if ( [second isEqual:@"["]) {
+        TRACE(@"possible subscript with first part",first);
         first = [self parseSubscriptExpression:first];
         second = [self nextToken];
         if ([self isAssignmentLikeToken:second] ) {
             return [self parseAssignmentLikeExpression:first withExpressionClass:[self connectorClassForToken:second]];
         }
+        first = [self objectifyScanned:first];
     }
     if (second && [second length] > 0)  {		//	potential message expression
         TRACE(@"potential message expression",second);
-		first = [self objectifyScanned:first];
         [self pushBack:second];
         if ( inLiteral && [second isEqualToString:@","]) {
             TRACE(@"comma encountered when in literal, return: ",first);
@@ -1043,7 +1048,7 @@ idAccessor(solver, setSolver)
             }
         }
     }
-//    NSLog(@"return from parseExpression: %@",first);
+    LEAVE1( first );
     return first;
 }
 
@@ -1073,43 +1078,45 @@ idAccessor(solver, setSolver)
     id parsedStatement = nil;
     
     if ( [next isEqual:@"|"]) {
+        TRACE(@"pipe found",next);
 //        NSLog(@"parseStatement encounted pipe '|'");
         next=[self nextToken];
         while ( next && ![next isEqual:@"|"]) {
             next=[self nextToken];
         }
-        return [self parseExpression];
+        TRACE(@"after pipe",next);
+        parsedStatement =   [self parseExpression];
     } else if ( [next isEqual:@"^"]) {
-        return [self parseSendResult];
+        parsedStatement =   [self parseSendResult];
     } else if ( [next isEqual:@"class"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
-        return [self parseClassDefinition];
+        parsedStatement =   [self parseClassDefinition];
     } else if ( [next isEqual:@"var"]) {
         //        NSLog(@"found a variable definition");
         [self pushBack:next];
         id result = [self parseLocalVariableDefinition];
-        return result;
+        parsedStatement =   result;
     } else if ( [next isEqual:@"object"]) {
         //        NSLog(@"found a class definition");
-        return [self parseObjectTemplate];
+        parsedStatement =   [self parseObjectTemplate];
     } else if ( [next isEqual:@"extension"]) {
         //        Currently just a synomym for class, because
         //        a class definition will be treated as an
         //        extension if the class already exists
         //        NSLog(@"found an extension definition");
         [self pushBack:next];
-        return [self parseClassDefinition];
+        parsedStatement =   [self parseClassDefinition];
     } else if ( [next isEqual:@"protocol"]) {
-        return [self parseProtocolDefinitionWithClass:[STProtocolDefinition class]];
+        parsedStatement =   [self parseProtocolDefinitionWithClass:[STProtocolDefinition class]];
     } else if ( [next isEqual:@"connector"]) {
-        return [self parseProtocolDefinitionWithClass:[STConnectionDefinition class]];
+        parsedStatement =   [self parseProtocolDefinitionWithClass:[STConnectionDefinition class]];
     } else if ( [next isEqual:@"notification"]) {
-        return [self parseProtocolDefinitionWithClass:[STNotificationDefinition class]];
+        parsedStatement =   [self parseProtocolDefinitionWithClass:[STNotificationDefinition class]];
     } else if ( [next isEqual:@"filter"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
-        return [self parseClassDefinition];
+        parsedStatement =   [self parseClassDefinition];
     } else if ( [next isEqual:@"system"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
@@ -1117,7 +1124,7 @@ idAccessor(solver, setSolver)
         if ( !schemeDef.superclassName ) {
             schemeDef.superclassName=@"STSystem";
         }
-        return schemeDef;
+        parsedStatement =   schemeDef;
     } else if ( [next isEqual:@"scheme"]) {
         //        NSLog(@"found a class definition");
         [self pushBack:next];
@@ -1125,11 +1132,12 @@ idAccessor(solver, setSolver)
         if ( !schemeDef.superclassName ) {
             schemeDef.superclassName=@"MPWScheme";
         }
-        return schemeDef;
+        parsedStatement =   schemeDef;
     } else {
         [self pushBack:next];
         parsedStatement =  [self parseExpression];
     }
+    LEAVE1(parsedStatement);
     return parsedStatement;
 }
 
