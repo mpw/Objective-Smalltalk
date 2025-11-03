@@ -17,6 +17,8 @@
 	id  script;
 }
 
+@property (nonatomic, assign) bool shouldEvaluateReturnValue;
+
 +scriptWithContentsOfFile:(NSString*)filename;
 
 -(void)executeInContext:(STShell *)executionContext;

@@ -96,7 +96,7 @@
 
 +(void)testCanSpecifyFrame
 {
-    NSView *v=[STCompiler evaluate:@" f := ( 10@20 extent: 400@200).  #NSView{ #frame: f } "];
+    NSView *v=[STCompiler evaluate:@" f := ( 10@20 extent: 400@200).  #NSView{ frame: f } "];
     EXPECTNOTNIL(v, @"got a view");
     EXPECTTRUE( [v isKindOfClass:[NSView class]],@"is a view");
     FLOATEXPECT(v.frame.origin.x, 10, @"x");
@@ -107,20 +107,20 @@
 
 +(void)testCanSpecifyAdditionalValues
 {
-    NSView *v=[STCompiler evaluate:@" #NSView{ #alphaValue: 0.3 }"];
+    NSView *v=[STCompiler evaluate:@" #NSView{ alphaValue: 0.3 }"];
     FLOATEXPECT(v.alphaValue, 0.3, @"alpha");
 }
 
 +(void)testCanSpecifySubviewAsArray
 {
-    NSView *v=[STCompiler evaluate:@" #NSView{ #subviews:  #(   #NSView{ #alphaValue: 0.3 } ) }"];
+    NSView *v=[STCompiler evaluate:@" #NSView{ subviews:  [   #NSView{ alphaValue: 0.3 } ] }"];
     INTEXPECT( v.subviews.count, 1 ,@"number of subviews");
     EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
 }
 
 +(void)testCanSpecifySubviewAsDict
 {
-    NSView *v=[STCompiler evaluate:@" #NSView{ #subviews:  #{  #transparent:   #NSView{ #alphaValue: 0.3 } } }"];
+    NSView *v=[STCompiler evaluate:@" #NSView{ subviews:  #{  transparent:   #NSView{ alphaValue: 0.3 } } }."];
     INTEXPECT( v.subviews.count, 1 ,@"number of subviews");
     EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
     IDEXPECT( v.subviews.firstObject.accessibilityIdentifier, @"transparent", @"name of subview" );
@@ -128,7 +128,7 @@
 
 +(void)testCanSpecifySeveralSubviewsAsDict
 {
-    NSView *v=[STCompiler evaluate:@" #NSView{ #subviews:  #{  #transparent:   #NSView{ #alphaValue: 0.3 }, #opaque:  #NSView{ #alphaValue: 1.0 } } }"];
+    NSView *v=[STCompiler evaluate:@" #NSView{ subviews: [ #{ transparent:   #NSView{ alphaValue: 0.3 }, opaque:  #NSView{ alphaValue: 1.0 }}]}"];
 }
 
 

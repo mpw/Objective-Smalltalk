@@ -85,6 +85,11 @@ objectAccessor(NSString*, filename, setFilename )
 	[self setScript:scriptLines];
 }
 
+-(BOOL)shouldReallyEvaluateReturnValue
+{
+    return self.shouldEvaluateReturnValue || [self hasDeclaredReturn];
+}
+
 -(BOOL)hasDeclaredReturn
 {
     MPWMethodHeader *header=[self methodHeader];
@@ -188,7 +193,7 @@ objectAccessor(NSString*, filename, setFilename )
         }
 		id localResult = [[executionContext evaluator] executeShellExpression:expr];
 //        NSLog(@"localResult: %@",localResult);
-		if ( [self hasDeclaredReturn] ) {
+		if ( [self shouldReallyEvaluateReturnValue] ) {
 			[executionContext setRetval:localResult];
         } else {
             
@@ -196,7 +201,7 @@ objectAccessor(NSString*, filename, setFilename )
 		line++;
 		[pool release];
 	}
-	if ( [self hasDeclaredReturn] ) {
+	if ( [self shouldReallyEvaluateReturnValue] ) {
 //        NSLog(@"declared return: %@",[executionContext retval]);
         [executionContext evaluateReturnValue:[executionContext retval]];
 //		[executionContext setRetval:nil];
@@ -217,10 +222,10 @@ objectAccessor(NSString*, filename, setFilename )
         @autoreleasepool {
             id expr = [[executionContext evaluator] compile:exprString];
             id localResult = [[executionContext evaluator] executeShellExpression:expr];
-            if ( [self hasDeclaredReturn] ) {
+            if ( [self shouldReallyEvaluateReturnValue] ) {
                 [executionContext setRetval:localResult];
             }
-            if ( [self hasDeclaredReturn] ) {
+            if ( [self shouldReallyEvaluateReturnValue] ) {
                 [[[MPWByteStream Stdout] do] println:[[executionContext retval] each]];
                 [executionContext setRetval:nil];
             }

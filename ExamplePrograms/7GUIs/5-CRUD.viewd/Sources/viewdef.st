@@ -20,13 +20,12 @@ prefixField → { :filterValue | model:filtered ← model:people select: { :dic
 
 table setItems: model:filtered.
  
->>>>>>> 81b74bcc6685e58b3c96479ed97e4dba598fe08c
 #VStack{ views: [   
- #HStack{ views:[ #Label{ #stringValue: 'Filter prefix:'  }, prefixField ] }, 
+ #HStack{ views:[ #Label{ stringValue: 'Filter prefix:'  }, prefixField ] }, 
   #HStack{ views:[ (table  inScrollView:(200@400 extent: 500@600))  , 
       #Grid{ rows: [ 
-            [ #Label{ #text: 'First:'} , #TextField{ binding: ref:cur:first  } ] ,
-            [ #Label{ #text: 'Last:'} , #TextField{ binding: ref:cur:last  } ] ] } 
+            [ #Label{ text: 'First:'} , #TextField{ binding: ref:cur:first  } ] ,
+            [ #Label{ text: 'Last:'} , #TextField{ binding: ref:cur:last  } ] ] } 
     ] } , 
-   #HStack{ #views:[  #Button{ title: 'Create' }, #Button{ title: 'Update' }, #Button{ title: 'Delete' } ] },
+   #HStack{ views:[  #Button{ title: 'Create' }, #Button{ title: 'Update' }, #Button{ title: 'Delete' } ] },
 ] }. 

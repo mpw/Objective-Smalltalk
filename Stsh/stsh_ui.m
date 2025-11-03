@@ -26,6 +26,8 @@ int main (int argc, const char *argv[])
         [args addObject:[NSString stringWithUTF8String:argv[i]]];
     }
     STShell *stsh=[[[MPWStshUI alloc] initWithArgs:args] autorelease];
+    stsh.shouldEvaluateReturnValue=true;
+
     NSData* initCode = [[STTextField class] frameworkResource:@"AppKitInit" category:@"st"];
     NSData *data=[[STTextField class] frameworkResource:@"appkit-enums" category:@"json"];
     NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];

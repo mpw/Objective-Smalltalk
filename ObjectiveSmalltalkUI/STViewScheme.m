@@ -77,7 +77,7 @@ CONVENIENCEANDINIT(scheme, WithView:(NSView*)aView )
 +(void)testGetChildrenByName
 {
     STCompiler *compiler=[STCompiler compiler];
-    NSView *baseView = [compiler evaluateScriptString:@" #NSView{ #subviews: #{  #text: #NSTextView{ #frame: 10 } , #field: #NSTextField{ #frame: 2 }   } } "];
+    NSView *baseView = [compiler evaluateScriptString:@" #NSView{ #subviews: #{  #text: #NSTextView{ frame: 10 } , #field: #NSTextField{ frame: 2 }   } } "];
     STViewScheme *scheme=[STViewScheme schemeWithView:baseView];
     NSTextView *tv=scheme[@"text"];
     EXPECTTRUE( [tv isKindOfClass:[NSTextView class]], @"got the text view");
@@ -90,7 +90,7 @@ CONVENIENCEANDINIT(scheme, WithView:(NSView*)aView )
 +(void)testGetChildNames
 {
     STCompiler *compiler=[STCompiler compiler];
-    NSView *baseView = [compiler evaluateScriptString:@" #NSView{ #subviews: #{  #text: #NSTextView{ #frame: 10 } , #field: #NSTextField{ #frame: 2 }   } } "];
+    NSView *baseView = [compiler evaluateScriptString:@" #NSView{ #subviews: #{  text: #NSTextView{ frame: 10 } , field: #NSTextField{ #frame: 2 }   } } "];
     STViewScheme *scheme=[STViewScheme schemeWithView:baseView];
     NSArray *childRefs = [scheme childrenOfReference:@""];
     IDEXPECT( childRefs.firstObject, ( @"field" ), @"the child references");
@@ -101,7 +101,7 @@ CONVENIENCEANDINIT(scheme, WithView:(NSView*)aView )
 +(void)testHasChildren
 {
     STCompiler *compiler=[STCompiler compiler];
-    NSView *baseView = [compiler evaluateScriptString:@" #NSView{ #subviews: #{  #text: #NSTextView{ #frame: 10 } , #field: #NSTextField{ #frame: 2 }   } } "];
+    NSView *baseView = [compiler evaluateScriptString:@" #NSView{ subviews: #{  text: #NSTextView{ frame: 10 } , field: #NSTextField{ #frame: 2 }   } } "];
     STViewScheme *scheme=[STViewScheme schemeWithView:baseView];
     EXPECTTRUE( [scheme hasChildren:@""], @"root should have children" );
     EXPECTFALSE( [scheme hasChildren:@"field"], @"first leaf should not have children" );

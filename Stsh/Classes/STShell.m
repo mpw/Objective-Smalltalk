@@ -279,6 +279,7 @@ static const char completionfun(EditLine *e, char ch) {
     return level;
 }
 
+
 idAccessor( retval, setRetval )
 
 -(void)executeFromFileName:(NSString*)filename
@@ -288,10 +289,10 @@ idAccessor( retval, setRetval )
 #else
     pthread_setname_np( pthread_self(), [filename UTF8String] );
 #endif
-	id script = [STScript scriptWithContentsOfFile:filename];
+	STScript* script = [STScript scriptWithContentsOfFile:filename];
+    script.shouldEvaluateReturnValue = self.shouldEvaluateReturnValue;
     [[self evaluator] bindValue:filename toVariableNamed:@"argv0" withScheme:@"var"];
 	[script executeInContext:self];
-
 }
 
 -(BOOL)isAssignmentExpresson:expr

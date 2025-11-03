@@ -35,6 +35,7 @@
 @property (nonatomic,strong) NSMutableArray *history;
 @property (nonatomic,strong) NSString *commandName;
 @property (strong) NSException *lastException;
+@property (nonatomic, assign) bool shouldEvaluateReturnValue;
 
 @end
 

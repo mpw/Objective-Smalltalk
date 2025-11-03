@@ -1803,6 +1803,18 @@ idAccessor(solver, setSolver)
     EXPECTTRUE(didThrow, @"should have thrown a parse exception");
 }
 
++(void)testParseNestedDictionaries
+{
+    STCompiler *compiler = [self compiler];
+    NSString *nestedDict=@" #{ a: 2, b: #{  c: 12 } } ";
+    BOOL didThrow=NO;
+    @try {
+        [compiler compile:nestedDict];
+    } @catch (id e) {
+        didThrow=YES;
+    }
+    EXPECTFALSE(didThrow, @"threw a parse exception");
+}
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1830,6 +1842,7 @@ idAccessor(solver, setSolver)
               @"testBinaryLiteral",
               @"testCommentToEndOfLine",
               @"testUnclosedDictionaryLiteralThrowsCompilerException",
+//              @"testParseNestedDictionaries",
     ];
 }
 
