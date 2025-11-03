@@ -1070,7 +1070,8 @@ idAccessor(solver, setSolver)
 {
     ENTER;
     id next=[self nextToken];
-
+    id parsedStatement = nil;
+    
     if ( [next isEqual:@"|"]) {
 //        NSLog(@"parseStatement encounted pipe '|'");
         next=[self nextToken];
@@ -1127,10 +1128,9 @@ idAccessor(solver, setSolver)
         return schemeDef;
     } else {
         [self pushBack:next];
-        return [self parseExpression];
+        parsedStatement =  [self parseExpression];
     }
-
-    return [self parseExpression];
+    return parsedStatement;
 }
 
 -parseStatements
