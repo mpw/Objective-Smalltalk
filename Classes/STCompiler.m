@@ -41,6 +41,14 @@
 #import "STNotificationDefinition.h"
 #import "STPostExpression.h"
 
+#define PARSEERROR( msg, theToken )  [self parseError:msg token:theToken selector:_cmd]
+#define TRACE( msg, theObjArg )  [self trace:msg obj:theObjArg selector:_cmd]
+#define ENTER1(obj)              TRACE(@"ENTER",obj)
+#define ENTER                    TRACE(@"ENTER",nil)
+#define LEAVE1(obj)              TRACE(@"LEAVE",obj)
+#define LEAVE                    TRACE(@"LEAVE",nil)
+
+
 @class MPWClassMethodStore;
 
 @implementation NSString(concat)
@@ -252,8 +260,6 @@ idAccessor(solver, setSolver)
     
 }
 
-#define PARSEERROR( msg, theToken )  [self parseError:msg token:theToken selector:_cmd]
-#define TRACE( msg, theObjArg )  [self trace:msg obj:theObjArg selector:_cmd]
 
 -(void)untangleConcatsForArrayLiteral:(MPWMessageExpression *)e into:(NSMutableArray *)result
 {
@@ -316,7 +322,7 @@ idAccessor(solver, setSolver)
         PARSEERROR(@"array syntax", token);
         return nil;
     }
-    LEAVE1;
+    LEAVE;
 }
 
 -parseLiteralDict
