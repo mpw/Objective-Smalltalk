@@ -125,7 +125,7 @@ idAccessor(solver, setSolver)
 	[self defineBuiltInConnectors];
     [self resetSmbolTable];
     self.classes = [NSMutableDictionary dictionary];
-    self.closingBraceLiteralDictHack = true;
+    self.closingBraceLiteralDictHack = false;
 	return self;
 }
 
@@ -242,7 +242,12 @@ idAccessor(solver, setSolver)
 {
     if (self.trace) {
         NSString* tokenString=token ? [NSString stringWithFormat:@" %@/%@",token,[token class]] : @"";
-        NSString* errstr = [NSString stringWithFormat:@"%@ in '%@' %@ context %@",msg,NSStringFromSelector(sel),tokenString,scanner];
+        NSString* pushBackTokens = @"";
+        NSArray *pushed=[scanner tokens];
+        if ( pushed.count > 0) {
+            pushBackTokens = [NSString stringWithFormat:@" %d pushback tokens: '%@' ",pushed.count, [pushed componentsJoinedByString:@","]];
+        }
+        NSString* errstr = [NSString stringWithFormat:@"%@ in '%@' %@ pushback tokens: '%@' context %@",msg,NSStringFromSelector(sel),tokenString,pushBackTokens, scanner];
         fprintf(stderr,"%s\n",[errstr UTF8String]);
     }
 }
@@ -334,9 +339,9 @@ idAccessor(solver, setSolver)
     id token=[self nextToken];
     TRACE( @"first token", token );
     MPWLiteralDictionaryExpression *dictLit=[[MPWLiteralDictionaryExpression new] autorelease];
-//    NSLog(@"before pushback: %@",scanner);
-    [self pushBack:token];
-//    NSLog(@"after pushback: %@",scanner);
+    if ( ![token isEqual:@"}"]) {
+        [self pushBack:token];
+    }
     while ( token && ![token isEqual:@"}"]) {
 //        NSLog(@"parse key/val loop, key part, token:%@ scanner:%@",token,scanner);
         id key=nil;
@@ -1847,7 +1852,7 @@ idAccessor(solver, setSolver)
     //        see what the differences are with and without the hack
     
     compiler.closingBraceLiteralDictHack = false;
-    compiler.trace = true;
+    compiler.trace = false;
     BOOL didThrow=NO;
     @try {
         [compiler compile:nestedDict];
@@ -1885,7 +1890,7 @@ idAccessor(solver, setSolver)
     STCompiler *compiler = [self compiler];
     NSString *dictReceiver=@" #{ } at:'a'";
     
-    compiler.closingBraceLiteralDictHack = true;           // succeds when hack is on, fails when hack is off (turn off to debug)
+    compiler.closingBraceLiteralDictHack = false;           // succeds when hack is on, fails when hack is off (turn off to debug)
     compiler.trace = true;
     id parseResult=nil;
     BOOL didThrow=NO;
