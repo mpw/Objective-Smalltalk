@@ -125,6 +125,7 @@ idAccessor(solver, setSolver)
 	[self defineBuiltInConnectors];
     [self resetSmbolTable];
     self.classes = [NSMutableDictionary dictionary];
+    self.closingBraceLiteralDictHack = true;
 	return self;
 }
 
@@ -240,8 +241,9 @@ idAccessor(solver, setSolver)
 -(void)trace:(NSString*)msg obj:(id)token selector:(SEL)sel
 {
     if (self.trace) {
-        NSString *errstr = [NSString stringWithFormat:@"%@ in '%@' %@/%@ context %@",msg,NSStringFromSelector(sel),token,[token class],scanner];
-        NSLog(@"%@",errstr);
+        NSString* tokenString=token ? [NSString stringWithFormat:@" %@/%@",token,[token class]] : @"";
+        NSString* errstr = [NSString stringWithFormat:@"%@ in '%@' %@ context %@",msg,NSStringFromSelector(sel),tokenString,scanner];
+        fprintf(stderr,"%s\n",[errstr UTF8String]);
     }
 }
 
@@ -360,13 +362,14 @@ idAccessor(solver, setSolver)
             }
         } else {
             token=[self nextToken];
+            TRACE(@"separator",token);
     //        NSLog(@"separator token: %@",token);
             if (![token isEqual:@":"]) {
                 PARSEERROR(@"dictionary syntax: key not folled by ':'  %@", token);
             }
         }
         token=[self nextToken];
-//        NSLog(@"will parse value with starting token: '%@'",token);
+        TRACE(@"first token of value",token);
         id value = nil;
         if ( [token isEqual:@"("]) {
             value = [self parseExpressionInLiteral:NO];
@@ -381,21 +384,30 @@ idAccessor(solver, setSolver)
 //        NSLog(@"value: %@",[value theLiteral]);
         [dictLit addKey:key value:value];
         token=[self nextToken];
-//        NSLog(@"nextToken: %@",token);
+
         if ( [token isEqual:@","]) {
             token=[self nextToken];
             [self pushBack:token];
         }
     }
+    TRACE(@"closing token after loop",token);
     if ( [token isEqual:@"}"]) {
         closed=YES;
-    }
-    token = [self nextToken];               // HACK (that actually breaks things) sometimes we haven't consumed to closing brace
-    TRACE(@"closing token",token);
-    if ( ![token isEqualToString:@"}"]) {
-        [self pushBack:token];
     } else {
-        closed = YES;
+        TRACE(@"fell off end in parseLiteralDict?",token);
+    }
+    // HACK:  sometimes we seem to not read the closing '}'
+    //        so we try to read it here by reading again.
+    //        However, this hack makes other things not work
+    //        so it needs to removed.
+    if ( self.closingBraceLiteralDictHack ) {
+        token = [self nextToken];    // sometimes this will be the } we forgot to get, but with nested dicts it will be the nesting
+        if ( [token isEqualToString:@"}"]) {
+            TRACE(@"it was a closing token",token);
+            closed = YES;
+        } else {
+            [self pushBack:token];
+        }
     }
     if (!closed) {
         PARSEERROR(@"literal expression should be closed", token);
@@ -407,6 +419,7 @@ idAccessor(solver, setSolver)
 
 -parseLiteral
 {
+    ENTER;
     id object = [self nextToken];
     if ( [object isEqual:@"#"]) {
         PARSEERROR(@"unexpected # after #", object);
@@ -421,6 +434,7 @@ idAccessor(solver, setSolver)
     } else {
         [self pushBack:next];
     }
+    TRACE(@"token to decide the literal",object);
     if ( [object isEqual:@"("] ) {
         e = [self parseLiteralArray:@")"];
     } else if ( [object isEqual:@"["] ) {
@@ -1828,6 +1842,12 @@ idAccessor(solver, setSolver)
 {
     STCompiler *compiler = [self compiler];
     NSString *nestedDict=@" #{ a: 2, b: #{  c: 12 } } ";
+    
+    // HACK:  turn the closingBraceLiteralDictHack off just for this, in order to
+    //        see what the differences are with and without the hack
+    
+    compiler.closingBraceLiteralDictHack = false;
+    compiler.trace = true;
     BOOL didThrow=NO;
     @try {
         [compiler compile:nestedDict];
@@ -1836,6 +1856,49 @@ idAccessor(solver, setSolver)
     }
     EXPECTFALSE(didThrow, @"threw a parse exception");
 }
+
+
++(void)testParseEmptyDictionary
+{
+    STCompiler *compiler = [self compiler];
+    NSString *emptyDict=@" #{ } ";
+        
+    compiler.closingBraceLiteralDictHack = false;
+    compiler.trace = false;
+    id parseResult=nil;
+    id dictResult=nil;
+    BOOL didThrow=NO;
+    @try {
+        parseResult = [compiler compile:emptyDict];
+    } @catch (id e) {
+        didThrow=YES;
+    }
+    EXPECTFALSE(didThrow, @"threw a parse exception");
+    IDEXPECT( [parseResult className],@"MPWLiteralDictionaryExpression",@"parsed");
+    dictResult=[compiler evaluate:parseResult];
+    IDEXPECT( dictResult, @{} ,@"evaluated");
+}
+
+
++(void)testParseEmptyLiteralDictAsReceiver
+{
+    STCompiler *compiler = [self compiler];
+    NSString *dictReceiver=@" #{ } at:'a'";
+    
+    compiler.closingBraceLiteralDictHack = true;           // succeds when hack is on, fails when hack is off (turn off to debug)
+    compiler.trace = true;
+    id parseResult=nil;
+    BOOL didThrow=NO;
+    @try {
+        parseResult = [compiler compile:dictReceiver];
+    } @catch (id e) {
+        didThrow=YES;
+    }
+    EXPECTFALSE(didThrow, @"threw a parse exception");
+    IDEXPECT( [parseResult className],@"MPWMessageExpression",@"parsed");
+}
+
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1863,7 +1926,9 @@ idAccessor(solver, setSolver)
               @"testBinaryLiteral",
               @"testCommentToEndOfLine",
               @"testUnclosedDictionaryLiteralThrowsCompilerException",
-//              @"testParseNestedDictionaries",
+              @"testParseNestedDictionaries",
+              @"testParseEmptyDictionary",
+              @"testParseEmptyLiteralDictAsReceiver",
     ];
 }
 
