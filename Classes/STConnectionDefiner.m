@@ -216,7 +216,7 @@ id st_connect_components( id left, id right )
 -(BOOL)connect:other
 {
     if ( [other class] == [@protocol(NSObject) class] ) {
-        MPWEventWriter *s = [[[MPWEventWriter alloc] initWithNotificationProtocol: other shouldPostOnMainThread:YES] autorelease];
+        MPWEventSender *s = [[[MPWEventSender alloc] initWithNotificationProtocol: other shouldPostOnMainThread:YES] autorelease];
         self.log = s;
         return YES;
     } else {
