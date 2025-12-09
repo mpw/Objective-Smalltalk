@@ -1,13 +1,11 @@
 
-model:count ← 1.
+init:model:count ← 1.
 
 button ← #Button{ #title: 'count' }.
-button → { model:count ← model:count + 1. protocol:ModelDidChange notify. }.
-label ←   #Label{  }.
-view := #Grid{ #rows: [   
- [ label, button ]
-] }. 
-
+button → {  model:count ← model:count + 1.  }.
+label ←   #Label{ intValue: model:count  }.
 var:label/intValue |= model:count.
 
-view. 
+#Grid{ #rows: [   
+ [ label, button ]
+] }. 
