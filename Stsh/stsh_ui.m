@@ -9,6 +9,7 @@
 #import <MPWFoundationUI/MPWFoundationUI.h>
 #import "STShell.h"
 #import <ObjectiveSmalltalkUI/ObjectiveSmalltalkUI.h>
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 
 @interface MPWStshUI : STShell
 
@@ -21,6 +22,8 @@
 int main (int argc, const char *argv[])
 {
     [[NSAutoreleasePool alloc] init];
+    [[NSProcessInfo processInfo] setProcessName:@"something else"];
+    NSLog(@"set the process name");
     NSMutableArray *args=[NSMutableArray array];
     for (int i=1;i<argc;i++) {
         [args addObject:[NSString stringWithUTF8String:argv[i]]];
@@ -29,10 +32,17 @@ int main (int argc, const char *argv[])
     stsh.shouldEvaluateReturnValue=true;
 
     NSData* initCode = [[STTextField class] frameworkResource:@"AppKitInit" category:@"st"];
+//    NSLog(@"initCode: %@",[initCode stringValue]);
     NSData *data=[[STTextField class] frameworkResource:@"appkit-enums" category:@"json"];
     NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    MPWDictStore *enumStore=[MPWDictStore storeWithDictionary:dict];
+    MPWDictStore *enumStore=[MPWDictStore storeWithDictionary:(NSMutableDictionary*)dict];
     STCompiler *compiler=[stsh evaluator];
+
+    [[compiler schemes] setSchemeHandler:[MPWDictStore storeWithDictionary:[NSMutableDictionary dictionary]] forSchemeName:@"modelbase"];
+    //    [compiler evaluateScriptString:@"scheme:modelbase := MPWDictStore store."];
+    [compiler evaluateScriptString:@"scheme:model := MPWLoggingStore storeWithSource: scheme:modelbase."];
+    [compiler evaluateScriptString:@"scheme:model setLog: (MPWEventSender alloc initWithNotificationProtocol: protocol:ModelDidChange shouldPostOnMainThread:false)."];
+
     [[compiler schemes] setSchemeHandler:enumStore forSchemeName:@"c"];
     [[compiler schemes] setSchemeHandler:[MPWColorStore store] forSchemeName:@"color"];
     [[compiler schemes] setSchemeHandler:[MPWFontStore store] forSchemeName:@"font"];

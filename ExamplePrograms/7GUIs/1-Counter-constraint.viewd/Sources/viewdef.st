@@ -1,4 +1,3 @@
-"Doesn't currently work".
 
 model:count ← 1.
 
@@ -9,6 +8,6 @@ view := #Grid{ #rows: [
  [ label, button ]
 ] }. 
 
-label |= model:count.
+var:label/intValue |= model:count.
 
 view. 

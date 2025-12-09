@@ -87,7 +87,11 @@
         }
         for ( NSWindowController *c in windowControllers) {
             if ( [c respondsToSelector:@selector(view)]) {
-                NSView *view=[[c contentViewController] view];
+                
+                MPWProgramTextView *view=(MPWProgramTextView*)[[c contentViewController] view];
+                
+                // FIXME:  part of this code assumes that view is a ClipView, others that it is a MPWProgramTextView
+                
                 NSWindow *w = [view openInWindow:@"Workspace"];
                 [c setWindow:w];
                 NSLog(@"workspace view: %@",view);

@@ -21,12 +21,13 @@ extension STDocument {
       workspace setCompiler: self compiler.
       workspace setDelegate: self.
       self workspaces addObject:workspace.
-      stdout println:'did set up workspace'.
+      stdout println:'STDocument did set up workspace'.
   }
+  
  -<bool>turnIntoApp {
        fm := NSFileManager defaultManager.
        appPath := NSBundle mainBundle bundlePath.
-      docPath := self fileURL path.
+       docPath := self fileURL path.
        newAppPath := docPath stringByDeletingPathExtension stringByAppendingPathExtension:'app'.
        resourcesPath := newAppPath , '/Contents/Resources/finishLaunching/', docPath lastPathComponent.
        stdout println: resourcesPath.
