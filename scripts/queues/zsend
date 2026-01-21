@@ -1,0 +1,5 @@
+#!env st
+framework:ObjectiveQueue load
+z ← #OQZero{} 
+z connect.
+z ! 'Hello World!'
