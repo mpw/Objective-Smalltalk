@@ -135,6 +135,14 @@
 
 @end
 
+@implementation NSNumber(factorial)
+
+-factorial
+{
+    return [[MPWBigInteger numberWithLong:[self longValue]] factorial];
+}
+
+@end
 
 
 @implementation MPWBigInteger(tests)

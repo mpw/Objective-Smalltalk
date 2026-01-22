@@ -29,7 +29,17 @@
             @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"RHS must be an identifier expression" userInfo:nil];
         }
     } else {
-        @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"LHS can't be bound" userInfo:nil];
+        if ( true ) {
+            id forward = [lhs syncToTarget:rhs inContext:aContext];
+//            id backward = [rhs syncToTarget:lhs inContext:aContext];
+            id constraints =  @{ @"forward": forward,
+                                 // @"backward": backward
+            };
+            return constraints;
+        } else {
+            @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"LHS must be bindable using setBinding:" userInfo:nil];
+        }
+        
     }
 //    @throw [NSException exceptionWithName:@"bidiconstraint" reason:@"Shouldn't get here" userInfo:nil];
 

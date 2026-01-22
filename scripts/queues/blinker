@@ -1,0 +1,8 @@
+#!env st
+framework:ObjectiveQueue load
+ object Blinker : #MPWFixedValueSource{ #values: #(0,1) }
+blinker ← #Blinker{ seconds: 1 }.
+z ← #OQZero{}
+z connect.
+blinker setTarget: z.
+blinker run.

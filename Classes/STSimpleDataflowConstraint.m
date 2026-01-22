@@ -35,6 +35,10 @@ CONVENIENCEANDINIT( constraint, WithSource:source target:target)
     self.target.value = self.source.value;
 }
 
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%p: source: %@ target: %@>",self.className,self,self.source,self.target];
+}
 
 @end
 

@@ -1,3 +1,3 @@
 #!env stui
 #-field
- #NSTextField{ #frame: (180@24), editable: true   } → stdout.
+ #NSTextField{ frame: (180@24)  } → stdout.
