@@ -9,7 +9,7 @@ stdout println:'files: '.
 stdout do println: bundle sourceNames each.
 sources do: { :sourceName |
     stdout println:'compile: ',sourceName.
-    compiled := compiler compile: file:{sourceName}.
+    compiled := compiler compile: file:{source}/Sources/{sourceName}.
     stdout println:'did compile: ',sourceName.
     macho := compiler compileClassToMachoO: compiled.
     stdout println:'did native compile: ',sourceName.
