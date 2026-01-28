@@ -1,0 +1,159 @@
+<html>
+<head>
+    <title>Smalltalk Workspace</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007acc;
+            padding-bottom: 10px;
+        }
+        .workspace-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 14px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #007acc;
+            box-shadow: 0 0 0 2px rgba(0,122,204,0.2);
+        }
+        #code {
+            min-height: 200px;
+            background: #fafafa;
+        }
+        .button-row {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        button[type="submit"] {
+            background: #007acc;
+            color: white;
+        }
+        button[type="submit"]:hover {
+            background: #005a9e;
+        }
+        button[type="button"] {
+            background: #6c757d;
+            color: white;
+        }
+        button[type="button"]:hover {
+            background: #545b62;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        .result-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 14px;
+            min-height: 50px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .help-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #444;
+        }
+        .help-section h3 {
+            margin-top: 0;
+            color: #007acc;
+        }
+        .help-section code {
+            background: #d0e8f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smalltalk Workspace</h1>
+
+    <div class="workspace-container">
+        <form action="/" method="post" id="evalForm">
+            <label for="code">Enter Smalltalk code:</label>
+            <textarea name="code" id="code">{code}</textarea>
+
+            <div class="button-row">
+                <button type="submit">Evaluate (Do it)</button>
+                <button type="button" onclick="clearCode()">Clear</button>
+            </div>
+        </form>
+
+        <div class="result-section">
+            <label>Result:</label>
+            <div class="result-box" id="result">{result}</div>
+        </div>
+    </div>
+
+    <div class="help-section">
+        <h3>Quick Reference</h3>
+        <p>
+            <strong>Basic expressions:</strong><br>
+            <code>3 + 4</code> - arithmetic<br>
+            <code>'Hello' , ' World'</code> - string concatenation<br>
+            <code>#(1 2 3) collect:{ :x | x * 2 }</code> - collections<br>
+            <code>x := 42. x * 2</code> - local variables
+        </p>
+        <p>
+            <strong>Keyboard shortcut:</strong> Press Cmd+Enter (or Ctrl+Enter) to evaluate
+        </p>
+    </div>
+
+    <script>
+        // Keyboard shortcut for evaluation
+        document.getElementById('code').addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('evalForm').submit();
+            }
+        });
+
+        function clearCode() {
+            document.getElementById('code').value = '';
+            document.getElementById('code').focus();
+        }
+
+    </script>
+</body>
+</html>
