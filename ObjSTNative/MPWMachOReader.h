@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(long)segmentOffset;
 -(long)segmentSize;
 -(const void*)segmentBytes;
+-(struct segment_command_64* _Nullable)segmentNamed:(NSString*)segmentName;
+-(const struct load_command* _Nullable)loadCommandOfTypeIfPresent:(int)commandType;
+-(NSArray<NSString*>*)exportedSymbolNames;
 
 
 -(NSArray<NSString*>*)stringTable;

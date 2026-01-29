@@ -449,10 +449,15 @@
 //    return [self declareGlobalSymbol:symbol atOffset:0 type:0x1 section:0];
 //}
 
+-(void)writeSymbolTableData
+{
+    [self appendBytes:symtab length:symtabCount * sizeof(symtab_entry)];
+}
+
 -(void)writeSymbolTable
 {
     NSAssert2(self.length == [self symbolTableOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
-    [self appendBytes:symtab length:symtabCount * sizeof(symtab_entry)];
+    [self writeSymbolTableData];
 }
 
 

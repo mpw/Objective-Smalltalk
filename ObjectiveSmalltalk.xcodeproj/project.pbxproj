@@ -771,6 +771,8 @@
 		1FF57C0B2880626B0080A2F8 /* MPWHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF57C092880626B0080A2F8 /* MPWHost.h */; };
 		1FF6C6121379DF1300CCB7AE /* MPWRelScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
+		1FF85FE02F2B9B4300A99A0C /* MPWMachODylibWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */; };
+		1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */; };
 		1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA166B2B970D8B004E63ED /* STTemplateStore.m */; };
 		1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
@@ -1607,6 +1609,8 @@
 		1FF6ACB30752982900A306C8 /* MPWBlockContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockContext.m; sourceTree = "<group>"; };
 		1FF6C60E1379DF1300CCB7AE /* MPWRelScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWRelScheme.h; sourceTree = "<group>"; };
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
+		1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachODylibWriter.h; sourceTree = "<group>"; };
+		1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachODylibWriter.m; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
 		1FFA166B2B970D8B004E63ED /* STTemplateStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTemplateStore.m; sourceTree = "<group>"; };
 		1FFA16732B970F8B004E63ED /* STRootMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STRootMapper.h; sourceTree = "<group>"; };
@@ -1973,6 +1977,8 @@
 				1F9AE9C028D4957A00671748 /* Mach_O_Structs.h */,
 				1F3466EE28CB10F7003257CB /* MPWMachOReader.h */,
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
+				1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */,
+				1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
 				1FE5D6DE2C3080890018B09C /* MPWELFTextSection.h */,
@@ -3003,6 +3009,7 @@
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F032E372BEF9A140000183E /* STNativeCompilerTestsMachO.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* STObjectCodeGeneratorARM.h in Headers */,
+				1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
 				1F78BD8D2CB6F78000AA41A3 /* STJittedMethod.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
@@ -4567,6 +4574,7 @@
 				1FD22E2B2CBA8F3F0064490A /* STNativeMachOCompiler.m in Sources */,
 				1F032E1F2BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
+				1FF85FE02F2B9B4300A99A0C /* MPWMachODylibWriter.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */,

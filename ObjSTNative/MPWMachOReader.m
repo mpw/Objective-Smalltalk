@@ -375,6 +375,51 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return descriptorPointer;
 }
 
+-(const struct load_command* _Nullable)loadCommandOfTypeIfPresent:(int)commandType
+{
+    const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
+    for (int i=0, max=[self numLoadCommands]; i<max; i++) {
+        if ( cur->cmd == commandType) {
+            return cur;
+        }
+        cur = ((void*)cur)+cur->cmdsize;
+    }
+    return nil;
+}
+
+-(struct segment_command_64* _Nullable)segmentNamed:(NSString*)segmentName
+{
+    const char *name = [segmentName UTF8String];
+    const struct load_command *cur=[self.data bytes] + sizeof(struct mach_header_64);
+    for (int i=0, max=[self numLoadCommands]; i<max; i++) {
+        if ( cur->cmd == LC_SEGMENT_64) {
+            struct segment_command_64 *seg = (struct segment_command_64*)cur;
+            if ( strncmp(seg->segname, name, 16) == 0 ) {
+                return seg;
+            }
+        }
+        cur = ((void*)cur)+cur->cmdsize;
+    }
+    return nil;
+}
+
+-(NSArray<NSString*>*)exportedSymbolNames
+{
+    // For now, just return global symbols from symtab
+    // A full implementation would parse the exports trie
+    NSMutableArray *exports = [NSMutableArray array];
+    int nsyms = [self numSymbols];
+    for (int i = 0; i < nsyms; i++) {
+        if ([self isSymbolGlobalAt:i]) {
+            NSString *name = [self symbolNameAt:i];
+            if (name) {
+                [exports addObject:name];
+            }
+        }
+    }
+    return exports;
+}
+
 
 @end
 
