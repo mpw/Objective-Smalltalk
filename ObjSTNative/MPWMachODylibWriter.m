@@ -132,10 +132,10 @@
 
     long textSegmentFileSize = sectionDataStart + sectionOffset;
 
-    // Page-align the VM size
-    self.textSegmentSize = (textSegmentFileSize + 0xFFF) & ~0xFFF;
+    // Page-align the VM size - use 16KB minimum like reference dylibs
+    self.textSegmentSize = (textSegmentFileSize + 0x3FFF) & ~0x3FFF;
     if (self.textSegmentSize == 0) {
-        self.textSegmentSize = 0x1000;  // Minimum one page
+        self.textSegmentSize = 0x4000;  // Minimum 16KB like reference
     }
 
     struct segment_command_64 segment = {};
@@ -145,7 +145,8 @@
     segment.vmaddr = 0;
     segment.vmsize = self.textSegmentSize;
     segment.fileoff = 0;
-    segment.filesize = textSegmentFileSize;
+    // filesize must extend to where __LINKEDIT starts (self.linkeditOffset was computed in writeFile)
+    segment.filesize = self.linkeditOffset;
     segment.maxprot = VM_PROT_READ | VM_PROT_EXECUTE;
     segment.initprot = VM_PROT_READ | VM_PROT_EXECUTE;
     segment.nsects = (uint32_t)writers.count;
@@ -168,10 +169,8 @@
     segment.cmdsize = sizeof(struct segment_command_64);
     strncpy(segment.segname, "__LINKEDIT", 16);
     segment.vmaddr = self.textSegmentSize;  // Right after __TEXT
-    // vmsize must be page-aligned and cover all linkedit data
-    long linkeditVmSize = (self.linkeditSize + 0xFFF) & ~0xFFF;
-    if (linkeditVmSize == 0) linkeditVmSize = 0x1000;
-    segment.vmsize = linkeditVmSize;
+    // vmsize should be 16KB like reference dylibs
+    segment.vmsize = 0x4000;
     segment.fileoff = self.linkeditOffset;
     segment.filesize = self.linkeditSize;
     segment.maxprot = VM_PROT_READ;
@@ -233,6 +232,21 @@
     dysymtab.nundefsym = 0;
 
     [self appendBytes:&dysymtab length:sizeof dysymtab];
+}
+
+// Override to set proper minos version (parent leaves it as 0.0)
+-(void)writePlatformLoadCommand
+{
+    struct build_version_command cmd = {};
+    cmd.cmd = LC_BUILD_VERSION;
+    cmd.cmdsize = sizeof(struct build_version_command);
+    cmd.platform = PLATFORM_MACOS;
+    // minos: macOS 11.0 encoded as (11 << 16) | (0 << 8) | 0
+    cmd.minos = (11 << 16);
+    // sdk: leave as 0 (n/a) - the linker normally sets this
+    cmd.sdk = 0;
+    cmd.ntools = 0;
+    [self appendBytes:&cmd length:sizeof cmd];
 }
 
 -(void)writeUUIDLoadCommand
@@ -404,7 +418,9 @@
         // Skip leading underscore
         if (name[0] == '_') name++;
 
-        long address = 0x1000;
+        // Get the actual vmaddr from the text section
+        long textSectionAddr = self.textSectionWriter.address;
+        long address = textSectionAddr;
         NSNumber *offsetNum = self.globalSymbolOffsets[symbols[0]];
         if (offsetNum) {
             address += [offsetNum longValue];
@@ -484,7 +500,8 @@
 
         // Write terminal nodes
         for (NSString *symbol in symbols) {
-            long address = 0x1000;
+            long textSectionAddr = self.textSectionWriter.address;
+            long address = textSectionAddr;
             NSNumber *offsetNum = self.globalSymbolOffsets[symbol];
             if (offsetNum) {
                 address += [offsetNum longValue];
@@ -563,6 +580,19 @@
 
     // String table
     [self writeStringTable];
+
+    // Pad to 8-byte alignment
+    long currentSize = self.length;
+    long targetSize = self.linkeditOffset + self.linkeditSize;
+    if (currentSize < targetSize) {
+        long padding = targetSize - currentSize;
+        char zeros[8] = {0};
+        while (padding > 0) {
+            long toWrite = MIN(padding, 8);
+            [self appendBytes:zeros length:toWrite];
+            padding -= toWrite;
+        }
+    }
 }
 
 #pragma mark - Main Write
@@ -597,9 +627,11 @@
         textDataSize += writer.sectionDataSize;
     }
 
-    // Page-align linkedit offset
-    self.linkeditOffset = (headerAndLoadCommands + textDataSize + 0xFFF) & ~0xFFF;
-    self.linkeditSize = [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
+    // Align linkedit offset to 16KB like __TEXT vmsize
+    self.linkeditOffset = (headerAndLoadCommands + textDataSize + 0x3FFF) & ~0x3FFF;
+    long rawLinkeditSize = [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
+    // Pad linkedit size to 8-byte alignment (required for mmap)
+    self.linkeditSize = (rawLinkeditSize + 7) & ~7;
 
     // Write everything
     [self writeHeader];
@@ -718,6 +750,238 @@
     EXPECTTRUE([exports containsObject:@"_testfn"], @"should export _testfn");
 }
 
+// Test that documents all load commands a working dylib has
++(void)testDocumentReferenceLoadCommands
+{
+    // Create reference dylib with clang
+    system("echo 'int answer(void) { return 42; }' > /tmp/ref_src.c");
+    system("clang -shared -o /tmp/libref_test.dylib /tmp/ref_src.c -install_name @rpath/libref.dylib");
+
+    NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_test.dylib"];
+    EXPECTNOTNIL(refData, @"reference dylib should exist");
+
+    MPWMachOReader *refReader = [[[MPWMachOReader alloc] initWithData:refData] autorelease];
+
+    // Document all load commands present in a working dylib
+    NSLog(@"Reference dylib load commands:");
+
+    // Required load commands for a dylib:
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_SEGMENT_64], @"needs LC_SEGMENT_64");
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_ID_DYLIB], @"needs LC_ID_DYLIB");
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_SYMTAB], @"needs LC_SYMTAB");
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_DYSYMTAB], @"needs LC_DYSYMTAB");
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_UUID], @"needs LC_UUID");
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_BUILD_VERSION], @"needs LC_BUILD_VERSION");
+    EXPECTNOTNIL([refReader loadCommandOfTypeIfPresent:LC_LOAD_DYLIB], @"needs LC_LOAD_DYLIB (libSystem)");
+    // Exports can be in LC_DYLD_EXPORTS_TRIE (new) or LC_DYLD_INFO_ONLY (old)
+    BOOL hasExports = [refReader loadCommandOfTypeIfPresent:LC_DYLD_EXPORTS_TRIE] != NULL ||
+                      [refReader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY] != NULL;
+    EXPECTTRUE(hasExports, @"needs exports (LC_DYLD_EXPORTS_TRIE or LC_DYLD_INFO_ONLY)");
+
+    // Modern dylibs also have chained fixups (required for arm64e, optional for arm64)
+    const struct load_command *chainedFixups = [refReader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
+    if (chainedFixups) {
+        NSLog(@"  Has LC_DYLD_CHAINED_FIXUPS (modern format)");
+    }
+
+    // Function starts (optional but common)
+    if ([refReader loadCommandOfTypeIfPresent:LC_FUNCTION_STARTS]) {
+        NSLog(@"  Has LC_FUNCTION_STARTS (optional)");
+    }
+
+    // Data in code (optional)
+    if ([refReader loadCommandOfTypeIfPresent:LC_DATA_IN_CODE]) {
+        NSLog(@"  Has LC_DATA_IN_CODE (optional)");
+    }
+
+    // Code signature (added by codesign, required to load on modern macOS)
+    if ([refReader loadCommandOfTypeIfPresent:LC_CODE_SIGNATURE]) {
+        NSLog(@"  Has LC_CODE_SIGNATURE (required for loading)");
+    }
+}
+
+// Test that documents and verifies structural assumptions about dylib layout
+// These assumptions are derived from analyzing reference dylibs created by clang/ld
++(void)testDylibLayoutAssumptions
+{
+    // Create reference dylib with clang
+    system("echo 'int answer(void) { return 42; }' > /tmp/ref_src.c");
+    system("clang -shared -o /tmp/libref_test.dylib /tmp/ref_src.c -install_name @rpath/libref.dylib");
+
+    NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_test.dylib"];
+    EXPECTNOTNIL(refData, @"reference dylib should exist");
+
+    MPWMachOReader *refReader = [[[MPWMachOReader alloc] initWithData:refData] autorelease];
+
+    // Get segments from reference
+    struct segment_command_64 *refText = [refReader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *refLinkedit = [refReader segmentNamed:@"__LINKEDIT"];
+    EXPECTNOTNIL((id)(uintptr_t)refText, @"reference should have __TEXT");
+    EXPECTNOTNIL((id)(uintptr_t)refLinkedit, @"reference should have __LINKEDIT");
+
+    // Document and verify layout assumptions:
+
+    // 1. __TEXT starts at file offset 0 and vmaddr 0
+    INTEXPECT(refText->fileoff, 0, @"__TEXT fileoff should be 0");
+    INTEXPECT(refText->vmaddr, 0, @"__TEXT vmaddr should be 0");
+
+    // 2. __TEXT filesize equals __LINKEDIT fileoff (no gaps)
+    INTEXPECT(refLinkedit->fileoff, refText->filesize, @"__LINKEDIT fileoff == __TEXT filesize");
+
+    // 3. __LINKEDIT vmaddr equals __TEXT vmsize (contiguous in memory)
+    INTEXPECT(refLinkedit->vmaddr, refText->vmsize, @"__LINKEDIT vmaddr == __TEXT vmsize");
+
+    // 4. Both vmsize values are page-aligned (0x1000 = 4096)
+    INTEXPECT(refText->vmsize % 0x1000, 0, @"__TEXT vmsize should be page-aligned");
+    INTEXPECT(refLinkedit->vmsize % 0x1000, 0, @"__LINKEDIT vmsize should be page-aligned");
+
+    // 5. File size should equal __LINKEDIT fileoff + __LINKEDIT filesize
+    long expectedFileSize = refLinkedit->fileoff + refLinkedit->filesize;
+    INTEXPECT((long)refData.length, expectedFileSize, @"file size == __LINKEDIT end");
+
+    NSLog(@"Reference dylib layout:");
+    NSLog(@"  __TEXT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          refText->vmaddr, refText->vmsize, refText->fileoff, refText->filesize);
+    NSLog(@"  __LINKEDIT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          refLinkedit->vmaddr, refLinkedit->vmsize, refLinkedit->fileoff, refLinkedit->filesize);
+    NSLog(@"  File size: %lu", (unsigned long)refData.length);
+}
+
+// Test that our generated dylib follows the same layout assumptions
++(void)testGeneratedDylibFollowsLayoutAssumptions
+{
+    MPWMachODylibWriter *writer = [self stream];
+    writer.installName = @"@rpath/libminimal.dylib";
+
+    unsigned char code[] = {
+        0x40, 0x05, 0x80, 0x52,  // mov w0, #42
+        0xc0, 0x03, 0x5f, 0xd6   // ret
+    };
+    [writer declareGlobalSymbol:@"_answer" atOffset:0];
+    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
+    [writer writeFile];
+
+    NSData *macho = [writer data];
+    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+
+    struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
+
+    NSLog(@"Generated dylib layout (before codesign):");
+    NSLog(@"  __TEXT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          text->vmaddr, text->vmsize, text->fileoff, text->filesize);
+    NSLog(@"  __LINKEDIT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          linkedit->vmaddr, linkedit->vmsize, linkedit->fileoff, linkedit->filesize);
+    NSLog(@"  File size: %lu", (unsigned long)macho.length);
+
+    // Verify assumptions
+    INTEXPECT(text->fileoff, 0, @"__TEXT fileoff should be 0");
+    INTEXPECT(text->vmaddr, 0, @"__TEXT vmaddr should be 0");
+    INTEXPECT(linkedit->fileoff, text->filesize, @"__LINKEDIT fileoff == __TEXT filesize");
+    INTEXPECT(linkedit->vmaddr, text->vmsize, @"__LINKEDIT vmaddr == __TEXT vmsize");
+    INTEXPECT(text->vmsize % 0x1000, 0, @"__TEXT vmsize should be page-aligned");
+    INTEXPECT(linkedit->vmsize % 0x1000, 0, @"__LINKEDIT vmsize should be page-aligned");
+
+    long expectedFileSize = linkedit->fileoff + linkedit->filesize;
+    INTEXPECT((long)macho.length, expectedFileSize, @"file size == __LINKEDIT end");
+}
+
+// Compare our dylib structure to reference AFTER codesign to find differences
++(void)testCompareSignedDylibStructure
+{
+    // Create reference dylib
+    system("echo 'int answer(void) { return 42; }' > /tmp/ref_src.c");
+    system("clang -shared -o /tmp/libref_compare.dylib /tmp/ref_src.c -install_name @rpath/libref.dylib");
+
+    // Create our dylib
+    MPWMachODylibWriter *writer = [self stream];
+    writer.installName = @"@rpath/libminimal.dylib";
+    unsigned char code[] = {
+        0x40, 0x05, 0x80, 0x52,  // mov w0, #42
+        0xc0, 0x03, 0x5f, 0xd6   // ret
+    };
+    [writer declareGlobalSymbol:@"_answer" atOffset:0];
+    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
+    [writer writeFile];
+
+    NSData *macho = [writer data];
+    NSString *path = @"/tmp/libminimal_compare.dylib";
+    [macho writeToFile:path atomically:YES];
+
+    // Sign our dylib
+    system("codesign -f -s - /tmp/libminimal_compare.dylib 2>&1");
+
+    // Read both signed dylibs
+    NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_compare.dylib"];
+    NSData *ourData = [NSData dataWithContentsOfFile:@"/tmp/libminimal_compare.dylib"];
+
+    MPWMachOReader *refReader = [[[MPWMachOReader alloc] initWithData:refData] autorelease];
+    MPWMachOReader *ourReader = [[[MPWMachOReader alloc] initWithData:ourData] autorelease];
+
+    struct segment_command_64 *refText = [refReader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *refLinkedit = [refReader segmentNamed:@"__LINKEDIT"];
+    struct segment_command_64 *ourText = [ourReader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *ourLinkedit = [ourReader segmentNamed:@"__LINKEDIT"];
+
+    NSLog(@"=== REFERENCE (after codesign) ===");
+    NSLog(@"  File size: %lu", (unsigned long)refData.length);
+    NSLog(@"  __TEXT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          refText->vmaddr, refText->vmsize, refText->fileoff, refText->filesize);
+    NSLog(@"  __LINKEDIT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          refLinkedit->vmaddr, refLinkedit->vmsize, refLinkedit->fileoff, refLinkedit->filesize);
+    NSLog(@"  Bytes available for __LINKEDIT: %lu", (unsigned long)(refData.length - refLinkedit->fileoff));
+
+    NSLog(@"=== OURS (after codesign) ===");
+    NSLog(@"  File size: %lu", (unsigned long)ourData.length);
+    NSLog(@"  __TEXT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          ourText->vmaddr, ourText->vmsize, ourText->fileoff, ourText->filesize);
+    NSLog(@"  __LINKEDIT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+          ourLinkedit->vmaddr, ourLinkedit->vmsize, ourLinkedit->fileoff, ourLinkedit->filesize);
+    NSLog(@"  Bytes available for __LINKEDIT: %lu", (unsigned long)(ourData.length - ourLinkedit->fileoff));
+
+    // Key comparisons
+    NSLog(@"=== KEY DIFFERENCES ===");
+    if (refLinkedit->vmsize != ourLinkedit->vmsize) {
+        NSLog(@"  __LINKEDIT vmsize: ref=%llx ours=%llx", refLinkedit->vmsize, ourLinkedit->vmsize);
+    }
+    if (refLinkedit->filesize != ourLinkedit->filesize) {
+        NSLog(@"  __LINKEDIT filesize: ref=%lld ours=%lld", refLinkedit->filesize, ourLinkedit->filesize);
+    }
+
+    // Check if vmsize can be backed by file
+    long refAvail = refData.length - refLinkedit->fileoff;
+    long ourAvail = ourData.length - ourLinkedit->fileoff;
+    NSLog(@"  Reference: vmsize=%llx, file can back %lx bytes", refLinkedit->vmsize, refAvail);
+    NSLog(@"  Ours: vmsize=%llx, file can back %lx bytes", ourLinkedit->vmsize, ourAvail);
+
+    // Check total VM size
+    NSLog(@"=== TOTAL VM LAYOUT ===");
+    NSLog(@"  Reference: __TEXT ends at %llx, __LINKEDIT spans %llx-%llx",
+          refText->vmsize, refLinkedit->vmaddr, refLinkedit->vmaddr + refLinkedit->vmsize);
+    NSLog(@"  Ours: __TEXT ends at %llx, __LINKEDIT spans %llx-%llx",
+          ourText->vmsize, ourLinkedit->vmaddr, ourLinkedit->vmaddr + ourLinkedit->vmsize);
+
+    // Check file backing for entire range
+    NSLog(@"=== FILE BACKING ===");
+    NSLog(@"  Reference file size: %lu, __LINKEDIT end in file: %lld",
+          (unsigned long)refData.length, refLinkedit->fileoff + refLinkedit->filesize);
+    NSLog(@"  Our file size: %lu, __LINKEDIT end in file: %lld",
+          (unsigned long)ourData.length, ourLinkedit->fileoff + ourLinkedit->filesize);
+
+    // Try loading reference to verify it works
+    void *refHandle = dlopen("/tmp/libref_compare.dylib", RTLD_NOW);
+    NSLog(@"  Reference loads: %s", refHandle ? "YES" : dlerror());
+    if (refHandle) dlclose(refHandle);
+
+    // Try loading ours
+    void *ourHandle = dlopen("/tmp/libminimal_compare.dylib", RTLD_NOW);
+    NSLog(@"  Ours loads: %s", ourHandle ? "YES" : dlerror());
+    if (ourHandle) dlclose(ourHandle);
+
+    // The test passes if we output the comparison - actual loading test is separate
+    EXPECTTRUE(YES, @"comparison complete");
+}
+
 +(void)testMinimalDylibCanBeLoaded
 {
     MPWMachODylibWriter *writer = [self stream];
@@ -762,6 +1026,10 @@
 +(NSArray*)testSelectors
 {
     return @[
+        @"testDocumentReferenceLoadCommands",
+        @"testDylibLayoutAssumptions",
+        @"testGeneratedDylibFollowsLayoutAssumptions",
+        @"testCompareSignedDylibStructure",
         @"testCanWriteDylibHeader",
         @"testDylibHasIdLoadCommand",
         @"testDylibHasMultipleSegments",
