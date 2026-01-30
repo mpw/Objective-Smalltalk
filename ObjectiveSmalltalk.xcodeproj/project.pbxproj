@@ -775,6 +775,9 @@
 		1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */; };
 		1FF860692F2C9B5800A99A0C /* MPWExportsTrieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */; };
 		1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */; };
+		1FF8609A2F2CD91A00A99A0C /* MPWMachOLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */; };
+		1FF8609B2F2CD91A00A99A0C /* MPWMachOWriter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */; };
+		1FF8609C2F2CD91A00A99A0C /* MPWMachOLinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */; };
 		1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA166B2B970D8B004E63ED /* STTemplateStore.m */; };
 		1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
@@ -1615,6 +1618,9 @@
 		1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachODylibWriter.m; sourceTree = "<group>"; };
 		1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWExportsTrieWriter.h; sourceTree = "<group>"; };
 		1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWExportsTrieWriter.m; sourceTree = "<group>"; };
+		1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOLinker.h; sourceTree = "<group>"; };
+		1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOLinker.m; sourceTree = "<group>"; };
+		1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPWMachOWriter+Private.h"; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
 		1FFA166B2B970D8B004E63ED /* STTemplateStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTemplateStore.m; sourceTree = "<group>"; };
 		1FFA16732B970F8B004E63ED /* STRootMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STRootMapper.h; sourceTree = "<group>"; };
@@ -1983,6 +1989,9 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */,
 				1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */,
+				1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */,
+				1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */,
+				1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */,
 				1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */,
@@ -3037,6 +3046,8 @@
 				1F6060192A2481D100783E17 /* elf.h in Headers */,
 				1FD22E302CBA8F730064490A /* STNativeJitCompiler.h in Headers */,
 				1FDDE95528F98682002A4AA4 /* MPWByteStreamWithSymbols.h in Headers */,
+				1FF8609B2F2CD91A00A99A0C /* MPWMachOWriter+Private.h in Headers */,
+				1FF8609C2F2CD91A00A99A0C /* MPWMachOLinker.h in Headers */,
 				1FEA9C942BE3CCAD002D237B /* MPWELFSection.h in Headers */,
 				1F032E202BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.h in Headers */,
 				1F2F8DBB192C691900A5D1B5 /* MPWMethodDescriptor.h in Headers */,
@@ -4572,6 +4583,7 @@
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
 				1F93FA5E2BE785FE0046C7C3 /* MPWELFWriter.m in Sources */,
 				1FA5DF7C2BE90F2E001E5231 /* MPWELFSectionWriter.m in Sources */,
+				1FF8609A2F2CD91A00A99A0C /* MPWMachOLinker.m in Sources */,
 				1F8027D52C2FD8FA00770B11 /* MPWELFRelocationTable.m in Sources */,
 				1FDDE95228F2E0DF002A4AA4 /* MPWMachOInSectionPointer.m in Sources */,
 				1FDDE94728F1D487002A4AA4 /* MPWMachOClassReader.m in Sources */,

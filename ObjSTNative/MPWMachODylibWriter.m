@@ -16,6 +16,8 @@
 @interface MPWMachODylibWriter()
 
 @property (nonatomic, assign) long textSegmentSize;
+@property (nonatomic, assign) long dataSegmentOffset;
+@property (nonatomic, assign) long dataSegmentSize;
 @property (nonatomic, assign) long linkeditOffset;
 @property (nonatomic, assign) long linkeditSize;
 
@@ -25,33 +27,55 @@
 
 -(instancetype)initWithTarget:(id)aTarget
 {
-    // Call super's super (MPWObjectFileWriter) to avoid parent's __objc_imageinfo
     self = [super initWithTarget:aTarget];
     if (self) {
         self.filetype = MH_DYLIB;
         self.cputype = CPU_TYPE_ARM64;
         self.currentVersion = 0x10000;       // 1.0.0
         self.compatibilityVersion = 0x10000; // 1.0.0
-
-        // Set up text section (parent does this but also adds objc stuff)
-        // We need to reinitialize without the objc_imageinfo
     }
     return self;
 }
 
-// Override to filter out __DATA sections for now - they need a separate segment
+// Get all active section writers (both __TEXT and __DATA)
 -(NSArray<MPWMachOSectionWriter*>*)activeSectionWriters
 {
     NSMutableArray *active = [NSMutableArray array];
     for (MPWMachOSectionWriter *writer in self.sectionWriters) {
         if (writer.isActive) {
-            // Only include __TEXT sections for now
-            if ([writer.segname isEqualToString:@"__TEXT"]) {
-                [active addObject:writer];
-            }
+            [active addObject:writer];
         }
     }
     return active;
+}
+
+// Get only __TEXT segment section writers
+-(NSArray<MPWMachOSectionWriter*>*)textSectionWriters
+{
+    NSMutableArray *writers = [NSMutableArray array];
+    for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+        if (writer.isActive && [writer.segname isEqualToString:@"__TEXT"]) {
+            [writers addObject:writer];
+        }
+    }
+    return writers;
+}
+
+// Get only __DATA segment section writers
+-(NSArray<MPWMachOSectionWriter*>*)dataSectionWriters
+{
+    NSMutableArray *writers = [NSMutableArray array];
+    for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+        if (writer.isActive && [writer.segname isEqualToString:@"__DATA"]) {
+            [writers addObject:writer];
+        }
+    }
+    return writers;
+}
+
+-(BOOL)hasDataSegment
+{
+    return [self dataSectionWriters].count > 0;
 }
 
 #pragma mark - Header
@@ -108,35 +132,32 @@
 
 -(int)textSegmentCommandSize
 {
-    return sizeof(struct segment_command_64) + ([self activeSectionWriters].count * sizeof(struct section_64));
+    return sizeof(struct segment_command_64) + ([self textSectionWriters].count * sizeof(struct section_64));
+}
+
+-(int)dataSegmentCommandSize
+{
+    NSArray *dataSections = [self dataSectionWriters];
+    if (dataSections.count == 0) {
+        return 0;
+    }
+    return sizeof(struct segment_command_64) + (dataSections.count * sizeof(struct section_64));
 }
 
 -(void)writeTextSegmentLoadCommand
 {
-    NSArray *writers = [self activeSectionWriters];
-    long headerAndLoadCommandsSize = [self segmentOffset];
+    NSArray *writers = [self textSectionWriters];
 
-    // Reserve space for LC_CODE_SIGNATURE that codesign will add
-    long codeSignatureReserve = sizeof(struct linkedit_data_command);
-    headerAndLoadCommandsSize += codeSignatureReserve;
+    // Use pre-computed values from writeFile
+    // textSegmentSize and linkeditOffset are already computed
 
-    // Align section data start to 8 bytes (could be page-aligned for better performance)
-    long sectionDataStart = (headerAndLoadCommandsSize + 7) & ~7;
-
-    // Compute section offsets and addresses
-    long sectionOffset = 0;
-    for (MPWMachOSectionWriter *writer in writers) {
-        writer.offset = sectionDataStart + sectionOffset;
-        writer.address = sectionDataStart + sectionOffset;  // vmaddr = file offset for __TEXT
-        sectionOffset += writer.sectionDataSize;
-    }
-
-    long textSegmentFileSize = sectionDataStart + sectionOffset;
-
-    // Page-align the VM size - use 16KB minimum like reference dylibs
-    self.textSegmentSize = (textSegmentFileSize + 0x3FFF) & ~0x3FFF;
-    if (self.textSegmentSize == 0) {
-        self.textSegmentSize = 0x4000;  // Minimum 16KB like reference
+    // If we have a __DATA segment, __TEXT filesize goes up to __DATA
+    // Otherwise it goes up to __LINKEDIT
+    long textFilesize;
+    if ([self hasDataSegment]) {
+        textFilesize = self.dataSegmentOffset;
+    } else {
+        textFilesize = self.linkeditOffset;
     }
 
     struct segment_command_64 segment = {};
@@ -146,8 +167,7 @@
     segment.vmaddr = 0;
     segment.vmsize = self.textSegmentSize;
     segment.fileoff = 0;
-    // filesize must extend to where __LINKEDIT starts (self.linkeditOffset was computed in writeFile)
-    segment.filesize = self.linkeditOffset;
+    segment.filesize = textFilesize;
     segment.maxprot = VM_PROT_READ | VM_PROT_EXECUTE;
     segment.initprot = VM_PROT_READ | VM_PROT_EXECUTE;
     segment.nsects = (uint32_t)writers.count;
@@ -163,13 +183,61 @@
     [self adjustSymtabEntries];
 }
 
+-(void)writeDataSegmentLoadCommand
+{
+    NSArray *writers = [self dataSectionWriters];
+    if (writers.count == 0) {
+        return;
+    }
+
+    // Compute section offsets and addresses for __DATA sections
+    long sectionOffset = 0;
+    for (MPWMachOSectionWriter *writer in writers) {
+        writer.offset = self.dataSegmentOffset + sectionOffset;
+        writer.address = self.textSegmentSize + sectionOffset;  // vmaddr continues after __TEXT
+        sectionOffset += writer.sectionDataSize;
+    }
+
+    struct segment_command_64 segment = {};
+    segment.cmd = LC_SEGMENT_64;
+    segment.cmdsize = [self dataSegmentCommandSize];
+    strncpy(segment.segname, "__DATA", 16);
+    segment.vmaddr = self.textSegmentSize;  // Right after __TEXT
+    // VM size page-aligned (16KB minimum)
+    segment.vmsize = (self.dataSegmentSize + 0x3FFF) & ~0x3FFF;
+    if (segment.vmsize == 0) {
+        segment.vmsize = 0x4000;
+    }
+    segment.fileoff = self.dataSegmentOffset;
+    segment.filesize = self.dataSegmentSize;
+    segment.maxprot = VM_PROT_READ | VM_PROT_WRITE;
+    segment.initprot = VM_PROT_READ | VM_PROT_WRITE;
+    segment.nsects = (uint32_t)writers.count;
+    segment.flags = 0;
+
+    [self appendBytes:&segment length:sizeof segment];
+
+    for (MPWMachOSectionWriter *writer in writers) {
+        [writer writeSectionLoadCommandOnWriter:self];
+    }
+}
+
 -(void)writeLinkeditSegmentLoadCommand
 {
+    // __LINKEDIT vmaddr is after __TEXT (and __DATA if present)
+    long linkeditVmaddr = self.textSegmentSize;
+    if ([self hasDataSegment]) {
+        // Add __DATA vmsize (page-aligned)
+        long dataVmsize = (self.dataSegmentSize + 0x3FFF) & ~0x3FFF;
+        if (dataVmsize == 0) dataVmsize = 0x4000;
+        linkeditVmaddr += dataVmsize;
+    }
+
     struct segment_command_64 segment = {};
     segment.cmd = LC_SEGMENT_64;
     segment.cmdsize = sizeof(struct segment_command_64);
     strncpy(segment.segname, "__LINKEDIT", 16);
-    segment.vmaddr = self.textSegmentSize;  // Right after __TEXT
+    segment.vmaddr = linkeditVmaddr;
     // vmsize should be 16KB like reference dylibs
     segment.vmsize = 0x4000;
     segment.fileoff = self.linkeditOffset;
@@ -389,6 +457,7 @@
     // Calculate sizes
     int idDylibSize = [self idDylibCommandSize];
     int textSegmentCmdSize = [self textSegmentCommandSize];
+    int dataSegmentCmdSize = [self dataSegmentCommandSize];
     int linkeditSegmentCmdSize = sizeof(struct segment_command_64);
     int exportsTrieCmdSize = sizeof(struct linkedit_data_command);
     int symtabCmdSize = sizeof(struct symtab_command);
@@ -397,25 +466,58 @@
     int uuidCmdSize = sizeof(struct uuid_command);
     int loadLibSystemCmdSize = [self loadDylibCommandSizeForPath:@"/usr/lib/libSystem.B.dylib"];
 
-    self.numLoadCommands = 9;  // __TEXT, __LINKEDIT, LC_ID_DYLIB, LC_UUID, LC_LOAD_DYLIB, LC_DYLD_EXPORTS_TRIE, LC_SYMTAB, LC_DYSYMTAB, LC_BUILD_VERSION
-    self.loadCommandSize = textSegmentCmdSize + linkeditSegmentCmdSize + idDylibSize + uuidCmdSize +
+    BOOL hasData = [self hasDataSegment];
+    self.numLoadCommands = 9 + (hasData ? 1 : 0);  // +1 for __DATA segment if present
+    self.loadCommandSize = textSegmentCmdSize + dataSegmentCmdSize + linkeditSegmentCmdSize + idDylibSize + uuidCmdSize +
                            loadLibSystemCmdSize + exportsTrieCmdSize + symtabCmdSize + dysymtabCmdSize +
                            buildVersionCmdSize;
 
     // Generate string table before computing offsets
     [self generateStringTable];
 
-    // Compute segment data start
+    // Compute segment data start (reserve space for LC_CODE_SIGNATURE that codesign will add)
     long headerAndLoadCommands = sizeof(struct mach_header_64) + self.loadCommandSize;
+    long codeSignatureReserve = sizeof(struct linkedit_data_command);
+    long sectionDataStart = (headerAndLoadCommands + codeSignatureReserve + 7) & ~7;
 
-    // Compute __LINKEDIT offset (after __TEXT segment data)
-    long textDataSize = 0;
-    for (MPWMachOSectionWriter *writer in [self activeSectionWriters]) {
-        textDataSize += writer.sectionDataSize;
+    // Compute __TEXT section offsets and addresses
+    long textSectionOffset = 0;
+    for (MPWMachOSectionWriter *writer in [self textSectionWriters]) {
+        writer.offset = sectionDataStart + textSectionOffset;
+        writer.address = sectionDataStart + textSectionOffset;  // vmaddr = file offset for __TEXT
+        textSectionOffset += writer.sectionDataSize;
+    }
+    long textDataSize = textSectionOffset;
+
+    // Compute __DATA data size
+    long dataDataSize = 0;
+    for (MPWMachOSectionWriter *writer in [self dataSectionWriters]) {
+        dataDataSize += writer.sectionDataSize;
     }
 
-    // Align linkedit offset to 16KB like __TEXT vmsize
-    self.linkeditOffset = (headerAndLoadCommands + textDataSize + 0x3FFF) & ~0x3FFF;
+    // __TEXT segment vmsize is page-aligned (16KB minimum)
+    long textSegmentFileEnd = sectionDataStart + textDataSize;
+    self.textSegmentSize = (textSegmentFileEnd + 0x3FFF) & ~0x3FFF;
+    if (self.textSegmentSize == 0) {
+        self.textSegmentSize = 0x4000;  // Minimum 16KB
+    }
+
+    // __TEXT filesize extends to the next segment (16KB aligned)
+    long textSegmentEnd = self.textSegmentSize;
+
+    if (hasData) {
+        // __DATA starts right after __TEXT (at __TEXT's aligned end)
+        self.dataSegmentOffset = textSegmentEnd;
+        self.dataSegmentSize = dataDataSize;
+        // __LINKEDIT starts after __DATA (16KB aligned)
+        self.linkeditOffset = (self.dataSegmentOffset + self.dataSegmentSize + 0x3FFF) & ~0x3FFF;
+    } else {
+        self.dataSegmentOffset = 0;
+        self.dataSegmentSize = 0;
+        // __LINKEDIT starts right after __TEXT
+        self.linkeditOffset = textSegmentEnd;
+    }
+
     long rawLinkeditSize = [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
     // Pad linkedit size to 8-byte alignment (required for mmap)
     self.linkeditSize = (rawLinkeditSize + 7) & ~7;
@@ -423,6 +525,9 @@
     // Write everything
     [self writeHeader];
     [self writeTextSegmentLoadCommand];
+    if (hasData) {
+        [self writeDataSegmentLoadCommand];
+    }
     [self writeLinkeditSegmentLoadCommand];
     [self writeIdDylibLoadCommand];
     [self writeUUIDLoadCommand];
@@ -432,8 +537,23 @@
     [self writeDysymtabLoadCommand];
     [self writePlatformLoadCommand];
 
-    // Write section data
+    // Write __TEXT section data
     [self writeSections];
+
+    // If we have __DATA, pad to its offset and write __DATA sections
+    if (hasData) {
+        long currentPos = self.length;
+        if (currentPos < self.dataSegmentOffset) {
+            long padding = self.dataSegmentOffset - currentPos;
+            char *zeros = calloc(padding, 1);
+            [self appendBytes:zeros length:padding];
+            free(zeros);
+        }
+        // Write __DATA section data
+        for (MPWMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
+            [sectionWriter writeSectionDataOn:self];
+        }
+    }
 
     // Pad to linkedit offset
     long currentPos = self.length;
@@ -654,11 +774,16 @@
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
 
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
     struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
 
     NSLog(@"Generated dylib layout (before codesign):");
     NSLog(@"  __TEXT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
           text->vmaddr, text->vmsize, text->fileoff, text->filesize);
+    if (data) {
+        NSLog(@"  __DATA: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
+              data->vmaddr, data->vmsize, data->fileoff, data->filesize);
+    }
     NSLog(@"  __LINKEDIT: vmaddr=%llx vmsize=%llx fileoff=%lld filesize=%lld",
           linkedit->vmaddr, linkedit->vmsize, linkedit->fileoff, linkedit->filesize);
     NSLog(@"  File size: %lu", (unsigned long)macho.length);
@@ -666,9 +791,21 @@
     // Verify assumptions
     INTEXPECT(text->fileoff, 0, @"__TEXT fileoff should be 0");
     INTEXPECT(text->vmaddr, 0, @"__TEXT vmaddr should be 0");
-    INTEXPECT(linkedit->fileoff, text->filesize, @"__LINKEDIT fileoff == __TEXT filesize");
-    INTEXPECT(linkedit->vmaddr, text->vmsize, @"__LINKEDIT vmaddr == __TEXT vmsize");
     INTEXPECT(text->vmsize % 0x1000, 0, @"__TEXT vmsize should be page-aligned");
+
+    if (data) {
+        // With __DATA: __TEXT filesize == __DATA fileoff, __LINKEDIT fileoff == __DATA fileoff + filesize (aligned)
+        INTEXPECT(data->fileoff, text->filesize, @"__DATA fileoff == __TEXT filesize");
+        INTEXPECT(data->vmaddr, text->vmsize, @"__DATA vmaddr == __TEXT vmsize");
+        // __LINKEDIT comes after __DATA
+        long expectedLinkeditVmaddr = text->vmsize + ((data->vmsize + 0x3FFF) & ~0x3FFF);
+        INTEXPECT(linkedit->vmaddr, expectedLinkeditVmaddr, @"__LINKEDIT vmaddr after __DATA");
+    } else {
+        // Without __DATA: __LINKEDIT directly follows __TEXT
+        INTEXPECT(linkedit->fileoff, text->filesize, @"__LINKEDIT fileoff == __TEXT filesize");
+        INTEXPECT(linkedit->vmaddr, text->vmsize, @"__LINKEDIT vmaddr == __TEXT vmsize");
+    }
+
     INTEXPECT(linkedit->vmsize % 0x1000, 0, @"__LINKEDIT vmsize should be page-aligned");
 
     long expectedFileSize = linkedit->fileoff + linkedit->filesize;
