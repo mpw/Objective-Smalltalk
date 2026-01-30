@@ -87,8 +87,7 @@
 -(void)buildSingleSymbolTrie:(NSMutableData*)trie symbol:(NSString*)symbol
 {
     const char *name = [symbol UTF8String];
-    // Skip leading underscore for trie edge label
-    if (name[0] == '_') name++;
+    // Keep the full symbol name including underscore prefix
 
     uint64_t address = [self.symbols[symbol] unsignedLongLongValue];
 
@@ -126,7 +125,6 @@
     // First pass: compute edge data sizes (name + null + offset byte for each)
     for (NSString *symbol in symbolNames) {
         const char *name = [symbol UTF8String];
-        if (name[0] == '_') name++;
         currentOffset += strlen(name) + 1 + 1;  // name + null + offset byte
     }
 
@@ -134,7 +132,6 @@
     for (int i = 0; i < symbolNames.count; i++) {
         NSString *symbol = symbolNames[i];
         const char *name = [symbol UTF8String];
-        if (name[0] == '_') name++;
 
         [trie appendBytes:name length:strlen(name) + 1];
 
@@ -226,8 +223,8 @@
     INTEXPECT(bytes[0], 0, @"root has no terminal info");
     INTEXPECT(bytes[1], 1, @"root has one child");
 
-    // Edge label should be "answer" (without underscore)
-    EXPECTTRUE(memcmp(bytes + 2, "answer", 6) == 0, @"edge label should be 'answer'");
+    // Edge label should be "_answer" (full symbol name including underscore)
+    EXPECTTRUE(memcmp(bytes + 2, "_answer", 7) == 0, @"edge label should be '_answer'");
 }
 
 +(void)testTrieContainsAddress

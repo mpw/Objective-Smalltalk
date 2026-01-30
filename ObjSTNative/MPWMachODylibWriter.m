@@ -453,6 +453,8 @@
 
 #import <MPWFoundation/DebugMacros.h>
 #import "MPWMachOReader.h"
+#import "STNativeCompiler.h"
+#import "STNativeCompilerTestsMachO.h"
 
 @implementation MPWMachODylibWriter(testing)
 
@@ -810,6 +812,68 @@
     EXPECTNOTNIL(handle, @"dylib should load");
 }
 
+// Compiles an ObjectiveSmalltalk class directly to a dylib (no external linker), loads it, and tests the class
+// This test documents the goal: STNativeCompiler should be able to use MPWMachODylibWriter
+// to produce a loadable framework directly, without going through .o files and ld.
++(void)testCompileSTClassDirectlyToDylibAndLoad
+{
+    // 1. Create a compiler that uses MPWMachODylibWriter instead of MPWMachOWriter
+    //    For now, we'll manually set up what STNativeCompiler would do
+    MPWMachODylibWriter *dylibWriter = [MPWMachODylibWriter stream];
+    dylibWriter.installName = @"@rpath/STTestClass.framework/STTestClass";
+
+    // 2. Compile an ObjectiveSmalltalk class using the dylib writer
+    //    This is where the magic needs to happen - the compiler should:
+    //    - Generate code into __TEXT segment
+    //    - Generate ObjC metadata into __DATA segment
+    //    - Set up proper fixups/bindings for external symbols
+
+    // For now, let's just verify the dylib writer can handle __DATA sections
+    // by checking that it doesn't crash when sections are added
+
+    // Add a __TEXT section (code)
+    unsigned char retCode[] = { 0x00, 0x00, 0x80, 0xD2, 0xC0, 0x03, 0x5F, 0xD6 };  // mov x0, #0; ret
+    [dylibWriter.textSectionWriter declareGlobalTextSymbol:@"_testFunction"];
+    [dylibWriter addTextSectionData:[NSData dataWithBytes:retCode length:sizeof(retCode)]];
+
+    // Try to add a __DATA section - this is what ObjC class structures need
+    MPWMachOSectionWriter *dataSection = [dylibWriter addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
+    EXPECTNOTNIL(dataSection, @"should be able to add __DATA section");
+
+    // Write the file
+    [dylibWriter writeFile];
+    NSData *dylibData = [dylibWriter data];
+    EXPECTNOTNIL(dylibData, @"should produce dylib data");
+
+    // Write to framework structure
+    NSString *frameworkDir = @"/tmp/STTestClass.framework";
+    NSString *dylibPath = [frameworkDir stringByAppendingPathComponent:@"STTestClass"];
+
+    [[NSFileManager defaultManager] removeItemAtPath:frameworkDir error:nil];
+    [[NSFileManager defaultManager] createDirectoryAtPath:frameworkDir withIntermediateDirectories:YES attributes:nil error:nil];
+    [dylibData writeToFile:dylibPath atomically:YES];
+
+    // Code sign
+    NSString *codesignCmd = [NSString stringWithFormat:@"codesign -f -s - %@", dylibPath];
+    int signResult = system([codesignCmd UTF8String]);
+    INTEXPECT(signResult, 0, @"codesign should succeed");
+
+    // Try to load it - for now this just tests that our basic dylib loads
+    void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen error: %s", dlerror());
+    }
+    EXPECTNOTNIL(handle, @"dylib with __DATA section should load");
+
+    if (handle) {
+        // Verify our test function is exported
+        // Note: dlsym uses the symbol name WITHOUT the underscore prefix
+        void *fn = dlsym(handle, "testFunction");
+        EXPECTNOTNIL(fn, @"testFunction should be exported");
+        dlclose(handle);
+    }
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -823,6 +887,7 @@
         @"testDylibHasExportsTrie",
         @"testDylibExportsSymbol",
         @"testMinimalDylibCanBeLoaded",
+        @"testCompileSTClassDirectlyToDylibAndLoad",
     ];
 }
 
