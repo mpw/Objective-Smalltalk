@@ -773,6 +773,8 @@
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FF85FE02F2B9B4300A99A0C /* MPWMachODylibWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */; };
 		1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */; };
+		1FF860692F2C9B5800A99A0C /* MPWExportsTrieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */; };
+		1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */; };
 		1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA166B2B970D8B004E63ED /* STTemplateStore.m */; };
 		1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
@@ -1611,6 +1613,8 @@
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
 		1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachODylibWriter.h; sourceTree = "<group>"; };
 		1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachODylibWriter.m; sourceTree = "<group>"; };
+		1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWExportsTrieWriter.h; sourceTree = "<group>"; };
+		1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWExportsTrieWriter.m; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
 		1FFA166B2B970D8B004E63ED /* STTemplateStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTemplateStore.m; sourceTree = "<group>"; };
 		1FFA16732B970F8B004E63ED /* STRootMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STRootMapper.h; sourceTree = "<group>"; };
@@ -1980,6 +1984,8 @@
 				1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */,
 				1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */,
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
+				1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */,
+				1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
 				1FE5D6DE2C3080890018B09C /* MPWELFTextSection.h */,
 				1FE5D6DF2C3080890018B09C /* MPWELFTextSection.m */,
@@ -3008,6 +3014,7 @@
 				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F032E372BEF9A140000183E /* STNativeCompilerTestsMachO.h in Headers */,
+				1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* STObjectCodeGeneratorARM.h in Headers */,
 				1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
@@ -4556,6 +4563,7 @@
 				1FA5DF712BE8BFF8001E5231 /* MPWStringTableWriter.m in Sources */,
 				1F3466F128CB10F7003257CB /* MPWMachOReader.m in Sources */,
 				1F032E382BEF9A140000183E /* STNativeCompilerTestsMachO.m in Sources */,
+				1FF860692F2C9B5800A99A0C /* MPWExportsTrieWriter.m in Sources */,
 				1F04243D28D1D09B00486831 /* MPWMachOWriter.m in Sources */,
 				1F78BD8C2CB6F78000AA41A3 /* STJittedMethod.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* STObjectCodeGeneratorARM.m in Sources */,

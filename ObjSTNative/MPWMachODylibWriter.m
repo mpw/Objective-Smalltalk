@@ -9,6 +9,7 @@
 #import "MPWMachOWriter+Private.h"
 #import "MPWMachOSectionWriter.h"
 #import "MPWStringTableWriter.h"
+#import "MPWExportsTrieWriter.h"
 #import <mach-o/loader.h>
 #import <dlfcn.h>
 
@@ -183,17 +184,8 @@
 
 -(int)exportTrieSize
 {
-    // Build a minimal exports trie
-    // For now, compute size based on exported symbols
-    int size = 0;
-    for (NSString *symbol in self.globalSymbolOffsets.allKeys) {
-        size += 1 + [symbol length] + 1 + 10;  // node info + symbol + terminator + uleb128 data
-    }
-    size += 16;  // Root node overhead
-    size = MAX(size, 8);
-    // Pad to 8-byte alignment for proper symbol table alignment
-    size = (size + 7) & ~7;
-    return size;
+    // Use class method to compute size from symbol names alone
+    return [MPWExportsTrieWriter trieSizeForSymbols:self.globalSymbolOffsets.allKeys];
 }
 
 -(void)writeExportsTrieLoadCommand
@@ -310,227 +302,22 @@
 
 #pragma mark - Exports Trie
 
--(void)writeULEB128:(uint64_t)value
-{
-    do {
-        uint8_t byte = value & 0x7F;
-        value >>= 7;
-        if (value != 0) {
-            byte |= 0x80;
-        }
-        [self appendBytes:&byte length:1];
-    } while (value != 0);
-}
-
 -(NSData*)buildExportsTrie
 {
-    // Build a minimal exports trie
-    // Format: each node has terminal info (if exported) + edges to children
+    MPWExportsTrieWriter *trieWriter = [[[MPWExportsTrieWriter alloc] init] autorelease];
 
-    NSMutableData *trie = [NSMutableData data];
-    NSArray *symbols = [self.globalSymbolOffsets allKeys];
-
-    if (symbols.count == 0) {
-        // Empty trie: just a root node with no exports and no children
-        uint8_t emptyNode[] = {0x00, 0x00};  // no terminal info, no children
-        [trie appendBytes:emptyNode length:2];
-        return trie;
-    }
-
-    // Simple trie: root node with edges to each symbol
-    // This is not optimal but works for small numbers of symbols
-
-    // First, compute total size needed
-    NSMutableData *nodesData = [NSMutableData data];
-    NSMutableArray *nodeOffsets = [NSMutableArray array];
-
-    // Create terminal nodes for each symbol first
-    for (NSString *symbol in symbols) {
-        [nodeOffsets addObject:@(nodesData.length)];
-
-        // Terminal node: flags + address (ULEB128 encoded)
-        uint8_t flags = 0x00;  // EXPORT_SYMBOL_FLAGS_KIND_REGULAR
-        [nodesData appendBytes:&flags length:1];
-
-        // Get symbol address
-        long address = 0x1000;  // Base address in __TEXT
-        NSNumber *offsetNum = self.globalSymbolOffsets[symbol];
-        if (offsetNum) {
-            // The offset stored is relative to text section, we need vmaddr
-            address += [offsetNum longValue];
-        }
-
-        // Write address as ULEB128
-        uint64_t addr = address;
-        do {
-            uint8_t byte = addr & 0x7F;
-            addr >>= 7;
-            if (addr != 0) byte |= 0x80;
-            [nodesData appendBytes:&byte length:1];
-        } while (addr != 0);
-
-        // Write terminal size (we'll fix this)
-        // No children for terminal nodes
-        uint8_t zero = 0x00;
-        [nodesData appendBytes:&zero length:1];  // no children
-    }
-
-    // Now build root node
-    NSMutableData *rootNode = [NSMutableData data];
-
-    // Root has no terminal info
-    uint8_t terminalSize = 0;
-    [rootNode appendBytes:&terminalSize length:1];
-
-    // Number of children = number of symbols
-    uint8_t numChildren = (uint8_t)symbols.count;
-    [rootNode appendBytes:&numChildren length:1];
-
-    // Each child edge: label string + node offset
-    long currentNodeOffset = rootNode.length + nodesData.length;
-    for (int i = 0; i < symbols.count; i++) {
-        NSString *symbol = symbols[i];
-        const char *label = [[symbol substringFromIndex:1] UTF8String];  // Skip leading underscore for trie
-        if ([symbol hasPrefix:@"_"]) {
-            label = [symbol UTF8String] + 1;
-        } else {
-            label = [symbol UTF8String];
-        }
-
-        [rootNode appendBytes:label length:strlen(label) + 1];  // Include null terminator
-
-        // Node offset (ULEB128)
-        // Point to terminal node
-        long offset = rootNode.length + [[nodeOffsets objectAtIndex:i] longValue];
-        // This is getting complex - let's simplify
-    }
-
-    // Simplified approach: put everything inline
-    // Root node has terminal info for first symbol if only one, otherwise edges
-
-    // Actually, let's use an even simpler format that dyld accepts
-    trie = [NSMutableData data];
-
-    // For a single symbol, we can use a simpler structure
-    if (symbols.count == 1) {
-        NSString *symbol = symbols[0];
-        const char *name = [symbol UTF8String];
-        // Skip leading underscore
-        if (name[0] == '_') name++;
-
-        // Get the actual vmaddr from the text section
+    // Add all global symbols to the exports trie writer
+    for (NSString *symbol in self.globalSymbolOffsets.allKeys) {
         long textSectionAddr = self.textSectionWriter.address;
         long address = textSectionAddr;
-        NSNumber *offsetNum = self.globalSymbolOffsets[symbols[0]];
+        NSNumber *offsetNum = self.globalSymbolOffsets[symbol];
         if (offsetNum) {
             address += [offsetNum longValue];
         }
-
-        // Root node: no terminal, one child
-        uint8_t rootTerminalSize = 0;
-        [trie appendBytes:&rootTerminalSize length:1];
-
-        uint8_t numChildren = 1;
-        [trie appendBytes:&numChildren length:1];
-
-        // Edge: label + offset to child
-        [trie appendBytes:name length:strlen(name) + 1];
-
-        // Offset to child node (right after this)
-        long childOffset = trie.length + 1;  // +1 for this ULEB
-        uint8_t offsetByte = (uint8_t)childOffset;
-        [trie appendBytes:&offsetByte length:1];
-
-        // Child node: terminal with address, no children
-        // Terminal size
-        NSMutableData *terminalInfo = [NSMutableData data];
-        uint8_t flags = 0x00;
-        [terminalInfo appendBytes:&flags length:1];
-
-        uint64_t addr = address;
-        do {
-            uint8_t byte = addr & 0x7F;
-            addr >>= 7;
-            if (addr != 0) byte |= 0x80;
-            [terminalInfo appendBytes:&byte length:1];
-        } while (addr != 0);
-
-        uint8_t termSize = (uint8_t)terminalInfo.length;
-        [trie appendBytes:&termSize length:1];
-        [trie appendData:terminalInfo];
-
-        // No children
-        uint8_t noChildren = 0;
-        [trie appendBytes:&noChildren length:1];
-    } else {
-        // Multiple symbols - simplified approach
-        // Root with no terminal, edges to each symbol
-        uint8_t rootTerminalSize = 0;
-        [trie appendBytes:&rootTerminalSize length:1];
-
-        uint8_t numChildren = (uint8_t)symbols.count;
-        [trie appendBytes:&numChildren length:1];
-
-        // We need to compute offsets first
-        // For simplicity, compute where each terminal node will be
-        NSMutableArray *edgeData = [NSMutableArray array];
-        long currentOffset = 2;  // After root header
-
-        // First pass: compute edge data sizes
-        for (NSString *symbol in symbols) {
-            const char *name = [symbol UTF8String];
-            if (name[0] == '_') name++;
-            currentOffset += strlen(name) + 1 + 1;  // name + null + offset byte
-        }
-
-        // Now write edges
-        for (int i = 0; i < symbols.count; i++) {
-            NSString *symbol = symbols[i];
-            const char *name = [symbol UTF8String];
-            if (name[0] == '_') name++;
-
-            [trie appendBytes:name length:strlen(name) + 1];
-
-            // Offset to this symbol's terminal node
-            uint8_t nodeOffset = (uint8_t)currentOffset;
-            [trie appendBytes:&nodeOffset length:1];
-
-            currentOffset += 5;  // Approximate terminal node size
-        }
-
-        // Write terminal nodes
-        for (NSString *symbol in symbols) {
-            long textSectionAddr = self.textSectionWriter.address;
-            long address = textSectionAddr;
-            NSNumber *offsetNum = self.globalSymbolOffsets[symbol];
-            if (offsetNum) {
-                address += [offsetNum longValue];
-            }
-
-            // Terminal info
-            NSMutableData *terminalInfo = [NSMutableData data];
-            uint8_t flags = 0x00;
-            [terminalInfo appendBytes:&flags length:1];
-
-            uint64_t addr = address;
-            do {
-                uint8_t byte = addr & 0x7F;
-                addr >>= 7;
-                if (addr != 0) byte |= 0x80;
-                [terminalInfo appendBytes:&byte length:1];
-            } while (addr != 0);
-
-            uint8_t termSize = (uint8_t)terminalInfo.length;
-            [trie appendBytes:&termSize length:1];
-            [trie appendData:terminalInfo];
-
-            // No children
-            uint8_t noChildren = 0;
-            [trie appendBytes:&noChildren length:1];
-        }
+        [trieWriter addSymbol:symbol atAddress:address];
     }
 
-    return trie;
+    return [trieWriter trieData];
 }
 
 #pragma mark - Write Sections
