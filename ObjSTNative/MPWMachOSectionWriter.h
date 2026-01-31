@@ -44,6 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(long)totalSize;
 -(BOOL)isActive;
 
+// Access relocation entries for linker
+-(int)numRelocationEntries;
+-(NSString*)symbolNameForRelocationAtIndex:(int)index;
+-(int)offsetForRelocationAtIndex:(int)index;
+
 @end
 
 NS_ASSUME_NONNULL_END

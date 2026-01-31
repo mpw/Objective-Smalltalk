@@ -10,6 +10,7 @@
 #import "MPWMachOSectionWriter.h"
 #import "MPWStringTableWriter.h"
 #import "MPWExportsTrieWriter.h"
+#import "MPWBindOpcodeWriter.h"
 #import <mach-o/loader.h>
 #import <dlfcn.h>
 
@@ -256,12 +257,72 @@
     return [MPWExportsTrieWriter trieSizeForSymbols:self.globalSymbolOffsets.allKeys];
 }
 
+-(BOOL)hasBindData
+{
+    return self.bindOpcodeWriter != nil;
+}
+
+-(int)rebaseDataSize
+{
+    if (!self.bindOpcodeWriter) return 0;
+    return (int)[self.bindOpcodeWriter rebaseOpcodeData].length;
+}
+
+-(int)bindDataSize
+{
+    if (!self.bindOpcodeWriter) return 0;
+    return (int)[self.bindOpcodeWriter bindOpcodeData].length;
+}
+
+-(void)writeDyldInfoLoadCommand
+{
+    if (![self hasBindData]) return;
+
+    struct dyld_info_command cmd = {};
+    cmd.cmd = LC_DYLD_INFO_ONLY;
+    cmd.cmdsize = sizeof(struct dyld_info_command);
+
+    // Layout in __LINKEDIT: rebase, bind, ..., exports (at end before symtab)
+    // For simplicity, put rebase and bind at the start of __LINKEDIT
+    uint32_t currentOffset = (uint32_t)self.linkeditOffset;
+
+    cmd.rebase_off = currentOffset;
+    cmd.rebase_size = [self rebaseDataSize];
+    currentOffset += cmd.rebase_size;
+
+    cmd.bind_off = currentOffset;
+    cmd.bind_size = [self bindDataSize];
+    // currentOffset += cmd.bind_size;
+
+    // We don't use weak_bind or lazy_bind
+    cmd.weak_bind_off = 0;
+    cmd.weak_bind_size = 0;
+    cmd.lazy_bind_off = 0;
+    cmd.lazy_bind_size = 0;
+
+    // Exports trie comes after bind data
+    cmd.export_off = (uint32_t)self.linkeditOffset + [self rebaseDataSize] + [self bindDataSize];
+    cmd.export_size = [self exportTrieSize];
+
+    [self appendBytes:&cmd length:sizeof cmd];
+}
+
+// Compute offset where exports trie starts in __LINKEDIT
+-(long)exportsTrieOffset
+{
+    // __LINKEDIT layout: rebase, bind, exports, symtab, strtab
+    return self.linkeditOffset + [self rebaseDataSize] + [self bindDataSize];
+}
+
 -(void)writeExportsTrieLoadCommand
 {
+    // Only write if we don't have LC_DYLD_INFO_ONLY (which includes exports)
+    if ([self hasBindData]) return;
+
     struct linkedit_data_command cmd = {};
     cmd.cmd = LC_DYLD_EXPORTS_TRIE;
     cmd.cmdsize = sizeof(struct linkedit_data_command);
-    cmd.dataoff = (uint32_t)self.linkeditOffset;
+    cmd.dataoff = (uint32_t)[self exportsTrieOffset];
     cmd.datasize = [self exportTrieSize];
 
     [self appendBytes:&cmd length:sizeof cmd];
@@ -273,7 +334,7 @@
     symtab.cmd = LC_SYMTAB;
     symtab.cmdsize = sizeof symtab;
     symtab.nsyms = [self numSymbols];
-    symtab.symoff = (uint32_t)(self.linkeditOffset + [self exportTrieSize]);
+    symtab.symoff = (uint32_t)([self exportsTrieOffset] + [self exportTrieSize]);
     symtab.stroff = (uint32_t)(symtab.symoff + [self symbolTableSize]);
     symtab.strsize = (uint32_t)[self.stringTableWriter length];
     [self appendBytes:&symtab length:sizeof symtab];
@@ -415,6 +476,20 @@
 
 -(void)writeLinkeditData
 {
+    // __LINKEDIT layout: rebase, bind, exports, symtab, strtab
+
+    // Write rebase data (if any)
+    if (self.bindOpcodeWriter) {
+        NSData *rebaseData = [self.bindOpcodeWriter rebaseOpcodeData];
+        [self appendBytes:rebaseData.bytes length:rebaseData.length];
+    }
+
+    // Write bind data (if any)
+    if (self.bindOpcodeWriter) {
+        NSData *bindData = [self.bindOpcodeWriter bindOpcodeData];
+        [self appendBytes:bindData.bytes length:bindData.length];
+    }
+
     // Exports trie
     NSData *exportsTrie = [self buildExportsTrie];
     [self appendBytes:exportsTrie.bytes length:exportsTrie.length];
@@ -459,7 +534,6 @@
     int textSegmentCmdSize = [self textSegmentCommandSize];
     int dataSegmentCmdSize = [self dataSegmentCommandSize];
     int linkeditSegmentCmdSize = sizeof(struct segment_command_64);
-    int exportsTrieCmdSize = sizeof(struct linkedit_data_command);
     int symtabCmdSize = sizeof(struct symtab_command);
     int dysymtabCmdSize = sizeof(struct dysymtab_command);
     int buildVersionCmdSize = sizeof(struct build_version_command);
@@ -467,9 +541,14 @@
     int loadLibSystemCmdSize = [self loadDylibCommandSizeForPath:@"/usr/lib/libSystem.B.dylib"];
 
     BOOL hasData = [self hasDataSegment];
+    BOOL hasBind = [self hasBindData];
+
+    // If we have bind data, use LC_DYLD_INFO_ONLY instead of LC_DYLD_EXPORTS_TRIE
+    int dyldInfoCmdSize = hasBind ? sizeof(struct dyld_info_command) : sizeof(struct linkedit_data_command);
+
     self.numLoadCommands = 9 + (hasData ? 1 : 0);  // +1 for __DATA segment if present
     self.loadCommandSize = textSegmentCmdSize + dataSegmentCmdSize + linkeditSegmentCmdSize + idDylibSize + uuidCmdSize +
-                           loadLibSystemCmdSize + exportsTrieCmdSize + symtabCmdSize + dysymtabCmdSize +
+                           loadLibSystemCmdSize + dyldInfoCmdSize + symtabCmdSize + dysymtabCmdSize +
                            buildVersionCmdSize;
 
     // Generate string table before computing offsets
@@ -518,7 +597,8 @@
         self.linkeditOffset = textSegmentEnd;
     }
 
-    long rawLinkeditSize = [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
+    // __LINKEDIT size includes: rebase, bind, exports, symtab, strtab
+    long rawLinkeditSize = [self rebaseDataSize] + [self bindDataSize] + [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
     // Pad linkedit size to 8-byte alignment (required for mmap)
     self.linkeditSize = (rawLinkeditSize + 7) & ~7;
 
@@ -532,7 +612,12 @@
     [self writeIdDylibLoadCommand];
     [self writeUUIDLoadCommand];
     [self writeLoadDylibCommand:@"/usr/lib/libSystem.B.dylib"];
-    [self writeExportsTrieLoadCommand];
+    // Write either LC_DYLD_INFO_ONLY (if we have bind data) or LC_DYLD_EXPORTS_TRIE
+    if (hasBind) {
+        [self writeDyldInfoLoadCommand];
+    } else {
+        [self writeExportsTrieLoadCommand];
+    }
     [self writeSymbolTableLoadCommand];
     [self writeDysymtabLoadCommand];
     [self writePlatformLoadCommand];

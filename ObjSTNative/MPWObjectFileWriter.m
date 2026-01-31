@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) MPWStringTableWriter *stringTableWriter;
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
+@property (nonatomic, strong) NSMutableSet *externalSymbolNames;
+@property (nonatomic, strong) NSMutableDictionary<NSString*, NSDictionary*> *symbolAddressInfo;
 
 @end
 
@@ -22,6 +24,8 @@
     self=[super initWithTarget:aTarget];
     self.stringTableWriter = [MPWStringTableWriter writer];
     self.globalSymbolOffsets=[NSMutableDictionary dictionary];
+    self.externalSymbolNames=[NSMutableSet set];
+    self.symbolAddressInfo=[NSMutableDictionary dictionary];
     return self;
 }
 
@@ -60,8 +64,14 @@
             [self growSymtab];
         }
         int stringOffset=[self stringTableOffsetOfString:symbol];
-        
+
         [self writeSymtabEntryOfType:theType section:theSection stringOffset:stringOffset address:offset];
+
+        // Store address info for linker to use
+        self.symbolAddressInfo[symbol] = @{
+            @"section": @(theSection),
+            @"offset": @(offset)
+        };
     } else {
         entryIndex = [offsetEntry intValue];
     }
@@ -96,6 +106,7 @@
 
 -(int)declareExternalSymbol:(NSString*)symbol
 {
+    [self.externalSymbolNames addObject:symbol];
     return [self declareGlobalSymbol:symbol atOffset:0 type:self.typeForExternalSymbols section:self.sectionNumberForExternalSymbols];
 }
 

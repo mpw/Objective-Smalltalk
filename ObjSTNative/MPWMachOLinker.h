@@ -11,6 +11,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MPWMachOWriter;
 @class MPWMachOSectionWriter;
+@class MPWMachODylibWriter;
+
+// Represents an internal relocation that needs pointer patching
+@interface MPWInternalRelocation : NSObject
+@property (nonatomic, strong) NSString *symbolName;        // Target symbol name
+@property (nonatomic, weak) MPWMachOSectionWriter *patchSection;   // Section containing the pointer to patch
+@property (nonatomic, assign) long offsetInSection;        // Offset of pointer within section
+@property (nonatomic, assign) long targetAddress;          // Resolved address (filled in later)
+@end
 
 @interface MPWMachOLinker : NSObject
 

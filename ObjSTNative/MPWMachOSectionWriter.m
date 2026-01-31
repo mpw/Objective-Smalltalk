@@ -15,6 +15,7 @@
 @implementation MPWMachOSectionWriter
 {
     struct relocation_info *relocations;
+    NSMutableArray<NSString*> *relocationSymbolNames;
     int relocCount;
     int relocCapacity;
 }
@@ -25,6 +26,7 @@
     if ( self ) {
         relocCapacity = 20;
         [self growRelocations];
+        relocationSymbolNames = [[NSMutableArray alloc] init];
         self.segname=@"__TEXT";
         self.sectname=@"__text";
         self.relocationType = GENERIC_RELOC_VANILLA;
@@ -95,7 +97,9 @@
     if ( relocCount >= relocCapacity ) {
         [self growRelocations];
     }
-    relocations[relocCount++]=r;
+    relocations[relocCount]=r;
+    [relocationSymbolNames addObject:symbol];
+    relocCount++;
 }
 
 
@@ -161,6 +165,32 @@
     const char padding[8]={ 0,0,0,0,0,0,0,0};
     [writer writeData:[self data]];
     [writer appendBytes:padding length:[self padding]];
+}
+
+-(NSString*)symbolNameForRelocationAtIndex:(int)index
+{
+    if (index < 0 || index >= relocCount) {
+        return nil;
+    }
+    return relocationSymbolNames[index];
+}
+
+-(int)offsetForRelocationAtIndex:(int)index
+{
+    if (index < 0 || index >= relocCount) {
+        return -1;
+    }
+    return relocations[index].r_address;
+}
+
+-(void)dealloc
+{
+    if (relocations) {
+        free(relocations);
+        relocations = NULL;
+    }
+    [relocationSymbolNames release];
+    [super dealloc];
 }
 
 @end

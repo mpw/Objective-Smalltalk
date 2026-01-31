@@ -21,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) MPWStringTableWriter *stringTableWriter;
 @property (readonly) NSMutableDictionary *globalSymbolOffsets;
+@property (readonly) NSMutableSet *externalSymbolNames;  // Symbols from other dylibs
+
+// Symbol address tracking for linker - maps symbol name to @{@"section": @(sectionNum), @"offset": @(offset)}
+@property (readonly) NSMutableDictionary<NSString*, NSDictionary*> *symbolAddressInfo;
 
 -(void)writeSymtabEntryOfType:(int)theType section:(int)theSection stringOffset:(int)stringOffset address:(long)addreess;
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection;

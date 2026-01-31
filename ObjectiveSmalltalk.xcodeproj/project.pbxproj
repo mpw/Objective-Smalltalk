@@ -778,6 +778,8 @@
 		1FF8609A2F2CD91A00A99A0C /* MPWMachOLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */; };
 		1FF8609B2F2CD91A00A99A0C /* MPWMachOWriter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */; };
 		1FF8609C2F2CD91A00A99A0C /* MPWMachOLinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */; };
+		1FF8609F2F2D25D600A99A0C /* MPWBindOpcodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8609E2F2D25D600A99A0C /* MPWBindOpcodeWriter.m */; };
+		1FF860A02F2D25D600A99A0C /* MPWBindOpcodeWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF8609D2F2D25D600A99A0C /* MPWBindOpcodeWriter.h */; };
 		1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA166B2B970D8B004E63ED /* STTemplateStore.m */; };
 		1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
@@ -1621,6 +1623,8 @@
 		1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOLinker.h; sourceTree = "<group>"; };
 		1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOLinker.m; sourceTree = "<group>"; };
 		1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPWMachOWriter+Private.h"; sourceTree = "<group>"; };
+		1FF8609D2F2D25D600A99A0C /* MPWBindOpcodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWBindOpcodeWriter.h; sourceTree = "<group>"; };
+		1FF8609E2F2D25D600A99A0C /* MPWBindOpcodeWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWBindOpcodeWriter.m; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
 		1FFA166B2B970D8B004E63ED /* STTemplateStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTemplateStore.m; sourceTree = "<group>"; };
 		1FFA16732B970F8B004E63ED /* STRootMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STRootMapper.h; sourceTree = "<group>"; };
@@ -1989,6 +1993,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */,
 				1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */,
+				1FF8609D2F2D25D600A99A0C /* MPWBindOpcodeWriter.h */,
+				1FF8609E2F2D25D600A99A0C /* MPWBindOpcodeWriter.m */,
 				1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */,
 				1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */,
 				1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */,
@@ -3021,6 +3027,7 @@
 				1FD22E2C2CBA8F3F0064490A /* STNativeMachOCompiler.h in Headers */,
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
+				1FF860A02F2D25D600A99A0C /* MPWBindOpcodeWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F032E372BEF9A140000183E /* STNativeCompilerTestsMachO.h in Headers */,
 				1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */,
@@ -4593,6 +4600,7 @@
 				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
 				1FD22E2B2CBA8F3F0064490A /* STNativeMachOCompiler.m in Sources */,
 				1F032E1F2BEF5DC30000183E /* MPWARMObjectCodeGeneratorExternalTestsMachO.m in Sources */,
+				1FF8609F2F2D25D600A99A0C /* MPWBindOpcodeWriter.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1FF85FE02F2B9B4300A99A0C /* MPWMachODylibWriter.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
