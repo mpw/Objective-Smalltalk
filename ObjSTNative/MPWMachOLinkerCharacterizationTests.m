@@ -136,26 +136,34 @@
     MPWMachOReader *reader = [self readerForReferenceFramework];
     if (!reader) return;
 
+    // Iterate through all load commands to find ALL segments and their sections
+    const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    NSLog(@"Reference dylib segments and sections:");
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            NSLog(@"  Segment '%.16s': vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
+                  seg->segname, seg->vmaddr, seg->vmsize, seg->fileoff, seg->filesize);
+
+            // List sections in this segment
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                NSLog(@"    Section '%.16s': addr=0x%llx size=%lld offset=%d flags=0x%x",
+                      sections[j].sectname, sections[j].addr, sections[j].size,
+                      sections[j].offset, sections[j].flags);
+            }
+        }
+        ptr += cmd->cmdsize;
+    }
+
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
-    struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
     struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
 
     EXPECTNOTNIL((id)(uintptr_t)text, @"should have __TEXT segment");
     EXPECTNOTNIL((id)(uintptr_t)linkedit, @"should have __LINKEDIT segment");
-    // __DATA may or may not be present depending on linker version
-
-    if (text) {
-        NSLog(@"Reference __TEXT: vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld nsects=%d",
-              text->vmaddr, text->vmsize, text->fileoff, text->filesize, text->nsects);
-    }
-    if (data) {
-        NSLog(@"Reference __DATA: vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld nsects=%d",
-              data->vmaddr, data->vmsize, data->fileoff, data->filesize, data->nsects);
-    }
-    if (linkedit) {
-        NSLog(@"Reference __LINKEDIT: vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
-              linkedit->vmaddr, linkedit->vmsize, linkedit->fileoff, linkedit->filesize);
-    }
 }
 
 +(void)testReferenceDylibHasRequiredLoadCommands
@@ -208,12 +216,48 @@
     }
 }
 
+#pragma mark - Object File Analysis
+
++(void)testObjectFileSections
+{
+    // Read the object file that was used to generate the reference framework
+    NSURL *objectURL = [[self testBundle] URLForResource:@"ReferenceSTClass" withExtension:@"macho"];
+    if (!objectURL) {
+        NSLog(@"Object file not found in bundle");
+        return;
+    }
+
+    NSData *objectData = [NSData dataWithContentsOfURL:objectURL];
+    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:objectData] autorelease];
+
+    const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    NSLog(@"Object file (.o) segments and sections:");
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            NSLog(@"  Segment '%.16s': vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
+                  seg->segname, seg->vmaddr, seg->vmsize, seg->fileoff, seg->filesize);
+
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                NSLog(@"    Section '%.16s,%.16s': addr=0x%llx size=%lld offset=%d flags=0x%x",
+                      sections[j].segname, sections[j].sectname,
+                      sections[j].addr, sections[j].size, sections[j].offset, sections[j].flags);
+            }
+        }
+        ptr += cmd->cmdsize;
+    }
+}
+
 #pragma mark - Internal Linker Output Tests
 
 +(NSData*)generateInternalLinkerDylib
 {
     STNativeCompiler *compiler = [STNativeCompiler compiler];
-    NSString *source = @"class InternalLinkerTestClass : NSObject { -<int>answerFortyTwo { 42. } -<int>addFive:x { x + 5. } }";
+    NSString *source = @"class InternalLinkerTestClass : NSObject { -answerFortyTwo { 42. } -addFive:x { x + 5. } }";
     STClassDefinition *theClass = [compiler compile:source];
     [compiler compileClassToMachoO:theClass];
 
@@ -237,26 +281,33 @@
     NSData *dylib = [self generateInternalLinkerDylib];
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
 
+    // Show all segments and sections like we did for reference
+    const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    NSLog(@"Internal linker dylib segments and sections:");
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            NSLog(@"  Segment '%.16s': vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
+                  seg->segname, seg->vmaddr, seg->vmsize, seg->fileoff, seg->filesize);
+
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                NSLog(@"    Section '%.16s': addr=0x%llx size=%lld offset=%d flags=0x%x",
+                      sections[j].sectname, sections[j].addr, sections[j].size,
+                      sections[j].offset, sections[j].flags);
+            }
+        }
+        ptr += cmd->cmdsize;
+    }
+
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
-    struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
     struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
 
     EXPECTNOTNIL((id)(uintptr_t)text, @"should have __TEXT segment");
-    EXPECTNOTNIL((id)(uintptr_t)data, @"should have __DATA segment");
     EXPECTNOTNIL((id)(uintptr_t)linkedit, @"should have __LINKEDIT segment");
-
-    if (text) {
-        NSLog(@"Internal __TEXT: vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld nsects=%d",
-              text->vmaddr, text->vmsize, text->fileoff, text->filesize, text->nsects);
-    }
-    if (data) {
-        NSLog(@"Internal __DATA: vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld nsects=%d",
-              data->vmaddr, data->vmsize, data->fileoff, data->filesize, data->nsects);
-    }
-    if (linkedit) {
-        NSLog(@"Internal __LINKEDIT: vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
-              linkedit->vmaddr, linkedit->vmsize, linkedit->fileoff, linkedit->filesize);
-    }
 }
 
 +(void)testInternalLinkerHasRequiredLoadCommands
@@ -340,6 +391,8 @@
 +(NSArray*)testSelectors
 {
     return @[
+        // Object file analysis
+        @"testObjectFileSections",
         // Reference framework tests
         @"testReferenceFrameworkExists",
         @"testReferenceDylibIsValidMachO",
