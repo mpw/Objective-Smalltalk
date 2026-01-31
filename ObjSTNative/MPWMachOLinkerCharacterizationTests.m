@@ -364,6 +364,7 @@
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
 
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *dataConst = [reader segmentNamed:@"__DATA_CONST"];
     struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
     struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
 
@@ -374,14 +375,24 @@
     // __TEXT vmsize should be page-aligned
     INTEXPECT(text->vmsize % 0x4000, 0, @"__TEXT vmsize should be 16KB aligned");
 
-    // __DATA should come after __TEXT
+    // Track expected vmaddr for subsequent segments
+    long expectedVmaddr = text->vmsize;
+
+    // __DATA_CONST should come after __TEXT (if present)
+    if (dataConst) {
+        EXPECTTRUE(dataConst->fileoff >= text->filesize, @"__DATA_CONST should come after __TEXT in file");
+        INTEXPECT(dataConst->vmaddr, expectedVmaddr, @"__DATA_CONST vmaddr should follow __TEXT");
+        expectedVmaddr += dataConst->vmsize;
+    }
+
+    // __DATA should come after __DATA_CONST (or __TEXT if no __DATA_CONST)
     if (data) {
-        EXPECTTRUE(data->fileoff >= text->filesize, @"__DATA should come after __TEXT");
-        INTEXPECT(data->vmaddr, text->vmsize, @"__DATA vmaddr should follow __TEXT");
+        INTEXPECT(data->vmaddr, expectedVmaddr, @"__DATA vmaddr should follow previous segment");
+        expectedVmaddr += data->vmsize;
     }
 
     // __LINKEDIT should come last
-    EXPECTTRUE(linkedit->fileoff >= text->filesize, @"__LINKEDIT should come after __TEXT");
+    INTEXPECT(linkedit->vmaddr, expectedVmaddr, @"__LINKEDIT vmaddr should follow previous segment");
 
     // File size should match __LINKEDIT end
     long expectedFileSize = linkedit->fileoff + linkedit->filesize;
