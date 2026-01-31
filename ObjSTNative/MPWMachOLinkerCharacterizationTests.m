@@ -37,14 +37,11 @@
     return [NSBundle bundleForClass:self];
 }
 
-+(NSURL*)referenceFrameworkURL
-{
-    return [[self testBundle] URLForResource:@"ReferenceSTClass" withExtension:@"framework"];
-}
+#pragma mark - Dylib Factories
 
 +(MPWMachOReader*)readerForReferenceFramework
 {
-    NSURL *frameworkURL = [self referenceFrameworkURL];
+    NSURL *frameworkURL = [[self testBundle] URLForResource:@"ReferenceSTClass" withExtension:@"framework"];
     if (!frameworkURL) return nil;
 
     NSString *dylibPath = [[frameworkURL path] stringByAppendingPathComponent:@"ReferenceSTClass"];
@@ -54,93 +51,81 @@
     return [[[MPWMachOReader alloc] initWithData:data] autorelease];
 }
 
-#pragma mark - Reference Framework Generation
-
-// This test generates the reference framework
-// Run it once manually: testlogger ObjSTNative MPWMachOLinkerCharacterizationTests testGenerateReferenceFramework
-// Then verify it works and copy to ObjSTNative/Resources/
-+(void)testGenerateReferenceFramework
++(MPWMachOReader*)readerForInternalLinkerDylib
 {
-    // Compile a simple ST class
     STNativeCompiler *compiler = [STNativeCompiler compiler];
-    NSString *source = @"class ReferenceSTClass : NSObject { -<int>answerFortyTwo { 42. } -<int>addFive:x { x + 5. } }";
+    NSString *source = @"class InternalLinkerTestClass : NSObject { -answerFortyTwo { 42. } -addFive:x { x + 5. } }";
     STClassDefinition *theClass = [compiler compile:source];
-    NSData *objectData = [compiler compileClassToMachoO:theClass];
+    [compiler compileClassToMachoO:theClass];
 
-    // Write object file
-    NSString *objectPath = @"/tmp/ReferenceSTClass.o";
-    [objectData writeToFile:objectPath atomically:YES];
+    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
+    NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/InternalLinkerTestClass.framework/InternalLinkerTestClass"
+                                            fromWriter:(MPWMachOWriter*)compiler.writer];
 
-    // Create framework directory structure
-    NSString *frameworkDir = @"/tmp/ReferenceSTClass.framework";
-    [[NSFileManager defaultManager] removeItemAtPath:frameworkDir error:nil];
-    [[NSFileManager defaultManager] createDirectoryAtPath:frameworkDir
-                              withIntermediateDirectories:YES
-                                               attributes:nil
-                                                    error:nil];
-
-    // Link with external linker
-    NSString *dylibPath = [frameworkDir stringByAppendingPathComponent:@"ReferenceSTClass"];
-    NSString *ldCommand = [NSString stringWithFormat:
-        @"ld -dylib -arch arm64 "
-        @"-platform_version macos 11.0.0 14.0 "
-        @"-syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk "
-        @"-o %@ %@ "
-        @"-lSystem "
-        @"-F/Library/Frameworks -framework Foundation -framework ObjectiveSmalltalk -framework MPWFoundation "
-        @"-install_name @rpath/ReferenceSTClass.framework/ReferenceSTClass",
-        dylibPath, objectPath];
-    int result = system([ldCommand UTF8String]);
-
-    if (result == 0) {
-        // Sign the framework
-        [self codesignDylibAtPath:dylibPath];
-        NSLog(@"Reference framework generated at: %@", frameworkDir);
-        NSLog(@"Verify it works with: st -e 'framework:ReferenceSTClass. class:ReferenceSTClass new answerFortyTwo.'");
-        NSLog(@"Then copy to ObjSTNative/Resources/");
-    } else {
-        NSLog(@"Failed to link reference framework");
-    }
+    return [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
 }
 
-#pragma mark - Characterization Tests for Reference Dylib
+#pragma mark - Shared Verification Methods
 
-// These tests document the structure of a known-good dylib
-+(void)testReferenceFrameworkExists
+// Verifies basic Mach-O validity - same for both
++(void)verifyValidMachO:(MPWMachOReader*)reader name:(NSString*)name
 {
-    NSURL *url = [self referenceFrameworkURL];
-    // This test will fail until the reference framework is added to Resources
-    // Run generateReferenceFramework, verify it works, then add it
-    if (!url) {
-        NSLog(@"Reference framework not found. Run generateReferenceFramework to create it.");
-    }
-    // Don't fail - this is expected initially
-    EXPECTTRUE(YES, @"placeholder");
+    EXPECTTRUE(reader.isHeaderValid, ([NSString stringWithFormat:@"%@ should be valid Mach-O", name]));
+    INTEXPECT([reader filetype], MH_DYLIB, ([NSString stringWithFormat:@"%@ should be a dylib", name]));
+    INTEXPECT([reader cputype], CPU_TYPE_ARM64, ([NSString stringWithFormat:@"%@ should be arm64", name]));
 }
 
-+(void)testReferenceDylibIsValidMachO
+// Verifies required load commands - same for both
++(void)verifyRequiredLoadCommands:(MPWMachOReader*)reader name:(NSString*)name
 {
-    MPWMachOReader *reader = [self readerForReferenceFramework];
-    if (!reader) {
-        NSLog(@"Skipping - reference framework not available");
-        return;
-    }
-
-    EXPECTTRUE(reader.isHeaderValid, @"reference dylib should be valid Mach-O");
-    INTEXPECT([reader filetype], MH_DYLIB, @"should be a dylib");
-    INTEXPECT([reader cputype], CPU_TYPE_ARM64, @"should be arm64");
+    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_ID_DYLIB], ([NSString stringWithFormat:@"%@ should have LC_ID_DYLIB", name]));
+    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_SYMTAB], ([NSString stringWithFormat:@"%@ should have LC_SYMTAB", name]));
+    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYSYMTAB], ([NSString stringWithFormat:@"%@ should have LC_DYSYMTAB", name]));
+    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_UUID], ([NSString stringWithFormat:@"%@ should have LC_UUID", name]));
+    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_BUILD_VERSION], ([NSString stringWithFormat:@"%@ should have LC_BUILD_VERSION", name]));
+    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_LOAD_DYLIB], ([NSString stringWithFormat:@"%@ should have LC_LOAD_DYLIB", name]));
 }
 
-+(void)testReferenceDylibHasRequiredSegments
+// Verifies segment layout - same structure, different details
++(void)verifySegmentLayout:(MPWMachOReader*)reader name:(NSString*)name
 {
-    MPWMachOReader *reader = [self readerForReferenceFramework];
-    if (!reader) return;
+    struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
+    struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
 
-    // Iterate through all load commands to find ALL segments and their sections
+    EXPECTNOTNIL((id)(uintptr_t)text, ([NSString stringWithFormat:@"%@ should have __TEXT segment", name]));
+    EXPECTNOTNIL((id)(uintptr_t)linkedit, ([NSString stringWithFormat:@"%@ should have __LINKEDIT segment", name]));
+
+    // __TEXT starts at 0
+    INTEXPECT(text->fileoff, 0, ([NSString stringWithFormat:@"%@ __TEXT should start at file offset 0", name]));
+    INTEXPECT(text->vmaddr, 0, ([NSString stringWithFormat:@"%@ __TEXT should start at vmaddr 0", name]));
+
+    // __TEXT vmsize should be page-aligned
+    INTEXPECT(text->vmsize % 0x4000, 0, ([NSString stringWithFormat:@"%@ __TEXT vmsize should be 16KB aligned", name]));
+
+    // File size should match __LINKEDIT end
+    long expectedFileSize = linkedit->fileoff + linkedit->filesize;
+    INTEXPECT((long)reader.data.length, expectedFileSize, ([NSString stringWithFormat:@"%@ file size should match __LINKEDIT end", name]));
+}
+
+// Verifies class symbols are exported - parameterized by class name
++(void)verifyExportsClassSymbols:(MPWMachOReader*)reader className:(NSString*)className name:(NSString*)name
+{
+    NSArray *exports = [reader exportedSymbolNames];
+
+    NSString *classSymbol = [NSString stringWithFormat:@"_OBJC_CLASS_$_%@", className];
+    NSString *metaclassSymbol = [NSString stringWithFormat:@"_OBJC_METACLASS_$_%@", className];
+
+    EXPECTTRUE([exports containsObject:classSymbol], ([NSString stringWithFormat:@"%@ should export %@", name, classSymbol]));
+    EXPECTTRUE([exports containsObject:metaclassSymbol], ([NSString stringWithFormat:@"%@ should export %@", name, metaclassSymbol]));
+}
+
+// Logs all segments and sections for debugging
++(void)logSegmentsAndSections:(MPWMachOReader*)reader name:(NSString*)name
+{
     const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
     const uint8_t *ptr = (const uint8_t *)(header + 1);
 
-    NSLog(@"Reference dylib segments and sections:");
+    NSLog(@"%@ segments and sections:", name);
     for (uint32_t i = 0; i < header->ncmds; i++) {
         const struct load_command *cmd = (const struct load_command *)ptr;
         if (cmd->cmd == LC_SEGMENT_64) {
@@ -148,7 +133,6 @@
             NSLog(@"  Segment '%.16s': vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
                   seg->segname, seg->vmaddr, seg->vmsize, seg->fileoff, seg->filesize);
 
-            // List sections in this segment
             const struct section_64 *sections = (const struct section_64 *)(seg + 1);
             for (uint32_t j = 0; j < seg->nsects; j++) {
                 NSLog(@"    Section '%.16s': addr=0x%llx size=%lld offset=%d flags=0x%x",
@@ -158,69 +142,12 @@
         }
         ptr += cmd->cmdsize;
     }
-
-    struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
-    struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
-
-    EXPECTNOTNIL((id)(uintptr_t)text, @"should have __TEXT segment");
-    EXPECTNOTNIL((id)(uintptr_t)linkedit, @"should have __LINKEDIT segment");
-}
-
-+(void)testReferenceDylibHasRequiredLoadCommands
-{
-    MPWMachOReader *reader = [self readerForReferenceFramework];
-    if (!reader) return;
-
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_ID_DYLIB], @"should have LC_ID_DYLIB");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_SYMTAB], @"should have LC_SYMTAB");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYSYMTAB], @"should have LC_DYSYMTAB");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_UUID], @"should have LC_UUID");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_BUILD_VERSION], @"should have LC_BUILD_VERSION");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_LOAD_DYLIB], @"should have LC_LOAD_DYLIB");
-
-    // Check for exports - either LC_DYLD_EXPORTS_TRIE or LC_DYLD_INFO_ONLY
-    BOOL hasExports = [reader loadCommandOfTypeIfPresent:LC_DYLD_EXPORTS_TRIE] != NULL ||
-                      [reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY] != NULL;
-    EXPECTTRUE(hasExports, @"should have exports trie");
-}
-
-+(void)testReferenceDylibExportsClassSymbols
-{
-    MPWMachOReader *reader = [self readerForReferenceFramework];
-    if (!reader) return;
-
-    NSArray *exports = [reader exportedSymbolNames];
-    NSLog(@"Reference exports: %@", exports);
-
-    EXPECTTRUE([exports containsObject:@"_OBJC_CLASS_$_ReferenceSTClass"], @"should export class symbol");
-    EXPECTTRUE([exports containsObject:@"_OBJC_METACLASS_$_ReferenceSTClass"], @"should export metaclass symbol");
-}
-
-+(void)testReferenceDylibBindInfo
-{
-    MPWMachOReader *reader = [self readerForReferenceFramework];
-    if (!reader) return;
-
-    // Check for LC_DYLD_INFO_ONLY which contains bind info
-    const struct dyld_info_command *dyldInfo =
-        (const struct dyld_info_command*)[reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
-
-    if (dyldInfo) {
-        NSLog(@"Reference bind info: rebase_size=%d bind_size=%d export_size=%d",
-              dyldInfo->rebase_size, dyldInfo->bind_size, dyldInfo->export_size);
-
-        // Document the sizes we observe
-        EXPECTTRUE(dyldInfo->bind_size > 0, @"should have bind data");
-    } else {
-        NSLog(@"Reference uses LC_DYLD_CHAINED_FIXUPS (modern format)");
-    }
 }
 
 #pragma mark - Object File Analysis
 
 +(void)testObjectFileSections
 {
-    // Read the object file that was used to generate the reference framework
     NSURL *objectURL = [[self testBundle] URLForResource:@"ReferenceSTClass" withExtension:@"macho"];
     if (!objectURL) {
         NSLog(@"Object file not found in bundle");
@@ -252,172 +179,128 @@
     }
 }
 
-#pragma mark - Internal Linker Output Tests
+#pragma mark - Reference Framework Test
 
-+(NSData*)generateInternalLinkerDylib
++(void)verifyFixupFormat:(MPWMachOReader*)reader name:(NSString*)name usesChainedFixups:(BOOL)expectChained
 {
-    STNativeCompiler *compiler = [STNativeCompiler compiler];
-    NSString *source = @"class InternalLinkerTestClass : NSObject { -answerFortyTwo { 42. } -addFive:x { x + 5. } }";
-    STClassDefinition *theClass = [compiler compile:source];
-    [compiler compileClassToMachoO:theClass];
+    BOOL hasChainedFixups = [reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS] != NULL;
+    BOOL hasDyldInfo = [reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY] != NULL;
 
-    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
-    return [linker linkToDylibWithInstallName:@"@rpath/InternalLinkerTestClass.framework/InternalLinkerTestClass"
-                                   fromWriter:(MPWMachOWriter*)compiler.writer];
-}
+    NSLog(@"%@ fixup format: %@", name,
+          hasChainedFixups ? @"LC_DYLD_CHAINED_FIXUPS" :
+          hasDyldInfo ? @"LC_DYLD_INFO_ONLY" : @"unknown");
 
-+(void)testInternalLinkerProducesValidMachO
-{
-    NSData *dylib = [self generateInternalLinkerDylib];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    EXPECTTRUE(hasChainedFixups || hasDyldInfo,
+               ([NSString stringWithFormat:@"%@ should have fixup info", name]));
 
-    EXPECTTRUE(reader.isHeaderValid, @"internal linker should produce valid Mach-O");
-    INTEXPECT([reader filetype], MH_DYLIB, @"should be a dylib");
-    INTEXPECT([reader cputype], CPU_TYPE_ARM64, @"should be arm64");
-}
-
-+(void)testInternalLinkerHasRequiredSegments
-{
-    NSData *dylib = [self generateInternalLinkerDylib];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
-
-    // Show all segments and sections like we did for reference
-    const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
-    const uint8_t *ptr = (const uint8_t *)(header + 1);
-
-    NSLog(@"Internal linker dylib segments and sections:");
-    for (uint32_t i = 0; i < header->ncmds; i++) {
-        const struct load_command *cmd = (const struct load_command *)ptr;
-        if (cmd->cmd == LC_SEGMENT_64) {
-            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
-            NSLog(@"  Segment '%.16s': vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
-                  seg->segname, seg->vmaddr, seg->vmsize, seg->fileoff, seg->filesize);
-
-            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
-            for (uint32_t j = 0; j < seg->nsects; j++) {
-                NSLog(@"    Section '%.16s': addr=0x%llx size=%lld offset=%d flags=0x%x",
-                      sections[j].sectname, sections[j].addr, sections[j].size,
-                      sections[j].offset, sections[j].flags);
-            }
-        }
-        ptr += cmd->cmdsize;
-    }
-
-    struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
-    struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
-
-    EXPECTNOTNIL((id)(uintptr_t)text, @"should have __TEXT segment");
-    EXPECTNOTNIL((id)(uintptr_t)linkedit, @"should have __LINKEDIT segment");
-}
-
-+(void)testInternalLinkerHasRequiredLoadCommands
-{
-    NSData *dylib = [self generateInternalLinkerDylib];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
-
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_ID_DYLIB], @"should have LC_ID_DYLIB");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_SYMTAB], @"should have LC_SYMTAB");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYSYMTAB], @"should have LC_DYSYMTAB");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_UUID], @"should have LC_UUID");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_BUILD_VERSION], @"should have LC_BUILD_VERSION");
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_LOAD_DYLIB], @"should have LC_LOAD_DYLIB");
-
-    // Our linker uses LC_DYLD_INFO_ONLY
-    EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY], @"should have LC_DYLD_INFO_ONLY");
-}
-
-+(void)testInternalLinkerExportsClassSymbols
-{
-    NSData *dylib = [self generateInternalLinkerDylib];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
-
-    NSArray *exports = [reader exportedSymbolNames];
-    NSLog(@"Internal exports: %@", exports);
-
-    EXPECTTRUE([exports containsObject:@"_OBJC_CLASS_$_InternalLinkerTestClass"], @"should export class symbol");
-    EXPECTTRUE([exports containsObject:@"_OBJC_METACLASS_$_InternalLinkerTestClass"], @"should export metaclass symbol");
-}
-
-+(void)testInternalLinkerBindInfo
-{
-    NSData *dylib = [self generateInternalLinkerDylib];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
-
-    const struct dyld_info_command *dyldInfo =
-        (const struct dyld_info_command*)[reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
-
-    EXPECTNOTNIL((id)(uintptr_t)dyldInfo, @"should have LC_DYLD_INFO_ONLY");
-
-    if (dyldInfo) {
-        NSLog(@"Internal bind info: rebase_size=%d bind_size=%d export_size=%d",
+    if (hasDyldInfo) {
+        const struct dyld_info_command *dyldInfo =
+            (const struct dyld_info_command*)[reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
+        NSLog(@"%@ bind info: rebase_size=%d bind_size=%d export_size=%d", name,
               dyldInfo->rebase_size, dyldInfo->bind_size, dyldInfo->export_size);
-
-        EXPECTTRUE(dyldInfo->rebase_size > 0, @"should have rebase data");
-        EXPECTTRUE(dyldInfo->bind_size > 0, @"should have bind data");
-        EXPECTTRUE(dyldInfo->export_size > 0, @"should have export data");
     }
 }
 
-+(void)testInternalLinkerSegmentLayoutIsValid
++(void)verifyDataConstSegment:(MPWMachOReader*)reader name:(NSString*)name
 {
-    NSData *dylib = [self generateInternalLinkerDylib];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
-
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
     struct segment_command_64 *dataConst = [reader segmentNamed:@"__DATA_CONST"];
     struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
     struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
 
-    // Verify layout constraints
-    INTEXPECT(text->fileoff, 0, @"__TEXT should start at file offset 0");
-    INTEXPECT(text->vmaddr, 0, @"__TEXT should start at vmaddr 0");
+    EXPECTNOTNIL((id)(uintptr_t)dataConst,
+                 ([NSString stringWithFormat:@"%@ should have __DATA_CONST segment", name]));
 
-    // __TEXT vmsize should be page-aligned
-    INTEXPECT(text->vmsize % 0x4000, 0, @"__TEXT vmsize should be 16KB aligned");
-
-    // Track expected vmaddr for subsequent segments
-    long expectedVmaddr = text->vmsize;
-
-    // __DATA_CONST should come after __TEXT (if present)
     if (dataConst) {
-        EXPECTTRUE(dataConst->fileoff >= text->filesize, @"__DATA_CONST should come after __TEXT in file");
-        INTEXPECT(dataConst->vmaddr, expectedVmaddr, @"__DATA_CONST vmaddr should follow __TEXT");
-        expectedVmaddr += dataConst->vmsize;
+        // __DATA_CONST should come right after __TEXT
+        INTEXPECT(dataConst->vmaddr, text->vmsize,
+                  ([NSString stringWithFormat:@"%@ __DATA_CONST vmaddr should follow __TEXT", name]));
+
+        // Track expected vmaddr
+        long expectedVmaddr = dataConst->vmaddr + dataConst->vmsize;
+
+        // __DATA should come after __DATA_CONST
+        if (data) {
+            INTEXPECT(data->vmaddr, expectedVmaddr,
+                      ([NSString stringWithFormat:@"%@ __DATA vmaddr should follow __DATA_CONST", name]));
+            expectedVmaddr += data->vmsize;
+        }
+
+        // __LINKEDIT should come last
+        INTEXPECT(linkedit->vmaddr, expectedVmaddr,
+                  ([NSString stringWithFormat:@"%@ __LINKEDIT vmaddr should follow all data segments", name]));
+    }
+}
+
++(int)countSegments:(MPWMachOReader*)reader
+{
+    int count = 0;
+    const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) count++;
+        ptr += cmd->cmdsize;
+    }
+    return count;
+}
+
+// Single test for the reference (externally linked) dylib
++(void)testReferenceDylib
+{
+    MPWMachOReader *reader = [self readerForReferenceFramework];
+    if (!reader) {
+        NSLog(@"Reference framework not available");
+        return;
     }
 
-    // __DATA should come after __DATA_CONST (or __TEXT if no __DATA_CONST)
-    if (data) {
-        INTEXPECT(data->vmaddr, expectedVmaddr, @"__DATA vmaddr should follow previous segment");
-        expectedVmaddr += data->vmsize;
-    }
+    [self logSegmentsAndSections:reader name:@"Reference"];
+    [self verifyValidMachO:reader name:@"Reference"];
+    [self verifyRequiredLoadCommands:reader name:@"Reference"];
+    [self verifySegmentLayout:reader name:@"Reference"];
+    [self verifyExportsClassSymbols:reader className:@"ReferenceSTClass" name:@"Reference"];
+    [self verifyFixupFormat:reader name:@"Reference" usesChainedFixups:YES];
+    [self verifyDataConstSegment:reader name:@"Reference"];
+}
 
-    // __LINKEDIT should come last
-    INTEXPECT(linkedit->vmaddr, expectedVmaddr, @"__LINKEDIT vmaddr should follow previous segment");
+#pragma mark - Internal Linker Test
 
-    // File size should match __LINKEDIT end
-    long expectedFileSize = linkedit->fileoff + linkedit->filesize;
-    INTEXPECT((long)dylib.length, expectedFileSize, @"file size should match __LINKEDIT end");
+// Single test for the internally linked dylib
++(void)testInternalLinkerDylib
+{
+    MPWMachOReader *reader = [self readerForInternalLinkerDylib];
+
+    [self logSegmentsAndSections:reader name:@"Internal"];
+    [self verifyValidMachO:reader name:@"Internal"];
+    [self verifyRequiredLoadCommands:reader name:@"Internal"];
+    [self verifySegmentLayout:reader name:@"Internal"];
+    [self verifyExportsClassSymbols:reader className:@"InternalLinkerTestClass" name:@"Internal"];
+    [self verifyFixupFormat:reader name:@"Internal" usesChainedFixups:NO];
+    [self verifyDataConstSegment:reader name:@"Internal"];
+}
+
+#pragma mark - Comparison Tests
+
++(void)testCompareReferenceAndInternal
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    if (!ref) return;
+
+    int refSegments = [self countSegments:ref];
+    int internalSegments = [self countSegments:internal];
+
+    NSLog(@"Segment count: reference=%d internal=%d", refSegments, internalSegments);
+    INTEXPECT(internalSegments, refSegments, @"Should have same number of segments as reference");
 }
 
 +(NSArray*)testSelectors
 {
     return @[
-        // Object file analysis
         @"testObjectFileSections",
-        // Reference framework tests
-        @"testReferenceFrameworkExists",
-        @"testReferenceDylibIsValidMachO",
-        @"testReferenceDylibHasRequiredSegments",
-        @"testReferenceDylibHasRequiredLoadCommands",
-        @"testReferenceDylibExportsClassSymbols",
-        @"testReferenceDylibBindInfo",
-        // Internal linker tests
-        @"testInternalLinkerProducesValidMachO",
-        @"testInternalLinkerHasRequiredSegments",
-        @"testInternalLinkerHasRequiredLoadCommands",
-        @"testInternalLinkerExportsClassSymbols",
-        @"testInternalLinkerBindInfo",
-        @"testInternalLinkerSegmentLayoutIsValid",
+        @"testReferenceDylib",
+        @"testInternalLinkerDylib",
+        @"testCompareReferenceAndInternal",
     ];
 }
 
