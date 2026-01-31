@@ -25,6 +25,7 @@
               @"/System/Library/Frameworks/",
               @"/System/Library/PrivateFrameworks/",
               @"/System/iOSSupport/System/Library/Frameworks/",
+              @"./",
               ];
 }
 
