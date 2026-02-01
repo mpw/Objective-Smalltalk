@@ -35,7 +35,6 @@
     dylibWriter.installName = installName;
 
     // Copy global symbols for export
-    // The symbols are stored in globalSymbolOffsets with their offsets within the section
     for (NSString *symbol in symbolSource.globalSymbolOffsets) {
         long offset = [symbolSource.globalSymbolOffsets[symbol] longValue];
         [dylibWriter declareGlobalSymbol:symbol atOffset:offset];
@@ -44,15 +43,17 @@
     // Track section mappings: original section -> dylib section
     NSMutableDictionary<NSNumber*, MPWMachOSectionWriter*> *sectionMapping = [NSMutableDictionary dictionary];
 
+    // Sections that go in __DATA_CONST: __got, __objc_classlist, __objc_imageinfo, __cfstring
+    NSSet *dataConstSectionNames = [NSSet setWithObjects:@"__got", @"__objc_classlist",
+                                                          @"__objc_imageinfo", @"__cfstring", nil];
+
     // Copy all __TEXT sections
     for (MPWMachOSectionWriter *section in sections) {
         if ([section.segname isEqualToString:@"__TEXT"]) {
             if ([section.sectname isEqualToString:@"__text"]) {
-                // Main code section - use the existing text section writer
                 [dylibWriter addTextSectionData:[section data]];
                 sectionMapping[@((uintptr_t)section)] = dylibWriter.textSectionWriter;
             } else {
-                // Other __TEXT sections (__objc_methname, __cstring, etc.)
                 MPWMachOSectionWriter *dylibSection = [dylibWriter addSectionWriterWithSegName:@"__TEXT"
                                                                                       sectName:section.sectname
                                                                                          flags:section.flags];
@@ -62,180 +63,189 @@
         }
     }
 
-    // Track __DATA sections and their segment indices for bind opcodes
-    int segmentIndex = 0;
-    // __TEXT is segment 0
-    segmentIndex++;
-    // __DATA is segment 1 (if present)
-    int dataSegmentIndex = segmentIndex;
+    // Check if we'll have a __DATA_CONST segment
+    BOOL hasDataConstSegment = NO;
+    for (MPWMachOSectionWriter *section in sections) {
+        if ([section.segname isEqualToString:@"__DATA"] &&
+            [dataConstSectionNames containsObject:section.sectname]) {
+            hasDataConstSegment = YES;
+            break;
+        }
+    }
 
-    // Copy all __DATA sections
+    // Segment indices in the dylib:
+    //   0: __TEXT
+    //   1: __DATA_CONST (if present)
+    //   2 or 1: __DATA
+    //   last: __LINKEDIT
+    int dataConstSegmentIndex = 1;
+    int dataSegmentIndex = hasDataConstSegment ? 2 : 1;
+
+    // Track section offsets within their segments
+    // Sections within a segment are laid out sequentially
+    NSMutableDictionary<NSNumber*, NSNumber*> *sectionOffsetWithinSegment = [NSMutableDictionary dictionary];
+    long dataConstCurrentOffset = 0;
+    long dataCurrentOffset = 0;
+
+    // Copy all __DATA sections and track their offsets within segments
     for (MPWMachOSectionWriter *section in sections) {
         if ([section.segname isEqualToString:@"__DATA"]) {
-            // Create corresponding section in dylib and copy data
             MPWMachOSectionWriter *dylibSection = [dylibWriter addSectionWriterWithSegName:@"__DATA"
                                                                                   sectName:section.sectname
                                                                                      flags:section.flags];
             [dylibSection appendBytes:[section data].bytes length:[section data].length];
             sectionMapping[@((uintptr_t)section)] = dylibSection;
+
+            // Track offset within segment
+            if ([dataConstSectionNames containsObject:section.sectname]) {
+                sectionOffsetWithinSegment[@((uintptr_t)section)] = @(dataConstCurrentOffset);
+                dataConstCurrentOffset += [section data].length;
+                // Align to 8 bytes for next section
+                dataConstCurrentOffset = (dataConstCurrentOffset + 7) & ~7;
+            } else {
+                sectionOffsetWithinSegment[@((uintptr_t)section)] = @(dataCurrentOffset);
+                dataCurrentOffset += [section data].length;
+                dataCurrentOffset = (dataCurrentOffset + 7) & ~7;
+            }
         }
     }
 
-    // Collect internal relocations that need pointer patching
-    NSMutableArray<MPWInternalRelocation*> *internalRelocations = [NSMutableArray array];
-
-    // External symbols are those in externalSymbolNames.
-    // However, some symbols may be incorrectly marked as external when they're defined locally.
-    // Filter by checking symbolAddressInfo - section 0 means undefined/external
+    // Identify external symbols (undefined in the object file)
     NSMutableSet *externalSymbols = [NSMutableSet set];
     for (NSString *symbol in symbolSource.externalSymbolNames) {
         NSDictionary *info = symbolSource.symbolAddressInfo[symbol];
         int section = info ? [info[@"section"] intValue] : -1;
         if (info == nil || section == 0) {
-            // Section 0 = undefined/external, or not in symbol table at all
             [externalSymbols addObject:symbol];
         }
     }
 
-    // Convert relocations to bind/rebase opcodes
-    // - External symbols (from other dylibs) -> bind opcodes
-    // - Internal symbols (within this object file) -> rebase opcodes + pointer patching
+    // Create bind/rebase opcode writer
     MPWBindOpcodeWriter *bindWriter = [[[MPWBindOpcodeWriter alloc] init] autorelease];
 
+    // Collect internal relocations for pointer patching
+    NSMutableArray<MPWInternalRelocation*> *internalRelocations = [NSMutableArray array];
+
+    // Process relocations and generate bind/rebase opcodes
     for (MPWMachOSectionWriter *section in sections) {
         int numRelocs = [section numRelocationEntries];
         if (numRelocs == 0) continue;
 
-        // Determine segment index for this section
-        int segIdx = 0;
-        if ([section.segname isEqualToString:@"__DATA"]) {
-            segIdx = dataSegmentIndex;
-        }
-        // __TEXT relocations would be segment 0, but we typically don't have external refs there
-
-        // Get the corresponding dylib section for patching
         MPWMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
+        if (!dylibSection) continue;
+
+        // Determine segment index and base offset for this section
+        int segIdx;
+        long baseOffsetInSegment;
+
+        if ([section.segname isEqualToString:@"__DATA"]) {
+            if ([dataConstSectionNames containsObject:section.sectname]) {
+                segIdx = dataConstSegmentIndex;
+            } else {
+                segIdx = dataSegmentIndex;
+            }
+            NSNumber *offsetNum = sectionOffsetWithinSegment[@((uintptr_t)section)];
+            baseOffsetInSegment = offsetNum ? [offsetNum longValue] : 0;
+        } else {
+            // __TEXT relocations - shouldn't typically have bind/rebase
+            continue;
+        }
 
         for (int i = 0; i < numRelocs; i++) {
             NSString *symbolName = [section symbolNameForRelocationAtIndex:i];
-            int offset = [section offsetForRelocationAtIndex:i];
+            int sectionOffset = [section offsetForRelocationAtIndex:i];
 
-            if (symbolName) {
-                if ([externalSymbols containsObject:symbolName]) {
-                    // External symbol - needs bind opcode
-                    // Use flat namespace lookup to find symbol in any loaded dylib
-                    [bindWriter addBindForSymbol:symbolName atSegment:segIdx offset:offset];
-                } else {
-                    // Internal symbol - needs rebase opcode AND pointer patching
-                    [bindWriter addRebaseAtSegment:segIdx offset:offset];
+            if (!symbolName) continue;
 
-                    // Track this relocation for pointer patching
-                    MPWInternalRelocation *reloc = [[[MPWInternalRelocation alloc] init] autorelease];
-                    reloc.symbolName = symbolName;
-                    reloc.patchSection = dylibSection;
-                    reloc.offsetInSection = offset;
-                    [internalRelocations addObject:reloc];
-                }
+            // Compute segment-relative offset
+            long segmentOffset = baseOffsetInSegment + sectionOffset;
+
+            if ([externalSymbols containsObject:symbolName]) {
+                // External symbol - needs bind opcode
+                [bindWriter addBindForSymbol:symbolName atSegment:segIdx offset:segmentOffset];
+                NSLog(@"Linker: BIND %@ at segment %d offset 0x%lx", symbolName, segIdx, segmentOffset);
+            } else {
+                // Internal symbol - needs rebase opcode AND pointer patching
+                [bindWriter addRebaseAtSegment:segIdx offset:segmentOffset];
+
+                MPWInternalRelocation *reloc = [[[MPWInternalRelocation alloc] init] autorelease];
+                reloc.symbolName = symbolName;
+                reloc.patchSection = dylibSection;
+                reloc.offsetInSection = sectionOffset;
+                [internalRelocations addObject:reloc];
+                NSLog(@"Linker: REBASE+PATCH %@ at segment %d offset 0x%lx (section %@,%@)",
+                      symbolName, segIdx, segmentOffset, section.segname, section.sectname);
             }
         }
     }
 
-    // Now resolve internal symbol addresses and patch pointers
-    // We need to compute where each internal symbol will end up after the dylib is laid out
-    // This requires knowing the section addresses, which are computed in writeFile
-    // For now, we'll defer this to a second pass after writeFile sets up addresses
-
-    // Store internal relocations for later patching
-    // The dylib writer needs to call us back or we need to patch after writeFile
-
-    // Actually, we need to patch BEFORE writeFile because writeFile copies section data
-    // But section addresses are computed DURING writeFile
-    //
-    // The solution: compute addresses ourselves using the same algorithm as writeFile
-    // OR: modify the section data in-place after it's been copied to dylibWriter
-    //
-    // Let's compute the layout ourselves:
-    // __TEXT segment starts at 0
-    // Section addresses within __TEXT are computed during writeFile
-    // For now, let's use a simpler approach: call writeFile, then patch the data
-
-    // Only set bind opcode writer if we have actual bindings or rebases
+    // Set bind opcode writer if we have any bindings or rebases
     NSData *bindData = [bindWriter bindOpcodeData];
     NSData *rebaseData = [bindWriter rebaseOpcodeData];
     if (bindData.length > 1 || rebaseData.length > 1) {
         dylibWriter.bindOpcodeWriter = bindWriter;
     }
 
-    // Build symbol address lookup from all sections (before writeFile computes addresses)
-    // We need to predict where symbols will end up
-    //
-    // Layout calculation (matching MPWMachODylibWriter.writeFile):
-    // 1. Header + load commands
-    // 2. __TEXT sections (starting after load commands, padded to 8-byte alignment)
-    // 3. Padding to 16KB boundary
-    // 4. __DATA sections (if any)
-    // 5. Padding to 16KB boundary
-    // 6. __LINKEDIT
-
-    // To compute symbol addresses before writeFile runs, we need to replicate its layout logic
-    // This is complex, so instead let's patch the underlying NSMutableData after writeFile runs
-
+    // Write the dylib file structure
     [dylibWriter writeFile];
 
-    // Now patch internal pointers in the dylib data
-    // The section addresses have been computed, we can resolve symbols
+    // Patch internal pointers after section addresses are computed
     if (internalRelocations.count > 0) {
         // Build section number to dylib section mapping
-        // Section numbers in the object file: 1 = first section, 2 = second, etc.
-        // We need to map each original section number to its corresponding dylib section
         NSMutableDictionary<NSNumber*, MPWMachOSectionWriter*> *sectionNumToDylibSection = [NSMutableDictionary dictionary];
-        int sectionNum = 1;  // Mach-O sections are 1-indexed
+        int sectionNum = 1;
         for (MPWMachOSectionWriter *section in sections) {
             MPWMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
             if (dylibSection) {
                 sectionNumToDylibSection[@(sectionNum)] = dylibSection;
+                NSLog(@"Linker: section %d (%@,%@) -> dylib section at vmaddr=0x%lx",
+                      sectionNum, section.segname, section.sectname, dylibSection.address);
+            } else {
+                NSLog(@"Linker: section %d (%@,%@) has NO dylib section mapping!",
+                      sectionNum, section.segname, section.sectname);
             }
             sectionNum++;
         }
 
-        // Build symbol-to-address map using symbolAddressInfo
+        // Build symbol-to-address map
         NSMutableDictionary<NSString*, NSNumber*> *symbolAddresses = [NSMutableDictionary dictionary];
-
         for (NSString *symbol in symbolSource.symbolAddressInfo) {
             NSDictionary *info = symbolSource.symbolAddressInfo[symbol];
             int symbolSectionNum = [info[@"section"] intValue];
             long symbolOffset = [info[@"offset"] longValue];
 
-            // Look up the dylib section for this section number
             MPWMachOSectionWriter *dylibSection = sectionNumToDylibSection[@(symbolSectionNum)];
             if (dylibSection) {
-                // Compute the symbol's final address in the dylib
                 long symbolAddr = dylibSection.address + symbolOffset;
                 symbolAddresses[symbol] = @(symbolAddr);
+                NSLog(@"Linker: symbol %@ -> section %d offset %ld -> vmaddr 0x%lx",
+                      symbol, symbolSectionNum, symbolOffset, symbolAddr);
+            } else if (symbolSectionNum != 0) {
+                NSLog(@"Linker: symbol %@ in section %d NOT FOUND in sectionNumToDylibSection!",
+                      symbol, symbolSectionNum);
             }
         }
 
-        // Now patch each internal relocation
+        // Patch each internal relocation
         NSMutableData *dylibData = (NSMutableData*)[dylibWriter target];
-
+        NSLog(@"Linker: patching %lu internal relocations", (unsigned long)internalRelocations.count);
         for (MPWInternalRelocation *reloc in internalRelocations) {
             NSNumber *targetAddrNum = symbolAddresses[reloc.symbolName];
             if (targetAddrNum) {
                 long targetAddr = [targetAddrNum longValue];
-
-                // Find the file offset where this pointer lives
-                // The pointer is in the dylib section at offset reloc.offsetInSection
-                // We need the section's file offset (not VM address)
                 long sectionFileOffset = reloc.patchSection.offset;
                 long pointerFileOffset = sectionFileOffset + reloc.offsetInSection;
 
-                // Patch the pointer with the target address
                 if (pointerFileOffset + 8 <= (long)dylibData.length) {
                     uint64_t *ptr = (uint64_t*)((uint8_t*)dylibData.mutableBytes + pointerFileOffset);
+                    uint64_t oldValue = *ptr;
                     *ptr = (uint64_t)targetAddr;
+                    NSLog(@"Linker: PATCH %@ at file offset %ld: 0x%llx -> 0x%lx",
+                          reloc.symbolName, pointerFileOffset, oldValue, targetAddr);
                 }
+            } else {
+                NSLog(@"Linker: FAILED to find address for %@", reloc.symbolName);
             }
-            // Note: If symbol not found, it's likely an external symbol that will be bound at load time
         }
     }
 
@@ -270,15 +280,13 @@
 {
     MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
 
-    // Add minimal code
-    unsigned char retCode[] = { 0x00, 0x00, 0x80, 0xD2, 0xC0, 0x03, 0x5F, 0xD6 };  // mov x0, #0; ret
+    unsigned char retCode[] = { 0x00, 0x00, 0x80, 0xD2, 0xC0, 0x03, 0x5F, 0xD6 };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_testFunc"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:retCode length:sizeof(retCode)]];
 
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
-    // Verify using MPWMachOReader
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should produce valid Mach-O");
     INTEXPECT([reader filetype], MH_DYLIB, @"should be a dylib");
@@ -288,10 +296,9 @@
 {
     MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
 
-    // Add code with a global symbol
     unsigned char code[] = {
-        0x40, 0x05, 0x80, 0x52,  // mov w0, #42
-        0xc0, 0x03, 0x5f, 0xd6   // ret
+        0x40, 0x05, 0x80, 0x52,
+        0xc0, 0x03, 0x5f, 0xd6
     };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_answer"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
@@ -299,12 +306,10 @@
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
-    // Verify exports using MPWMachOReader
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:@"_answer"], @"symbol should be exported");
 
-    // Also verify it loads and runs correctly
     NSString *path = @"/tmp/linker_test_exports.dylib";
     [dylib writeToFile:path atomically:YES];
     [self codesignDylibAtPath:path];
@@ -326,12 +331,10 @@
 {
     MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
 
-    // Add code
-    unsigned char code[] = { 0xc0, 0x03, 0x5f, 0xd6 };  // ret
+    unsigned char code[] = { 0xc0, 0x03, 0x5f, 0xd6 };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_dummy"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
 
-    // Add a __DATA section
     MPWMachOSectionWriter *dataSection = [objectWriter addSectionWriterWithSegName:@"__DATA"
                                                                           sectName:@"__mydata"
                                                                              flags:0];
@@ -341,12 +344,10 @@
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
-    // Verify structure using MPWMachOReader
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should be valid Mach-O");
     EXPECTNOTNIL([reader segmentNamed:@"__DATA"], @"should have __DATA segment");
 
-    // Verify it loads
     NSString *path = @"/tmp/linker_test_data.dylib";
     [dylib writeToFile:path atomically:YES];
     [self codesignDylibAtPath:path];
@@ -358,8 +359,6 @@
     }
 }
 
-// Test that linker produces valid structure for ST class
-// Detailed comparison tests are in MPWMachOLinkerCharacterizationTests
 +(void)testLinkerProducesValidSTClassDylib
 {
     STNativeCompiler *compiler = [STNativeCompiler compiler];
@@ -370,23 +369,19 @@
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/LinkerTestClass.framework/LinkerTestClass"
                                             fromWriter:(MPWMachOWriter*)compiler.writer];
 
-    // Verify structure using MPWMachOReader
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should produce valid Mach-O");
     INTEXPECT([reader filetype], MH_DYLIB, @"should be a dylib");
 
-    // Verify segments exist
     EXPECTNOTNIL([reader segmentNamed:@"__TEXT"], @"should have __TEXT segment");
     EXPECTNOTNIL([reader segmentNamed:@"__DATA"], @"should have __DATA segment");
     EXPECTNOTNIL([reader segmentNamed:@"__LINKEDIT"], @"should have __LINKEDIT segment");
 
-    // Verify class symbols are exported
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:@"_OBJC_CLASS_$_LinkerTestClass"], @"should export class symbol");
     EXPECTTRUE([exports containsObject:@"_OBJC_METACLASS_$_LinkerTestClass"], @"should export metaclass symbol");
 }
 
-// Test that the linker includes bind/rebase opcodes for ST classes
 +(void)testLinkerIncludesBindAndRebaseOpcodes
 {
     STNativeCompiler *compiler = [STNativeCompiler compiler];
@@ -397,58 +392,42 @@
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/BindTestClass.framework/BindTestClass"
                                             fromWriter:(MPWMachOWriter*)compiler.writer];
 
-    // Verify using MPWMachOReader
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should have valid header");
 
-    // Check for LC_DYLD_INFO_ONLY (contains bind/rebase info)
     const struct dyld_info_command *dyldInfo =
         (const struct dyld_info_command*)[reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
     EXPECTNOTNIL((id)(uintptr_t)dyldInfo, @"should have LC_DYLD_INFO_ONLY");
 
     if (dyldInfo) {
-        // ST classes have internal pointers that need rebasing
         EXPECTTRUE(dyldInfo->rebase_size > 0, @"should have rebase data");
-        // ST classes reference external symbols (NSObject, etc.)
         EXPECTTRUE(dyldInfo->bind_size > 0, @"should have bind data");
-        // Should export the class symbols
         EXPECTTRUE(dyldInfo->export_size > 0, @"should have export data");
     }
 }
 
-// Test that external symbol binding produces loadable dylib
 +(void)testExternalSymbolBindingProducesLoadableDylib
 {
     MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
 
-    // Minimal code that just returns
-    unsigned char code[] = {
-        0xc0, 0x03, 0x5f, 0xd6   // ret
-    };
+    unsigned char code[] = { 0xc0, 0x03, 0x5f, 0xd6 };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_testfunc"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
 
-    // Add a __DATA section with a pointer that references an external symbol
     MPWMachOSectionWriter *dataSection = [objectWriter addSectionWriterWithSegName:@"__DATA"
                                                                           sectName:@"__got"
                                                                              flags:0];
-    // Declare malloc as external (available from libSystem)
     [objectWriter declareExternalSymbol:@"_malloc"];
-
-    // Add relocation for the pointer slot
     [dataSection addRelocationEntryForSymbol:@"_malloc" atOffset:0];
     char zeros[8] = {0};
     [dataSection appendBytes:zeros length:8];
 
-    // Link
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test_bind.dylib" fromWriter:objectWriter];
 
-    // Verify structure using MPWMachOReader
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should be valid Mach-O");
 
-    // Verify bind info exists
     const struct dyld_info_command *dyldInfo =
         (const struct dyld_info_command*)[reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
     EXPECTNOTNIL((id)(uintptr_t)dyldInfo, @"should have LC_DYLD_INFO_ONLY");
@@ -456,7 +435,6 @@
         EXPECTTRUE(dyldInfo->bind_size > 0, @"should have bind data for external symbol");
     }
 
-    // Write, sign, and load
     NSString *path = @"/tmp/test_bind.dylib";
     [dylib writeToFile:path atomically:YES];
     [self codesignDylibAtPath:path];

@@ -11,8 +11,12 @@
 #import "MPWMachOReader.h"
 #import "MPWMachOLinker.h"
 #import "MPWMachODylibWriter.h"
+#import "MPWMachOWriter.h"
+#import "MPWMachOSectionWriter.h"
 #import "STNativeCompiler.h"
 #import <mach-o/loader.h>
+#import <dlfcn.h>
+#import <objc/runtime.h>
 
 @interface MPWMachOLinkerCharacterizationTests : NSObject
 @end
@@ -179,7 +183,333 @@
     }
 }
 
-#pragma mark - Reference Framework Test
+#pragma mark - Reference Framework Characterization
+
+// This test captures the EXACT structure of a working reference dylib.
+// These values were determined by examining a dylib produced by the external linker.
+// The internal linker should produce equivalent structure.
++(void)testCharacterizeReferenceSegments
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    if (!ref) {
+        NSLog(@"Reference framework not available");
+        return;
+    }
+
+    const struct mach_header_64 *header = (const struct mach_header_64 *)ref.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    // Count segments
+    int segmentCount = 0;
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) segmentCount++;
+        ptr += cmd->cmdsize;
+    }
+
+    // Reference dylib should have 4 segments: __TEXT, __DATA_CONST, __DATA, __LINKEDIT
+    INTEXPECT(segmentCount, 4, @"reference should have 4 segments");
+
+    // Verify each segment
+    struct segment_command_64 *text = [ref segmentNamed:@"__TEXT"];
+    struct segment_command_64 *dataConst = [ref segmentNamed:@"__DATA_CONST"];
+    struct segment_command_64 *data = [ref segmentNamed:@"__DATA"];
+    struct segment_command_64 *linkedit = [ref segmentNamed:@"__LINKEDIT"];
+
+    EXPECTNOTNIL((id)(uintptr_t)text, @"should have __TEXT");
+    EXPECTNOTNIL((id)(uintptr_t)dataConst, @"should have __DATA_CONST");
+    EXPECTNOTNIL((id)(uintptr_t)data, @"should have __DATA");
+    EXPECTNOTNIL((id)(uintptr_t)linkedit, @"should have __LINKEDIT");
+
+    // __TEXT segment characteristics
+    INTEXPECT(text->vmaddr, 0, @"__TEXT vmaddr should be 0");
+    INTEXPECT(text->fileoff, 0, @"__TEXT fileoff should be 0");
+    INTEXPECT(text->vmsize, 0x4000, @"__TEXT vmsize should be 16KB");
+    // nsects varies but should have at least __text
+    EXPECTTRUE(text->nsects >= 1, @"__TEXT should have at least 1 section");
+
+    // __DATA_CONST segment characteristics
+    INTEXPECT(dataConst->vmaddr, 0x4000, @"__DATA_CONST vmaddr should follow __TEXT");
+    INTEXPECT(dataConst->vmsize, 0x4000, @"__DATA_CONST vmsize should be 16KB");
+
+    // __DATA segment characteristics
+    INTEXPECT(data->vmaddr, 0x8000, @"__DATA vmaddr should follow __DATA_CONST");
+    INTEXPECT(data->vmsize, 0x4000, @"__DATA vmsize should be 16KB");
+
+    // __LINKEDIT segment characteristics
+    INTEXPECT(linkedit->vmaddr, 0xc000, @"__LINKEDIT vmaddr should follow __DATA");
+    INTEXPECT(linkedit->vmsize, 0x4000, @"__LINKEDIT vmsize should be 16KB");
+
+    NSLog(@"Reference segment layout verified");
+}
+
+// Characterize the sections within each segment
++(void)testCharacterizeReferenceSections
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    if (!ref) return;
+
+    const struct mach_header_64 *header = (const struct mach_header_64 *)ref.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    NSMutableArray *textSections = [NSMutableArray array];
+    NSMutableArray *dataConstSections = [NSMutableArray array];
+    NSMutableArray *dataSections = [NSMutableArray array];
+
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                NSString *sectname = [NSString stringWithFormat:@"%.16s", sections[j].sectname];
+                NSDictionary *info = @{
+                    @"name": sectname,
+                    @"addr": @(sections[j].addr),
+                    @"size": @(sections[j].size),
+                    @"offset": @(sections[j].offset),
+                    @"flags": @(sections[j].flags)
+                };
+
+                if (strncmp(seg->segname, "__TEXT", 16) == 0) {
+                    [textSections addObject:info];
+                } else if (strncmp(seg->segname, "__DATA_CONST", 16) == 0) {
+                    [dataConstSections addObject:info];
+                } else if (strncmp(seg->segname, "__DATA", 16) == 0) {
+                    [dataSections addObject:info];
+                }
+            }
+        }
+        ptr += cmd->cmdsize;
+    }
+
+    // __TEXT sections
+    NSLog(@"__TEXT sections: %@", [textSections valueForKey:@"name"]);
+    EXPECTTRUE([textSections count] >= 4, @"__TEXT should have at least 4 sections");
+    // Expected: __text, __stubs, __objc_methname, __objc_classname, __objc_methtype, etc.
+
+    // __DATA_CONST sections - these contain pointers that are read-only after fixup
+    NSLog(@"__DATA_CONST sections: %@", [dataConstSections valueForKey:@"name"]);
+    EXPECTTRUE([dataConstSections count] >= 2, @"__DATA_CONST should have sections");
+    // Expected: __got, __objc_classlist, __objc_imageinfo
+
+    // __DATA sections - these contain mutable data
+    NSLog(@"__DATA sections: %@", [dataSections valueForKey:@"name"]);
+    EXPECTTRUE([dataSections count] >= 2, @"__DATA should have sections");
+    // Expected: __objc_const, __objc_selrefs, __objc_data
+}
+
+// Characterize the __objc_data section contents (class structures)
++(void)testCharacterizeReferenceObjcData
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    if (!ref) return;
+
+    // Find __objc_data section
+    const struct mach_header_64 *header = (const struct mach_header_64 *)ref.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+    const struct section_64 *objcDataSection = NULL;
+    long segmentVmaddr = 0;
+
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                if (strncmp(sections[j].sectname, "__objc_data", 16) == 0) {
+                    objcDataSection = &sections[j];
+                    segmentVmaddr = seg->vmaddr;
+                    break;
+                }
+            }
+            if (objcDataSection) break;
+        }
+        ptr += cmd->cmdsize;
+    }
+
+    EXPECTNOTNIL((id)(uintptr_t)objcDataSection, @"should have __objc_data section");
+    if (!objcDataSection) return;
+
+    // __objc_data contains metaclass (40 bytes) + class (40 bytes) = 80 bytes
+    INTEXPECT(objcDataSection->size, 80, @"__objc_data should be 80 bytes (2 class structures)");
+
+    // Read the class structures
+    const uint64_t *classData = (const uint64_t*)(ref.data.bytes + objcDataSection->offset);
+
+    NSLog(@"=== REFERENCE __objc_data CONTENTS ===");
+    NSLog(@"Section at vmaddr=0x%llx, file offset=%d", objcDataSection->addr, objcDataSection->offset);
+
+    // Metaclass structure (offsets 0x00-0x28)
+    // These values are what dyld will see BEFORE applying fixups
+    NSLog(@"Metaclass:");
+    for (int i = 0; i < 5; i++) {
+        NSLog(@"  [0x%02x] = 0x%016llx", i*8, classData[i]);
+    }
+
+    // Class structure (offsets 0x28-0x50)
+    NSLog(@"Class:");
+    for (int i = 5; i < 10; i++) {
+        NSLog(@"  [0x%02x] = 0x%016llx", i*8, classData[i]);
+    }
+
+    // Key observations about the reference:
+    // - Pointers to external symbols (NSObject, _objc_empty_cache) should be 0 (to be bound)
+    // - Pointers to internal symbols should be valid vmaddrs within the dylib
+    // - The isa pointer of class should point to metaclass vmaddr
+
+    // Metaclass.isa [0x00] - should be 0 (bound to NSObject metaclass)
+    INTEXPECT(classData[0], 0, @"metaclass.isa should be 0 (external bind)");
+
+    // Metaclass.superclass [0x08] - should be 0 (bound to NSObject metaclass)
+    INTEXPECT(classData[1], 0, @"metaclass.superclass should be 0 (external bind)");
+
+    // Metaclass.cache [0x10] - should be 0 (bound to _objc_empty_cache)
+    INTEXPECT(classData[2], 0, @"metaclass.cache should be 0 (external bind)");
+
+    // Metaclass.vtable [0x18] - should be 0
+    INTEXPECT(classData[3], 0, @"metaclass.vtable should be 0");
+
+    // Metaclass.data [0x20] - should be non-zero vmaddr pointing to class_ro_t
+    EXPECTTRUE(classData[4] != 0, @"metaclass.data should point to class_ro_t");
+    EXPECTTRUE(classData[4] >= 0x8000 && classData[4] < 0xc000,
+               @"metaclass.data should point into __DATA segment");
+
+    // Class.isa [0x28] - should point to metaclass vmaddr
+    uint64_t metaclassVmaddr = objcDataSection->addr;  // metaclass is at start of section
+    INTEXPECT(classData[5], metaclassVmaddr, @"class.isa should point to metaclass");
+
+    // Class.superclass [0x30] - should be 0 (bound to NSObject class)
+    INTEXPECT(classData[6], 0, @"class.superclass should be 0 (external bind)");
+
+    // Class.cache [0x38] - should be 0 (bound to _objc_empty_cache)
+    INTEXPECT(classData[7], 0, @"class.cache should be 0 (external bind)");
+
+    // Class.vtable [0x40] - should be 0
+    INTEXPECT(classData[8], 0, @"class.vtable should be 0");
+
+    // Class.data [0x48] - should be non-zero vmaddr pointing to class_ro_t
+    EXPECTTRUE(classData[9] != 0, @"class.data should point to class_ro_t");
+    EXPECTTRUE(classData[9] >= 0x8000 && classData[9] < 0xc000,
+               @"class.data should point into __DATA segment");
+}
+
+#pragma mark - Internal Linker Characterization (compare to reference)
+
+// Same tests but for internal linker output
++(void)testCharacterizeInternalSegments
+{
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+
+    const struct mach_header_64 *header = (const struct mach_header_64 *)internal.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    int segmentCount = 0;
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) segmentCount++;
+        ptr += cmd->cmdsize;
+    }
+
+    // Internal linker should match reference: 4 segments
+    INTEXPECT(segmentCount, 4, @"internal should have 4 segments");
+
+    struct segment_command_64 *text = [internal segmentNamed:@"__TEXT"];
+    struct segment_command_64 *dataConst = [internal segmentNamed:@"__DATA_CONST"];
+    struct segment_command_64 *data = [internal segmentNamed:@"__DATA"];
+    struct segment_command_64 *linkedit = [internal segmentNamed:@"__LINKEDIT"];
+
+    EXPECTNOTNIL((id)(uintptr_t)text, @"should have __TEXT");
+    EXPECTNOTNIL((id)(uintptr_t)dataConst, @"should have __DATA_CONST");
+    EXPECTNOTNIL((id)(uintptr_t)data, @"should have __DATA");
+    EXPECTNOTNIL((id)(uintptr_t)linkedit, @"should have __LINKEDIT");
+
+    // Verify vmaddr layout matches reference
+    INTEXPECT(text->vmaddr, 0, @"__TEXT vmaddr should be 0");
+    INTEXPECT(text->vmsize, 0x4000, @"__TEXT vmsize should be 16KB");
+    INTEXPECT(dataConst->vmaddr, 0x4000, @"__DATA_CONST vmaddr should follow __TEXT");
+    INTEXPECT(data->vmaddr, 0x8000, @"__DATA vmaddr should follow __DATA_CONST");
+    INTEXPECT(linkedit->vmaddr, 0xc000, @"__LINKEDIT vmaddr should follow __DATA");
+}
+
+// Characterize internal __objc_data and compare to reference expectations
++(void)testCharacterizeInternalObjcData
+{
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+
+    // Find __objc_data section
+    const struct mach_header_64 *header = (const struct mach_header_64 *)internal.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+    const struct section_64 *objcDataSection = NULL;
+
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                if (strncmp(sections[j].sectname, "__objc_data", 16) == 0) {
+                    objcDataSection = &sections[j];
+                    break;
+                }
+            }
+            if (objcDataSection) break;
+        }
+        ptr += cmd->cmdsize;
+    }
+
+    EXPECTNOTNIL((id)(uintptr_t)objcDataSection, @"should have __objc_data section");
+    if (!objcDataSection) return;
+
+    INTEXPECT(objcDataSection->size, 80, @"__objc_data should be 80 bytes");
+
+    const uint64_t *classData = (const uint64_t*)(internal.data.bytes + objcDataSection->offset);
+
+    NSLog(@"=== INTERNAL __objc_data CONTENTS ===");
+    NSLog(@"Section at vmaddr=0x%llx, file offset=%d", objcDataSection->addr, objcDataSection->offset);
+
+    for (int i = 0; i < 10; i++) {
+        NSLog(@"  [0x%02x] = 0x%016llx", i*8, classData[i]);
+    }
+
+    // Apply same expectations as reference
+    // Metaclass.isa [0x00] - should be 0 (bound to NSObject metaclass)
+    INTEXPECT(classData[0], 0, @"metaclass.isa should be 0 (external bind)");
+
+    // Metaclass.superclass [0x08] - should be 0 (bound to NSObject metaclass)
+    INTEXPECT(classData[1], 0, @"metaclass.superclass should be 0 (external bind)");
+
+    // Metaclass.cache [0x10] - should be 0 (bound to _objc_empty_cache)
+    INTEXPECT(classData[2], 0, @"metaclass.cache should be 0 (external bind)");
+
+    // Metaclass.vtable [0x18] - should be 0
+    INTEXPECT(classData[3], 0, @"metaclass.vtable should be 0");
+
+    // Metaclass.data [0x20] - should point into __DATA segment (0x8000-0xc000)
+    EXPECTTRUE(classData[4] >= 0x8000 && classData[4] < 0xc000,
+               ([NSString stringWithFormat:@"metaclass.data (0x%llx) should point into __DATA", classData[4]]));
+
+    // Class.isa [0x28] - should point to metaclass vmaddr
+    uint64_t metaclassVmaddr = objcDataSection->addr;
+    INTEXPECT(classData[5], metaclassVmaddr,
+              ([NSString stringWithFormat:@"class.isa should point to metaclass at 0x%llx", metaclassVmaddr]));
+
+    // Class.superclass [0x30] - should be 0 (bound to NSObject class)
+    INTEXPECT(classData[6], 0, @"class.superclass should be 0 (external bind)");
+
+    // Class.cache [0x38] - should be 0 (bound to _objc_empty_cache)
+    INTEXPECT(classData[7], 0, @"class.cache should be 0 (external bind)");
+
+    // Class.vtable [0x40] - should be 0
+    INTEXPECT(classData[8], 0, @"class.vtable should be 0");
+
+    // Class.data [0x48] - should point into __DATA segment
+    EXPECTTRUE(classData[9] >= 0x8000 && classData[9] < 0xc000,
+               ([NSString stringWithFormat:@"class.data (0x%llx) should point into __DATA", classData[9]]));
+}
+
+#pragma mark - Fixup Format Tests
 
 +(void)verifyFixupFormat:(MPWMachOReader*)reader name:(NSString*)name usesChainedFixups:(BOOL)expectChained
 {
@@ -294,6 +624,1001 @@
     INTEXPECT(internalSegments, refSegments, @"Should have same number of segments as reference");
 }
 
+#pragma mark - Functional Tests
+
+// Helper to create dylib data for a simple test class
++(NSData*)createInternallyLinkedDylibWithClassName:(NSString*)className
+{
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    NSString *source = [NSString stringWithFormat:
+        @"class %@ : NSObject { -answerFortyTwo { 42. } -addFive:x { x + 5. } }", className];
+    STClassDefinition *theClass = [compiler compile:source];
+    [compiler compileClassToMachoO:theClass];
+
+    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
+    NSString *installName = [NSString stringWithFormat:@"@rpath/%@.framework/%@", className, className];
+    return [linker linkToDylibWithInstallName:installName
+                                   fromWriter:(MPWMachOWriter*)compiler.writer];
+}
+
+// Test that the internally linked dylib can actually be loaded and the class used
++(void)testInternalLinkerClassCanBeLoaded
+{
+    NSString *className = @"InternalLinkerFunctionalTestClass";
+    NSData *dylib = [self createInternallyLinkedDylibWithClassName:className];
+    EXPECTNOTNIL(dylib, @"should create dylib data");
+
+    // Write to temp file
+    NSString *path = [NSString stringWithFormat:@"/tmp/%@.dylib", className];
+    [dylib writeToFile:path atomically:YES];
+
+    // Code sign
+    [self codesignDylibAtPath:path];
+
+    // Try to load
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen failed: %s", dlerror());
+    }
+    EXPECTNOTNIL(handle, @"dylib should load with dlopen");
+
+    if (handle) {
+        dlclose(handle);
+    }
+}
+
+// Test that the class can be looked up after loading
++(void)testInternalLinkerClassCanBeLookedUp
+{
+    NSString *className = @"InternalLinkerLookupTestClass";
+    NSData *dylib = [self createInternallyLinkedDylibWithClassName:className];
+
+    NSString *path = [NSString stringWithFormat:@"/tmp/%@.dylib", className];
+    [dylib writeToFile:path atomically:YES];
+    [self codesignDylibAtPath:path];
+
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen failed: %s", dlerror());
+        EXPECTTRUE(NO, @"dylib should load");
+        return;
+    }
+
+    // Try to get the class
+    Class cls = NSClassFromString(className);
+    if (!cls) {
+        NSLog(@"NSClassFromString failed for %@", className);
+    }
+    EXPECTNOTNIL(cls, @"class should be found after loading dylib");
+
+    if (cls) {
+        NSLog(@"Found class: %@", cls);
+        NSLog(@"Superclass: %@", [cls superclass]);
+    }
+
+    dlclose(handle);
+}
+
+// Test that an instance can be created and methods called
++(void)testInternalLinkerClassCanBeInstantiated
+{
+    NSString *className = @"InternalLinkerInstantiateTestClass";
+    NSData *dylib = [self createInternallyLinkedDylibWithClassName:className];
+
+    NSString *path = [NSString stringWithFormat:@"/tmp/%@.dylib", className];
+    [dylib writeToFile:path atomically:YES];
+    [self codesignDylibAtPath:path];
+
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen failed: %s", dlerror());
+        EXPECTTRUE(NO, @"dylib should load");
+        return;
+    }
+
+    Class cls = NSClassFromString(className);
+    if (!cls) {
+        NSLog(@"NSClassFromString failed for %@", className);
+        dlclose(handle);
+        EXPECTTRUE(NO, @"class should be found");
+        return;
+    }
+
+    // Try to instantiate
+    id instance = nil;
+    @try {
+        instance = [[cls alloc] init];
+        NSLog(@"Created instance: %@", instance);
+    } @catch (NSException *e) {
+        NSLog(@"Exception creating instance: %@", e);
+    }
+    EXPECTNOTNIL(instance, @"should be able to create instance");
+
+    dlclose(handle);
+}
+
+// Test that methods can actually be called and return correct values
++(void)testInternalLinkerMethodsWork
+{
+    NSString *className = @"InternalLinkerMethodTestClass";
+    NSData *dylib = [self createInternallyLinkedDylibWithClassName:className];
+
+    NSString *path = [NSString stringWithFormat:@"/tmp/%@.dylib", className];
+    [dylib writeToFile:path atomically:YES];
+    [self codesignDylibAtPath:path];
+
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen failed: %s", dlerror());
+        EXPECTTRUE(NO, @"dylib should load");
+        return;
+    }
+
+    Class cls = NSClassFromString(className);
+    if (!cls) {
+        NSLog(@"NSClassFromString failed for %@", className);
+        dlclose(handle);
+        EXPECTTRUE(NO, @"class should be found");
+        return;
+    }
+
+    id instance = nil;
+    @try {
+        instance = [[cls alloc] init];
+    } @catch (NSException *e) {
+        NSLog(@"Exception creating instance: %@", e);
+        dlclose(handle);
+        EXPECTTRUE(NO, @"should create instance");
+        return;
+    }
+
+    // Try calling answerFortyTwo
+    @try {
+        // Use performSelector to avoid compile-time issues
+        NSInteger result = (NSInteger)[instance performSelector:@selector(answerFortyTwo)];
+        NSLog(@"answerFortyTwo returned: %ld", (long)result);
+        INTEXPECT((int)result, 42, @"answerFortyTwo should return 42");
+    } @catch (NSException *e) {
+        NSLog(@"Exception calling answerFortyTwo: %@", e);
+        EXPECTTRUE(NO, @"answerFortyTwo should not throw");
+    }
+
+    // Try calling addFive: with argument
+    @try {
+        NSInteger result = (NSInteger)[instance performSelector:@selector(addFive:) withObject:@(10)];
+        NSLog(@"addFive:10 returned: %ld", (long)result);
+        INTEXPECT((int)result, 15, @"addFive:10 should return 15");
+    } @catch (NSException *e) {
+        NSLog(@"Exception calling addFive:: %@", e);
+        EXPECTTRUE(NO, @"addFive: should not throw");
+    }
+
+    dlclose(handle);
+}
+
+#pragma mark - Rebase/Bind Opcode Diagnostic Tests
+
+// Decode rebase opcodes and log their contents
++(void)logRebaseOpcodes:(NSData*)rebaseData name:(NSString*)name
+{
+    const uint8_t *ptr = rebaseData.bytes;
+    const uint8_t *end = ptr + rebaseData.length;
+
+    NSLog(@"%@ rebase opcodes (%lu bytes):", name, (unsigned long)rebaseData.length);
+
+    int segmentIndex = 0;
+    long segmentOffset = 0;
+    int type = 0;
+
+    while (ptr < end) {
+        uint8_t byte = *ptr++;
+        uint8_t opcode = byte & REBASE_OPCODE_MASK;
+        uint8_t imm = byte & REBASE_IMMEDIATE_MASK;
+
+        switch (opcode) {
+            case REBASE_OPCODE_DONE:
+                NSLog(@"  DONE");
+                return;
+            case REBASE_OPCODE_SET_TYPE_IMM:
+                type = imm;
+                NSLog(@"  SET_TYPE_IMM: type=%d", type);
+                break;
+            case REBASE_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB:
+                segmentIndex = imm;
+                segmentOffset = 0;
+                // Decode ULEB128
+                {
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        segmentOffset |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                }
+                NSLog(@"  SET_SEGMENT_AND_OFFSET_ULEB: segment=%d offset=0x%lx", segmentIndex, segmentOffset);
+                break;
+            case REBASE_OPCODE_ADD_ADDR_ULEB:
+                {
+                    long delta = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        delta |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    segmentOffset += delta;
+                }
+                NSLog(@"  ADD_ADDR_ULEB: new offset=0x%lx", segmentOffset);
+                break;
+            case REBASE_OPCODE_ADD_ADDR_IMM_SCALED:
+                segmentOffset += imm * 8;
+                NSLog(@"  ADD_ADDR_IMM_SCALED: +%d*8, new offset=0x%lx", imm, segmentOffset);
+                break;
+            case REBASE_OPCODE_DO_REBASE_IMM_TIMES:
+                for (int i = 0; i < imm; i++) {
+                    NSLog(@"  DO_REBASE: segment=%d offset=0x%lx type=%d", segmentIndex, segmentOffset, type);
+                    segmentOffset += 8;
+                }
+                break;
+            case REBASE_OPCODE_DO_REBASE_ULEB_TIMES:
+                {
+                    long count = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        count |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    for (long i = 0; i < count; i++) {
+                        NSLog(@"  DO_REBASE: segment=%d offset=0x%lx type=%d", segmentIndex, segmentOffset, type);
+                        segmentOffset += 8;
+                    }
+                }
+                break;
+            case REBASE_OPCODE_DO_REBASE_ADD_ADDR_ULEB:
+                {
+                    NSLog(@"  DO_REBASE: segment=%d offset=0x%lx type=%d", segmentIndex, segmentOffset, type);
+                    long delta = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        delta |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    segmentOffset += delta + 8;
+                }
+                break;
+            case REBASE_OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB:
+                {
+                    long count = 0, skip = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        count |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    shift = 0;
+                    do {
+                        b = *ptr++;
+                        skip |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    for (long i = 0; i < count; i++) {
+                        NSLog(@"  DO_REBASE: segment=%d offset=0x%lx type=%d", segmentIndex, segmentOffset, type);
+                        segmentOffset += skip + 8;
+                    }
+                }
+                break;
+            default:
+                NSLog(@"  UNKNOWN: 0x%02x", byte);
+                break;
+        }
+    }
+}
+
+// Log bind opcodes
++(void)logBindOpcodes:(NSData*)bindData name:(NSString*)name
+{
+    const uint8_t *ptr = bindData.bytes;
+    const uint8_t *end = ptr + bindData.length;
+
+    NSLog(@"%@ bind opcodes (%lu bytes):", name, (unsigned long)bindData.length);
+
+    int segmentIndex = 0;
+    long segmentOffset = 0;
+    int type = 0;
+    int dylibOrdinal = 0;
+    NSString *symbolName = nil;
+    long addend = 0;
+
+    while (ptr < end) {
+        uint8_t byte = *ptr++;
+        uint8_t opcode = byte & BIND_OPCODE_MASK;
+        uint8_t imm = byte & BIND_IMMEDIATE_MASK;
+
+        switch (opcode) {
+            case BIND_OPCODE_DONE:
+                NSLog(@"  DONE");
+                return;
+            case BIND_OPCODE_SET_DYLIB_ORDINAL_IMM:
+                dylibOrdinal = imm;
+                NSLog(@"  SET_DYLIB_ORDINAL_IMM: %d", dylibOrdinal);
+                break;
+            case BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB:
+                {
+                    dylibOrdinal = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        dylibOrdinal |= ((int)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                }
+                NSLog(@"  SET_DYLIB_ORDINAL_ULEB: %d", dylibOrdinal);
+                break;
+            case BIND_OPCODE_SET_DYLIB_SPECIAL_IMM:
+                // Special ordinals are negative
+                if (imm == 0) {
+                    dylibOrdinal = 0;
+                } else {
+                    dylibOrdinal = (imm | 0xF0);  // Sign extend from 4 bits
+                    dylibOrdinal = (int8_t)dylibOrdinal;  // Sign extend to int
+                }
+                NSLog(@"  SET_DYLIB_SPECIAL_IMM: %d", dylibOrdinal);
+                break;
+            case BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM:
+                symbolName = [NSString stringWithUTF8String:(const char*)ptr];
+                ptr += strlen((const char*)ptr) + 1;
+                NSLog(@"  SET_SYMBOL: %@ (flags=%d)", symbolName, imm);
+                break;
+            case BIND_OPCODE_SET_TYPE_IMM:
+                type = imm;
+                NSLog(@"  SET_TYPE_IMM: %d", type);
+                break;
+            case BIND_OPCODE_SET_ADDEND_SLEB:
+                {
+                    addend = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    BOOL more = YES;
+                    while (more) {
+                        b = *ptr++;
+                        addend |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                        if ((b & 0x80) == 0) {
+                            more = NO;
+                            if ((shift < 64) && (b & 0x40)) {
+                                addend |= -((long)1 << shift);
+                            }
+                        }
+                    }
+                }
+                NSLog(@"  SET_ADDEND_SLEB: %ld", addend);
+                break;
+            case BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB:
+                segmentIndex = imm;
+                segmentOffset = 0;
+                {
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        segmentOffset |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                }
+                NSLog(@"  SET_SEGMENT_AND_OFFSET_ULEB: segment=%d offset=0x%lx", segmentIndex, segmentOffset);
+                break;
+            case BIND_OPCODE_ADD_ADDR_ULEB:
+                {
+                    long delta = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        delta |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    segmentOffset += delta;
+                }
+                NSLog(@"  ADD_ADDR_ULEB: new offset=0x%lx", segmentOffset);
+                break;
+            case BIND_OPCODE_DO_BIND:
+                NSLog(@"  DO_BIND: segment=%d offset=0x%lx symbol=%@ dylib=%d addend=%ld",
+                      segmentIndex, segmentOffset, symbolName, dylibOrdinal, addend);
+                segmentOffset += 8;
+                break;
+            case BIND_OPCODE_DO_BIND_ADD_ADDR_ULEB:
+                {
+                    NSLog(@"  DO_BIND: segment=%d offset=0x%lx symbol=%@ dylib=%d", segmentIndex, segmentOffset, symbolName, dylibOrdinal);
+                    long delta = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        delta |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    segmentOffset += delta + 8;
+                }
+                break;
+            case BIND_OPCODE_DO_BIND_ADD_ADDR_IMM_SCALED:
+                NSLog(@"  DO_BIND_ADD_ADDR_IMM_SCALED: segment=%d offset=0x%lx symbol=%@", segmentIndex, segmentOffset, symbolName);
+                segmentOffset += imm * 8 + 8;
+                break;
+            case BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB:
+                {
+                    long count = 0, skip = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *ptr++;
+                        count |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    shift = 0;
+                    do {
+                        b = *ptr++;
+                        skip |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    for (long i = 0; i < count; i++) {
+                        NSLog(@"  DO_BIND: segment=%d offset=0x%lx symbol=%@", segmentIndex, segmentOffset, symbolName);
+                        segmentOffset += skip + 8;
+                    }
+                }
+                break;
+            default:
+                NSLog(@"  UNKNOWN: 0x%02x", byte);
+                break;
+        }
+    }
+}
+
+// Test to decode and compare rebase opcodes between reference and internal
++(void)testCompareRebaseOpcodes
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+
+    if (!ref) {
+        NSLog(@"Reference framework not available - skipping test");
+        return;
+    }
+
+    // Get LC_DYLD_INFO from both
+    const struct dyld_info_command *refDyldInfo =
+        (const struct dyld_info_command*)[ref loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
+    const struct dyld_info_command *internalDyldInfo =
+        (const struct dyld_info_command*)[internal loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
+
+    // Reference might use chained fixups instead
+    if (!refDyldInfo) {
+        NSLog(@"Reference uses LC_DYLD_CHAINED_FIXUPS instead of LC_DYLD_INFO_ONLY");
+        // Still log internal opcodes
+        if (internalDyldInfo && internalDyldInfo->rebase_size > 0) {
+            NSData *internalRebase = [NSData dataWithBytes:(ref.data.bytes + internalDyldInfo->rebase_off)
+                                                    length:internalDyldInfo->rebase_size];
+            // Wait, that's using ref.data - fix it
+            internalRebase = [NSData dataWithBytes:(internal.data.bytes + internalDyldInfo->rebase_off)
+                                            length:internalDyldInfo->rebase_size];
+            [self logRebaseOpcodes:internalRebase name:@"Internal"];
+        }
+        return;
+    }
+
+    NSLog(@"=== REBASE OPCODE COMPARISON ===");
+
+    // Log reference rebase opcodes
+    if (refDyldInfo && refDyldInfo->rebase_size > 0) {
+        NSData *refRebase = [NSData dataWithBytes:(ref.data.bytes + refDyldInfo->rebase_off)
+                                           length:refDyldInfo->rebase_size];
+        [self logRebaseOpcodes:refRebase name:@"Reference"];
+    } else {
+        NSLog(@"Reference has no rebase data");
+    }
+
+    // Log internal rebase opcodes
+    if (internalDyldInfo && internalDyldInfo->rebase_size > 0) {
+        NSData *internalRebase = [NSData dataWithBytes:(internal.data.bytes + internalDyldInfo->rebase_off)
+                                                length:internalDyldInfo->rebase_size];
+        [self logRebaseOpcodes:internalRebase name:@"Internal"];
+    } else {
+        NSLog(@"Internal has no rebase data");
+    }
+}
+
+// Test to compare bind opcodes
++(void)testCompareBindOpcodes
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+
+    if (!ref) {
+        NSLog(@"Reference framework not available - skipping test");
+        return;
+    }
+
+    const struct dyld_info_command *refDyldInfo =
+        (const struct dyld_info_command*)[ref loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
+    const struct dyld_info_command *internalDyldInfo =
+        (const struct dyld_info_command*)[internal loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
+
+    NSLog(@"=== BIND OPCODE COMPARISON ===");
+
+    if (!refDyldInfo) {
+        NSLog(@"Reference uses LC_DYLD_CHAINED_FIXUPS - cannot directly compare bind opcodes");
+    } else if (refDyldInfo->bind_size > 0) {
+        NSData *refBind = [NSData dataWithBytes:(ref.data.bytes + refDyldInfo->bind_off)
+                                         length:refDyldInfo->bind_size];
+        [self logBindOpcodes:refBind name:@"Reference"];
+    }
+
+    if (internalDyldInfo && internalDyldInfo->bind_size > 0) {
+        NSData *internalBind = [NSData dataWithBytes:(internal.data.bytes + internalDyldInfo->bind_off)
+                                              length:internalDyldInfo->bind_size];
+        [self logBindOpcodes:internalBind name:@"Internal"];
+    }
+}
+
+// Test to examine segment layout and verify rebase targets are valid
++(void)testVerifyRebaseTargetsAreValid
+{
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+
+    const struct dyld_info_command *dyldInfo =
+        (const struct dyld_info_command*)[internal loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
+
+    if (!dyldInfo || dyldInfo->rebase_size == 0) {
+        NSLog(@"No rebase data to verify");
+        return;
+    }
+
+    // Get segment info
+    NSLog(@"=== SEGMENT LAYOUT ===");
+    const struct mach_header_64 *header = (const struct mach_header_64 *)internal.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    NSMutableArray *segments = [NSMutableArray array];
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            NSDictionary *segInfo = @{
+                @"name": [NSString stringWithFormat:@"%.16s", seg->segname],
+                @"vmaddr": @(seg->vmaddr),
+                @"vmsize": @(seg->vmsize),
+                @"fileoff": @(seg->fileoff),
+                @"filesize": @(seg->filesize)
+            };
+            [segments addObject:segInfo];
+            NSLog(@"  Segment %lu '%.16s': vmaddr=0x%llx vmsize=0x%llx fileoff=%lld filesize=%lld",
+                  (unsigned long)segments.count - 1, seg->segname, seg->vmaddr, seg->vmsize, seg->fileoff, seg->filesize);
+        }
+        ptr += cmd->cmdsize;
+    }
+
+    // Parse rebase opcodes and verify each target is within segment bounds
+    NSLog(@"=== REBASE TARGET VERIFICATION ===");
+    NSData *rebaseData = [NSData dataWithBytes:(internal.data.bytes + dyldInfo->rebase_off)
+                                        length:dyldInfo->rebase_size];
+
+    const uint8_t *rptr = rebaseData.bytes;
+    const uint8_t *rend = rptr + rebaseData.length;
+
+    int segmentIndex = 0;
+    long segmentOffset = 0;
+    int type = 0;
+    int validCount = 0;
+    int invalidCount = 0;
+
+    while (rptr < rend) {
+        uint8_t byte = *rptr++;
+        uint8_t opcode = byte & REBASE_OPCODE_MASK;
+        uint8_t imm = byte & REBASE_IMMEDIATE_MASK;
+
+        switch (opcode) {
+            case REBASE_OPCODE_DONE:
+                goto done;
+            case REBASE_OPCODE_SET_TYPE_IMM:
+                type = imm;
+                break;
+            case REBASE_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB:
+                segmentIndex = imm;
+                segmentOffset = 0;
+                {
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *rptr++;
+                        segmentOffset |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                }
+                break;
+            case REBASE_OPCODE_ADD_ADDR_ULEB:
+                {
+                    long delta = 0;
+                    int shift = 0;
+                    uint8_t b;
+                    do {
+                        b = *rptr++;
+                        delta |= ((long)(b & 0x7F)) << shift;
+                        shift += 7;
+                    } while (b & 0x80);
+                    segmentOffset += delta;
+                }
+                break;
+            case REBASE_OPCODE_ADD_ADDR_IMM_SCALED:
+                segmentOffset += imm * 8;
+                break;
+            case REBASE_OPCODE_DO_REBASE_IMM_TIMES:
+                for (int i = 0; i < imm; i++) {
+                    // Verify this rebase target
+                    if (segmentIndex < (int)segments.count) {
+                        NSDictionary *seg = segments[segmentIndex];
+                        long vmaddr = [seg[@"vmaddr"] longValue];
+                        long vmsize = [seg[@"vmsize"] longValue];
+                        long fileoff = [seg[@"fileoff"] longValue];
+                        long filesize = [seg[@"filesize"] longValue];
+
+                        long targetVmaddr = vmaddr + segmentOffset;
+                        long targetFileoff = fileoff + segmentOffset;
+
+                        BOOL vmValid = (segmentOffset >= 0 && segmentOffset < vmsize);
+                        BOOL fileValid = (segmentOffset >= 0 && segmentOffset < filesize);
+
+                        if (vmValid && fileValid) {
+                            // Read the pointer value at this location
+                            if (targetFileoff + 8 <= (long)internal.data.length) {
+                                uint64_t ptrValue = *(uint64_t*)(internal.data.bytes + targetFileoff);
+                                NSLog(@"  VALID: seg=%d offset=0x%lx -> vmaddr=0x%lx fileoff=%ld, ptr_value=0x%llx",
+                                      segmentIndex, segmentOffset, targetVmaddr, targetFileoff, ptrValue);
+                                validCount++;
+                            }
+                        } else {
+                            NSLog(@"  INVALID: seg=%d offset=0x%lx (vmsize=0x%lx filesize=%ld)",
+                                  segmentIndex, segmentOffset, vmsize, filesize);
+                            invalidCount++;
+                        }
+                    } else {
+                        NSLog(@"  INVALID: segment index %d out of range (max=%lu)",
+                              segmentIndex, (unsigned long)segments.count);
+                        invalidCount++;
+                    }
+                    segmentOffset += 8;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+done:
+    NSLog(@"=== SUMMARY ===");
+    NSLog(@"  Valid rebase targets: %d", validCount);
+    NSLog(@"  Invalid rebase targets: %d", invalidCount);
+
+    INTEXPECT(invalidCount, 0, @"All rebase targets should be valid");
+}
+
+// Test to examine what relocations the object file has and compare to what we're patching
++(void)testAnalyzeObjectFileRelocations
+{
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    NSString *source = @"class RelocAnalysisTestClass : NSObject { -answerFortyTwo { 42. } }";
+    STClassDefinition *theClass = [compiler compile:source];
+    [compiler compileClassToMachoO:theClass];
+
+    MPWMachOWriter *objectWriter = (MPWMachOWriter*)compiler.writer;
+
+    NSLog(@"=== OBJECT FILE SYMBOL INFO ===");
+    NSLog(@"Global symbols (%lu):", (unsigned long)objectWriter.globalSymbolOffsets.count);
+    for (NSString *symbol in objectWriter.globalSymbolOffsets) {
+        NSLog(@"  %@: offset=%@", symbol, objectWriter.globalSymbolOffsets[symbol]);
+    }
+
+    NSLog(@"\nExternal symbols (%lu):", (unsigned long)objectWriter.externalSymbolNames.count);
+    for (NSString *symbol in objectWriter.externalSymbolNames) {
+        NSLog(@"  %@", symbol);
+    }
+
+    NSLog(@"\nSymbol address info (%lu):", (unsigned long)objectWriter.symbolAddressInfo.count);
+    for (NSString *symbol in objectWriter.symbolAddressInfo) {
+        NSDictionary *info = objectWriter.symbolAddressInfo[symbol];
+        NSLog(@"  %@: section=%@ offset=%@", symbol, info[@"section"], info[@"offset"]);
+    }
+
+    // Collect all symbols referenced by relocations
+    NSMutableSet *referencedSymbols = [NSMutableSet set];
+    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+        int numRelocs = [section numRelocationEntries];
+        for (int i = 0; i < numRelocs; i++) {
+            NSString *symbol = [section symbolNameForRelocationAtIndex:i];
+            if (symbol) {
+                [referencedSymbols addObject:symbol];
+            }
+        }
+    }
+
+    // Check which referenced symbols are NOT in symbolAddressInfo
+    NSLog(@"\n=== RELOCATION COVERAGE ANALYSIS ===");
+    NSLog(@"Symbols referenced by relocations (%lu total):", (unsigned long)referencedSymbols.count);
+    int foundCount = 0;
+    int missingCount = 0;
+    for (NSString *symbol in referencedSymbols) {
+        NSDictionary *info = objectWriter.symbolAddressInfo[symbol];
+        if (info) {
+            NSLog(@"  FOUND: %@ (section=%@, offset=%@)", symbol, info[@"section"], info[@"offset"]);
+            foundCount++;
+        } else {
+            // Check if it's external
+            if ([objectWriter.externalSymbolNames containsObject:symbol]) {
+                NSLog(@"  EXTERNAL: %@", symbol);
+                foundCount++;
+            } else {
+                NSLog(@"  MISSING: %@ <- BUG: internal symbol not in symbolAddressInfo!", symbol);
+                missingCount++;
+            }
+        }
+    }
+    NSLog(@"\nSummary: %d found, %d missing", foundCount, missingCount);
+
+    // Also analyze section numbering
+    NSLog(@"\n=== SECTION NUMBERING ===");
+    int sectionNum = 1;
+    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+        NSLog(@"  Section %d: %@,%@ (data size=%lu)", sectionNum, section.segname, section.sectname, (unsigned long)[section data].length);
+        sectionNum++;
+    }
+
+    // Check if symbolAddressInfo section numbers match
+    NSLog(@"\n=== SYMBOL -> SECTION MAPPING ===");
+    for (NSString *symbol in objectWriter.symbolAddressInfo) {
+        NSDictionary *info = objectWriter.symbolAddressInfo[symbol];
+        int symbolSection = [info[@"section"] intValue];
+        long symbolOffset = [info[@"offset"] longValue];
+
+        // Find the section with this number
+        sectionNum = 1;
+        NSString *foundSectionName = nil;
+        for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+            if (sectionNum == symbolSection) {
+                foundSectionName = [NSString stringWithFormat:@"%@,%@", section.segname, section.sectname];
+                break;
+            }
+            sectionNum++;
+        }
+
+        if (symbolSection == 0) {
+            // External symbol
+            NSLog(@"  %@: section=0 (external/undefined)", symbol);
+        } else if (foundSectionName) {
+            NSLog(@"  %@: section=%d (%@) offset=%ld", symbol, symbolSection, foundSectionName, symbolOffset);
+        } else {
+            NSLog(@"  %@: section=%d (NOT FOUND!) offset=%ld <- BUG", symbol, symbolSection, symbolOffset);
+        }
+    }
+
+    INTEXPECT(missingCount, 0, @"All internal symbols should have address info");
+
+    NSLog(@"\n=== SECTION RELOCATIONS ===");
+    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+        int numRelocs = [section numRelocationEntries];
+        NSLog(@"\nSection %@,%@: %d relocation entries", section.segname, section.sectname, numRelocs);
+
+        for (int i = 0; i < numRelocs; i++) {
+            NSString *symbol = [section symbolNameForRelocationAtIndex:i];
+            int offset = [section offsetForRelocationAtIndex:i];
+            NSLog(@"  [%d] offset=0x%x symbol=%@", i, offset, symbol ?: @"(none)");
+        }
+
+        // Log section data as hex (first 128 bytes)
+        NSData *sectionData = [section data];
+        NSLog(@"  Section data (%lu bytes, showing first 128):", (unsigned long)sectionData.length);
+        const uint8_t *bytes = sectionData.bytes;
+        NSMutableString *hexLine = [NSMutableString string];
+        for (int i = 0; i < MIN(128, (int)sectionData.length); i++) {
+            if (i % 16 == 0) {
+                if (i > 0) {
+                    NSLog(@"    %04x: %@", i - 16, hexLine);
+                    hexLine = [NSMutableString string];
+                }
+            }
+            [hexLine appendFormat:@"%02x ", bytes[i]];
+        }
+        if (hexLine.length > 0) {
+            int startOffset = ((int)MIN(128, sectionData.length) - 1) / 16 * 16;
+            NSLog(@"    %04x: %@", startOffset, hexLine);
+        }
+    }
+}
+
+// Test to examine pointer values before and after linking
++(void)testComparePointerValuesBeforeAndAfterLinking
+{
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    NSString *source = @"class PointerTestClass : NSObject { -answerFortyTwo { 42. } }";
+    STClassDefinition *theClass = [compiler compile:source];
+    [compiler compileClassToMachoO:theClass];
+
+    MPWMachOWriter *objectWriter = (MPWMachOWriter*)compiler.writer;
+
+    // Get __DATA section data from object file
+    NSLog(@"=== POINTER VALUES IN __DATA SECTIONS ===");
+    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+        if (![section.segname isEqualToString:@"__DATA"]) continue;
+
+        NSData *sectionData = [section data];
+        if (sectionData.length < 8) continue;
+
+        NSLog(@"\n%@,%@ (%lu bytes):", section.segname, section.sectname, (unsigned long)sectionData.length);
+
+        // Log all 8-byte values as potential pointers
+        const uint64_t *ptrs = (const uint64_t*)sectionData.bytes;
+        int numPtrs = (int)(sectionData.length / 8);
+
+        for (int i = 0; i < numPtrs; i++) {
+            uint64_t value = ptrs[i];
+            // Check if this looks like an internal address (small value)
+            NSString *annotation = @"";
+            if (value > 0 && value < 0x10000) {
+                annotation = @" <- looks like internal offset (needs rebase)";
+            } else if (value == 0) {
+                annotation = @" <- null";
+            }
+            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
+        }
+    }
+
+    // Now link and check the values
+    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
+    NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/PointerTestClass.framework/PointerTestClass"
+                                            fromWriter:objectWriter];
+
+    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+
+    NSLog(@"\n=== AFTER LINKING ===");
+
+    // Get __DATA and __DATA_CONST segments
+    struct segment_command_64 *dataConst = [reader segmentNamed:@"__DATA_CONST"];
+    struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
+
+    if (dataConst) {
+        NSLog(@"\n__DATA_CONST (vmaddr=0x%llx fileoff=%lld):", dataConst->vmaddr, dataConst->fileoff);
+        const uint64_t *ptrs = (const uint64_t*)(dylib.bytes + dataConst->fileoff);
+        int numPtrs = MIN(32, (int)(dataConst->filesize / 8));
+
+        for (int i = 0; i < numPtrs; i++) {
+            uint64_t value = ptrs[i];
+            NSString *annotation = @"";
+            if (value > 0 && value < 0x10000) {
+                annotation = @" <- STILL LOOKS LIKE INTERNAL OFFSET (BUG!)";
+            } else if (value >= dataConst->vmaddr && value < dataConst->vmaddr + dataConst->vmsize) {
+                annotation = @" <- points into __DATA_CONST";
+            } else if (data && value >= data->vmaddr && value < data->vmaddr + data->vmsize) {
+                annotation = @" <- points into __DATA";
+            }
+            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
+        }
+    }
+
+    if (data) {
+        NSLog(@"\n__DATA (vmaddr=0x%llx fileoff=%lld):", data->vmaddr, data->fileoff);
+        const uint64_t *ptrs = (const uint64_t*)(dylib.bytes + data->fileoff);
+        int numPtrs = MIN(48, (int)(data->filesize / 8));
+
+        for (int i = 0; i < numPtrs; i++) {
+            uint64_t value = ptrs[i];
+            NSString *annotation = @"";
+            if (value > 0 && value < 0x10000) {
+                annotation = @" <- STILL LOOKS LIKE INTERNAL OFFSET (BUG!)";
+            } else if (dataConst && value >= dataConst->vmaddr && value < dataConst->vmaddr + dataConst->vmsize) {
+                annotation = @" <- points into __DATA_CONST";
+            } else if (value >= data->vmaddr && value < data->vmaddr + data->vmsize) {
+                annotation = @" <- points into __DATA";
+            }
+            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
+        }
+    }
+}
+
+// Helper to find a section and return its file offset
++(long)fileOffsetForSection:(NSString*)sectname inReader:(MPWMachOReader*)reader
+{
+    const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
+    const uint8_t *ptr = (const uint8_t *)(header + 1);
+
+    for (uint32_t i = 0; i < header->ncmds; i++) {
+        const struct load_command *cmd = (const struct load_command *)ptr;
+        if (cmd->cmd == LC_SEGMENT_64) {
+            const struct segment_command_64 *seg = (const struct segment_command_64 *)ptr;
+            const struct section_64 *sections = (const struct section_64 *)(seg + 1);
+            for (uint32_t j = 0; j < seg->nsects; j++) {
+                if (strncmp(sections[j].sectname, [sectname UTF8String], 16) == 0) {
+                    return sections[j].offset;
+                }
+            }
+        }
+        ptr += cmd->cmdsize;
+    }
+    return -1;
+}
+
+// Compare __objc_data between reference dylib and internal dylib
++(void)testCompareObjcDataSections
+{
+    MPWMachOReader *ref = [self readerForReferenceFramework];
+    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+
+    if (!ref) {
+        NSLog(@"Reference framework not available");
+        return;
+    }
+
+    long refOffset = [self fileOffsetForSection:@"__objc_data" inReader:ref];
+    long internalOffset = [self fileOffsetForSection:@"__objc_data" inReader:internal];
+
+    NSLog(@"=== __objc_data COMPARISON ===");
+    NSLog(@"Reference __objc_data at file offset: %ld", refOffset);
+    NSLog(@"Internal __objc_data at file offset: %ld", internalOffset);
+
+    if (refOffset < 0 || internalOffset < 0) {
+        NSLog(@"Could not find __objc_data sections");
+        return;
+    }
+
+    // Read the class structures (80 bytes = 10 pointers for metaclass + class)
+    const uint64_t *refData = (const uint64_t*)(ref.data.bytes + refOffset);
+    const uint64_t *intData = (const uint64_t*)(internal.data.bytes + internalOffset);
+
+    NSLog(@"\n=== METACLASS (first 40 bytes) ===");
+    NSLog(@"         Reference                Internal");
+    for (int i = 0; i < 5; i++) {
+        NSString *match = (refData[i] == intData[i]) ? @"==" : @"!=";
+        NSLog(@"[0x%02x] 0x%016llx  %@  0x%016llx", i*8, refData[i], match, intData[i]);
+    }
+
+    NSLog(@"\n=== CLASS (next 40 bytes) ===");
+    NSLog(@"         Reference                Internal");
+    for (int i = 5; i < 10; i++) {
+        NSString *match = (refData[i] == intData[i]) ? @"==" : @"!=";
+        NSLog(@"[0x%02x] 0x%016llx  %@  0x%016llx", i*8, refData[i], match, intData[i]);
+    }
+}
+
+// Compare: test the reference framework works the same way
++(void)testReferenceFrameworkClassCanBeUsed
+{
+    NSURL *frameworkURL = [[self testBundle] URLForResource:@"ReferenceSTClass" withExtension:@"framework"];
+    EXPECTNOTNIL(frameworkURL, @"should have the reference framework");
+    
+    NSString *dylibPath = [[frameworkURL path] stringByAppendingPathComponent:@"ReferenceSTClass"];
+
+    void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen failed for reference: %s", dlerror());
+        EXPECTTRUE(NO, @"reference dylib should load");
+        return;
+    }
+
+    Class cls = NSClassFromString(@"ReferenceSTClass");
+    EXPECTNOTNIL(cls, @"reference class should be found");
+
+    id instance = [[cls alloc] init];
+    EXPECTNOTNIL(instance, @"reference instance should be created");
+
+            id result = [instance performSelector:@selector(answerFortyTwo)];
+            IDEXPECT(result, @(42), @"reference answerFortyTwo should return 42");
+    dlclose(handle);
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -301,6 +1626,19 @@
         @"testReferenceDylib",
         @"testInternalLinkerDylib",
         @"testCompareReferenceAndInternal",
+        // Diagnostic tests - decode and compare rebase/bind opcodes
+        @"testCompareRebaseOpcodes",
+        @"testCompareBindOpcodes",
+        @"testVerifyRebaseTargetsAreValid",
+        @"testAnalyzeObjectFileRelocations",
+        @"testComparePointerValuesBeforeAndAfterLinking",
+//        @"testExamineObjcClassStructure",
+        // Functional tests - actually load and use the classes
+        @"testReferenceFrameworkClassCanBeUsed",
+//        @"testInternalLinkerClassCanBeLoaded",
+//        @"testInternalLinkerClassCanBeLookedUp",
+//        @"testInternalLinkerClassCanBeInstantiated",
+//        @"testInternalLinkerMethodsWork",
     ];
 }
 

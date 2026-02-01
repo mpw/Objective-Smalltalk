@@ -382,6 +382,19 @@
     return (int)[self.bindOpcodeWriter bindOpcodeData].length;
 }
 
+// Helper to compute 8-byte aligned size
+-(int)alignedRebaseDataSize
+{
+    int size = [self rebaseDataSize];
+    return (size + 7) & ~7;  // Round up to 8-byte boundary
+}
+
+-(int)alignedBindDataSize
+{
+    int size = [self bindDataSize];
+    return (size + 7) & ~7;  // Round up to 8-byte boundary
+}
+
 -(void)writeDyldInfoLoadCommand
 {
     if (![self hasBindData]) return;
@@ -390,17 +403,17 @@
     cmd.cmd = LC_DYLD_INFO_ONLY;
     cmd.cmdsize = sizeof(struct dyld_info_command);
 
-    // Layout in __LINKEDIT: rebase, bind, ..., exports (at end before symtab)
-    // For simplicity, put rebase and bind at the start of __LINKEDIT
+    // Layout in __LINKEDIT: rebase, (padding), bind, (padding), exports, symtab, strtab
+    // Each section must be 8-byte aligned
     uint32_t currentOffset = (uint32_t)self.linkeditOffset;
 
     cmd.rebase_off = currentOffset;
     cmd.rebase_size = [self rebaseDataSize];
-    currentOffset += cmd.rebase_size;
+    currentOffset += [self alignedRebaseDataSize];  // Use aligned size for next offset
 
     cmd.bind_off = currentOffset;
     cmd.bind_size = [self bindDataSize];
-    // currentOffset += cmd.bind_size;
+    currentOffset += [self alignedBindDataSize];  // Use aligned size for next offset
 
     // We don't use weak_bind or lazy_bind
     cmd.weak_bind_off = 0;
@@ -408,8 +421,8 @@
     cmd.lazy_bind_off = 0;
     cmd.lazy_bind_size = 0;
 
-    // Exports trie comes after bind data
-    cmd.export_off = (uint32_t)self.linkeditOffset + [self rebaseDataSize] + [self bindDataSize];
+    // Exports trie comes after bind data (aligned)
+    cmd.export_off = currentOffset;
     cmd.export_size = [self exportTrieSize];
 
     [self appendBytes:&cmd length:sizeof cmd];
@@ -418,8 +431,8 @@
 // Compute offset where exports trie starts in __LINKEDIT
 -(long)exportsTrieOffset
 {
-    // __LINKEDIT layout: rebase, bind, exports, symtab, strtab
-    return self.linkeditOffset + [self rebaseDataSize] + [self bindDataSize];
+    // __LINKEDIT layout: rebase, (padding), bind, (padding), exports, symtab, strtab
+    return self.linkeditOffset + [self alignedRebaseDataSize] + [self alignedBindDataSize];
 }
 
 -(void)writeExportsTrieLoadCommand
@@ -585,17 +598,32 @@
 -(void)writeLinkeditData
 {
     // __LINKEDIT layout: rebase, bind, exports, symtab, strtab
+    // Each section must be 8-byte aligned
 
     // Write rebase data (if any)
     if (self.bindOpcodeWriter) {
         NSData *rebaseData = [self.bindOpcodeWriter rebaseOpcodeData];
         [self appendBytes:rebaseData.bytes length:rebaseData.length];
+
+        // Pad to 8-byte alignment before bind data
+        long rebasePadding = (8 - (rebaseData.length % 8)) % 8;
+        if (rebasePadding > 0) {
+            char zeros[8] = {0};
+            [self appendBytes:zeros length:rebasePadding];
+        }
     }
 
     // Write bind data (if any)
     if (self.bindOpcodeWriter) {
         NSData *bindData = [self.bindOpcodeWriter bindOpcodeData];
         [self appendBytes:bindData.bytes length:bindData.length];
+
+        // Pad to 8-byte alignment before exports trie
+        long bindPadding = (8 - (bindData.length % 8)) % 8;
+        if (bindPadding > 0) {
+            char zeros[8] = {0};
+            [self appendBytes:zeros length:bindPadding];
+        }
     }
 
     // Exports trie
@@ -724,8 +752,8 @@
 
     self.linkeditOffset = currentOffset;
 
-    // __LINKEDIT size includes: rebase, bind, exports, symtab, strtab
-    long rawLinkeditSize = [self rebaseDataSize] + [self bindDataSize] + [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
+    // __LINKEDIT size includes: rebase (aligned), bind (aligned), exports, symtab, strtab
+    long rawLinkeditSize = [self alignedRebaseDataSize] + [self alignedBindDataSize] + [self exportTrieSize] + [self symbolTableSize] + [self.stringTableWriter length];
     // Pad linkedit size to 8-byte alignment (required for mmap)
     self.linkeditSize = (rawLinkeditSize + 7) & ~7;
 
