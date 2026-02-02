@@ -6,6 +6,7 @@
 //
 
 #import "MPWMachOReader.h"
+#import "MPWMachOSegment.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
 #import <mach-o/reloc.h>
@@ -20,6 +21,7 @@
 
 @property (nonatomic, strong) NSData *data;
 @property (nonatomic, strong) NSMutableDictionary* sections;
+@property (nonatomic, strong) NSArray<MPWMachOSegment*> *segments;
 
 @end
 
@@ -32,6 +34,8 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
         self=[super init];
         self.data = machodata;
         self.sections = [NSMutableDictionary dictionary];
+
+        [self parseSegments];
         return self;
     } else {
         return nil;
@@ -104,18 +108,81 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return nil;
 }
 
+-(void)parseSegments
+{
+    NSLog(@"parseSegments");
+    NSMutableArray *segments = [NSMutableArray array];
+    const struct load_command *cur = [self.data bytes] + sizeof(struct mach_header_64);
+    NSLog(@"parseSegments with %d loadCommands",[self numLoadCommands]);
+    int maxLoadCommands = [self numLoadCommands];
+    maxLoadCommands = MIN( maxLoadCommands, 20);
+    for (int i = 0; i < maxLoadCommands; i++) {
+        NSLog(@"load command[%d]=%d",i,cur->cmd);
+        if (cur->cmd == LC_SEGMENT_64) {
+            NSLog(@"got a segment");
+            struct segment_command_64 *segCmd = (struct segment_command_64*)cur;
+            
+            // Parse sections within this segment
+            NSMutableArray *sectionArray = [NSMutableArray array];
+            struct section_64 *sectionHeaders = (struct section_64*)((char*)cur + sizeof(struct segment_command_64));
+            NSLog(@" %d sections for segment",segCmd->nsects);
+            for (int j = 0; j < segCmd->nsects; j++) {
+                NSLog(@" sectopn[%d]",j);
+                struct section_64 *sectionHeader = &sectionHeaders[j];
+                MPWMachOSection *section = [[[MPWMachOSection alloc] initWithSectionHeader:sectionHeader inMacho:self] autorelease];
+                [sectionArray addObject:section];
+                
+                // Add to sections dictionary by name for backward compatibility
+                NSString *sectionKey = [NSString stringWithFormat:@"%s,%s", sectionHeader->segname, sectionHeader->sectname];
+                self.sections[sectionKey] = section;
+            }
+            
+            MPWMachOSegment *segment = [[[MPWMachOSegment alloc] initWithSegmentCommand:segCmd 
+                                                                               data:self.data 
+                                                                             sections:sectionArray] autorelease];
+            [segments addObject:segment];
+        }
+        cur = ((void*)cur) + cur->cmdsize;
+    }
+    
+    self.segments = [segments copy];
+}
+
 -(struct segment_command_64*)segment
 {
     return (struct segment_command_64*)[self loadCommandOfType:LC_SEGMENT_64];
 }
 
+-(MPWMachOSegment*)segmentObjectNamed:(NSString*)segmentName
+{
+    for (MPWMachOSegment *segment in self.segments) {
+        if ([segment.name isEqualToString:segmentName]) {
+            return segment;
+        }
+    }
+    return nil;
+}
+
+-(NSArray<MPWMachOSegment*>*)allSegments
+{
+    return self.segments;
+}
+
 -(long)segmentOffset
 {
+    // For backward compatibility, return the first segment's offset
+    if (self.segments.count > 0) {
+        return self.segments[0].fileoff;
+    }
     return [self segment]->fileoff;
 }
 
 -(long)segmentSize
 {
+    // For backward compatibility, return the first segment's size
+    if (self.segments.count > 0) {
+        return self.segments[0].filesize;
+    }
     return [self segment]->filesize;
 }
 
@@ -448,6 +515,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 +(void)testCanIdentifyHeader
 {
     MPWMachOReader *reader=[self readerForAdd];
+    NSLog(@"got reader");
     EXPECTTRUE([reader isHeaderValid], @"got the right header");
     NSData *notamacho = [@"Hello World!" asData];
     reader=[[[self alloc] initWithData:notamacho] autorelease];

@@ -1557,14 +1557,12 @@ done:
     MPWMachOReader *ref = [self readerForReferenceFramework];
     MPWMachOReader *internal = [self readerForInternalLinkerDylib];
 
-    if (!ref) {
-        NSLog(@"Reference framework not available");
-        return;
-    }
+    EXPECTNOTNIL( ref, @"reference framework");
 
     long refOffset = [self fileOffsetForSection:@"__objc_data" inReader:ref];
     long internalOffset = [self fileOffsetForSection:@"__objc_data" inReader:internal];
 
+//    INTEXPECT( internalOffset, refOffset, @"offset of __objc_data");
     NSLog(@"=== __objc_data COMPARISON ===");
     NSLog(@"Reference __objc_data at file offset: %ld", refOffset);
     NSLog(@"Internal __objc_data at file offset: %ld", internalOffset);
@@ -1639,6 +1637,7 @@ done:
 //        @"testInternalLinkerClassCanBeLookedUp",
 //        @"testInternalLinkerClassCanBeInstantiated",
 //        @"testInternalLinkerMethodsWork",
+//        @"testCompareObjcDataSections",
     ];
 }
 

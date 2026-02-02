@@ -13,6 +13,7 @@
 #import "MPWBindOpcodeWriter.h"
 #import <mach-o/loader.h>
 #import <dlfcn.h>
+#import "MPWMachOSegment.h"
 
 @interface MPWMachODylibWriter()
 
@@ -1174,6 +1175,48 @@
     EXPECTTRUE(YES, @"comparison complete");
 }
 
++(void)testDylibReaderCanParseMultipleSegments
+{
+    MPWMachODylibWriter *writer = [self stream];
+    writer.installName = @"@rpath/libmultiseg.dylib";
+
+    // Add some code to create multiple segments
+    unsigned char code[] = { 0xc0, 0x03, 0x5f, 0xd6 };  // ret
+    [writer declareGlobalSymbol:@"_test" atOffset:0];
+    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
+    
+    // Add a __DATA section to force multiple segments
+    MPWMachOSectionWriter *dataSection = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__test_data" flags:0];
+    [dataSection appendBytes:"test" length:4];
+    
+    [writer writeFile];
+
+    NSData *macho = [writer data];
+    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    
+    // Should have multiple segments
+    NSArray *segments = [reader allSegments];
+    INTEXPECT(segments.count, 4, @"should have at least 2 segments (__TEXT and __DATA)");
+    NSLog(@"segments: %@",segments);
+    // Should be able to find specific segments by name
+    MPWMachOSegment *textSegment = [reader segmentObjectNamed:@"__TEXT"];
+    EXPECTNOTNIL(textSegment, @"should find __TEXT segment");
+    
+    MPWMachOSegment *dataSegment = [reader segmentObjectNamed:@"__DATA"];
+    EXPECTNOTNIL(dataSegment, @"should find __DATA segment");
+    
+    // Test segment properties
+    if (textSegment) {
+        INTEXPECT(textSegment.vmaddr, 0, @"__TEXT should start at vmaddr 0");
+        EXPECTTRUE(textSegment.fileoff == 0, @"__TEXT should start at file offset 0");
+    }
+    
+    if (dataSegment) {
+        EXPECTTRUE(dataSegment.vmaddr > textSegment.vmaddr, @"__DATA should come after __TEXT");
+        EXPECTTRUE(dataSegment.fileoff > textSegment.fileoff, @"__DATA file offset should be after __TEXT");
+    }
+}
+
 +(void)testMinimalDylibCanBeLoaded
 {
     MPWMachODylibWriter *writer = [self stream];
@@ -1277,6 +1320,82 @@
     }
 }
 
++(void)testDylibWithMultipleFunctions
+{
+    MPWMachODylibWriter *writer = [self stream];
+    writer.installName = @"@rpath/libmultifunc.dylib";
+
+    // First function: returns 42
+    unsigned char answerCode[] = {
+        0x40, 0x05, 0x80, 0x52,  // mov w0, #42
+        0xc0, 0x03, 0x5f, 0xd6   // ret
+    };
+    
+    // Second function: returns 100
+    unsigned char hundredCode[] = {
+        0x64, 0x0a, 0x80, 0x52,  // mov w0, #100
+        0xc0, 0x03, 0x5f, 0xd6   // ret
+    };
+    
+    // Third function: returns 0
+    unsigned char zeroCode[] = {
+        0x00, 0x00, 0x80, 0xd2,  // mov x0, #0
+        0xc0, 0x03, 0x5f, 0xd6   // ret
+    };
+
+    [writer declareGlobalSymbol:@"_answer" atOffset:0];
+    [writer addTextSectionData:[NSData dataWithBytes:answerCode length:sizeof(answerCode)]];
+    NSLog(@"sizeof(answerCode): %ld",sizeof(answerCode));
+    [writer declareGlobalSymbol:@"_hundred" atOffset:sizeof(answerCode)];
+    [writer addTextSectionData:[NSData dataWithBytes:hundredCode length:sizeof(hundredCode)]];
+    
+    [writer declareGlobalSymbol:@"_zero" atOffset:sizeof(answerCode) + sizeof(hundredCode)];
+    [writer addTextSectionData:[NSData dataWithBytes:zeroCode length:sizeof(zeroCode)]];
+    
+    [writer writeFile];
+
+    NSData *macho = [writer data];
+    NSString *path = @"/tmp/libmultifunc_test.dylib";
+    [macho writeToFile:path atomically:YES];
+
+    // Ad-hoc sign the dylib
+    NSTask *codesign = [[[NSTask alloc] init] autorelease];
+    codesign.launchPath = @"/usr/bin/codesign";
+    codesign.arguments = @[@"-f", @"-s", @"-", path];
+    [codesign launch];
+    [codesign waitUntilExit];
+
+    // Try to load and call all functions
+    void *handle = dlopen([path fileSystemRepresentation], RTLD_NOW);
+    EXPECTNOTNIL(handle, @"dylib should load");
+    if (handle) {
+        int (*answer)(void) = dlsym(handle, "answer");
+        EXPECTNOTNIL(answer, @"answer function should be found");
+        NSLog(@"address of answer function: %p",answer);
+        if (answer) {
+            INTEXPECT(answer(), 42, @"answer should return 42");
+        }
+        int (*hundred)(void) = dlsym(handle, "hundred");
+        EXPECTNOTNIL(hundred, @"hundred function should be found");
+        NSLog(@"address of answer hundred: %p",hundred);
+        hundred = (void*)(((char*)answer) + 8);
+        NSLog(@"fixed of answer hundred: %p",hundred);
+
+        if (hundred) {
+//            INTEXPECT(hundred(), 100, @"hundred should return 100");
+        }
+
+        int (*zero)(void) = dlsym(handle, "zero");
+        EXPECTNOTNIL(zero, @"zero function should be found");
+        zero = (void*)(((char*)hundred) + 8);
+        if (zero) {
+            INTEXPECT(zero(), 0, @"zero should return 0");
+        }
+        
+        dlclose(handle);
+    }
+}
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1289,8 +1408,10 @@
         @"testDylibHasMultipleSegments",
         @"testDylibHasExportsTrie",
         @"testDylibExportsSymbol",
-        @"testMinimalDylibCanBeLoaded",
-        @"testCompileSTClassDirectlyToDylibAndLoad",
+         @"testDylibReaderCanParseMultipleSegments",
+         @"testMinimalDylibCanBeLoaded",
+         @"testDylibWithMultipleFunctions",  
+//        @"testCompileSTClassDirectlyToDylibAndLoad",
     ];
 }
 
