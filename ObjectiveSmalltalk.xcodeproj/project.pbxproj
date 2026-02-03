@@ -23,6 +23,9 @@
 		1F05B5412B441A00004C7772 /* STSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F05B53D2B441A00004C7772 /* STSystem.m */; };
 		1F084A1516DCE6A200ED2517 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F084A1316DCE6A200ED2517 /* InfoPlist.strings */; };
 		1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F084A2316DCFB3300ED2517 /* llvmincludes.h */; };
+		1F08D3022F321279008AE661 /* MPWChainedFixupWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F08D3012F321279008AE661 /* MPWChainedFixupWriter.m */; };
+		1F08D3032F321279008AE661 /* MPWChainedFixupWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F08D3002F321279008AE661 /* MPWChainedFixupWriter.h */; };
+		1F08D3052F323E8E008AE661 /* DetailedDylibCharacterizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F08D3042F323E8E008AE661 /* DetailedDylibCharacterizationTests.m */; };
 		1F096D322B4941B70072DD85 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F635619179EB68900D2DE58 /* Foundation.framework */; };
 		1F096D332B4942050072DD85 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1F096D382B4943030072DD85 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -1071,6 +1074,9 @@
 		1F084A1716DCE6A200ED2517 /* ObjSTNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjSTNative.h; sourceTree = "<group>"; };
 		1F084A2316DCFB3300ED2517 /* llvmincludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llvmincludes.h; sourceTree = "<group>"; };
 		1F084A2516DEB04F00ED2517 /* libLLVMJIT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMJIT.a; path = "../../Imports/built-llvm/build/Release+Asserts/lib/libLLVMJIT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F08D3002F321279008AE661 /* MPWChainedFixupWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWChainedFixupWriter.h; sourceTree = "<group>"; };
+		1F08D3012F321279008AE661 /* MPWChainedFixupWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWChainedFixupWriter.m; sourceTree = "<group>"; };
+		1F08D3042F323E8E008AE661 /* DetailedDylibCharacterizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailedDylibCharacterizationTests.m; sourceTree = "<group>"; };
 		1F096D452B4966CC0072DD85 /* sails_command */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sails_command; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F096D472B4966CD0072DD85 /* sails_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sails_main.m; sourceTree = "<group>"; };
 		1F096D562B49690D0072DD85 /* sl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sl.entitlements; sourceTree = "<group>"; };
@@ -2011,6 +2017,7 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */,
 				1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */,
+				1F08D3042F323E8E008AE661 /* DetailedDylibCharacterizationTests.m */,
 				1FF860AF2F315BA400A99A0C /* MPWMachOSegment.h */,
 				1FF860B02F315BA400A99A0C /* MPWMachOSegment.m */,
 				1FF860A12F2E320B00A99A0C /* MPWMachOLinkerCharacterizationTests.m */,
@@ -2022,6 +2029,8 @@
 				1F6060132A24803800783E17 /* MPWELFReader.h */,
 				1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */,
 				1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */,
+				1F08D3002F321279008AE661 /* MPWChainedFixupWriter.h */,
+				1F08D3012F321279008AE661 /* MPWChainedFixupWriter.m */,
 				1F6060142A24803800783E17 /* MPWELFReader.m */,
 				1FE5D6DE2C3080890018B09C /* MPWELFTextSection.h */,
 				1FE5D6DF2C3080890018B09C /* MPWELFTextSection.m */,
@@ -3057,6 +3066,7 @@
 				1F3466F028CB10F7003257CB /* MPWMachOReader.h in Headers */,
 				1F032E372BEF9A140000183E /* STNativeCompilerTestsMachO.h in Headers */,
 				1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */,
+				1F08D3032F321279008AE661 /* MPWChainedFixupWriter.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* STObjectCodeGeneratorARM.h in Headers */,
 				1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
@@ -4621,6 +4631,7 @@
 				1FDDE95A28F98CE4002A4AA4 /* MPWMachOSectionWriter.m in Sources */,
 				1F1380012BE66C0300CD023C /* MPWELFSymbolTable.m in Sources */,
 				1F9AE9E428EC696200671748 /* MPWMachOSection.m in Sources */,
+				1F08D3052F323E8E008AE661 /* DetailedDylibCharacterizationTests.m in Sources */,
 				1F93FA5E2BE785FE0046C7C3 /* MPWELFWriter.m in Sources */,
 				1FA5DF7C2BE90F2E001E5231 /* MPWELFSectionWriter.m in Sources */,
 				1FF8609A2F2CD91A00A99A0C /* MPWMachOLinker.m in Sources */,
@@ -4642,6 +4653,7 @@
 				1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */,
 				1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
+				1F08D3022F321279008AE661 /* MPWChainedFixupWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

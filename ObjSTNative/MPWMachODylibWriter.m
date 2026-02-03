@@ -7,11 +7,14 @@
 
 #import "MPWMachODylibWriter.h"
 #import "MPWBindOpcodeWriter.h"
+#import "MPWChainedFixupWriter.h"
 #import "MPWExportsTrieWriter.h"
+#import "MPWMachOSection.h"
 #import "MPWMachOSectionWriter.h"
 #import "MPWMachOSegment.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWStringTableWriter.h"
+#import "STJittableData.h"
 #import <dlfcn.h>
 #import <mach-o/loader.h>
 
@@ -24,7 +27,15 @@
 @property(nonatomic, assign) long dataSegmentSize;
 @property(nonatomic, assign) long linkeditOffset;
 @property(nonatomic, assign) long linkeditSize;
+@property(nonatomic, strong) MPWChainedFixupWriter *chainedFixupWriter;
+@property(nonatomic, strong) NSMutableDictionary *stubOffsets;
+@property(nonatomic, strong) NSMutableDictionary *gotOffsets;
+@property(nonatomic, strong) NSMutableArray *frameworks;
 
+@end
+
+@interface MPWMachODylibWriter ()
+- (void)generateStringTable;
 @end
 
 @implementation MPWMachODylibWriter
@@ -36,6 +47,12 @@
     self.cputype = CPU_TYPE_ARM64;
     self.currentVersion = 0x10000;       // 1.0.0
     self.compatibilityVersion = 0x10000; // 1.0.0
+    self.chainedFixupWriter =
+        [[[MPWChainedFixupWriter alloc] init] autorelease];
+    self.stubOffsets = [NSMutableDictionary dictionary];
+    self.gotOffsets = [NSMutableDictionary dictionary];
+    self.frameworks =
+        [NSMutableArray arrayWithObject:@"/usr/lib/libSystem.B.dylib"];
   }
   return self;
 }
@@ -64,14 +81,15 @@
 
 // Sections that belong in __DATA_CONST (read-only after fixups)
 - (BOOL)sectionBelongsInDataConst:(NSString *)sectname {
-  // These sections contain pointers that need fixup but are read-only after
-  static NSSet *dataConstSections = nil;
-  if (!dataConstSections) {
-    dataConstSections =
-        [[NSSet setWithObjects:@"__got", @"__objc_classlist",
-                               @"__objc_imageinfo", @"__cfstring", nil] retain];
-  }
-  return [dataConstSections containsObject:sectname];
+  return [sectname isEqualToString:@"__got"] ||
+         [sectname isEqualToString:@"__objc_classlist"] ||
+         [sectname isEqualToString:@"__objc_imageinfo"] ||
+         [sectname isEqualToString:@"__cfstring"] ||
+         [sectname isEqualToString:@"__objc_protolist"] ||
+         [sectname isEqualToString:@"__objc_selrefs"] ||
+         [sectname isEqualToString:@"__objc_protorefs"] ||
+         [sectname isEqualToString:@"__objc_classrefs"] ||
+         [sectname isEqualToString:@"__objc_superrefs"];
 }
 
 // Get only __DATA_CONST segment section writers
@@ -108,6 +126,201 @@
 
 - (BOOL)hasDataSegment {
   return [self dataSectionWriters].count > 0;
+}
+
+- (BOOL)hasChainedFixups {
+  return self.stubOffsets.count > 0 || self.gotOffsets.count > 0;
+}
+
+- (MPWMachOSectionWriter *)stubSectionWriter {
+  return [self
+      addSectionWriterWithSegName:@"__TEXT"
+                         sectName:@"__stubs"
+                            flags:S_SYMBOL_STUBS | S_ATTR_SOME_INSTRUCTIONS |
+                                  S_ATTR_PURE_INSTRUCTIONS];
+}
+
+- (MPWMachOSectionWriter *)gotSectionWriter {
+  // Use __DATA so it gets grouped into __DATA_CONST by
+  // sectionBelongsInDataConst
+  MPWMachOSectionWriter *writer =
+      [self addSectionWriterWithSegName:@"__DATA"
+                               sectName:@"__got"
+                                  flags:S_NON_LAZY_SYMBOL_POINTERS];
+  writer.alignment = 3; // 8-byte alignment
+  return writer;
+}
+
+- (int)declareExternalSymbol:(NSString *)symbol {
+  if (!self.stubOffsets[symbol]) {
+    MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
+//    stubWriter.reserved2 = 12; // stub size   FIXME:  this used to do something, but is no deleted
+    self.stubOffsets[symbol] = @(stubWriter.length);
+
+    // Initial placeholder for stub (3 instructions, 12 bytes)
+    uint32_t stubCode[3] = {0xd503201f, 0xd503201f, 0xd503201f}; // 3x nop
+    [stubWriter appendBytes:stubCode length:sizeof(stubCode)];
+
+    MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+    self.gotOffsets[symbol] = @(gotWriter.length);
+    uint64_t dummy = 0;
+    [gotWriter appendBytes:&dummy length:sizeof(dummy)];
+  }
+  return [super declareExternalSymbol:symbol];
+}
+
+- (void)patchStubs {
+  MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
+  MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+  if (!stubWriter.isActive || !gotWriter.isActive)
+    return;
+  long gotAddr = gotWriter.address;
+  long stubAddr = stubWriter.address;
+  NSMutableData *stubData = (NSMutableData *)stubWriter.target;
+
+  for (NSString *symbol in self.stubOffsets.allKeys) {
+    long curStubOffset = [self.stubOffsets[symbol] longValue];
+    long curStubAddr = stubAddr + curStubOffset;
+    long curGotAddr = gotAddr + [self.gotOffsets[symbol] longValue];
+
+    long pcPage = curStubAddr & ~0xFFF;
+    long gotPage = curGotAddr & ~0xFFF;
+    long pageDiff = (gotPage - pcPage) >> 12;
+
+    uint32_t adrp = 0x90000010; // adrp x16, 0
+    adrp |= (uint32_t)((pageDiff & 0x3) << 29);
+    adrp |= (uint32_t)((pageDiff & 0x1FFFFC) << 3);
+
+    uint32_t ldr = 0xf9400210; // ldr x16, [x16, #0]
+    ldr |= (uint32_t)(((curGotAddr & 0xFFF) >> 3) << 10);
+
+    uint32_t br = 0xd61f0200; // br x16
+
+    uint32_t code[3] = {adrp, ldr, br};
+    [stubData replaceBytesInRange:NSMakeRange(curStubOffset, sizeof(code))
+                        withBytes:code];
+  }
+}
+
+- (void)applyRelocations {
+  for (MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+    NSMutableData *sectionData = (NSMutableData *)sectionWriter.target;
+    for (int i = 0; i < sectionWriter.numRelocationEntries; i++) {
+      NSString *symbolName = [sectionWriter symbolNameForRelocationAtIndex:i];
+      int offset = [sectionWriter offsetForRelocationAtIndex:i];
+
+      long targetAddr = 0;
+      if (self.stubOffsets[symbolName]) {
+        targetAddr = self.stubSectionWriter.address +
+                     [self.stubOffsets[symbolName] longValue];
+      } else {
+        NSDictionary *info = self.symbolAddressInfo[symbolName];
+        if (info) {
+          targetAddr =
+              self.textSectionWriter.address + [info[@"offset"] longValue];
+        }
+      }
+
+      if (targetAddr != 0) {
+        long pcAddr = sectionWriter.address + offset;
+        long delta = (targetAddr - pcAddr);
+        uint32_t instr;
+        [sectionData getBytes:&instr range:NSMakeRange(offset, 4)];
+        instr &= 0xfc000000;
+        instr |= (uint32_t)((delta >> 2) & 0x03ffffff);
+        [sectionData replaceBytesInRange:NSMakeRange(offset, 4)
+                               withBytes:&instr];
+      }
+    }
+  }
+}
+
+- (int)ordinalForSymbol:(NSString *)symbol {
+  int ordinal = 1; // Default to libSystem
+  if ([symbol containsString:@"MPW"]) {
+    for (int i = 0; i < self.frameworks.count; i++) {
+      if ([self.frameworks[i] containsString:@"MPWFoundation"]) {
+        ordinal = i + 1;
+        break;
+      }
+    }
+  }
+  NSLog(@"Ordinal for symbol %@ is %d (frameworks: %@)", symbol, ordinal,
+        self.frameworks);
+  return ordinal;
+}
+
+- (void)buildChainedFixups {
+  MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+  if (!gotWriter.isActive)
+    return;
+
+  // 1. Register binds in ChainedFixupWriter
+  for (NSString *symbol in self.gotOffsets.allKeys) {
+    long offset = [self.gotOffsets[symbol] longValue];
+    int ordinal = [self ordinalForSymbol:symbol];
+    int importOrdinal = [self.chainedFixupWriter addImport:symbol
+                                                 fromDylib:ordinal];
+    long dataConstVmaddr = self.textSegmentSize;
+    long segmentOffset = gotWriter.address - dataConstVmaddr;
+    [self.chainedFixupWriter addBindAtSegment:1 // __DATA_CONST
+                                       offset:segmentOffset + offset
+                                      ordinal:importOrdinal];
+  }
+
+  // 2. Generate metadata to compute 'next' pointers
+  [self.chainedFixupWriter fixupDataWithSegmentCount:[self segmentCount]];
+
+  // 3. Patch GOT slots with bind entry bits
+  NSMutableData *gotData = (NSMutableData *)gotWriter.target;
+  NSArray *segFixups = [self.chainedFixupWriter fixupsForSegment:1];
+  long dataConstVmaddr = self.textSegmentSize;
+  long gotSegStart = gotWriter.address - dataConstVmaddr;
+
+  for (id f in segFixups) {
+    uint64_t bindBits = [self.chainedFixupWriter
+        bind64Bits:[[f valueForKey:@"ordinal"] intValue]
+              next:[[f valueForKey:@"next"] intValue]];
+    long f_seg_offset = [[f valueForKey:@"offset"] longValue];
+    long f_section_offset = f_seg_offset - gotSegStart;
+    [gotData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
+                       withBytes:&bindBits];
+  }
+}
+
+- (int)segmentCount {
+  int count = 1; // __TEXT
+  if ([self hasDataConstSegment])
+    count++;
+  if ([self hasDataSegment])
+    count++;
+  count++; // __LINKEDIT
+  return count;
+}
+
+- (int)chainedFixupsSize {
+  return (int)[self.chainedFixupWriter
+             fixupDataWithSegmentCount:[self segmentCount]]
+      .length;
+}
+
+- (int)alignedChainedFixupsSize {
+  return ([self chainedFixupsSize] + 7) & ~7;
+}
+
+- (void)writeChainedFixupsLoadCommand {
+  struct linkedit_data_command cmd = {};
+  cmd.cmd = LC_DYLD_CHAINED_FIXUPS;
+  cmd.cmdsize = sizeof(struct linkedit_data_command);
+
+  uint32_t currentOffset = (uint32_t)self.linkeditOffset;
+  currentOffset += [self alignedRebaseDataSize];
+  currentOffset += [self alignedBindDataSize];
+  currentOffset += [self exportTrieSize];
+
+  cmd.dataoff = currentOffset;
+  cmd.datasize = [self chainedFixupsSize];
+  [self appendBytes:&cmd length:sizeof cmd];
 }
 
 #pragma mark - Header
@@ -215,6 +428,7 @@
   [self appendBytes:&segment length:sizeof segment];
 
   for (MPWMachOSectionWriter *writer in writers) {
+//    writer.writeRelocationInfo = NO;          // FIXME: this used to be here
     [writer writeSectionLoadCommandOnWriter:self];
   }
 
@@ -224,82 +438,43 @@
 
 - (void)writeDataConstSegmentLoadCommand {
   NSArray *writers = [self dataConstSectionWriters];
-  if (writers.count == 0) {
+  if (writers.count == 0)
     return;
-  }
-
-  // Compute section offsets and addresses for __DATA_CONST sections
-  long sectionOffset = 0;
-  for (MPWMachOSectionWriter *writer in writers) {
-    writer.offset = self.dataConstSegmentOffset + sectionOffset;
-    writer.address =
-        self.textSegmentSize + sectionOffset; // vmaddr continues after __TEXT
-    sectionOffset += writer.sectionDataSize;
-  }
-
-  // Compute vmsize (page-aligned)
-  long dataConstVmsize = (self.dataConstSegmentSize + 0x3FFF) & ~0x3FFF;
-  if (dataConstVmsize == 0) {
-    dataConstVmsize = 0x4000;
-  }
 
   struct segment_command_64 segment = {};
   segment.cmd = LC_SEGMENT_64;
   segment.cmdsize = [self dataConstSegmentCommandSize];
   strncpy(segment.segname, "__DATA_CONST", 16);
-  segment.vmaddr = self.textSegmentSize; // Right after __TEXT
-  segment.vmsize = dataConstVmsize;
+  segment.vmaddr = self.dataConstSegmentOffset;
+  segment.vmsize = self.dataConstSegmentSize;
+  segment.fileoff = self.dataConstSegmentOffset;
   segment.fileoff = self.dataConstSegmentOffset;
   segment.filesize = self.dataConstSegmentSize;
   segment.maxprot = VM_PROT_READ | VM_PROT_WRITE;
   segment.initprot = VM_PROT_READ | VM_PROT_WRITE;
   segment.nsects = (uint32_t)writers.count;
-  segment.flags = SG_READ_ONLY; // Mark as read-only after fixups
+  segment.flags = 0x10; // SG_READ_ONLY
 
   [self appendBytes:&segment length:sizeof segment];
 
   for (MPWMachOSectionWriter *writer in writers) {
-    // Temporarily change segname for section header
-    NSString *originalSegname = writer.segname;
-    writer.segname = @"__DATA_CONST";
+//    writer.writeRelocationInfo = NO;   // FIXME:  used to be here.
     [writer writeSectionLoadCommandOnWriter:self];
-    writer.segname = originalSegname;
   }
 }
 
 - (void)writeDataSegmentLoadCommand {
   NSArray *writers = [self dataSectionWriters];
-  if (writers.count == 0) {
+  if (writers.count == 0)
     return;
-  }
-
-  // Compute __DATA vmaddr (after __TEXT and __DATA_CONST if present)
-  long dataVmaddr = self.textSegmentSize;
-  if ([self hasDataConstSegment]) {
-    long dataConstVmsize = (self.dataConstSegmentSize + 0x3FFF) & ~0x3FFF;
-    if (dataConstVmsize == 0)
-      dataConstVmsize = 0x4000;
-    dataVmaddr += dataConstVmsize;
-  }
-
-  // Compute section offsets and addresses for __DATA sections
-  long sectionOffset = 0;
-  for (MPWMachOSectionWriter *writer in writers) {
-    writer.offset = self.dataSegmentOffset + sectionOffset;
-    writer.address = dataVmaddr + sectionOffset;
-    sectionOffset += writer.sectionDataSize;
-  }
 
   struct segment_command_64 segment = {};
   segment.cmd = LC_SEGMENT_64;
   segment.cmdsize = [self dataSegmentCommandSize];
   strncpy(segment.segname, "__DATA", 16);
-  segment.vmaddr = dataVmaddr; // After __TEXT and __DATA_CONST
-  // VM size page-aligned (16KB minimum)
-  segment.vmsize = (self.dataSegmentSize + 0x3FFF) & ~0x3FFF;
-  if (segment.vmsize == 0) {
-    segment.vmsize = 0x4000;
-  }
+  segment.vmaddr = self.dataSegmentOffset;
+  segment.vmsize = self.dataSegmentSize;
+  segment.fileoff = self.dataSegmentOffset;
   segment.fileoff = self.dataSegmentOffset;
   segment.filesize = self.dataSegmentSize;
   segment.maxprot = VM_PROT_READ | VM_PROT_WRITE;
@@ -310,6 +485,7 @@
   [self appendBytes:&segment length:sizeof segment];
 
   for (MPWMachOSectionWriter *writer in writers) {
+//    writer.writeRelocationInfo = NO;   // FIXME:  this used to be here.
     [writer writeSectionLoadCommandOnWriter:self];
   }
 }
@@ -442,7 +618,12 @@
   symtab.cmd = LC_SYMTAB;
   symtab.cmdsize = sizeof symtab;
   symtab.nsyms = [self numSymbols];
-  symtab.symoff = (uint32_t)([self exportsTrieOffset] + [self exportTrieSize]);
+  uint32_t offset =
+      (uint32_t)([self exportsTrieOffset] + [self exportTrieSize]);
+  if ([self hasChainedFixups]) {
+    offset += [self alignedChainedFixupsSize];
+  }
+  symtab.symoff = offset;
   symtab.stroff = (uint32_t)(symtab.symoff + [self symbolTableSize]);
   symtab.strsize = (uint32_t)[self.stringTableWriter length];
   [self appendBytes:&symtab length:sizeof symtab];
@@ -621,6 +802,20 @@
     }
   }
 
+  // Chained fixups
+  if ([self hasChainedFixups]) {
+    NSData *fixupData =
+        [self.chainedFixupWriter fixupDataWithSegmentCount:[self segmentCount]];
+    [self appendBytes:fixupData.bytes length:fixupData.length];
+
+    // Pad to maintain alignment
+    long fixupPadding = [self alignedChainedFixupsSize] - fixupData.length;
+    if (fixupPadding > 0) {
+      char zeros[8] = {0};
+      [self appendBytes:zeros length:fixupPadding];
+    }
+  }
+
   // Symbol table (using writeSymbolTableData to avoid offset assertion)
   [self writeSymbolTableData];
 
@@ -660,18 +855,30 @@
   BOOL hasDataConst = [self hasDataConstSegment];
   BOOL hasData = [self hasDataSegment];
   BOOL hasBind = [self hasBindData];
+  BOOL hasChained = [self hasChainedFixups];
+
+  // Chained fixups command size
+  int chainedFixupsCmdSize =
+      hasChained ? sizeof(struct linkedit_data_command) : 0;
 
   // If we have bind data, use LC_DYLD_INFO_ONLY instead of LC_DYLD_EXPORTS_TRIE
   int dyldInfoCmdSize = hasBind ? sizeof(struct dyld_info_command)
                                 : sizeof(struct linkedit_data_command);
 
-  // Count load commands: base 9 + optional __DATA_CONST + optional __DATA
-  self.numLoadCommands = 9 + (hasDataConst ? 1 : 0) + (hasData ? 1 : 0);
+  // Count load commands: base 8 + modifiers
+  self.numLoadCommands = 8 + (int)self.frameworks.count +
+                         (hasDataConst ? 1 : 0) + (hasData ? 1 : 0) +
+                         (hasChained ? 1 : 0);
+  int loadDylibsSize = 0;
+  for (NSString *path in self.frameworks) {
+    loadDylibsSize += [self loadDylibCommandSizeForPath:path];
+  }
+
   self.loadCommandSize = textSegmentCmdSize + dataConstSegmentCmdSize +
                          dataSegmentCmdSize + linkeditSegmentCmdSize +
-                         idDylibSize + uuidCmdSize + loadLibSystemCmdSize +
+                         idDylibSize + uuidCmdSize + loadDylibsSize +
                          dyldInfoCmdSize + symtabCmdSize + dysymtabCmdSize +
-                         buildVersionCmdSize;
+                         buildVersionCmdSize + chainedFixupsCmdSize;
 
   // Generate string table before computing offsets
   [self generateStringTable];
@@ -713,14 +920,31 @@
     self.textSegmentSize = 0x4000; // Minimum 16KB
   }
 
-  // Compute segment offsets: __TEXT -> __DATA_CONST -> __DATA -> __LINKEDIT
+  // Compute segment offsets and VM addresses: __TEXT -> __DATA_CONST -> __DATA
+  // -> __LINKEDIT
   long currentOffset = self.textSegmentSize;
+  long currentVmaddr = self.textSegmentSize;
 
   if (hasDataConst) {
     self.dataConstSegmentOffset = currentOffset;
-    self.dataConstSegmentSize = dataConstDataSize;
-    // Next segment starts at page-aligned boundary
+    // vmsize should be page-aligned for segments
+    self.dataConstSegmentSize = (dataConstDataSize + 0x3FFF) & ~0x3FFF;
+    if (self.dataConstSegmentSize == 0)
+      self.dataConstSegmentSize = 0x4000;
+
+    [self.chainedFixupWriter setSegmentFileOffset:self.dataConstSegmentOffset
+                                       forSegment:1];
+
+    // Compute section offsets and addresses for __DATA_CONST sections
+    long sectionOffset = 0;
+    for (MPWMachOSectionWriter *writer in [self dataConstSectionWriters]) {
+      writer.offset = self.dataConstSegmentOffset + sectionOffset;
+      writer.address = currentVmaddr + sectionOffset;
+      sectionOffset += writer.sectionDataSize;
+    }
+
     currentOffset = (currentOffset + dataConstDataSize + 0x3FFF) & ~0x3FFF;
+    currentVmaddr += self.dataConstSegmentSize;
   } else {
     self.dataConstSegmentOffset = 0;
     self.dataConstSegmentSize = 0;
@@ -728,24 +952,50 @@
 
   if (hasData) {
     self.dataSegmentOffset = currentOffset;
-    self.dataSegmentSize = dataDataSize;
-    // Next segment starts at page-aligned boundary
+    self.dataSegmentSize = (dataDataSize + 0x3FFF) & ~0x3FFF;
+    if (self.dataSegmentSize == 0)
+      self.dataSegmentSize = 0x4000;
+
+    // Compute section offsets and addresses for __DATA sections
+    long sectionOffset = 0;
+    for (MPWMachOSectionWriter *writer in [self dataSectionWriters]) {
+      writer.offset = self.dataSegmentOffset + sectionOffset;
+      writer.address = currentVmaddr + sectionOffset;
+      sectionOffset += writer.sectionDataSize;
+    }
+
     currentOffset = (currentOffset + dataDataSize + 0x3FFF) & ~0x3FFF;
+    currentVmaddr += self.dataSegmentSize;
   } else {
     self.dataSegmentOffset = 0;
     self.dataSegmentSize = 0;
   }
 
   self.linkeditOffset = currentOffset;
+  self.linkeditSize =
+      (uint32_t)currentVmaddr; // Temporary storage for total VM size if needed
+
+  [self.chainedFixupWriter setSegmentFileOffset:0 forSegment:0]; // __TEXT
+
+  // 4. Build chained fixups data if needed
+  if (hasChained) {
+    [self buildChainedFixups];
+  }
 
   // __LINKEDIT size includes: rebase (aligned), bind (aligned), exports,
-  // symtab, strtab
+  // chained fixups (aligned), symtab, strtab
   long rawLinkeditSize = [self alignedRebaseDataSize] +
                          [self alignedBindDataSize] + [self exportTrieSize] +
+                         (hasChained ? [self alignedChainedFixupsSize] : 0) +
                          [self symbolTableSize] +
                          [self.stringTableWriter length];
   // Pad linkedit size to 8-byte alignment (required for mmap)
   self.linkeditSize = (rawLinkeditSize + 7) & ~7;
+  self.linkeditSize = (uint32_t)self.linkeditSize;
+
+  // 5. Patch stubs and apply relocations
+  [self patchStubs];
+  [self applyRelocations];
 
   // Write everything
   [self writeHeader];
@@ -758,8 +1008,9 @@
   }
   [self writeLinkeditSegmentLoadCommand];
   [self writeIdDylibLoadCommand];
-  [self writeUUIDLoadCommand];
-  [self writeLoadDylibCommand:@"/usr/lib/libSystem.B.dylib"];
+  for (NSString *path in self.frameworks) {
+    [self writeLoadDylibCommand:path];
+  }
   // Write either LC_DYLD_INFO_ONLY (if we have bind data) or
   // LC_DYLD_EXPORTS_TRIE
   if (hasBind) {
@@ -769,6 +1020,10 @@
   }
   [self writeSymbolTableLoadCommand];
   [self writeDysymtabLoadCommand];
+  [self writeUUIDLoadCommand];
+  if ([self hasChainedFixups]) {
+    [self writeChainedFixupsLoadCommand];
+  }
   [self writePlatformLoadCommand];
 
   // Write __TEXT section data
@@ -891,6 +1146,61 @@
   // Should have LC_DYLD_EXPORTS_TRIE load command
   EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYLD_EXPORTS_TRIE],
                @"should have exports trie");
+}
+
++ (void)testDissectKnownCorrectDylib {
+  NSData *macho =
+      [NSData dataWithContentsOfFile:@"/tmp/libexternal_macos13.dylib"];
+  if (!macho) {
+    NSLog(@"testDissectKnownCorrectDylib: /tmp/libexternal_macos13.dylib not "
+          @"found, skipping");
+    return;
+  }
+  NSLog(@"testDissectKnownCorrectDylib: loaded %lu bytes",
+        (unsigned long)macho.length);
+  MPWMachOReader *reader =
+      [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+
+  MPWMachOSegment *text = [reader segmentObjectNamed:@"__TEXT"];
+  NSLog(@"testDissectKnownCorrectDylib: __TEXT: vmaddr=0x%llx vmsize=0x%llx "
+        @"fileoff=0x%llx filesize=0x%llx",
+        text.vmaddr, text.vmsize, text.fileoff, text.filesize);
+  EXPECTNOTNIL(text, @"should have __TEXT");
+  INTEXPECT(text.vmaddr, 0, @"__TEXT vmaddr");
+  INTEXPECT(text.vmsize, 0x4000, @"__TEXT vmsize");
+  INTEXPECT(text.fileoff, 0, @"__TEXT fileoff");
+  INTEXPECT(text.filesize, 0x4000, @"__TEXT filesize");
+
+  MPWMachOSegment *dataConst = [reader segmentObjectNamed:@"__DATA_CONST"];
+  NSLog(@"testDissectKnownCorrectDylib: __DATA_CONST: vmaddr=0x%llx "
+        @"vmsize=0x%llx fileoff=0x%llx filesize=0x%llx",
+        dataConst.vmaddr, dataConst.vmsize, dataConst.fileoff,
+        dataConst.filesize);
+  EXPECTNOTNIL(dataConst, @"should have __DATA_CONST");
+  INTEXPECT(dataConst.vmaddr, 0x4000, @"__DATA_CONST vmaddr");
+  INTEXPECT(dataConst.vmsize, 0x4000, @"__DATA_CONST vmsize");
+  INTEXPECT(dataConst.fileoff, 0x4000, @"__DATA_CONST fileoff");
+  INTEXPECT(dataConst.filesize, 0x4000, @"__DATA_CONST filesize");
+
+  MPWMachOSegment *linkedit = [reader segmentObjectNamed:@"__LINKEDIT"];
+  NSLog(
+      @"testDissectKnownCorrectDylib: __LINKEDIT: vmaddr=0x%llx vmsize=0x%llx "
+      @"fileoff=0x%llx filesize=0x%llx",
+      linkedit.vmaddr, linkedit.vmsize, linkedit.fileoff, linkedit.filesize);
+  EXPECTNOTNIL(linkedit, @"should have __LINKEDIT");
+  INTEXPECT(linkedit.vmaddr, 0x8000, @"__LINKEDIT vmaddr");
+  INTEXPECT(linkedit.fileoff, 0x8000, @"__LINKEDIT fileoff");
+
+  struct linkedit_data_command *chained =
+      (struct linkedit_data_command *)[reader
+          loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
+  EXPECTNOTNIL(chained, @"should have LC_DYLD_CHAINED_FIXUPS");
+  if (chained) {
+    NSLog(@"testDissectKnownCorrectDylib: LC_DYLD_CHAINED_FIXUPS: dataoff=0x%x "
+          @"datasize=0x%x",
+          chained->dataoff, chained->datasize);
+    INTEXPECT(chained->dataoff, 0x8000, @"chained fixups offset");
+  }
 }
 
 + (void)testDylibExportsSymbol {
@@ -1437,15 +1747,71 @@
 
 + (NSArray *)testSelectors {
   return @[
-    @"testDocumentReferenceLoadCommands", @"testDylibLayoutAssumptions",
+    @"testDocumentReferenceLoadCommands",
+    @"testDylibLayoutAssumptions",
     @"testGeneratedDylibFollowsLayoutAssumptions",
-    @"testCompareSignedDylibStructure", @"testCanWriteDylibHeader",
-    @"testDylibHasIdLoadCommand", @"testDylibHasMultipleSegments",
-    @"testDylibHasExportsTrie", @"testDylibExportsSymbol",
-    @"testDylibReaderCanParseMultipleSegments", @"testMinimalDylibCanBeLoaded",
+    @"testCompareSignedDylibStructure",
+    @"testCanWriteDylibHeader",
+    @"testDylibHasIdLoadCommand",
+    @"testDylibHasMultipleSegments",
+    @"testDylibHasExportsTrie",
+    @"testDylibExportsSymbol",
+    @"testDissectKnownCorrectDylib",
+    @"testDylibReaderCanParseMultipleSegments",
+    @"testMinimalDylibCanBeLoaded",
     @"testDylibWithMultipleFunctions",
-    //        @"testCompileSTClassDirectlyToDylibAndLoad",
+//    @"testDylibWithExternalCall",
   ];
+}
+
++ (void)testDylibWithExternalCall {
+  MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+  NSString *path = @"/tmp/libexternalcall.dylib";
+  writer.installName = @"@rpath/libexternalcall.dylib";
+  [writer.frameworks
+      addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/"
+                @"MPWFoundation"];
+
+  STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+  gen.symbolWriter = writer;
+  gen.relocationWriter = writer.textSectionWriter;
+
+  // wrapper function: takes long in x0, calls MPWCreateInteger, returns
+  // NSNumber in x0
+  [gen generateStartOfFunctionNamed:@"_wrap_MPWCreateInteger" stackSpace:32];
+  [gen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
+  [gen generateEndOfFunctionStackSpace:32];
+  [writer addTextSectionData:gen.generatedCode];
+
+  [writer writeFile];
+  NSData *dylibData = [writer data];
+  [dylibData writeToFile:path atomically:YES];
+
+  // Ad-hoc sign
+  system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+
+  // Try to load
+    NSLog(@"will try to load");
+  void *handle = dlopen([path UTF8String], RTLD_NOW);
+  if (!handle) {
+    NSLog(@"dlopen external call error: %s", dlerror());
+  }
+  EXPECTNOTNIL(handle, @"dylib with external call should load");
+    NSLog(@"did load");
+
+  if (handle) {
+    id (*wrap)(long) = dlsym(handle, "wrap_MPWCreateInteger");
+    EXPECTNOTNIL(wrap, @"wrapper function should be found");
+    if (wrap) {
+        NSLog(@"did find function");
+      id result = wrap(42);
+      EXPECTNOTNIL(result, @"should return an object");
+      if ([result isKindOfClass:[NSNumber class]]) {
+        INTEXPECT([result intValue], 42, @"should return number 42");
+      }
+    }
+    dlclose(handle);
+  }
 }
 
 @end
