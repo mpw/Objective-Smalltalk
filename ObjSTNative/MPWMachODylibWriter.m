@@ -2332,6 +2332,59 @@
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++ (void)testDylibWithMessageSend {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *path = @"/tmp/libmsgsend.dylib";
+    writer.installName = @"@rpath/libmsgsend.dylib";
+
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = writer;
+    gen.relocationWriter = writer.textSectionWriter;
+
+    // Generate: id concatStrings(id prefix, id suffix)
+    // On entry: x0=prefix, x1=suffix
+    // Need: x0=prefix (receiver), x2=suffix (arg for stringByAppendingString:)
+    [gen generateFunctionNamed:@"_concatStrings" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
+        // Move suffix from x1 to x2 (argument position)
+        [g generateMoveRegisterFrom:1 to:2];
+        // x0 already has prefix (receiver)
+        // Call [prefix stringByAppendingString:suffix]
+        [g generateMessageSendToSelector:@"stringByAppendingString:"];
+        // Result is in x0, which is what we return
+    }];
+
+    [writer addTextSectionData:gen.generatedCode];
+
+    [writer writeFile];
+    NSData *dylibData = [writer data];
+    [dylibData writeToFile:path atomically:YES];
+
+    // Ad-hoc sign
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+
+    // Load and test
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen error: %s", dlerror());
+    }
+    EXPECTNOTNIL(handle, @"dylib with message send should load");
+
+    if (handle) {
+        id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
+        EXPECTNOTNIL(concatStrings, @"concatStrings function should be found");
+        if (concatStrings) {
+            NSString *prefix = @"Hello, ";
+            NSString *suffix = @"World!";
+            NSString *result = concatStrings(prefix, suffix);
+            IDEXPECT(result, @"Hello, World!", @"should concatenate strings");
+        }
+        dlclose(handle);
+    }
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
 + (NSArray *)testSelectors {
   return @[
     @"testDocumentReferenceLoadCommands", @"testDylibLayoutAssumptions",
@@ -2345,6 +2398,7 @@
     @"testCharacterizeGeneratedExternalCallDylib",
     @"testDylibWithExternalCall",
     @"testDylibWithIntraLibraryCall",
+    @"testDylibWithMessageSend",
   ];
 }
 
