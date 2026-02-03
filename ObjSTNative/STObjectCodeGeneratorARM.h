@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)generateBranchAndLinkWithOffset:(int)offset;
 -(void)generateBranchAndLinkWithRegister:(int)theRegister;
 -(void)generateCallToExternalFunctionNamed:(NSString*)name;
+-(void)generateCallToInternalFunctionNamed:(NSString*)name;
 -(void)generateMessageSendToSelector:(NSString*)selector;
 -(void)generateJittedMessageSendToSelector:(NSString*)selector;
 -(void)generateAddDest:(int)destReg source1:(int)source1Reg source2:(int)source2Reg;

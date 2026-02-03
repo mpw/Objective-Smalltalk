@@ -259,6 +259,14 @@
     [self generateBranchAndLinkWithOffset:0];
 }
 
+-(void)generateCallToInternalFunctionNamed:(NSString*)name
+{
+    // For intra-library calls: add relocation entry and BL, but don't declare as external
+    // The target symbol should already be declared with declareGlobalSymbol:atOffset:
+    [self addRelocationEntryForSymbol:name];
+    [self generateBranchAndLinkWithOffset:0];
+}
+
 -(void)generateMessageSendToSelector:(NSString*)selector
 {
     NSString *functionName=[@"_objc_msgSend$" stringByAppendingString:selector];

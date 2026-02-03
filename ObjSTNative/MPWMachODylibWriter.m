@@ -154,6 +154,14 @@
 // Override to intercept external symbol declarations (section=0)
 // and route them through declareExternalSymbol: for stub/GOT creation
 - (int)declareGlobalSymbol:(NSString *)symbol atOffset:(int)offset type:(int)theType section:(int)theSection {
+  // Check if this symbol was already declared as an internal symbol
+  // (e.g., from an explicit declareGlobalSymbol:atOffset: call with valid section)
+  NSDictionary *existingInfo = self.symbolAddressInfo[symbol];
+  if (existingInfo && [existingInfo[@"section"] intValue] > 0) {
+    // Return the existing symbol index - don't re-declare
+    return [self.globalSymbolOffsets[symbol] intValue];
+  }
+
   // Only intercept external symbol declarations from code generator (section=0)
   // Don't intercept calls from within declareExternalSymbol -> super chain
   if (theSection == 0 && !self.stubOffsets[symbol]) {
@@ -2262,6 +2270,68 @@
     [[NSFileManager defaultManager] removeItemAtPath:genPath error:nil];
 }
 
++ (void)testDylibWithIntraLibraryCall {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *path = @"/tmp/libintra.dylib";
+    writer.installName = @"@rpath/libintra.dylib";
+
+    // Function 1: _helper - returns 42
+    unsigned char helperCode[] = {
+        0x40, 0x05, 0x80, 0x52, // mov w0, #42
+        0xc0, 0x03, 0x5f, 0xd6  // ret
+    };
+
+    // Declare helper at offset 0
+    [writer declareGlobalSymbol:@"_helper" atOffset:0];
+    [writer addTextSectionData:[NSData dataWithBytes:helperCode length:sizeof(helperCode)]];
+
+    // Function 2: _caller - calls _helper and returns result
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = writer;
+    gen.relocationWriter = writer.textSectionWriter;
+
+    [gen generateFunctionNamed:@"_caller" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
+        [g generateCallToInternalFunctionNamed:@"_helper"];
+    }];
+
+    // Declare caller at offset after helper
+    [writer declareGlobalSymbol:@"_caller" atOffset:sizeof(helperCode)];
+    [writer addTextSectionData:gen.generatedCode];
+
+    [writer writeFile];
+    NSData *dylibData = [writer data];
+    [dylibData writeToFile:path atomically:YES];
+
+    // Ad-hoc sign
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+
+    // Load and test
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen error: %s", dlerror());
+    }
+    EXPECTNOTNIL(handle, @"dylib with intra-library call should load");
+
+    if (handle) {
+        int (*caller)(void) = dlsym(handle, "caller");
+        EXPECTNOTNIL(caller, @"caller function should be found");
+        if (caller) {
+            INTEXPECT(caller(), 42, @"caller should return 42 (from helper)");
+        }
+
+        int (*helper)(void) = dlsym(handle, "helper");
+        EXPECTNOTNIL(helper, @"helper function should also be exported");
+        if (helper) {
+            INTEXPECT(helper(), 42, @"helper should return 42 directly");
+        }
+
+        dlclose(handle);
+    }
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
 + (NSArray *)testSelectors {
   return @[
     @"testDocumentReferenceLoadCommands", @"testDylibLayoutAssumptions",
@@ -2274,6 +2344,7 @@
     @"testCharacterizeReferenceExternalCallDylib",
     @"testCharacterizeGeneratedExternalCallDylib",
     @"testDylibWithExternalCall",
+    @"testDylibWithIntraLibraryCall",
   ];
 }
 
