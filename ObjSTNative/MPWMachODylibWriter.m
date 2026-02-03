@@ -1331,13 +1331,8 @@
         0xc0, 0x03, 0x5f, 0xd6   // ret
     };
     
-    // Second function: returns 100
-    unsigned char hundredCode[] = {
-        0x64, 0x0a, 0x80, 0x52,  // mov w0, #100
-        0xc0, 0x03, 0x5f, 0xd6   // ret
-    };
     
-    // Third function: returns 0
+    // Second function: returns 0
     unsigned char zeroCode[] = {
         0x00, 0x00, 0x80, 0xd2,  // mov x0, #0
         0xc0, 0x03, 0x5f, 0xd6   // ret
@@ -1346,10 +1341,8 @@
     [writer declareGlobalSymbol:@"_answer" atOffset:0];
     [writer addTextSectionData:[NSData dataWithBytes:answerCode length:sizeof(answerCode)]];
     NSLog(@"sizeof(answerCode): %ld",sizeof(answerCode));
-    [writer declareGlobalSymbol:@"_hundred" atOffset:sizeof(answerCode)];
-    [writer addTextSectionData:[NSData dataWithBytes:hundredCode length:sizeof(hundredCode)]];
     
-    [writer declareGlobalSymbol:@"_zero" atOffset:sizeof(answerCode) + sizeof(hundredCode)];
+    [writer declareGlobalSymbol:@"_zero" atOffset:sizeof(answerCode) + sizeof(zeroCode)];
     [writer addTextSectionData:[NSData dataWithBytes:zeroCode length:sizeof(zeroCode)]];
     
     [writer writeFile];
@@ -1375,22 +1368,10 @@
         if (answer) {
             INTEXPECT(answer(), 42, @"answer should return 42");
         }
-        int (*hundred)(void) = dlsym(handle, "hundred");
-        EXPECTNOTNIL(hundred, @"hundred function should be found");
-        NSLog(@"address of answer hundred: %p",hundred);
-        hundred = (void*)(((char*)answer) + 8);
-        NSLog(@"fixed of answer hundred: %p",hundred);
-
-        if (hundred) {
-//            INTEXPECT(hundred(), 100, @"hundred should return 100");
-        }
-
         int (*zero)(void) = dlsym(handle, "zero");
         EXPECTNOTNIL(zero, @"zero function should be found");
-        zero = (void*)(((char*)hundred) + 8);
-        if (zero) {
-            INTEXPECT(zero(), 0, @"zero should return 0");
-        }
+        INTEXPECT( (off_t)zero , (off_t)answer + 8, @"zero should be 8 bytes from answer");
+        INTEXPECT(zero(), 0, @"zero should return 0");
         
         dlclose(handle);
     }
@@ -1410,7 +1391,7 @@
         @"testDylibExportsSymbol",
          @"testDylibReaderCanParseMultipleSegments",
          @"testMinimalDylibCanBeLoaded",
-         @"testDylibWithMultipleFunctions",  
+         @"testDylibWithMultipleFunctions",
 //        @"testCompileSTClassDirectlyToDylibAndLoad",
     ];
 }
