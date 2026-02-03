@@ -152,7 +152,7 @@
           calloc(1, segStartsSize);
       segStarts->size = segStartsSize;
       segStarts->page_size = (uint16_t)self.pageSize;
-      segStarts->pointer_format = DYLD_CHAINED_PTR_64;
+      segStarts->pointer_format = DYLD_CHAINED_PTR_64_OFFSET;
       if (i < _segmentCount) {
         segStarts->segment_offset = segmentFileOffsets[i];
       }

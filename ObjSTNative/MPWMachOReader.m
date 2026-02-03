@@ -117,17 +117,17 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     int maxLoadCommands = [self numLoadCommands];
     maxLoadCommands = MIN( maxLoadCommands, 20);
     for (int i = 0; i < maxLoadCommands; i++) {
-        NSLog(@"load command[%d]=%d",i,cur->cmd);
+//        NSLog(@"load command[%d]=%d",i,cur->cmd);
         if (cur->cmd == LC_SEGMENT_64) {
-            NSLog(@"got a segment");
+//            NSLog(@"got a segment");
             struct segment_command_64 *segCmd = (struct segment_command_64*)cur;
             
             // Parse sections within this segment
             NSMutableArray *sectionArray = [NSMutableArray array];
             struct section_64 *sectionHeaders = (struct section_64*)((char*)cur + sizeof(struct segment_command_64));
-            NSLog(@" %d sections for segment",segCmd->nsects);
+//            NSLog(@" %d sections for segment",segCmd->nsects);
             for (int j = 0; j < segCmd->nsects; j++) {
-                NSLog(@" sectopn[%d]",j);
+//                NSLog(@" sectopn[%d]",j);
                 struct section_64 *sectionHeader = &sectionHeaders[j];
                 MPWMachOSection *section = [[[MPWMachOSection alloc] initWithSectionHeader:sectionHeader inMacho:self] autorelease];
                 [sectionArray addObject:section];

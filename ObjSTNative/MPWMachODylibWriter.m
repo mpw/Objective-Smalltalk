@@ -151,10 +151,21 @@
   return writer;
 }
 
+// Override to intercept external symbol declarations (section=0)
+// and route them through declareExternalSymbol: for stub/GOT creation
+- (int)declareGlobalSymbol:(NSString *)symbol atOffset:(int)offset type:(int)theType section:(int)theSection {
+  // Only intercept external symbol declarations from code generator (section=0)
+  // Don't intercept calls from within declareExternalSymbol -> super chain
+  if (theSection == 0 && !self.stubOffsets[symbol]) {
+    // External symbol not yet registered - create stubs and GOT entries
+    return [self declareExternalSymbol:symbol];
+  }
+  return [super declareGlobalSymbol:symbol atOffset:offset type:theType section:theSection];
+}
+
 - (int)declareExternalSymbol:(NSString *)symbol {
   if (!self.stubOffsets[symbol]) {
     MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
-//    stubWriter.reserved2 = 12; // stub size   FIXME:  this used to do something, but is no deleted
     self.stubOffsets[symbol] = @(stubWriter.length);
 
     // Initial placeholder for stub (3 instructions, 12 bytes)
@@ -172,11 +183,15 @@
 - (void)patchStubs {
   MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
   MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
-  if (!stubWriter.isActive || !gotWriter.isActive)
+  if (!stubWriter.isActive || !gotWriter.isActive) {
+    NSLog(@"patchStubs: stubWriter.isActive=%d gotWriter.isActive=%d - skipping", stubWriter.isActive, gotWriter.isActive);
     return;
+  }
   long gotAddr = gotWriter.address;
   long stubAddr = stubWriter.address;
   NSMutableData *stubData = (NSMutableData *)stubWriter.target;
+
+  NSLog(@"patchStubs: stubAddr=0x%lx gotAddr=0x%lx stubData.length=%lu", stubAddr, gotAddr, (unsigned long)stubData.length);
 
   for (NSString *symbol in self.stubOffsets.allKeys) {
     long curStubOffset = [self.stubOffsets[symbol] longValue];
@@ -195,6 +210,10 @@
     ldr |= (uint32_t)(((curGotAddr & 0xFFF) >> 3) << 10);
 
     uint32_t br = 0xd61f0200; // br x16
+
+    NSLog(@"patchStubs: symbol=%@ stubOffset=%ld stubAddr=0x%lx gotAddr=0x%lx", symbol, curStubOffset, curStubAddr, curGotAddr);
+    NSLog(@"  pcPage=0x%lx gotPage=0x%lx pageDiff=%ld", pcPage, gotPage, pageDiff);
+    NSLog(@"  adrp=0x%08x ldr=0x%08x br=0x%08x", adrp, ldr, br);
 
     uint32_t code[3] = {adrp, ldr, br};
     [stubData replaceBytesInRange:NSMakeRange(curStubOffset, sizeof(code))
@@ -428,7 +447,8 @@
   [self appendBytes:&segment length:sizeof segment];
 
   for (MPWMachOSectionWriter *writer in writers) {
-//    writer.writeRelocationInfo = NO;          // FIXME: this used to be here
+    //    writer.writeRelocationInfo = NO;          // FIXME: this used to be
+    //    here
     [writer writeSectionLoadCommandOnWriter:self];
   }
 
@@ -458,7 +478,7 @@
   [self appendBytes:&segment length:sizeof segment];
 
   for (MPWMachOSectionWriter *writer in writers) {
-//    writer.writeRelocationInfo = NO;   // FIXME:  used to be here.
+    //    writer.writeRelocationInfo = NO;   // FIXME:  used to be here.
     [writer writeSectionLoadCommandOnWriter:self];
   }
 }
@@ -485,7 +505,7 @@
   [self appendBytes:&segment length:sizeof segment];
 
   for (MPWMachOSectionWriter *writer in writers) {
-//    writer.writeRelocationInfo = NO;   // FIXME:  this used to be here.
+    //    writer.writeRelocationInfo = NO;   // FIXME:  this used to be here.
     [writer writeSectionLoadCommandOnWriter:self];
   }
 }
@@ -736,7 +756,10 @@
 #pragma mark - Write Sections
 
 - (void)writeSections {
-  NSArray *writers = [self activeSectionWriters];
+  // Only write __TEXT segment sections here
+  // __DATA_CONST and __DATA sections are written separately after padding
+  NSArray *writers = [self textSectionWriters];
+
   if (writers.count > 0) {
     // Pad to first section's offset if needed
     MPWMachOSectionWriter *firstWriter = writers[0];
@@ -1078,6 +1101,8 @@
 #import "MPWMachOReader.h"
 #import "STNativeCompiler.h"
 #import "STNativeCompilerTestsMachO.h"
+#import "STObjectCodeGeneratorARM.h"
+#import "macho-headers/mach-o/fixup-chains.h"
 #import <MPWFoundation/DebugMacros.h>
 
 @implementation MPWMachODylibWriter (testing)
@@ -1745,73 +1770,512 @@
   }
 }
 
++ (void)testDylibWithExternalCall {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *path = @"/tmp/libexternalcall.dylib";
+    writer.installName = @"@rpath/libexternalcall.dylib";
+    [writer.frameworks
+     addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/"
+     @"MPWFoundation"];
+    
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = writer;
+    gen.relocationWriter = writer.textSectionWriter;
+    
+    // wrapper function: takes long in x0, calls MPWCreateInteger, returns
+    // NSNumber in x0
+    [gen generateStartOfFunctionNamed:@"_wrap_MPWCreateInteger" stackSpace:32];
+    [gen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
+    [gen generateEndOfFunctionStackSpace:32];
+    [writer addTextSectionData:gen.generatedCode];
+    
+    [writer writeFile];
+    NSData *dylibData = [writer data];
+    [dylibData writeToFile:path atomically:YES];
+    
+    // Ad-hoc sign
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    
+    // Try to load
+    NSLog(@"will try to load");
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    if (!handle) {
+        NSLog(@"dlopen external call error: %s", dlerror());
+    }
+    EXPECTNOTNIL(handle, @"dylib with external call should load");
+    NSLog(@"did load");
+    
+    if (handle) {
+        id (*wrap)(long) = dlsym(handle, "wrap_MPWCreateInteger");
+        EXPECTNOTNIL(wrap, @"wrapper function should be found");
+        if (wrap) {
+            NSLog(@"did find function");
+            id result = wrap(42);
+            EXPECTNOTNIL(result, @"should return an object");
+            if ([result isKindOfClass:[NSNumber class]]) {
+                INTEXPECT([result intValue], 42, @"should return number 42");
+            }
+        }
+        dlclose(handle);
+    }
+}
+
+// Helper to extract chained fixups data from a dylib
++ (NSData *)chainedFixupsDataFromReader:(MPWMachOReader *)reader {
+    struct linkedit_data_command *chainedCmd =
+        (struct linkedit_data_command *)[reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
+    if (!chainedCmd) return nil;
+    return [reader.data subdataWithRange:NSMakeRange(chainedCmd->dataoff, chainedCmd->datasize)];
+}
+
+// Characterization test: Generate reference dylib with external call using external linker
+// and document its structure for comparison
++ (void)testCharacterizeReferenceExternalCallDylib {
+    // 1. Generate object file with external call using STObjectCodeGeneratorARM + MPWMachOWriter
+    //    We manually create a minimal object file that calls _MPWCreateInteger
+
+    NSString *tempDir = @"/tmp";
+    NSString *objectPath = [tempDir stringByAppendingPathComponent:@"externalcall_ref.o"];
+    NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"externalcall_ref.dylib"];
+
+    // Create object file with external call
+    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = objectWriter;
+    gen.relocationWriter = objectWriter.textSectionWriter;
+
+    // Generate: wrapper(long x) { return MPWCreateInteger(x); }
+    // x0 already contains the argument, so just call and return
+    [gen generateFunctionNamed:@"_wrap_MPWCreateInteger" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
+        [g generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
+    }];
+    [objectWriter addTextSectionData:gen.generatedCode];
+
+    [objectWriter writeFile];
+    [objectWriter.data writeToFile:objectPath atomically:YES];
+
+    // 2. Link with external linker
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    int linkResult = [compiler linkObjects:@[@"externalcall_ref"]
+                           toSharedLibrary:@"externalcall_ref.dylib"
+                                     inDir:tempDir
+                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+
+    // 3. Read and characterize the reference dylib
+    NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
+    EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:refDylibData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    // 3a. Verify LC_DYLD_CHAINED_FIXUPS exists
+    struct linkedit_data_command *chainedCmd =
+        (struct linkedit_data_command *)[reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
+    EXPECTNOTNIL(chainedCmd, @"reference dylib should have LC_DYLD_CHAINED_FIXUPS");
+
+    if (chainedCmd) {
+        // 3b. Characterize chained fixups header
+        NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+        EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+        EXPECTTRUE(chainedData.length >= sizeof(struct dyld_chained_fixups_header),
+                   @"chained data should be large enough for header");
+
+        const struct dyld_chained_fixups_header *header =
+            (const struct dyld_chained_fixups_header *)chainedData.bytes;
+
+        // Characterize header fields
+        INTEXPECT(header->fixups_version, 0, @"fixups_version should be 0");
+        INTEXPECT(header->imports_format, DYLD_CHAINED_IMPORT, @"imports_format should be DYLD_CHAINED_IMPORT");
+        INTEXPECT(header->symbols_format, 0, @"symbols_format should be 0 (uncompressed)");
+        EXPECTTRUE(header->imports_count >= 1, @"should have at least 1 import (_MPWCreateInteger)");
+
+        NSLog(@"Reference chained fixups header: starts_offset=%u imports_offset=%u symbols_offset=%u imports_count=%u",
+              header->starts_offset, header->imports_offset, header->symbols_offset, header->imports_count);
+
+        // 3c. Characterize starts_in_image
+        const struct dyld_chained_starts_in_image *startsInImage =
+            (const struct dyld_chained_starts_in_image *)(chainedData.bytes + header->starts_offset);
+        EXPECTTRUE(startsInImage->seg_count >= 2, @"should have at least 2 segments (TEXT, DATA_CONST or LINKEDIT)");
+        NSLog(@"Reference starts_in_image: seg_count=%u", startsInImage->seg_count);
+
+        // Find the segment with fixups (usually segment 1 = __DATA_CONST)
+        for (int i = 0; i < startsInImage->seg_count; i++) {
+            uint32_t segInfoOffset = startsInImage->seg_info_offset[i];
+            if (segInfoOffset != 0) {
+                const struct dyld_chained_starts_in_segment *segStarts =
+                    (const struct dyld_chained_starts_in_segment *)(chainedData.bytes + header->starts_offset + segInfoOffset);
+                NSLog(@"Reference segment %d: size=%u page_size=0x%x pointer_format=%u segment_offset=0x%llx page_count=%u",
+                      i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
+                      segStarts->segment_offset, segStarts->page_count);
+
+                // Check pointer format - may be DYLD_CHAINED_PTR_64 (2) or DYLD_CHAINED_PTR_64_OFFSET (6)
+                EXPECTTRUE(segStarts->pointer_format == DYLD_CHAINED_PTR_64 ||
+                           segStarts->pointer_format == DYLD_CHAINED_PTR_64_OFFSET,
+                           @"pointer_format should be DYLD_CHAINED_PTR_64 or DYLD_CHAINED_PTR_64_OFFSET");
+
+                // Log page starts
+                for (int p = 0; p < segStarts->page_count; p++) {
+                    uint16_t pageStart = segStarts->page_start[p];
+                    if (pageStart != DYLD_CHAINED_PTR_START_NONE) {
+                        NSLog(@"  Page %d: start=0x%x", p, pageStart);
+                    }
+                }
+            }
+        }
+
+        // 3d. Characterize imports table
+        const struct dyld_chained_import *imports =
+            (const struct dyld_chained_import *)(chainedData.bytes + header->imports_offset);
+        const char *symbolPool = (const char *)(chainedData.bytes + header->symbols_offset);
+
+        for (uint32_t i = 0; i < header->imports_count; i++) {
+            const char *symbolName = symbolPool + imports[i].name_offset;
+            NSLog(@"Reference import %u: lib_ordinal=%u weak=%u name='%s'",
+                  i, imports[i].lib_ordinal, imports[i].weak_import, symbolName);
+
+            // We expect _MPWCreateInteger to be imported
+            if (strcmp(symbolName, "_MPWCreateInteger") == 0) {
+                NSLog(@"Found _MPWCreateInteger at import index %u with lib_ordinal %u", i, imports[i].lib_ordinal);
+            }
+        }
+    }
+
+    // 3e. Characterize __stubs section
+    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
+
+    // Look for __stubs section in __TEXT
+    MPWMachOSection *stubsSection = nil;
+    for (MPWMachOSection *section in textSeg.sections) {
+        if ([section.sectionName isEqualToString:@"__stubs"]) {
+            stubsSection = section;
+            break;
+        }
+    }
+
+    if (stubsSection) {
+        NSLog(@"Reference __stubs section: addr=0x%llx size=%lu offset=0x%lx",
+              stubsSection.address, (unsigned long)stubsSection.size, stubsSection.offset);
+
+        // Each stub is 12 bytes: adrp x16, GOT_page; ldr x16, [x16, GOT_off]; br x16
+        INTEXPECT(stubsSection.size % 12, 0, @"stub section should be multiple of 12 bytes");
+
+        // Log the actual stub code bytes
+        NSData *stubData = [refDylibData subdataWithRange:NSMakeRange(stubsSection.offset, stubsSection.size)];
+        const uint32_t *stubWords = (const uint32_t *)stubData.bytes;
+        for (int i = 0; i < stubsSection.size / 4; i += 3) {
+            NSLog(@"Stub[%d]: adrp=0x%08x ldr=0x%08x br=0x%08x", i/3, stubWords[i], stubWords[i+1], stubWords[i+2]);
+        }
+    } else {
+        NSLog(@"No __stubs section found in reference dylib");
+    }
+
+    // 3f. Characterize __got section
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    if (!dataConstSeg) {
+        dataConstSeg = [reader segmentObjectNamed:@"__DATA"];
+    }
+
+    if (dataConstSeg) {
+        MPWMachOSection *gotSection = nil;
+        for (MPWMachOSection *section in dataConstSeg.sections) {
+            if ([section.sectionName isEqualToString:@"__got"]) {
+                gotSection = section;
+                break;
+            }
+        }
+
+        if (gotSection) {
+            NSLog(@"Reference __got section: addr=0x%llx size=%lu offset=0x%lx",
+                  gotSection.address, (unsigned long)gotSection.size, gotSection.offset);
+
+            // Log GOT entry values (should have chained fixup encoding)
+            NSData *gotData = [refDylibData subdataWithRange:NSMakeRange(gotSection.offset, gotSection.size)];
+            const uint64_t *gotEntries = (const uint64_t *)gotData.bytes;
+            for (int i = 0; i < gotSection.size / 8; i++) {
+                uint64_t entry = gotEntries[i];
+                // Decode as dyld_chained_ptr_64_bind
+                struct dyld_chained_ptr_64_bind bind;
+                memcpy(&bind, &entry, sizeof(bind));
+                NSLog(@"GOT[%d]: raw=0x%016llx ordinal=%u addend=%u next=%u bind=%u",
+                      i, entry, bind.ordinal, bind.addend, bind.next, bind.bind);
+            }
+        } else {
+            NSLog(@"No __got section found in reference dylib");
+        }
+    }
+
+    // 3g. Characterize BL instruction in __text pointing to __stubs
+    MPWMachOSection *textSection = [reader textSection];
+    EXPECTNOTNIL(textSection, @"should have __text section");
+
+    if (textSection && stubsSection) {
+        NSData *textData = [refDylibData subdataWithRange:NSMakeRange(textSection.offset, textSection.size)];
+        const uint32_t *textWords = (const uint32_t *)textData.bytes;
+
+        // Search for BL instructions (opcode starts with 0x94 or 0x97 for bl)
+        for (int i = 0; i < textSection.size / 4; i++) {
+            uint32_t instr = textWords[i];
+            if ((instr & 0xfc000000) == 0x94000000) {  // BL instruction
+                int32_t offset = (instr & 0x03ffffff);
+                if (offset & 0x02000000) offset |= 0xfc000000;  // Sign extend
+                offset <<= 2;  // Convert to bytes
+
+                uint64_t blAddr = textSection.address + (i * 4);
+                uint64_t targetAddr = blAddr + offset;
+
+                NSLog(@"BL at 0x%llx: instr=0x%08x offset=%d target=0x%llx (stubs at 0x%llx)",
+                      blAddr, instr, offset, targetAddr, stubsSection.address);
+
+                // Verify BL targets the stubs section
+                if (targetAddr >= stubsSection.address && targetAddr < stubsSection.address + stubsSection.size) {
+                    NSLog(@"  -> Correctly targets __stubs section");
+                }
+            }
+        }
+    }
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
+}
+
+// Characterization test: Generate dylib using MPWMachODylibWriter with external call
+// and compare against reference characteristics discovered in testCharacterizeReferenceExternalCallDylib
++ (void)testCharacterizeGeneratedExternalCallDylib {
+    // Generate dylib using MPWMachODylibWriter (same as testDylibWithExternalCall but without dlopen)
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    writer.installName = @"@rpath/libexternalcall.dylib";
+    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = writer;
+    gen.relocationWriter = writer.textSectionWriter;
+
+    // Generate wrapper function that calls _MPWCreateInteger
+    [gen generateFunctionNamed:@"_wrap_MPWCreateInteger" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
+        [g generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
+    }];
+    [writer addTextSectionData:gen.generatedCode];
+
+    [writer writeFile];
+    NSData *genDylibData = [writer data];
+    EXPECTNOTNIL(genDylibData, @"generated dylib should have data");
+
+    // Write to file for analysis
+    NSString *genPath = @"/tmp/libexternalcall_gen.dylib";
+    [genDylibData writeToFile:genPath atomically:YES];
+
+    // Read and characterize the generated dylib
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:genDylibData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    // 1. Verify LC_DYLD_CHAINED_FIXUPS exists (CRITICAL for external calls)
+    struct linkedit_data_command *chainedCmd =
+        (struct linkedit_data_command *)[reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
+    EXPECTNOTNIL(chainedCmd, @"generated dylib should have LC_DYLD_CHAINED_FIXUPS");
+
+    if (chainedCmd) {
+        // 2. Characterize chained fixups header
+        NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+        EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+        EXPECTTRUE(chainedData.length >= sizeof(struct dyld_chained_fixups_header),
+                   @"chained data should be large enough for header");
+
+        const struct dyld_chained_fixups_header *header =
+            (const struct dyld_chained_fixups_header *)chainedData.bytes;
+
+        // Compare against reference: fixups_version=0, imports_format=DYLD_CHAINED_IMPORT
+        INTEXPECT(header->fixups_version, 0, @"fixups_version should be 0");
+        INTEXPECT(header->imports_format, DYLD_CHAINED_IMPORT, @"imports_format should be DYLD_CHAINED_IMPORT");
+        INTEXPECT(header->symbols_format, 0, @"symbols_format should be 0 (uncompressed)");
+
+        // Reference had imports_count=1
+        INTEXPECT(header->imports_count, 1, @"should have exactly 1 import (_MPWCreateInteger)");
+
+        NSLog(@"Generated chained fixups header: starts_offset=%u imports_offset=%u symbols_offset=%u imports_count=%u",
+              header->starts_offset, header->imports_offset, header->symbols_offset, header->imports_count);
+
+        // 3. Characterize starts_in_image
+        if (header->starts_offset > 0 && header->starts_offset < chainedData.length) {
+            const struct dyld_chained_starts_in_image *startsInImage =
+                (const struct dyld_chained_starts_in_image *)(chainedData.bytes + header->starts_offset);
+
+            NSLog(@"Generated starts_in_image: seg_count=%u", startsInImage->seg_count);
+
+            // Find the segment with fixups
+            for (int i = 0; i < startsInImage->seg_count && i < 10; i++) {
+                uint32_t segInfoOffset = startsInImage->seg_info_offset[i];
+                if (segInfoOffset != 0) {
+                    const struct dyld_chained_starts_in_segment *segStarts =
+                        (const struct dyld_chained_starts_in_segment *)(chainedData.bytes + header->starts_offset + segInfoOffset);
+
+                    NSLog(@"Generated segment %d: size=%u page_size=0x%x pointer_format=%u segment_offset=0x%llx page_count=%u",
+                          i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
+                          segStarts->segment_offset, segStarts->page_count);
+
+                    // Reference had: page_size=0x4000, pointer_format=6 (DYLD_CHAINED_PTR_64_OFFSET)
+                    INTEXPECT(segStarts->page_size, 0x4000, @"page_size should be 16KB");
+
+                    // Log page starts
+                    for (int p = 0; p < segStarts->page_count && p < 10; p++) {
+                        uint16_t pageStart = segStarts->page_start[p];
+                        if (pageStart != DYLD_CHAINED_PTR_START_NONE) {
+                            NSLog(@"  Page %d: start=0x%x", p, pageStart);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 4. Characterize imports table
+        if (header->imports_offset > 0 && header->imports_offset < chainedData.length) {
+            const struct dyld_chained_import *imports =
+                (const struct dyld_chained_import *)(chainedData.bytes + header->imports_offset);
+            const char *symbolPool = (const char *)(chainedData.bytes + header->symbols_offset);
+
+            for (uint32_t i = 0; i < header->imports_count && i < 10; i++) {
+                const char *symbolName = symbolPool + imports[i].name_offset;
+                NSLog(@"Generated import %u: lib_ordinal=%u weak=%u name='%s'",
+                      i, imports[i].lib_ordinal, imports[i].weak_import, symbolName);
+
+                // Reference had: lib_ordinal=1, name='_MPWCreateInteger'
+                if (i == 0) {
+                    // MPWFoundation is ordinal 2 (libSystem=1, MPWFoundation=2)
+                    INTEXPECT(imports[i].lib_ordinal, 2, @"_MPWCreateInteger should come from ordinal 2 (MPWFoundation)");
+                    EXPECTTRUE(strcmp(symbolName, "_MPWCreateInteger") == 0, @"first import should be _MPWCreateInteger");
+                }
+            }
+        }
+    }
+
+    // 5. Characterize __stubs section
+    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
+
+    MPWMachOSection *stubsSection = nil;
+    if (textSeg) {
+        for (MPWMachOSection *section in textSeg.sections) {
+            if ([section.sectionName isEqualToString:@"__stubs"]) {
+                stubsSection = section;
+                break;
+            }
+        }
+    }
+
+    if (stubsSection) {
+        NSLog(@"Generated __stubs section: addr=0x%lx size=%lu offset=0x%lx",
+              stubsSection.address, (unsigned long)stubsSection.size, stubsSection.offset);
+
+        // Reference had: size=12 (one 12-byte stub)
+        INTEXPECT(stubsSection.size, 12, @"stub section should be 12 bytes for 1 external symbol");
+
+        // Log stub code
+        NSData *stubData = [genDylibData subdataWithRange:NSMakeRange(stubsSection.offset, stubsSection.size)];
+        const uint32_t *stubWords = (const uint32_t *)stubData.bytes;
+        for (int i = 0; i < stubsSection.size / 4; i += 3) {
+            NSLog(@"Generated Stub[%d]: adrp=0x%08x ldr=0x%08x br=0x%08x", i/3, stubWords[i], stubWords[i+1], stubWords[i+2]);
+        }
+    } else {
+        NSLog(@"ERROR: No __stubs section found in generated dylib");
+        EXPECTTRUE(NO, @"generated dylib should have __stubs section");
+    }
+
+    // 6. Characterize __got section
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    if (!dataConstSeg) {
+        dataConstSeg = [reader segmentObjectNamed:@"__DATA"];
+    }
+
+    MPWMachOSection *gotSection = nil;
+    if (dataConstSeg) {
+        for (MPWMachOSection *section in dataConstSeg.sections) {
+            if ([section.sectionName isEqualToString:@"__got"]) {
+                gotSection = section;
+                break;
+            }
+        }
+    }
+
+    if (gotSection) {
+        NSLog(@"Generated __got section: addr=0x%lx size=%lu offset=0x%lx",
+              gotSection.address, (unsigned long)gotSection.size, gotSection.offset);
+
+        // Reference had: size=8 (one 8-byte GOT entry)
+        INTEXPECT(gotSection.size, 8, @"GOT section should be 8 bytes for 1 external symbol");
+
+        // Log GOT entry
+        NSData *gotData = [genDylibData subdataWithRange:NSMakeRange(gotSection.offset, gotSection.size)];
+        const uint64_t *gotEntries = (const uint64_t *)gotData.bytes;
+        for (int i = 0; i < gotSection.size / 8; i++) {
+            uint64_t entry = gotEntries[i];
+            struct dyld_chained_ptr_64_bind bind;
+            memcpy(&bind, &entry, sizeof(bind));
+            NSLog(@"Generated GOT[%d]: raw=0x%016llx ordinal=%u addend=%u next=%u bind=%u",
+                  i, entry, bind.ordinal, bind.addend, bind.next, bind.bind);
+
+            // Reference had: raw=0x8000000000000000 ordinal=0 bind=1
+            // The high bit (0x8000000000000000) indicates bind=1
+            INTEXPECT(bind.bind, 1, @"GOT entry should have bind=1");
+        }
+    } else {
+        NSLog(@"ERROR: No __got section found in generated dylib");
+        EXPECTTRUE(NO, @"generated dylib should have __got section");
+    }
+
+    // 7. Characterize BL instruction targeting __stubs
+    MPWMachOSection *textSection = [reader textSection];
+    EXPECTNOTNIL(textSection, @"should have __text section");
+
+    if (textSection && stubsSection) {
+        NSData *textData = [genDylibData subdataWithRange:NSMakeRange(textSection.offset, textSection.size)];
+        const uint32_t *textWords = (const uint32_t *)textData.bytes;
+
+        BOOL foundBL = NO;
+        for (int i = 0; i < textSection.size / 4; i++) {
+            uint32_t instr = textWords[i];
+            if ((instr & 0xfc000000) == 0x94000000) {  // BL instruction
+                int32_t offset = (instr & 0x03ffffff);
+                if (offset & 0x02000000) offset |= 0xfc000000;  // Sign extend
+                offset <<= 2;
+
+                uint64_t blAddr = textSection.address + (i * 4);
+                uint64_t targetAddr = blAddr + offset;
+
+                NSLog(@"Generated BL at 0x%llx: instr=0x%08x offset=%d target=0x%lx (stubs at 0x%lx)",
+                      blAddr, instr, offset, targetAddr, stubsSection.address);
+
+                // Verify BL targets the stubs section
+                if (targetAddr >= stubsSection.address && targetAddr < stubsSection.address + stubsSection.size) {
+                    NSLog(@"  -> Correctly targets __stubs section");
+                    foundBL = YES;
+                }
+            }
+        }
+        EXPECTTRUE(foundBL, @"should have BL instruction targeting __stubs");
+    }
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:genPath error:nil];
+}
+
 + (NSArray *)testSelectors {
   return @[
-    @"testDocumentReferenceLoadCommands",
-    @"testDylibLayoutAssumptions",
+    @"testDocumentReferenceLoadCommands", @"testDylibLayoutAssumptions",
     @"testGeneratedDylibFollowsLayoutAssumptions",
-    @"testCompareSignedDylibStructure",
-    @"testCanWriteDylibHeader",
-    @"testDylibHasIdLoadCommand",
-    @"testDylibHasMultipleSegments",
-    @"testDylibHasExportsTrie",
-    @"testDylibExportsSymbol",
-    @"testDissectKnownCorrectDylib",
-    @"testDylibReaderCanParseMultipleSegments",
-    @"testMinimalDylibCanBeLoaded",
-    @"testDylibWithMultipleFunctions",
-//    @"testDylibWithExternalCall",
+    @"testCompareSignedDylibStructure", @"testCanWriteDylibHeader",
+    @"testDylibHasIdLoadCommand", @"testDylibHasMultipleSegments",
+    @"testDylibHasExportsTrie", @"testDylibExportsSymbol",
+    @"testDissectKnownCorrectDylib", @"testDylibReaderCanParseMultipleSegments",
+    @"testMinimalDylibCanBeLoaded", @"testDylibWithMultipleFunctions",
+    @"testCharacterizeReferenceExternalCallDylib",
+    @"testCharacterizeGeneratedExternalCallDylib",
+    @"testDylibWithExternalCall",
   ];
 }
 
-+ (void)testDylibWithExternalCall {
-  MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
-  NSString *path = @"/tmp/libexternalcall.dylib";
-  writer.installName = @"@rpath/libexternalcall.dylib";
-  [writer.frameworks
-      addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/"
-                @"MPWFoundation"];
-
-  STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
-  gen.symbolWriter = writer;
-  gen.relocationWriter = writer.textSectionWriter;
-
-  // wrapper function: takes long in x0, calls MPWCreateInteger, returns
-  // NSNumber in x0
-  [gen generateStartOfFunctionNamed:@"_wrap_MPWCreateInteger" stackSpace:32];
-  [gen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
-  [gen generateEndOfFunctionStackSpace:32];
-  [writer addTextSectionData:gen.generatedCode];
-
-  [writer writeFile];
-  NSData *dylibData = [writer data];
-  [dylibData writeToFile:path atomically:YES];
-
-  // Ad-hoc sign
-  system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
-
-  // Try to load
-    NSLog(@"will try to load");
-  void *handle = dlopen([path UTF8String], RTLD_NOW);
-  if (!handle) {
-    NSLog(@"dlopen external call error: %s", dlerror());
-  }
-  EXPECTNOTNIL(handle, @"dylib with external call should load");
-    NSLog(@"did load");
-
-  if (handle) {
-    id (*wrap)(long) = dlsym(handle, "wrap_MPWCreateInteger");
-    EXPECTNOTNIL(wrap, @"wrapper function should be found");
-    if (wrap) {
-        NSLog(@"did find function");
-      id result = wrap(42);
-      EXPECTNOTNIL(result, @"should return an object");
-      if ([result isKindOfClass:[NSNumber class]]) {
-        INTEXPECT([result intValue], 42, @"should return number 42");
-      }
-    }
-    dlclose(handle);
-  }
-}
 
 @end

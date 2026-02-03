@@ -163,7 +163,7 @@
             if ([externalSymbols containsObject:symbolName]) {
                 // External symbol - needs bind opcode
                 [bindWriter addBindForSymbol:symbolName atSegment:segIdx offset:segmentOffset];
-                NSLog(@"Linker: BIND %@ at segment %d offset 0x%lx", symbolName, segIdx, segmentOffset);
+//                NSLog(@"Linker: BIND %@ at segment %d offset 0x%lx", symbolName, segIdx, segmentOffset);
             } else {
                 // Internal symbol - needs rebase opcode AND pointer patching
                 [bindWriter addRebaseAtSegment:segIdx offset:segmentOffset];
@@ -173,8 +173,8 @@
                 reloc.patchSection = dylibSection;
                 reloc.offsetInSection = sectionOffset;
                 [internalRelocations addObject:reloc];
-                NSLog(@"Linker: REBASE+PATCH %@ at segment %d offset 0x%lx (section %@,%@)",
-                      symbolName, segIdx, segmentOffset, section.segname, section.sectname);
+//                NSLog(@"Linker: REBASE+PATCH %@ at segment %d offset 0x%lx (section %@,%@)",
+//                      symbolName, segIdx, segmentOffset, section.segname, section.sectname);
             }
         }
     }
@@ -198,11 +198,11 @@
             MPWMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
             if (dylibSection) {
                 sectionNumToDylibSection[@(sectionNum)] = dylibSection;
-                NSLog(@"Linker: section %d (%@,%@) -> dylib section at vmaddr=0x%lx",
-                      sectionNum, section.segname, section.sectname, dylibSection.address);
+//                NSLog(@"Linker: section %d (%@,%@) -> dylib section at vmaddr=0x%lx",
+//                      sectionNum, section.segname, section.sectname, dylibSection.address);
             } else {
-                NSLog(@"Linker: section %d (%@,%@) has NO dylib section mapping!",
-                      sectionNum, section.segname, section.sectname);
+//                NSLog(@"Linker: section %d (%@,%@) has NO dylib section mapping!",
+//                      sectionNum, section.segname, section.sectname);
             }
             sectionNum++;
         }
@@ -218,17 +218,17 @@
             if (dylibSection) {
                 long symbolAddr = dylibSection.address + symbolOffset;
                 symbolAddresses[symbol] = @(symbolAddr);
-                NSLog(@"Linker: symbol %@ -> section %d offset %ld -> vmaddr 0x%lx",
-                      symbol, symbolSectionNum, symbolOffset, symbolAddr);
+//                NSLog(@"Linker: symbol %@ -> section %d offset %ld -> vmaddr 0x%lx",
+//                      symbol, symbolSectionNum, symbolOffset, symbolAddr);
             } else if (symbolSectionNum != 0) {
-                NSLog(@"Linker: symbol %@ in section %d NOT FOUND in sectionNumToDylibSection!",
-                      symbol, symbolSectionNum);
+//                NSLog(@"Linker: symbol %@ in section %d NOT FOUND in sectionNumToDylibSection!",
+//                      symbol, symbolSectionNum);
             }
         }
 
         // Patch each internal relocation
         NSMutableData *dylibData = (NSMutableData*)[dylibWriter target];
-        NSLog(@"Linker: patching %lu internal relocations", (unsigned long)internalRelocations.count);
+//        NSLog(@"Linker: patching %lu internal relocations", (unsigned long)internalRelocations.count);
         for (MPWInternalRelocation *reloc in internalRelocations) {
             NSNumber *targetAddrNum = symbolAddresses[reloc.symbolName];
             if (targetAddrNum) {
@@ -240,8 +240,8 @@
                     uint64_t *ptr = (uint64_t*)((uint8_t*)dylibData.mutableBytes + pointerFileOffset);
                     uint64_t oldValue = *ptr;
                     *ptr = (uint64_t)targetAddr;
-                    NSLog(@"Linker: PATCH %@ at file offset %ld: 0x%llx -> 0x%lx",
-                          reloc.symbolName, pointerFileOffset, oldValue, targetAddr);
+//                    NSLog(@"Linker: PATCH %@ at file offset %ld: 0x%llx -> 0x%lx",
+//                          reloc.symbolName, pointerFileOffset, oldValue, targetAddr);
                 }
             } else {
                 NSLog(@"Linker: FAILED to find address for %@", reloc.symbolName);

@@ -1451,14 +1451,14 @@ done:
     MPWMachOWriter *objectWriter = (MPWMachOWriter*)compiler.writer;
 
     // Get __DATA section data from object file
-    NSLog(@"=== POINTER VALUES IN __DATA SECTIONS ===");
+//    NSLog(@"=== POINTER VALUES IN __DATA SECTIONS ===");
     for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
         if (![section.segname isEqualToString:@"__DATA"]) continue;
 
         NSData *sectionData = [section data];
         if (sectionData.length < 8) continue;
 
-        NSLog(@"\n%@,%@ (%lu bytes):", section.segname, section.sectname, (unsigned long)sectionData.length);
+//        NSLog(@"\n%@,%@ (%lu bytes):", section.segname, section.sectname, (unsigned long)sectionData.length);
 
         // Log all 8-byte values as potential pointers
         const uint64_t *ptrs = (const uint64_t*)sectionData.bytes;
@@ -1473,7 +1473,7 @@ done:
             } else if (value == 0) {
                 annotation = @" <- null";
             }
-            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
+//            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
         }
     }
 
@@ -1484,14 +1484,14 @@ done:
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
 
-    NSLog(@"\n=== AFTER LINKING ===");
+//    NSLog(@"\n=== AFTER LINKING ===");
 
     // Get __DATA and __DATA_CONST segments
     struct segment_command_64 *dataConst = [reader segmentNamed:@"__DATA_CONST"];
     struct segment_command_64 *data = [reader segmentNamed:@"__DATA"];
 
     if (dataConst) {
-        NSLog(@"\n__DATA_CONST (vmaddr=0x%llx fileoff=%lld):", dataConst->vmaddr, dataConst->fileoff);
+//        NSLog(@"\n__DATA_CONST (vmaddr=0x%llx fileoff=%lld):", dataConst->vmaddr, dataConst->fileoff);
         const uint64_t *ptrs = (const uint64_t*)(dylib.bytes + dataConst->fileoff);
         int numPtrs = MIN(32, (int)(dataConst->filesize / 8));
 
@@ -1505,12 +1505,12 @@ done:
             } else if (data && value >= data->vmaddr && value < data->vmaddr + data->vmsize) {
                 annotation = @" <- points into __DATA";
             }
-            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
+//            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
         }
     }
 
     if (data) {
-        NSLog(@"\n__DATA (vmaddr=0x%llx fileoff=%lld):", data->vmaddr, data->fileoff);
+//        NSLog(@"\n__DATA (vmaddr=0x%llx fileoff=%lld):", data->vmaddr, data->fileoff);
         const uint64_t *ptrs = (const uint64_t*)(dylib.bytes + data->fileoff);
         int numPtrs = MIN(48, (int)(data->filesize / 8));
 
@@ -1524,7 +1524,7 @@ done:
             } else if (value >= data->vmaddr && value < data->vmaddr + data->vmsize) {
                 annotation = @" <- points into __DATA";
             }
-            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
+//            NSLog(@"  [0x%03x] = 0x%016llx%@", i * 8, value, annotation);
         }
     }
 }
@@ -1563,12 +1563,12 @@ done:
     long internalOffset = [self fileOffsetForSection:@"__objc_data" inReader:internal];
 
 //    INTEXPECT( internalOffset, refOffset, @"offset of __objc_data");
-    NSLog(@"=== __objc_data COMPARISON ===");
-    NSLog(@"Reference __objc_data at file offset: %ld", refOffset);
-    NSLog(@"Internal __objc_data at file offset: %ld", internalOffset);
+//    NSLog(@"=== __objc_data COMPARISON ===");
+//    NSLog(@"Reference __objc_data at file offset: %ld", refOffset);
+//    NSLog(@"Internal __objc_data at file offset: %ld", internalOffset);
 
     if (refOffset < 0 || internalOffset < 0) {
-        NSLog(@"Could not find __objc_data sections");
+//        NSLog(@"Could not find __objc_data sections");
         return;
     }
 
@@ -1576,18 +1576,18 @@ done:
     const uint64_t *refData = (const uint64_t*)(ref.data.bytes + refOffset);
     const uint64_t *intData = (const uint64_t*)(internal.data.bytes + internalOffset);
 
-    NSLog(@"\n=== METACLASS (first 40 bytes) ===");
-    NSLog(@"         Reference                Internal");
+//    NSLog(@"\n=== METACLASS (first 40 bytes) ===");
+//    NSLog(@"         Reference                Internal");
     for (int i = 0; i < 5; i++) {
         NSString *match = (refData[i] == intData[i]) ? @"==" : @"!=";
-        NSLog(@"[0x%02x] 0x%016llx  %@  0x%016llx", i*8, refData[i], match, intData[i]);
+//        NSLog(@"[0x%02x] 0x%016llx  %@  0x%016llx", i*8, refData[i], match, intData[i]);
     }
 
     NSLog(@"\n=== CLASS (next 40 bytes) ===");
     NSLog(@"         Reference                Internal");
     for (int i = 5; i < 10; i++) {
         NSString *match = (refData[i] == intData[i]) ? @"==" : @"!=";
-        NSLog(@"[0x%02x] 0x%016llx  %@  0x%016llx", i*8, refData[i], match, intData[i]);
+//        NSLog(@"[0x%02x] 0x%016llx  %@  0x%016llx", i*8, refData[i], match, intData[i]);
     }
 }
 
