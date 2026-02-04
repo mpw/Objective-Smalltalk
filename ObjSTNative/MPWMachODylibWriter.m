@@ -2671,21 +2671,25 @@
 // linked with external linker. Documents structure for comparison with our generated version.
 + (void)testCharacterizeReferenceMessageSendDylib {
     // 1. Generate object file with message send using MPWMachOWriter + STObjectCodeGeneratorARM
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
     NSString *tempDir = @"/tmp";
     NSString *objectPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.o"];
     NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.dylib"];
 
-    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
-    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    MPWMachOWriter *objectWriter = compiler.writer;
+    STObjectCodeGeneratorARM *gen = compiler.codegen;
     gen.symbolWriter = objectWriter;
     gen.relocationWriter = objectWriter.textSectionWriter;
 
     // Generate: concatStrings(id prefix, id suffix) { return [prefix stringByAppendingString:suffix]; }
     // x0 = prefix (receiver), x1 = suffix (argument)
     // Move x1 to x2 (second arg to objc_msgSend), x0 stays as receiver
-    [gen generateFunctionNamed:@"_concatStrings" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
-        [g generateMoveRegisterFrom:1 to:2];
-        [g generateMessageSendToSelector:@"stringByAppendingString:"];
+    [compiler generateFunctionNamed:@"_concatStrings" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [gen generateMoveRegisterFrom:1 to:2];
+        [gen generateMessageSendToSelector:@"stringByAppendingString:"];
+
+        //        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
+        //        [codegen generateMoveConstant:0 to:0];
     }];
     [objectWriter addTextSectionData:gen.generatedCode];
 
@@ -2693,7 +2697,6 @@
     [objectWriter.data writeToFile:objectPath atomically:YES];
 
     // 2. Link with external linker
-    STNativeCompiler *compiler = [STNativeCompiler compiler];
     int linkResult = [compiler linkObjects:@[@"msgsend_ref"]
                            toSharedLibrary:@"msgsend_ref.dylib"
                                      inDir:tempDir
