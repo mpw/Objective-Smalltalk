@@ -202,3 +202,38 @@ Minimum set for a loadable dylib:
 See `MPWMachODylibWriter.m` in ObjSTNative for working implementation.
 Tests in `testDylibLayoutAssumptions` and `testGeneratedDylibFollowsLayoutAssumptions`
 document and verify these requirements.
+
+## Debugging Approach: Differential Analysis with Characterization Tests
+
+When debugging complex binary format issues (like Mach-O dylib generation), use this systematic approach:
+
+### The Loop
+1. **Create a reference** using known-good tools (e.g., ObjSTNative object file + system linker)
+2. **Create characterization tests** that examine the reference structure using code (MPWMachOReader), not external tools
+3. **Run the same tests** on the generated output
+4. **Record findings as EXPECT assertions** - this documents what you learned
+5. **If structures match but dlopen fails** → add more structural tests to expose hidden differences
+6. **If structures differ** → fix the difference
+7. **Repeat** until dlopen succeeds
+
+### Key Principles
+- **No ad-hoc external tool usage** - put examination logic in tests so it's repeatable
+- **Reference files go in TestResources** - ask user to add to Xcode project
+- **Tests document the required structure** - each EXPECT records a constraint
+- **Focus the loop** - if dlopen fails, the structural tests aren't comprehensive enough yet
+
+### Example: Message Send Dylib
+The `testCharacterizeReferenceMessageSendDylib` and `testCharacterizeGeneratedMessageSendDylib` tests:
+1. Generate reference: ObjSTNative object file with message send → system linker → signed dylib
+2. Examine with MPWMachOReader: segments, sections, exports, chained fixups structure
+3. Record as EXPECTs: segment count, section names, import symbols, segment offsets
+4. Compare generated dylib against same expectations
+5. Differences found led directly to fixes:
+   - `_objc_msgSend$` symbols appearing in exports (interception bug)
+   - Segment file offsets being zeroed (array reallocation bug)
+
+### Benefits
+- Systematic rather than ad-hoc debugging
+- Tests remain as regression protection
+- Documents binary format requirements
+- Differences between reference and generated point directly to bugs
