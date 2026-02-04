@@ -219,7 +219,7 @@
 }
 
 objectAccessor(STObjectCodeGeneratorARM*, codegen, setCodegen)
-objectAccessor(MPWMachOWriter*, writer, setWriter)
+objectAccessor(MPWMachOWriter*, writer, _setWriter)
 objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(instancetype)stackBlockCompiler {
@@ -246,21 +246,31 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return nil;   // redefined in category to return MachO-class-writer  -> fix
 }
 
--(instancetype)init
+-(void)setWriter:aWriter
+{
+    [self _setWriter:aWriter];
+    codegen.symbolWriter = writer;
+    codegen.relocationWriter = writer.textSectionWriter;
+}
+
+-(instancetype)initWithWriter:(MPWMachOWriter*)aWriter
 {
     self=[super init];
     if ( self ) {
-        self.writer = [self createObjectFileWriter];
-        self.classwriter = [self createClassWriter];
         self.codegen = [STObjectCodeGeneratorARM stream];
+        self.writer = aWriter;
+        self.classwriter = [self createClassWriter];
         
         self.localRegisterMin = 19;     // ARM min saved register
         self.localRegisterMax = 29;     // ARM min saved register
         self.currentLocalRegStack = self.localRegisterMin;
-        codegen.symbolWriter = writer;
-        codegen.relocationWriter = writer.textSectionWriter;
     }
     return self;
+}
+
+-(instancetype)init
+{
+    return [self initWithWriter:[self createObjectFileWriter]];
 }
 
 -(int)registerForLocalVar:(NSString*)name
