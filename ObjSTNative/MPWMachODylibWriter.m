@@ -2171,6 +2171,97 @@
     return [reader.data subdataWithRange:NSMakeRange(chainedCmd->dataoff, chainedCmd->datasize)];
 }
 
+// Helper to check if exports contain any symbol with given prefix
++ (BOOL)exports:(NSArray *)exports containSymbolWithPrefix:(NSString *)prefix {
+    for (NSString *exp in exports) {
+        if ([exp hasPrefix:prefix]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+// Helper to find a section by name in a segment
++ (MPWMachOSection *)findSectionNamed:(NSString *)sectionName inSegment:(MPWMachOSegment *)segment {
+    for (MPWMachOSection *section in segment.sections) {
+        if ([section.sectionName isEqualToString:sectionName]) {
+            return section;
+        }
+    }
+    return nil;
+}
+
+// Helper to check if segment has a section with given name
++ (BOOL)segment:(MPWMachOSegment *)segment hasSectionNamed:(NSString *)sectionName {
+    return [self findSectionNamed:sectionName inSegment:segment] != nil;
+}
+
+// Helper to log and check chained fixups imports for a specific symbol
+// Returns a dictionary with keys: @"found", @"foundDollarVariant" as NSNumbers (BOOLs)
++ (NSDictionary *)checkChainedFixupsImportsIn:(NSData *)chainedData
+                                    forSymbol:(NSString *)symbolName
+                                    logPrefix:(NSString *)prefix {
+    BOOL foundSymbol = NO;
+    BOOL foundDollarVariant = NO;
+    NSString *dollarPrefix = [symbolName stringByAppendingString:@"$"];
+
+    if (!chainedData) {
+        return @{@"found": @NO, @"foundDollarVariant": @NO};
+    }
+
+    const struct dyld_chained_fixups_header *header =
+        (const struct dyld_chained_fixups_header *)chainedData.bytes;
+    const struct dyld_chained_import *imports =
+        (const struct dyld_chained_import *)((const uint8_t *)header + header->imports_offset);
+    const char *symbolPool = (const char *)header + header->symbols_offset;
+
+    for (uint32_t i = 0; i < header->imports_count; i++) {
+        const char *name = symbolPool + imports[i].name_offset;
+        NSLog(@"%@ import %d: '%s'", prefix, i, name);
+        if (strcmp(name, [symbolName UTF8String]) == 0) {
+            foundSymbol = YES;
+        }
+        if (strncmp(name, [dollarPrefix UTF8String], dollarPrefix.length) == 0) {
+            foundDollarVariant = YES;
+        }
+    }
+
+    return @{@"found": @(foundSymbol), @"foundDollarVariant": @(foundDollarVariant)};
+}
+
+// Helper to log segment fixups structure from chained fixups data
++ (void)logSegmentFixupsFromChainedData:(NSData *)chainedData withPrefix:(NSString *)prefix {
+    if (!chainedData) return;
+
+    const struct dyld_chained_fixups_header *header =
+        (const struct dyld_chained_fixups_header *)chainedData.bytes;
+    const struct dyld_chained_starts_in_image *starts =
+        (const struct dyld_chained_starts_in_image *)((const uint8_t *)header + header->starts_offset);
+
+    NSLog(@"%@ starts: seg_count=%d", prefix, starts->seg_count);
+
+    for (int i = 0; i < starts->seg_count; i++) {
+        uint32_t offset = starts->seg_info_offset[i];
+        if (offset != 0) {
+            const struct dyld_chained_starts_in_segment *segStarts =
+                (const struct dyld_chained_starts_in_segment *)((const uint8_t *)starts + offset);
+            NSLog(@"%@ segment %d: size=%d page_size=0x%x pointer_format=%d segment_offset=0x%llx page_count=%d",
+                  prefix, i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
+                  segStarts->segment_offset, segStarts->page_count);
+        } else {
+            NSLog(@"%@ segment %d: no fixups", prefix, i);
+        }
+    }
+}
+
+// Helper to log sections in a segment
++ (void)logSectionsInSegment:(MPWMachOSegment *)segment withPrefix:(NSString *)prefix {
+    if (!segment) return;
+    for (MPWMachOSection *section in segment.sections) {
+        NSLog(@"%@ %@ section: %@", prefix, segment.name, section.sectionName);
+    }
+}
+
 // Characterization test: Generate reference dylib with external call using external linker
 // and document its structure for comparison
 + (void)testCharacterizeReferenceExternalCallDylib {
@@ -2290,13 +2381,7 @@
     EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
 
     // Look for __stubs section in __TEXT
-    MPWMachOSection *stubsSection = nil;
-    for (MPWMachOSection *section in textSeg.sections) {
-        if ([section.sectionName isEqualToString:@"__stubs"]) {
-            stubsSection = section;
-            break;
-        }
-    }
+    MPWMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
 
     if (stubsSection) {
         NSLog(@"Reference __stubs section: addr=0x%llx size=%lu offset=0x%lx",
@@ -2322,13 +2407,7 @@
     }
 
     if (dataConstSeg) {
-        MPWMachOSection *gotSection = nil;
-        for (MPWMachOSection *section in dataConstSeg.sections) {
-            if ([section.sectionName isEqualToString:@"__got"]) {
-                gotSection = section;
-                break;
-            }
-        }
+        MPWMachOSection *gotSection = [self findSectionNamed:@"__got" inSegment:dataConstSeg];
 
         if (gotSection) {
             NSLog(@"Reference __got section: addr=0x%llx size=%lu offset=0x%lx",
@@ -2499,15 +2578,7 @@
     MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
 
-    MPWMachOSection *stubsSection = nil;
-    if (textSeg) {
-        for (MPWMachOSection *section in textSeg.sections) {
-            if ([section.sectionName isEqualToString:@"__stubs"]) {
-                stubsSection = section;
-                break;
-            }
-        }
-    }
+    MPWMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
 
     if (stubsSection) {
         NSLog(@"Generated __stubs section: addr=0x%lx size=%lu offset=0x%lx",
@@ -2533,15 +2604,7 @@
         dataConstSeg = [reader segmentObjectNamed:@"__DATA"];
     }
 
-    MPWMachOSection *gotSection = nil;
-    if (dataConstSeg) {
-        for (MPWMachOSection *section in dataConstSeg.sections) {
-            if ([section.sectionName isEqualToString:@"__got"]) {
-                gotSection = section;
-                break;
-            }
-        }
-    }
+    MPWMachOSection *gotSection = [self findSectionNamed:@"__got" inSegment:dataConstSeg];
 
     if (gotSection) {
         NSLog(@"Generated __got section: addr=0x%lx size=%lu offset=0x%lx",
@@ -2678,12 +2741,7 @@
 
     MPWMachOWriter *objectWriter = compiler.writer;
     STObjectCodeGeneratorARM *gen = compiler.codegen;
-    gen.symbolWriter = objectWriter;
-    gen.relocationWriter = objectWriter.textSectionWriter;
 
-    // Generate: concatStrings(id prefix, id suffix) { return [prefix stringByAppendingString:suffix]; }
-    // x0 = prefix (receiver), x1 = suffix (argument)
-    // Move x1 to x2 (second arg to objc_msgSend), x0 stays as receiver
     [compiler generateFunctionNamed:@"_concatStrings" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
         [gen generateMoveRegisterFrom:1 to:2];
         [gen generateMessageSendToSelector:@"stringByAppendingString:"];
@@ -2718,102 +2776,36 @@
     NSArray *exports = [reader exportedSymbolNames];
     NSLog(@"Reference exports: %@", exports);
 
-    // Should only export _concatStrings, NOT _objc_msgSend$stringByAppendingString:
     EXPECTTRUE([exports containsObject:@"_concatStrings"], @"should export _concatStrings");
-    BOOL hasObjcMsgSendExport = NO;
-    for (NSString *exp in exports) {
-        if ([exp hasPrefix:@"_objc_msgSend$"]) {
-            hasObjcMsgSendExport = YES;
-            break;
-        }
-    }
-    EXPECTFALSE(hasObjcMsgSendExport, @"should NOT export _objc_msgSend$ variants");
+    EXPECTFALSE([self exports:exports containSymbolWithPrefix:@"_objc_msgSend$"],
+                @"should NOT export _objc_msgSend$ variants");
 
     // 5. Characterize chained fixups imports - should bind to _objc_msgSend (not _objc_msgSend$...)
     NSData *chainedData = [self chainedFixupsDataFromReader:reader];
     EXPECTNOTNIL(chainedData, @"should have chained fixups data");
 
-    if (chainedData) {
-        const struct dyld_chained_fixups_header *header =
-            (const struct dyld_chained_fixups_header *)chainedData.bytes;
-        const struct dyld_chained_import *imports =
-            (const struct dyld_chained_import *)((const uint8_t *)header + header->imports_offset);
-        const char *symbolPool = (const char *)header + header->symbols_offset;
+    NSDictionary *importCheck = [self checkChainedFixupsImportsIn:chainedData
+                                                        forSymbol:@"_objc_msgSend"
+                                                        logPrefix:@"Reference"];
+    EXPECTTRUE([importCheck[@"found"] boolValue], @"reference should import _objc_msgSend");
+    EXPECTFALSE([importCheck[@"foundDollarVariant"] boolValue], @"reference should NOT import _objc_msgSend$ variants");
 
-        BOOL foundObjcMsgSend = NO;
-        BOOL foundObjcMsgSendDollar = NO;
-        for (uint32_t i = 0; i < header->imports_count; i++) {
-            const char *name = symbolPool + imports[i].name_offset;
-            NSLog(@"Reference import %d: '%s'", i, name);
-            if (strcmp(name, "_objc_msgSend") == 0) {
-                foundObjcMsgSend = YES;
-            }
-            if (strncmp(name, "_objc_msgSend$", 14) == 0) {
-                foundObjcMsgSendDollar = YES;
-            }
-        }
-        EXPECTTRUE(foundObjcMsgSend, @"reference should import _objc_msgSend");
-        EXPECTFALSE(foundObjcMsgSendDollar, @"reference should NOT import _objc_msgSend$ variants");
-
-        // 5b. Characterize segment fixups structure
-        const struct dyld_chained_starts_in_image *starts =
-            (const struct dyld_chained_starts_in_image *)((const uint8_t *)header + header->starts_offset);
-        NSLog(@"Reference starts: seg_count=%d", starts->seg_count);
-
-        // Log which segments have fixups
-        for (int i = 0; i < starts->seg_count; i++) {
-            uint32_t offset = starts->seg_info_offset[i];
-            if (offset != 0) {
-                const struct dyld_chained_starts_in_segment *segStarts =
-                    (const struct dyld_chained_starts_in_segment *)((const uint8_t *)starts + offset);
-                NSLog(@"Reference segment %d: size=%d page_size=0x%x pointer_format=%d segment_offset=0x%llx page_count=%d",
-                      i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
-                      segStarts->segment_offset, segStarts->page_count);
-            } else {
-                NSLog(@"Reference segment %d: no fixups", i);
-            }
-        }
-    }
+    // 5b. Log segment fixups structure
+    [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Reference"];
 
     // 6. Characterize sections - should have __objc_stubs, __objc_methname, __objc_selrefs
     MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT");
 
-    BOOL hasObjcStubs = NO;
-    BOOL hasObjcMethname = NO;
-
-    if (textSeg) {
-        for (MPWMachOSection *section in textSeg.sections) {
-            NSLog(@"Reference __TEXT section: %@", section.sectionName);
-            if ([section.sectionName isEqualToString:@"__objc_stubs"]) {
-                hasObjcStubs = YES;
-                NSLog(@"  __objc_stubs: addr=0x%lx size=%lu", section.address, (unsigned long)section.size);
-            }
-            if ([section.sectionName isEqualToString:@"__objc_methname"]) {
-                hasObjcMethname = YES;
-                NSLog(@"  __objc_methname: addr=0x%lx size=%lu", section.address, (unsigned long)section.size);
-            }
-        }
-    }
-
-    EXPECTTRUE(hasObjcStubs, @"reference should have __objc_stubs section");
-    EXPECTTRUE(hasObjcMethname, @"reference should have __objc_methname section");
+    [self logSectionsInSegment:textSeg withPrefix:@"Reference"];
+    EXPECTTRUE([self segment:textSeg hasSectionNamed:@"__objc_stubs"], @"reference should have __objc_stubs section");
+    EXPECTTRUE([self segment:textSeg hasSectionNamed:@"__objc_methname"], @"reference should have __objc_methname section");
 
     // Check for __objc_selrefs in __DATA
     MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
-    BOOL hasObjcSelrefs = NO;
-
-    if (dataSeg) {
-        for (MPWMachOSection *section in dataSeg.sections) {
-            NSLog(@"Reference __DATA section: %@", section.sectionName);
-            if ([section.sectionName isEqualToString:@"__objc_selrefs"]) {
-                hasObjcSelrefs = YES;
-                NSLog(@"  __objc_selrefs: addr=0x%lx size=%lu", section.address, (unsigned long)section.size);
-            }
-        }
-    }
-
-    EXPECTTRUE(hasObjcSelrefs, @"reference should have __objc_selrefs section in __DATA");
+    [self logSectionsInSegment:dataSeg withPrefix:@"Reference"];
+    EXPECTTRUE([self segment:dataSeg hasSectionNamed:@"__objc_selrefs"],
+               @"reference should have __objc_selrefs section in __DATA");
 
     // 7. Test that reference dylib actually loads and works
     void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
@@ -2838,16 +2830,18 @@
 // and compare against reference to find differences
 + (void)testCharacterizeGeneratedMessageSendDylib {
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/libmsgsend_gen.dylib";
     writer.installName = @"@rpath/libmsgsend.dylib";
 
-    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
-    gen.symbolWriter = writer;
-    gen.relocationWriter = writer.textSectionWriter;
+    STObjectCodeGeneratorARM *gen = compiler.codegen;
 
-    [gen generateFunctionNamed:@"_concatStrings" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
-        [g generateMoveRegisterFrom:1 to:2];
-        [g generateMessageSendToSelector:@"stringByAppendingString:"];
+    [compiler generateFunctionNamed:@"_concatStrings" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [gen generateMoveRegisterFrom:1 to:2];
+        [gen generateMessageSendToSelector:@"stringByAppendingString:"];
+        
+        //        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
+        //        [codegen generateMoveConstant:0 to:0];
     }];
 
     [writer addTextSectionData:gen.generatedCode];
@@ -2861,115 +2855,51 @@
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
 
-    // 1. Check exports using MPWMachOReader - should only export _concatStrings, NOT _objc_msgSend$...
+    // 1. Check exports using helper - should only export _concatStrings, NOT _objc_msgSend$...
     NSArray *exports = [reader exportedSymbolNames];
     NSLog(@"Generated exports: %@", exports);
 
     EXPECTTRUE([exports containsObject:@"_concatStrings"], @"should export _concatStrings");
+    EXPECTFALSE([self exports:exports containSymbolWithPrefix:@"_objc_msgSend$"],
+                @"should NOT export _objc_msgSend$ variants");
 
-    BOOL hasObjcMsgSendExport = NO;
-    for (NSString *exp in exports) {
-        if ([exp hasPrefix:@"_objc_msgSend$"]) {
-            hasObjcMsgSendExport = YES;
-            break;
-        }
-    }
-    EXPECTFALSE(hasObjcMsgSendExport, @"should NOT export _objc_msgSend$ variants");
-
-    // 2. Check chained fixups imports - should import _objc_msgSend, not _objc_msgSend$...
+    // 2. Check chained fixups imports using helper
     NSData *chainedData = [self chainedFixupsDataFromReader:reader];
     EXPECTNOTNIL(chainedData, @"should have chained fixups data");
 
-    BOOL foundObjcMsgSend = NO;
-    BOOL foundObjcMsgSendDollar = NO;
+    NSDictionary *importCheck = [self checkChainedFixupsImportsIn:chainedData
+                                                        forSymbol:@"_objc_msgSend"
+                                                        logPrefix:@"Generated"];
+    EXPECTTRUE([importCheck[@"found"] boolValue], @"should import _objc_msgSend (not $variant)");
+    EXPECTFALSE([importCheck[@"foundDollarVariant"] boolValue], @"should NOT import _objc_msgSend$ variants");
 
-    if (chainedData) {
-        const struct dyld_chained_fixups_header *header =
-            (const struct dyld_chained_fixups_header *)chainedData.bytes;
-        const struct dyld_chained_import *imports =
-            (const struct dyld_chained_import *)((const uint8_t *)header + header->imports_offset);
-        const char *symbolPool = (const char *)header + header->symbols_offset;
+    // 2b. Log segment fixups structure for comparison with reference
+    [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Generated"];
 
-        for (uint32_t i = 0; i < header->imports_count; i++) {
-            const char *name = symbolPool + imports[i].name_offset;
-            NSLog(@"Generated import %d: '%s'", i, name);
-            if (strcmp(name, "_objc_msgSend") == 0) {
-                foundObjcMsgSend = YES;
-            }
-            if (strncmp(name, "_objc_msgSend$", 14) == 0) {
-                foundObjcMsgSendDollar = YES;
-            }
-        }
-
-        // Log segment fixups structure for comparison with reference
-        const struct dyld_chained_starts_in_image *starts =
-            (const struct dyld_chained_starts_in_image *)((const uint8_t *)header + header->starts_offset);
-        NSLog(@"Generated starts: seg_count=%d", starts->seg_count);
-
-        for (int i = 0; i < starts->seg_count; i++) {
-            uint32_t offset = starts->seg_info_offset[i];
-            if (offset != 0) {
-                const struct dyld_chained_starts_in_segment *segStarts =
-                    (const struct dyld_chained_starts_in_segment *)((const uint8_t *)starts + offset);
-                NSLog(@"Generated segment %d: size=%d page_size=0x%x pointer_format=%d segment_offset=0x%llx page_count=%d",
-                      i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
-                      segStarts->segment_offset, segStarts->page_count);
-            } else {
-                NSLog(@"Generated segment %d: no fixups", i);
-            }
-        }
-    }
-
-    EXPECTTRUE(foundObjcMsgSend, @"should import _objc_msgSend (not $variant)");
-    EXPECTFALSE(foundObjcMsgSendDollar, @"should NOT import _objc_msgSend$ variants");
-
-    // 3. Check sections - should have __objc_stubs (not __stubs), __objc_methname, __objc_selrefs
+    // 3. Check sections using helpers - should have __objc_stubs, __objc_methname, __objc_selrefs
     MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    EXPECTNOTNIL(textSeg, @"should have __TEXT");
 
-    BOOL hasObjcStubs = NO;
-    BOOL hasRegularStubs = NO;
-    BOOL hasObjcMethname = NO;
+    [self logSectionsInSegment:textSeg withPrefix:@"Generated"];
+    EXPECTTRUE([self segment:textSeg hasSectionNamed:@"__objc_stubs"],
+               @"should have __objc_stubs section for objc message sends - BUG if missing");
+    EXPECTTRUE([self segment:textSeg hasSectionNamed:@"__objc_methname"],
+               @"should have __objc_methname section - BUG if missing");
 
-    if (textSeg) {
-        for (MPWMachOSection *section in textSeg.sections) {
-            NSLog(@"Generated __TEXT section: %@", section.sectionName);
-            if ([section.sectionName isEqualToString:@"__objc_stubs"]) {
-                hasObjcStubs = YES;
-            }
-            if ([section.sectionName isEqualToString:@"__stubs"]) {
-                hasRegularStubs = YES;
-            }
-            if ([section.sectionName isEqualToString:@"__objc_methname"]) {
-                hasObjcMethname = YES;
-            }
-        }
-    }
-
-    // For objc message sends, we need __objc_stubs (not __stubs)
-    EXPECTTRUE(hasObjcStubs, @"should have __objc_stubs section for objc message sends - BUG if missing");
-    EXPECTTRUE(hasObjcMethname, @"should have __objc_methname section - BUG if missing");
     // Having regular __stubs is OK for non-objc external calls, but for pure objc we don't need it
-    if (hasRegularStubs && !hasObjcStubs) {
+    if ([self segment:textSeg hasSectionNamed:@"__stubs"] && ![self segment:textSeg hasSectionNamed:@"__objc_stubs"]) {
         NSLog(@"WARNING: Has __stubs but not __objc_stubs - wrong section type for objc");
     }
 
-    // Check for __objc_selrefs
+    // Check for __objc_selrefs in __DATA or __DATA_CONST
     MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
     MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
 
-    BOOL hasObjcSelrefs = NO;
+    [self logSectionsInSegment:dataSeg withPrefix:@"Generated"];
+    [self logSectionsInSegment:dataConstSeg withPrefix:@"Generated"];
 
-    for (MPWMachOSegment *seg in @[dataSeg ?: [NSNull null], dataConstSeg ?: [NSNull null]]) {
-        if ([seg isKindOfClass:[MPWMachOSegment class]]) {
-            for (MPWMachOSection *section in seg.sections) {
-                NSLog(@"Generated %@ section: %@", seg.name, section.sectionName);
-                if ([section.sectionName isEqualToString:@"__objc_selrefs"]) {
-                    hasObjcSelrefs = YES;
-                }
-            }
-        }
-    }
-
+    BOOL hasObjcSelrefs = [self segment:dataSeg hasSectionNamed:@"__objc_selrefs"] ||
+                          [self segment:dataConstSeg hasSectionNamed:@"__objc_selrefs"];
     EXPECTTRUE(hasObjcSelrefs, @"should have __objc_selrefs section - BUG if missing");
 
     // Cleanup
