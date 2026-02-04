@@ -64,17 +64,36 @@
   f.segmentIndex = segmentIndex;
   f.offset = offset;
   f.ordinal = ordinal;
+  f.isRebase = NO;
   [fixups addObject:f];
   NSLog(@"MPWChainedFixupWriter: addBindAtSegment:%d offset:0x%llx ordinal:%d",
         segmentIndex, offset, ordinal);
 }
 
+- (void)addRebaseAtSegment:(int)segmentIndex
+                    offset:(uint64_t)offset
+                    target:(uint64_t)target {
+  MPWChainedFixup *f = [[MPWChainedFixup alloc] init];
+  f.segmentIndex = segmentIndex;
+  f.offset = offset;
+  f.isRebase = YES;
+  f.rebaseTarget = target;
+  [fixups addObject:f];
+  NSLog(@"MPWChainedFixupWriter: addRebaseAtSegment:%d offset:0x%llx target:0x%llx",
+        segmentIndex, offset, target);
+}
+
 - (void)setSegmentFileOffset:(uint64_t)offset forSegment:(int)segmentIndex {
   if (!segmentFileOffsets || segmentIndex >= _segmentCount) {
-    if (segmentFileOffsets)
+    // Need to grow the array - preserve existing values
+    int newCount = segmentIndex + 1;
+    uint64_t *newOffsets = calloc(newCount, sizeof(uint64_t));
+    if (segmentFileOffsets) {
+      memcpy(newOffsets, segmentFileOffsets, _segmentCount * sizeof(uint64_t));
       free(segmentFileOffsets);
-    _segmentCount = segmentIndex + 1;
-    segmentFileOffsets = calloc(_segmentCount, sizeof(uint64_t));
+    }
+    segmentFileOffsets = newOffsets;
+    _segmentCount = newCount;
   }
   segmentFileOffsets[segmentIndex] = offset;
 }
@@ -234,6 +253,20 @@
   entry.reserved = 0;
   entry.next = (uint32_t)(next / 4); // 4-byte stride
   entry.bind = 1;
+  uint64_t val;
+  memcpy(&val, &entry, 8);
+  return val;
+}
+
+- (uint64_t)rebase64Bits:(uint64_t)target next:(int)next {
+  // DYLD_CHAINED_PTR_64_REBASE format:
+  // target:36, high8:8, reserved:7, next:12, bind:1 (bind=0 for rebase)
+  struct dyld_chained_ptr_64_rebase entry = {0};
+  entry.target = target & 0x0FFFFFFFFULL; // 36 bits = 64GB max
+  entry.high8 = (target >> 56) & 0xFF;    // high 8 bits
+  entry.reserved = 0;
+  entry.next = (uint32_t)(next / 4);      // 4-byte stride
+  // bind = 0 is implicit (it's 0 by default)
   uint64_t val;
   memcpy(&val, &entry, 8);
   return val;

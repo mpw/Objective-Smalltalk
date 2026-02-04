@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) uint64_t offset;
 @property(nonatomic, assign) int ordinal;
 @property(nonatomic, assign) int next;
+@property(nonatomic, assign) BOOL isRebase;       // YES = rebase, NO = bind
+@property(nonatomic, assign) uint64_t rebaseTarget; // target address for rebases
 @end
 
 @interface MPWChainedFixupWriter : NSObject
@@ -28,6 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addBindAtSegment:(int)segmentIndex
                   offset:(uint64_t)offset
                  ordinal:(int)ordinal;
+
+// Add a rebase at a specific offset within a segment
+- (void)addRebaseAtSegment:(int)segmentIndex
+                    offset:(uint64_t)offset
+                    target:(uint64_t)target;
+
 - (void)setSegmentFileOffset:(uint64_t)offset forSegment:(int)segmentIndex;
 
 // Generate the full data block for LC_DYLD_CHAINED_FIXUPS
@@ -38,6 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Helper to get bind entry bits
 - (uint64_t)bind64Bits:(int)ordinal next:(int)next;
+
+// Helper to get rebase entry bits
+- (uint64_t)rebase64Bits:(uint64_t)target next:(int)next;
 
 @end
 

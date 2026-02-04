@@ -31,6 +31,10 @@
 @property(nonatomic, strong) NSMutableDictionary *stubOffsets;
 @property(nonatomic, strong) NSMutableDictionary *gotOffsets;
 @property(nonatomic, strong) NSMutableArray *frameworks;
+// ObjC message send support
+@property(nonatomic, strong) NSMutableDictionary *objcStubOffsets;      // selector -> offset in __objc_stubs
+@property(nonatomic, strong) NSMutableDictionary *objcMethnameOffsets;  // selector -> offset in __objc_methname
+@property(nonatomic, strong) NSMutableDictionary *objcSelrefOffsets;    // selector -> offset in __objc_selrefs
 
 @end
 
@@ -53,6 +57,10 @@
     self.gotOffsets = [NSMutableDictionary dictionary];
     self.frameworks =
         [NSMutableArray arrayWithObject:@"/usr/lib/libSystem.B.dylib"];
+    // ObjC message send support
+    self.objcStubOffsets = [NSMutableDictionary dictionary];
+    self.objcMethnameOffsets = [NSMutableDictionary dictionary];
+    self.objcSelrefOffsets = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -80,13 +88,13 @@
 }
 
 // Sections that belong in __DATA_CONST (read-only after fixups)
+// Note: __objc_selrefs is NOT in DATA_CONST - it goes in __DATA because it needs rebasing
 - (BOOL)sectionBelongsInDataConst:(NSString *)sectname {
   return [sectname isEqualToString:@"__got"] ||
          [sectname isEqualToString:@"__objc_classlist"] ||
          [sectname isEqualToString:@"__objc_imageinfo"] ||
          [sectname isEqualToString:@"__cfstring"] ||
          [sectname isEqualToString:@"__objc_protolist"] ||
-         [sectname isEqualToString:@"__objc_selrefs"] ||
          [sectname isEqualToString:@"__objc_protorefs"] ||
          [sectname isEqualToString:@"__objc_classrefs"] ||
          [sectname isEqualToString:@"__objc_superrefs"];
@@ -96,8 +104,11 @@
 - (NSArray<MPWMachOSectionWriter *> *)dataConstSectionWriters {
   NSMutableArray *writers = [NSMutableArray array];
   for (MPWMachOSectionWriter *writer in self.sectionWriters) {
-    if (writer.isActive && [writer.segname isEqualToString:@"__DATA"]) {
-      // Check if this section should be in __DATA_CONST
+    if (writer.isActive && [writer.segname isEqualToString:@"__DATA_CONST"]) {
+      [writers addObject:writer];
+    }
+    // Also include __DATA sections that belong in __DATA_CONST (legacy support)
+    else if (writer.isActive && [writer.segname isEqualToString:@"__DATA"]) {
       if ([self sectionBelongsInDataConst:writer.sectname]) {
         [writers addObject:writer];
       }
@@ -140,20 +151,58 @@
                                   S_ATTR_PURE_INSTRUCTIONS];
 }
 
-- (MPWMachOSectionWriter *)gotSectionWriter {
-  // Use __DATA so it gets grouped into __DATA_CONST by
-  // sectionBelongsInDataConst
+- (MPWMachOSectionWriter *)objcStubSectionWriter {
+  MPWMachOSectionWriter *writer = [self
+      addSectionWriterWithSegName:@"__TEXT"
+                         sectName:@"__objc_stubs"
+                            flags:S_ATTR_SOME_INSTRUCTIONS |
+                                  S_ATTR_PURE_INSTRUCTIONS];
+  writer.alignment = 5; // 32-byte alignment like reference
+  return writer;
+}
+
+- (MPWMachOSectionWriter *)objcMethnameSectionWriter {
+  return [self
+      addSectionWriterWithSegName:@"__TEXT"
+                         sectName:@"__objc_methname"
+                            flags:S_CSTRING_LITERALS];
+}
+
+- (MPWMachOSectionWriter *)objcSelrefsSectionWriter {
+  // __objc_selrefs goes in __DATA (not __DATA_CONST) for rebase
   MPWMachOSectionWriter *writer =
       [self addSectionWriterWithSegName:@"__DATA"
+                               sectName:@"__objc_selrefs"
+                                  flags:S_LITERAL_POINTERS | S_ATTR_NO_DEAD_STRIP];
+  writer.alignment = 3; // 8-byte alignment
+  return writer;
+}
+
+- (MPWMachOSectionWriter *)gotSectionWriter {
+  // __got goes in __DATA_CONST segment
+  MPWMachOSectionWriter *writer =
+      [self addSectionWriterWithSegName:@"__DATA_CONST"
                                sectName:@"__got"
                                   flags:S_NON_LAZY_SYMBOL_POINTERS];
   writer.alignment = 3; // 8-byte alignment
   return writer;
 }
 
-// Override to intercept external symbol declarations (section=0)
-// and route them through declareExternalSymbol: for stub/GOT creation
+// Override to intercept external symbol declarations and _objc_msgSend$ symbols
+// Route them through declareExternalSymbol: for stub/GOT creation
 - (int)declareGlobalSymbol:(NSString *)symbol atOffset:(int)offset type:(int)theType section:(int)theSection {
+  // ALWAYS intercept _objc_msgSend$ symbols - these are ObjC stubs, not real exports
+  // They can come from declareExternalFunction (section=0) or addRelocationEntryForSymbol (section=1)
+  NSString *selector = nil;
+  if ([self isObjcMsgSendSymbol:symbol selector:&selector]) {
+    // If we already have a stub for this selector, return its offset
+    if (self.objcStubOffsets[selector]) {
+      return [self.stubOffsets[symbol] intValue];
+    }
+    // Otherwise create the ObjC stub structures
+    return [self declareObjcMsgSendForSelector:selector];
+  }
+
   // Check if this symbol was already declared as an internal symbol
   // (e.g., from an explicit declareGlobalSymbol:atOffset: call with valid section)
   NSDictionary *existingInfo = self.symbolAddressInfo[symbol];
@@ -171,7 +220,97 @@
   return [super declareGlobalSymbol:symbol atOffset:offset type:theType section:theSection];
 }
 
+- (BOOL)isObjcMsgSendSymbol:(NSString *)symbol selector:(NSString **)outSelector {
+  NSString *prefix = @"_objc_msgSend$";
+  if ([symbol hasPrefix:prefix]) {
+    if (outSelector) {
+      *outSelector = [symbol substringFromIndex:prefix.length];
+    }
+    return YES;
+  }
+  return NO;
+}
+
+- (int)declareObjcMsgSendForSelector:(NSString *)selector {
+  // Check if we already have an ObjC stub for this selector
+  if (self.objcStubOffsets[selector]) {
+    // Return stub offset for relocation
+    NSString *fullSymbol = [@"_objc_msgSend$" stringByAppendingString:selector];
+    return [self.stubOffsets[fullSymbol] intValue];
+  }
+
+  // Ensure _objc_msgSend is declared as external (only once)
+  if (!self.gotOffsets[@"_objc_msgSend"]) {
+    // Add libobjc to frameworks if not already present
+    BOOL hasLibobjc = NO;
+    for (NSString *fw in self.frameworks) {
+      if ([fw containsString:@"libobjc"]) {
+        hasLibobjc = YES;
+        break;
+      }
+    }
+    if (!hasLibobjc) {
+      [self.frameworks addObject:@"/usr/lib/libobjc.A.dylib"];
+    }
+
+    MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+    self.gotOffsets[@"_objc_msgSend"] = @(gotWriter.length);
+    uint64_t dummy = 0;
+    [gotWriter appendBytes:&dummy length:sizeof(dummy)];
+    // Note: We don't call [super declareExternalSymbol:] here to avoid exporting
+    // Instead, we manually add it to the bind info later
+  }
+
+  // 1. Add selector string to __objc_methname
+  MPWMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
+  self.objcMethnameOffsets[selector] = @(methnameWriter.length);
+  const char *selectorCStr = [selector UTF8String];
+  [methnameWriter appendBytes:selectorCStr length:strlen(selectorCStr) + 1];
+
+  // 2. Add selector reference to __objc_selrefs
+  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  self.objcSelrefOffsets[selector] = @(selrefsWriter.length);
+  uint64_t placeholder = 0; // Will be patched later with actual address
+  [selrefsWriter appendBytes:&placeholder length:sizeof(placeholder)];
+
+  // 3. Create ObjC stub (8 instructions = 32 bytes, aligned to 32 bytes)
+  // The stub:
+  //   adrp x1, __objc_selrefs@PAGE
+  //   ldr  x1, [x1, __objc_selrefs@PAGEOFF]  ; load selector
+  //   adrp x16, __got@PAGE
+  //   ldr  x16, [x16, __got@PAGEOFF]         ; load _objc_msgSend
+  //   br   x16
+  //   brk  #0x1  ; padding
+  //   brk  #0x1  ; padding
+  //   brk  #0x1  ; padding
+  MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+
+  // Store stub offset for this selector
+  NSString *fullSymbol = [@"_objc_msgSend$" stringByAppendingString:selector];
+  self.stubOffsets[fullSymbol] = @(objcStubWriter.length);
+  self.objcStubOffsets[selector] = @(objcStubWriter.length);
+
+  // Write placeholder instructions (will be patched in patchObjcStubs)
+  uint32_t stubCode[8] = {
+      0xd503201f, 0xd503201f, // nop, nop (adrp x1, ldr x1)
+      0xd503201f, 0xd503201f, // nop, nop (adrp x16, ldr x16)
+      0xd61f0200,             // br x16
+      0xd4200020, 0xd4200020, 0xd4200020 // brk #1 padding
+  };
+  [objcStubWriter appendBytes:stubCode length:sizeof(stubCode)];
+
+  // Return the index (stub offset) - don't call super to avoid exporting
+  return (int)[self.stubOffsets[fullSymbol] intValue];
+}
+
 - (int)declareExternalSymbol:(NSString *)symbol {
+  // Check if this is an _objc_msgSend$ symbol
+  NSString *selector = nil;
+  if ([self isObjcMsgSendSymbol:symbol selector:&selector]) {
+    return [self declareObjcMsgSendForSelector:selector];
+  }
+
+  // Regular external symbol handling
   if (!self.stubOffsets[symbol]) {
     MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
     self.stubOffsets[symbol] = @(stubWriter.length);
@@ -202,6 +341,15 @@
   NSLog(@"patchStubs: stubAddr=0x%lx gotAddr=0x%lx stubData.length=%lu", stubAddr, gotAddr, (unsigned long)stubData.length);
 
   for (NSString *symbol in self.stubOffsets.allKeys) {
+    // Skip ObjC stubs - they're handled by patchObjcStubs
+    if ([self isObjcMsgSendSymbol:symbol selector:nil]) {
+      continue;
+    }
+    // Also skip if this symbol doesn't have a GOT entry (e.g., internal symbols)
+    if (!self.gotOffsets[symbol]) {
+      continue;
+    }
+
     long curStubOffset = [self.stubOffsets[symbol] longValue];
     long curStubAddr = stubAddr + curStubOffset;
     long curGotAddr = gotAddr + [self.gotOffsets[symbol] longValue];
@@ -229,6 +377,99 @@
   }
 }
 
+- (void)patchObjcStubs {
+  MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+
+  if (!objcStubWriter.isActive) {
+    return;
+  }
+
+  long objcStubAddr = objcStubWriter.address;
+  long selrefsAddr = selrefsWriter.address;
+  long gotAddr = gotWriter.address;
+  NSMutableData *objcStubData = (NSMutableData *)objcStubWriter.target;
+
+  // Get the GOT offset for _objc_msgSend
+  NSNumber *msgSendGotOffset = self.gotOffsets[@"_objc_msgSend"];
+  if (!msgSendGotOffset) {
+    NSLog(@"patchObjcStubs: No GOT entry for _objc_msgSend");
+    return;
+  }
+  long msgSendGotAddr = gotAddr + [msgSendGotOffset longValue];
+
+  NSLog(@"patchObjcStubs: objcStubAddr=0x%lx selrefsAddr=0x%lx msgSendGotAddr=0x%lx",
+        objcStubAddr, selrefsAddr, msgSendGotAddr);
+
+  for (NSString *selector in self.objcStubOffsets.allKeys) {
+    long stubOffset = [self.objcStubOffsets[selector] longValue];
+    long selrefOffset = [self.objcSelrefOffsets[selector] longValue];
+
+    long curStubAddr = objcStubAddr + stubOffset;
+    long curSelrefAddr = selrefsAddr + selrefOffset;
+
+    // Generate: adrp x1, __objc_selrefs@PAGE
+    long selrefPage = curSelrefAddr & ~0xFFF;
+    long stubPage = curStubAddr & ~0xFFF;
+    long selrefPageDiff = (selrefPage - stubPage) >> 12;
+
+    uint32_t adrp_x1 = 0x90000001; // adrp x1, 0
+    adrp_x1 |= (uint32_t)((selrefPageDiff & 0x3) << 29);
+    adrp_x1 |= (uint32_t)((selrefPageDiff & 0x1FFFFC) << 3);
+
+    // ldr x1, [x1, selref@PAGEOFF]
+    uint32_t ldr_x1 = 0xf9400021; // ldr x1, [x1, #0]
+    ldr_x1 |= (uint32_t)(((curSelrefAddr & 0xFFF) >> 3) << 10);
+
+    // Generate: adrp x16, __got@PAGE (for _objc_msgSend)
+    long gotPage = msgSendGotAddr & ~0xFFF;
+    long stubAddr4 = (curStubAddr + 8) & ~0xFFF; // PC after 2 instructions
+    long gotPageDiff = (gotPage - stubAddr4) >> 12;
+
+    uint32_t adrp_x16 = 0x90000010; // adrp x16, 0
+    adrp_x16 |= (uint32_t)((gotPageDiff & 0x3) << 29);
+    adrp_x16 |= (uint32_t)((gotPageDiff & 0x1FFFFC) << 3);
+
+    // ldr x16, [x16, got@PAGEOFF]
+    uint32_t ldr_x16 = 0xf9400210; // ldr x16, [x16, #0]
+    ldr_x16 |= (uint32_t)(((msgSendGotAddr & 0xFFF) >> 3) << 10);
+
+    uint32_t br_x16 = 0xd61f0200; // br x16
+    uint32_t brk = 0xd4200020;    // brk #1
+
+    NSLog(@"patchObjcStubs: selector=%@ stubOffset=%ld selrefAddr=0x%lx", selector, stubOffset, curSelrefAddr);
+
+    uint32_t code[8] = {adrp_x1, ldr_x1, adrp_x16, ldr_x16, br_x16, brk, brk, brk};
+    [objcStubData replaceBytesInRange:NSMakeRange(stubOffset, sizeof(code)) withBytes:code];
+  }
+}
+
+- (void)patchObjcSelrefs {
+  MPWMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
+  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+
+  if (!selrefsWriter.isActive || !methnameWriter.isActive) {
+    return;
+  }
+
+  long methnameAddr = methnameWriter.address;
+  NSMutableData *selrefsData = (NSMutableData *)selrefsWriter.target;
+
+  for (NSString *selector in self.objcSelrefOffsets.allKeys) {
+    long selrefOffset = [self.objcSelrefOffsets[selector] longValue];
+    long methnameOffset = [self.objcMethnameOffsets[selector] longValue];
+
+    // Selector reference points to the selector string in __objc_methname
+    uint64_t selectorAddr = methnameAddr + methnameOffset;
+
+    NSLog(@"patchObjcSelrefs: selector=%@ selrefOffset=%ld selectorAddr=0x%llx", selector, selrefOffset, selectorAddr);
+
+    [selrefsData replaceBytesInRange:NSMakeRange(selrefOffset, sizeof(selectorAddr))
+                           withBytes:&selectorAddr];
+  }
+}
+
 - (void)applyRelocations {
   for (MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
     NSMutableData *sectionData = (NSMutableData *)sectionWriter.target;
@@ -237,10 +478,21 @@
       int offset = [sectionWriter offsetForRelocationAtIndex:i];
 
       long targetAddr = 0;
-      if (self.stubOffsets[symbolName]) {
+
+      // Check if this is an ObjC stub (for _objc_msgSend$selector)
+      NSString *selector = nil;
+      if ([self isObjcMsgSendSymbol:symbolName selector:&selector]) {
+        // Target is in __objc_stubs section
+        MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+        if (self.objcStubOffsets[selector]) {
+          targetAddr = objcStubWriter.address + [self.objcStubOffsets[selector] longValue];
+        }
+      } else if (self.stubOffsets[symbolName]) {
+        // Regular stub in __stubs section
         targetAddr = self.stubSectionWriter.address +
                      [self.stubOffsets[symbolName] longValue];
       } else {
+        // Internal symbol
         NSDictionary *info = self.symbolAddressInfo[symbolName];
         if (info) {
           targetAddr =
@@ -264,7 +516,16 @@
 
 - (int)ordinalForSymbol:(NSString *)symbol {
   int ordinal = 1; // Default to libSystem
-  if ([symbol containsString:@"MPW"]) {
+
+  // _objc_msgSend comes from libobjc
+  if ([symbol isEqualToString:@"_objc_msgSend"]) {
+    for (int i = 0; i < self.frameworks.count; i++) {
+      if ([self.frameworks[i] containsString:@"libobjc"]) {
+        ordinal = i + 1;
+        break;
+      }
+    }
+  } else if ([symbol containsString:@"MPW"]) {
     for (int i = 0; i < self.frameworks.count; i++) {
       if ([self.frameworks[i] containsString:@"MPWFoundation"]) {
         ordinal = i + 1;
@@ -282,7 +543,7 @@
   if (!gotWriter.isActive)
     return;
 
-  // 1. Register binds in ChainedFixupWriter
+  // 1. Register binds for GOT entries in ChainedFixupWriter
   for (NSString *symbol in self.gotOffsets.allKeys) {
     long offset = [self.gotOffsets[symbol] longValue];
     int ordinal = [self ordinalForSymbol:symbol];
@@ -295,23 +556,83 @@
                                       ordinal:importOrdinal];
   }
 
-  // 2. Generate metadata to compute 'next' pointers
+  // 2. Register rebases for __objc_selrefs (if any)
+  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  MPWMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
+  if (selrefsWriter.isActive && methnameWriter.isActive && self.objcSelrefOffsets.count > 0) {
+    // __DATA segment index:
+    // If we have __DATA_CONST: __TEXT=0, __DATA_CONST=1, __DATA=2
+    // If no __DATA_CONST: __TEXT=0, __DATA=1
+    int dataSegmentIndex = [self hasDataConstSegment] ? 2 : 1;
+
+    // Calculate __DATA segment base address
+    long dataSegmentVmaddr = self.textSegmentSize;
+    if ([self hasDataConstSegment]) {
+      long dataConstVmsize = (self.dataConstSegmentSize + 0x3FFF) & ~0x3FFF;
+      if (dataConstVmsize == 0) dataConstVmsize = 0x4000;
+      dataSegmentVmaddr += dataConstVmsize;
+    }
+
+    for (NSString *selector in self.objcSelrefOffsets.allKeys) {
+      long selrefOffset = [self.objcSelrefOffsets[selector] longValue];
+      long methnameOffset = [self.objcMethnameOffsets[selector] longValue];
+
+      // The rebase target is the address of the selector string in __objc_methname
+      uint64_t selectorStringAddr = methnameWriter.address + methnameOffset;
+
+      // Offset within __DATA segment
+      long selrefSegmentOffset = selrefsWriter.address - dataSegmentVmaddr + selrefOffset;
+
+      NSLog(@"buildChainedFixups: Adding rebase for selector %@ at segment %d offset 0x%lx target 0x%llx",
+            selector, dataSegmentIndex, selrefSegmentOffset, selectorStringAddr);
+
+      [self.chainedFixupWriter addRebaseAtSegment:dataSegmentIndex
+                                           offset:selrefSegmentOffset
+                                           target:selectorStringAddr];
+    }
+  }
+
+  // 3. Generate metadata to compute 'next' pointers
   [self.chainedFixupWriter fixupDataWithSegmentCount:[self segmentCount]];
 
-  // 3. Patch GOT slots with bind entry bits
+  // 4. Patch GOT slots with bind entry bits
   NSMutableData *gotData = (NSMutableData *)gotWriter.target;
   NSArray *segFixups = [self.chainedFixupWriter fixupsForSegment:1];
   long dataConstVmaddr = self.textSegmentSize;
   long gotSegStart = gotWriter.address - dataConstVmaddr;
 
-  for (id f in segFixups) {
-    uint64_t bindBits = [self.chainedFixupWriter
-        bind64Bits:[[f valueForKey:@"ordinal"] intValue]
-              next:[[f valueForKey:@"next"] intValue]];
-    long f_seg_offset = [[f valueForKey:@"offset"] longValue];
-    long f_section_offset = f_seg_offset - gotSegStart;
-    [gotData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
-                       withBytes:&bindBits];
+  for (MPWChainedFixup *f in segFixups) {
+    if (!f.isRebase) {
+      uint64_t bindBits = [self.chainedFixupWriter bind64Bits:f.ordinal next:f.next];
+      long f_section_offset = f.offset - gotSegStart;
+      [gotData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
+                         withBytes:&bindBits];
+    }
+  }
+
+  // 5. Patch selrefs with rebase entry bits
+  if (selrefsWriter.isActive && self.objcSelrefOffsets.count > 0) {
+    int dataSegmentIndex = [self hasDataConstSegment] ? 2 : 1;
+    NSArray *dataSegFixups = [self.chainedFixupWriter fixupsForSegment:dataSegmentIndex];
+    NSMutableData *selrefsData = (NSMutableData *)selrefsWriter.target;
+
+    long dataSegmentVmaddr = self.textSegmentSize;
+    if ([self hasDataConstSegment]) {
+      long dataConstVmsize = (self.dataConstSegmentSize + 0x3FFF) & ~0x3FFF;
+      if (dataConstVmsize == 0) dataConstVmsize = 0x4000;
+      dataSegmentVmaddr += dataConstVmsize;
+    }
+    long selrefsSegStart = selrefsWriter.address - dataSegmentVmaddr;
+
+    for (MPWChainedFixup *f in dataSegFixups) {
+      if (f.isRebase) {
+        uint64_t rebaseBits = [self.chainedFixupWriter rebase64Bits:f.rebaseTarget next:f.next];
+        long f_section_offset = f.offset - selrefsSegStart;
+        NSLog(@"Patching selref at section offset %ld with rebase bits 0x%llx", f_section_offset, rebaseBits);
+        [selrefsData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
+                               withBytes:&rebaseBits];
+      }
+    }
   }
 }
 
@@ -748,7 +1069,13 @@
       [[[MPWExportsTrieWriter alloc] init] autorelease];
 
   // Add all global symbols to the exports trie writer
+  // EXCEPT: _objc_msgSend$ symbols which are ObjC stubs, not real exports
   for (NSString *symbol in self.globalSymbolOffsets.allKeys) {
+    // Skip _objc_msgSend$ symbols - they are internal stubs, not real exports
+    if ([self isObjcMsgSendSymbol:symbol selector:nil]) {
+      continue;
+    }
+
     long textSectionAddr = self.textSectionWriter.address;
     long address = textSectionAddr;
     NSDictionary *info = self.symbolAddressInfo[symbol];
@@ -987,6 +1314,12 @@
     if (self.dataSegmentSize == 0)
       self.dataSegmentSize = 0x4000;
 
+    // Set segment file offset for chained fixups
+    // Segment index is 2 if we have __DATA_CONST, otherwise 1
+    int dataSegmentIndex = hasDataConst ? 2 : 1;
+    [self.chainedFixupWriter setSegmentFileOffset:self.dataSegmentOffset
+                                       forSegment:dataSegmentIndex];
+
     // Compute section offsets and addresses for __DATA sections
     long sectionOffset = 0;
     for (MPWMachOSectionWriter *writer in [self dataSectionWriters]) {
@@ -1026,6 +1359,8 @@
 
   // 5. Patch stubs and apply relocations
   [self patchStubs];
+  [self patchObjcStubs];
+  [self patchObjcSelrefs];
   [self applyRelocations];
 
   // Write everything
@@ -2332,6 +2667,312 @@
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
+// Characterization test: Create reference dylib with message send using ObjSTNative object file
+// linked with external linker. Documents structure for comparison with our generated version.
++ (void)testCharacterizeReferenceMessageSendDylib {
+    // 1. Generate object file with message send using MPWMachOWriter + STObjectCodeGeneratorARM
+    NSString *tempDir = @"/tmp";
+    NSString *objectPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.o"];
+    NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.dylib"];
+
+    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = objectWriter;
+    gen.relocationWriter = objectWriter.textSectionWriter;
+
+    // Generate: concatStrings(id prefix, id suffix) { return [prefix stringByAppendingString:suffix]; }
+    // x0 = prefix (receiver), x1 = suffix (argument)
+    // Move x1 to x2 (second arg to objc_msgSend), x0 stays as receiver
+    [gen generateFunctionNamed:@"_concatStrings" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
+        [g generateMoveRegisterFrom:1 to:2];
+        [g generateMessageSendToSelector:@"stringByAppendingString:"];
+    }];
+    [objectWriter addTextSectionData:gen.generatedCode];
+
+    [objectWriter writeFile];
+    [objectWriter.data writeToFile:objectPath atomically:YES];
+
+    // 2. Link with external linker
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    int linkResult = [compiler linkObjects:@[@"msgsend_ref"]
+                           toSharedLibrary:@"msgsend_ref.dylib"
+                                     inDir:tempDir
+                            withFrameworks:@[@"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+
+    // Sign the dylib
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", dylibPath] UTF8String]);
+
+    // 3. Read reference dylib
+    NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
+    EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:refDylibData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    // 4. Characterize exports using MPWMachOReader
+    NSArray *exports = [reader exportedSymbolNames];
+    NSLog(@"Reference exports: %@", exports);
+
+    // Should only export _concatStrings, NOT _objc_msgSend$stringByAppendingString:
+    EXPECTTRUE([exports containsObject:@"_concatStrings"], @"should export _concatStrings");
+    BOOL hasObjcMsgSendExport = NO;
+    for (NSString *exp in exports) {
+        if ([exp hasPrefix:@"_objc_msgSend$"]) {
+            hasObjcMsgSendExport = YES;
+            break;
+        }
+    }
+    EXPECTFALSE(hasObjcMsgSendExport, @"should NOT export _objc_msgSend$ variants");
+
+    // 5. Characterize chained fixups imports - should bind to _objc_msgSend (not _objc_msgSend$...)
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+
+    if (chainedData) {
+        const struct dyld_chained_fixups_header *header =
+            (const struct dyld_chained_fixups_header *)chainedData.bytes;
+        const struct dyld_chained_import *imports =
+            (const struct dyld_chained_import *)((const uint8_t *)header + header->imports_offset);
+        const char *symbolPool = (const char *)header + header->symbols_offset;
+
+        BOOL foundObjcMsgSend = NO;
+        BOOL foundObjcMsgSendDollar = NO;
+        for (uint32_t i = 0; i < header->imports_count; i++) {
+            const char *name = symbolPool + imports[i].name_offset;
+            NSLog(@"Reference import %d: '%s'", i, name);
+            if (strcmp(name, "_objc_msgSend") == 0) {
+                foundObjcMsgSend = YES;
+            }
+            if (strncmp(name, "_objc_msgSend$", 14) == 0) {
+                foundObjcMsgSendDollar = YES;
+            }
+        }
+        EXPECTTRUE(foundObjcMsgSend, @"reference should import _objc_msgSend");
+        EXPECTFALSE(foundObjcMsgSendDollar, @"reference should NOT import _objc_msgSend$ variants");
+
+        // 5b. Characterize segment fixups structure
+        const struct dyld_chained_starts_in_image *starts =
+            (const struct dyld_chained_starts_in_image *)((const uint8_t *)header + header->starts_offset);
+        NSLog(@"Reference starts: seg_count=%d", starts->seg_count);
+
+        // Log which segments have fixups
+        for (int i = 0; i < starts->seg_count; i++) {
+            uint32_t offset = starts->seg_info_offset[i];
+            if (offset != 0) {
+                const struct dyld_chained_starts_in_segment *segStarts =
+                    (const struct dyld_chained_starts_in_segment *)((const uint8_t *)starts + offset);
+                NSLog(@"Reference segment %d: size=%d page_size=0x%x pointer_format=%d segment_offset=0x%llx page_count=%d",
+                      i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
+                      segStarts->segment_offset, segStarts->page_count);
+            } else {
+                NSLog(@"Reference segment %d: no fixups", i);
+            }
+        }
+    }
+
+    // 6. Characterize sections - should have __objc_stubs, __objc_methname, __objc_selrefs
+    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    EXPECTNOTNIL(textSeg, @"should have __TEXT");
+
+    BOOL hasObjcStubs = NO;
+    BOOL hasObjcMethname = NO;
+
+    if (textSeg) {
+        for (MPWMachOSection *section in textSeg.sections) {
+            NSLog(@"Reference __TEXT section: %@", section.sectionName);
+            if ([section.sectionName isEqualToString:@"__objc_stubs"]) {
+                hasObjcStubs = YES;
+                NSLog(@"  __objc_stubs: addr=0x%lx size=%lu", section.address, (unsigned long)section.size);
+            }
+            if ([section.sectionName isEqualToString:@"__objc_methname"]) {
+                hasObjcMethname = YES;
+                NSLog(@"  __objc_methname: addr=0x%lx size=%lu", section.address, (unsigned long)section.size);
+            }
+        }
+    }
+
+    EXPECTTRUE(hasObjcStubs, @"reference should have __objc_stubs section");
+    EXPECTTRUE(hasObjcMethname, @"reference should have __objc_methname section");
+
+    // Check for __objc_selrefs in __DATA
+    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    BOOL hasObjcSelrefs = NO;
+
+    if (dataSeg) {
+        for (MPWMachOSection *section in dataSeg.sections) {
+            NSLog(@"Reference __DATA section: %@", section.sectionName);
+            if ([section.sectionName isEqualToString:@"__objc_selrefs"]) {
+                hasObjcSelrefs = YES;
+                NSLog(@"  __objc_selrefs: addr=0x%lx size=%lu", section.address, (unsigned long)section.size);
+            }
+        }
+    }
+
+    EXPECTTRUE(hasObjcSelrefs, @"reference should have __objc_selrefs section in __DATA");
+
+    // 7. Test that reference dylib actually loads and works
+    void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
+    EXPECTNOTNIL(handle, @"reference dylib should load");
+
+    if (handle) {
+        id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
+        EXPECTNOTNIL(concatStrings, @"should find concatStrings");
+        if (concatStrings) {
+            NSString *result = concatStrings(@"Hello, ", @"World!");
+            IDEXPECT(result, @"Hello, World!", @"reference should work correctly");
+        }
+        dlclose(handle);
+    }
+
+    // Cleanup temp files
+    [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
+}
+
+// Characterization test: Check the generated message send dylib structure
+// and compare against reference to find differences
++ (void)testCharacterizeGeneratedMessageSendDylib {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *path = @"/tmp/libmsgsend_gen.dylib";
+    writer.installName = @"@rpath/libmsgsend.dylib";
+
+    STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
+    gen.symbolWriter = writer;
+    gen.relocationWriter = writer.textSectionWriter;
+
+    [gen generateFunctionNamed:@"_concatStrings" stackSpace:32 body:^(STObjectCodeGeneratorARM *g) {
+        [g generateMoveRegisterFrom:1 to:2];
+        [g generateMessageSendToSelector:@"stringByAppendingString:"];
+    }];
+
+    [writer addTextSectionData:gen.generatedCode];
+    [writer writeFile];
+    NSData *genDylibData = [writer data];
+    [genDylibData writeToFile:path atomically:YES];
+
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:genDylibData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    // 1. Check exports using MPWMachOReader - should only export _concatStrings, NOT _objc_msgSend$...
+    NSArray *exports = [reader exportedSymbolNames];
+    NSLog(@"Generated exports: %@", exports);
+
+    EXPECTTRUE([exports containsObject:@"_concatStrings"], @"should export _concatStrings");
+
+    BOOL hasObjcMsgSendExport = NO;
+    for (NSString *exp in exports) {
+        if ([exp hasPrefix:@"_objc_msgSend$"]) {
+            hasObjcMsgSendExport = YES;
+            break;
+        }
+    }
+    EXPECTFALSE(hasObjcMsgSendExport, @"should NOT export _objc_msgSend$ variants");
+
+    // 2. Check chained fixups imports - should import _objc_msgSend, not _objc_msgSend$...
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+
+    BOOL foundObjcMsgSend = NO;
+    BOOL foundObjcMsgSendDollar = NO;
+
+    if (chainedData) {
+        const struct dyld_chained_fixups_header *header =
+            (const struct dyld_chained_fixups_header *)chainedData.bytes;
+        const struct dyld_chained_import *imports =
+            (const struct dyld_chained_import *)((const uint8_t *)header + header->imports_offset);
+        const char *symbolPool = (const char *)header + header->symbols_offset;
+
+        for (uint32_t i = 0; i < header->imports_count; i++) {
+            const char *name = symbolPool + imports[i].name_offset;
+            NSLog(@"Generated import %d: '%s'", i, name);
+            if (strcmp(name, "_objc_msgSend") == 0) {
+                foundObjcMsgSend = YES;
+            }
+            if (strncmp(name, "_objc_msgSend$", 14) == 0) {
+                foundObjcMsgSendDollar = YES;
+            }
+        }
+
+        // Log segment fixups structure for comparison with reference
+        const struct dyld_chained_starts_in_image *starts =
+            (const struct dyld_chained_starts_in_image *)((const uint8_t *)header + header->starts_offset);
+        NSLog(@"Generated starts: seg_count=%d", starts->seg_count);
+
+        for (int i = 0; i < starts->seg_count; i++) {
+            uint32_t offset = starts->seg_info_offset[i];
+            if (offset != 0) {
+                const struct dyld_chained_starts_in_segment *segStarts =
+                    (const struct dyld_chained_starts_in_segment *)((const uint8_t *)starts + offset);
+                NSLog(@"Generated segment %d: size=%d page_size=0x%x pointer_format=%d segment_offset=0x%llx page_count=%d",
+                      i, segStarts->size, segStarts->page_size, segStarts->pointer_format,
+                      segStarts->segment_offset, segStarts->page_count);
+            } else {
+                NSLog(@"Generated segment %d: no fixups", i);
+            }
+        }
+    }
+
+    EXPECTTRUE(foundObjcMsgSend, @"should import _objc_msgSend (not $variant)");
+    EXPECTFALSE(foundObjcMsgSendDollar, @"should NOT import _objc_msgSend$ variants");
+
+    // 3. Check sections - should have __objc_stubs (not __stubs), __objc_methname, __objc_selrefs
+    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+
+    BOOL hasObjcStubs = NO;
+    BOOL hasRegularStubs = NO;
+    BOOL hasObjcMethname = NO;
+
+    if (textSeg) {
+        for (MPWMachOSection *section in textSeg.sections) {
+            NSLog(@"Generated __TEXT section: %@", section.sectionName);
+            if ([section.sectionName isEqualToString:@"__objc_stubs"]) {
+                hasObjcStubs = YES;
+            }
+            if ([section.sectionName isEqualToString:@"__stubs"]) {
+                hasRegularStubs = YES;
+            }
+            if ([section.sectionName isEqualToString:@"__objc_methname"]) {
+                hasObjcMethname = YES;
+            }
+        }
+    }
+
+    // For objc message sends, we need __objc_stubs (not __stubs)
+    EXPECTTRUE(hasObjcStubs, @"should have __objc_stubs section for objc message sends - BUG if missing");
+    EXPECTTRUE(hasObjcMethname, @"should have __objc_methname section - BUG if missing");
+    // Having regular __stubs is OK for non-objc external calls, but for pure objc we don't need it
+    if (hasRegularStubs && !hasObjcStubs) {
+        NSLog(@"WARNING: Has __stubs but not __objc_stubs - wrong section type for objc");
+    }
+
+    // Check for __objc_selrefs
+    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+
+    BOOL hasObjcSelrefs = NO;
+
+    for (MPWMachOSegment *seg in @[dataSeg ?: [NSNull null], dataConstSeg ?: [NSNull null]]) {
+        if ([seg isKindOfClass:[MPWMachOSegment class]]) {
+            for (MPWMachOSection *section in seg.sections) {
+                NSLog(@"Generated %@ section: %@", seg.name, section.sectionName);
+                if ([section.sectionName isEqualToString:@"__objc_selrefs"]) {
+                    hasObjcSelrefs = YES;
+                }
+            }
+        }
+    }
+
+    EXPECTTRUE(hasObjcSelrefs, @"should have __objc_selrefs section - BUG if missing");
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
 + (void)testDylibWithMessageSend {
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *path = @"/tmp/libmsgsend.dylib";
@@ -2398,6 +3039,8 @@
     @"testCharacterizeGeneratedExternalCallDylib",
     @"testDylibWithExternalCall",
     @"testDylibWithIntraLibraryCall",
+    @"testCharacterizeReferenceMessageSendDylib",
+    @"testCharacterizeGeneratedMessageSendDylib",
     @"testDylibWithMessageSend",
   ];
 }
