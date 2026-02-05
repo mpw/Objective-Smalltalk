@@ -170,22 +170,16 @@
 
 -(void)adjustSymtabEntries
 {
-    int numSections = [self sectionWriters].count;
-    int sectionNumberRemap[numSections];
-    int segmentToSectionOfffset[numSections];
-    int offsets[[self activeSectionWriters].count ];
     NSArray<MPWMachOSectionWriter*> *activeWriters=[self sectionWriters];
-    
-//    for (int i=0,max=activeWriters.count;i<max;i++) {
-//        sectionNumberRemap[activeWriters[i].sectionNumber]=i;
-//    }
-    
+
     for (int i=0;i<symtabCount;i++) {
-//        NSLog(@"before: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
-//        symtab[i].section=sectionNumberRemap[symtab[i].section];
         symtab[i].address += activeWriters[symtab[i].section].address;
-//        NSLog(@"after: symtab[%d] section: %d address: %ld",i,symtab[i].section,symtab[i].address);
-   }
+    }
+}
+
+-(symtab_entry*)symtabEntries
+{
+    return symtab;
 }
 
 -(void)writeSegmentLoadCommand

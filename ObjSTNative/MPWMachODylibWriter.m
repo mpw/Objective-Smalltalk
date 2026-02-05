@@ -52,6 +52,9 @@
   if (self) {
     self.filetype = MH_DYLIB;
     self.cputype = CPU_TYPE_ARM64;
+    // Fix text section number to match Mach-O 1-based convention
+    // (base class addSectionWriter: assigns 0-based, but textSectionNumber returns 1)
+    self.textSectionWriter.sectionNumber = 1;
     self.currentVersion = 0x10000;       // 1.0.0
     self.compatibilityVersion = 0x10000; // 1.0.0
     self.chainedFixupWriter =
@@ -59,7 +62,8 @@
     self.stubOffsets = [NSMutableDictionary dictionary];
     self.gotOffsets = [NSMutableDictionary dictionary];
     self.frameworks =
-        [NSMutableArray arrayWithObject:@"/usr/lib/libSystem.B.dylib"];
+        [NSMutableArray arrayWithObjects:@"/usr/lib/libSystem.B.dylib",
+                                         @"/usr/lib/libobjc.A.dylib", nil];
     // ObjC message send support
     self.objcStubOffsets = [NSMutableDictionary dictionary];
     self.objcMethnameOffsets = [NSMutableDictionary dictionary];
@@ -265,18 +269,6 @@
 
   // Ensure _objc_msgSend is declared as external (only once)
   if (!self.gotOffsets[@"_objc_msgSend"]) {
-    // Add libobjc to frameworks if not already present
-    BOOL hasLibobjc = NO;
-    for (NSString *fw in self.frameworks) {
-      if ([fw containsString:@"libobjc"]) {
-        hasLibobjc = YES;
-        break;
-      }
-    }
-    if (!hasLibobjc) {
-      [self.frameworks addObject:@"/usr/lib/libobjc.A.dylib"];
-    }
-
     MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
     self.gotOffsets[@"_objc_msgSend"] = @(gotWriter.length);
     uint64_t dummy = 0;
@@ -328,6 +320,14 @@
 }
 
 - (int)declareExternalSymbol:(NSString *)symbol {
+  // If this symbol is already defined internally, don't treat it as external.
+  // This happens when addClassReferenceForClass: calls declareExternalSymbol:
+  // for a class that is being defined in this same dylib.
+  NSDictionary *existingInfo = self.symbolAddressInfo[symbol];
+  if (existingInfo && [existingInfo[@"section"] intValue] > 0) {
+    return [self.globalSymbolOffsets[symbol] intValue];
+  }
+
   // Check if this is an _objc_msgSend$ symbol
   NSString *selector = nil;
   if ([self isObjcMsgSendSymbol:symbol selector:&selector]) {
@@ -566,8 +566,11 @@
 - (int)ordinalForSymbol:(NSString *)symbol {
   int ordinal = 1; // Default to libSystem
 
-  // _objc_msgSend comes from libobjc
-  if ([symbol isEqualToString:@"_objc_msgSend"]) {
+  // ObjC runtime symbols come from libobjc
+  if ([symbol isEqualToString:@"_objc_msgSend"] ||
+      [symbol isEqualToString:@"__objc_empty_cache"] ||
+      [symbol hasPrefix:@"_OBJC_CLASS_$_"] ||
+      [symbol hasPrefix:@"_OBJC_METACLASS_$_"]) {
     for (int i = 0; i < self.frameworks.count; i++) {
       if ([self.frameworks[i] containsString:@"libobjc"]) {
         ordinal = i + 1;
@@ -684,21 +687,61 @@
     }
   }
 
+  // 2c. Process relocations from __DATA_CONST sections (excluding __got, handled in step 1)
+  // Sections like __objc_classlist have relocations that need chained fixups
+  {
+    long dataConstVmaddr2 = self.textSegmentSize;
+    for (MPWMachOSectionWriter *sectionWriter in [self dataConstSectionWriters]) {
+      if ([sectionWriter.sectname isEqualToString:@"__got"]) continue; // already handled in step 1
+      int numRelocs = [sectionWriter numRelocationEntries];
+      if (numRelocs > 0) {
+        for (int i = 0; i < numRelocs; i++) {
+          NSString *symbolName = [sectionWriter symbolNameForRelocationAtIndex:i];
+          int relocOffset = [sectionWriter offsetForRelocationAtIndex:i];
+          long segmentOffset = sectionWriter.address - dataConstVmaddr2 + relocOffset;
+
+          if (self.gotOffsets[symbolName]) {
+            int ordinal = [self ordinalForSymbol:symbolName];
+            int importOrdinal = [self.chainedFixupWriter addImport:symbolName fromDylib:ordinal];
+            [self.chainedFixupWriter addBindAtSegment:1 offset:segmentOffset ordinal:importOrdinal];
+          } else {
+            long targetAddr = [self resolveSymbolAddress:symbolName];
+            [self.chainedFixupWriter addRebaseAtSegment:1 offset:segmentOffset target:targetAddr];
+          }
+        }
+      }
+    }
+  }
+
   // 3. Generate metadata to compute 'next' pointers
   [self.chainedFixupWriter fixupDataWithSegmentCount:[self segmentCount]];
 
-  // 4. Patch GOT slots with bind entry bits
-  NSMutableData *gotData = (NSMutableData *)gotWriter.target;
-  NSArray *segFixups = [self.chainedFixupWriter fixupsForSegment:1];
-  long dataConstVmaddr = self.textSegmentSize;
-  long gotSegStart = gotWriter.address - dataConstVmaddr;
+  // 4. Patch __DATA_CONST section fixups (GOT binds, classlist rebases, etc.)
+  {
+    NSArray *segFixups = [self.chainedFixupWriter fixupsForSegment:1];
+    long dataConstVmaddr = self.textSegmentSize;
 
-  for (MPWChainedFixup *f in segFixups) {
-    if (!f.isRebase) {
-      uint64_t bindBits = [self.chainedFixupWriter bind64Bits:f.ordinal next:f.next];
-      long f_section_offset = f.offset - gotSegStart;
-      [gotData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
-                         withBytes:&bindBits];
+    for (MPWChainedFixup *f in segFixups) {
+      // Find the section writer that contains this fixup offset
+      for (MPWMachOSectionWriter *sectionWriter in [self dataConstSectionWriters]) {
+        long sectionSegStart = sectionWriter.address - dataConstVmaddr;
+        long sectionSegEnd = sectionSegStart + sectionWriter.length;
+
+        if (f.offset >= sectionSegStart && f.offset < sectionSegEnd) {
+          NSMutableData *sectionData = (NSMutableData *)sectionWriter.target;
+          long f_section_offset = f.offset - sectionSegStart;
+
+          uint64_t bits;
+          if (f.isRebase) {
+            bits = [self.chainedFixupWriter rebase64Bits:f.rebaseTarget next:f.next];
+          } else {
+            bits = [self.chainedFixupWriter bind64Bits:f.ordinal next:f.next];
+          }
+          [sectionData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
+                                 withBytes:&bits];
+          break;
+        }
+      }
     }
   }
 
@@ -848,6 +891,24 @@
          (dataSections.count * sizeof(struct section_64));
 }
 
+// Override: dylib has sections spread across multiple segments,
+// so we match by sectionNumber property instead of array index.
+-(void)adjustSymtabEntries
+{
+    symtab_entry *entries = [self symtabEntries];
+    NSArray<MPWMachOSectionWriter*> *allWriters = self.sectionWriters;
+
+    for (int i=0; i<symtabCount; i++) {
+        int sect = entries[i].section;
+        for (MPWMachOSectionWriter *w in allWriters) {
+            if (w.sectionNumber == sect) {
+                entries[i].address += w.address;
+                break;
+            }
+        }
+    }
+}
+
 - (void)writeTextSegmentLoadCommand {
   NSArray *writers = [self textSectionWriters];
 
@@ -888,6 +949,7 @@
   // Adjust symbol table entries to use actual vmaddrs
   [self adjustSymtabEntries];
 }
+
 
 - (void)writeDataConstSegmentLoadCommand {
   NSArray *writers = [self dataConstSectionWriters];
@@ -2670,8 +2732,8 @@
 
                 // Reference had: lib_ordinal=1, name='_MPWCreateInteger'
                 if (i == 0) {
-                    // MPWFoundation is ordinal 2 (libSystem=1, MPWFoundation=2)
-                    INTEXPECT(imports[i].lib_ordinal, 2, @"_MPWCreateInteger should come from ordinal 2 (MPWFoundation)");
+                    // MPWFoundation is ordinal 3 (libSystem=1, libobjc=2, MPWFoundation=3)
+                    INTEXPECT(imports[i].lib_ordinal, 3, @"_MPWCreateInteger should come from ordinal 3 (MPWFoundation)");
                     EXPECTTRUE(strcmp(symbolName, "_MPWCreateInteger") == 0, @"first import should be _MPWCreateInteger");
                 }
             }
@@ -3698,11 +3760,12 @@
     NSString *path = @"/tmp/compiled-st-class.dylib";
     writer.installName = @"@rpath/compiled-st-class.dylib";
     [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     NSString *className = @"TestClassCode1";
 
     NSString *classToCompile = [self testClassCodeWithName:className];
 
-    
+
     NSData *dylibdata = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
     
     //    [writer addTextSectionData:gen.generatedCode];

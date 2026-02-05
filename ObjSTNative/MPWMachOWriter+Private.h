@@ -6,6 +6,7 @@
 //
 
 #import "MPWMachOWriter.h"
+#import "Mach_O_Structs.h"
 
 @class MPWMachOSectionWriter;
 
@@ -29,5 +30,6 @@
 -(void)writeStringTable;
 -(void)writeSymbolTableData;  // Writes symtab data without offset assertion
 -(void)adjustSymtabEntries;   // Adjust symbol addresses based on section addresses
+-(symtab_entry*)symtabEntries;  // Access raw symtab for subclass overrides
 
 @end
