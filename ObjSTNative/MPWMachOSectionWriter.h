@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) int relocationLength;
 @property (nonatomic, assign) int relocationPCRel;
 @property (nonatomic, assign) int alignment;
+@property (nonatomic, assign) BOOL suppressRelocationInfo;  // For dylibs: set to YES to suppress nreloc/reloff
 
 -(void)writeSectionLoadCommandOnWriter:(MPWByteStream*)writer;
 -(void)writeSectionDataOn:(MPWByteStream*)writer;
@@ -48,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)numRelocationEntries;
 -(NSString*)symbolNameForRelocationAtIndex:(int)index;
 -(int)offsetForRelocationAtIndex:(int)index;
+-(int)typeOfRelocationAtIndex:(int)index;
 
 @end
 

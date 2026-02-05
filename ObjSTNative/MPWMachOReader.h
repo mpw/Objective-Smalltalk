@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)sectionForSymbolAt:(int)which;
 -(bool)isSymbolGlobalAt:(int)which;
 -(int)indexOfSymbolNamed:(NSString*)symbol;
+-(bool)isSymbolUndefined:(int)which;
+-(NSArray<NSDictionary*>*)symbols;
 
 
 -(MPWMachOSection*)textSection;

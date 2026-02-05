@@ -60,8 +60,11 @@
     section.offset = (int)self.offset;
     section.size = self.length;
     section.flags = self.flags; //;
-    section.nreloc = [self numRelocationEntries];
-    section.reloff = [self numRelocationEntries] >0 ? self.relocationEntryOffset : 0;
+    // For dylibs, suppress section-level relocations (they use chained fixups instead)
+    if (!self.suppressRelocationInfo) {
+        section.nreloc = [self numRelocationEntries];
+        section.reloff = [self numRelocationEntries] >0 ? self.relocationEntryOffset : 0;
+    }
     section.align = self.alignment;
     [writer appendBytes:&section length:sizeof section];
 }
@@ -181,6 +184,14 @@
         return -1;
     }
     return relocations[index].r_address;
+}
+
+-(int)typeOfRelocationAtIndex:(int)index
+{
+    if (index < 0 || index >= relocCount) {
+        return -1;
+    }
+    return relocations[index].r_type;
 }
 
 -(void)dealloc

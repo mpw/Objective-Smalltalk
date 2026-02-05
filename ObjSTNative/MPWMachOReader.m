@@ -408,6 +408,22 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return (entry->section) == 0 && (entry->type & N_EXT);
 }
 
+-(NSArray<NSDictionary*>*)symbols
+{
+    int nsyms = [self numSymbols];
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:nsyms];
+    for (int i = 0; i < nsyms; i++) {
+        symtab_entry *entry = [self entryAt:i];
+        [result addObject:@{
+            @"name": [self symbolNameAt:i],
+            @"type": @(entry->type),
+            @"sect": @(entry->section),
+            @"value": @((unsigned long long)entry->address),
+        }];
+    }
+    return result;
+}
+
 -(MPWMachOInSectionPointer*)pointerForSymbolAt:(int)symbolIndex
 {
     MPWMachOSection *section = [self sectionAtIndex:[self sectionForSymbolAt:symbolIndex]];

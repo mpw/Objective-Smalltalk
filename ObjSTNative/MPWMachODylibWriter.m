@@ -17,6 +17,9 @@
 #import "STJittableData.h"
 #import <dlfcn.h>
 #import <mach-o/loader.h>
+#import <mach-o/arm64/reloc.h>
+#import "STNativeCompiler.h"
+
 
 @interface MPWMachODylibWriter ()
 
@@ -143,6 +146,18 @@
   return self.stubOffsets.count > 0 || self.gotOffsets.count > 0;
 }
 
+// Override to suppress section-level relocations for dylibs
+// Dylibs use chained fixups instead of section relocations
+- (MPWMachOSectionWriter *)addSectionWriterWithSegName:(NSString *)segname
+                                              sectName:(NSString *)sectname
+                                                 flags:(int)flags {
+  MPWMachOSectionWriter *writer = [super addSectionWriterWithSegName:segname
+                                                            sectName:sectname
+                                                               flags:flags];
+  writer.suppressRelocationInfo = YES;
+  return writer;
+}
+
 - (MPWMachOSectionWriter *)stubSectionWriter {
   return [self
       addSectionWriterWithSegName:@"__TEXT"
@@ -209,6 +224,15 @@
   if (existingInfo && [existingInfo[@"section"] intValue] > 0) {
     // Return the existing symbol index - don't re-declare
     return [self.globalSymbolOffsets[symbol] intValue];
+  }
+
+  // Check if this symbol was already declared as external (via declareExternalSymbol:).
+  // This happens when addRelocationEntryForSymbol: re-calls declareGlobalSymbol
+  // with a non-zero section (the cfstring section) for symbols like
+  // ___CFConstantStringClassReference. We must NOT let it fall through to super,
+  // which would add it to the symbol table as a defined symbol.
+  if ([self.externalSymbolNames containsObject:symbol]) {
+    return [self.stubOffsets[symbol] intValue];
   }
 
   // Only intercept external symbol declarations from code generator (section=0)
@@ -324,7 +348,12 @@
     uint64_t dummy = 0;
     [gotWriter appendBytes:&dummy length:sizeof(dummy)];
   }
-  return [super declareExternalSymbol:symbol];
+  // For dylibs, external symbols are handled via chained fixups imports,
+  // NOT via the symbol table. Don't call super - that would add the symbol
+  // to the symbol table as a "common" symbol instead of an undefined external.
+  // Just track in externalSymbolNames for reference.
+  [self.externalSymbolNames addObject:symbol];
+  return 0;
 }
 
 - (void)patchStubs {
@@ -470,45 +499,80 @@
   }
 }
 
+- (long)resolveSymbolAddress:(NSString *)symbolName {
+  // Check if this is an ObjC stub (for _objc_msgSend$selector)
+  NSString *selector = nil;
+  if ([self isObjcMsgSendSymbol:symbolName selector:&selector]) {
+    MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+    if (self.objcStubOffsets[selector]) {
+      return objcStubWriter.address + [self.objcStubOffsets[selector] longValue];
+    }
+  } else if (self.stubOffsets[symbolName]) {
+    // Regular external symbol stub in __stubs section
+    return self.stubSectionWriter.address +
+                   [self.stubOffsets[symbolName] longValue];
+  } else {
+    // Internal symbol - use symbolAddressInfo to find correct section
+    NSDictionary *info = self.symbolAddressInfo[symbolName];
+    if (info) {
+      int sectionNum = [info[@"section"] intValue];
+      long offsetInSection = [info[@"offset"] longValue];
+      for (MPWMachOSectionWriter *sw in self.sectionWriters) {
+        if (sw.sectionNumber == sectionNum) {
+          return sw.address + offsetInSection;
+        }
+      }
+    }
+  }
+  return 0;
+}
+
 - (void)applyRelocations {
   for (MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+    // Skip __DATA sections - their relocations are handled via chained fixups
+    // in buildChainedFixups, not via ARM64 instruction patching
+    if ([sectionWriter.segname isEqualToString:@"__DATA"]) {
+      continue;
+    }
     NSMutableData *sectionData = (NSMutableData *)sectionWriter.target;
     for (int i = 0; i < sectionWriter.numRelocationEntries; i++) {
       NSString *symbolName = [sectionWriter symbolNameForRelocationAtIndex:i];
       int offset = [sectionWriter offsetForRelocationAtIndex:i];
+      int relocType = [sectionWriter typeOfRelocationAtIndex:i];
 
-      long targetAddr = 0;
-
-      // Check if this is an ObjC stub (for _objc_msgSend$selector)
-      NSString *selector = nil;
-      if ([self isObjcMsgSendSymbol:symbolName selector:&selector]) {
-        // Target is in __objc_stubs section
-        MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
-        if (self.objcStubOffsets[selector]) {
-          targetAddr = objcStubWriter.address + [self.objcStubOffsets[selector] longValue];
-        }
-      } else if (self.stubOffsets[symbolName]) {
-        // Regular stub in __stubs section
-        targetAddr = self.stubSectionWriter.address +
-                     [self.stubOffsets[symbolName] longValue];
-      } else {
-        // Internal symbol
-        NSDictionary *info = self.symbolAddressInfo[symbolName];
-        if (info) {
-          targetAddr =
-              self.textSectionWriter.address + [info[@"offset"] longValue];
-        }
-      }
+      long targetAddr = [self resolveSymbolAddress:symbolName];
 
       if (targetAddr != 0) {
         long pcAddr = sectionWriter.address + offset;
-        long delta = (targetAddr - pcAddr);
         uint32_t instr;
         [sectionData getBytes:&instr range:NSMakeRange(offset, 4)];
-        instr &= 0xfc000000;
-        instr |= (uint32_t)((delta >> 2) & 0x03ffffff);
-        [sectionData replaceBytesInRange:NSMakeRange(offset, 4)
-                               withBytes:&instr];
+
+        if (relocType == ARM64_RELOC_PAGE21) {
+          // ADRP instruction: encode page-relative offset
+          long pcPage = pcAddr & ~0xFFF;
+          long targetPage = targetAddr & ~0xFFF;
+          long pageDiff = (targetPage - pcPage) >> 12;
+          // ADRP encoding: immhi (bits 5-23), immlo (bits 29-30)
+          instr &= 0x9F00001F; // preserve opcode and Rd
+          instr |= (uint32_t)((pageDiff & 0x3) << 29);     // immlo
+          instr |= (uint32_t)(((pageDiff >> 2) & 0x7FFFF) << 5); // immhi
+          [sectionData replaceBytesInRange:NSMakeRange(offset, 4)
+                                 withBytes:&instr];
+        } else if (relocType == ARM64_RELOC_PAGEOFF12) {
+          // ADD immediate instruction: encode page offset (low 12 bits)
+          long pageOff = targetAddr & 0xFFF;
+          instr &= 0xFFC003FF; // preserve everything except imm12
+          instr |= (uint32_t)((pageOff & 0xFFF) << 10);
+          [sectionData replaceBytesInRange:NSMakeRange(offset, 4)
+                                 withBytes:&instr];
+        } else {
+          // ARM64_RELOC_BRANCH26: branch instruction
+          long delta = (targetAddr - pcAddr);
+          instr &= 0xfc000000;
+          instr |= (uint32_t)((delta >> 2) & 0x03ffffff);
+          [sectionData replaceBytesInRange:NSMakeRange(offset, 4)
+                                 withBytes:&instr];
+        }
       }
     }
   }
@@ -528,6 +592,15 @@
   } else if ([symbol containsString:@"MPW"]) {
     for (int i = 0; i < self.frameworks.count; i++) {
       if ([self.frameworks[i] containsString:@"MPWFoundation"]) {
+        ordinal = i + 1;
+        break;
+      }
+    }
+  } else if ([symbol isEqualToString:@"___CFConstantStringClassReference"]) {
+    // ___CFConstantStringClassReference is in CoreFoundation (part of Foundation)
+    for (int i = 0; i < self.frameworks.count; i++) {
+      if ([self.frameworks[i] containsString:@"Foundation"] ||
+          [self.frameworks[i] containsString:@"CoreFoundation"]) {
         ordinal = i + 1;
         break;
       }
@@ -592,6 +665,47 @@
     }
   }
 
+  // 2b. Process relocations from __DATA sections (like __string for constant NSStrings)
+  // These have relocation entries that need to be converted to chained fixups
+  int dataSegmentIndex = [self hasDataConstSegment] ? 2 : 1;
+  long dataSegmentVmaddr = self.textSegmentSize;
+  if ([self hasDataConstSegment]) {
+    long dataConstVmsize = (self.dataConstSegmentSize + 0x3FFF) & ~0x3FFF;
+    if (dataConstVmsize == 0) dataConstVmsize = 0x4000;
+    dataSegmentVmaddr += dataConstVmsize;
+  }
+
+  for (MPWMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
+    int numRelocs = [sectionWriter numRelocationEntries];
+    if (numRelocs > 0) {
+      for (int i = 0; i < numRelocs; i++) {
+        NSString *symbolName = [sectionWriter symbolNameForRelocationAtIndex:i];
+        int relocOffset = [sectionWriter offsetForRelocationAtIndex:i];
+        long segmentOffset = sectionWriter.address - dataSegmentVmaddr + relocOffset;
+
+        // Check if this is an external symbol (needs bind) or internal (needs rebase)
+        // External symbols are tracked in gotOffsets
+        if (self.gotOffsets[symbolName]) {
+          // External symbol - needs a bind
+          int ordinal = [self ordinalForSymbol:symbolName];
+          int importOrdinal = [self.chainedFixupWriter addImport:symbolName fromDylib:ordinal];
+
+          NSLog(@"buildChainedFixups: Adding bind for %@ at segment %d offset 0x%lx ordinal %d",
+                symbolName, dataSegmentIndex, segmentOffset, importOrdinal);
+          [self.chainedFixupWriter addBindAtSegment:dataSegmentIndex
+                                             offset:segmentOffset
+                                            ordinal:importOrdinal];
+        } else {
+          // Internal symbol - this is a rebase to a local address
+          long targetAddr = [self resolveSymbolAddress:symbolName];
+          [self.chainedFixupWriter addRebaseAtSegment:dataSegmentIndex
+                                               offset:segmentOffset
+                                               target:targetAddr];
+        }
+      }
+    }
+  }
+
   // 3. Generate metadata to compute 'next' pointers
   [self.chainedFixupWriter fixupDataWithSegmentCount:[self segmentCount]];
 
@@ -610,27 +724,43 @@
     }
   }
 
-  // 5. Patch selrefs with rebase entry bits
-  if (selrefsWriter.isActive && self.objcSelrefOffsets.count > 0) {
-    int dataSegmentIndex = [self hasDataConstSegment] ? 2 : 1;
-    NSArray *dataSegFixups = [self.chainedFixupWriter fixupsForSegment:dataSegmentIndex];
-    NSMutableData *selrefsData = (NSMutableData *)selrefsWriter.target;
+  // 5. Patch __DATA section fixups (selrefs, __string, etc.)
+  {
+    int dataSegIdx = [self hasDataConstSegment] ? 2 : 1;
+    NSArray *dataSegFixups = [self.chainedFixupWriter fixupsForSegment:dataSegIdx];
 
-    long dataSegmentVmaddr = self.textSegmentSize;
+    long dataSegVmaddr = self.textSegmentSize;
     if ([self hasDataConstSegment]) {
       long dataConstVmsize = (self.dataConstSegmentSize + 0x3FFF) & ~0x3FFF;
       if (dataConstVmsize == 0) dataConstVmsize = 0x4000;
-      dataSegmentVmaddr += dataConstVmsize;
+      dataSegVmaddr += dataConstVmsize;
     }
-    long selrefsSegStart = selrefsWriter.address - dataSegmentVmaddr;
 
+    // For each fixup, find which section it belongs to and patch it
     for (MPWChainedFixup *f in dataSegFixups) {
-      if (f.isRebase) {
-        uint64_t rebaseBits = [self.chainedFixupWriter rebase64Bits:f.rebaseTarget next:f.next];
-        long f_section_offset = f.offset - selrefsSegStart;
-        NSLog(@"Patching selref at section offset %ld with rebase bits 0x%llx", f_section_offset, rebaseBits);
-        [selrefsData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
-                               withBytes:&rebaseBits];
+      // Find the section writer that contains this fixup offset
+      for (MPWMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
+        long sectionSegStart = sectionWriter.address - dataSegVmaddr;
+        long sectionSegEnd = sectionSegStart + sectionWriter.length;
+
+        if (f.offset >= sectionSegStart && f.offset < sectionSegEnd) {
+          NSMutableData *sectionData = (NSMutableData *)sectionWriter.target;
+          long f_section_offset = f.offset - sectionSegStart;
+
+          uint64_t bits;
+          if (f.isRebase) {
+            bits = [self.chainedFixupWriter rebase64Bits:f.rebaseTarget next:f.next];
+            NSLog(@"Patching %@ at section offset %ld with rebase bits 0x%llx (target 0x%llx)",
+                  sectionWriter.sectname, f_section_offset, bits, f.rebaseTarget);
+          } else {
+            bits = [self.chainedFixupWriter bind64Bits:f.ordinal next:f.next];
+            NSLog(@"Patching %@ at section offset %ld with bind bits 0x%llx (ordinal %d)",
+                  sectionWriter.sectname, f_section_offset, bits, f.ordinal);
+          }
+          [sectionData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
+                                 withBytes:&bits];
+          break;
+        }
       }
     }
   }
@@ -2826,8 +2956,6 @@
     [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
 }
 
-// Characterization test: Check the generated message send dylib structure
-// and compare against reference to find differences
 + (void)testCharacterizeGeneratedMessageSendDylib {
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
@@ -2844,7 +2972,7 @@
         //        [codegen generateMoveConstant:0 to:0];
     }];
 
-    [writer addTextSectionData:gen.generatedCode];
+//    [writer addTextSectionData:gen.generatedCode];
     [writer writeFile];
     NSData *genDylibData = [writer data];
     [genDylibData writeToFile:path atomically:YES];
@@ -2959,6 +3087,632 @@
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
+// Characterization test: Create reference dylib with constant NSString using ObjSTNative object file
+// linked with external linker. Documents structure for comparison with our generated version.
++ (void)testCharacterizeReferenceConstantStringDylib {
+    // 1. Generate object file with constant string using MPWMachOWriter
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    MPWMachOWriter *objectWriter = compiler.writer;
+    NSString *tempDir = @"/tmp";
+    NSString *objectPath = [tempDir stringByAppendingPathComponent:@"conststring_ref.o"];
+    NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"conststring_ref.dylib"];
+
+    STObjectCodeGeneratorARM *gen = compiler.codegen;
+
+    [compiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [compiler generateStringLiteral:@"Test String"];
+    }];
+
+    [objectWriter addTextSectionData:(NSData*)gen.generatedCode];
+    [objectWriter writeFile];
+    [objectWriter.data writeToFile:objectPath atomically:YES];
+
+    // 2. Link with external linker
+    int linkResult = [compiler linkObjects:@[@"conststring_ref"]
+                           toSharedLibrary:@"conststring_ref.dylib"
+                                     inDir:tempDir
+                            withFrameworks:@[@"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+
+    // Sign the dylib
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", dylibPath] UTF8String]);
+
+    // 3. Read reference dylib
+    NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
+    EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:refDylibData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    // 4. Characterize segments
+    NSArray *segments = [reader segments];
+    NSLog(@"Reference constant string dylib has %lu segments", (unsigned long)segments.count);
+    for (MPWMachOSegment *seg in segments) {
+        NSLog(@"Reference segment: %@ vmaddr=0x%lx vmsize=0x%lx fileoff=0x%lx filesize=0x%lx",
+              seg.name, seg.vmaddr, seg.vmsize, seg.fileoff, seg.filesize);
+        for (MPWMachOSection *section in seg.sections) {
+            NSLog(@"  Reference section: %@ addr=0x%llx size=0x%llx offset=0x%lx",
+                  section.sectionName, section.address, (unsigned long long)section.size, section.offset);
+        }
+    }
+
+    // 5. Check for __string section (constant NSString data - struct with isa, flags, cstring ptr, length)
+    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+
+    BOOL hasStringSection = [self segment:dataSeg hasSectionNamed:@"__string"];
+    EXPECTTRUE(hasStringSection, @"reference should have __string section in __DATA");
+
+    // 6. Check for cstring section (string content)
+    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    BOOL hasCstring = [self segment:textSeg hasSectionNamed:@"__cstring"];
+    EXPECTTRUE(hasCstring, @"reference should have __cstring section in __TEXT");
+
+    // 7. CRITICAL: Check section relocation fields - dylibs should NOT have section-level relocations
+    // (they use chained fixups instead). This was the nm error about "relocation entries at offset 0"
+    MPWMachOSection *stringSection = [self findSectionNamed:@"__string" inSegment:dataSeg];
+    if (stringSection) {
+        NSLog(@"Reference __string section: relocEntryOffset=%d numRelocEntries=%d",
+              stringSection.relocEntryOffset, stringSection.numRelocEntries);
+        INTEXPECT(stringSection.relocEntryOffset, 0, @"reference __string section should have reloff=0");
+        INTEXPECT(stringSection.numRelocEntries, 0, @"reference __string section should have nreloc=0");
+    }
+
+    // 8. Check chained fixups for ___CFConstantStringClassReference import
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+
+    NSDictionary *importCheck = [self checkChainedFixupsImportsIn:chainedData
+                                                        forSymbol:@"___CFConstantStringClassReference"
+                                                        logPrefix:@"Reference"];
+    EXPECTTRUE([importCheck[@"found"] boolValue], @"reference should import ___CFConstantStringClassReference");
+
+    // 9. Log segment fixups structure
+    [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Reference"];
+
+    // 9. Test that reference dylib actually loads
+    void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
+    EXPECTNOTNIL(handle, @"reference dylib should load");
+    if (handle) {
+        id (*returnString)(void) = dlsym(handle, "returnString");
+        EXPECTNOTNIL(returnString, @"should find returnString");
+        if (returnString) {
+            NSString *result = returnString();
+            IDEXPECT(result, @"Test String", @"reference should return correct string");
+        }
+        dlclose(handle);
+    }
+
+    // Cleanup temp files
+    [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
+}
+
+// Characterization test: Check the generated constant string dylib structure
+// and compare against reference to find differences
++ (void)testCharacterizeGeneratedConstantStringDylib {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
+    NSString *path = @"/tmp/libconststring_gen.dylib";
+    writer.installName = @"@rpath/libconststring.dylib";
+
+    STObjectCodeGeneratorARM *gen = compiler.codegen;
+
+    [compiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [compiler generateStringLiteral:@"Test String"];
+    }];
+
+    [writer addTextSectionData:gen.generatedCode];
+    [writer writeFile];
+    NSData *genDylibData = [writer data];
+    [genDylibData writeToFile:path atomically:YES];
+
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:genDylibData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    // 1. Characterize segments
+    NSArray *segments = [reader segments];
+    NSLog(@"Generated constant string dylib has %lu segments", (unsigned long)segments.count);
+    for (MPWMachOSegment *seg in segments) {
+        NSLog(@"Generated segment: %@ vmaddr=0x%lx vmsize=0x%lx fileoff=0x%lx filesize=0x%lx",
+              seg.name, seg.vmaddr, seg.vmsize, seg.fileoff, seg.filesize);
+        for (MPWMachOSection *section in seg.sections) {
+            NSLog(@"  Generated section: %@ addr=0x%llx size=0x%llx offset=0x%lx",
+                  section.sectionName, section.address, (unsigned long long)section.size, section.offset);
+        }
+    }
+
+    // 2. Check for __string section (constant NSString data)
+    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+
+    BOOL hasStringSection = [self segment:dataSeg hasSectionNamed:@"__string"];
+    [self logSectionsInSegment:dataSeg withPrefix:@"Generated"];
+    [self logSectionsInSegment:dataConstSeg withPrefix:@"Generated"];
+
+    EXPECTTRUE(hasStringSection, @"generated should have __string section in __DATA - BUG if missing");
+
+    // 3. CRITICAL: Check section relocation fields - dylibs should NOT have section-level relocations
+    // This is the nm error: "section relocation entries at offset 0 with a size of 16"
+    MPWMachOSection *stringSection = [self findSectionNamed:@"__string" inSegment:dataSeg];
+    if (stringSection) {
+        NSLog(@"Generated __string section: relocEntryOffset=%d numRelocEntries=%d",
+              stringSection.relocEntryOffset, stringSection.numRelocEntries);
+        INTEXPECT(stringSection.relocEntryOffset, 0, @"generated __string section should have reloff=0 - BUG if nonzero");
+        INTEXPECT(stringSection.numRelocEntries, 0, @"generated __string section should have nreloc=0 - BUG if nonzero");
+    }
+
+    // 4. Check for cstring section
+    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    [self logSectionsInSegment:textSeg withPrefix:@"Generated"];
+    BOOL hasCstring = [self segment:textSeg hasSectionNamed:@"__cstring"];
+    EXPECTTRUE(hasCstring, @"generated should have __cstring section - BUG if missing");
+
+    // 5. Check chained fixups for ___CFConstantStringClassReference import
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+
+    NSDictionary *importCheck = [self checkChainedFixupsImportsIn:chainedData
+                                                        forSymbol:@"___CFConstantStringClassReference"
+                                                        logPrefix:@"Generated"];
+    EXPECTTRUE([importCheck[@"found"] boolValue], @"generated should import ___CFConstantStringClassReference - BUG if missing");
+
+    // 6. Log segment fixups structure
+    [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Generated"];
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+// Detailed binary comparison test: Compare __string section content byte-by-byte
+// to find exact differences causing "out of range bind ordinal" error
++ (void)testCompareConstantStringBinaryContent {
+    // 1. Generate REFERENCE dylib using external linker
+    STNativeCompiler *refCompiler = [STNativeCompiler compiler];
+    MPWMachOWriter *objectWriter = refCompiler.writer;
+    NSString *tempDir = @"/tmp";
+    NSString *objectPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare.o"];
+    NSString *refDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare_ref.dylib"];
+
+    STObjectCodeGeneratorARM *refGen = refCompiler.codegen;
+    [refCompiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [refCompiler generateStringLiteral:@"Test String"];
+    }];
+
+    [objectWriter addTextSectionData:(NSData*)refGen.generatedCode];
+    [objectWriter writeFile];
+    [objectWriter.data writeToFile:objectPath atomically:YES];
+
+    int linkResult = [refCompiler linkObjects:@[@"conststring_bincompare"]
+                           toSharedLibrary:@"conststring_bincompare_ref.dylib"
+                                     inDir:tempDir
+                            withFrameworks:@[@"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", refDylibPath] UTF8String]);
+
+    NSData *refDylibData = [NSData dataWithContentsOfFile:refDylibPath];
+    EXPECTNOTNIL(refDylibData, @"reference dylib should exist");
+    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refDylibData];
+
+    // 2. Generate CANDIDATE dylib using MPWMachODylibWriter
+    MPWMachODylibWriter *genWriter = [MPWMachODylibWriter stream];
+    STNativeCompiler *genCompiler = [[[STNativeCompiler alloc] initWithWriter:genWriter] autorelease];
+    genWriter.installName = @"@rpath/libconststring.dylib";
+    [genWriter.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+
+    STObjectCodeGeneratorARM *genGen = genCompiler.codegen;
+    [genCompiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [genCompiler generateStringLiteral:@"Test String"];
+    }];
+
+    [genWriter addTextSectionData:genGen.generatedCode];
+    [genWriter writeFile];
+    NSData *genDylibData = [genWriter data];
+
+    NSString *genDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare_gen.dylib"];
+    [genDylibData writeToFile:genDylibPath atomically:YES];
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", genDylibPath] UTF8String]);
+
+    MPWMachOReader *genReader = [MPWMachOReader readerWithData:genDylibData];
+
+    // 3. Find __string section in both
+    MPWMachOSegment *refDataSeg = [refReader segmentObjectNamed:@"__DATA"];
+    MPWMachOSegment *genDataSeg = [genReader segmentObjectNamed:@"__DATA"];
+
+    EXPECTNOTNIL(refDataSeg, @"reference should have __DATA segment");
+    EXPECTNOTNIL(genDataSeg, @"generated should have __DATA segment");
+
+    MPWMachOSection *refStringSection = [self findSectionNamed:@"__string" inSegment:refDataSeg];
+    MPWMachOSection *genStringSection = [self findSectionNamed:@"__string" inSegment:genDataSeg];
+
+    EXPECTNOTNIL(refStringSection, @"reference should have __string section");
+    EXPECTNOTNIL(genStringSection, @"generated should have __string section");
+
+    // 4. Dump __string section binary content
+    NSLog(@"=== __STRING SECTION BINARY COMPARISON ===");
+    NSLog(@"Reference __string: addr=0x%llx size=%lld offset=0x%lx",
+          refStringSection.address, (unsigned long long)refStringSection.size, refStringSection.offset);
+    NSLog(@"Generated __string: addr=0x%llx size=%lld offset=0x%lx",
+          genStringSection.address, (unsigned long long)genStringSection.size, genStringSection.offset);
+
+    // NSString constant structure: isa (8 bytes), flags (8 bytes), cstring ptr (8 bytes), length (8 bytes) = 32 bytes
+    INTEXPECT(refStringSection.size, 32, @"reference __string should be 32 bytes");
+    INTEXPECT(genStringSection.size, 32, @"generated __string should be 32 bytes");
+
+    const uint64_t *refPtrs = (const uint64_t *)(refDylibData.bytes + refStringSection.offset);
+    const uint64_t *genPtrs = (const uint64_t *)(genDylibData.bytes + genStringSection.offset);
+
+    NSLog(@"Reference __string content (4 qwords):");
+    for (int i = 0; i < 4; i++) {
+        NSLog(@"  [%d] 0x%016llx", i, refPtrs[i]);
+    }
+
+    NSLog(@"Generated __string content (4 qwords):");
+    for (int i = 0; i < 4; i++) {
+        NSLog(@"  [%d] 0x%016llx", i, genPtrs[i]);
+    }
+
+    // 5. CRITICAL: Compare the bind pointer (first qword = isa pointer to ___CFConstantStringClassReference)
+    // This should be encoded as a chained fixup bind entry
+    // Format for DYLD_CHAINED_PTR_64_OFFSET bind: ordinal:24, addend:8, reserved:19, next:12, bind:1
+    uint64_t refIsa = refPtrs[0];
+    uint64_t genIsa = genPtrs[0];
+
+    // Decode bind entry
+    NSLog(@"=== BIND ENTRY ANALYSIS (isa pointer) ===");
+    NSLog(@"Reference isa raw: 0x%016llx", refIsa);
+    NSLog(@"Generated isa raw: 0x%016llx", genIsa);
+
+    // Extract bind fields: bind bit is bit 63
+    BOOL refIsBind = (refIsa >> 63) & 1;
+    BOOL genIsBind = (genIsa >> 63) & 1;
+    NSLog(@"Reference is_bind: %d", refIsBind);
+    NSLog(@"Generated is_bind: %d", genIsBind);
+
+    if (refIsBind) {
+        // For DYLD_CHAINED_PTR_64_OFFSET bind format:
+        // bits 0-23: ordinal (24 bits)
+        // bits 24-31: addend (8 bits)
+        // bits 32-50: reserved (19 bits)
+        // bits 51-62: next/4 (12 bits)
+        // bit 63: bind (1 bit)
+        uint32_t refOrdinal = refIsa & 0xFFFFFF;
+        uint8_t refAddend = (refIsa >> 24) & 0xFF;
+        uint32_t refNext = (refIsa >> 51) & 0xFFF;
+        NSLog(@"Reference bind: ordinal=%u addend=%u next=%u", refOrdinal, refAddend, refNext);
+    }
+
+    if (genIsBind) {
+        uint32_t genOrdinal = genIsa & 0xFFFFFF;
+        uint8_t genAddend = (genIsa >> 24) & 0xFF;
+        uint32_t genNext = (genIsa >> 51) & 0xFFF;
+        NSLog(@"Generated bind: ordinal=%u addend=%u next=%u", genOrdinal, genAddend, genNext);
+    }
+
+    // 6. Compare the cstring pointer (third qword) - this should be a rebase
+    uint64_t refCstring = refPtrs[2];
+    uint64_t genCstring = genPtrs[2];
+
+    NSLog(@"=== REBASE ENTRY ANALYSIS (cstring pointer) ===");
+    NSLog(@"Reference cstring raw: 0x%016llx", refCstring);
+    NSLog(@"Generated cstring raw: 0x%016llx", genCstring);
+
+    BOOL refCstringIsBind = (refCstring >> 63) & 1;
+    BOOL genCstringIsBind = (genCstring >> 63) & 1;
+    NSLog(@"Reference cstring is_bind: %d (should be 0 for rebase)", refCstringIsBind);
+    NSLog(@"Generated cstring is_bind: %d (should be 0 for rebase)", genCstringIsBind);
+
+    if (!refCstringIsBind) {
+        // For DYLD_CHAINED_PTR_64_OFFSET rebase format:
+        // bits 0-35: target (36 bits)
+        // bits 36-43: high8 (8 bits)
+        // bits 44-50: reserved (7 bits)
+        // bits 51-62: next/4 (12 bits)
+        // bit 63: bind (1 bit, 0 for rebase)
+        uint64_t refTarget = refCstring & 0xFFFFFFFFFULL;
+        uint8_t refHigh8 = (refCstring >> 36) & 0xFF;
+        uint32_t refNext = (refCstring >> 51) & 0xFFF;
+        NSLog(@"Reference rebase: target=0x%llx high8=0x%02x next=%u", refTarget, refHigh8, refNext);
+    }
+
+    if (!genCstringIsBind) {
+        uint64_t genTarget = genCstring & 0xFFFFFFFFFULL;
+        uint8_t genHigh8 = (genCstring >> 36) & 0xFF;
+        uint32_t genNext = (genCstring >> 51) & 0xFFF;
+        NSLog(@"Generated rebase: target=0x%llx high8=0x%02x next=%u", genTarget, genHigh8, genNext);
+    }
+
+    // 7. Compare chained fixups header
+    NSData *refChainedData = [self chainedFixupsDataFromReader:refReader];
+    NSData *genChainedData = [self chainedFixupsDataFromReader:genReader];
+
+    EXPECTNOTNIL(refChainedData, @"reference should have chained fixups");
+    EXPECTNOTNIL(genChainedData, @"generated should have chained fixups");
+
+    const struct dyld_chained_fixups_header *refHeader =
+        (const struct dyld_chained_fixups_header *)refChainedData.bytes;
+    const struct dyld_chained_fixups_header *genHeader =
+        (const struct dyld_chained_fixups_header *)genChainedData.bytes;
+
+    NSLog(@"=== CHAINED FIXUPS HEADER COMPARISON ===");
+    NSLog(@"Reference: version=%d starts=%u imports=%u symbols=%u imports_count=%u imports_format=%d",
+          refHeader->fixups_version, refHeader->starts_offset, refHeader->imports_offset,
+          refHeader->symbols_offset, refHeader->imports_count, refHeader->imports_format);
+    NSLog(@"Generated: version=%d starts=%u imports=%u symbols=%u imports_count=%u imports_format=%d",
+          genHeader->fixups_version, genHeader->starts_offset, genHeader->imports_offset,
+          genHeader->symbols_offset, genHeader->imports_count, genHeader->imports_format);
+
+    // 8. Compare imports
+    NSLog(@"=== IMPORTS COMPARISON ===");
+    const struct dyld_chained_import *refImports =
+        (const struct dyld_chained_import *)(refChainedData.bytes + refHeader->imports_offset);
+    const struct dyld_chained_import *genImports =
+        (const struct dyld_chained_import *)(genChainedData.bytes + genHeader->imports_offset);
+    const char *refSymbols = (const char *)(refChainedData.bytes + refHeader->symbols_offset);
+    const char *genSymbols = (const char *)(genChainedData.bytes + genHeader->symbols_offset);
+
+    for (uint32_t i = 0; i < refHeader->imports_count; i++) {
+        NSLog(@"Reference import[%u]: lib_ordinal=%u weak=%u name='%s'",
+              i, refImports[i].lib_ordinal, refImports[i].weak_import,
+              refSymbols + refImports[i].name_offset);
+    }
+
+    for (uint32_t i = 0; i < genHeader->imports_count; i++) {
+        NSLog(@"Generated import[%u]: lib_ordinal=%u weak=%u name='%s'",
+              i, genImports[i].lib_ordinal, genImports[i].weak_import,
+              genSymbols + genImports[i].name_offset);
+    }
+
+    // 9. Compare starts_in_segment for __DATA segment
+    NSLog(@"=== SEGMENT FIXUPS COMPARISON ===");
+    const struct dyld_chained_starts_in_image *refStarts =
+        (const struct dyld_chained_starts_in_image *)(refChainedData.bytes + refHeader->starts_offset);
+    const struct dyld_chained_starts_in_image *genStarts =
+        (const struct dyld_chained_starts_in_image *)(genChainedData.bytes + genHeader->starts_offset);
+
+    NSLog(@"Reference seg_count=%d, Generated seg_count=%d", refStarts->seg_count, genStarts->seg_count);
+
+    for (int i = 0; i < refStarts->seg_count; i++) {
+        uint32_t refOffset = refStarts->seg_info_offset[i];
+        uint32_t genOffset = (i < genStarts->seg_count) ? genStarts->seg_info_offset[i] : 0;
+
+        NSLog(@"Segment %d: ref_offset=%u gen_offset=%u", i, refOffset, genOffset);
+
+        if (refOffset != 0) {
+            const struct dyld_chained_starts_in_segment *refSegStarts =
+                (const struct dyld_chained_starts_in_segment *)(refChainedData.bytes + refHeader->starts_offset + refOffset);
+            NSLog(@"  Reference: size=%u page_size=0x%x pointer_format=%u segment_offset=0x%llx page_count=%u",
+                  refSegStarts->size, refSegStarts->page_size, refSegStarts->pointer_format,
+                  refSegStarts->segment_offset, refSegStarts->page_count);
+
+            for (int p = 0; p < refSegStarts->page_count; p++) {
+                uint16_t pageStart = refSegStarts->page_start[p];
+                if (pageStart != DYLD_CHAINED_PTR_START_NONE) {
+                    NSLog(@"    Page %d: start=0x%x", p, pageStart);
+                }
+            }
+        }
+
+        if (genOffset != 0 && i < genStarts->seg_count) {
+            const struct dyld_chained_starts_in_segment *genSegStarts =
+                (const struct dyld_chained_starts_in_segment *)(genChainedData.bytes + genHeader->starts_offset + genOffset);
+            NSLog(@"  Generated: size=%u page_size=0x%x pointer_format=%u segment_offset=0x%llx page_count=%u",
+                  genSegStarts->size, genSegStarts->page_size, genSegStarts->pointer_format,
+                  genSegStarts->segment_offset, genSegStarts->page_count);
+
+            for (int p = 0; p < genSegStarts->page_count; p++) {
+                uint16_t pageStart = genSegStarts->page_start[p];
+                if (pageStart != DYLD_CHAINED_PTR_START_NONE) {
+                    NSLog(@"    Page %d: start=0x%x", p, pageStart);
+                }
+            }
+        }
+    }
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:refDylibPath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:genDylibPath error:nil];
+}
+
+// NEW: Compare nm output between reference and generated to find symbol table differences
++ (void)testCompareSymbolTablesBetweenRefAndGenerated {
+    // 1. Generate REFERENCE dylib using external linker
+    STNativeCompiler *refCompiler = [STNativeCompiler compiler];
+    MPWMachOWriter *objectWriter = refCompiler.writer;
+    NSString *tempDir = @"/tmp";
+    NSString *objectPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare.o"];
+    NSString *refDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare_ref.dylib"];
+
+    STObjectCodeGeneratorARM *refGen = refCompiler.codegen;
+    [refCompiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [refCompiler generateStringLiteral:@"Test String"];
+    }];
+
+    [objectWriter addTextSectionData:(NSData*)refGen.generatedCode];
+    [objectWriter writeFile];
+    [objectWriter.data writeToFile:objectPath atomically:YES];
+
+    int linkResult = [refCompiler linkObjects:@[@"conststring_symcompare"]
+                           toSharedLibrary:@"conststring_symcompare_ref.dylib"
+                                     inDir:tempDir
+                            withFrameworks:@[@"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", refDylibPath] UTF8String]);
+
+    // 2. Generate CANDIDATE dylib using MPWMachODylibWriter
+    MPWMachODylibWriter *genWriter = [MPWMachODylibWriter stream];
+    STNativeCompiler *genCompiler = [[[STNativeCompiler alloc] initWithWriter:genWriter] autorelease];
+    genWriter.installName = @"@rpath/libconststring.dylib";
+    [genWriter.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+
+    STObjectCodeGeneratorARM *genGen = genCompiler.codegen;
+    [genCompiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [genCompiler generateStringLiteral:@"Test String"];
+    }];
+
+    [genWriter addTextSectionData:genGen.generatedCode];
+    [genWriter writeFile];
+    NSData *genDylibData = [genWriter data];
+
+    NSString *genDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare_gen.dylib"];
+    [genDylibData writeToFile:genDylibPath atomically:YES];
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", genDylibPath] UTF8String]);
+
+    // 3. Run nm on both and log output
+    NSLog(@"=== REFERENCE DYLIB nm OUTPUT ===");
+    system([[NSString stringWithFormat:@"nm %@ 2>&1", refDylibPath] UTF8String]);
+
+    NSLog(@"=== GENERATED DYLIB nm OUTPUT ===");
+    system([[NSString stringWithFormat:@"nm %@ 2>&1", genDylibPath] UTF8String]);
+
+    // 4. Use MPWMachOReader to examine symbol tables programmatically
+    NSData *refDylibData = [NSData dataWithContentsOfFile:refDylibPath];
+    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refDylibData];
+    MPWMachOReader *genReader = [MPWMachOReader readerWithData:genDylibData];
+
+    NSLog(@"=== REFERENCE SYMBOL TABLE (via MPWMachOReader) ===");
+    NSArray *refSymbols = [refReader symbols];
+    for (int i = 0; i < refSymbols.count; i++) {
+        NSDictionary *sym = refSymbols[i];
+        NSLog(@"  [%d] name='%@' type=0x%02x sect=%@ value=0x%llx",
+              i, sym[@"name"], [sym[@"type"] intValue], sym[@"sect"], [sym[@"value"] unsignedLongLongValue]);
+    }
+
+    NSLog(@"=== GENERATED SYMBOL TABLE (via MPWMachOReader) ===");
+    NSArray *genSymbols = [genReader symbols];
+    for (int i = 0; i < genSymbols.count; i++) {
+        NSDictionary *sym = genSymbols[i];
+        NSLog(@"  [%d] name='%@' type=0x%02x sect=%@ value=0x%llx",
+              i, sym[@"name"], [sym[@"type"] intValue], sym[@"sect"], [sym[@"value"] unsignedLongLongValue]);
+    }
+
+    // 5. Check for ___CFConstantStringClassReference specifically
+    NSLog(@"=== ___CFConstantStringClassReference CHECK ===");
+    long refCFStrIndex = [refReader indexOfSymbolNamed:@"___CFConstantStringClassReference"];
+    long genCFStrIndex = [genReader indexOfSymbolNamed:@"___CFConstantStringClassReference"];
+
+    NSLog(@"Reference index: %ld", refCFStrIndex);
+    NSLog(@"Generated index: %ld", genCFStrIndex);
+
+    if (refCFStrIndex >= 0 && refCFStrIndex < refSymbols.count) {
+        NSDictionary *refSym = refSymbols[refCFStrIndex];
+        NSLog(@"Reference ___CFConstantStringClassReference: type=0x%02x sect=%@ (should be undefined external)",
+              [refSym[@"type"] intValue], refSym[@"sect"]);
+        // type 0x01 = N_EXT (external), sect 0 = undefined
+        INTEXPECT([refSym[@"type"] intValue] & 0x0e, 0, @"reference should have type=0 (undefined)");
+    }
+
+    if (genCFStrIndex >= 0 && genCFStrIndex < genSymbols.count) {
+        NSDictionary *genSym = genSymbols[genCFStrIndex];
+        NSLog(@"Generated ___CFConstantStringClassReference: type=0x%02x sect=%@ (SHOULD be undefined external)",
+              [genSym[@"type"] intValue], genSym[@"sect"]);
+        // This is the BUG if type != 0 or sect != NO_SECT
+        int genType = [genSym[@"type"] intValue] & 0x0e;
+        if (genType != 0) {
+            NSLog(@"BUG: Generated ___CFConstantStringClassReference has type 0x%02x instead of 0 (undefined)", genType);
+        }
+    }
+}
+
++ (void)testKnownGoodExternalLinkerDylibWithConstantNSString {
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    MPWMachOWriter *writer = compiler.writer;
+    NSString *objectPath = @"/tmp/justconstantstring-ref.o";
+    NSString *path = @"/tmp/libconstantstring-ref.dylib";
+    
+    NSString *stringToGeneratorAndCheck = @"Hello World Constant Strign in dylib";
+    
+    STObjectCodeGeneratorARM *gen = compiler.codegen;
+    
+    [compiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [compiler generateStringLiteral:stringToGeneratorAndCheck];
+    }];
+
+    [writer addTextSectionData:(NSData*)gen.generatedCode];
+    [writer writeFile];
+    [writer.data writeToFile:objectPath atomically:YES];
+    
+    // 2. Link with external linker
+    int linkResult = [compiler linkObjects:@[@"justconstantstring-ref"]
+                           toSharedLibrary:@"libconstantstring-ref.dylib"
+                                     inDir:@"/tmp"
+                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+
+    
+    
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString=nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+    id (*returnString)(void) = dlsym(handle, "returnString");
+    EXPECTNOTNIL(returnString, @" returnString function address");
+    IDEXPECT( returnString(), stringToGeneratorAndCheck,@"returned constants string" );
+    
+    
+    // Cleanup
+//    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+
+
++ (void)testDylibWithConstantNSString {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
+    NSString *path = @"/tmp/libconstantstring.dylib";
+    writer.installName = @"@rpath/libconstantstring.dylib";
+    // ___CFConstantStringClassReference is in CoreFoundation, need to link Foundation
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+
+    NSString *stringToGeneratorAndCheck = @"Hello World Constant String in dylib";
+    
+    STObjectCodeGeneratorARM *gen = compiler.codegen;
+    
+    [compiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
+        [compiler generateStringLiteral:stringToGeneratorAndCheck];
+    }];
+    
+    [writer addTextSectionData:gen.generatedCode];
+    [writer writeFile];
+    NSData *genDylibData = [writer data];
+    [genDylibData writeToFile:path atomically:YES];
+    
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString=nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+    NSLog(@"testDylibWithConstantNSString: dlopen result = %p", handle);
+
+    if (handle) {
+        id (*returnString)(void) = dlsym(handle, "returnString");
+        NSLog(@"testDylibWithConstantNSString: dlsym returnString = %p", returnString);
+        EXPECTNOTNIL(returnString, @"returnString function address");
+        if (returnString) {
+            NSLog(@"testDylibWithConstantNSString: About to call returnString()");
+            id result = returnString();
+            NSLog(@"testDylibWithConstantNSString: Got result = %@", result);
+            IDEXPECT(result, stringToGeneratorAndCheck, @"returned constant string");
+        }
+        dlclose(handle);
+    }
+
+    // Cleanup
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+
 + (NSArray *)testSelectors {
   return @[
     @"testDocumentReferenceLoadCommands", @"testDylibLayoutAssumptions",
@@ -2975,6 +3729,12 @@
     @"testCharacterizeReferenceMessageSendDylib",
     @"testCharacterizeGeneratedMessageSendDylib",
     @"testDylibWithMessageSend",
+    @"testCharacterizeReferenceConstantStringDylib",
+    @"testCharacterizeGeneratedConstantStringDylib",
+    @"testCompareConstantStringBinaryContent",
+    @"testCompareSymbolTablesBetweenRefAndGenerated",
+    @"testKnownGoodExternalLinkerDylibWithConstantNSString",
+    @"testDylibWithConstantNSString",
   ];
 }
 
