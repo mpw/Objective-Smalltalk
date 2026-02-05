@@ -51,9 +51,9 @@
   imp.symbolName = symbolName;
   imp.dylibOrdinal = dylibOrdinal;
   [imports addObject:imp];
-  NSLog(
-      @"MPWChainedFixupWriter: Added NEW import %@ from dylib %d at index %lu",
-      symbolName, dylibOrdinal, (unsigned long)imports.count - 1);
+//  NSLog(
+//      @"MPWChainedFixupWriter: Added NEW import %@ from dylib %d at index %lu",
+//      symbolName, dylibOrdinal, (unsigned long)imports.count - 1);
   return (int)imports.count - 1;
 }
 
@@ -66,8 +66,8 @@
   f.ordinal = ordinal;
   f.isRebase = NO;
   [fixups addObject:f];
-  NSLog(@"MPWChainedFixupWriter: addBindAtSegment:%d offset:0x%llx ordinal:%d",
-        segmentIndex, offset, ordinal);
+//  NSLog(@"MPWChainedFixupWriter: addBindAtSegment:%d offset:0x%llx ordinal:%d",
+//        segmentIndex, offset, ordinal);
 }
 
 - (void)addRebaseAtSegment:(int)segmentIndex
@@ -79,8 +79,8 @@
   f.isRebase = YES;
   f.rebaseTarget = target;
   [fixups addObject:f];
-  NSLog(@"MPWChainedFixupWriter: addRebaseAtSegment:%d offset:0x%llx target:0x%llx",
-        segmentIndex, offset, target);
+//  NSLog(@"MPWChainedFixupWriter: addRebaseAtSegment:%d offset:0x%llx target:0x%llx",
+//        segmentIndex, offset, target);
 }
 
 - (void)setSegmentFileOffset:(uint64_t)offset forSegment:(int)segmentIndex {

@@ -3686,6 +3686,97 @@
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++(NSString*)testClassCodeWithName:(NSString*)className
+{
+    return [NSString stringWithFormat:@"class %@ { -value { 42. } }",className];
+}
+
++(void)testDylibWithCompiledObjectiveSmalltalkClass
+{
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
+    NSString *path = @"/tmp/compiled-st-class.dylib";
+    writer.installName = @"@rpath/compiled-st-class.dylib";
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    NSString *className = @"TestClassCode1";
+
+    NSString *classToCompile = [self testClassCodeWithName:className];
+
+    
+    NSData *dylibdata = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
+    
+    //    [writer addTextSectionData:gen.generatedCode];
+    [dylibdata writeToFile:path atomically:YES];
+    
+    system([[NSString stringWithFormat:@"codesign -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString=nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+    NSLog(@"testDylibWithCompiledObjectiveSmalltalkClass: dlopen result = %p", handle);
+    
+    if (handle) {
+        id testClass = NSClassFromString(className);
+        EXPECTNOTNIL(testClass, @"loaded the test class");
+        id instance = [testClass new];
+        EXPECTNOTNIL(instance, @"testinstance");
+        IDEXPECT([instance value],@(42),@"test value");
+        dlclose(handle);
+    }
+
+    // Cleanup
+    //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
++(void)testDylibWithCompiledObjectiveSmalltalkClassRef
+{
+    STNativeCompiler *compiler = [STNativeCompiler compiler];
+    NSString *path = @"/tmp/compiled-st-class-ref.o";
+    NSString *lib = @"libst-test-class.dylib";\
+    NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
+    NSString *className = @"TestClassCode1";
+    
+    NSString *classToCompile = [self testClassCodeWithName:className];
+        
+    NSData *compiled = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
+    
+    //    [writer addTextSectionData:gen.generatedCode];
+    [compiled writeToFile:path atomically:YES];
+    
+    // 2. Link with external linker
+    int linkResult = [compiler linkObjects:@[@"compiled-st-class-ref"]
+                           toSharedLibrary:lib
+                                     inDir:@"/tmp"
+                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+    
+    
+
+    
+    system([[NSString stringWithFormat:@"codesign -s - /tmp/%@", @"libst-test-class.dylib"] UTF8String]);
+    void *handle = dlopen([libpath UTF8String], RTLD_NOW);
+    NSString *errorString=nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+    NSLog(@"testDylibWithCompiledObjectiveSmalltalkClass: dlopen result = %p", handle);
+    
+    if (handle) {
+        id testClass = NSClassFromString(className);
+        EXPECTNOTNIL(testClass, @"loaded the test class");
+        id instance = [testClass new];
+        EXPECTNOTNIL(instance, @"testinstance");
+        IDEXPECT([instance value],@(42),@"test value");
+        dlclose(handle);
+    }
+    
+    // Cleanup
+    //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
 
 + (NSArray *)testSelectors {
   return @[
@@ -3706,9 +3797,11 @@
     @"testCharacterizeReferenceConstantStringDylib",
     @"testCharacterizeGeneratedConstantStringDylib",
     @"testCompareConstantStringBinaryContent",
-    @"testCompareSymbolTablesBetweenRefAndGenerated",
+//    @"testCompareSymbolTablesBetweenRefAndGenerated",   FIXME:  this test just logs, it should EXPECT
     @"testKnownGoodExternalLinkerDylibWithConstantNSString",
     @"testDylibWithConstantNSString",
+    @"testDylibWithCompiledObjectiveSmalltalkClass",
+    @"testDylibWithCompiledObjectiveSmalltalkClassRef",
   ];
 }
 

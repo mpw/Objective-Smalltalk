@@ -122,7 +122,7 @@
 
 -(int)generateNativeCodeOn:(STNativeCompiler*)compiler
 {
-    NSLog(@"generate native code for %@",self);
+//    NSLog(@"generate native code for %@",self);
     return [compiler generateMessageSend:self];
 }
 
@@ -409,7 +409,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(int)generateBlockExpression:(MPWBlockExpression*)expr
 {
-    NSLog(@"generate native code for block expression");
+//    NSLog(@"generate native code for block expression");
     if ( [self shouldGenerateStackBlockForBlockExpression:expr]) {
         return [self generateStackBlockExpression:expr];
     } else {
