@@ -360,14 +360,11 @@
   MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
   MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
   if (!stubWriter.isActive || !gotWriter.isActive) {
-    NSLog(@"patchStubs: stubWriter.isActive=%d gotWriter.isActive=%d - skipping", stubWriter.isActive, gotWriter.isActive);
     return;
   }
   long gotAddr = gotWriter.address;
   long stubAddr = stubWriter.address;
   NSMutableData *stubData = (NSMutableData *)stubWriter.target;
-
-  NSLog(@"patchStubs: stubAddr=0x%lx gotAddr=0x%lx stubData.length=%lu", stubAddr, gotAddr, (unsigned long)stubData.length);
 
   for (NSString *symbol in self.stubOffsets.allKeys) {
     // Skip ObjC stubs - they're handled by patchObjcStubs
@@ -396,10 +393,6 @@
 
     uint32_t br = 0xd61f0200; // br x16
 
-    NSLog(@"patchStubs: symbol=%@ stubOffset=%ld stubAddr=0x%lx gotAddr=0x%lx", symbol, curStubOffset, curStubAddr, curGotAddr);
-    NSLog(@"  pcPage=0x%lx gotPage=0x%lx pageDiff=%ld", pcPage, gotPage, pageDiff);
-    NSLog(@"  adrp=0x%08x ldr=0x%08x br=0x%08x", adrp, ldr, br);
-
     uint32_t code[3] = {adrp, ldr, br};
     [stubData replaceBytesInRange:NSMakeRange(curStubOffset, sizeof(code))
                         withBytes:code];
@@ -423,13 +416,9 @@
   // Get the GOT offset for _objc_msgSend
   NSNumber *msgSendGotOffset = self.gotOffsets[@"_objc_msgSend"];
   if (!msgSendGotOffset) {
-    NSLog(@"patchObjcStubs: No GOT entry for _objc_msgSend");
     return;
   }
   long msgSendGotAddr = gotAddr + [msgSendGotOffset longValue];
-
-  NSLog(@"patchObjcStubs: objcStubAddr=0x%lx selrefsAddr=0x%lx msgSendGotAddr=0x%lx",
-        objcStubAddr, selrefsAddr, msgSendGotAddr);
 
   for (NSString *selector in self.objcStubOffsets.allKeys) {
     long stubOffset = [self.objcStubOffsets[selector] longValue];
@@ -467,8 +456,6 @@
     uint32_t br_x16 = 0xd61f0200; // br x16
     uint32_t brk = 0xd4200020;    // brk #1
 
-    NSLog(@"patchObjcStubs: selector=%@ stubOffset=%ld selrefAddr=0x%lx", selector, stubOffset, curSelrefAddr);
-
     uint32_t code[8] = {adrp_x1, ldr_x1, adrp_x16, ldr_x16, br_x16, brk, brk, brk};
     [objcStubData replaceBytesInRange:NSMakeRange(stubOffset, sizeof(code)) withBytes:code];
   }
@@ -491,8 +478,6 @@
 
     // Selector reference points to the selector string in __objc_methname
     uint64_t selectorAddr = methnameAddr + methnameOffset;
-
-    NSLog(@"patchObjcSelrefs: selector=%@ selrefOffset=%ld selectorAddr=0x%llx", selector, selrefOffset, selectorAddr);
 
     [selrefsData replaceBytesInRange:NSMakeRange(selrefOffset, sizeof(selectorAddr))
                            withBytes:&selectorAddr];
@@ -606,8 +591,6 @@
       }
     }
   }
-  NSLog(@"Ordinal for symbol %@ is %d (frameworks: %@)", symbol, ordinal,
-        self.frameworks);
   return ordinal;
 }
 
@@ -656,9 +639,6 @@
       // Offset within __DATA segment
       long selrefSegmentOffset = selrefsWriter.address - dataSegmentVmaddr + selrefOffset;
 
-      NSLog(@"buildChainedFixups: Adding rebase for selector %@ at segment %d offset 0x%lx target 0x%llx",
-            selector, dataSegmentIndex, selrefSegmentOffset, selectorStringAddr);
-
       [self.chainedFixupWriter addRebaseAtSegment:dataSegmentIndex
                                            offset:selrefSegmentOffset
                                            target:selectorStringAddr];
@@ -690,8 +670,6 @@
           int ordinal = [self ordinalForSymbol:symbolName];
           int importOrdinal = [self.chainedFixupWriter addImport:symbolName fromDylib:ordinal];
 
-          NSLog(@"buildChainedFixups: Adding bind for %@ at segment %d offset 0x%lx ordinal %d",
-                symbolName, dataSegmentIndex, segmentOffset, importOrdinal);
           [self.chainedFixupWriter addBindAtSegment:dataSegmentIndex
                                              offset:segmentOffset
                                             ordinal:importOrdinal];
@@ -750,12 +728,8 @@
           uint64_t bits;
           if (f.isRebase) {
             bits = [self.chainedFixupWriter rebase64Bits:f.rebaseTarget next:f.next];
-            NSLog(@"Patching %@ at section offset %ld with rebase bits 0x%llx (target 0x%llx)",
-                  sectionWriter.sectname, f_section_offset, bits, f.rebaseTarget);
           } else {
             bits = [self.chainedFixupWriter bind64Bits:f.ordinal next:f.next];
-            NSLog(@"Patching %@ at section offset %ld with bind bits 0x%llx (ordinal %d)",
-                  sectionWriter.sectname, f_section_offset, bits, f.ordinal);
           }
           [sectionData replaceBytesInRange:NSMakeRange((NSUInteger)f_section_offset, 8)
                                  withBytes:&bits];

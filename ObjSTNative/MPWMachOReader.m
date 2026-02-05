@@ -110,10 +110,8 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 -(void)parseSegments
 {
-    NSLog(@"parseSegments");
     NSMutableArray *segments = [NSMutableArray array];
     const struct load_command *cur = [self.data bytes] + sizeof(struct mach_header_64);
-    NSLog(@"parseSegments with %d loadCommands",[self numLoadCommands]);
     int maxLoadCommands = [self numLoadCommands];
     maxLoadCommands = MIN( maxLoadCommands, 20);
     for (int i = 0; i < maxLoadCommands; i++) {
@@ -531,7 +529,6 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 +(void)testCanIdentifyHeader
 {
     MPWMachOReader *reader=[self readerForAdd];
-    NSLog(@"got reader");
     EXPECTTRUE([reader isHeaderValid], @"got the right header");
     NSData *notamacho = [@"Hello World!" asData];
     reader=[[[self alloc] initWithData:notamacho] autorelease];

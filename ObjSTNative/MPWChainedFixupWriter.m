@@ -181,9 +181,9 @@
       for (int p = 0; p < pageCount; p++)
         segStarts->page_start[p] = DYLD_CHAINED_PTR_START_NONE;
 
-      NSLog(@"MPWChainedFixupWriter: Segment %d has %lu fixups, %d pages, "
-            @"segStartsSize %d",
-            i, (unsigned long)segFixups.count, pageCount, segStartsSize);
+//      NSLog(@"MPWChainedFixupWriter: Segment %d has %lu fixups, %d pages, "
+//            @"segStartsSize %d",
+//            i, (unsigned long)segFixups.count, pageCount, segStartsSize);
 
       // For now, we only support ONE fixup per page for simplicity (no chain
       // linking yet) Or we assume they are already sorted. Actually, we need to
