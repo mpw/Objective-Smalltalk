@@ -3788,9 +3788,14 @@
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++(NSString*)testClassCodeWithName:(NSString*)className returnValue:(NSString*)returnValue
+{
+    return [NSString stringWithFormat:@"class %@ { -value { %@. } }",className,returnValue];
+}
+
 +(NSString*)testClassCodeWithName:(NSString*)className
 {
-    return [NSString stringWithFormat:@"class %@ { -value { 42. } }",className];
+    return [self testClassCodeWithName:className returnValue:@"42"];
 }
 
 +(void)testDylibWithCompiledObjectiveSmalltalkClass
@@ -3891,8 +3896,8 @@
     NSString *class1Name = @"TestClassCode3";
     NSString *class2Name = @"TestClassCode4";
 
-    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
-    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
+    NSString *class1ToCompile = [self testClassCodeWithName:class1Name returnValue:@"40"];
+    NSString *class2ToCompile = [self testClassCodeWithName:class2Name returnValue:@"50"];
 
     
     NSData *dylibdata = [compiler compileClassesToMachoO:@[ [compiler compile:class1ToCompile], [compiler compile:class2ToCompile]]];
@@ -3914,13 +3919,13 @@
         EXPECTNOTNIL(testClass1, @"loaded the test class");
         id instance1 = [testClass1 new];
         EXPECTNOTNIL(instance1, @"testinstance");
-        IDEXPECT([instance1 value],@(42),@"test value");
+        IDEXPECT([instance1 value],@(40),@"test value");
 
         id testClass2 = NSClassFromString(class2Name);
         EXPECTNOTNIL(testClass2, @"loaded the test class");
         id instance2 = [testClass2 new];
         EXPECTNOTNIL(instance2, @"testinstance");
-        IDEXPECT([instance2 value],@(42),@"test value");
+        IDEXPECT([instance2 value],@(50),@"test value");
         dlclose(handle);
     }
     
