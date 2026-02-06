@@ -3799,7 +3799,7 @@
     NSString *path = @"/tmp/compiled-st-class-ref.o";
     NSString *lib = @"libst-test-class.dylib";\
     NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
-    NSString *className = @"TestClassCode1";
+    NSString *className = @"TestClassCode2";
     
     NSString *classToCompile = [self testClassCodeWithName:className];
         
@@ -3840,6 +3840,105 @@
     //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++(void)testDylibWithTwoClasses
+{
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
+    NSString *path = @"/tmp/two-compiled-st-classes.dylib";
+    writer.installName = @"@rpath/two-compiled-st-classes.dylib";
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+    NSString *class1Name = @"TestClassCode3";
+    NSString *class2Name = @"TestClassCode4";
+
+    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
+    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
+
+    
+    NSData *dylibdata = [compiler compileClassesToMachoO:@[ [compiler compile:class1ToCompile], [compiler compile:class2ToCompile]]];
+    
+    //    [writer addTextSectionData:gen.generatedCode];
+    [dylibdata writeToFile:path atomically:YES];
+    
+    system([[NSString stringWithFormat:@"codesign -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString=nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+    NSLog(@"testDylibWithCompiledObjectiveSmalltalkClass: dlopen result = %p", handle);
+//    
+//    if (handle) {
+//        id testClass1 = NSClassFromString(class1Name);
+//        EXPECTNOTNIL(testClass1, @"loaded the test class");
+//        id instance1 = [testClass1 new];
+//        EXPECTNOTNIL(instance1, @"testinstance");
+//        IDEXPECT([instance1 value],@(42),@"test value");
+//        dlclose(handle);
+//    }
+    
+    // Cleanup
+    //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
++(void)testDylibWithTwoClassesRef
+{
+    STNativeCompiler *compiler1 = [STNativeCompiler compiler];
+    STNativeCompiler *compiler2 = [STNativeCompiler compiler];
+    NSString *object_path1 = @"/tmp/compiled-st-class1-ref.o";
+    NSString *object_path2 = @"/tmp/compiled-st-class2-ref.o";
+    NSString *lib = @"libst-test-class.dylib";\
+    NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
+    
+    NSString *class1Name = @"TestClassCode6";
+    NSString *class2Name = @"TestClassCode7";
+    
+    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
+    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
+
+    NSData *compiled1 = [compiler1 compileClassToMachoO:[compiler1 compile:class1ToCompile]];
+    NSData *compiled2 = [compiler2 compileClassToMachoO:[compiler2 compile:class2ToCompile]];
+
+    //    [writer addTextSectionData:gen.generatedCode];
+    [compiled1 writeToFile:object_path1 atomically:YES];
+    [compiled2 writeToFile:object_path2 atomically:YES];
+
+    // 2. Link with external linker
+    int linkResult = [compiler1 linkObjects:@[@"compiled-st-class1-ref", @"compiled-st-class2-ref"]
+                           toSharedLibrary:lib
+                                     inDir:@"/tmp"
+                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+    
+        
+    system([[NSString stringWithFormat:@"codesign -s - %@", libpath] UTF8String]);
+    void *handle = dlopen([libpath UTF8String], RTLD_NOW);
+    NSString *errorString=nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+    NSLog(@"testDylibWithCompiledObjectiveSmalltalkClass: dlopen result = %p", handle);
+    
+        if (handle) {
+            id testClass1 = NSClassFromString(class1Name);
+            EXPECTNOTNIL(testClass1, @"loaded the test class");
+            id instance1 = [testClass1 new];
+            EXPECTNOTNIL(instance1, @"testinstance");
+            IDEXPECT([instance1 value],@(42),@"test value");
+
+            id testClass2 = NSClassFromString(class2Name);
+            EXPECTNOTNIL(testClass1, @"loaded the test class");
+            id instance2 = [testClass2 new];
+            EXPECTNOTNIL(instance2, @"testinstance");
+            IDEXPECT([instance2 value],@(42),@"test value");
+            dlclose(handle);
+        }
+    
+    // Cleanup
+    //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
 
 + (NSArray *)testSelectors {
   return @[
@@ -3865,6 +3964,8 @@
     @"testDylibWithConstantNSString",
     @"testDylibWithCompiledObjectiveSmalltalkClass",
     @"testDylibWithCompiledObjectiveSmalltalkClassRef",
+    @"testDylibWithTwoClassesRef",
+//    @"testDylibWithTwoClasses",
   ];
 }
 

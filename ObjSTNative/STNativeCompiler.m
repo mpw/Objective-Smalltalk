@@ -259,7 +259,6 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     if ( self ) {
         self.codegen = [STObjectCodeGeneratorARM stream];
         self.writer = aWriter;
-        self.classwriter = [self createClassWriter];
         
         self.localRegisterMin = 19;     // ARM min saved register
         self.localRegisterMax = 29;     // ARM min saved register
@@ -738,17 +737,25 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileClass:(STClassDefinition*)aClass
 {
-    classwriter.nameOfClass = aClass.name;
-    classwriter.nameOfSuperClass = aClass.superclassNameToUse;
+    self.classwriter = [self createClassWriter];
+    self.classwriter.nameOfClass = aClass.name;
+    self.classwriter.nameOfSuperClass = aClass.superclassNameToUse;
     [self compileMethodsForClass:aClass];
     [classwriter writeClass];
     [writer addClassReferenceForClass:aClass.name];
 }
 
+-(void)compileAndWriteClasses:(NSArray*)classes
+{
+    for ( STClassDefinition *aClass in classes ) {
+        [self compileClass:aClass];
+    }
+    [writer writeFile];
+}
+
 -(void)compileAndWriteClass:(STClassDefinition*)aClass
 {
-    [self compileClass:aClass];
-    [writer writeFile];
+    [self compileAndWriteClasses:@[ aClass] ];
 }
 
 -(void)generateFunctionNamed:(NSString*)name stackSpace:(int)stackSpace body:(void(^)(STObjectCodeGeneratorARM* gen))block
@@ -832,10 +839,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return blockSymbol;
 }
 
+-(NSData*)compileClassesToMachoO:(NSArray*)classes
+{
+    [self compileAndWriteClasses:classes];
+    return (NSData*)[writer target];
+}
+
 -(NSData*)compileClassToMachoO:(STClassDefinition*)aClass
 {
-    [self compileAndWriteClass:aClass];
-    return (NSData*)[writer target];
+    return [self compileClassesToMachoO:@[ aClass ]];
 }
 
 -(NSData*)compileProcessToMachoO:(STClassDefinition*)theClass
