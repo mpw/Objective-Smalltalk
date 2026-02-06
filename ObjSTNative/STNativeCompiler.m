@@ -216,6 +216,7 @@
     MPWMachOClassWriter *classwriter;
     int blockNo;
     int stringLiteralNo;
+    long textCodegenOffset;
 }
 
 objectAccessor(STObjectCodeGeneratorARM*, codegen, setCodegen)
@@ -259,6 +260,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     if ( self ) {
         self.codegen = [STObjectCodeGeneratorARM stream];
         self.writer = aWriter;
+        textCodegenOffset = 0;
         
         self.localRegisterMin = 19;     // ARM min saved register
         self.localRegisterMax = 29;     // ARM min saved register
@@ -722,7 +724,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     STMethodSymbols *classMethods=[[STMethodSymbols new] autorelease];
     [self compileMethodsInList:aClass.classMethods forClass:aClass info:classMethods classMethods:YES];
     
-    [writer addTextSectionData:(NSData*)[codegen target]];
+    STJittableData *code = (STJittableData *)[codegen target];
+    long currentLen = [code length];
+    if (currentLen > textCodegenOffset) {
+        const char *bytes = (const char *)[code bytes];
+        NSData *delta = [NSData dataWithBytes:(bytes + textCodegenOffset)
+                                       length:(currentLen - textCodegenOffset)];
+        [writer addTextSectionData:delta];
+        textCodegenOffset = currentLen;
+    }
     [classwriter writeInstanceMethodList:instanceMethods ];
     [classwriter writeClassMethodList:classMethods];
 }
@@ -747,6 +757,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 -(void)compileAndWriteClasses:(NSArray*)classes
 {
+    textCodegenOffset = 0;
     for ( STClassDefinition *aClass in classes ) {
         [self compileClass:aClass];
     }
@@ -1017,4 +1028,3 @@ static int notOnStack = 0;
 }
 
 @end
-
