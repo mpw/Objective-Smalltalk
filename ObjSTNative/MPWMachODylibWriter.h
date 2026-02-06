@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) MPWBindOpcodeWriter *bindOpcodeWriter;
 @property (nonatomic, strong, readonly) NSMutableArray *frameworks;
 
+- (void)addExternalLibraryPath:(NSString *)path;
+
 @end
 
 NS_ASSUME_NONNULL_END

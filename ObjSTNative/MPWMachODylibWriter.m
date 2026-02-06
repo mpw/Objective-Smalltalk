@@ -36,10 +36,55 @@
 @property(nonatomic, strong) NSMutableDictionary *stubOffsets;
 @property(nonatomic, strong) NSMutableDictionary *gotOffsets;
 @property(nonatomic, strong) NSMutableArray *frameworks;
+@property(nonatomic, strong) NSMutableArray *externalLibraries;
 // ObjC message send support
 @property(nonatomic, strong) NSMutableDictionary *objcStubOffsets;      // selector -> offset in __objc_stubs
 @property(nonatomic, strong) NSMutableDictionary *objcMethnameOffsets;  // selector -> offset in __objc_methname
 @property(nonatomic, strong) NSMutableDictionary *objcSelrefOffsets;    // selector -> offset in __objc_selrefs
+
+@end
+
+@interface MPWExternalLibrary : NSObject
+@property(nonatomic, copy) NSString *name;
+@property(nonatomic, copy) NSString *path;
+@property(nonatomic, strong) NSMutableSet<NSString *> *symbols;
+@property(nonatomic, strong) NSArray<NSString *> *prefixes;
+- (instancetype)initWithName:(NSString *)name
+                        path:(NSString *)path
+                     symbols:(NSArray<NSString *> *)symbols
+                    prefixes:(NSArray<NSString *> *)prefixes;
+- (BOOL)matchesSymbol:(NSString *)symbol;
+- (BOOL)matchesPrefix:(NSString *)symbol;
+@end
+
+@implementation MPWExternalLibrary
+
+- (instancetype)initWithName:(NSString *)name
+                        path:(NSString *)path
+                     symbols:(NSArray<NSString *> *)symbols
+                    prefixes:(NSArray<NSString *> *)prefixes {
+  self = [super init];
+  if (self) {
+    self.name = name;
+    self.path = path;
+    self.symbols = [NSMutableSet setWithArray:symbols ?: @[]];
+    self.prefixes = prefixes ?: @[];
+  }
+  return self;
+}
+
+- (BOOL)matchesSymbol:(NSString *)symbol {
+  return [self.symbols containsObject:symbol];
+}
+
+- (BOOL)matchesPrefix:(NSString *)symbol {
+  for (NSString *prefix in self.prefixes) {
+    if ([symbol hasPrefix:prefix]) {
+      return YES;
+    }
+  }
+  return NO;
+}
 
 @end
 
@@ -63,9 +108,10 @@
         [[[MPWChainedFixupWriter alloc] init] autorelease];
     self.stubOffsets = [NSMutableDictionary dictionary];
     self.gotOffsets = [NSMutableDictionary dictionary];
-    self.frameworks =
-        [NSMutableArray arrayWithObjects:@"/usr/lib/libSystem.B.dylib",
-                                         @"/usr/lib/libobjc.A.dylib", nil];
+    self.frameworks = [NSMutableArray array];
+    self.externalLibraries = [NSMutableArray array];
+    [self addExternalLibraryPath:@"/usr/lib/libSystem.B.dylib"];
+    [self addExternalLibraryPath:@"/usr/lib/libobjc.A.dylib"];
     // ObjC message send support
     self.objcStubOffsets = [NSMutableDictionary dictionary];
     self.objcMethnameOffsets = [NSMutableDictionary dictionary];
@@ -574,75 +620,110 @@
         }
       }
 
-      if ([sectionWriter.segname isEqualToString:@"__DATA_CONST"] &&
-          ([sectionWriter.sectname isEqualToString:@"__objc_arrayobj"] ||
-           [sectionWriter.sectname isEqualToString:@"__objc_arraydata"])) {
-        uint64_t after = 0;
-        if (sectionData.length >= (NSUInteger)offset + 8) {
-          [sectionData getBytes:&after range:NSMakeRange((NSUInteger)offset, 8)];
-        }
-        NSLog(@"applyRelocations AFTER  %@.%@ offset=0x%x relocType=%d symbol=%@ value=0x%llx",
-              sectionWriter.segname, sectionWriter.sectname, offset, relocType, symbolName, after);
-      }
     }
   }
 }
 
+- (MPWExternalLibrary *)libraryForPath:(NSString *)path {
+  for (MPWExternalLibrary *library in self.externalLibraries) {
+    if ([library.path isEqualToString:path]) {
+      return library;
+    }
+  }
+  return nil;
+}
+
+- (MPWExternalLibrary *)knownLibraryForPath:(NSString *)path {
+  NSString *name = [path lastPathComponent];
+  if ([name isEqualToString:@"libSystem.B.dylib"]) {
+    return [[[MPWExternalLibrary alloc] initWithName:@"libSystem"
+                                                path:path
+                                             symbols:@[]
+                                            prefixes:@[]] autorelease];
+  }
+  if ([name isEqualToString:@"libobjc.A.dylib"]) {
+    return [[[MPWExternalLibrary alloc] initWithName:@"libobjc"
+                                                path:path
+                                             symbols:@[
+                                               @"_objc_msgSend",
+                                               @"__objc_empty_cache",
+                                             ]
+                                            prefixes:@[
+                                              @"_OBJC_CLASS_$_",
+                                              @"_OBJC_METACLASS_$_",
+                                            ]] autorelease];
+  }
+  if ([name isEqualToString:@"CoreFoundation"]) {
+    return [[[MPWExternalLibrary alloc] initWithName:@"CoreFoundation"
+                                                path:path
+                                             symbols:@[
+                                               @"_OBJC_CLASS_$_NSConstantArray",
+                                               @"_OBJC_CLASS_$_NSConstantDictionary",
+                                               @"_OBJC_CLASS_$_NSConstantData",
+                                               @"_OBJC_CLASS_$_NSConstantDate",
+                                             ]
+                                            prefixes:@[]] autorelease];
+  }
+  if ([name isEqualToString:@"Foundation"]) {
+    return [[[MPWExternalLibrary alloc] initWithName:@"Foundation"
+                                                path:path
+                                             symbols:@[
+                                               @"___CFConstantStringClassReference",
+                                               @"_OBJC_CLASS_$_NSConstantIntegerNumber",
+                                               @"_OBJC_CLASS_$_NSConstantDoubleNumber",
+                                               @"_OBJC_CLASS_$_NSConstantFloatNumber",
+                                             ]
+                                            prefixes:@[]] autorelease];
+  }
+  if ([name isEqualToString:@"MPWFoundation"]) {
+    return [[[MPWExternalLibrary alloc] initWithName:@"MPWFoundation"
+                                                path:path
+                                             symbols:@[]
+                                            prefixes:@[@"_MPW"]] autorelease];
+  }
+  return [[[MPWExternalLibrary alloc] initWithName:name
+                                              path:path
+                                           symbols:@[]
+                                          prefixes:@[]] autorelease];
+}
+
+- (MPWExternalLibrary *)externalLibraryForPath:(NSString *)path {
+  MPWExternalLibrary *existing = [self libraryForPath:path];
+  if (existing) {
+    return existing;
+  }
+  MPWExternalLibrary *library = [self knownLibraryForPath:path];
+  [self.externalLibraries addObject:library];
+  return library;
+}
+
+- (void)addExternalLibraryPath:(NSString *)path {
+  if (![self.frameworks containsObject:path]) {
+    [self.frameworks addObject:path];
+  }
+  [self externalLibraryForPath:path];
+}
+
 - (int)ordinalForSymbol:(NSString *)symbol {
   int ordinal = 1; // Default to libSystem
-
-  // NSConstant classes must be checked BEFORE generic _OBJC_CLASS_$_ check
-  // These classes are NOT in libobjc, they're in CoreFoundation or Foundation
-  if ([symbol containsString:@"NSConstantArray"] ||
-      [symbol containsString:@"NSConstantDictionary"] ||
-      [symbol containsString:@"NSConstantData"] ||
-      [symbol containsString:@"NSConstantDate"]) {
-      // These NSConstant classes are in CoreFoundation
-      NSLog(@"ordinalForSymbol: %@ -> CoreFoundation, frameworks=%@", symbol, self.frameworks);
-      for (int i = 0; i < self.frameworks.count; i++) {
-          if ([self.frameworks[i] containsString:@"CoreFoundation"]) {
-              ordinal = i + 1;
-              NSLog(@"ordinalForSymbol: %@ -> CoreFoundation ordinal=%d", symbol, ordinal);
-              break;
-          }
-      }
-  } else if ([symbol containsString:@"NSConstantIntegerNumber"] ||
-             [symbol containsString:@"NSConstantDoubleNumber"] ||
-             [symbol containsString:@"NSConstantFloatNumber"]) {
-      // These NSConstant number classes are in Foundation
-      for (int i = 0; i < self.frameworks.count; i++) {
-          if ([self.frameworks[i] containsString:@"Foundation"]) {
-              ordinal = i + 1;
-              break;
-          }
-      }
-  } else if ([symbol isEqualToString:@"_objc_msgSend"] ||
-             [symbol isEqualToString:@"__objc_empty_cache"] ||
-             [symbol hasPrefix:@"_OBJC_CLASS_$_"] ||
-             [symbol hasPrefix:@"_OBJC_METACLASS_$_"]) {
-      // ObjC runtime symbols come from libobjc
-      for (int i = 0; i < self.frameworks.count; i++) {
-          if ([self.frameworks[i] containsString:@"libobjc"]) {
-              ordinal = i + 1;
-              break;
-          }
-      }
-  } else if ([symbol containsString:@"MPW"]) {
-      for (int i = 0; i < self.frameworks.count; i++) {
-          if ([self.frameworks[i] containsString:@"MPWFoundation"]) {
-              ordinal = i + 1;
-              break;
-          }
-      }
-  } else if ([symbol isEqualToString:@"___CFConstantStringClassReference"]) {
-      // ___CFConstantStringClassReference is in CoreFoundation (part of Foundation)
-      for (int i = 0; i < self.frameworks.count; i++) {
-          if ([self.frameworks[i] containsString:@"Foundation"]) {
-              ordinal = i + 1;
-              break;
-          }
-      }
+  if (self.externalLibraries.count == 0) {
+    return ordinal;
   }
+
+  for (int i = 0; i < self.externalLibraries.count; i++) {
+    MPWExternalLibrary *library = self.externalLibraries[i];
+    if ([library matchesSymbol:symbol]) {
+      return i + 1;
+    }
+  }
+
+  for (int i = 0; i < self.externalLibraries.count; i++) {
+    MPWExternalLibrary *library = self.externalLibraries[i];
+    if ([library matchesPrefix:symbol]) {
+      return i + 1;
+    }
+  }
+
   return ordinal;
 }
 
@@ -2379,9 +2460,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *path = @"/tmp/libexternalcall.dylib";
     writer.installName = @"@rpath/libexternalcall.dylib";
-    [writer.frameworks
-     addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/"
-     @"MPWFoundation"];
+    [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
     gen.symbolWriter = writer;
@@ -2771,7 +2850,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     // Generate dylib using MPWMachODylibWriter (same as testDylibWithExternalCall but without dlopen)
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     writer.installName = @"@rpath/libexternalcall.dylib";
-    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+    [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
 
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
     gen.symbolWriter = writer;
@@ -3487,8 +3566,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testCharacterizeGeneratedLiteralObjectsDylib {
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     writer.installName = @"@rpath/libliteralobjects.dylib";
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
 
@@ -3570,7 +3649,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     MPWMachODylibWriter *genWriter = [MPWMachODylibWriter stream];
     STNativeCompiler *genCompiler = [[[STNativeCompiler alloc] initWithWriter:genWriter] autorelease];
     genWriter.installName = @"@rpath/libconststring.dylib";
-    [genWriter.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [genWriter addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
 
     STObjectCodeGeneratorARM *genGen = genCompiler.codegen;
     [genCompiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
@@ -3812,8 +3891,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     // 2. Generate literal-object dylib (array only)
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     writer.installName = @"@rpath/libliteralobjects.dylib";
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -3965,7 +4044,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     MPWMachODylibWriter *genWriter = [MPWMachODylibWriter stream];
     STNativeCompiler *genCompiler = [[[STNativeCompiler alloc] initWithWriter:genWriter] autorelease];
     genWriter.installName = @"@rpath/libconststring.dylib";
-    [genWriter.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [genWriter addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
 
     STObjectCodeGeneratorARM *genGen = genCompiler.codegen;
     [genCompiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
@@ -4088,7 +4167,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *path = @"/tmp/libconstantstring.dylib";
     writer.installName = @"@rpath/libconstantstring.dylib";
     // ___CFConstantStringClassReference is in CoreFoundation, need to link Foundation
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
 
     NSString *stringToGeneratorAndCheck = @"Hello World Constant String in dylib";
     
@@ -4114,7 +4193,6 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
     if (handle) {
         id (*returnString)(void) = dlsym(handle, "returnString");
-        NSLog(@"testDylibWithConstantNSString: dlsym returnString = %p", returnString);
         EXPECTNOTNIL(returnString, @"returnString function address");
         if (returnString) {
             NSLog(@"testDylibWithConstantNSString: About to call returnString()");
@@ -4145,8 +4223,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/compiled-st-class.dylib";
     writer.installName = @"@rpath/compiled-st-class.dylib";
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     NSString *className = @"TestClassCode1";
 
     NSString *classToCompile = [self testClassCodeWithName:className];
@@ -4232,8 +4310,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/two-compiled-st-classes.dylib";
     writer.installName = @"@rpath/two-compiled-st-classes.dylib";
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     NSString *class1Name = @"TestClassCode3";
     NSString *class2Name = @"TestClassCode4";
 
@@ -4321,8 +4399,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     writer.installName = @"@rpath/two-classes-gen.dylib";
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
 
     NSString *class1Name = @"TestClassCode3";
     NSString *class2Name = @"TestClassCode4";
@@ -4440,8 +4518,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralobjects", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     
@@ -4489,9 +4567,6 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     if (handle) {
         id *arrayPtr = dlsym(handle, "literal_nsarray_test");
-        if (!arrayPtr) {
-            NSLog(@"testDylibWithLiteralNSArrayObject: dlsym error: %s", dlerror());
-        }
         EXPECTNOTNIL(arrayPtr, @"literal_nsarray_test symbol");
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded array");
@@ -4530,8 +4605,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralstring", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSString *stringLiteral = @"literal string";
@@ -4573,8 +4648,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralnumber", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSNumber *numberLiteral = @42;
@@ -4616,8 +4691,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralarray", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -4662,8 +4737,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     (void)uniqueLiteralPath(@"libliteralarray", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -4687,7 +4762,6 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
 
     NSArray *exports = [reader exportedSymbolNames];
-    NSLog(@"Generated array exports: %@", exports);
     EXPECTTRUE([exports containsObject:@"_literal_nsarray_test"],
                @"should export _literal_nsarray_test");
 
@@ -4723,8 +4797,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteraldict", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
@@ -4768,8 +4842,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *installName = nil;
     (void)uniqueLiteralPath(@"libliteraldict", &installName);
     writer.installName = installName;
-    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
@@ -4793,7 +4867,6 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
 
     NSArray *exports = [reader exportedSymbolNames];
-    NSLog(@"Generated dict exports: %@", exports);
     EXPECTTRUE([exports containsObject:@"_literal_nsdict_test"],
                @"should export _literal_nsdict_test");
 
