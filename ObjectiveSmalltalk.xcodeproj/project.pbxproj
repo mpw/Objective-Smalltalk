@@ -778,6 +778,8 @@
 		1FF6C6131379DF1300CCB7AE /* MPWRelScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */; };
 		1FF85FE02F2B9B4300A99A0C /* MPWMachODylibWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */; };
 		1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */; };
+		1F0B2C3D4E5F678901234568 /* MPWMachOObjectSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B2C3D4E5F678901234566 /* MPWMachOObjectSerializer.m */; };
+		1F0B2C3D4E5F678901234569 /* MPWMachOObjectSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0B2C3D4E5F678901234565 /* MPWMachOObjectSerializer.h */; };
 		1FF860692F2C9B5800A99A0C /* MPWExportsTrieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */; };
 		1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */; };
 		1FF8609A2F2CD91A00A99A0C /* MPWMachOLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */; };
@@ -1637,6 +1639,8 @@
 		1FF6C60F1379DF1300CCB7AE /* MPWRelScheme.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = MPWRelScheme.m; sourceTree = "<group>"; };
 		1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachODylibWriter.h; sourceTree = "<group>"; };
 		1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachODylibWriter.m; sourceTree = "<group>"; };
+		1F0B2C3D4E5F678901234565 /* MPWMachOObjectSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOObjectSerializer.h; sourceTree = "<group>"; };
+		1F0B2C3D4E5F678901234566 /* MPWMachOObjectSerializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOObjectSerializer.m; sourceTree = "<group>"; };
 		1FF860672F2C9B5800A99A0C /* MPWExportsTrieWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWExportsTrieWriter.h; sourceTree = "<group>"; };
 		1FF860682F2C9B5800A99A0C /* MPWExportsTrieWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWExportsTrieWriter.m; sourceTree = "<group>"; };
 		1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOLinker.h; sourceTree = "<group>"; };
@@ -2023,6 +2027,8 @@
 				1F3466EF28CB10F7003257CB /* MPWMachOReader.m */,
 				1FF85FDE2F2B9B4300A99A0C /* MPWMachODylibWriter.h */,
 				1FF85FDF2F2B9B4300A99A0C /* MPWMachODylibWriter.m */,
+				1F0B2C3D4E5F678901234565 /* MPWMachOObjectSerializer.h */,
+				1F0B2C3D4E5F678901234566 /* MPWMachOObjectSerializer.m */,
 				1F08D3042F323E8E008AE661 /* DetailedDylibCharacterizationTests.m */,
 				1FF860AF2F315BA400A99A0C /* MPWMachOSegment.h */,
 				1FF860B02F315BA400A99A0C /* MPWMachOSegment.m */,
@@ -3075,6 +3081,7 @@
 				1F08D3032F321279008AE661 /* MPWChainedFixupWriter.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* STObjectCodeGeneratorARM.h in Headers */,
 				1FF85FE12F2B9B4300A99A0C /* MPWMachODylibWriter.h in Headers */,
+				1F0B2C3D4E5F678901234569 /* MPWMachOObjectSerializer.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* MPWObjectFileWriter.h in Headers */,
 				1F78BD8D2CB6F78000AA41A3 /* STJittedMethod.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
@@ -4654,6 +4661,7 @@
 				1FF8609F2F2D25D600A99A0C /* MPWBindOpcodeWriter.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* MPWByteStreamWithSymbols.m in Sources */,
 				1FF85FE02F2B9B4300A99A0C /* MPWMachODylibWriter.m in Sources */,
+				1F0B2C3D4E5F678901234568 /* MPWMachOObjectSerializer.m in Sources */,
 				1F7B0C5D3B9C0A3E00A1B2C3 /* STBundle+ObjSTNative.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
 				1FF860B12F315BA400A99A0C /* MPWMachOSegment.m in Sources */,

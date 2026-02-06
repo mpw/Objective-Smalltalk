@@ -18,6 +18,7 @@
 #import <ObjectiveSmalltalk/STSubscriptExpression.h>
 #import "STJittableData.h"
 #import <mach-o/arm64/reloc.h>
+#import "MPWMachOObjectSerializer.h"
 #import "MPWClassScheme.h"
 #import "STIdentifier.h"
 #import "STConnectionDefiner.h"
@@ -214,6 +215,7 @@
     STObjectCodeGeneratorARM* codegen;
     MPWMachOWriter *writer;
     MPWMachOClassWriter *classwriter;
+    MPWMachOObjectSerializer *objectSerializer;
     int blockNo;
     int stringLiteralNo;
     long textCodegenOffset;
@@ -252,6 +254,15 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [self _setWriter:aWriter];
     codegen.symbolWriter = writer;
     codegen.relocationWriter = writer.textSectionWriter;
+    objectSerializer = nil;
+}
+
+-(MPWMachOObjectSerializer*)objectSerializer
+{
+    if ( objectSerializer == nil ) {
+        objectSerializer = [[MPWMachOObjectSerializer alloc] initWithWriter:self.writer];
+    }
+    return objectSerializer;
 }
 
 -(instancetype)initWithWriter:(MPWMachOWriter*)aWriter
@@ -583,15 +594,75 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return [someExpression generateNativeCodeOn:self];
 }
 
+-(id)literalObjectForArrayExpression:(MPWLiteralArrayExpression*)expression
+{
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:expression.objects.count];
+    for (id element in expression.objects) {
+        id value = [self literalObjectForExpression:element];
+        if ( value == nil ) {
+            [NSException raise:@"unsupported" format:@"Nil literal array element for %@", element];
+        }
+        [result addObject:value];
+    }
+    return result;
+}
+
+-(id)literalObjectForDictionaryExpression:(MPWLiteralDictionaryExpression*)expression
+{
+    NSArray *keys = [expression valueForKey:@"keys"];
+    NSArray *values = [expression valueForKey:@"values"];
+    if ( ![keys isKindOfClass:[NSArray class]] || ![values isKindOfClass:[NSArray class]] ) {
+        [NSException raise:@"unsupported" format:@"Literal dict has no key/value arrays: %@", expression];
+    }
+    if ( keys.count != values.count ) {
+        [NSException raise:@"unsupported" format:@"Literal dict key/value count mismatch: %ld/%ld", (long)keys.count, (long)values.count];
+    }
+    NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:keys.count];
+    for (NSInteger i = 0; i < keys.count; i++) {
+        id keyValue = [self literalObjectForExpression:keys[i]];
+        id valueValue = [self literalObjectForExpression:values[i]];
+        if ( keyValue == nil || valueValue == nil ) {
+            [NSException raise:@"unsupported" format:@"Nil literal dict entry at index %ld", (long)i];
+        }
+        result[keyValue] = valueValue;
+    }
+    return result;
+}
+
+-(id)literalObjectForExpression:(id)expression
+{
+    if ( [expression isKindOfClass:[MPWLiteralExpression class]] ) {
+        return [(MPWLiteralExpression*)expression theLiteral];
+    } else if ( [expression isKindOfClass:[MPWLiteralArrayExpression class]] ) {
+        return [self literalObjectForArrayExpression:expression];
+    } else if ( [expression isKindOfClass:[MPWLiteralDictionaryExpression class]] ) {
+        return [self literalObjectForDictionaryExpression:expression];
+    } else if ( [expression isKindOfClass:[NSString class]] || [expression isKindOfClass:[NSNumber class]] ) {
+        return expression;
+    }
+    [NSException raise:@"unsupported" format:@"Unsupported literal expression: %@ (%@)", expression, [expression class]];
+    return nil;
+}
+
 -(int)generateLiteralArrayExpression:(MPWLiteralArrayExpression*)expression
 {
-    [NSException raise:@"unknown" format:@"Can't generate code literal array %@/%@ yet",expression.class,expression];
+    id literalObject = [self literalObjectForExpression:expression];
+    if ( ![literalObject isKindOfClass:[NSArray class]] ) {
+        [NSException raise:@"unsupported" format:@"Literal array did not produce NSArray: %@ (%@)", literalObject, [literalObject class]];
+    }
+    NSString *symbol = [[self objectSerializer] symbolForObject:literalObject];
+    [self generateLoadSymbolicAddress:symbol intoRegister:0];
     return 0;
 }
 
 -(int)generateLiteralDictionaryExpression:(MPWLiteralDictionaryExpression*)expression
 {
-    [NSException raise:@"unknown" format:@"Can't generate code for literal dict %@/%@ yet",expression.class,expression];
+    id literalObject = [self literalObjectForExpression:expression];
+    if ( ![literalObject isKindOfClass:[NSDictionary class]] ) {
+        [NSException raise:@"unsupported" format:@"Literal dict did not produce NSDictionary: %@ (%@)", literalObject, [literalObject class]];
+    }
+    NSString *symbol = [[self objectSerializer] symbolForObject:literalObject];
+    [self generateLoadSymbolicAddress:symbol intoRegister:0];
     return 0;
 }
 
