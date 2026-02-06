@@ -44,6 +44,10 @@
     MPWChainedImport *imp = imports[i];
     if ([imp.symbolName isEqualToString:symbolName] &&
         imp.dylibOrdinal == dylibOrdinal) {
+      if ([symbolName containsString:@"NSConstant"]) {
+        NSLog(@"MPWChainedFixupWriter: reuse import %@ dylib=%d index=%d (imports=%lu)",
+              symbolName, dylibOrdinal, i, (unsigned long)imports.count);
+      }
       return i;
     }
   }
@@ -51,9 +55,11 @@
   imp.symbolName = symbolName;
   imp.dylibOrdinal = dylibOrdinal;
   [imports addObject:imp];
-//  NSLog(
-//      @"MPWChainedFixupWriter: Added NEW import %@ from dylib %d at index %lu",
-//      symbolName, dylibOrdinal, (unsigned long)imports.count - 1);
+  if ([symbolName containsString:@"NSConstant"]) {
+    NSLog(@"MPWChainedFixupWriter: add import %@ dylib=%d index=%lu (imports=%lu)",
+          symbolName, dylibOrdinal, (unsigned long)imports.count - 1,
+          (unsigned long)imports.count);
+  }
   return (int)imports.count - 1;
 }
 

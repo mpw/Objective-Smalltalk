@@ -516,9 +516,10 @@
 
 - (void)applyRelocations {
   for (MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
-    // Skip __DATA sections - their relocations are handled via chained fixups
-    // in buildChainedFixups, not via ARM64 instruction patching
-    if ([sectionWriter.segname isEqualToString:@"__DATA"]) {
+    // Skip __DATA and __DATA_CONST sections - their relocations are handled
+    // via chained fixups in buildChainedFixups, not via ARM64 instruction patching
+    if ([sectionWriter.segname isEqualToString:@"__DATA"] ||
+        [sectionWriter.segname isEqualToString:@"__DATA_CONST"]) {
       continue;
     }
     NSMutableData *sectionData = (NSMutableData *)sectionWriter.target;
@@ -597,9 +598,11 @@
       [symbol containsString:@"NSConstantData"] ||
       [symbol containsString:@"NSConstantDate"]) {
       // These NSConstant classes are in CoreFoundation
+      NSLog(@"ordinalForSymbol: %@ -> CoreFoundation, frameworks=%@", symbol, self.frameworks);
       for (int i = 0; i < self.frameworks.count; i++) {
           if ([self.frameworks[i] containsString:@"CoreFoundation"]) {
               ordinal = i + 1;
+              NSLog(@"ordinalForSymbol: %@ -> CoreFoundation ordinal=%d", symbol, ordinal);
               break;
           }
       }
@@ -1318,6 +1321,10 @@
 
     // Use resolveSymbolAddress: to get correct address for symbols in any section
     long address = [self resolveSymbolAddress:symbol];
+    if ([symbol containsString:@"constant_ns"]) {
+      NSDictionary *info = self.symbolAddressInfo[symbol];
+      NSLog(@"exportsTrie: symbol=%@ address=0x%lx info=%@", symbol, address, info);
+    }
     [trieWriter addSymbol:symbol atAddress:address];
   }
 
@@ -1693,6 +1700,17 @@
 #import <MPWFoundation/DebugMacros.h>
 
 @implementation MPWMachODylibWriter (testing)
+
+static int literalTestCounter = 0;
+
+static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName) {
+    literalTestCounter++;
+    NSString *suffix = [NSString stringWithFormat:@"%d", literalTestCounter];
+    if (outInstallName) {
+        *outInstallName = [NSString stringWithFormat:@"@rpath/%@_%@.dylib", baseName, suffix];
+    }
+    return [NSString stringWithFormat:@"/tmp/%@_%@.dylib", baseName, suffix];
+}
 
 + (void)testCanWriteDylibHeader {
   MPWMachODylibWriter *writer = [self stream];
@@ -3482,7 +3500,7 @@
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_constant_nsarray_test"];
+    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
     [dataWriter addRelocationEntryForSymbol:[serializer symbolForObject:arrayLiteral]
                                    atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
@@ -3806,7 +3824,7 @@
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_constant_nsarray_test"];
+    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
     [dataWriter addRelocationEntryForSymbol:[serializer symbolForObject:arrayLiteral]
                                    atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
@@ -4419,7 +4437,9 @@
 
 + (void)testDylibWithLiteralObjects {
     MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
-    writer.installName = @"@rpath/libliteralobjects.dylib";
+    NSString *installName = nil;
+    NSString *path = uniqueLiteralPath(@"libliteralobjects", &installName);
+    writer.installName = installName;
     [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
 
@@ -4440,24 +4460,23 @@
                                                                       flags:0];
     uint64_t zero = 0;
     
-    [dataWriter declareGlobalSymbol:@"_constant_nsarray_test"];
+    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [dataWriter declareGlobalSymbol:@"_constant_nsdict_test"];
+    [dataWriter declareGlobalSymbol:@"_literal_nsdict_test"];
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [dataWriter declareGlobalSymbol:@"_constant_nsnumber_test"];
+    [dataWriter declareGlobalSymbol:@"_literal_nsnumber_test"];
     [dataWriter addRelocationEntryForSymbol:numberSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [dataWriter declareGlobalSymbol:@"_constant_nsstring_test"];
+    [dataWriter declareGlobalSymbol:@"_literal_nsstring_test"];
     [dataWriter addRelocationEntryForSymbol:stringSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
     [writer writeFile];
-    NSString *path = @"/tmp/libliteralobjects.dylib";
     [[writer data] writeToFile:path atomically:YES];
     
     system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
@@ -4469,29 +4488,32 @@
     EXPECTNOTNIL(handle, errorString);
     
     if (handle) {
-        id *arrayPtr = dlsym(handle, "constant_nsarray_test");
-        EXPECTNOTNIL(arrayPtr, @"constant_nsarray_test symbol");
+        id *arrayPtr = dlsym(handle, "literal_nsarray_test");
+        if (!arrayPtr) {
+            NSLog(@"testDylibWithLiteralNSArrayObject: dlsym error: %s", dlerror());
+        }
+        EXPECTNOTNIL(arrayPtr, @"literal_nsarray_test symbol");
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded array");
         INTEXPECT((int)loadedArray.count, 2, @"array count");
         IDEXPECT(loadedArray[0], @"string1", @"array first element");
         IDEXPECT(loadedArray[1], @"string2", @"array second element");
         
-        id *dictPtr = dlsym(handle, "constant_nsdict_test");
-        EXPECTNOTNIL(dictPtr, @"constant_nsdict_test symbol");
+        id *dictPtr = dlsym(handle, "literal_nsdict_test");
+        EXPECTNOTNIL(dictPtr, @"literal_nsdict_test symbol");
         NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
         EXPECTNOTNIL(loadedDict, @"loaded dict");
         IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
         IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
         
-        id *numberPtr = dlsym(handle, "constant_nsnumber_test");
-        EXPECTNOTNIL(numberPtr, @"constant_nsnumber_test symbol");
+        id *numberPtr = dlsym(handle, "literal_nsnumber_test");
+        EXPECTNOTNIL(numberPtr, @"literal_nsnumber_test symbol");
         NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
         EXPECTNOTNIL(loadedNumber, @"loaded number");
         INTEXPECT([loadedNumber intValue], 42, @"number value");
         
-        id *stringPtr = dlsym(handle, "constant_nsstring_test");
-        EXPECTNOTNIL(stringPtr, @"constant_nsstring_test symbol");
+        id *stringPtr = dlsym(handle, "literal_nsstring_test");
+        EXPECTNOTNIL(stringPtr, @"literal_nsstring_test symbol");
         NSString *loadedString = stringPtr ? *stringPtr : nil;
         EXPECTNOTNIL(loadedString, @"loaded string");
         IDEXPECT(loadedString, stringLiteral, @"string value");
@@ -4500,6 +4522,308 @@
     }
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+// Smaller-step tests for literal object serialization
++ (void)testDylibWithLiteralNSStringObject {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *installName = nil;
+    NSString *path = uniqueLiteralPath(@"libliteralstring", &installName);
+    writer.installName = installName;
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+
+    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSString *stringLiteral = @"literal string";
+    NSString *stringSymbol = [serializer symbolForObject:stringLiteral];
+
+    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:@"_literal_nsstring_test"];
+    [dataWriter addRelocationEntryForSymbol:stringSymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    [writer writeFile];
+    [[writer data] writeToFile:path atomically:YES];
+
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString = nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+
+    if (handle) {
+        id *stringPtr = dlsym(handle, "literal_nsstring_test");
+        EXPECTNOTNIL(stringPtr, @"literal_nsstring_test symbol");
+        NSString *loadedString = stringPtr ? *stringPtr : nil;
+        EXPECTNOTNIL(loadedString, @"loaded string");
+        IDEXPECT(loadedString, stringLiteral, @"string value");
+        dlclose(handle);
+    }
+
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
++ (void)testDylibWithLiteralNSNumberObject {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *installName = nil;
+    NSString *path = uniqueLiteralPath(@"libliteralnumber", &installName);
+    writer.installName = installName;
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+
+    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSNumber *numberLiteral = @42;
+    NSString *numberSymbol = [serializer symbolForObject:numberLiteral];
+
+    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:@"_literal_nsnumber_test"];
+    [dataWriter addRelocationEntryForSymbol:numberSymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    [writer writeFile];
+    [[writer data] writeToFile:path atomically:YES];
+
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString = nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+
+    if (handle) {
+        id *numberPtr = dlsym(handle, "literal_nsnumber_test");
+        EXPECTNOTNIL(numberPtr, @"literal_nsnumber_test symbol");
+        NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
+        EXPECTNOTNIL(loadedNumber, @"loaded number");
+        INTEXPECT([loadedNumber intValue], 42, @"number value");
+        dlclose(handle);
+    }
+
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
++ (void)testDylibWithLiteralNSArrayObject {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *installName = nil;
+    NSString *path = uniqueLiteralPath(@"libliteralarray", &installName);
+    writer.installName = installName;
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+
+    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSArray *arrayLiteral = @[ @"string1", @"string2" ];
+    NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
+
+    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    [writer writeFile];
+    [[writer data] writeToFile:path atomically:YES];
+
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString = nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+
+    if (handle) {
+        id *arrayPtr = dlsym(handle, "literal_nsarray_test");
+        EXPECTNOTNIL(arrayPtr, @"literal_nsarray_test symbol");
+        NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
+        EXPECTNOTNIL(loadedArray, @"loaded array");
+        INTEXPECT((int)loadedArray.count, 2, @"array count");
+        IDEXPECT(loadedArray[0], @"string1", @"array first element");
+        IDEXPECT(loadedArray[1], @"string2", @"array second element");
+        dlclose(handle);
+    }
+
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+// Characterize generated literal NSArray dylib without dlopen
++ (void)testCharacterizeGeneratedLiteralNSArrayDylib {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *installName = nil;
+    (void)uniqueLiteralPath(@"libliteralarray", &installName);
+    writer.installName = installName;
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+
+    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSArray *arrayLiteral = @[ @"string1", @"string2" ];
+    NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
+
+    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    [writer writeFile];
+    NSData *genData = [writer data];
+    EXPECTNOTNIL(genData, @"generated array dylib data");
+    if (!genData) return;
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:genData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    NSArray *exports = [reader exportedSymbolNames];
+    NSLog(@"Generated array exports: %@", exports);
+    EXPECTTRUE([exports containsObject:@"_literal_nsarray_test"],
+               @"should export _literal_nsarray_test");
+
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
+    MPWMachOSection *arrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:dataConstSeg];
+    MPWMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
+    EXPECTNOTNIL(arrayObj, @"generated should have __objc_arrayobj");
+    EXPECTNOTNIL(arrayData, @"generated should have __objc_arraydata");
+    if (!arrayObj || !arrayData) return;
+
+    NSLog(@"Generated __objc_arrayobj: addr=0x%llx size=%lld offset=0x%lx",
+          arrayObj.address, (unsigned long long)arrayObj.size, arrayObj.offset);
+    NSLog(@"Generated __objc_arraydata: addr=0x%llx size=%lld offset=0x%lx",
+          arrayData.address, (unsigned long long)arrayData.size, arrayData.offset);
+
+    const uint64_t *arrayQ = (const uint64_t *)(genData.bytes + arrayObj.offset);
+    for (int i = 0; i < 3; i++) {
+        NSLog(@"  arrayobj[%d] = 0x%016llx", i, arrayQ[i]);
+    }
+
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"generated should have chained fixups data");
+    NSDictionary *arrayImport = [self checkChainedFixupsImportsIn:chainedData
+                                                        forSymbol:@"_OBJC_CLASS_$_NSConstantArray"
+                                                        logPrefix:@"Generated"];
+    EXPECTTRUE([arrayImport[@"found"] boolValue],
+               @"generated should import _OBJC_CLASS_$_NSConstantArray");
+}
+
++ (void)testDylibWithLiteralNSDictionaryObject {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *installName = nil;
+    NSString *path = uniqueLiteralPath(@"libliteraldict", &installName);
+    writer.installName = installName;
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+
+    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
+    NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
+
+    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:@"_literal_nsdict_test"];
+    [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    [writer writeFile];
+    [[writer data] writeToFile:path atomically:YES];
+
+    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString = nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+
+    if (handle) {
+        id *dictPtr = dlsym(handle, "literal_nsdict_test");
+        EXPECTNOTNIL(dictPtr, @"literal_nsdict_test symbol");
+        NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
+        EXPECTNOTNIL(loadedDict, @"loaded dict");
+        IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
+        IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
+        dlclose(handle);
+    }
+
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+// Characterize generated literal NSDictionary dylib without dlopen
++ (void)testCharacterizeGeneratedLiteralNSDictionaryDylib {
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    NSString *installName = nil;
+    (void)uniqueLiteralPath(@"libliteraldict", &installName);
+    writer.installName = installName;
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+
+    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
+    NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
+
+    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:@"_literal_nsdict_test"];
+    [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    [writer writeFile];
+    NSData *genData = [writer data];
+    EXPECTNOTNIL(genData, @"generated dict dylib data");
+    if (!genData) return;
+
+    MPWMachOReader *reader = [MPWMachOReader readerWithData:genData];
+    EXPECTNOTNIL(reader, @"reader should be created");
+    EXPECTTRUE([reader isHeaderValid], @"header should be valid");
+
+    NSArray *exports = [reader exportedSymbolNames];
+    NSLog(@"Generated dict exports: %@", exports);
+    EXPECTTRUE([exports containsObject:@"_literal_nsdict_test"],
+               @"should export _literal_nsdict_test");
+
+    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
+
+    MPWMachOSection *dictObj = [self findSectionNamed:@"__objc_dictobj" inSegment:dataConstSeg];
+    MPWMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
+    EXPECTNOTNIL(dictObj, @"generated should have __objc_dictobj");
+    EXPECTNOTNIL(arrayData, @"generated should have __objc_arraydata");
+    if (!dictObj || !arrayData) return;
+
+    NSLog(@"Generated __objc_dictobj: addr=0x%llx size=%lld offset=0x%lx",
+          dictObj.address, (unsigned long long)dictObj.size, dictObj.offset);
+    NSLog(@"Generated __objc_arraydata: addr=0x%llx size=%lld offset=0x%lx",
+          arrayData.address, (unsigned long long)arrayData.size, arrayData.offset);
+
+    EXPECTTRUE(dictObj.size >= 40, @"dict object should be at least 40 bytes");
+    const uint64_t *dictQ = (const uint64_t *)(genData.bytes + dictObj.offset);
+    for (int i = 0; i < 5; i++) {
+        NSLog(@"  dictobj[%d] = 0x%016llx", i, dictQ[i]);
+    }
+
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"generated should have chained fixups data");
+    NSDictionary *dictImport = [self checkChainedFixupsImportsIn:chainedData
+                                                       forSymbol:@"_OBJC_CLASS_$_NSConstantDictionary"
+                                                       logPrefix:@"Generated"];
+    EXPECTTRUE([dictImport[@"found"] boolValue],
+               @"generated should import _OBJC_CLASS_$_NSConstantDictionary");
 }
 
 
@@ -4536,7 +4860,13 @@
     @"testDylibWithTwoClassesRef",
     @"testDylibWithTwoClasses",
     @"testCompileBundleSourcesToDylib",
-//    @"testDylibWithLiteralObjects", // temporarily disabled to allow characterization tests to run
+    @"testDylibWithLiteralNSStringObject",
+    @"testDylibWithLiteralNSNumberObject",
+    @"testCharacterizeGeneratedLiteralNSArrayDylib",
+    @"testDylibWithLiteralNSArrayObject",
+    @"testDylibWithLiteralNSDictionaryObject",
+    @"testCharacterizeGeneratedLiteralNSDictionaryDylib",
+    @"testDylibWithLiteralObjects",
   ];
 }
 
