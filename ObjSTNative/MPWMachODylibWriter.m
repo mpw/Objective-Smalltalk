@@ -19,6 +19,7 @@
 #import <mach-o/loader.h>
 #import <mach-o/arm64/reloc.h>
 #import "STNativeCompiler.h"
+#import "STBundle+ObjSTNative.h"
 
 
 @interface MPWMachODylibWriter ()
@@ -4056,6 +4057,38 @@
     //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++(void)testCompileBundleSourcesToDylib
+{
+    NSString *bundleOriginPath = [[NSBundle bundleForClass:[STBundle class]] pathForResource:@"test" ofType:@"stb"];
+    NSString *bundlePath = @"/tmp/test.stb";
+    EXPECTNOTNIL(bundleOriginPath, @"test bundle should exist");
+    system( [[NSString stringWithFormat:@"cp -r %@ /tmp/", bundleOriginPath] UTF8String]);
+    STBundle *bundle = [STBundle bundleWithPath:bundlePath];
+    EXPECTNOTNIL(bundle, @"bundle should be created");
+
+    [bundle compileSourcesToNativeDylib];
+//    EXPECTNOTNIL(dylibData, @"compiled dylib data should exist");
+
+
+    
+//    system([[NSString stringWithFormat:@"codesign --deep -s - %@", path] UTF8String]);
+    
+    NSBundle *nsbundle = [NSBundle bundleWithPath:bundlePath];
+    EXPECTNOTNIL(nsbundle, @"got a bundle");
+    EXPECTTRUE( [nsbundle load],@"loading");
+//    void *handle = dlopen([path UTF8String], RTLD_NOW);
+//    NSString *errorString=nil;
+//    if (!handle) {
+//        errorString = @(dlerror());
+//    }
+//    EXPECTNOTNIL(handle, errorString);
+
+        id testClass1 = NSClassFromString(@"_STBundleLoadedTestClass1");
+        id testClass2 = NSClassFromString(@"_STBundleLoadedTestClass2");
+        EXPECTNOTNIL(testClass1, @"loaded class 1");
+        EXPECTNOTNIL(testClass2, @"loaded class 2");
+}
+
 + (NSArray *)testSelectors {
   return @[
     @"testDocumentReferenceLoadCommands", @"testDylibLayoutAssumptions",
@@ -4084,6 +4117,7 @@
     @"testCharacterizeGeneratedTwoClassesDylib",
     @"testDylibWithTwoClassesRef",
     @"testDylibWithTwoClasses",
+    @"testCompileBundleSourcesToDylib",
   ];
 }
 

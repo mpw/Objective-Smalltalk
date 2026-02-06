@@ -1,7 +1,7 @@
 class _STBundleLoadedTestClass2 : NSObject
 {
 var testVar.
--<void>testMethod {
+-testMethod {
     43.
 }
 

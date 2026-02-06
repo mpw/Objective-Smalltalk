@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(id <MPWHierarchicalStorage>)sourceDir;      // compatibility
 
+-(NSString*)path;
 
 @end
 

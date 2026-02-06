@@ -1,7 +1,7 @@
 class _STBundleLoadedTestClass1 : NSObject
 {
 var server.
--<void>testMethod {
+-testMethod {
     42.
 }
 

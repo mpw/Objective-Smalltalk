@@ -315,7 +315,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     STBundle *bundle=[self _testBundle];
     NSData *source=[bundle sourceDir][@"STBundleLoadedTestClass2.st"];
     EXPECTNOTNIL(source, @"got the source");
-    INTEXPECT(source.length, 91, @"and it is the source I expected");
+    INTEXPECT(source.length, 85, @"and it is the source I expected");
 }
 
 +(void)testGetAllSourceNames
@@ -325,7 +325,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     INTEXPECT(names.count, 2, @"number of source files");
     NSData *s1=[bundle sourceDir][names[0]];
     IDEXPECT(names[0], @"STBundleLoadedTestClass1.st", @"what is it?");
-    INTEXPECT(s1.length,92,@"source file 1");
+    INTEXPECT(s1.length,86,@"source file 1");
 }
 
 +(void)testReadInfo
