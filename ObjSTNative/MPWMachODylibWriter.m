@@ -2428,6 +2428,45 @@
     }
 }
 
+// Helper to find a section by name across all segments (dylibs have multiple segments)
++ (MPWMachOSection *)sectionNamed:(NSString *)sectionName inReader:(MPWMachOReader *)reader {
+    for (MPWMachOSegment *segment in reader.segments) {
+        MPWMachOSection *section = [segment sectionNamed:sectionName];
+        if (section) {
+            return section;
+        }
+    }
+    return nil;
+}
+
+// Helper to validate __objc_classlist for N classes
++ (void)expectClassListInReader:(MPWMachOReader *)reader
+                     classNames:(NSArray<NSString *> *)classNames
+                          label:(NSString *)label {
+    MPWMachOSection *classListSection = [self sectionNamed:@"__objc_classlist" inReader:reader];
+    EXPECTNOTNIL(classListSection, ([NSString stringWithFormat:@"%@: should have __objc_classlist", label]));
+    if (!classListSection) return;
+
+    long expectedSize = (long)classNames.count * 8;
+    INTEXPECT(classListSection.size, expectedSize,
+              ([NSString stringWithFormat:@"%@: __objc_classlist size should be %ld", label, expectedSize]));
+
+    // Dylibs use chained fixups; relocation entries are stripped.
+    if (classListSection.size >= expectedSize) {
+        const uint8_t *bytes = (const uint8_t *)reader.data.bytes + classListSection.offset;
+        const uint64_t *entries = (const uint64_t *)bytes;
+        for (int i = 0; i < classNames.count; i++) {
+            uint64_t entry = entries[i];
+            EXPECTTRUE(entry != 0,
+                       ([NSString stringWithFormat:@"%@: classlist entry %d should be non-zero (fixup-encoded)", label, i]));
+        }
+        if (classNames.count > 1) {
+            EXPECTTRUE(entries[0] != entries[1],
+                       ([NSString stringWithFormat:@"%@: classlist entries should differ for distinct classes", label]));
+        }
+    }
+}
+
 // Characterization test: Generate reference dylib with external call using external linker
 // and document its structure for comparison
 + (void)testCharacterizeReferenceExternalCallDylib {
@@ -3868,18 +3907,95 @@
     }
     EXPECTNOTNIL(handle, errorString);
     NSLog(@"testDylibWithCompiledObjectiveSmalltalkClass: dlopen result = %p", handle);
-//    
-//    if (handle) {
-//        id testClass1 = NSClassFromString(class1Name);
-//        EXPECTNOTNIL(testClass1, @"loaded the test class");
-//        id instance1 = [testClass1 new];
-//        EXPECTNOTNIL(instance1, @"testinstance");
-//        IDEXPECT([instance1 value],@(42),@"test value");
-//        dlclose(handle);
-//    }
+    
+    if (handle) {
+        id testClass1 = NSClassFromString(class1Name);
+        EXPECTNOTNIL(testClass1, @"loaded the test class");
+        id instance1 = [testClass1 new];
+        EXPECTNOTNIL(instance1, @"testinstance");
+        IDEXPECT([instance1 value],@(42),@"test value");
+
+        id testClass2 = NSClassFromString(class2Name);
+        EXPECTNOTNIL(testClass2, @"loaded the test class");
+        id instance2 = [testClass2 new];
+        EXPECTNOTNIL(instance2, @"testinstance");
+        IDEXPECT([instance2 value],@(42),@"test value");
+        dlclose(handle);
+    }
     
     // Cleanup
     //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
++(void)testCharacterizeReferenceTwoClassesDylib
+{
+    STNativeCompiler *compiler1 = [STNativeCompiler compiler];
+    STNativeCompiler *compiler2 = [STNativeCompiler compiler];
+    NSString *object_path1 = @"/tmp/two-classes-ref-1.o";
+    NSString *object_path2 = @"/tmp/two-classes-ref-2.o";
+    NSString *lib = @"two-classes-ref.dylib";
+    NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
+
+    NSString *class1Name = @"TestClassCode6";
+    NSString *class2Name = @"TestClassCode7";
+
+    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
+    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
+
+    NSData *compiled1 = [compiler1 compileClassToMachoO:[compiler1 compile:class1ToCompile]];
+    NSData *compiled2 = [compiler2 compileClassToMachoO:[compiler2 compile:class2ToCompile]];
+
+    [compiled1 writeToFile:object_path1 atomically:YES];
+    [compiled2 writeToFile:object_path2 atomically:YES];
+
+    int linkResult = [compiler1 linkObjects:@[@"two-classes-ref-1", @"two-classes-ref-2"]
+                           toSharedLibrary:lib
+                                     inDir:@"/tmp"
+                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
+    INTEXPECT(linkResult, 0, @"external linker should succeed");
+
+    NSData *refDylibData = [NSData dataWithContentsOfFile:libpath];
+    EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
+    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refDylibData];
+    EXPECTNOTNIL(refReader, @"reference reader should be created");
+    EXPECTTRUE([refReader isHeaderValid], @"reference header should be valid");
+
+    [self expectClassListInReader:refReader
+                       classNames:@[ class1Name, class2Name ]
+                            label:@"Reference two-class dylib"];
+
+    [[NSFileManager defaultManager] removeItemAtPath:object_path1 error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:object_path2 error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:libpath error:nil];
+}
+
++(void)testCharacterizeGeneratedTwoClassesDylib
+{
+    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
+    writer.installName = @"@rpath/two-classes-gen.dylib";
+    [writer.frameworks addObject:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer.frameworks addObject:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+
+    NSString *class1Name = @"TestClassCode3";
+    NSString *class2Name = @"TestClassCode4";
+
+    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
+    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
+
+    NSData *dylibdata = [compiler compileClassesToMachoO:@[
+        [compiler compile:class1ToCompile],
+        [compiler compile:class2ToCompile]
+    ]];
+
+    EXPECTNOTNIL(dylibdata, @"generated dylib data should exist");
+    MPWMachOReader *genReader = [MPWMachOReader readerWithData:dylibdata];
+    EXPECTNOTNIL(genReader, @"generated reader should be created");
+    EXPECTTRUE([genReader isHeaderValid], @"generated header should be valid");
+
+    [self expectClassListInReader:genReader
+                       classNames:@[ class1Name, class2Name ]
+                            label:@"Generated two-class dylib"];
 }
 
 +(void)testDylibWithTwoClassesRef
@@ -3964,8 +4080,10 @@
     @"testDylibWithConstantNSString",
     @"testDylibWithCompiledObjectiveSmalltalkClass",
     @"testDylibWithCompiledObjectiveSmalltalkClassRef",
+    @"testCharacterizeReferenceTwoClassesDylib",
+    @"testCharacterizeGeneratedTwoClassesDylib",
     @"testDylibWithTwoClassesRef",
-//    @"testDylibWithTwoClasses",
+    @"testDylibWithTwoClasses",
   ];
 }
 

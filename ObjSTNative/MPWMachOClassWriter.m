@@ -168,7 +168,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
     MPWMachOSectionWriter *classListWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classlist" flags:0];
     char zerobytes[80];
     memset(zerobytes,0,80);
-    [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:0];
+    [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:(int)classListWriter.length];
     [classListWriter appendBytes:zerobytes length:8];
     
 }

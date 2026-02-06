@@ -187,13 +187,13 @@ You have unlimited stamina. The human does not. Use your persistence wisely—lo
 ### Building
 Use xcodebuild with Release configuration and the shared build directory:
 ```bash
-xcodebuild -project ObjectiveSmalltalk.xcodeproj -target <TargetName> \
+xcodebuild -project ObjectiveSmalltalk.xcodeproj -configuration Release -target <TargetName> \
     CONFIGURATION_BUILD_DIR=/Users/marcel/programming/Build/Release/ build
 ```
 
 Example for ObjSTNative:
 ```bash
-xcodebuild -project ObjectiveSmalltalk.xcodeproj -target ObjSTNative \
+xcodebuild -project ObjectiveSmalltalk.xcodeproj -configuration Release -target ObjSTNative \
     CONFIGURATION_BUILD_DIR=/Users/marcel/programming/Build/Release/ build
 ```
 
