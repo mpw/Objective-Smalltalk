@@ -11,7 +11,7 @@
 #import "MPWMachOReader.h"
 #import "MPWMachOLinker.h"
 #import "MPWMachODylibWriter.h"
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
 #import "STNativeCompiler.h"
 #import <mach-o/loader.h>
@@ -64,7 +64,7 @@
 
     MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/InternalLinkerTestClass.framework/InternalLinkerTestClass"
-                                            fromWriter:(MPWMachOWriter*)compiler.writer];
+                                            fromWriter:(STMachOWriter*)compiler.writer];
 
     return [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
 }
@@ -638,7 +638,7 @@
     MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
     NSString *installName = [NSString stringWithFormat:@"@rpath/%@.framework/%@", className, className];
     return [linker linkToDylibWithInstallName:installName
-                                   fromWriter:(MPWMachOWriter*)compiler.writer];
+                                   fromWriter:(STMachOWriter*)compiler.writer];
 }
 
 // Test that the internally linked dylib can actually be loaded and the class used
@@ -1316,7 +1316,7 @@ done:
     STClassDefinition *theClass = [compiler compile:source];
     [compiler compileClassToMachoO:theClass];
 
-    MPWMachOWriter *objectWriter = (MPWMachOWriter*)compiler.writer;
+    STMachOWriter *objectWriter = (STMachOWriter*)compiler.writer;
 
     NSLog(@"=== OBJECT FILE SYMBOL INFO ===");
     NSLog(@"Global symbols (%lu):", (unsigned long)objectWriter.globalSymbolOffsets.count);
@@ -1448,7 +1448,7 @@ done:
     STClassDefinition *theClass = [compiler compile:source];
     [compiler compileClassToMachoO:theClass];
 
-    MPWMachOWriter *objectWriter = (MPWMachOWriter*)compiler.writer;
+    STMachOWriter *objectWriter = (STMachOWriter*)compiler.writer;
 
     // Get __DATA section data from object file
 //    NSLog(@"=== POINTER VALUES IN __DATA SECTIONS ===");

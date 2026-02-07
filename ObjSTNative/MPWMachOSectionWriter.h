@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOWriter;
+@class STMachOWriter;
 @protocol SymbolWriter;
 
 @interface MPWMachOSectionWriter : MPWByteStream 

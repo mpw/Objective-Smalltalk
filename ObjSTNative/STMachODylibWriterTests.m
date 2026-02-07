@@ -66,7 +66,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (MPWMachOReader *)readerForWrittenWriter:(MPWMachODylibWriter *)writer {
-    [writer writeFile];
+    [writer generateMachO];
     return [self readerWithData:[writer data]];
 }
 
@@ -342,7 +342,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     };
     [writer declareGlobalSymbol:@"_answer" atOffset:0];
     [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
-    [writer writeFile];
+    [writer generateMachO];
     
     NSData *macho = [writer data];
     MPWMachOReader *reader =
@@ -526,7 +526,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
                                   flags:0];
     [dataSection appendBytes:"test" length:4];
     
-    [writer writeFile];
+    [writer generateMachO];
     
     NSData *macho = [writer data];
     MPWMachOReader *reader =
@@ -626,7 +626,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(dataSection, @"should be able to add __DATA section");
     
     // Write the file
-    [dylibWriter writeFile];
+    [dylibWriter generateMachO];
     NSData *dylibData = [dylibWriter data];
     EXPECTNOTNIL(dylibData, @"should produce dylib data");
     
@@ -907,7 +907,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"externalcall_ref.dylib"];
     
     // Create object file with external call
-    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STMachOWriter *objectWriter = [STMachOWriter stream];
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
     gen.symbolWriter = objectWriter;
     gen.relocationWriter = objectWriter.textSectionWriter;
@@ -919,7 +919,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     [objectWriter addTextSectionData:gen.generatedCode];
     
-    [objectWriter writeFile];
+    [objectWriter generateMachO];
     [objectWriter.data writeToFile:objectPath atomically:YES];
     
     // 2. Link with external linker
@@ -1116,7 +1116,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     [writer addTextSectionData:gen.generatedCode];
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genDylibData = [writer data];
     EXPECTNOTNIL(genDylibData, @"generated dylib should have data");
     
@@ -1330,7 +1330,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [writer declareGlobalSymbol:@"_caller" atOffset:sizeof(helperCode)];
     [writer addTextSectionData:gen.generatedCode];
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *dylibData = [writer data];
     [dylibData writeToFile:path atomically:YES];
     
@@ -1373,7 +1373,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *objectPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.o"];
     NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.dylib"];
     
-    MPWMachOWriter *objectWriter = compiler.writer;
+    STMachOWriter *objectWriter = compiler.writer;
     STObjectCodeGeneratorARM *gen = compiler.codegen;
     
     [compiler generateFunctionNamed:@"_concatStrings" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
@@ -1385,7 +1385,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     [objectWriter addTextSectionData:gen.generatedCode];
     
-    [objectWriter writeFile];
+    [objectWriter generateMachO];
     [objectWriter.data writeToFile:objectPath atomically:YES];
     
     // 2. Link with external linker
@@ -1477,7 +1477,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     //    [writer addTextSectionData:gen.generatedCode];
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genDylibData = [writer data];
     [genDylibData writeToFile:path atomically:YES];
     
@@ -1592,7 +1592,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testCharacterizeReferenceConstantStringDylib {
     // 1. Generate object file with constant string using MPWMachOWriter
     STNativeCompiler *compiler = [STNativeCompiler compiler];
-    MPWMachOWriter *objectWriter = compiler.writer;
+    STMachOWriter *objectWriter = compiler.writer;
     NSString *tempDir = @"/tmp";
     NSString *objectPath = [tempDir stringByAppendingPathComponent:@"conststring_ref.o"];
     NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"conststring_ref.dylib"];
@@ -1604,7 +1604,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [objectWriter addTextSectionData:(NSData*)gen.generatedCode];
-    [objectWriter writeFile];
+    [objectWriter generateMachO];
     [objectWriter.data writeToFile:objectPath atomically:YES];
     
     // 2. Link with external linker
@@ -1704,7 +1704,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [writer addTextSectionData:gen.generatedCode];
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genDylibData = [writer data];
     [genDylibData writeToFile:path atomically:YES];
     
@@ -1834,7 +1834,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
                                    atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated dylib data");
     if (!genData) return;
@@ -1870,7 +1870,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testCompareConstantStringBinaryContent {
     // 1. Generate REFERENCE dylib using external linker
     STNativeCompiler *refCompiler = [STNativeCompiler compiler];
-    MPWMachOWriter *objectWriter = refCompiler.writer;
+    STMachOWriter *objectWriter = refCompiler.writer;
     NSString *tempDir = @"/tmp";
     NSString *objectPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare.o"];
     NSString *refDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare_ref.dylib"];
@@ -1881,7 +1881,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [objectWriter addTextSectionData:(NSData*)refGen.generatedCode];
-    [objectWriter writeFile];
+    [objectWriter generateMachO];
     [objectWriter.data writeToFile:objectPath atomically:YES];
     
     int linkResult = [refCompiler linkObjects:@[@"conststring_bincompare"]
@@ -1907,7 +1907,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [genWriter addTextSectionData:genGen.generatedCode];
-    [genWriter writeFile];
+    [genWriter generateMachO];
     NSData *genDylibData = [genWriter data];
     
     NSString *genDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare_gen.dylib"];
@@ -2158,7 +2158,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
                                    atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated dylib data");
     if (!genData) return;
@@ -2269,7 +2269,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testCompareSymbolTablesBetweenRefAndGenerated {
     // 1. Generate REFERENCE dylib using external linker
     STNativeCompiler *refCompiler = [STNativeCompiler compiler];
-    MPWMachOWriter *objectWriter = refCompiler.writer;
+    STMachOWriter *objectWriter = refCompiler.writer;
     NSString *tempDir = @"/tmp";
     NSString *objectPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare.o"];
     NSString *refDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare_ref.dylib"];
@@ -2280,7 +2280,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [objectWriter addTextSectionData:(NSData*)refGen.generatedCode];
-    [objectWriter writeFile];
+    [objectWriter generateMachO];
     [objectWriter.data writeToFile:objectPath atomically:YES];
     
     int linkResult = [refCompiler linkObjects:@[@"conststring_symcompare"]
@@ -2302,7 +2302,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [genWriter addTextSectionData:genGen.generatedCode];
-    [genWriter writeFile];
+    [genWriter generateMachO];
     NSData *genDylibData = [genWriter data];
     
     NSString *genDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare_gen.dylib"];
@@ -2367,7 +2367,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 + (void)testKnownGoodExternalLinkerDylibWithConstantNSString {
     STNativeCompiler *compiler = [STNativeCompiler compiler];
-    MPWMachOWriter *writer = compiler.writer;
+    STMachOWriter *writer = compiler.writer;
     NSString *objectPath = @"/tmp/justconstantstring-ref.o";
     NSString *path = @"/tmp/libconstantstring-ref.dylib";
     
@@ -2380,7 +2380,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [writer addTextSectionData:(NSData*)gen.generatedCode];
-    [writer writeFile];
+    [writer generateMachO];
     [writer.data writeToFile:objectPath atomically:YES];
     
     // 2. Link with external linker
@@ -2428,7 +2428,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }];
     
     [writer addTextSectionData:gen.generatedCode];
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genDylibData = [writer data];
     [genDylibData writeToFile:path atomically:YES];
     
@@ -2983,7 +2983,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated array dylib data");
     if (!genData) return;
@@ -3081,7 +3081,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated dict dylib data");
     if (!genData) return;

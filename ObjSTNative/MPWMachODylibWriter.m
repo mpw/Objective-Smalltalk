@@ -143,7 +143,7 @@
 }
 
 - (BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error {
-  [self writeFile];
+  [self generateMachO];
   NSData *dylibData = [self data];
   if (![dylibData writeToFile:path atomically:YES]) {
     if (error) {
@@ -1576,7 +1576,7 @@
 
 #pragma mark - Main Write
 
-- (void)writeFile {
+- (void)generateMachO {
   // Calculate sizes
   int idDylibSize = [self idDylibCommandSize];
   int textSegmentCmdSize = [self textSegmentCommandSize];

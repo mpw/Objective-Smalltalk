@@ -6,7 +6,7 @@
 //
 
 #import "MPWMachOLinker.h"
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWMachOSectionWriter.h"
 #import "MPWMachODylibWriter.h"
@@ -20,7 +20,7 @@
 @implementation MPWMachOLinker
 
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
-                          fromWriter:(MPWMachOWriter*)objectWriter
+                          fromWriter:(STMachOWriter*)objectWriter
 {
     return [self linkToDylibWithInstallName:installName
                            sectionWriters:[objectWriter activeSectionWriters]
@@ -29,7 +29,7 @@
 
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
                      sectionWriters:(NSArray<MPWMachOSectionWriter*>*)sections
-                       symbolWriter:(MPWMachOWriter*)symbolSource
+                       symbolWriter:(STMachOWriter*)symbolSource
 {
     MPWMachODylibWriter *dylibWriter = [MPWMachODylibWriter stream];
     dylibWriter.installName = installName;
@@ -187,7 +187,7 @@
     }
 
     // Write the dylib file structure
-    [dylibWriter writeFile];
+    [dylibWriter generateMachO];
 
     // Patch internal pointers after section addresses are computed
     if (internalRelocations.count > 0) {
@@ -278,7 +278,7 @@
 
 +(void)testLinkEmptyWriterProducesDylib
 {
-    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STMachOWriter *objectWriter = [STMachOWriter stream];
 
     unsigned char retCode[] = { 0x00, 0x00, 0x80, 0xD2, 0xC0, 0x03, 0x5F, 0xD6 };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_testFunc"];
@@ -294,7 +294,7 @@
 
 +(void)testLinkerExportsSymbols
 {
-    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STMachOWriter *objectWriter = [STMachOWriter stream];
 
     unsigned char code[] = {
         0x40, 0x05, 0x80, 0x52,
@@ -329,7 +329,7 @@
 
 +(void)testLinkerHandlesDataSections
 {
-    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STMachOWriter *objectWriter = [STMachOWriter stream];
 
     unsigned char code[] = { 0xc0, 0x03, 0x5f, 0xd6 };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_dummy"];
@@ -367,7 +367,7 @@
 
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/LinkerTestClass.framework/LinkerTestClass"
-                                            fromWriter:(MPWMachOWriter*)compiler.writer];
+                                            fromWriter:(STMachOWriter*)compiler.writer];
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should produce valid Mach-O");
@@ -390,7 +390,7 @@
 
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/BindTestClass.framework/BindTestClass"
-                                            fromWriter:(MPWMachOWriter*)compiler.writer];
+                                            fromWriter:(STMachOWriter*)compiler.writer];
 
     MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should have valid header");
@@ -408,7 +408,7 @@
 
 +(void)testExternalSymbolBindingProducesLoadableDylib
 {
-    MPWMachOWriter *objectWriter = [MPWMachOWriter stream];
+    STMachOWriter *objectWriter = [STMachOWriter stream];
 
     unsigned char code[] = { 0xc0, 0x03, 0x5f, 0xd6 };
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_testfunc"];

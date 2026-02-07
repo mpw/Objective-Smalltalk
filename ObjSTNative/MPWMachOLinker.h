@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOWriter;
+@class STMachOWriter;
 @class MPWMachOSectionWriter;
 @class MPWMachODylibWriter;
 
@@ -26,12 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 // Link the object file data from an MPWMachOWriter into a dylib
 // Returns the dylib data ready to be written to disk and codesigned
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
-                          fromWriter:(MPWMachOWriter*)objectWriter;
+                          fromWriter:(STMachOWriter*)objectWriter;
 
 // Lower-level: link specific section writers
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
                      sectionWriters:(NSArray<MPWMachOSectionWriter*>*)sections
-                       symbolWriter:(MPWMachOWriter*)symbolSource;
+                       symbolWriter:(STMachOWriter*)symbolSource;
 
 @end
 

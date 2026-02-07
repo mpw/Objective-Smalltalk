@@ -7,15 +7,15 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class MPWMachOWriter;
+@class STMachOWriter;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MPWMachOObjectSerializer : MPWByteStream
 
-@property (nonatomic, assign, readonly) MPWMachOWriter *writer;
+@property (nonatomic, assign, readonly) STMachOWriter *writer;
 
-- (instancetype)initWithWriter:(MPWMachOWriter *)writer;
+- (instancetype)initWithWriter:(STMachOWriter *)writer;
 - (NSString *)symbolForObject:(id)object;
 
 @end

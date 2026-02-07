@@ -6,7 +6,7 @@
 //
 
 #import "MPWARMObjectCodeGeneratorExternalTestsMachO.h"
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "MPWMachOReader.h"
 #import "STJittableData.h"
 
@@ -21,7 +21,7 @@
 
 +(void)testGenerateMachOWithCallToExternalFunction
 {
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    STMachOWriter *writer = [STMachOWriter stream];
     STObjectCodeGeneratorARM *g=[self stream];
     g.symbolWriter = writer;
     g.relocationWriter = writer.textSectionWriter;
@@ -30,7 +30,7 @@
     }];
     [writer addTextSectionData:(NSData*)[g target]];
     //    NSLog(@"before write file");
-    [writer writeFile];
+    [writer generateMachO];
     //    NSLog(@"after write file");
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
@@ -41,7 +41,7 @@
 
 +(void)testGenerateMachOWithMessageSend
 {
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    STMachOWriter *writer = [STMachOWriter stream];
     STObjectCodeGeneratorARM *g=[self stream];
     g.symbolWriter = writer;
     g.relocationWriter = writer.textSectionWriter;
@@ -49,7 +49,7 @@
         [g generateMessageSendToSelector:@"length"];
     }];
     [writer addTextSectionData:(NSData*)[g target]];
-    [writer writeFile];
+    [writer generateMachO];
     NSData *macho=[writer data];
     //    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
     MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];

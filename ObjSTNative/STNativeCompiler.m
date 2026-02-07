@@ -7,7 +7,7 @@
 
 #import "STNativeCompiler.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "STObjectCodeGeneratorARM.h"
 #import "MPWMachOClassWriter.h"
 #import <ObjectiveSmalltalk/MPWMessageExpression.h>
@@ -213,7 +213,7 @@
 @implementation STNativeCompiler
 {
     STObjectCodeGeneratorARM* codegen;
-    MPWMachOWriter *writer;
+    STMachOWriter *writer;
     MPWMachOClassWriter *classwriter;
     MPWMachOObjectSerializer *objectSerializer;
     int blockNo;
@@ -222,7 +222,7 @@
 }
 
 objectAccessor(STObjectCodeGeneratorARM*, codegen, setCodegen)
-objectAccessor(MPWMachOWriter*, writer, _setWriter)
+objectAccessor(STMachOWriter*, writer, _setWriter)
 objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 
 +(instancetype)stackBlockCompiler {
@@ -265,7 +265,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     return objectSerializer;
 }
 
--(instancetype)initWithWriter:(MPWMachOWriter*)aWriter
+-(instancetype)initWithWriter:(STMachOWriter*)aWriter
 {
     self=[super init];
     if ( self ) {
@@ -832,7 +832,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     for ( STClassDefinition *aClass in classes ) {
         [self compileClass:aClass];
     }
-    [writer writeFile];
+    [writer generateMachO];
 }
 
 -(void)compileAndWriteClass:(STClassDefinition*)aClass
@@ -943,7 +943,7 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     self.currentBlockStackOffset=0;
     [self compileBlock:aBlock inMethod:nil];
     [writer addTextSectionData:[codegen target]];
-    [writer writeFile];
+    [writer generateMachO];
     return (NSData*)[writer target];
 }
 

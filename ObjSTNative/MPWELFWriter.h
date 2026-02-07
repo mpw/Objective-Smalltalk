@@ -5,11 +5,11 @@
 //  Created by Marcel Weiher on 05.05.24.
 //
 
-#import <ObjSTNative/MPWObjectFileWriter.h>
+#import <ObjSTNative/STObjectFileWriter.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWELFWriter : MPWObjectFileWriter
+@interface MPWELFWriter : STObjectFileWriter
 
 
 @end

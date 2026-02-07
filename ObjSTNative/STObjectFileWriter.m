@@ -5,10 +5,10 @@
 //  Created by Marcel Weiher on 06.05.24.
 //
 
-#import "MPWObjectFileWriter.h"
+#import "STObjectFileWriter.h"
 #import "MPWStringTableWriter.h"
 
-@interface MPWObjectFileWriter()
+@interface STObjectFileWriter()
 
 @property (nonatomic, strong) MPWStringTableWriter *stringTableWriter;
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
@@ -17,7 +17,7 @@
 
 @end
 
-@implementation MPWObjectFileWriter
+@implementation STObjectFileWriter
 
 -(instancetype)initWithTarget:(id)aTarget
 {
@@ -123,11 +123,11 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWObjectFileWriter(testing) 
+@implementation STObjectFileWriter(testing) 
 
 +(void)testCanWriteStringsToStringTable
 {
-    MPWObjectFileWriter *writer = [self stream];
+    STObjectFileWriter *writer = [self stream];
     INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"offset");
     INTEXPECT( [writer stringTableOffsetOfString:@"_sub"],6,@"offset");
     INTEXPECT( [writer stringTableOffsetOfString:@"_add"],1,@"repeat");

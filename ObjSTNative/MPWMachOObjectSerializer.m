@@ -6,13 +6,13 @@
 //
 
 #import "MPWMachOObjectSerializer.h"
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
 #import <mach-o/loader.h>
 
 @interface MPWMachOObjectSerializer ()
 
-@property (nonatomic, assign, readwrite) MPWMachOWriter *writer;
+@property (nonatomic, assign, readwrite) STMachOWriter *writer;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *stringSymbols;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *cstringSymbols;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *numberSymbols;
@@ -35,7 +35,7 @@
 
 +testSelectors { return @[]; }
 
-- (instancetype)initWithWriter:(MPWMachOWriter *)writer {
+- (instancetype)initWithWriter:(STMachOWriter *)writer {
     self = [super initWithTarget:[NSMutableData data]];
     if (self) {
         _writer = writer;

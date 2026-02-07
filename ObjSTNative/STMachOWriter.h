@@ -7,17 +7,17 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 #import "STObjectCodeGeneratorARM.h"
-#import "MPWObjectFileWriter.h"
+#import "STObjectFileWriter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MPWMachOSectionWriter;
 
-@interface MPWMachOWriter : MPWObjectFileWriter <SymbolWriter>
+@interface STMachOWriter : STObjectFileWriter <SymbolWriter>
 
 @property (nonatomic, readonly) MPWMachOSectionWriter *textSectionWriter;
 
--(void)writeFile;
+-(void)generateMachO;
 -(NSData*)data;
 -(int)declareExternalSymbol:(NSString*)symbol;
 -(MPWMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags;

@@ -6,7 +6,7 @@
 //
 
 #import "MPWMachOSectionWriter.h"
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import <mach-o/loader.h>
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>

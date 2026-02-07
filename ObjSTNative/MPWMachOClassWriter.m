@@ -6,7 +6,7 @@
 //
 
 #import "MPWMachOClassWriter.h"
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
 #import "Mach_O_Structs.h"
 #import <mach-o/loader.h>
@@ -15,14 +15,14 @@
 
 @interface MPWMachOClassWriter()
 
-@property (nonatomic,strong) MPWMachOWriter* writer;
+@property (nonatomic,strong) STMachOWriter* writer;
 @property (nonatomic,strong) MPWMachOSectionWriter* typeWriter;
 
 @end
 
 @implementation MPWMachOClassWriter
 
-CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
+CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
 {
     self=[super init];
     self.writer = writer;
@@ -124,7 +124,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 -(void)writeClass
 {
-    MPWMachOWriter* writer = self.writer;
+    STMachOWriter* writer = self.writer;
     
     NSString *classNameSymbolName=[self classNameSymbolName];
     
@@ -258,7 +258,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 +(void)testWriteSimpleClassAndCheckManually
 {
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    STMachOWriter *writer = [STMachOWriter stream];
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
 
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
@@ -319,7 +319,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 +(void)testWriteSimpleClassAndCheckViaClassReader
 {
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    STMachOWriter *writer = [STMachOWriter stream];
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
 
     MPWMachOClassWriter *classWriter = [[MPWMachOClassWriter alloc] initWithWriter:writer];
@@ -348,7 +348,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 
 +(void)testWriteClassWithOneInstanceMethod
 {
-    MPWMachOWriter *writer = [MPWMachOWriter stream];
+    STMachOWriter *writer = [STMachOWriter stream];
 
     NSString *methodName = @"method";
     NSString *methodTypeString = @"@:";
@@ -404,7 +404,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(MPWMachOWriter*)writer)
 +(void)testWriteSimplePropertyPathStruct
 {
     @autoreleasepool {
-        MPWMachOWriter *writer = [MPWMachOWriter stream];
+        STMachOWriter *writer = [STMachOWriter stream];
         NSString *symbol=@"_propertyPathDef";
         NSString *functionSymbol=@"_theFunction";
         STObjectCodeGeneratorARM *g=[STObjectCodeGeneratorARM stream];

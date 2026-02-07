@@ -5,12 +5,12 @@
 //  Private interface for subclasses
 //
 
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import "Mach_O_Structs.h"
 
 @class MPWMachOSectionWriter;
 
-@interface MPWMachOWriter()
+@interface STMachOWriter()
 
 @property (nonatomic, assign) int numLoadCommands;
 @property (nonatomic, assign) int cputype;

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MPWStringTableWriter;
 
-@interface MPWObjectFileWriter : MPWByteStream
+@interface STObjectFileWriter : MPWByteStream
 {
     int symtabCount;
     int symtabCapacity;

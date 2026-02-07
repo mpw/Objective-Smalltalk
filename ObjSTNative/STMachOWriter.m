@@ -7,7 +7,7 @@
 // http://www.cilinder.be/docs/next/NeXTStep/3.3/nd/DevTools/14_MachO/MachO.htmld/index.html
 //
 
-#import "MPWMachOWriter.h"
+#import "STMachOWriter.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
 #import <mach-o/reloc.h>
@@ -17,7 +17,7 @@
 #import "MPWMachOSectionWriter.h"
 #import "MPWStringTableWriter.h"
 
-@interface MPWMachOWriter()
+@interface STMachOWriter()
 
 @property (nonatomic, assign) int numLoadCommands;
 @property (nonatomic, assign) int cputype;
@@ -40,7 +40,7 @@
 @end
 
 
-@implementation MPWMachOWriter
+@implementation STMachOWriter
 {
     symtab_entry *symtab;
 }
@@ -459,7 +459,7 @@
 {
     NSData *data = (NSData*)self.target;
     if ( data.length == 0 ) {
-        [self writeFile];
+        [self generateMachO];
     }
     return data;
 }
@@ -481,7 +481,7 @@
     [self appendBytes:&cmd length:sizeof cmd];
 }
 
--(void)writeFile
+-(void)generateMachO
 {
     self.numLoadCommands = 3;
     self.loadCommandSize = sizeof(struct symtab_command) + sizeof(struct build_version_command)+[self segmentCommandSize];
@@ -514,11 +514,11 @@
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
 
-@implementation MPWMachOWriter(testing) 
+@implementation STMachOWriter(testing) 
 
 +(void)testCanWriteHeader
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     [writer writeHeader];
     
     NSData *macho=[writer data];
@@ -531,13 +531,13 @@
 
 +(void)testCanWriteGlobalSymboltable
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     [writer declareGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData: machineCode];
     //    INTEXPECT(writer.textSectionSize,8,@"bytes in text section");
     
-    [writer writeFile];
+    [writer generateMachO];
     
     NSData *macho=[writer data];
     //    [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
@@ -559,23 +559,23 @@
 
 +(void)testWriteLinkableAddFunction
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     [writer declareGlobalSymbol:@"_add" atOffset:10];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData:machineCode];
-    [writer writeFile];
+    [writer generateMachO];
     NSData *macho=[writer data];
 //    [macho writeToFile:@"/tmp/add.o" atomically:YES];
 }
 
 +(void)testWriteFunctionWithRelocationEntries
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     
     [writer.textSectionWriter addRelocationEntryForSymbol:@"_other" atOffset:12];
     NSData *machineCode = [self frameworkResource:@"add" category:@"aarch64"];
     [writer addTextSectionData:machineCode];
-    [writer writeFile];
+    [writer generateMachO];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/reloc.o" atomically:YES];
     
@@ -589,7 +589,7 @@
 
 +(void)testWriteClassPartsAndReadPartsManually
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     NSString *testclassNameSymbolName=@"_TestClass_name";
     [writer addTextSectionData:[self frameworkResource:@"add" category:@"aarch64"]];
     
@@ -630,7 +630,7 @@
     [classListWriter appendBytes:zerobytes length:8];
     
     
-    [writer writeFile];
+    [writer generateMachO];
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/class.o" atomically:YES];
     
@@ -698,7 +698,7 @@
 
 +(void)testRelocationEntriesComeAfterAllSegmentData
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     MPWMachOClassWriter *classwriter=[MPWMachOClassWriter writerWithWriter:writer];
     classwriter.nameOfClass = @"TestClass";
     classwriter.nameOfSuperClass = @"NSObject";
@@ -715,7 +715,7 @@
 
 +(void)testSegmentSizeIsOnlyDataNotRelocEntries
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     MPWMachOClassWriter *classwriter=[MPWMachOClassWriter writerWithWriter:writer];
     classwriter.nameOfClass = @"TestClass";
     classwriter.nameOfSuperClass = @"NSObject";
@@ -732,7 +732,7 @@
 
 +(void)testSectionWritersAreUniqed
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     id s1=[writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:0];
     id s2=[writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__text" flags:0];
     INTEXPECT( s1,s2, @"should be the same");
@@ -741,7 +741,7 @@
 +(void)testMachOWriteNSStringLiteral
 {
     NSString *theString=@"Hello World!";
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     [writer writeNSStringLiteral:theString label:@"_theString"];
     [writer addTextSectionData:[NSData dataWithBytes:"1234" length:4]];
     NSData *d=[writer data];
@@ -766,7 +766,7 @@
 
 +(void)testMachOWriteBlockStructures
 {
-    MPWMachOWriter *writer = [self stream];
+    STMachOWriter *writer = [self stream];
     STObjectCodeGeneratorARM *gen=[STObjectCodeGeneratorARM stream];
     [gen setRelocationWriter:writer];
     [gen setSymbolWriter:writer];
@@ -789,7 +789,7 @@
 
 +(void)testWriteClassReferences
 {
-    MPWMachOWriter *writer=[self stream];
+    STMachOWriter *writer=[self stream];
     [writer addClassReferenceForClass:@"NSObject"];
     [writer addClassReferenceForClass:@"NSNumber"];
     [writer addClassReferenceForClass:@"NSObject"];

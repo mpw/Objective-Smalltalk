@@ -26,7 +26,7 @@
   STNativeCompiler *compiler = [STNativeCompiler compiler];
   STClassDefinition *theClass = [compiler compile:source];
   [compiler compileClassToMachoO:theClass];
-  MPWMachOWriter *objectWriter = (MPWMachOWriter *)compiler.writer;
+  STMachOWriter *objectWriter = (STMachOWriter *)compiler.writer;
   EXPECTNOTNIL(objectWriter, @"object writer");
 
   // 3. Generate Reference Dylib (External Linker)

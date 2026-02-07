@@ -9,12 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOWriter,STMethodSymbols;
+@class STMachOWriter,STMethodSymbols;
 
 @interface MPWMachOClassWriter : NSObject
 
-+(instancetype)writerWithWriter:(MPWMachOWriter*)writer;
--(instancetype)initWithWriter:(MPWMachOWriter*)writer;
++(instancetype)writerWithWriter:(STMachOWriter*)writer;
+-(instancetype)initWithWriter:(STMachOWriter*)writer;
 
 @property (nonatomic,strong) NSString* nameOfClass;
 @property (nonatomic,strong) NSString* nameOfSuperClass;
