@@ -10,7 +10,7 @@
 #import "MPWMachOWriter+Private.h"
 #import "MPWMachOSectionWriter.h"
 #import "STMachODylibWriter.h"
-#import "MPWBindOpcodeWriter.h"
+#import "STBindOpcodeWriter.h"
 #import "STNativeCompiler.h"
 #import <dlfcn.h>
 
@@ -121,7 +121,7 @@
     }
 
     // Create bind/rebase opcode writer
-    MPWBindOpcodeWriter *bindWriter = [[[MPWBindOpcodeWriter alloc] init] autorelease];
+    STBindOpcodeWriter *bindWriter = [[[STBindOpcodeWriter alloc] init] autorelease];
 
     // Collect internal relocations for pointer patching
     NSMutableArray<MPWInternalRelocation*> *internalRelocations = [NSMutableArray array];

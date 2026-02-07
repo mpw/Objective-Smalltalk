@@ -7,12 +7,12 @@
 
 #import "STMachODylibWriterTests.h"
 
-#import "MPWBindOpcodeWriter.h"
+#import "STBindOpcodeWriter.h"
 #import "MPWChainedFixupWriter.h"
 #import "MPWExportsTrieWriter.h"
 #import "MPWMachOSection.h"
 #import "MPWMachOSectionWriter.h"
-#import "MPWMachOSegment.h"
+#import "STMachOSegment.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWStringTableWriter.h"
 #import "STJittableData.h"
@@ -158,7 +158,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOReader *reader =
     [[[STMachOReader alloc] initWithData:macho] autorelease];
     
-    MPWMachOSegment *text = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *text = [reader segmentObjectNamed:@"__TEXT"];
     NSLog(@"testDissectKnownCorrectDylib: __TEXT: vmaddr=0x%llx vmsize=0x%llx "
           @"fileoff=0x%llx filesize=0x%llx",
           text.vmaddr, text.vmsize, text.fileoff, text.filesize);
@@ -168,7 +168,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     INTEXPECT(text.fileoff, 0, @"__TEXT fileoff");
     INTEXPECT(text.filesize, 0x4000, @"__TEXT filesize");
     
-    MPWMachOSegment *dataConst = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataConst = [reader segmentObjectNamed:@"__DATA_CONST"];
     NSLog(@"testDissectKnownCorrectDylib: __DATA_CONST: vmaddr=0x%llx "
           @"vmsize=0x%llx fileoff=0x%llx filesize=0x%llx",
           dataConst.vmaddr, dataConst.vmsize, dataConst.fileoff,
@@ -179,7 +179,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     INTEXPECT(dataConst.fileoff, 0x4000, @"__DATA_CONST fileoff");
     INTEXPECT(dataConst.filesize, 0x4000, @"__DATA_CONST filesize");
     
-    MPWMachOSegment *linkedit = [reader segmentObjectNamed:@"__LINKEDIT"];
+    STMachOSegment *linkedit = [reader segmentObjectNamed:@"__LINKEDIT"];
     NSLog(
           @"testDissectKnownCorrectDylib: __LINKEDIT: vmaddr=0x%llx vmsize=0x%llx "
           @"fileoff=0x%llx filesize=0x%llx",
@@ -538,10 +538,10 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
               @"should have at least 2 segments (__TEXT and __DATA)");
     NSLog(@"segments: %@", segments);
     // Should be able to find specific segments by name
-    MPWMachOSegment *textSegment = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSegment = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSegment, @"should find __TEXT segment");
     
-    MPWMachOSegment *dataSegment = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataSegment = [reader segmentObjectNamed:@"__DATA"];
     EXPECTNOTNIL(dataSegment, @"should find __DATA segment");
     
     // Test segment properties
@@ -777,7 +777,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to find a section by name in a segment
-+ (MPWMachOSection *)findSectionNamed:(NSString *)sectionName inSegment:(MPWMachOSegment *)segment {
++ (MPWMachOSection *)findSectionNamed:(NSString *)sectionName inSegment:(STMachOSegment *)segment {
     for (MPWMachOSection *section in segment.sections) {
         if ([section.sectionName isEqualToString:sectionName]) {
             return section;
@@ -787,7 +787,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to check if segment has a section with given name
-+ (BOOL)segment:(MPWMachOSegment *)segment hasSectionNamed:(NSString *)sectionName {
++ (BOOL)segment:(STMachOSegment *)segment hasSectionNamed:(NSString *)sectionName {
     return [self findSectionNamed:sectionName inSegment:segment] != nil;
 }
 
@@ -850,7 +850,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to log sections in a segment
-+ (void)logSectionsInSegment:(MPWMachOSegment *)segment withPrefix:(NSString *)prefix {
++ (void)logSectionsInSegment:(STMachOSegment *)segment withPrefix:(NSString *)prefix {
     if (!segment) return;
     for (MPWMachOSection *section in segment.sections) {
         NSLog(@"%@ %@ section: %@", prefix, segment.name, section.sectionName);
@@ -859,7 +859,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 // Helper to find a section by name across all segments (dylibs have multiple segments)
 + (MPWMachOSection *)sectionNamed:(NSString *)sectionName inReader:(STMachOReader *)reader {
-    for (MPWMachOSegment *segment in reader.segments) {
+    for (STMachOSegment *segment in reader.segments) {
         MPWMachOSection *section = [segment sectionNamed:sectionName];
         if (section) {
             return section;
@@ -1011,7 +1011,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 3e. Characterize __stubs section
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
     
     // Look for __stubs section in __TEXT
@@ -1035,7 +1035,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 3f. Characterize __got section
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     if (!dataConstSeg) {
         dataConstSeg = [reader segmentObjectNamed:@"__DATA"];
     }
@@ -1209,7 +1209,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 5. Characterize __stubs section
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
     
     MPWMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
@@ -1233,7 +1233,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 6. Characterize __got section
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     if (!dataConstSeg) {
         dataConstSeg = [reader segmentObjectNamed:@"__DATA"];
     }
@@ -1428,7 +1428,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Reference"];
     
     // 6. Characterize sections - should have __objc_stubs, __objc_methname, __objc_selrefs
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT");
     
     [self logSectionsInSegment:textSeg withPrefix:@"Reference"];
@@ -1436,7 +1436,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([self segment:textSeg hasSectionNamed:@"__objc_methname"], @"reference should have __objc_methname section");
     
     // Check for __objc_selrefs in __DATA
-    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
     [self logSectionsInSegment:dataSeg withPrefix:@"Reference"];
     EXPECTTRUE([self segment:dataSeg hasSectionNamed:@"__objc_selrefs"],
                @"reference should have __objc_selrefs section in __DATA");
@@ -1509,7 +1509,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Generated"];
     
     // 3. Check sections using helpers - should have __objc_stubs, __objc_methname, __objc_selrefs
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT");
     
     [self logSectionsInSegment:textSeg withPrefix:@"Generated"];
@@ -1524,8 +1524,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // Check for __objc_selrefs in __DATA or __DATA_CONST
-    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     
     [self logSectionsInSegment:dataSeg withPrefix:@"Generated"];
     [self logSectionsInSegment:dataConstSeg withPrefix:@"Generated"];
@@ -1628,7 +1628,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     // 4. Characterize segments
     NSArray *segments = [reader segments];
     NSLog(@"Reference constant string dylib has %lu segments", (unsigned long)segments.count);
-    for (MPWMachOSegment *seg in segments) {
+    for (STMachOSegment *seg in segments) {
         NSLog(@"Reference segment: %@ vmaddr=0x%lx vmsize=0x%lx fileoff=0x%lx filesize=0x%lx",
               seg.name, seg.vmaddr, seg.vmsize, seg.fileoff, seg.filesize);
         for (MPWMachOSection *section in seg.sections) {
@@ -1638,14 +1638,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 5. Check for __string section (constant NSString data - struct with isa, flags, cstring ptr, length)
-    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     
     BOOL hasStringSection = [self segment:dataSeg hasSectionNamed:@"__string"];
     EXPECTTRUE(hasStringSection, @"reference should have __string section in __DATA");
     
     // 6. Check for cstring section (string content)
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     BOOL hasCstring = [self segment:textSeg hasSectionNamed:@"__cstring"];
     EXPECTTRUE(hasCstring, @"reference should have __cstring section in __TEXT");
     
@@ -1717,7 +1717,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     // 1. Characterize segments
     NSArray *segments = [reader segments];
     NSLog(@"Generated constant string dylib has %lu segments", (unsigned long)segments.count);
-    for (MPWMachOSegment *seg in segments) {
+    for (STMachOSegment *seg in segments) {
         NSLog(@"Generated segment: %@ vmaddr=0x%lx vmsize=0x%lx fileoff=0x%lx filesize=0x%lx",
               seg.name, seg.vmaddr, seg.vmsize, seg.fileoff, seg.filesize);
         for (MPWMachOSection *section in seg.sections) {
@@ -1727,8 +1727,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 2. Check for __string section (constant NSString data)
-    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     
     BOOL hasStringSection = [self segment:dataSeg hasSectionNamed:@"__string"];
     [self logSectionsInSegment:dataSeg withPrefix:@"Generated"];
@@ -1747,7 +1747,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 4. Check for cstring section
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     [self logSectionsInSegment:textSeg withPrefix:@"Generated"];
     BOOL hasCstring = [self segment:textSeg hasSectionNamed:@"__cstring"];
     EXPECTTRUE(hasCstring, @"generated should have __cstring section - BUG if missing");
@@ -1789,9 +1789,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
-    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     
     [self logSectionsInSegment:textSeg withPrefix:@"Reference"];
     [self logSectionsInSegment:dataSeg withPrefix:@"Reference"];
@@ -1843,9 +1843,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
-    MPWMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
-    MPWMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
+    STMachOSegment *dataSeg = [reader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     
     [self logSectionsInSegment:textSeg withPrefix:@"Generated"];
     [self logSectionsInSegment:dataSeg withPrefix:@"Generated"];
@@ -1917,8 +1917,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOReader *genReader = [STMachOReader readerWithData:genDylibData];
     
     // 3. Find __string section in both
-    MPWMachOSegment *refDataSeg = [refReader segmentObjectNamed:@"__DATA"];
-    MPWMachOSegment *genDataSeg = [genReader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *refDataSeg = [refReader segmentObjectNamed:@"__DATA"];
+    STMachOSegment *genDataSeg = [genReader segmentObjectNamed:@"__DATA"];
     
     EXPECTNOTNIL(refDataSeg, @"reference should have __DATA segment");
     EXPECTNOTNIL(genDataSeg, @"generated should have __DATA segment");
@@ -2168,8 +2168,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([genReader isHeaderValid], @"gen header should be valid");
     
     // 3. Find __objc_arrayobj / __objc_arraydata sections
-    MPWMachOSegment *refDataConst = [refReader segmentObjectNamed:@"__DATA_CONST"];
-    MPWMachOSegment *genDataConst = [genReader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *refDataConst = [refReader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *genDataConst = [genReader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(refDataConst, @"reference should have __DATA_CONST");
     EXPECTNOTNIL(genDataConst, @"generated should have __DATA_CONST");
     if (!refDataConst || !genDataConst) return;
@@ -2996,7 +2996,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([exports containsObject:@"_literal_nsarray_test"],
                @"should export _literal_nsarray_test");
     
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
     MPWMachOSection *arrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:dataConstSeg];
     MPWMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
@@ -3094,7 +3094,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([exports containsObject:@"_literal_nsdict_test"],
                @"should export _literal_nsdict_test");
     
-    MPWMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
+    STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
     
     MPWMachOSection *dictObj = [self findSectionNamed:@"__objc_dictobj" inSegment:dataConstSeg];

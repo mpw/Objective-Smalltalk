@@ -6,12 +6,12 @@
 //
 
 #import "STMachODylibWriter.h"
-#import "MPWBindOpcodeWriter.h"
+#import "STBindOpcodeWriter.h"
 #import "MPWChainedFixupWriter.h"
 #import "MPWExportsTrieWriter.h"
 #import "MPWMachOSection.h"
 #import "MPWMachOSectionWriter.h"
-#import "MPWMachOSegment.h"
+#import "STMachOSegment.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWStringTableWriter.h"
 #import "STJittableData.h"

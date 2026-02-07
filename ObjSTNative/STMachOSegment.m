@@ -5,10 +5,10 @@
 //  Created by Marcel Weiher on 02.02.26.
 //
 
-#import "MPWMachOSegment.h"
+#import "STMachOSegment.h"
 #import "MPWMachOSection.h"
 
-@implementation MPWMachOSegment
+@implementation STMachOSegment
 
 - (instancetype)initWithSegmentCommand:(struct segment_command_64*)segmentCommand 
                                 data:(NSData*)data 

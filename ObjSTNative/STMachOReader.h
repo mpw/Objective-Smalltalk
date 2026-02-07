@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOSection,MPWMachORelocationPointer,MPWMachOClassReader,MPWMachOInSectionPointer,MPWMachOSegment;
+@class MPWMachOSection,MPWMachORelocationPointer,MPWMachOClassReader,MPWMachOInSectionPointer,STMachOSegment;
 
 @interface STMachOReader : NSObject
 
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) int numSections;
 @property (readonly) int numberOfClassReferences;
 @property (readonly) NSMutableDictionary* sections;
-@property (readonly) NSArray<MPWMachOSegment*> *segments;
+@property (readonly) NSArray<STMachOSegment*> *segments;
 
 
 +(instancetype)readerWithData:(NSData*)machodata;
@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(long)segmentSize;
 -(const void*)segmentBytes;
 -(struct segment_command_64* _Nullable)segmentNamed:(NSString*)segmentName;
--(MPWMachOSegment* _Nullable)segmentObjectNamed:(NSString*)segmentName;
--(NSArray<MPWMachOSegment*>*)allSegments;
+-(STMachOSegment* _Nullable)segmentObjectNamed:(NSString*)segmentName;
+-(NSArray<STMachOSegment*>*)allSegments;
 -(const struct load_command* _Nullable)loadCommandOfTypeIfPresent:(int)commandType;
 -(NSArray<NSString*>*)exportedSymbolNames;
 

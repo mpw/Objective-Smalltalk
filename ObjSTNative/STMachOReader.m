@@ -6,7 +6,7 @@
 //
 
 #import "STMachOReader.h"
-#import "MPWMachOSegment.h"
+#import "STMachOSegment.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
 #import <mach-o/reloc.h>
@@ -21,7 +21,7 @@
 
 @property (nonatomic, strong) NSData *data;
 @property (nonatomic, strong) NSMutableDictionary* sections;
-@property (nonatomic, strong) NSArray<MPWMachOSegment*> *segments;
+@property (nonatomic, strong) NSArray<STMachOSegment*> *segments;
 
 @end
 
@@ -135,7 +135,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
                 self.sections[sectionKey] = section;
             }
             
-            MPWMachOSegment *segment = [[[MPWMachOSegment alloc] initWithSegmentCommand:segCmd 
+            STMachOSegment *segment = [[[STMachOSegment alloc] initWithSegmentCommand:segCmd 
                                                                                data:self.data 
                                                                              sections:sectionArray] autorelease];
             [segments addObject:segment];
@@ -151,9 +151,9 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return (struct segment_command_64*)[self loadCommandOfType:LC_SEGMENT_64];
 }
 
--(MPWMachOSegment*)segmentObjectNamed:(NSString*)segmentName
+-(STMachOSegment*)segmentObjectNamed:(NSString*)segmentName
 {
-    for (MPWMachOSegment *segment in self.segments) {
+    for (STMachOSegment *segment in self.segments) {
         if ([segment.name isEqualToString:segmentName]) {
             return segment;
         }
@@ -161,7 +161,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return nil;
 }
 
--(NSArray<MPWMachOSegment*>*)allSegments
+-(NSArray<STMachOSegment*>*)allSegments
 {
     return self.segments;
 }

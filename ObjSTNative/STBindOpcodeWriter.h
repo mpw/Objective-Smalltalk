@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) int type;              // REBASE_TYPE_POINTER, etc.
 @end
 
-@interface MPWBindOpcodeWriter : NSObject
+@interface STBindOpcodeWriter : NSObject
 
 // Add bind entries (external symbol references)
 -(void)addBindForSymbol:(NSString*)symbol

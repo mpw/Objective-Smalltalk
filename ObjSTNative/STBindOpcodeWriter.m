@@ -5,7 +5,7 @@
 //  Writes bind and rebase opcodes for Mach-O dylibs
 //
 
-#import "MPWBindOpcodeWriter.h"
+#import "STBindOpcodeWriter.h"
 #import <mach-o/loader.h>
 
 @implementation MPWBindEntry
@@ -14,12 +14,12 @@
 @implementation MPWRebaseEntry
 @end
 
-@interface MPWBindOpcodeWriter()
+@interface STBindOpcodeWriter()
 @property (nonatomic, strong) NSMutableArray<MPWBindEntry*> *bindEntries;
 @property (nonatomic, strong) NSMutableArray<MPWRebaseEntry*> *rebaseEntries;
 @end
 
-@implementation MPWBindOpcodeWriter
+@implementation STBindOpcodeWriter
 
 -(instancetype)init
 {
@@ -275,11 +275,11 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWBindOpcodeWriter(testing)
+@implementation STBindOpcodeWriter(testing)
 
 +(void)testEmptyBindProducesDone
 {
-    MPWBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
+    STBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
     NSData *bindData = [writer bindOpcodeData];
     EXPECTTRUE(bindData.length == 1, @"should be just DONE opcode");
     const uint8_t *bytes = bindData.bytes;
@@ -288,7 +288,7 @@
 
 +(void)testEmptyRebaseProducesDone
 {
-    MPWBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
+    STBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
     NSData *rebaseData = [writer rebaseOpcodeData];
     EXPECTTRUE(rebaseData.length == 1, @"should be just DONE opcode");
     const uint8_t *bytes = rebaseData.bytes;
@@ -297,7 +297,7 @@
 
 +(void)testSingleBindEntry
 {
-    MPWBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
+    STBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
     [writer addBindForSymbol:@"_objc_msgSend" fromDylib:1 atSegment:1 offset:0x100];
 
     NSData *bindData = [writer bindOpcodeData];
@@ -313,7 +313,7 @@
 
 +(void)testSingleRebaseEntry
 {
-    MPWBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
+    STBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
     [writer addRebaseAtSegment:1 offset:0x100];
 
     NSData *rebaseData = [writer rebaseOpcodeData];
@@ -327,7 +327,7 @@
 
 +(void)testMultipleBindEntries
 {
-    MPWBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
+    STBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
     [writer addBindForSymbol:@"_objc_msgSend" fromDylib:1 atSegment:1 offset:0x100];
     [writer addBindForSymbol:@"_objc_alloc" fromDylib:1 atSegment:1 offset:0x108];
 
@@ -342,7 +342,7 @@
 
 +(void)testFlatNamespaceBind
 {
-    MPWBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
+    STBindOpcodeWriter *writer = [[[self alloc] init] autorelease];
     [writer addBindForSymbol:@"_someSymbol" atSegment:1 offset:0x200];
 
     NSData *bindData = [writer bindOpcodeData];

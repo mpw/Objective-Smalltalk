@@ -1,10 +1,10 @@
 
-#import "MPWBindOpcodeWriter.h"
+#import "STBindOpcodeWriter.h"
 #import "STMachODylibWriter.h"
 #import "MPWMachOLinker.h"
 #import "STMachOReader.h"
 #import "MPWMachOSection.h"
-#import "MPWMachOSegment.h"
+#import "STMachOSegment.h"
 #import "STNativeCompiler.h"
 #import <MPWFoundation/MPWFoundation.h>
 #import <dlfcn.h>
@@ -69,16 +69,16 @@
                @"reference has chained fixups");
 
   // Segment layout
-  MPWMachOSegment *refText = [refReader segmentObjectNamed:@"__TEXT"];
+  STMachOSegment *refText = [refReader segmentObjectNamed:@"__TEXT"];
   EXPECTNOTNIL(refText, @"ref __TEXT");
   INTEXPECT(refText.vmaddr, 0, @"ref __TEXT vmaddr");
 
-  MPWMachOSegment *refDataConst =
+  STMachOSegment *refDataConst =
       [refReader segmentObjectNamed:@"__DATA_CONST"];
   EXPECTNOTNIL(refDataConst, @"ref __DATA_CONST");
   HEXEXPECT(refDataConst.vmaddr, 0x4000, @"ref __DATA_CONST vmaddr");
 
-  MPWMachOSegment *refData = [refReader segmentObjectNamed:@"__DATA"];
+  STMachOSegment *refData = [refReader segmentObjectNamed:@"__DATA"];
   EXPECTNOTNIL(refData, @"ref __DATA");
   HEXEXPECT(refData.vmaddr, 0x8000, @"ref __DATA vmaddr");
 
@@ -117,11 +117,11 @@
   }
 
   // 6. Detailed Comparison with Reference
-  MPWMachOSegment *candText = [candReader segmentObjectNamed:@"__TEXT"];
-  MPWMachOSegment *candDataConst =
+  STMachOSegment *candText = [candReader segmentObjectNamed:@"__TEXT"];
+  STMachOSegment *candDataConst =
       [candReader segmentObjectNamed:@"__DATA_CONST"];
-  MPWMachOSegment *candData = [candReader segmentObjectNamed:@"__DATA"];
-  MPWMachOSegment *candLinkedit = [candReader segmentObjectNamed:@"__LINKEDIT"];
+  STMachOSegment *candData = [candReader segmentObjectNamed:@"__DATA"];
+  STMachOSegment *candLinkedit = [candReader segmentObjectNamed:@"__LINKEDIT"];
 
   EXPECTNOTNIL(candText, @"cand __TEXT");
   EXPECTNOTNIL(candDataConst, @"cand __DATA_CONST");
@@ -209,8 +209,8 @@
 
   // 8. Detailed Segment/Section Characterization
   void (^compareSegments)(NSString *) = ^(NSString *segname) {
-    MPWMachOSegment *rSeg = [refReader segmentObjectNamed:segname];
-    MPWMachOSegment *cSeg = [candReader segmentObjectNamed:segname];
+    STMachOSegment *rSeg = [refReader segmentObjectNamed:segname];
+    STMachOSegment *cSeg = [candReader segmentObjectNamed:segname];
     EXPECTNOTNIL(cSeg, ([NSString stringWithFormat:@"cand has %@", segname]));
     if (rSeg && cSeg) {
       HEXEXPECT(cSeg.vmaddr, rSeg.vmaddr,
@@ -273,7 +273,7 @@
                     inReader:(STMachOReader *)reader {
   if (!reader.data)
     return -1;
-  for (MPWMachOSegment *seg in reader.allSegments) {
+  for (STMachOSegment *seg in reader.allSegments) {
     MPWMachOSection *sect = [seg sectionNamed:sectname];
     if (sect) {
       return [sect offset];

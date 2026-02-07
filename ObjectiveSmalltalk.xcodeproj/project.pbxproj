@@ -787,8 +787,8 @@
 		1FF8609A2F2CD91A00A99A0C /* MPWMachOLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */; };
 		1FF8609B2F2CD91A00A99A0C /* MPWMachOWriter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */; };
 		1FF8609C2F2CD91A00A99A0C /* MPWMachOLinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */; };
-		1FF8609F2F2D25D600A99A0C /* MPWBindOpcodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8609E2F2D25D600A99A0C /* MPWBindOpcodeWriter.m */; };
-		1FF860A02F2D25D600A99A0C /* MPWBindOpcodeWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF8609D2F2D25D600A99A0C /* MPWBindOpcodeWriter.h */; };
+		1FF8609F2F2D25D600A99A0C /* STBindOpcodeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8609E2F2D25D600A99A0C /* STBindOpcodeWriter.m */; };
+		1FF860A02F2D25D600A99A0C /* STBindOpcodeWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF8609D2F2D25D600A99A0C /* STBindOpcodeWriter.h */; };
 		1FF860A22F2E320B00A99A0C /* MPWMachOLinkerCharacterizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860A12F2E320B00A99A0C /* MPWMachOLinkerCharacterizationTests.m */; };
 		1FF860A72F2E330E00A99A0C /* generate_reference_framework.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FF860A32F2E330E00A99A0C /* generate_reference_framework.st */; };
 		1FF860A82F2E330E00A99A0C /* verify_reference_framework.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FF860A52F2E330E00A99A0C /* verify_reference_framework.st */; };
@@ -796,8 +796,8 @@
 		1FF860AC2F2E393E00A99A0C /* ReferenceSTClass.macho in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF860AA2F2E393E00A99A0C /* ReferenceSTClass.macho */; };
 		1FF860AD2F2E393E00A99A0C /* ReferenceSTClass.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FF860AB2F2E393E00A99A0C /* ReferenceSTClass.st */; };
 		1FF860AE2F2E39E500A99A0C /* ReferenceSTClass.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1FF860AA2F2E393E00A99A0C /* ReferenceSTClass.macho */; };
-		1FF860B12F315BA400A99A0C /* MPWMachOSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860B02F315BA400A99A0C /* MPWMachOSegment.m */; };
-		1FF860B22F315BA400A99A0C /* MPWMachOSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860AF2F315BA400A99A0C /* MPWMachOSegment.h */; };
+		1FF860B12F315BA400A99A0C /* STMachOSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF860B02F315BA400A99A0C /* STMachOSegment.m */; };
+		1FF860B22F315BA400A99A0C /* STMachOSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF860AF2F315BA400A99A0C /* STMachOSegment.h */; };
 		1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA166A2B970D8B004E63ED /* STTemplateStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA166B2B970D8B004E63ED /* STTemplateStore.m */; };
 		1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFA16732B970F8B004E63ED /* STRootMapper.h */; };
@@ -1650,16 +1650,16 @@
 		1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOLinker.h; sourceTree = "<group>"; };
 		1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOLinker.m; sourceTree = "<group>"; };
 		1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPWMachOWriter+Private.h"; sourceTree = "<group>"; };
-		1FF8609D2F2D25D600A99A0C /* MPWBindOpcodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWBindOpcodeWriter.h; sourceTree = "<group>"; };
-		1FF8609E2F2D25D600A99A0C /* MPWBindOpcodeWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWBindOpcodeWriter.m; sourceTree = "<group>"; };
+		1FF8609D2F2D25D600A99A0C /* STBindOpcodeWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBindOpcodeWriter.h; sourceTree = "<group>"; };
+		1FF8609E2F2D25D600A99A0C /* STBindOpcodeWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBindOpcodeWriter.m; sourceTree = "<group>"; };
 		1FF860A12F2E320B00A99A0C /* MPWMachOLinkerCharacterizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOLinkerCharacterizationTests.m; sourceTree = "<group>"; };
 		1FF860A32F2E330E00A99A0C /* generate_reference_framework.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = generate_reference_framework.st; sourceTree = "<group>"; };
 		1FF860A42F2E330E00A99A0C /* ReferenceSTClass.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReferenceSTClass.framework; sourceTree = "<group>"; };
 		1FF860A52F2E330E00A99A0C /* verify_reference_framework.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = verify_reference_framework.st; sourceTree = "<group>"; };
 		1FF860AA2F2E393E00A99A0C /* ReferenceSTClass.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ReferenceSTClass.macho; sourceTree = "<group>"; };
 		1FF860AB2F2E393E00A99A0C /* ReferenceSTClass.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReferenceSTClass.st; sourceTree = "<group>"; };
-		1FF860AF2F315BA400A99A0C /* MPWMachOSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWMachOSegment.h; sourceTree = "<group>"; };
-		1FF860B02F315BA400A99A0C /* MPWMachOSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWMachOSegment.m; sourceTree = "<group>"; };
+		1FF860AF2F315BA400A99A0C /* STMachOSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOSegment.h; sourceTree = "<group>"; };
+		1FF860B02F315BA400A99A0C /* STMachOSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOSegment.m; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
 		1FFA166B2B970D8B004E63ED /* STTemplateStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTemplateStore.m; sourceTree = "<group>"; };
 		1FFA16732B970F8B004E63ED /* STRootMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STRootMapper.h; sourceTree = "<group>"; };
@@ -2036,11 +2036,11 @@
 				1F0B2C3D4E5F678901234565 /* STMachOObjectSerializer.h */,
 				1F0B2C3D4E5F678901234566 /* STMachOObjectSerializer.m */,
 				1F08D3042F323E8E008AE661 /* DetailedDylibCharacterizationTests.m */,
-				1FF860AF2F315BA400A99A0C /* MPWMachOSegment.h */,
-				1FF860B02F315BA400A99A0C /* MPWMachOSegment.m */,
+				1FF860AF2F315BA400A99A0C /* STMachOSegment.h */,
+				1FF860B02F315BA400A99A0C /* STMachOSegment.m */,
 				1FF860A12F2E320B00A99A0C /* MPWMachOLinkerCharacterizationTests.m */,
-				1FF8609D2F2D25D600A99A0C /* MPWBindOpcodeWriter.h */,
-				1FF8609E2F2D25D600A99A0C /* MPWBindOpcodeWriter.m */,
+				1FF8609D2F2D25D600A99A0C /* STBindOpcodeWriter.h */,
+				1FF8609E2F2D25D600A99A0C /* STBindOpcodeWriter.m */,
 				1FF860972F2CD91A00A99A0C /* MPWMachOLinker.h */,
 				1FF860982F2CD91A00A99A0C /* MPWMachOLinker.m */,
 				1FF860992F2CD91A00A99A0C /* MPWMachOWriter+Private.h */,
@@ -3080,7 +3080,7 @@
 				1FD22E2C2CBA8F3F0064490A /* STNativeMachOCompiler.h in Headers */,
 				1F9AE9E328EC696200671748 /* MPWMachOSection.h in Headers */,
 				1F93FA5F2BE785FE0046C7C3 /* MPWELFWriter.h in Headers */,
-				1FF860A02F2D25D600A99A0C /* MPWBindOpcodeWriter.h in Headers */,
+				1FF860A02F2D25D600A99A0C /* STBindOpcodeWriter.h in Headers */,
 				1F3466F028CB10F7003257CB /* STMachOReader.h in Headers */,
 				1F032E372BEF9A140000183E /* STNativeCompilerTestsMachO.h in Headers */,
 				1FF8606A2F2C9B5800A99A0C /* MPWExportsTrieWriter.h in Headers */,
@@ -3104,7 +3104,7 @@
 				1FDDE94628F1D487002A4AA4 /* MPWMachOClassReader.h in Headers */,
 				1F1380022BE66C0300CD023C /* MPWELFSymbolTable.h in Headers */,
 				1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */,
-				1FF860B22F315BA400A99A0C /* MPWMachOSegment.h in Headers */,
+				1FF860B22F315BA400A99A0C /* STMachOSegment.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* MPWMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
 				1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */,
@@ -4666,13 +4666,13 @@
 				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
 				1FD22E2B2CBA8F3F0064490A /* STNativeMachOCompiler.m in Sources */,
 				1F032E1F2BEF5DC30000183E /* STARMObjectCodeGeneratorExternalTestsMachO.m in Sources */,
-				1FF8609F2F2D25D600A99A0C /* MPWBindOpcodeWriter.m in Sources */,
+				1FF8609F2F2D25D600A99A0C /* STBindOpcodeWriter.m in Sources */,
 				1FDDE95628F98682002A4AA4 /* STByteStreamWithSymbols.m in Sources */,
 				1FF85FE02F2B9B4300A99A0C /* STMachODylibWriter.m in Sources */,
 				1F0B2C3D4E5F678901234568 /* STMachOObjectSerializer.m in Sources */,
 				1F7B0C5D3B9C0A3E00A1B2C3 /* STBundle+ObjSTNative.m in Sources */,
 				1F93D4722A5F326A00C9BA2A /* STMethodSymbols.m in Sources */,
-				1FF860B12F315BA400A99A0C /* MPWMachOSegment.m in Sources */,
+				1FF860B12F315BA400A99A0C /* STMachOSegment.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */,
 				1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */,

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MPWMachOSection;
 
-@interface MPWMachOSegment : NSObject
+@interface STMachOSegment : NSObject
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) struct segment_command_64 *segmentCommand;
