@@ -7,7 +7,7 @@
 
 #import "STBundle+ObjSTNative.h"
 
-#import "MPWMachODylibWriter.h"
+#import "STMachODylibWriter.h"
 #import "STNativeCompiler.h"
 #import "STClassDefinition.h"
 #import "MPWStatementList.h"
@@ -83,7 +83,7 @@
 - (void)compileSourcesToNativeDylibWithFrameworks:(NSArray<NSString *> *)frameworks
                                            installName:(NSString *)installName
 {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
 
     if (installName.length > 0) {

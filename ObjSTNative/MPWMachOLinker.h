@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class STMachOWriter;
 @class MPWMachOSectionWriter;
-@class MPWMachODylibWriter;
+@class STMachODylibWriter;
 
 // Represents an internal relocation that needs pointer patching
 @interface MPWInternalRelocation : NSObject

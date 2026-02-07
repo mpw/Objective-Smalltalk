@@ -8,9 +8,9 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOLinker.h"
-#import "MPWMachODylibWriter.h"
+#import "STMachODylibWriter.h"
 #import "STMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
 #import "STNativeCompiler.h"
@@ -43,7 +43,7 @@
 
 #pragma mark - Dylib Factories
 
-+(MPWMachOReader*)readerForReferenceFramework
++(STMachOReader*)readerForReferenceFramework
 {
     NSURL *frameworkURL = [[self testBundle] URLForResource:@"ReferenceSTClass" withExtension:@"framework"];
     if (!frameworkURL) return nil;
@@ -52,10 +52,10 @@
     NSData *data = [NSData dataWithContentsOfFile:dylibPath];
     if (!data) return nil;
 
-    return [[[MPWMachOReader alloc] initWithData:data] autorelease];
+    return [[[STMachOReader alloc] initWithData:data] autorelease];
 }
 
-+(MPWMachOReader*)readerForInternalLinkerDylib
++(STMachOReader*)readerForInternalLinkerDylib
 {
     STNativeCompiler *compiler = [STNativeCompiler compiler];
     NSString *source = @"class InternalLinkerTestClass : NSObject { -answerFortyTwo { 42. } -addFive:x { x + 5. } }";
@@ -66,13 +66,13 @@
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/InternalLinkerTestClass.framework/InternalLinkerTestClass"
                                             fromWriter:(STMachOWriter*)compiler.writer];
 
-    return [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    return [[[STMachOReader alloc] initWithData:dylib] autorelease];
 }
 
 #pragma mark - Shared Verification Methods
 
 // Verifies basic Mach-O validity - same for both
-+(void)verifyValidMachO:(MPWMachOReader*)reader name:(NSString*)name
++(void)verifyValidMachO:(STMachOReader*)reader name:(NSString*)name
 {
     EXPECTTRUE(reader.isHeaderValid, ([NSString stringWithFormat:@"%@ should be valid Mach-O", name]));
     INTEXPECT([reader filetype], MH_DYLIB, ([NSString stringWithFormat:@"%@ should be a dylib", name]));
@@ -80,7 +80,7 @@
 }
 
 // Verifies required load commands - same for both
-+(void)verifyRequiredLoadCommands:(MPWMachOReader*)reader name:(NSString*)name
++(void)verifyRequiredLoadCommands:(STMachOReader*)reader name:(NSString*)name
 {
     EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_ID_DYLIB], ([NSString stringWithFormat:@"%@ should have LC_ID_DYLIB", name]));
     EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_SYMTAB], ([NSString stringWithFormat:@"%@ should have LC_SYMTAB", name]));
@@ -91,7 +91,7 @@
 }
 
 // Verifies segment layout - same structure, different details
-+(void)verifySegmentLayout:(MPWMachOReader*)reader name:(NSString*)name
++(void)verifySegmentLayout:(STMachOReader*)reader name:(NSString*)name
 {
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
     struct segment_command_64 *linkedit = [reader segmentNamed:@"__LINKEDIT"];
@@ -112,7 +112,7 @@
 }
 
 // Verifies class symbols are exported - parameterized by class name
-+(void)verifyExportsClassSymbols:(MPWMachOReader*)reader className:(NSString*)className name:(NSString*)name
++(void)verifyExportsClassSymbols:(STMachOReader*)reader className:(NSString*)className name:(NSString*)name
 {
     NSArray *exports = [reader exportedSymbolNames];
 
@@ -124,7 +124,7 @@
 }
 
 // Logs all segments and sections for debugging
-+(void)logSegmentsAndSections:(MPWMachOReader*)reader name:(NSString*)name
++(void)logSegmentsAndSections:(STMachOReader*)reader name:(NSString*)name
 {
     const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
     const uint8_t *ptr = (const uint8_t *)(header + 1);
@@ -159,7 +159,7 @@
     }
 
     NSData *objectData = [NSData dataWithContentsOfURL:objectURL];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:objectData] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:objectData] autorelease];
 
     const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
     const uint8_t *ptr = (const uint8_t *)(header + 1);
@@ -190,7 +190,7 @@
 // The internal linker should produce equivalent structure.
 +(void)testCharacterizeReferenceSegments
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *ref = [self readerForReferenceFramework];
     if (!ref) {
         NSLog(@"Reference framework not available");
         return;
@@ -246,7 +246,7 @@
 // Characterize the sections within each segment
 +(void)testCharacterizeReferenceSections
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *ref = [self readerForReferenceFramework];
     if (!ref) return;
 
     const struct mach_header_64 *header = (const struct mach_header_64 *)ref.data.bytes;
@@ -303,7 +303,7 @@
 // Characterize the __objc_data section contents (class structures)
 +(void)testCharacterizeReferenceObjcData
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *ref = [self readerForReferenceFramework];
     if (!ref) return;
 
     // Find __objc_data section
@@ -400,7 +400,7 @@
 // Same tests but for internal linker output
 +(void)testCharacterizeInternalSegments
 {
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
 
     const struct mach_header_64 *header = (const struct mach_header_64 *)internal.data.bytes;
     const uint8_t *ptr = (const uint8_t *)(header + 1);
@@ -436,7 +436,7 @@
 // Characterize internal __objc_data and compare to reference expectations
 +(void)testCharacterizeInternalObjcData
 {
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
 
     // Find __objc_data section
     const struct mach_header_64 *header = (const struct mach_header_64 *)internal.data.bytes;
@@ -511,7 +511,7 @@
 
 #pragma mark - Fixup Format Tests
 
-+(void)verifyFixupFormat:(MPWMachOReader*)reader name:(NSString*)name usesChainedFixups:(BOOL)expectChained
++(void)verifyFixupFormat:(STMachOReader*)reader name:(NSString*)name usesChainedFixups:(BOOL)expectChained
 {
     BOOL hasChainedFixups = [reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS] != NULL;
     BOOL hasDyldInfo = [reader loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY] != NULL;
@@ -531,7 +531,7 @@
     }
 }
 
-+(void)verifyDataConstSegment:(MPWMachOReader*)reader name:(NSString*)name
++(void)verifyDataConstSegment:(STMachOReader*)reader name:(NSString*)name
 {
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
     struct segment_command_64 *dataConst = [reader segmentNamed:@"__DATA_CONST"];
@@ -562,7 +562,7 @@
     }
 }
 
-+(int)countSegments:(MPWMachOReader*)reader
++(int)countSegments:(STMachOReader*)reader
 {
     int count = 0;
     const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
@@ -578,7 +578,7 @@
 // Single test for the reference (externally linked) dylib
 +(void)testReferenceDylib
 {
-    MPWMachOReader *reader = [self readerForReferenceFramework];
+    STMachOReader *reader = [self readerForReferenceFramework];
     if (!reader) {
         NSLog(@"Reference framework not available");
         return;
@@ -598,7 +598,7 @@
 // Single test for the internally linked dylib
 +(void)testInternalLinkerDylib
 {
-    MPWMachOReader *reader = [self readerForInternalLinkerDylib];
+    STMachOReader *reader = [self readerForInternalLinkerDylib];
 
     [self logSegmentsAndSections:reader name:@"Internal"];
     [self verifyValidMachO:reader name:@"Internal"];
@@ -613,8 +613,8 @@
 
 +(void)testCompareReferenceAndInternal
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
     if (!ref) return;
 
     int refSegments = [self countSegments:ref];
@@ -1084,8 +1084,8 @@
 // Test to decode and compare rebase opcodes between reference and internal
 +(void)testCompareRebaseOpcodes
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
 
     if (!ref) {
         NSLog(@"Reference framework not available - skipping test");
@@ -1137,8 +1137,8 @@
 // Test to compare bind opcodes
 +(void)testCompareBindOpcodes
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
 
     if (!ref) {
         NSLog(@"Reference framework not available - skipping test");
@@ -1170,7 +1170,7 @@
 // Test to examine segment layout and verify rebase targets are valid
 +(void)testVerifyRebaseTargetsAreValid
 {
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
 
     const struct dyld_info_command *dyldInfo =
         (const struct dyld_info_command*)[internal loadCommandOfTypeIfPresent:LC_DYLD_INFO_ONLY];
@@ -1482,7 +1482,7 @@ done:
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/PointerTestClass.framework/PointerTestClass"
                                             fromWriter:objectWriter];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
 
 //    NSLog(@"\n=== AFTER LINKING ===");
 
@@ -1530,7 +1530,7 @@ done:
 }
 
 // Helper to find a section and return its file offset
-+(long)fileOffsetForSection:(NSString*)sectname inReader:(MPWMachOReader*)reader
++(long)fileOffsetForSection:(NSString*)sectname inReader:(STMachOReader*)reader
 {
     const struct mach_header_64 *header = (const struct mach_header_64 *)reader.data.bytes;
     const uint8_t *ptr = (const uint8_t *)(header + 1);
@@ -1554,8 +1554,8 @@ done:
 // Compare __objc_data between reference dylib and internal dylib
 +(void)testCompareObjcDataSections
 {
-    MPWMachOReader *ref = [self readerForReferenceFramework];
-    MPWMachOReader *internal = [self readerForInternalLinkerDylib];
+    STMachOReader *ref = [self readerForReferenceFramework];
+    STMachOReader *internal = [self readerForInternalLinkerDylib];
 
     EXPECTNOTNIL( ref, @"reference framework");
 

@@ -9,7 +9,7 @@
 #import "STMachOWriter.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWMachOSectionWriter.h"
-#import "MPWMachODylibWriter.h"
+#import "STMachODylibWriter.h"
 #import "MPWBindOpcodeWriter.h"
 #import "STNativeCompiler.h"
 #import <dlfcn.h>
@@ -31,7 +31,7 @@
                      sectionWriters:(NSArray<MPWMachOSectionWriter*>*)sections
                        symbolWriter:(STMachOWriter*)symbolSource
 {
-    MPWMachODylibWriter *dylibWriter = [MPWMachODylibWriter stream];
+    STMachODylibWriter *dylibWriter = [STMachODylibWriter stream];
     dylibWriter.installName = installName;
 
     // Copy global symbols for export
@@ -257,7 +257,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 #import <mach-o/loader.h>
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 
 @implementation MPWMachOLinker(testing)
 
@@ -287,7 +287,7 @@
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should produce valid Mach-O");
     INTEXPECT([reader filetype], MH_DYLIB, @"should be a dylib");
 }
@@ -306,7 +306,7 @@
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:@"_answer"], @"symbol should be exported");
 
@@ -344,7 +344,7 @@
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should be valid Mach-O");
     EXPECTNOTNIL([reader segmentNamed:@"__DATA"], @"should have __DATA segment");
 
@@ -369,7 +369,7 @@
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/LinkerTestClass.framework/LinkerTestClass"
                                             fromWriter:(STMachOWriter*)compiler.writer];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should produce valid Mach-O");
     INTEXPECT([reader filetype], MH_DYLIB, @"should be a dylib");
 
@@ -392,7 +392,7 @@
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/BindTestClass.framework/BindTestClass"
                                             fromWriter:(STMachOWriter*)compiler.writer];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should have valid header");
 
     const struct dyld_info_command *dyldInfo =
@@ -425,7 +425,7 @@
     MPWMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test_bind.dylib" fromWriter:objectWriter];
 
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:dylib] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
     EXPECTTRUE(reader.isHeaderValid, @"should be valid Mach-O");
 
     const struct dyld_info_command *dyldInfo =

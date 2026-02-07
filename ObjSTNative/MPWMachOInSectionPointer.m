@@ -105,7 +105,7 @@
 
 +(void)testReadNSString
 {
-    MPWMachOReader *reader=[MPWMachOReader readerForTestFile:@"function-passing-nsstring"];
+    STMachOReader *reader=[STMachOReader readerForTestFile:@"function-passing-nsstring"];
     int cfstringSymbolIndex = [reader indexOfSymbolNamed:@"l__unnamed_cfstring_"];
     INTEXPECT( cfstringSymbolIndex,1,@"index of the cfstring");
     MPWMachOInSectionPointer *stringPointer=[reader pointerForSymbolAt:cfstringSymbolIndex];

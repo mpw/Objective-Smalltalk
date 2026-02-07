@@ -6,7 +6,7 @@
 //
 
 #import "MPWMachOClassReader.h"
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOSection.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
@@ -177,7 +177,7 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 
 +(instancetype)readerForTestFile:(NSString*)testfile
 {
-    MPWMachOReader *machoReader=[MPWMachOReader readerForTestFile:testfile];
+    STMachOReader *machoReader=[STMachOReader readerForTestFile:testfile];
     MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
     return classreader;
 }

@@ -30,7 +30,7 @@
 
 
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
@@ -47,7 +47,7 @@
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
     NSData *macho=[compiler compileClassToMachoO:compiledClass];
     [macho writeToFile:@"/tmp/testclass-from-source.o" atomically:YES];
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
+    STMachOReader *reader = [STMachOReader readerWithData:macho];
     EXPECTTRUE(reader.isHeaderValid, @"got a macho");
     INTEXPECT([reader classReaders].count,1,@"number of classes" );
     MPWMachOClassReader *classReader = [reader classReaders].firstObject;
@@ -68,7 +68,7 @@
     INTEXPECT( compiledClass.classMethods.count,0,@"class method count");
     NSData *macho=[compiler compileClassToMachoO:compiledClass];
     [macho writeToFile:@"/tmp/testclass2methods-from-source.o" atomically:YES];
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
+    STMachOReader *reader = [STMachOReader readerWithData:macho];
     EXPECTTRUE(reader.isHeaderValid, @"got a macho");
     INTEXPECT([reader classReaders].count,1,@"number of classes" );
     MPWMachOClassReader *classReader = [reader classReaders].firstObject;
@@ -98,7 +98,7 @@
     NSData *d=[compiler compileClassToMachoO:compiledClass];
     [d writeToFile:@"/tmp/stringLiteral.o" atomically:YES];
     
-    MPWMachOReader *reader=[MPWMachOReader readerWithData:d];
+    STMachOReader *reader=[STMachOReader readerWithData:d];
     MPWMachOInSectionPointer *s=[reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_CFSTR_L1"]];
     EXPECTNOTNIL(s, @" pointer");
     Mach_O_NSString *str_read=(Mach_O_NSString*)[s bytes];

@@ -249,7 +249,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
 
 
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOClassReader.h"
 #import "MPWMachOSection.h"
 #import "MPWMachORelocationPointer.h"
@@ -272,7 +272,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     [macho writeToFile:@"/tmp/class_via_writer.o" atomically:YES];
     
     
-    MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
+    STMachOReader *machoReader = [STMachOReader readerWithData:macho];
     INTEXPECT( machoReader.numSections, 6,@"number of sections");
     
     int classNameSymbolEntry = [machoReader indexOfSymbolNamed:testclassNameSymbolName];
@@ -332,7 +332,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     [macho writeToFile:@"/tmp/testclass.o" atomically:YES];
     
     
-    MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
+    STMachOReader *machoReader = [STMachOReader readerWithData:macho];
 //    NSLog(@"relocations for class2_via_writer.o:");
 //    [machoReader dumpRelocationsOn:[MPWByteStream Stderr]];
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
@@ -386,7 +386,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
 //    [macho writeToFile:@"/tmp/testclass-with-method.o" atomically:YES];
     
     
-    MPWMachOReader *machoReader = [MPWMachOReader readerWithData:macho];
+    STMachOReader *machoReader = [STMachOReader readerWithData:macho];
     MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,8,@"instance size");
@@ -428,7 +428,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
         NSData *macho=[writer data];
         [macho writeToFile:@"/tmp/ppath-def.macho" atomically:YES];
         //    INTEXPECT(macho.length,938,@"generate macho for 0 length ppath");
-        MPWMachOReader *reader = [MPWMachOReader readerWithData:macho];
+        STMachOReader *reader = [STMachOReader readerWithData:macho];
         int structindex = [reader indexOfSymbolNamed:symbol];
         MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];
         int functionIndex = [reader indexOfSymbolNamed:functionSymbol];

@@ -1,8 +1,8 @@
 
 #import "MPWBindOpcodeWriter.h"
-#import "MPWMachODylibWriter.h"
+#import "STMachODylibWriter.h"
 #import "MPWMachOLinker.h"
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOSection.h"
 #import "MPWMachOSegment.h"
 #import "STNativeCompiler.h"
@@ -49,8 +49,8 @@
 
   NSData *refDylibData = [NSData dataWithContentsOfFile:refDylibPath];
   EXPECTNOTNIL(refDylibData, @"reference dylib data");
-  MPWMachOReader *refReader =
-      [[MPWMachOReader alloc] initWithData:refDylibData];
+  STMachOReader *refReader =
+      [[STMachOReader alloc] initWithData:refDylibData];
 
   // 4. Generate Candidate Dylib (Internal Linker)
   MPWMachOLinker *linker = [[MPWMachOLinker alloc] init];
@@ -59,8 +59,8 @@
                                                             className]
                       fromWriter:objectWriter];
   EXPECTNOTNIL(candDylibData, @"candidate dylib data");
-  MPWMachOReader *candReader =
-      [[MPWMachOReader alloc] initWithData:candDylibData];
+  STMachOReader *candReader =
+      [[STMachOReader alloc] initWithData:candDylibData];
 
   // 5. Structural Characterization of Reference
 
@@ -270,7 +270,7 @@
 }
 
 + (long)fileOffsetForSection:(NSString *)sectname
-                    inReader:(MPWMachOReader *)reader {
+                    inReader:(STMachOReader *)reader {
   if (!reader.data)
     return -1;
   for (MPWMachOSegment *seg in reader.allSegments) {

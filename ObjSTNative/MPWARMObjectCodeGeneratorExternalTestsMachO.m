@@ -7,7 +7,7 @@
 
 #import "MPWARMObjectCodeGeneratorExternalTestsMachO.h"
 #import "STMachOWriter.h"
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "STJittableData.h"
 
 @implementation MPWARMObjectCodeGeneratorExternalTestsMachO
@@ -34,7 +34,7 @@
     //    NSLog(@"after write file");
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/theFunction-calls-other.o" atomically:YES];
-    MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader=[[[STMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 12,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_other",@"name of call to _other");
 }
@@ -52,7 +52,7 @@
     [writer generateMachO];
     NSData *macho=[writer data];
     //    [macho writeToFile:@"/tmp/theFunction-sends-length.o" atomically:YES];
-    MPWMachOReader *reader=[[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader=[[[STMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT( [[reader textSection] offsetOfRelocEntryAt:0], 12,@"location of call to _other");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0], @"_objc_msgSend$length",@"name of msg send");
 }

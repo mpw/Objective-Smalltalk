@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 29.01.26.
 //
 
-#import "MPWMachODylibWriter.h"
+#import "STMachODylibWriter.h"
 #import "MPWBindOpcodeWriter.h"
 #import "MPWChainedFixupWriter.h"
 #import "MPWExportsTrieWriter.h"
@@ -23,7 +23,7 @@
 #import "MPWMachOObjectSerializer.h"
 
 
-@interface MPWMachODylibWriter ()
+@interface STMachODylibWriter ()
 
 @property(nonatomic, assign) long textSegmentSize;
 @property(nonatomic, assign) long dataConstSegmentOffset;
@@ -88,15 +88,15 @@
 
 @end
 
-@interface MPWMachODylibWriter ()
+@interface STMachODylibWriter ()
 - (void)generateStringTable;
 @end
 
-@implementation MPWMachODylibWriter
+@implementation STMachODylibWriter
 
 + (instancetype)streamWithInstallName:(NSString *)installName
                      externalLibraries:(NSArray<NSString *> *)externalLibraries {
-  MPWMachODylibWriter *writer = [self stream];
+  STMachODylibWriter *writer = [self stream];
   writer.installName = installName;
   for (NSString *libraryPath in externalLibraries) {
     [writer addExternalLibraryPath:libraryPath];
@@ -1830,7 +1830,7 @@
 @end
 
 
-@implementation MPWMachODylibWriter (testing)
+@implementation STMachODylibWriter (testing)
 
 +(NSArray*)testSelectors {
     return  @[];

@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOReader,MPWMachORelocationPointer;
+@class STMachOReader,MPWMachORelocationPointer;
 
 @interface MPWMachOClassReader : NSObject
 

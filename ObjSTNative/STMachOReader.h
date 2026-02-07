@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MPWMachOSection,MPWMachORelocationPointer,MPWMachOClassReader,MPWMachOInSectionPointer,MPWMachOSegment;
 
-@interface MPWMachOReader : NSObject
+@interface STMachOReader : NSObject
 
 @property (readonly) NSData *data;
 @property (readonly) int numSections;
@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface MPWMachOReader(testing)
+@interface STMachOReader(testing)
 -(void)verifyPropertyPathsAtPointer:(MPWMachOInSectionPointer*)structptr against:(PropertyPathDefs*)checkdefs;
 @end
 

@@ -506,7 +506,7 @@
 
 
 #import <MPWFoundation/DebugMacros.h>
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOClassReader.h"
 #import "MPWMachOSection.h"
 #import "MPWMachOClassWriter.h"
@@ -522,7 +522,7 @@
     [writer writeHeader];
     
     NSData *macho=[writer data];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:macho] autorelease];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT([reader cputype],CPU_TYPE_ARM64,@"cputype");
     INTEXPECT([reader filetype],MH_OBJECT,@"filetype");
@@ -541,7 +541,7 @@
     
     NSData *macho=[writer data];
     //    [macho writeToFile:@"/tmp/generated.macho" atomically:YES];
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:macho] autorelease];
     
     EXPECTTRUE([reader isHeaderValid],@"valid header");
     INTEXPECT([reader numLoadCommands],3,@"number of load commands");
@@ -579,7 +579,7 @@
     NSData *macho=[writer data];
     [macho writeToFile:@"/tmp/reloc.o" atomically:YES];
     
-    MPWMachOReader *reader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader = [[[STMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT([[reader textSection] numRelocEntries],1,@"number of undefined symbol reloc entries");
     INTEXPECT([[reader textSection] relocEntryOffset],328,@"offset of undefined symbol reloc entries");
     IDEXPECT( [[reader textSection] nameOfRelocEntryAt:0],@"_other",@"name");
@@ -635,7 +635,7 @@
     [macho writeToFile:@"/tmp/class.o" atomically:YES];
     
     
-    MPWMachOReader *machoReader = [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *machoReader = [[[STMachOReader alloc] initWithData:macho] autorelease];
     INTEXPECT( machoReader.numSections, 6,@"number of sections");
     //    for (int i=1;i<machoReader.numSections;i++) {
     //        MPWMachOSection *s=[machoReader sectionAtIndex:i];
@@ -703,7 +703,7 @@
     classwriter.nameOfClass = @"TestClass";
     classwriter.nameOfSuperClass = @"NSObject";
     [classwriter writeClass];
-    MPWMachOReader *reader=[MPWMachOReader readerWithData:[writer data]];
+    STMachOReader *reader=[STMachOReader readerWithData:[writer data]];
     MPWMachOSection *firstSection = [reader sectionAtIndex:3];
     MPWMachOSection *lastSection = [reader sectionAtIndex:reader.numSections];
     int firstRelocationOffset = [firstSection relocEntryOffset];
@@ -722,7 +722,7 @@
     [classwriter writeClass];
     NSData *d=[writer data];
     [d writeToFile:@"/tmp/segment_size.macho" atomically:YES];
-    MPWMachOReader *reader=[MPWMachOReader readerWithData:d];
+    STMachOReader *reader=[STMachOReader readerWithData:d];
     long sectionSize = 0;
     for (int i=1;i<=reader.numSections;i++) {
         sectionSize += ((([reader sectionAtIndex:i].size) + 7) / 8) * 8;
@@ -749,7 +749,7 @@
     
     
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:d];
+    STMachOReader *reader = [STMachOReader readerWithData:d];
 
     MPWMachOInSectionPointer *cfstrPtr = [reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_theString"]];
     Mach_O_NSString *str_read=(Mach_O_NSString*)[cfstrPtr bytes];
@@ -777,7 +777,7 @@
     [writer writeBlockLiteralWithCodeAtSymbol:@"_block_fn" blockSymbol:@"_global_block" signature:@"i12@?0i8" global:YES];
     NSData *d=[writer data];
     [d writeToFile:@"/tmp/block.o" atomically:YES];
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:d];
+    STMachOReader *reader = [STMachOReader readerWithData:d];
     MPWMachOInSectionPointer *blockDataPtr = [reader pointerForSymbolAt:[reader indexOfSymbolNamed:@"_global_block"]];
     MPWMachOInSectionPointer *blockPtr = [[blockDataPtr relocationPointer] targetPointer];
     EXPECTNOTNIL(blockPtr, @"pointer to block");
@@ -796,7 +796,7 @@
 
     
     NSData *macho=[writer data];
-    MPWMachOReader *reader=[MPWMachOReader readerWithData:macho];
+    STMachOReader *reader=[STMachOReader readerWithData:macho];
     INTEXPECT(reader.numberOfClassReferences,2,@"number of class references");
     NSArray <MPWMachORelocationPointer*> *refs=[reader classReferences];
     INTEXPECT(refs.count,2,@"number of refs again");

@@ -24,7 +24,7 @@
 #import "MPWMachOObjectSerializer.h"
 
 
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "STNativeCompiler.h"
 #import "STNativeCompilerTestsMachO.h"
 #import "STObjectCodeGeneratorARM.h"
@@ -51,32 +51,32 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     return [NSString stringWithFormat:@"/tmp/%@_%@.dylib", baseName, suffix];
 }
 
-+ (MPWMachODylibWriter *)dylibWriterWithInstallName:(NSString *)installName {
-    return [MPWMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
++ (STMachODylibWriter *)dylibWriterWithInstallName:(NSString *)installName {
+    return [STMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
 }
 
-+ (MPWMachODylibWriter *)foundationDylibWriterWithInstallName:(NSString *)installName {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:installName];
++ (STMachODylibWriter *)foundationDylibWriterWithInstallName:(NSString *)installName {
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:installName];
     [writer useFoundationRuntimeLibraries];
     return writer;
 }
 
-+ (MPWMachOReader *)readerWithData:(NSData *)machoData {
-    return [[[MPWMachOReader alloc] initWithData:machoData] autorelease];
++ (STMachOReader *)readerWithData:(NSData *)machoData {
+    return [[[STMachOReader alloc] initWithData:machoData] autorelease];
 }
 
-+ (MPWMachOReader *)readerForWrittenWriter:(MPWMachODylibWriter *)writer {
++ (STMachOReader *)readerForWrittenWriter:(STMachODylibWriter *)writer {
     [writer generateMachO];
     return [self readerWithData:[writer data]];
 }
 
-+ (BOOL)writeSignedWriter:(MPWMachODylibWriter *)writer
++ (BOOL)writeSignedWriter:(STMachODylibWriter *)writer
                    toPath:(NSString *)path
                     error:(NSError **)error {
     return [writer writeSignedDylibToPath:path error:error];
 }
 
-+ (MPWMachOReader *)readerForSignedWriter:(MPWMachODylibWriter *)writer
++ (STMachOReader *)readerForSignedWriter:(STMachODylibWriter *)writer
                                    toPath:(NSString *)path
                                     error:(NSError **)error {
     if (![self writeSignedWriter:writer toPath:path error:error]) {
@@ -98,16 +98,16 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testCanWriteDylibHeader {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
-    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    STMachOReader *reader = [self readerForWrittenWriter:writer];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT([reader cputype], CPU_TYPE_ARM64, @"cputype");
     INTEXPECT([reader filetype], MH_DYLIB, @"filetype should be MH_DYLIB");
 }
 
 + (void)testDylibHasIdLoadCommand {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
-    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have LC_ID_DYLIB load command
     EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_ID_DYLIB],
@@ -115,14 +115,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibHasMultipleSegments {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
     // Add some code
     unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
     [writer addExportedTextSymbol:@"_testfn"
                          codeData:[NSData dataWithBytes:code length:sizeof(code)]
                          atOffset:0];
-    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
+    STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have __TEXT and __LINKEDIT segments at minimum
     EXPECTNOTNIL([reader segmentNamed:@"__TEXT"], @"should have __TEXT segment");
@@ -131,14 +131,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibHasExportsTrie {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
     // Add an exported function
     unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
     [writer addExportedTextSymbol:@"_testfn"
                          codeData:[NSData dataWithBytes:code length:sizeof(code)]
                          atOffset:0];
-    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
+    STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have LC_DYLD_EXPORTS_TRIE load command
     EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYLD_EXPORTS_TRIE],
@@ -155,8 +155,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     NSLog(@"testDissectKnownCorrectDylib: loaded %lu bytes",
           (unsigned long)macho.length);
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader =
+    [[[STMachOReader alloc] initWithData:macho] autorelease];
     
     MPWMachOSegment *text = [reader segmentObjectNamed:@"__TEXT"];
     NSLog(@"testDissectKnownCorrectDylib: __TEXT: vmaddr=0x%llx vmsize=0x%llx "
@@ -201,14 +201,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibExportsSymbol {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
     // Add an exported function
     unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
     [writer addExportedTextSymbol:@"_testfn"
                          codeData:[NSData dataWithBytes:code length:sizeof(code)]
                          atOffset:0];
-    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
+    STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:@"_testfn"], @"should export _testfn");
@@ -224,8 +224,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_test.dylib"];
     EXPECTNOTNIL(refData, @"reference dylib should exist");
     
-    MPWMachOReader *refReader =
-    [[[MPWMachOReader alloc] initWithData:refData] autorelease];
+    STMachOReader *refReader =
+    [[[STMachOReader alloc] initWithData:refData] autorelease];
     
     // Document all load commands present in a working dylib
     NSLog(@"Reference dylib load commands:");
@@ -288,8 +288,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_test.dylib"];
     EXPECTNOTNIL(refData, @"reference dylib should exist");
     
-    MPWMachOReader *refReader =
-    [[[MPWMachOReader alloc] initWithData:refData] autorelease];
+    STMachOReader *refReader =
+    [[[STMachOReader alloc] initWithData:refData] autorelease];
     
     // Get segments from reference
     struct segment_command_64 *refText = [refReader segmentNamed:@"__TEXT"];
@@ -334,7 +334,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 // Test that our generated dylib follows the same layout assumptions
 + (void)testGeneratedDylibFollowsLayoutAssumptions {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     
     unsigned char code[] = {
         0x40, 0x05, 0x80, 0x52, // mov w0, #42
@@ -345,8 +345,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [writer generateMachO];
     
     NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader =
+    [[[STMachOReader alloc] initWithData:macho] autorelease];
     
     struct segment_command_64 *text = [reader segmentNamed:@"__TEXT"];
     struct segment_command_64 *dataConst = [reader segmentNamed:@"__DATA_CONST"];
@@ -408,7 +408,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
            "-install_name @rpath/libref.dylib");
     
     // Create our dylib
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     unsigned char code[] = {
         0x40, 0x05, 0x80, 0x52, // mov w0, #42
         0xc0, 0x03, 0x5f, 0xd6  // ret
@@ -418,7 +418,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
                          atOffset:0];
     NSString *path = @"/tmp/libminimal_compare.dylib";
     NSError *error = nil;
-    MPWMachOReader *ourReader = [self readerForSignedWriter:writer toPath:path error:&error];
+    STMachOReader *ourReader = [self readerForSignedWriter:writer toPath:path error:&error];
     EXPECTNOTNIL(ourReader, error.localizedDescription ?: @"should create reader for signed dylib");
     
     // Read both signed dylibs
@@ -426,7 +426,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [NSData dataWithContentsOfFile:@"/tmp/libref_compare.dylib"];
     NSData *ourData = [NSData dataWithContentsOfFile:path];
     
-    MPWMachOReader *refReader = [self readerWithData:refData];
+    STMachOReader *refReader = [self readerWithData:refData];
     
     
     struct segment_command_64 *refText = [refReader segmentNamed:@"__TEXT"];
@@ -511,7 +511,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibReaderCanParseMultipleSegments {
-    MPWMachODylibWriter *writer = [self stream];
+    STMachODylibWriter *writer = [self stream];
     writer.installName = @"@rpath/libmultiseg.dylib";
     
     // Add some code to create multiple segments
@@ -529,8 +529,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [writer generateMachO];
     
     NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    STMachOReader *reader =
+    [[[STMachOReader alloc] initWithData:macho] autorelease];
     
     // Should have multiple segments
     NSArray *segments = [reader allSegments];
@@ -560,7 +560,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testMinimalDylibCanBeLoaded {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     
     // Simple function that returns 42
     // mov w0, #42; ret
@@ -599,7 +599,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     // 1. Create a compiler that uses MPWMachODylibWriter instead of
     // MPWMachOWriter
     //    For now, we'll manually set up what STNativeCompiler would do
-    MPWMachODylibWriter *dylibWriter = [MPWMachODylibWriter stream];
+    STMachODylibWriter *dylibWriter = [STMachODylibWriter stream];
     dylibWriter.installName = @"@rpath/STTestClass.framework/STTestClass";
     
     // 2. Compile an ObjectiveSmalltalk class using the dylib writer
@@ -665,7 +665,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithMultipleFunctions {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmultifunc.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmultifunc.dylib"];
     
     // First function: returns 42
     unsigned char answerCode[] = {
@@ -715,7 +715,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithExternalCall {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libexternalcall.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libexternalcall.dylib"];
     NSString *path = @"/tmp/libexternalcall.dylib";
     [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     
@@ -759,7 +759,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to extract chained fixups data from a dylib
-+ (NSData *)chainedFixupsDataFromReader:(MPWMachOReader *)reader {
++ (NSData *)chainedFixupsDataFromReader:(STMachOReader *)reader {
     struct linkedit_data_command *chainedCmd =
     (struct linkedit_data_command *)[reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
     if (!chainedCmd) return nil;
@@ -858,7 +858,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to find a section by name across all segments (dylibs have multiple segments)
-+ (MPWMachOSection *)sectionNamed:(NSString *)sectionName inReader:(MPWMachOReader *)reader {
++ (MPWMachOSection *)sectionNamed:(NSString *)sectionName inReader:(STMachOReader *)reader {
     for (MPWMachOSegment *segment in reader.segments) {
         MPWMachOSection *section = [segment sectionNamed:sectionName];
         if (section) {
@@ -869,7 +869,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to validate __objc_classlist for N classes
-+ (void)expectClassListInReader:(MPWMachOReader *)reader
++ (void)expectClassListInReader:(STMachOReader *)reader
                      classNames:(NSArray<NSString *> *)classNames
                           label:(NSString *)label {
     MPWMachOSection *classListSection = [self sectionNamed:@"__objc_classlist" inReader:reader];
@@ -934,7 +934,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
     EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:refDylibData];
+    STMachOReader *reader = [STMachOReader readerWithData:refDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1102,7 +1102,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 // and compare against reference characteristics discovered in testCharacterizeReferenceExternalCallDylib
 + (void)testCharacterizeGeneratedExternalCallDylib {
     // Generate dylib using MPWMachODylibWriter (same as testDylibWithExternalCall but without dlopen)
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     writer.installName = @"@rpath/libexternalcall.dylib";
     [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     
@@ -1125,7 +1125,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [genDylibData writeToFile:genPath atomically:YES];
     
     // Read and characterize the generated dylib
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:genDylibData];
+    STMachOReader *reader = [STMachOReader readerWithData:genDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1303,7 +1303,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithIntraLibraryCall {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     NSString *path = @"/tmp/libintra.dylib";
     writer.installName = @"@rpath/libintra.dylib";
     
@@ -1402,7 +1402,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
     EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:refDylibData];
+    STMachOReader *reader = [STMachOReader readerWithData:refDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1461,7 +1461,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testCharacterizeGeneratedMessageSendDylib {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/libmsgsend_gen.dylib";
     writer.installName = @"@rpath/libmsgsend.dylib";
@@ -1483,7 +1483,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:genDylibData];
+    STMachOReader *reader = [STMachOReader readerWithData:genDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1539,7 +1539,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithMessageSend {
-    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmsgsend.dylib"];
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmsgsend.dylib"];
     NSString *path = @"/tmp/libmsgsend.dylib";
     
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
@@ -1621,7 +1621,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
     EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:refDylibData];
+    STMachOReader *reader = [STMachOReader readerWithData:refDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1692,7 +1692,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 // Characterization test: Check the generated constant string dylib structure
 // and compare against reference to find differences
 + (void)testCharacterizeGeneratedConstantStringDylib {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/libconststring_gen.dylib";
     writer.installName = @"@rpath/libconststring.dylib";
@@ -1710,7 +1710,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:genDylibData];
+    STMachOReader *reader = [STMachOReader readerWithData:genDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1785,7 +1785,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(refData, @"ConstArray framework data");
     if (!refData) return;
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:refData];
+    STMachOReader *reader = [STMachOReader readerWithData:refData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1814,7 +1814,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 // Characterization test: Examine the generated literal-object dylib structure
 // without dlopen, to compare against the reference framework.
 + (void)testCharacterizeGeneratedLiteralObjectsDylib {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     writer.installName = @"@rpath/libliteralobjects.dylib";
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
@@ -1839,7 +1839,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(genData, @"generated dylib data");
     if (!genData) return;
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:genData];
+    STMachOReader *reader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -1893,10 +1893,10 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     NSData *refDylibData = [NSData dataWithContentsOfFile:refDylibPath];
     EXPECTNOTNIL(refDylibData, @"reference dylib should exist");
-    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refDylibData];
+    STMachOReader *refReader = [STMachOReader readerWithData:refDylibData];
     
     // 2. Generate CANDIDATE dylib using MPWMachODylibWriter
-    MPWMachODylibWriter *genWriter = [MPWMachODylibWriter stream];
+    STMachODylibWriter *genWriter = [STMachODylibWriter stream];
     STNativeCompiler *genCompiler = [[[STNativeCompiler alloc] initWithWriter:genWriter] autorelease];
     genWriter.installName = @"@rpath/libconststring.dylib";
     [genWriter addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
@@ -1914,7 +1914,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [genDylibData writeToFile:genDylibPath atomically:YES];
     system([[NSString stringWithFormat:@"codesign -f -s - %@", genDylibPath] UTF8String]);
     
-    MPWMachOReader *genReader = [MPWMachOReader readerWithData:genDylibData];
+    STMachOReader *genReader = [STMachOReader readerWithData:genDylibData];
     
     // 3. Find __string section in both
     MPWMachOSegment *refDataSeg = [refReader segmentObjectNamed:@"__DATA"];
@@ -2134,12 +2134,12 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(refData, @"reference framework data");
     if (!refData) return;
     
-    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refData];
+    STMachOReader *refReader = [STMachOReader readerWithData:refData];
     EXPECTNOTNIL(refReader, @"ref reader should be created");
     EXPECTTRUE([refReader isHeaderValid], @"ref header should be valid");
     
     // 2. Generate literal-object dylib (array only)
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     writer.installName = @"@rpath/libliteralobjects.dylib";
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
@@ -2163,7 +2163,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(genData, @"generated dylib data");
     if (!genData) return;
     
-    MPWMachOReader *genReader = [MPWMachOReader readerWithData:genData];
+    STMachOReader *genReader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(genReader, @"gen reader should be created");
     EXPECTTRUE([genReader isHeaderValid], @"gen header should be valid");
     
@@ -2291,7 +2291,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     system([[NSString stringWithFormat:@"codesign -f -s - %@", refDylibPath] UTF8String]);
     
     // 2. Generate CANDIDATE dylib using MPWMachODylibWriter
-    MPWMachODylibWriter *genWriter = [MPWMachODylibWriter stream];
+    STMachODylibWriter *genWriter = [STMachODylibWriter stream];
     STNativeCompiler *genCompiler = [[[STNativeCompiler alloc] initWithWriter:genWriter] autorelease];
     genWriter.installName = @"@rpath/libconststring.dylib";
     [genWriter addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
@@ -2318,8 +2318,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     // 4. Use MPWMachOReader to examine symbol tables programmatically
     NSData *refDylibData = [NSData dataWithContentsOfFile:refDylibPath];
-    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refDylibData];
-    MPWMachOReader *genReader = [MPWMachOReader readerWithData:genDylibData];
+    STMachOReader *refReader = [STMachOReader readerWithData:refDylibData];
+    STMachOReader *genReader = [STMachOReader readerWithData:genDylibData];
     
     NSLog(@"=== REFERENCE SYMBOL TABLE (via MPWMachOReader) ===");
     NSArray *refSymbols = [refReader symbols];
@@ -2412,7 +2412,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 
 + (void)testDylibWithConstantNSString {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/libconstantstring.dylib";
     writer.installName = @"@rpath/libconstantstring.dylib";
@@ -2469,7 +2469,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 +(void)testDylibWithCompiledObjectiveSmalltalkClass
 {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/compiled-st-class.dylib";
     writer.installName = @"@rpath/compiled-st-class.dylib";
@@ -2556,7 +2556,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 +(void)testDylibWithTwoClasses
 {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     NSString *path = @"/tmp/two-compiled-st-classes.dylib";
     writer.installName = @"@rpath/two-compiled-st-classes.dylib";
@@ -2631,7 +2631,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     NSData *refDylibData = [NSData dataWithContentsOfFile:libpath];
     EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
-    MPWMachOReader *refReader = [MPWMachOReader readerWithData:refDylibData];
+    STMachOReader *refReader = [STMachOReader readerWithData:refDylibData];
     EXPECTNOTNIL(refReader, @"reference reader should be created");
     EXPECTTRUE([refReader isHeaderValid], @"reference header should be valid");
     
@@ -2646,7 +2646,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 +(void)testCharacterizeGeneratedTwoClassesDylib
 {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
     writer.installName = @"@rpath/two-classes-gen.dylib";
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
@@ -2664,7 +2664,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     ]];
     
     EXPECTNOTNIL(dylibdata, @"generated dylib data should exist");
-    MPWMachOReader *genReader = [MPWMachOReader readerWithData:dylibdata];
+    STMachOReader *genReader = [STMachOReader readerWithData:dylibdata];
     EXPECTNOTNIL(genReader, @"generated reader should be created");
     EXPECTTRUE([genReader isHeaderValid], @"generated header should be valid");
     
@@ -2766,7 +2766,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testDylibWithLiteralObjects {
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralobjects", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     
@@ -2849,7 +2849,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testDylibWithLiteralNSStringObject {
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralstring", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSString *stringLiteral = @"literal string";
@@ -2888,7 +2888,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testDylibWithLiteralNSNumberObject {
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralnumber", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSNumber *numberLiteral = @42;
@@ -2927,7 +2927,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testDylibWithLiteralNSArrayObject {
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralarray", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -2969,7 +2969,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testCharacterizeGeneratedLiteralNSArrayDylib {
     NSString *installName = nil;
     (void)uniqueLiteralPath(@"libliteralarray", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -2988,7 +2988,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(genData, @"generated array dylib data");
     if (!genData) return;
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:genData];
+    STMachOReader *reader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
@@ -3026,7 +3026,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testDylibWithLiteralNSDictionaryObject {
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteraldict", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
@@ -3067,7 +3067,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)testCharacterizeGeneratedLiteralNSDictionaryDylib {
     NSString *installName = nil;
     (void)uniqueLiteralPath(@"libliteraldict", &installName);
-    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
@@ -3086,7 +3086,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(genData, @"generated dict dylib data");
     if (!genData) return;
     
-    MPWMachOReader *reader = [MPWMachOReader readerWithData:genData];
+    STMachOReader *reader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(reader, @"reader should be created");
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     

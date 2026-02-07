@@ -5,7 +5,7 @@
 //  Created by Marcel Weiher on 09.09.22.
 //
 
-#import "MPWMachOReader.h"
+#import "STMachOReader.h"
 #import "MPWMachOSegment.h"
 #import <mach-o/loader.h>
 #import <nlist.h>
@@ -17,7 +17,7 @@
 #import "MPWMachOInSectionPointer.h"
 #import "MPWMachOClassReader.h"
 
-@interface MPWMachOReader()
+@interface STMachOReader()
 
 @property (nonatomic, strong) NSData *data;
 @property (nonatomic, strong) NSMutableDictionary* sections;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation MPWMachOReader
+@implementation STMachOReader
 
 
 CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
@@ -507,12 +507,12 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWMachOReader(testing) 
+@implementation STMachOReader(testing) 
 
 +(instancetype)readerForTestFile:(NSString*)name
 {
     NSData *addmacho=[self frameworkResource:name category:@"macho"];
-    MPWMachOReader *reader=[[[self alloc] initWithData:addmacho] autorelease];
+    STMachOReader *reader=[[[self alloc] initWithData:addmacho] autorelease];
     return reader;
 }
 
@@ -528,7 +528,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testCanIdentifyHeader
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     EXPECTTRUE([reader isHeaderValid], @"got the right header");
     NSData *notamacho = [@"Hello World!" asData];
     reader=[[[self alloc] initWithData:notamacho] autorelease];
@@ -537,20 +537,20 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testFiletype
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     INTEXPECT([reader filetype], MH_OBJECT, @"should be an object file");
 }
 
 +(void)testCPUType
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     INTEXPECT([reader cputype], CPU_TYPE_ARM64, @"should be ARM");
     INTEXPECT([reader cpusubtype], 0, @"subytep");
 }
 
 +(void)testLoadCommands
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     INTEXPECT([reader numLoadCommands], 4, @"number of load commands");
     INTEXPECT([reader sizeOfLoadCommands], 360, @"size of load commands");
     struct load_command first=[reader loadCommandAtIndex:0];
@@ -573,7 +573,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testReadSegment
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     struct segment_command_64 *segment=[reader segment];
     INTEXPECT( segment->nsects, 2, @"number of sections");
     INTEXPECT( segment->cmdsize, sizeof(struct segment_command_64)+2*sizeof(struct section_64),@"correct size");
@@ -605,7 +605,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testReadSymtab
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     struct symtab_command *symtab=[reader symtab];
     EXPECTNOTNIL(symtab,@"have a symtab");
     
@@ -634,7 +634,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testReadStringTable
 {
-    MPWMachOReader *reader=[self readerForAdd];
+    STMachOReader *reader=[self readerForAdd];
     NSArray *strings = [reader stringTable];
     NSArray *expectedStrings=@[ @"_add",@"ltmp1",@"ltmp0" ];
     IDEXPECT( strings, expectedStrings, @"string table")
@@ -642,7 +642,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testReadMachOWithExternalSymbols
 {
-    MPWMachOReader *reader=[self readerForExternalFunction];
+    STMachOReader *reader=[self readerForExternalFunction];
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
     INTEXPECT( reader.numSections, 2 , @"load commands");
     IDEXPECT( [reader symbolNameAt:2],@"_fn",@"defined function");
@@ -660,7 +660,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testGetClassPointers
 {
-    MPWMachOReader *reader=[self readerForTestFile:@"two-classes"];
+    STMachOReader *reader=[self readerForTestFile:@"two-classes"];
     NSArray<MPWMachORelocationPointer*> *classPointers = [reader classPointers];
     INTEXPECT( classPointers.count, 2, @"number of classes");
     IDEXPECT( classPointers[0].targetName, @"_OBJC_CLASS_$_SecondClass",@"First class in list");
@@ -672,7 +672,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 +(void)testReadObjectiveC_StringConstant
 {
-    MPWMachOReader *reader=[self readerForTestFile:@"function-passing-nsstring"];
+    STMachOReader *reader=[self readerForTestFile:@"function-passing-nsstring"];
     int cfstringSymbolIndex = [reader indexOfSymbolNamed:@"l__unnamed_cfstring_"];
     INTEXPECT( cfstringSymbolIndex,1,@"index of the cfstring");
     MPWMachOInSectionPointer *stringPointer=[reader pointerForSymbolAt:cfstringSymbolIndex];
@@ -701,7 +701,7 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
 
 +(void)testReadBlock
 {
-    MPWMachOReader *reader=[self readerForTestFile:@"function-passing-block"];
+    STMachOReader *reader=[self readerForTestFile:@"function-passing-block"];
     int blockIndex = [reader indexOfSymbolNamed:@"___block_literal_global"];
     MPWMachOInSectionPointer *blockPointer=[reader pointerForSymbolAt:blockIndex];
     EXPECTNOTNIL(blockPointer, @"block pointer");
@@ -713,7 +713,7 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
 
 +(void)testReadClassReferences
 {
-    MPWMachOReader *reader=[self readerForTestFile:@"use_class"];
+    STMachOReader *reader=[self readerForTestFile:@"use_class"];
     EXPECTNOTNIL(reader, @"reader for use_class.macho");
     INTEXPECT(reader.numberOfClassReferences,2,@"number of class references");
     NSArray <MPWMachORelocationPointer*> *refs=[reader classReferences];
@@ -755,7 +755,7 @@ NSString *reason=[NSString stringWithFormat:@"checking using %@ failed: %@",@""#
 
 +(void)testVerifyExternallyProvidedPropertyPathDefs
 {
-    MPWMachOReader *reader=[self readerForTestFile:@"define-pp-structs"];
+    STMachOReader *reader=[self readerForTestFile:@"define-pp-structs"];
     EXPECTNOTNIL(reader, @"reader for define-pp-structs");
     int structindex = [reader indexOfSymbolNamed:@"_defs"];
     MPWMachOInSectionPointer *structptr=[reader pointerForSymbolAt:structindex];

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MPWBindOpcodeWriter;
 
-@interface MPWMachODylibWriter : STMachOWriter
+@interface STMachODylibWriter : STMachOWriter
 
 @property (nonatomic, strong) NSString *installName;
 @property (nonatomic, assign) uint32_t currentVersion;      // e.g., 0x10000 for 1.0.0
