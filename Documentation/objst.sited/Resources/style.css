@@ -1,0 +1,17 @@
+@import "mustard/mustard-ui.css";
+
+html {
+   padding: 1em;
+}
+
+.nav-container {
+   background-color: 19809a; 
+}
+nav {
+   background-color:  19809a; 
+    padding: 15px;
+}
+nav img {
+  padding: 5px;
+}
+
