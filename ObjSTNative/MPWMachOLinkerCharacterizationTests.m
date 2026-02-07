@@ -9,7 +9,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 #import "STMachOReader.h"
-#import "MPWMachOLinker.h"
+#import "STMachOLinker.h"
 #import "STMachODylibWriter.h"
 #import "STMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
@@ -62,7 +62,7 @@
     STClassDefinition *theClass = [compiler compile:source];
     [compiler compileClassToMachoO:theClass];
 
-    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
+    STMachOLinker *linker = [[[STMachOLinker alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/InternalLinkerTestClass.framework/InternalLinkerTestClass"
                                             fromWriter:(STMachOWriter*)compiler.writer];
 
@@ -635,7 +635,7 @@
     STClassDefinition *theClass = [compiler compile:source];
     [compiler compileClassToMachoO:theClass];
 
-    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
+    STMachOLinker *linker = [[[STMachOLinker alloc] init] autorelease];
     NSString *installName = [NSString stringWithFormat:@"@rpath/%@.framework/%@", className, className];
     return [linker linkToDylibWithInstallName:installName
                                    fromWriter:(STMachOWriter*)compiler.writer];
@@ -1478,7 +1478,7 @@ done:
     }
 
     // Now link and check the values
-    MPWMachOLinker *linker = [[[MPWMachOLinker alloc] init] autorelease];
+    STMachOLinker *linker = [[[STMachOLinker alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/PointerTestClass.framework/PointerTestClass"
                                             fromWriter:objectWriter];
 

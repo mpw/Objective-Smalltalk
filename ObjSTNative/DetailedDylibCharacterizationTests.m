@@ -1,7 +1,7 @@
 
 #import "STBindOpcodeWriter.h"
 #import "STMachODylibWriter.h"
-#import "MPWMachOLinker.h"
+#import "STMachOLinker.h"
 #import "STMachOReader.h"
 #import "MPWMachOSection.h"
 #import "STMachOSegment.h"
@@ -53,7 +53,7 @@
       [[STMachOReader alloc] initWithData:refDylibData];
 
   // 4. Generate Candidate Dylib (Internal Linker)
-  MPWMachOLinker *linker = [[MPWMachOLinker alloc] init];
+  STMachOLinker *linker = [[STMachOLinker alloc] init];
   NSData *candDylibData = [linker
       linkToDylibWithInstallName:[NSString stringWithFormat:@"@rpath/%@.dylib",
                                                             className]

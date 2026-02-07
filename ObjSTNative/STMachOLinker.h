@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) long targetAddress;          // Resolved address (filled in later)
 @end
 
-@interface MPWMachOLinker : NSObject
+@interface STMachOLinker : NSObject
 
 // Link the object file data from an MPWMachOWriter into a dylib
 // Returns the dylib data ready to be written to disk and codesigned

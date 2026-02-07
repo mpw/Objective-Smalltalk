@@ -5,7 +5,7 @@
 //  Internal linker: transforms object file data into a loadable dylib
 //
 
-#import "MPWMachOLinker.h"
+#import "STMachOLinker.h"
 #import "STMachOWriter.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWMachOSectionWriter.h"
@@ -17,7 +17,7 @@
 @implementation MPWInternalRelocation
 @end
 
-@implementation MPWMachOLinker
+@implementation STMachOLinker
 
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
                           fromWriter:(STMachOWriter*)objectWriter
@@ -259,7 +259,7 @@
 #import <mach-o/loader.h>
 #import "STMachOReader.h"
 
-@implementation MPWMachOLinker(testing)
+@implementation STMachOLinker(testing)
 
 #pragma mark - Helper Methods
 
@@ -284,7 +284,7 @@
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_testFunc"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:retCode length:sizeof(retCode)]];
 
-    MPWMachOLinker *linker = [[[self alloc] init] autorelease];
+    STMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
     STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
@@ -303,7 +303,7 @@
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_answer"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
 
-    MPWMachOLinker *linker = [[[self alloc] init] autorelease];
+    STMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
     STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
@@ -341,7 +341,7 @@
     unsigned char someData[] = { 0x01, 0x02, 0x03, 0x04 };
     [dataSection appendBytes:someData length:sizeof(someData)];
 
-    MPWMachOLinker *linker = [[[self alloc] init] autorelease];
+    STMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test.dylib" fromWriter:objectWriter];
 
     STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
@@ -365,7 +365,7 @@
     STClassDefinition *theClass = [compiler compile:@"class LinkerTestClass : NSObject { -<int>answerFortyTwo { 42. } }"];
     [compiler compileClassToMachoO:theClass];
 
-    MPWMachOLinker *linker = [[[self alloc] init] autorelease];
+    STMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/LinkerTestClass.framework/LinkerTestClass"
                                             fromWriter:(STMachOWriter*)compiler.writer];
 
@@ -388,7 +388,7 @@
     STClassDefinition *theClass = [compiler compile:@"class BindTestClass : NSObject { -<int>test { 42. } }"];
     [compiler compileClassToMachoO:theClass];
 
-    MPWMachOLinker *linker = [[[self alloc] init] autorelease];
+    STMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/BindTestClass.framework/BindTestClass"
                                             fromWriter:(STMachOWriter*)compiler.writer];
 
@@ -422,7 +422,7 @@
     char zeros[8] = {0};
     [dataSection appendBytes:zeros length:8];
 
-    MPWMachOLinker *linker = [[[self alloc] init] autorelease];
+    STMachOLinker *linker = [[[self alloc] init] autorelease];
     NSData *dylib = [linker linkToDylibWithInstallName:@"@rpath/test_bind.dylib" fromWriter:objectWriter];
 
     STMachOReader *reader = [[[STMachOReader alloc] initWithData:dylib] autorelease];
