@@ -19,7 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) MPWBindOpcodeWriter *bindOpcodeWriter;
 @property (nonatomic, strong, readonly) NSMutableArray *frameworks;
 
++ (instancetype)streamWithInstallName:(NSString *)installName
+                     externalLibraries:(NSArray<NSString *> *)externalLibraries;
 - (void)addExternalLibraryPath:(NSString *)path;
+- (void)useFoundationRuntimeLibraries;
+- (void)addExportedTextSymbol:(NSString *)symbol
+                      codeData:(NSData *)codeData
+                      atOffset:(NSUInteger)offset;
+- (BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error;
 
 @end
 

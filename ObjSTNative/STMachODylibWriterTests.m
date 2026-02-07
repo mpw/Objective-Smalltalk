@@ -51,27 +51,63 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     return [NSString stringWithFormat:@"/tmp/%@_%@.dylib", baseName, suffix];
 }
 
-+ (void)testCanWriteDylibHeader {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libtest.dylib";
++ (MPWMachODylibWriter *)dylibWriterWithInstallName:(NSString *)installName {
+    return [MPWMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
+}
+
++ (MPWMachODylibWriter *)foundationDylibWriterWithInstallName:(NSString *)installName {
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:installName];
+    [writer useFoundationRuntimeLibraries];
+    return writer;
+}
+
++ (MPWMachOReader *)readerWithData:(NSData *)machoData {
+    return [[[MPWMachOReader alloc] initWithData:machoData] autorelease];
+}
+
++ (MPWMachOReader *)readerForWrittenWriter:(MPWMachODylibWriter *)writer {
     [writer writeFile];
-    
-    NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    return [self readerWithData:[writer data]];
+}
+
++ (BOOL)writeSignedWriter:(MPWMachODylibWriter *)writer
+                   toPath:(NSString *)path
+                    error:(NSError **)error {
+    return [writer writeSignedDylibToPath:path error:error];
+}
+
++ (MPWMachOReader *)readerForSignedWriter:(MPWMachODylibWriter *)writer
+                                   toPath:(NSString *)path
+                                    error:(NSError **)error {
+    if (![self writeSignedWriter:writer toPath:path error:error]) {
+        return nil;
+    }
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    if (!data) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"STMachODylibWriterTests"
+                                         code:10
+                                     userInfo:@{
+                NSLocalizedDescriptionKey:
+                    [NSString stringWithFormat:@"Failed to read signed dylib at %@", path]
+            }];
+        }
+        return nil;
+    }
+    return [self readerWithData:data];
+}
+
++ (void)testCanWriteDylibHeader {
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
     EXPECTTRUE([reader isHeaderValid], @"header valid");
     INTEXPECT([reader cputype], CPU_TYPE_ARM64, @"cputype");
     INTEXPECT([reader filetype], MH_DYLIB, @"filetype should be MH_DYLIB");
 }
 
 + (void)testDylibHasIdLoadCommand {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libtest.dylib";
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
+    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have LC_ID_DYLIB load command
     EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_ID_DYLIB],
@@ -79,18 +115,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibHasMultipleSegments {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libtest.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
     // Add some code
     unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
-    [writer declareGlobalSymbol:@"_testfn" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    [writer addExportedTextSymbol:@"_testfn"
+                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
+                         atOffset:0];
+    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have __TEXT and __LINKEDIT segments at minimum
     EXPECTNOTNIL([reader segmentNamed:@"__TEXT"], @"should have __TEXT segment");
@@ -99,18 +131,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibHasExportsTrie {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libtest.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
     // Add an exported function
     unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
-    [writer declareGlobalSymbol:@"_testfn" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    [writer addExportedTextSymbol:@"_testfn"
+                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
+                         atOffset:0];
+    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have LC_DYLD_EXPORTS_TRIE load command
     EXPECTNOTNIL([reader loadCommandOfTypeIfPresent:LC_DYLD_EXPORTS_TRIE],
@@ -173,18 +201,14 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibExportsSymbol {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libtest.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
     // Add an exported function
     unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
-    [writer declareGlobalSymbol:@"_testfn" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
-    MPWMachOReader *reader =
-    [[[MPWMachOReader alloc] initWithData:macho] autorelease];
+    [writer addExportedTextSymbol:@"_testfn"
+                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
+                         atOffset:0];
+    MPWMachOReader *reader = [self readerForWrittenWriter:writer];
     
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:@"_testfn"], @"should export _testfn");
@@ -310,8 +334,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 // Test that our generated dylib follows the same layout assumptions
 + (void)testGeneratedDylibFollowsLayoutAssumptions {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libminimal.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     
     unsigned char code[] = {
         0x40, 0x05, 0x80, 0x52, // mov w0, #42
@@ -385,33 +408,26 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
            "-install_name @rpath/libref.dylib");
     
     // Create our dylib
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libminimal.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     unsigned char code[] = {
         0x40, 0x05, 0x80, 0x52, // mov w0, #42
         0xc0, 0x03, 0x5f, 0xd6  // ret
     };
-    [writer declareGlobalSymbol:@"_answer" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
+    [writer addExportedTextSymbol:@"_answer"
+                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
+                         atOffset:0];
     NSString *path = @"/tmp/libminimal_compare.dylib";
-    [macho writeToFile:path atomically:YES];
-    
-    // Sign our dylib
-    system("codesign -f -s - /tmp/libminimal_compare.dylib 2>&1");
+    NSError *error = nil;
+    MPWMachOReader *ourReader = [self readerForSignedWriter:writer toPath:path error:&error];
+    EXPECTNOTNIL(ourReader, error.localizedDescription ?: @"should create reader for signed dylib");
     
     // Read both signed dylibs
     NSData *refData =
     [NSData dataWithContentsOfFile:@"/tmp/libref_compare.dylib"];
-    NSData *ourData =
-    [NSData dataWithContentsOfFile:@"/tmp/libminimal_compare.dylib"];
+    NSData *ourData = [NSData dataWithContentsOfFile:path];
     
-    MPWMachOReader *refReader =
-    [[[MPWMachOReader alloc] initWithData:refData] autorelease];
-    MPWMachOReader *ourReader =
-    [[[MPWMachOReader alloc] initWithData:ourData] autorelease];
+    MPWMachOReader *refReader = [self readerWithData:refData];
+    
     
     struct segment_command_64 *refText = [refReader segmentNamed:@"__TEXT"];
     struct segment_command_64 *refLinkedit =
@@ -544,8 +560,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testMinimalDylibCanBeLoaded {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libminimal.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     
     // Simple function that returns 42
     // mov w0, #42; ret
@@ -553,20 +568,13 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
         0x40, 0x05, 0x80, 0x52, // mov w0, #42
         0xc0, 0x03, 0x5f, 0xd6  // ret
     };
-    [writer declareGlobalSymbol:@"_answer" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
+    [writer addExportedTextSymbol:@"_answer"
+                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
+                         atOffset:0];
     NSString *path = @"/tmp/libminimal_test.dylib";
-    [macho writeToFile:path atomically:YES];
-    
-    // Ad-hoc sign the dylib (required on modern macOS)
-    NSTask *codesign = [[[NSTask alloc] init] autorelease];
-    codesign.launchPath = @"/usr/bin/codesign";
-    codesign.arguments = @[ @"-f", @"-s", @"-", path ];
-    [codesign launch];
-    [codesign waitUntilExit];
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     
     // Try to load and call
     void *handle = dlopen([path fileSystemRepresentation], RTLD_NOW);
@@ -657,8 +665,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithMultipleFunctions {
-    MPWMachODylibWriter *writer = [self stream];
-    writer.installName = @"@rpath/libmultifunc.dylib";
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmultifunc.dylib"];
     
     // First function: returns 42
     unsigned char answerCode[] = {
@@ -672,27 +679,20 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
         0xc0, 0x03, 0x5f, 0xd6  // ret
     };
     
-    [writer declareGlobalSymbol:@"_answer" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:answerCode
-                                              length:sizeof(answerCode)]];
+    [writer addExportedTextSymbol:@"_answer"
+                         codeData:[NSData dataWithBytes:answerCode
+                                                 length:sizeof(answerCode)]
+                         atOffset:0];
     NSLog(@"sizeof(answerCode): %ld", sizeof(answerCode));
     
-    [writer declareGlobalSymbol:@"_zero" atOffset:sizeof(answerCode)];
-    [writer addTextSectionData:[NSData dataWithBytes:zeroCode
-                                              length:sizeof(zeroCode)]];
-    
-    [writer writeFile];
-    
-    NSData *macho = [writer data];
+    [writer addExportedTextSymbol:@"_zero"
+                         codeData:[NSData dataWithBytes:zeroCode
+                                                 length:sizeof(zeroCode)]
+                         atOffset:sizeof(answerCode)];
     NSString *path = @"/tmp/libmultifunc_test.dylib";
-    [macho writeToFile:path atomically:YES];
-    
-    // Ad-hoc sign the dylib
-    NSTask *codesign = [[[NSTask alloc] init] autorelease];
-    codesign.launchPath = @"/usr/bin/codesign";
-    codesign.arguments = @[ @"-f", @"-s", @"-", path ];
-    [codesign launch];
-    [codesign waitUntilExit];
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     
     // Try to load and call all functions
     void *handle = dlopen([path fileSystemRepresentation], RTLD_NOW);
@@ -715,9 +715,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithExternalCall {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libexternalcall.dylib"];
     NSString *path = @"/tmp/libexternalcall.dylib";
-    writer.installName = @"@rpath/libexternalcall.dylib";
     [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
@@ -731,12 +730,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [gen generateEndOfFunctionStackSpace:32];
     [writer addTextSectionData:gen.generatedCode];
     
-    [writer writeFile];
-    NSData *dylibData = [writer data];
-    [dylibData writeToFile:path atomically:YES];
-    
-    // Ad-hoc sign
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     
     // Try to load
     NSLog(@"will try to load");
@@ -1543,9 +1539,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithMessageSend {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
+    MPWMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmsgsend.dylib"];
     NSString *path = @"/tmp/libmsgsend.dylib";
-    writer.installName = @"@rpath/libmsgsend.dylib";
     
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
     gen.symbolWriter = writer;
@@ -1565,12 +1560,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     [writer addTextSectionData:gen.generatedCode];
     
-    [writer writeFile];
-    NSData *dylibData = [writer data];
-    [dylibData writeToFile:path atomically:YES];
-    
-    // Ad-hoc sign
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     
     // Load and test
     void *handle = dlopen([path UTF8String], RTLD_NOW);
@@ -2772,12 +2764,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithLiteralObjects {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralobjects", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     
@@ -2812,10 +2801,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:stringSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
-    [[writer data] writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString = nil;
     if (!handle) {
@@ -2859,12 +2847,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 // Smaller-step tests for literal object serialization
 + (void)testDylibWithLiteralNSStringObject {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralstring", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSString *stringLiteral = @"literal string";
@@ -2878,10 +2863,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:stringSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
-    [[writer data] writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString = nil;
     if (!handle) {
@@ -2902,12 +2886,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithLiteralNSNumberObject {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralnumber", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSNumber *numberLiteral = @42;
@@ -2921,10 +2902,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:numberSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
-    [[writer data] writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString = nil;
     if (!handle) {
@@ -2945,12 +2925,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithLiteralNSArrayObject {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteralarray", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -2964,10 +2941,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
-    [[writer data] writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString = nil;
     if (!handle) {
@@ -2991,12 +2967,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 // Characterize generated literal NSArray dylib without dlopen
 + (void)testCharacterizeGeneratedLiteralNSArrayDylib {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     (void)uniqueLiteralPath(@"libliteralarray", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
@@ -3051,12 +3024,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 + (void)testDylibWithLiteralNSDictionaryObject {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     NSString *path = uniqueLiteralPath(@"libliteraldict", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
@@ -3070,10 +3040,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [writer writeFile];
-    [[writer data] writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString = nil;
     if (!handle) {
@@ -3096,12 +3065,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 
 // Characterize generated literal NSDictionary dylib without dlopen
 + (void)testCharacterizeGeneratedLiteralNSDictionaryDylib {
-    MPWMachODylibWriter *writer = [MPWMachODylibWriter stream];
     NSString *installName = nil;
     (void)uniqueLiteralPath(@"libliteraldict", &installName);
-    writer.installName = installName;
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
-    [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+    MPWMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
     MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };

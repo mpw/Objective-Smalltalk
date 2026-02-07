@@ -94,6 +94,16 @@
 
 @implementation MPWMachODylibWriter
 
++ (instancetype)streamWithInstallName:(NSString *)installName
+                     externalLibraries:(NSArray<NSString *> *)externalLibraries {
+  MPWMachODylibWriter *writer = [self stream];
+  writer.installName = installName;
+  for (NSString *libraryPath in externalLibraries) {
+    [writer addExternalLibraryPath:libraryPath];
+  }
+  return writer;
+}
+
 - (instancetype)initWithTarget:(id)aTarget {
   self = [super initWithTarget:aTarget];
   if (self) {
@@ -118,6 +128,52 @@
     self.objcSelrefOffsets = [NSMutableDictionary dictionary];
   }
   return self;
+}
+
+- (void)useFoundationRuntimeLibraries {
+  [self addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+  [self addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
+}
+
+- (void)addExportedTextSymbol:(NSString *)symbol
+                      codeData:(NSData *)codeData
+                      atOffset:(NSUInteger)offset {
+  [self declareGlobalSymbol:symbol atOffset:(int)offset];
+  [self addTextSectionData:codeData];
+}
+
+- (BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error {
+  [self writeFile];
+  NSData *dylibData = [self data];
+  if (![dylibData writeToFile:path atomically:YES]) {
+    if (error) {
+      *error = [NSError errorWithDomain:@"MPWMachODylibWriterErrorDomain"
+                                   code:1
+                               userInfo:@{
+                                 NSLocalizedDescriptionKey :
+                                     [NSString stringWithFormat:@"Failed to write dylib to %@", path]
+                               }];
+    }
+    return NO;
+  }
+
+  NSTask *codesignTask = [[[NSTask alloc] init] autorelease];
+  codesignTask.launchPath = @"/usr/bin/codesign";
+  codesignTask.arguments = @[ @"-f", @"-s", @"-", path ];
+  [codesignTask launch];
+  [codesignTask waitUntilExit];
+  if (codesignTask.terminationStatus != 0) {
+    if (error) {
+      *error = [NSError errorWithDomain:@"MPWMachODylibWriterErrorDomain"
+                                   code:2
+                               userInfo:@{
+                                 NSLocalizedDescriptionKey :
+                                     [NSString stringWithFormat:@"codesign failed for %@", path]
+                               }];
+    }
+    return NO;
+  }
+  return YES;
 }
 
 // Get all active section writers (both __TEXT and __DATA)
