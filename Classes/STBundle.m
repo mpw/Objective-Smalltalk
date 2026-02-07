@@ -281,6 +281,16 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [self.cachedResources flush];
 }
 
+-(NSBundle*)nsBundle
+{
+    return [NSBundle bundleWithPath:self.path];
+}
+
+-(BOOL)load
+{
+    return [[self nsBundle] load];
+}
+
 @end
 
 

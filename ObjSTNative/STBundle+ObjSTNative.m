@@ -64,7 +64,7 @@
     return classes;
 }
 
-- (void)compileSourcesToNativeDylib
+- (void)compileSourcesToNativeDylibWithoutCodesigning
 {
     NSArray<NSString *> *frameworks = @[
         @"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation",
@@ -72,6 +72,12 @@
     ];
     NSString *installName = [@"@rpath/" stringByAppendingString:[self nativeDylibName]];
     [self compileSourcesToNativeDylibWithFrameworks:frameworks installName:installName];
+}
+
+- (void)compileSourcesToNativeDylib
+{
+    [self compileSourcesToNativeDylibWithoutCodesigning];
+    [self codesign];
 }
 
 - (void)compileSourcesToNativeDylibWithFrameworks:(NSArray<NSString *> *)frameworks
@@ -95,7 +101,6 @@
     NSData *dylibData = [compiler compileClassesToMachoO:classes];
     if (dylibData) {
         [dylibData writeToFile:[self nativeDylibPath] atomically:YES];
-        [self codesign];
     }
 }
 
