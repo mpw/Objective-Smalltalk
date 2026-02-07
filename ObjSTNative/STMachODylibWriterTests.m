@@ -21,7 +21,7 @@
 #import <mach-o/arm64/reloc.h>
 #import "STNativeCompiler.h"
 #import "STBundle+ObjSTNative.h"
-#import "MPWMachOObjectSerializer.h"
+#import "STMachOObjectSerializer.h"
 
 
 #import "STMachOReader.h"
@@ -1819,7 +1819,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     
@@ -2144,7 +2144,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation"];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     
     [serializer symbolForObject:arrayLiteral];
@@ -2768,7 +2768,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *path = uniqueLiteralPath(@"libliteralobjects", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
@@ -2851,7 +2851,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *path = uniqueLiteralPath(@"libliteralstring", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSString *stringLiteral = @"literal string";
     NSString *stringSymbol = [serializer symbolForObject:stringLiteral];
     
@@ -2890,7 +2890,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *path = uniqueLiteralPath(@"libliteralnumber", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSNumber *numberLiteral = @42;
     NSString *numberSymbol = [serializer symbolForObject:numberLiteral];
     
@@ -2929,7 +2929,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *path = uniqueLiteralPath(@"libliteralarray", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
     
@@ -2971,7 +2971,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     (void)uniqueLiteralPath(@"libliteralarray", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
     
@@ -3028,7 +3028,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *path = uniqueLiteralPath(@"libliteraldict", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
     NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
     
@@ -3069,7 +3069,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     (void)uniqueLiteralPath(@"libliteraldict", &installName);
     STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
     
-    MPWMachOObjectSerializer *serializer = [[[MPWMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
     NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
     

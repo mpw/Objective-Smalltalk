@@ -20,7 +20,7 @@
 #import <mach-o/arm64/reloc.h>
 #import "STNativeCompiler.h"
 #import "STBundle+ObjSTNative.h"
-#import "MPWMachOObjectSerializer.h"
+#import "STMachOObjectSerializer.h"
 
 
 @interface STMachODylibWriter ()

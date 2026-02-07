@@ -18,7 +18,7 @@
 #import <ObjectiveSmalltalk/STSubscriptExpression.h>
 #import "STJittableData.h"
 #import <mach-o/arm64/reloc.h>
-#import "MPWMachOObjectSerializer.h"
+#import "STMachOObjectSerializer.h"
 #import "MPWClassScheme.h"
 #import "STIdentifier.h"
 #import "STConnectionDefiner.h"
@@ -215,7 +215,7 @@
     STObjectCodeGeneratorARM* codegen;
     STMachOWriter *writer;
     MPWMachOClassWriter *classwriter;
-    MPWMachOObjectSerializer *objectSerializer;
+    STMachOObjectSerializer *objectSerializer;
     int blockNo;
     int stringLiteralNo;
     long textCodegenOffset;
@@ -257,10 +257,10 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     objectSerializer = nil;
 }
 
--(MPWMachOObjectSerializer*)objectSerializer
+-(STMachOObjectSerializer*)objectSerializer
 {
     if ( objectSerializer == nil ) {
-        objectSerializer = [[MPWMachOObjectSerializer alloc] initWithWriter:self.writer];
+        objectSerializer = [[STMachOObjectSerializer alloc] initWithWriter:self.writer];
     }
     return objectSerializer;
 }

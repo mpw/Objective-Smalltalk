@@ -5,19 +5,19 @@
 //  Created by Marcel Weiher on 11.05.24.
 //
 
-#import "MPWARMObjectCodeGeneratorExternalTestsMachO.h"
+#import "STARMObjectCodeGeneratorExternalTestsMachO.h"
 #import "STMachOWriter.h"
 #import "STMachOReader.h"
 #import "STJittableData.h"
 
-@implementation MPWARMObjectCodeGeneratorExternalTestsMachO
+@implementation STARMObjectCodeGeneratorExternalTestsMachO
 
 @end
 
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWARMObjectCodeGeneratorExternalTestsMachO(testing) 
+@implementation STARMObjectCodeGeneratorExternalTestsMachO(testing) 
 
 +(void)testGenerateMachOWithCallToExternalFunction
 {

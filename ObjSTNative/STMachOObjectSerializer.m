@@ -5,12 +5,12 @@
 //  Created by Codex on 2026-02-06.
 //
 
-#import "MPWMachOObjectSerializer.h"
+#import "STMachOObjectSerializer.h"
 #import "STMachOWriter.h"
 #import "MPWMachOSectionWriter.h"
 #import <mach-o/loader.h>
 
-@interface MPWMachOObjectSerializer ()
+@interface STMachOObjectSerializer ()
 
 @property (nonatomic, assign, readwrite) STMachOWriter *writer;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *stringSymbols;
@@ -31,7 +31,7 @@
 
 @end
 
-@implementation MPWMachOObjectSerializer
+@implementation STMachOObjectSerializer
 
 +testSelectors { return @[]; }
 
@@ -282,7 +282,7 @@
 
 @implementation NSString (MPWMachOObjectStreaming)
 
-- (void)writeOnMachOObject:(MPWMachOObjectSerializer *)writer {
+- (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
     [writer symbolForString:self];
 }
 
@@ -290,7 +290,7 @@
 
 @implementation NSNumber (MPWMachOObjectStreaming)
 
-- (void)writeOnMachOObject:(MPWMachOObjectSerializer *)writer {
+- (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
     [writer symbolForNumber:self];
 }
 
@@ -298,7 +298,7 @@
 
 @implementation NSArray (MPWMachOObjectStreaming)
 
-- (void)writeOnMachOObject:(MPWMachOObjectSerializer *)writer {
+- (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
     [writer symbolForArray:self];
 }
 
@@ -306,7 +306,7 @@
 
 @implementation NSDictionary (MPWMachOObjectStreaming)
 
-- (void)writeOnMachOObject:(MPWMachOObjectSerializer *)writer {
+- (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
     [writer symbolForDictionary:self];
 }
 

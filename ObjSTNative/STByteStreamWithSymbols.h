@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface MPWByteStreamWithSymbols : MPWByteStream
+@interface STByteStreamWithSymbols : MPWByteStream
 
 @property (nonatomic, nullable, strong) id <RelocationWriter> relocationWriter;
 @property (nonatomic, nullable, strong) id <SymbolWriter> symbolWriter;

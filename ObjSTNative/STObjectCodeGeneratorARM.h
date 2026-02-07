@@ -5,13 +5,13 @@
 //  Created by Marcel Weiher on 04.09.22.
 //
 
-#import <ObjSTNative/MPWByteStreamWithSymbols.h>
+#import <ObjSTNative/STByteStreamWithSymbols.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class STJittableData;
 
-@interface STObjectCodeGeneratorARM : MPWByteStreamWithSymbols
+@interface STObjectCodeGeneratorARM : STByteStreamWithSymbols
 
 @property (nonatomic,assign) int defaultFunctionStackSpace;
 

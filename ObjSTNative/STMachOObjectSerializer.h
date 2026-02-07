@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWMachOObjectSerializer : MPWByteStream
+@interface STMachOObjectSerializer : MPWByteStream
 
 @property (nonatomic, assign, readonly) STMachOWriter *writer;
 

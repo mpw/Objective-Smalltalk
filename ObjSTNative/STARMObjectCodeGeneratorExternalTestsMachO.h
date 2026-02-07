@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWARMObjectCodeGeneratorExternalTestsMachO : STObjectCodeGeneratorARM
+@interface STARMObjectCodeGeneratorExternalTestsMachO : STObjectCodeGeneratorARM
 
 @end
 

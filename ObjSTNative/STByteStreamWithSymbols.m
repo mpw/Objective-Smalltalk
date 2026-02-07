@@ -5,9 +5,9 @@
 //  Created by Marcel Weiher on 14.10.22.
 //
 
-#import "MPWByteStreamWithSymbols.h"
+#import "STByteStreamWithSymbols.h"
 
-@implementation MPWByteStreamWithSymbols
+@implementation STByteStreamWithSymbols
 
 -(void)declareGlobalSymbol:(NSString*)symbol
 {
@@ -35,7 +35,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWByteStreamWithSymbols(testing) 
+@implementation STByteStreamWithSymbols(testing) 
 
 +(void)someTest
 {
