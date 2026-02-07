@@ -5,21 +5,21 @@
 //  Created by Marcel Weiher on 08.10.22.
 //
 
-#import "MPWMachOClassReader.h"
+#import "STMachOClassReader.h"
 #import "STMachOReader.h"
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
 #import "Mach_O_Structs.h"
 
-@interface MPWMachOClassReader()
+@interface STMachOClassReader()
 
 @property (nonatomic, strong) MPWMachORelocationPointer *basePointer;
 
 @end
 
 
-@implementation MPWMachOClassReader
+@implementation STMachOClassReader
 
 
 static int offsetOfReadOnlyPointerFromBaseClass() {
@@ -173,22 +173,22 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWMachOClassReader(testing) 
+@implementation STMachOClassReader(testing) 
 
 +(instancetype)readerForTestFile:(NSString*)testfile
 {
     STMachOReader *machoReader=[STMachOReader readerForTestFile:testfile];
-    MPWMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
+    STMachOClassReader *classreader=[[[self alloc] initWithPointer:machoReader.classPointers[0]] autorelease];
     return classreader;
 }
 
 +(void)testReadClass
 {
-    MPWMachOClassReader *reader=[self readerForTestFile:@"two-classes"];
+    STMachOClassReader *reader=[self readerForTestFile:@"two-classes"];
     IDEXPECT( reader.classSymbolName, @"_OBJC_CLASS_$_SecondClass",@"class symbol");
     IDEXPECT( reader.readOnlyPartSymbolName, @"__OBJC_CLASS_RO_$_SecondClass",@"read only part symbol");
     IDEXPECT( reader.classNameRelocationPointer.targetName, @"l_OBJC_CLASS_NAME_.1",@"class name symbol");
-    MPWMachOSection *cnameSection=reader.classNameRelocationPointer.targetSection;
+    STMachOSection *cnameSection=reader.classNameRelocationPointer.targetSection;
     IDEXPECT( cnameSection.sectionName, @"__objc_classname",@"section name in which class name is stored");
     INTEXPECT( reader.classNameRelocationPointer.targetOffset,11,@"offset");
 
@@ -214,12 +214,12 @@ CONVENIENCEANDINIT(reader, WithPointer:(MPWMachORelocationPointer*)basePointer)
 
 +(void)testReadMetaClass
 {
-    MPWMachOClassReader *baseReader=[self readerForTestFile:@"two-classes"];
+    STMachOClassReader *baseReader=[self readerForTestFile:@"two-classes"];
     MPWMachORelocationPointer *metaclassPointer = [baseReader metaclassPointer];
     IDEXPECT(metaclassPointer.targetName, @"_OBJC_METACLASS_$_SecondClass",@"meta class symbol name");
     
     
-    MPWMachOClassReader *reader = [baseReader metaclassReader];
+    STMachOClassReader *reader = [baseReader metaclassReader];
     IDEXPECT( reader.classSymbolName, @"_OBJC_METACLASS_$_SecondClass",@"class symbol");
     IDEXPECT( reader.readOnlyPartSymbolName, @"__OBJC_METACLASS_RO_$_SecondClass",@"read only part symbol");
     INTEXPECT( reader.flags, 1, @"flags for metaclass");

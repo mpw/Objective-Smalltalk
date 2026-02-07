@@ -12,10 +12,10 @@
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
 #import "Mach_O_Structs.h"
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
-#import "MPWMachOClassReader.h"
+#import "STMachOClassReader.h"
 
 @interface STMachOReader()
 
@@ -127,7 +127,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
             for (int j = 0; j < segCmd->nsects; j++) {
 //                NSLog(@" sectopn[%d]",j);
                 struct section_64 *sectionHeader = &sectionHeaders[j];
-                MPWMachOSection *section = [[[MPWMachOSection alloc] initWithSectionHeader:sectionHeader inMacho:self] autorelease];
+                STMachOSection *section = [[[STMachOSection alloc] initWithSectionHeader:sectionHeader inMacho:self] autorelease];
                 [sectionArray addObject:section];
                 
                 // Add to sections dictionary by name for backward compatibility
@@ -208,24 +208,24 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return nil;
 }
 
--(MPWMachOSection*)sectionWithSectionHeader:(struct section_64*)header
+-(STMachOSection*)sectionWithSectionHeader:(struct section_64*)header
 {
-    return header ? [[[MPWMachOSection alloc] initWithSectionHeader:header inMacho:self] autorelease] : nil;
+    return header ? [[[STMachOSection alloc] initWithSectionHeader:header inMacho:self] autorelease] : nil;
 }
 
--(MPWMachOSection*)sectionWithName:(const char*)name
+-(STMachOSection*)sectionWithName:(const char*)name
 {
     return [self sectionWithSectionHeader:[self sectionHeaderWithName:name]];
 }
 
--(MPWMachOSection*)textSection
+-(STMachOSection*)textSection
 {
     return [self sectionWithName:"__text"];
 }
 
--(MPWMachOSection*)sectionAtIndex:(int)sectionIndex
+-(STMachOSection*)sectionAtIndex:(int)sectionIndex
 {
-    MPWMachOSection *section=self.sections[@(sectionIndex)];
+    STMachOSection *section=self.sections[@(sectionIndex)];
     if ( !section ) {
         struct segment_command_64 *segment=[self segment];
         struct section_64 *sections=(struct section_64*)(segment + 1);
@@ -244,37 +244,37 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 }
 
 
--(MPWMachOSection*)objcClassNameSection
+-(STMachOSection*)objcClassNameSection
 {
     return [self sectionWithName:"__objc_classname"];
 }
 
--(MPWMachOSection*)objcClassReadOnlySection
+-(STMachOSection*)objcClassReadOnlySection
 {
     return [self sectionWithName:"__objc_const"];
 }
 
--(MPWMachOSection*)objcDataSection
+-(STMachOSection*)objcDataSection
 {
     return [self sectionWithName:"__objc_data"];
 }
 
--(MPWMachOSection*)cfstringSection
+-(STMachOSection*)cfstringSection
 {
     return [self sectionWithName:"__cfstring"];
 }
 
--(MPWMachOSection*)objcClassListSection
+-(STMachOSection*)objcClassListSection
 {
     return [self sectionWithName:"__objc_classlist"];
 }
 
--(MPWMachOSection*)objcClassReferenceSection
+-(STMachOSection*)objcClassReferenceSection
 {
     return [self sectionWithName:"__objc_classref"];
 }
 
--(MPWMachOSection*)objcMethodNamesSection
+-(STMachOSection*)objcMethodNamesSection
 {
     return [self sectionWithName:"__objc_methname"];
 }
@@ -287,7 +287,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 -(NSArray<MPWMachORelocationPointer*>*)classPointers
 {
-    MPWMachOSection *classListSection=self.objcClassListSection;
+    STMachOSection *classListSection=self.objcClassListSection;
     NSMutableArray *classes = [NSMutableArray array];
     for (int i=0;i<[self numberOfClasses];i++) {
         [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:classListSection relocEntryIndex:i] autorelease]];;
@@ -302,7 +302,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 -(NSArray<MPWMachORelocationPointer*>*)classReferences
 {
-    MPWMachOSection *classRefSection=self.objcClassReferenceSection;
+    STMachOSection *classRefSection=self.objcClassReferenceSection;
     NSMutableArray *classes = [NSMutableArray array];
     for (int i=0;i<[self numberOfClassReferences];i++) {
         [classes addObject:[[[MPWMachORelocationPointer alloc] initWithSection:classRefSection relocEntryIndex:i] autorelease]];;
@@ -318,9 +318,9 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
     return classNames;
 }
 
--(NSArray<MPWMachOClassReader*>*)classReaders
+-(NSArray<STMachOClassReader*>*)classReaders
 {
-    return [[MPWMachOClassReader collect] readerWithPointer:[[self classPointers] each] ];
+    return [[STMachOClassReader collect] readerWithPointer:[[self classPointers] each] ];
 }
 
 
@@ -424,7 +424,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 -(MPWMachOInSectionPointer*)pointerForSymbolAt:(int)symbolIndex
 {
-    MPWMachOSection *section = [self sectionAtIndex:[self sectionForSymbolAt:symbolIndex]];
+    STMachOSection *section = [self sectionAtIndex:[self sectionForSymbolAt:symbolIndex]];
     
     return [[[MPWMachOInSectionPointer alloc] initWithSection:section offset:[self symbolOffsetAt:symbolIndex]-[section address]] autorelease];
 }

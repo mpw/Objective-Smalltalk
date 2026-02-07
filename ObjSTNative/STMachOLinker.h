@@ -10,13 +10,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class STMachOWriter;
-@class MPWMachOSectionWriter;
+@class STMachOSectionWriter;
 @class STMachODylibWriter;
 
 // Represents an internal relocation that needs pointer patching
 @interface MPWInternalRelocation : NSObject
 @property (nonatomic, strong) NSString *symbolName;        // Target symbol name
-@property (nonatomic, weak) MPWMachOSectionWriter *patchSection;   // Section containing the pointer to patch
+@property (nonatomic, weak) STMachOSectionWriter *patchSection;   // Section containing the pointer to patch
 @property (nonatomic, assign) long offsetInSection;        // Offset of pointer within section
 @property (nonatomic, assign) long targetAddress;          // Resolved address (filled in later)
 @end
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Lower-level: link specific section writers
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
-                     sectionWriters:(NSArray<MPWMachOSectionWriter*>*)sections
+                     sectionWriters:(NSArray<STMachOSectionWriter*>*)sections
                        symbolWriter:(STMachOWriter*)symbolSource;
 
 @end

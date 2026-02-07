@@ -6,21 +6,21 @@
 //
 
 #import "MPWMachOInSectionPointer.h"
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 #import "MPWMachORelocationPointer.h"
 #import <MPWFoundation/DebugMacros.h>
 #import "Mach_O_Structs.h"
 
 @interface MPWMachOInSectionPointer()
 
-@property (nonatomic, strong) MPWMachOSection *section;
+@property (nonatomic, strong) STMachOSection *section;
 @property (nonatomic, assign) long offset;
 
 @end
 
 @implementation MPWMachOInSectionPointer
 
--(instancetype)initWithSection:(MPWMachOSection*)section offset:(long)offset
+-(instancetype)initWithSection:(STMachOSection*)section offset:(long)offset
 {
     self = [super init];
     self.section = section;

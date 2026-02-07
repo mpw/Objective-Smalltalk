@@ -3,7 +3,7 @@
 //  ObjSTNative
 //
 
-#import "MPWChainedFixupWriter.h"
+#import "STChainedFixupWriter.h"
 #import "mach-o/fixup-chains.h"
 
 @interface MPWChainedImport : NSObject
@@ -17,11 +17,11 @@
 @implementation MPWChainedFixup
 @end
 
-@interface MPWChainedFixupWriter ()
+@interface STChainedFixupWriter ()
 - (uint64_t)bind64Bits:(int)ordinal next:(int)next;
 @end
 
-@implementation MPWChainedFixupWriter {
+@implementation STChainedFixupWriter {
   NSMutableArray *imports;
   NSMutableArray *fixups;
   uint64_t *segmentFileOffsets;

@@ -9,15 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOSection,MPWMachORelocationPointer;
+@class STMachOSection,MPWMachORelocationPointer;
 
 @interface MPWMachOInSectionPointer : NSObject
 
-@property (readonly) MPWMachOSection *section;
+@property (readonly) STMachOSection *section;
 @property (readonly) long offset;
 
 
--(instancetype)initWithSection:(MPWMachOSection*)section offset:(long)offset;
+-(instancetype)initWithSection:(STMachOSection*)section offset:(long)offset;
 -(const void*)bytes;
 -(NSString*)stringValue;        // of a cString
 -(NSString*)cfStringValue;      // of an NSString / CFString

@@ -7,10 +7,10 @@
 
 #import "STMachODylibWriter.h"
 #import "STBindOpcodeWriter.h"
-#import "MPWChainedFixupWriter.h"
-#import "MPWExportsTrieWriter.h"
-#import "MPWMachOSection.h"
-#import "MPWMachOSectionWriter.h"
+#import "STChainedFixupWriter.h"
+#import "STExportsTrieWriter.h"
+#import "STMachOSection.h"
+#import "STMachOSectionWriter.h"
 #import "STMachOSegment.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWStringTableWriter.h"
@@ -32,7 +32,7 @@
 @property(nonatomic, assign) long dataSegmentSize;
 @property(nonatomic, assign) long linkeditOffset;
 @property(nonatomic, assign) long linkeditSize;
-@property(nonatomic, strong) MPWChainedFixupWriter *chainedFixupWriter;
+@property(nonatomic, strong) STChainedFixupWriter *chainedFixupWriter;
 @property(nonatomic, strong) NSMutableDictionary *stubOffsets;
 @property(nonatomic, strong) NSMutableDictionary *gotOffsets;
 @property(nonatomic, strong) NSMutableArray *frameworks;
@@ -115,7 +115,7 @@
     self.currentVersion = 0x10000;       // 1.0.0
     self.compatibilityVersion = 0x10000; // 1.0.0
     self.chainedFixupWriter =
-        [[[MPWChainedFixupWriter alloc] init] autorelease];
+        [[[STChainedFixupWriter alloc] init] autorelease];
     self.stubOffsets = [NSMutableDictionary dictionary];
     self.gotOffsets = [NSMutableDictionary dictionary];
     self.frameworks = [NSMutableArray array];
@@ -177,9 +177,9 @@
 }
 
 // Get all active section writers (both __TEXT and __DATA)
-- (NSArray<MPWMachOSectionWriter *> *)activeSectionWriters {
+- (NSArray<STMachOSectionWriter *> *)activeSectionWriters {
   NSMutableArray *active = [NSMutableArray array];
-  for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+  for (STMachOSectionWriter *writer in self.sectionWriters) {
     if (writer.isActive) {
       [active addObject:writer];
     }
@@ -188,9 +188,9 @@
 }
 
 // Get only __TEXT segment section writers
-- (NSArray<MPWMachOSectionWriter *> *)textSectionWriters {
+- (NSArray<STMachOSectionWriter *> *)textSectionWriters {
   NSMutableArray *writers = [NSMutableArray array];
-  for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+  for (STMachOSectionWriter *writer in self.sectionWriters) {
     if (writer.isActive && [writer.segname isEqualToString:@"__TEXT"]) {
       [writers addObject:writer];
     }
@@ -212,9 +212,9 @@
 }
 
 // Get only __DATA_CONST segment section writers
-- (NSArray<MPWMachOSectionWriter *> *)dataConstSectionWriters {
+- (NSArray<STMachOSectionWriter *> *)dataConstSectionWriters {
   NSMutableArray *writers = [NSMutableArray array];
-  for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+  for (STMachOSectionWriter *writer in self.sectionWriters) {
     if (writer.isActive && [writer.segname isEqualToString:@"__DATA_CONST"]) {
       [writers addObject:writer];
     }
@@ -229,9 +229,9 @@
 }
 
 // Get only __DATA segment section writers (excluding __DATA_CONST sections)
-- (NSArray<MPWMachOSectionWriter *> *)dataSectionWriters {
+- (NSArray<STMachOSectionWriter *> *)dataSectionWriters {
   NSMutableArray *writers = [NSMutableArray array];
-  for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+  for (STMachOSectionWriter *writer in self.sectionWriters) {
     if (writer.isActive && [writer.segname isEqualToString:@"__DATA"]) {
       // Exclude sections that go in __DATA_CONST
       if (![self sectionBelongsInDataConst:writer.sectname]) {
@@ -256,17 +256,17 @@
 
 // Override to suppress section-level relocations for dylibs
 // Dylibs use chained fixups instead of section relocations
-- (MPWMachOSectionWriter *)addSectionWriterWithSegName:(NSString *)segname
+- (STMachOSectionWriter *)addSectionWriterWithSegName:(NSString *)segname
                                               sectName:(NSString *)sectname
                                                  flags:(int)flags {
-  MPWMachOSectionWriter *writer = [super addSectionWriterWithSegName:segname
+  STMachOSectionWriter *writer = [super addSectionWriterWithSegName:segname
                                                             sectName:sectname
                                                                flags:flags];
   writer.suppressRelocationInfo = YES;
   return writer;
 }
 
-- (MPWMachOSectionWriter *)stubSectionWriter {
+- (STMachOSectionWriter *)stubSectionWriter {
   return [self
       addSectionWriterWithSegName:@"__TEXT"
                          sectName:@"__stubs"
@@ -274,8 +274,8 @@
                                   S_ATTR_PURE_INSTRUCTIONS];
 }
 
-- (MPWMachOSectionWriter *)objcStubSectionWriter {
-  MPWMachOSectionWriter *writer = [self
+- (STMachOSectionWriter *)objcStubSectionWriter {
+  STMachOSectionWriter *writer = [self
       addSectionWriterWithSegName:@"__TEXT"
                          sectName:@"__objc_stubs"
                             flags:S_ATTR_SOME_INSTRUCTIONS |
@@ -284,16 +284,16 @@
   return writer;
 }
 
-- (MPWMachOSectionWriter *)objcMethnameSectionWriter {
+- (STMachOSectionWriter *)objcMethnameSectionWriter {
   return [self
       addSectionWriterWithSegName:@"__TEXT"
                          sectName:@"__objc_methname"
                             flags:S_CSTRING_LITERALS];
 }
 
-- (MPWMachOSectionWriter *)objcSelrefsSectionWriter {
+- (STMachOSectionWriter *)objcSelrefsSectionWriter {
   // __objc_selrefs goes in __DATA (not __DATA_CONST) for rebase
-  MPWMachOSectionWriter *writer =
+  STMachOSectionWriter *writer =
       [self addSectionWriterWithSegName:@"__DATA"
                                sectName:@"__objc_selrefs"
                                   flags:S_LITERAL_POINTERS | S_ATTR_NO_DEAD_STRIP];
@@ -301,9 +301,9 @@
   return writer;
 }
 
-- (MPWMachOSectionWriter *)gotSectionWriter {
+- (STMachOSectionWriter *)gotSectionWriter {
   // __got goes in __DATA_CONST segment
-  MPWMachOSectionWriter *writer =
+  STMachOSectionWriter *writer =
       [self addSectionWriterWithSegName:@"__DATA_CONST"
                                sectName:@"__got"
                                   flags:S_NON_LAZY_SYMBOL_POINTERS];
@@ -373,7 +373,7 @@
 
   // Ensure _objc_msgSend is declared as external (only once)
   if (!self.gotOffsets[@"_objc_msgSend"]) {
-    MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+    STMachOSectionWriter *gotWriter = [self gotSectionWriter];
     self.gotOffsets[@"_objc_msgSend"] = @(gotWriter.length);
     uint64_t dummy = 0;
     [gotWriter appendBytes:&dummy length:sizeof(dummy)];
@@ -382,13 +382,13 @@
   }
 
   // 1. Add selector string to __objc_methname
-  MPWMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
+  STMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
   self.objcMethnameOffsets[selector] = @(methnameWriter.length);
   const char *selectorCStr = [selector UTF8String];
   [methnameWriter appendBytes:selectorCStr length:strlen(selectorCStr) + 1];
 
   // 2. Add selector reference to __objc_selrefs
-  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  STMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
   self.objcSelrefOffsets[selector] = @(selrefsWriter.length);
   uint64_t placeholder = 0; // Will be patched later with actual address
   [selrefsWriter appendBytes:&placeholder length:sizeof(placeholder)];
@@ -403,7 +403,7 @@
   //   brk  #0x1  ; padding
   //   brk  #0x1  ; padding
   //   brk  #0x1  ; padding
-  MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+  STMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
 
   // Store stub offset for this selector
   NSString *fullSymbol = [@"_objc_msgSend$" stringByAppendingString:selector];
@@ -440,14 +440,14 @@
 
   // Regular external symbol handling
   if (!self.stubOffsets[symbol]) {
-    MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
+    STMachOSectionWriter *stubWriter = [self stubSectionWriter];
     self.stubOffsets[symbol] = @(stubWriter.length);
 
     // Initial placeholder for stub (3 instructions, 12 bytes)
     uint32_t stubCode[3] = {0xd503201f, 0xd503201f, 0xd503201f}; // 3x nop
     [stubWriter appendBytes:stubCode length:sizeof(stubCode)];
 
-    MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+    STMachOSectionWriter *gotWriter = [self gotSectionWriter];
     self.gotOffsets[symbol] = @(gotWriter.length);
     uint64_t dummy = 0;
     [gotWriter appendBytes:&dummy length:sizeof(dummy)];
@@ -461,8 +461,8 @@
 }
 
 - (void)patchStubs {
-  MPWMachOSectionWriter *stubWriter = [self stubSectionWriter];
-  MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+  STMachOSectionWriter *stubWriter = [self stubSectionWriter];
+  STMachOSectionWriter *gotWriter = [self gotSectionWriter];
   if (!stubWriter.isActive || !gotWriter.isActive) {
     return;
   }
@@ -504,9 +504,9 @@
 }
 
 - (void)patchObjcStubs {
-  MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
-  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
-  MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+  STMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+  STMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  STMachOSectionWriter *gotWriter = [self gotSectionWriter];
 
   if (!objcStubWriter.isActive) {
     return;
@@ -566,8 +566,8 @@
 }
 
 - (void)patchObjcSelrefs {
-  MPWMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
-  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  STMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
+  STMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
 
   if (!selrefsWriter.isActive || !methnameWriter.isActive) {
     return;
@@ -592,7 +592,7 @@
   // Check if this is an ObjC stub (for _objc_msgSend$selector)
   NSString *selector = nil;
   if ([self isObjcMsgSendSymbol:symbolName selector:&selector]) {
-    MPWMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
+    STMachOSectionWriter *objcStubWriter = [self objcStubSectionWriter];
     if (self.objcStubOffsets[selector]) {
       return objcStubWriter.address + [self.objcStubOffsets[selector] longValue];
     }
@@ -606,7 +606,7 @@
     if (info) {
       int sectionNum = [info[@"section"] intValue];
       long offsetInSection = [info[@"offset"] longValue];
-      for (MPWMachOSectionWriter *sw in self.sectionWriters) {
+      for (STMachOSectionWriter *sw in self.sectionWriters) {
         if (sw.sectionNumber == sectionNum) {
           return sw.address + offsetInSection;
         }
@@ -617,7 +617,7 @@
 }
 
 - (void)applyRelocations {
-  for (MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+  for (STMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
     // Skip __DATA and __DATA_CONST sections - their relocations are handled
     // via chained fixups in buildChainedFixups, not via ARM64 instruction patching
     if ([sectionWriter.segname isEqualToString:@"__DATA"] ||
@@ -784,7 +784,7 @@
 }
 
 - (void)buildChainedFixups {
-  MPWMachOSectionWriter *gotWriter = [self gotSectionWriter];
+  STMachOSectionWriter *gotWriter = [self gotSectionWriter];
   if (!gotWriter.isActive)
     return;
 
@@ -802,8 +802,8 @@
   }
 
   // 2. Register rebases for __objc_selrefs (if any)
-  MPWMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
-  MPWMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
+  STMachOSectionWriter *selrefsWriter = [self objcSelrefsSectionWriter];
+  STMachOSectionWriter *methnameWriter = [self objcMethnameSectionWriter];
   if (selrefsWriter.isActive && methnameWriter.isActive && self.objcSelrefOffsets.count > 0) {
     // __DATA segment index:
     // If we have __DATA_CONST: __TEXT=0, __DATA_CONST=1, __DATA=2
@@ -844,7 +844,7 @@
     dataSegmentVmaddr += dataConstVmsize;
   }
 
-  for (MPWMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
+  for (STMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
     int numRelocs = [sectionWriter numRelocationEntries];
     if (numRelocs > 0) {
       for (int i = 0; i < numRelocs; i++) {
@@ -877,7 +877,7 @@
   // Sections like __objc_classlist have relocations that need chained fixups
   {
     long dataConstVmaddr2 = self.textSegmentSize;
-    for (MPWMachOSectionWriter *sectionWriter in [self dataConstSectionWriters]) {
+    for (STMachOSectionWriter *sectionWriter in [self dataConstSectionWriters]) {
       if ([sectionWriter.sectname isEqualToString:@"__got"]) continue; // already handled in step 1
       int numRelocs = [sectionWriter numRelocationEntries];
       if (numRelocs > 0) {
@@ -915,7 +915,7 @@
     for (MPWChainedFixup *f in segFixups) {
       // Find the section writer that contains this fixup offset
       BOOL foundSection = NO;
-      for (MPWMachOSectionWriter *sectionWriter in [self dataConstSectionWriters]) {
+      for (STMachOSectionWriter *sectionWriter in [self dataConstSectionWriters]) {
         long sectionSegStart = sectionWriter.address - dataConstVmaddr;
         long sectionSegEnd = sectionSegStart + sectionWriter.length;
 
@@ -974,7 +974,7 @@
     // For each fixup, find which section it belongs to and patch it
     for (MPWChainedFixup *f in dataSegFixups) {
       // Find the section writer that contains this fixup offset
-      for (MPWMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
+      for (STMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
         long sectionSegStart = sectionWriter.address - dataSegVmaddr;
         long sectionSegEnd = sectionSegStart + sectionWriter.length;
 
@@ -1110,11 +1110,11 @@
 -(void)adjustSymtabEntries
 {
     symtab_entry *entries = [self symtabEntries];
-    NSArray<MPWMachOSectionWriter*> *allWriters = self.sectionWriters;
+    NSArray<STMachOSectionWriter*> *allWriters = self.sectionWriters;
 
     for (int i=0; i<symtabCount; i++) {
         int sect = entries[i].section;
-        for (MPWMachOSectionWriter *w in allWriters) {
+        for (STMachOSectionWriter *w in allWriters) {
             if (w.sectionNumber == sect) {
                 entries[i].address += w.address;
                 break;
@@ -1154,7 +1154,7 @@
 
   [self appendBytes:&segment length:sizeof segment];
 
-  for (MPWMachOSectionWriter *writer in writers) {
+  for (STMachOSectionWriter *writer in writers) {
     //    writer.writeRelocationInfo = NO;          // FIXME: this used to be
     //    here
     [writer writeSectionLoadCommandOnWriter:self];
@@ -1186,7 +1186,7 @@
 
   [self appendBytes:&segment length:sizeof segment];
 
-  for (MPWMachOSectionWriter *writer in writers) {
+  for (STMachOSectionWriter *writer in writers) {
     //    writer.writeRelocationInfo = NO;   // FIXME:  used to be here.
     [writer writeSectionLoadCommandOnWriter:self];
   }
@@ -1213,7 +1213,7 @@
 
   [self appendBytes:&segment length:sizeof segment];
 
-  for (MPWMachOSectionWriter *writer in writers) {
+  for (STMachOSectionWriter *writer in writers) {
     //    writer.writeRelocationInfo = NO;   // FIXME:  this used to be here.
     [writer writeSectionLoadCommandOnWriter:self];
   }
@@ -1254,7 +1254,7 @@
 
 - (int)exportTrieSize {
   // Use class method to compute size from symbol names alone
-  return [MPWExportsTrieWriter
+  return [STExportsTrieWriter
       trieSizeForSymbols:self.globalSymbolOffsets.allKeys];
 }
 
@@ -1445,8 +1445,8 @@
 #pragma mark - Exports Trie
 
 - (NSData *)buildExportsTrie {
-  MPWExportsTrieWriter *trieWriter =
-      [[[MPWExportsTrieWriter alloc] init] autorelease];
+  STExportsTrieWriter *trieWriter =
+      [[[STExportsTrieWriter alloc] init] autorelease];
 
   // Add all global symbols to the exports trie writer
   // EXCEPT: _objc_msgSend$ symbols which are ObjC stubs, not real exports
@@ -1477,7 +1477,7 @@
 
   if (writers.count > 0) {
     // Pad to first section's offset if needed
-    MPWMachOSectionWriter *firstWriter = writers[0];
+    STMachOSectionWriter *firstWriter = writers[0];
     long currentPos = self.length;
     if (currentPos < firstWriter.offset) {
       long padding = firstWriter.offset - currentPos;
@@ -1487,7 +1487,7 @@
     }
   }
 
-  for (MPWMachOSectionWriter *sectionWriter in writers) {
+  for (STMachOSectionWriter *sectionWriter in writers) {
     [sectionWriter writeSectionDataOn:self];
   }
   // No relocation entries for dylib - they're handled by chained fixups
@@ -1631,7 +1631,7 @@
 
   // Compute __TEXT section offsets and addresses
   long textSectionOffset = 0;
-  for (MPWMachOSectionWriter *writer in [self textSectionWriters]) {
+  for (STMachOSectionWriter *writer in [self textSectionWriters]) {
     writer.offset = sectionDataStart + textSectionOffset;
     writer.address =
         sectionDataStart + textSectionOffset; // vmaddr = file offset for __TEXT
@@ -1641,13 +1641,13 @@
 
   // Compute __DATA_CONST data size
   long dataConstDataSize = 0;
-  for (MPWMachOSectionWriter *writer in [self dataConstSectionWriters]) {
+  for (STMachOSectionWriter *writer in [self dataConstSectionWriters]) {
     dataConstDataSize += writer.sectionDataSize;
   }
 
   // Compute __DATA data size
   long dataDataSize = 0;
-  for (MPWMachOSectionWriter *writer in [self dataSectionWriters]) {
+  for (STMachOSectionWriter *writer in [self dataSectionWriters]) {
     dataDataSize += writer.sectionDataSize;
   }
 
@@ -1675,7 +1675,7 @@
 
     // Compute section offsets and addresses for __DATA_CONST sections
     long sectionOffset = 0;
-    for (MPWMachOSectionWriter *writer in [self dataConstSectionWriters]) {
+    for (STMachOSectionWriter *writer in [self dataConstSectionWriters]) {
       writer.offset = self.dataConstSegmentOffset + sectionOffset;
       writer.address = currentVmaddr + sectionOffset;
       sectionOffset += writer.sectionDataSize;
@@ -1702,7 +1702,7 @@
 
     // Compute section offsets and addresses for __DATA sections
     long sectionOffset = 0;
-    for (MPWMachOSectionWriter *writer in [self dataSectionWriters]) {
+    for (STMachOSectionWriter *writer in [self dataSectionWriters]) {
       writer.offset = self.dataSegmentOffset + sectionOffset;
       writer.address = currentVmaddr + sectionOffset;
       sectionOffset += writer.sectionDataSize;
@@ -1785,7 +1785,7 @@
       free(zeros);
     }
     // Write __DATA_CONST section data
-    for (MPWMachOSectionWriter *sectionWriter in
+    for (STMachOSectionWriter *sectionWriter in
          [self dataConstSectionWriters]) {
       if ([sectionWriter.sectname isEqualToString:@"__objc_arrayobj"]) {
         NSData *d = [sectionWriter data];
@@ -1809,7 +1809,7 @@
       free(zeros);
     }
     // Write __DATA section data
-    for (MPWMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
+    for (STMachOSectionWriter *sectionWriter in [self dataSectionWriters]) {
       [sectionWriter writeSectionDataOn:self];
     }
   }

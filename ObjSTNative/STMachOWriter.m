@@ -13,8 +13,7 @@
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
 #import "Mach_O_Structs.h"
-#import "MPWMachOSection.h"
-#import "MPWMachOSectionWriter.h"
+#import "STMachOSectionWriter.h"
 #import "MPWStringTableWriter.h"
 
 @interface STMachOWriter()
@@ -28,8 +27,8 @@
 @property (nonatomic, strong) NSMutableDictionary *globalSymbolOffsets;
 @property (nonatomic, strong) NSDictionary *externalSymbols;
 
-@property (nonatomic, strong) MPWMachOSectionWriter *textSectionWriter;
-@property (nonatomic, strong) NSMutableArray<MPWMachOSectionWriter*>* sectionWriters;
+@property (nonatomic, strong) STMachOSectionWriter *textSectionWriter;
+@property (nonatomic, strong) NSMutableArray<STMachOSectionWriter*>* sectionWriters;
 @property (nonatomic, strong) NSMutableDictionary *sectionWritersByKind;
 @property (nonatomic, strong) NSMutableDictionary *classReferences;
 
@@ -46,7 +45,7 @@
 }
 
 
--(void)addSectionWriter:(MPWMachOSectionWriter*)newWriter
+-(void)addSectionWriter:(STMachOSectionWriter*)newWriter
 {
     int sectionNumber = (int)self.sectionWriters.count;
     newWriter.sectionNumber = sectionNumber;
@@ -55,10 +54,10 @@
     [self.sectionWriters addObject:newWriter];
 }
 
--(NSArray<MPWMachOSectionWriter*>*)activeSectionWriters
+-(NSArray<STMachOSectionWriter*>*)activeSectionWriters
 {
     NSMutableArray *active=[NSMutableArray array];
-    for (MPWMachOSectionWriter *writer in self.sectionWriters) {
+    for (STMachOSectionWriter *writer in self.sectionWriters) {
         if ( writer.isActive) {
             [active addObject:writer];
         }
@@ -66,7 +65,7 @@
     return active;
 }
 
--(MPWMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags
+-(STMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags
 {
     if (!self.sectionWriters) {
         self.sectionWriters = [NSMutableArray array];
@@ -75,9 +74,9 @@
         self.sectionWritersByKind = [NSMutableDictionary dictionary];
     }
     NSString *key=[NSString stringWithFormat:@"%@/%@",segname,sectname];
-    MPWMachOSectionWriter *writer=self.sectionWritersByKind[key];
+    STMachOSectionWriter *writer=self.sectionWritersByKind[key];
     if (!writer) {
-        writer=[MPWMachOSectionWriter stream];
+        writer=[STMachOSectionWriter stream];
         writer.segname = segname;
         writer.sectname = sectname;
         writer.flags = flags;
@@ -170,7 +169,7 @@
 
 -(void)adjustSymtabEntries
 {
-    NSArray<MPWMachOSectionWriter*> *activeWriters=[self sectionWriters];
+    NSArray<STMachOSectionWriter*> *activeWriters=[self sectionWriters];
 
     for (int i=0;i<symtabCount;i++) {
         symtab[i].address += activeWriters[symtab[i].section].address;
@@ -191,7 +190,7 @@
     
     //--- compute section data offsets
     
-    for ( MPWMachOSectionWriter *writer in writers) {
+    for ( STMachOSectionWriter *writer in writers) {
         writer.offset = sectionOffset + segmentOffset;
         writer.address = sectionOffset;
         segmentSize += writer.sectionDataSize;
@@ -200,7 +199,7 @@
     long sectionDataSize = segmentSize;
 //    NSLog(@"segmentSize just data: %ld",segmentSize);
     long relocOffset = sectionOffset;
-    for ( MPWMachOSectionWriter *writer in writers) {
+    for ( STMachOSectionWriter *writer in writers) {
         writer.relocationEntryOffset = relocOffset + segmentOffset;
         segmentSize += writer.relocEntrySize;
         relocOffset += writer.relocEntrySize;
@@ -221,7 +220,7 @@
     segment.maxprot = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE;
     [self appendBytes:&segment length:sizeof segment];
 
-    for ( MPWMachOSectionWriter *writer in writers) {
+    for ( STMachOSectionWriter *writer in writers) {
         [writer writeSectionLoadCommandOnWriter:self];
     }
 }
@@ -248,12 +247,12 @@
 {
 //    NSLog(@"sections to write: %@",self.activeSectionWriters);
     NSAssert2(self.length == [self segmentOffset], @"Actual symbol table offset %ld does not match computed %d", (long)self.length,[self symbolTableOffset]);
-    for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+    for ( STMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
 //        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         [sectionWriter writeSectionDataOn:self];
 //        NSLog(@"after writing %ld bytes length now %ld",[sectionWriter sectionDataSize],self.length);
     }
-    for ( MPWMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
+    for ( STMachOSectionWriter *sectionWriter in [self activeSectionWriters]) {
 //        NSLog(@"%@ write %ld bytes length now %ld",[sectionWriter sectname],[sectionWriter sectionDataSize],self.length);
         NSAssert2(self.length == sectionWriter.relocationEntryOffset , @"relocation entry offset %ld does not match computed %d", (long)self.length,sectionWriter.relocationEntryOffset);
         [sectionWriter writeRelocationEntriesOn:self];
@@ -267,29 +266,29 @@
     [self writeData:[self.stringTableWriter data]];
 }
 
--(MPWMachOSectionWriter*)cstringWriter
+-(STMachOSectionWriter*)cstringWriter
 {
-    MPWMachOSectionWriter *w = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__cstring" flags:2];
+    STMachOSectionWriter *w = [self addSectionWriterWithSegName:@"__TEXT" sectName:@"__cstring" flags:2];
     w.alignment=1;
     return w;
 }
 
--(MPWMachOSectionWriter*)cfstringWriter
+-(STMachOSectionWriter*)cfstringWriter
 {
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__string" flags:0];
 }
 
--(MPWMachOSectionWriter*)classRefWriter
+-(STMachOSectionWriter*)classRefWriter
 {
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classref" flags:0];
 }
 
--(MPWMachOSectionWriter*)constWriter
+-(STMachOSectionWriter*)constWriter
 {
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__const" flags:0];
 }
 
--(MPWMachOSectionWriter*)dataWriter
+-(STMachOSectionWriter*)dataWriter
 {
     return [self addSectionWriterWithSegName:@"__DATA" sectName:@"__data" flags:0];
 }
@@ -298,8 +297,8 @@
 
 -(void)writeNSStringLiteral:(NSString*)theString label:(NSString*)label
 {
-    MPWMachOSectionWriter *cstringWriter=[self cstringWriter];
-    MPWMachOSectionWriter *cfstringWriter=[self cfstringWriter];
+    STMachOSectionWriter *cstringWriter=[self cstringWriter];
+    STMachOSectionWriter *cfstringWriter=[self cfstringWriter];
 //    NSLog(@"cfstringwriter offset at start of writeNSStringLiteral: %ld",[cfstringWriter length]);
     // write the cstring, retain a symbol reference to it
     
@@ -331,7 +330,7 @@
         NSString *externalSymbolName=[prefix stringByAppendingString:className];
         localReferenceName=[@"_OBJC_CLASS_REF_"  stringByAppendingString:className];
         const char zerobytes[8]={0,0,0,0,0,0,0,0};
-        MPWMachOSectionWriter *refWriter=[self classRefWriter];
+        STMachOSectionWriter *refWriter=[self classRefWriter];
         [self declareExternalSymbol:externalSymbolName];
         [refWriter declareLocalSymbol:localReferenceName];
         [refWriter addRelocationEntryForSymbol:externalSymbolName atOffset:(int)[refWriter length]];
@@ -350,8 +349,8 @@
 {
     NSString *signatureSymbol=[blockSymbol stringByAppendingString:@"_sig"];
     NSString *descriptorSymbol=[blockSymbol stringByAppendingString:@"_descriptor"];
-    MPWMachOSectionWriter *cstringWriter=[self cstringWriter];
-    MPWMachOSectionWriter *blockWriter=[self constWriter];
+    STMachOSectionWriter *cstringWriter=[self cstringWriter];
+    STMachOSectionWriter *blockWriter=[self constWriter];
     
     
     [cstringWriter declareLocalSymbol:signatureSymbol];
@@ -374,8 +373,8 @@
     NSString *blockConstSymbol=[blockSymbol stringByAppendingString:@"_blockconst"];
     NSString *descriptorSymbol=[self writeBlockDescritorWithCodeAtSymbol:codeSymbol blockSymbol:blockSymbol signature:signature];
 //    NSString *descriptorSymbol=[blockSymbol stringByAppendingString:@"_descriptor"];
-    MPWMachOSectionWriter *blockWriter=[self constWriter];
-    MPWMachOSectionWriter *dataWriter=[self dataWriter];
+    STMachOSectionWriter *blockWriter=[self constWriter];
+    STMachOSectionWriter *dataWriter=[self dataWriter];
 
     [self declareExternalSymbol:@"__NSConcreteGlobalBlock"];
 
@@ -466,7 +465,7 @@
 
 -(void)addObjcImageInfo
 {
-    MPWMachOSectionWriter *objcInfo=[self addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_imageinfo" flags:0];
+    STMachOSectionWriter *objcInfo=[self addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_imageinfo" flags:0];
     unsigned char data[8]={0,0,0,0,0x40,0,0,0};
     [objcInfo appendBytes:data length:8];
 }
@@ -507,8 +506,8 @@
 
 #import <MPWFoundation/DebugMacros.h>
 #import "STMachOReader.h"
-#import "MPWMachOClassReader.h"
-#import "MPWMachOSection.h"
+#import "STMachOClassReader.h"
+#import "STMachOSection.h"
 #import "MPWMachOClassWriter.h"
 #import "Mach_O_Structs.h"
 #import "MPWMachORelocationPointer.h"
@@ -595,13 +594,13 @@
     
     //  class name goes in its own section
     
-    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
+    STMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:0];
     [classNameWriter declareGlobalSymbol:testclassNameSymbolName];
     [classNameWriter writeNullTerminatedString:@"TestClass"];
     
     // RO Part
     
-    MPWMachOSectionWriter *classROWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
+    STMachOSectionWriter *classROWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
     NSString *roClassPartSymbol = @"__OBJC_CLASS_RO_TestClass";
     Mach_O_Class_RO roClassPart={};
     long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
@@ -613,7 +612,7 @@
     
     // RW Part
     
-    MPWMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
+    STMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
     NSString *classPartSymbol = @"__OBJC_CLASS_$_TestClass";
     Mach_O_Class classInfo={};
     long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
@@ -623,7 +622,7 @@
     
     // Pointers
     
-    MPWMachOSectionWriter *classListWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classlist" flags:0];
+    STMachOSectionWriter *classListWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classlist" flags:0];
     char zerobytes[80];
     memset(zerobytes,0,80);
     [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:0];
@@ -647,7 +646,7 @@
     
     //  read classname
     
-    MPWMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]];
+    STMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]];
     EXPECTNOTNIL(classnameSection, @"have a class name section");
     IDEXPECT(classnameSection.sectionName,@"__objc_classname",@"");
     INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
@@ -658,7 +657,7 @@
     int roClassSmbolIndex=[machoReader indexOfSymbolNamed:roClassPartSymbol];
     INTEXPECT(roClassSmbolIndex, 1,@"symbol index");
     
-    MPWMachOSection *roClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:roClassSmbolIndex]];
+    STMachOSection *roClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:roClassSmbolIndex]];
     const struct Mach_O_Class_RO *roClassPartCheck=[roClassPartSection bytes];
     EXPECTNOTNIL(roClassPartSection, @"objc const section");
     IDEXPECT(roClassPartSection.sectionName,@"__objc_const",@"");
@@ -679,7 +678,7 @@
     
     int rwClassSmbolIndex=[machoReader indexOfSymbolNamed:classPartSymbol];
     INTEXPECT(rwClassSmbolIndex, 2,@"symbol index");
-    MPWMachOSection *rwClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:rwClassSmbolIndex]];
+    STMachOSection *rwClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:rwClassSmbolIndex]];
     MPWMachORelocationPointer *roClassViaRWPointer = [[[MPWMachORelocationPointer alloc] initWithSection:rwClassPartSection relocEntryIndex:0] autorelease];
     IDEXPECT( [roClassViaRWPointer targetName],@"__OBJC_CLASS_RO_TestClass",@"RO part of class def via RW part");
     
@@ -690,7 +689,7 @@
     MPWMachORelocationPointer *firstClassPtr=classPtrs.firstObject;
     IDEXPECT(firstClassPtr.targetName,@"__OBJC_CLASS_$_TestClass",@"");
     
-    MPWMachOClassReader *reader=[[[MPWMachOClassReader alloc] initWithPointer:firstClassPtr] autorelease];
+    STMachOClassReader *reader=[[[STMachOClassReader alloc] initWithPointer:firstClassPtr] autorelease];
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,8,@"instance size");
     
@@ -704,8 +703,8 @@
     classwriter.nameOfSuperClass = @"NSObject";
     [classwriter writeClass];
     STMachOReader *reader=[STMachOReader readerWithData:[writer data]];
-    MPWMachOSection *firstSection = [reader sectionAtIndex:3];
-    MPWMachOSection *lastSection = [reader sectionAtIndex:reader.numSections];
+    STMachOSection *firstSection = [reader sectionAtIndex:3];
+    STMachOSection *lastSection = [reader sectionAtIndex:reader.numSections];
     int firstRelocationOffset = [firstSection relocEntryOffset];
     //    INTEXPECT(firstRelocationOffset,712,@"");
     int lastDataOffset = lastSection.offset;

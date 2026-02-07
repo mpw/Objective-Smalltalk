@@ -6,19 +6,19 @@
 //
 
 #import "MPWMachORelocationPointer.h"
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 #import "MPWMachOInSectionPointer.h"
 
 @interface MPWMachORelocationPointer()
 
-@property (nonatomic, strong) MPWMachOSection *section;
+@property (nonatomic, strong) STMachOSection *section;
 @property (nonatomic, assign) int relocEntryIndex;
 
 @end
 
 @implementation MPWMachORelocationPointer
 
--(instancetype)initWithSection:(MPWMachOSection*)section relocEntryIndex:(int)theIndex
+-(instancetype)initWithSection:(STMachOSection*)section relocEntryIndex:(int)theIndex
 {
     self = [super init];
     self.section = section;
@@ -42,12 +42,12 @@
     return [self.section nameOfRelocEntryAt:self.relocEntryIndex];
 }
 
--(MPWMachOSection*)targetSection
+-(STMachOSection*)targetSection
 {
     return [self.section sectionForRelocEntryAt:self.relocEntryIndex];
 }
 
--(MPWMachOSection*)targetSectionIndex
+-(STMachOSection*)targetSectionIndex
 {
     return [self.section sectionIndexForRelocEntryAt:self.relocEntryIndex];
 }

@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) uint64_t rebaseTarget; // target address for rebases
 @end
 
-@interface MPWChainedFixupWriter : NSObject
+@interface STChainedFixupWriter : NSObject
 
 @property(nonatomic, assign) uint32_t pageSize; // Default 0x4000 (16KB)
 

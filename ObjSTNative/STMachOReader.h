@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOSection,MPWMachORelocationPointer,MPWMachOClassReader,MPWMachOInSectionPointer,STMachOSegment;
+@class STMachOSection,MPWMachORelocationPointer,STMachOClassReader,MPWMachOInSectionPointer,STMachOSegment;
 
 @interface STMachOReader : NSObject
 
@@ -49,19 +49,19 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSArray<NSDictionary*>*)symbols;
 
 
--(MPWMachOSection*)textSection;
--(MPWMachOSection*)objcClassNameSection;
--(MPWMachOSection*)objcClassReadOnlySection;
--(MPWMachOSection*)objcClassListSection;
--(MPWMachOSection*)objcMethodNamesSection;
--(MPWMachOSection*)objcDataSection;
--(MPWMachOSection*)cfstringSection;
--(MPWMachOSection*)sectionAtIndex:(int)sectionIndex;
+-(STMachOSection*)textSection;
+-(STMachOSection*)objcClassNameSection;
+-(STMachOSection*)objcClassReadOnlySection;
+-(STMachOSection*)objcClassListSection;
+-(STMachOSection*)objcMethodNamesSection;
+-(STMachOSection*)objcDataSection;
+-(STMachOSection*)cfstringSection;
+-(STMachOSection*)sectionAtIndex:(int)sectionIndex;
 -(NSArray<MPWMachORelocationPointer*>*)classPointers;
 -(NSArray<MPWMachORelocationPointer*>*)classReferences;
 -(NSArray<NSString*>*)classReferenceNames;
 
--(NSArray<MPWMachOClassReader*>*)classReaders;
+-(NSArray<STMachOClassReader*>*)classReaders;
 -(MPWMachOInSectionPointer*)pointerForSymbolAt:(int)symbolIndex;
 
 

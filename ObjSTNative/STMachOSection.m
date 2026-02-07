@@ -5,23 +5,23 @@
 //  Created by Marcel Weiher on 04.10.22.
 //
 
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 #import <mach-o/loader.h>
 #import <mach-o/reloc.h>
 #import "STMachOReader.h"
 #import "Mach_O_Structs.h"
-#import "MPWMachOClassReader.h"
+#import "STMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
 
-@interface MPWMachOSection()
+@interface STMachOSection()
 
 @property (nonatomic, strong) NSData *machoData;
 @property (nonatomic, weak) STMachOReader *reader;
 
 @end
 
-@implementation MPWMachOSection
+@implementation STMachOSection
 {
     const struct section_64 *sectionHeader;
     NSData *sectionData;
@@ -177,7 +177,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
 -(const Mach_O_Class_RO*)readOnlyClassStruct:(NSString*)className metaclass:(BOOL)metaclass
 {
     int sectionIndex = [self.reader sectionForSymbolAt:[self readOnlyClassSymbolOffset:className metaclass:metaclass]];
-    MPWMachOSection *readOnlyClassSection = [self.reader sectionAtIndex:sectionIndex];
+    STMachOSection *readOnlyClassSection = [self.reader sectionAtIndex:sectionIndex];
     return [readOnlyClassSection bytes] + [self readOnlyClassStructOffset:className metaclass:metaclass];
 }
 
@@ -209,7 +209,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     return [self.reader sectionForSymbolAt:symbolIndex];
 }
 
--(MPWMachOSection*)sectionForRelocEntryAt:(int)which
+-(STMachOSection*)sectionForRelocEntryAt:(int)which
 {
     return [self.reader sectionAtIndex:[self sectionIndexForRelocEntryAt:which]];
     //    INTEXPECT( sectionIndex,4, @"should point to objc data");
@@ -223,7 +223,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
 
 -(long)offsetInTargetSectionForRelocEntryAt:(int)which
 {
-    MPWMachOSection *targetSection = [self sectionForRelocEntryAt:which];
+    STMachOSection *targetSection = [self sectionForRelocEntryAt:which];
     int symbolEntryIndex = [self symbolNumberOfRelocEntryAt:which];
     return [targetSection shiftedOffsetForBaseSymbolOffset:[self.reader symbolOffsetAt:symbolEntryIndex]];
 }
@@ -245,7 +245,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
 #import <MPWFoundation/DebugMacros.h>
 #import "STMachOReader.h"
 
-@implementation MPWMachOSection(testing) 
+@implementation STMachOSection(testing) 
 
 +(STMachOReader*)readerForTestFile:(NSString*)name
 {
@@ -257,11 +257,11 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
 +(void)testSectionName
 {
     STMachOReader *reader = [self readerForTestFile:@"class-with-method"];
-    MPWMachOSection *textSection = [reader textSection];
+    STMachOSection *textSection = [reader textSection];
     IDEXPECT([textSection sectionName],@"__text",@"text section section name");
     IDEXPECT([textSection segmentName],@"__TEXT",@"text section segment name");
     
-    MPWMachOSection *objcConstantSection = [reader objcClassReadOnlySection];
+    STMachOSection *objcConstantSection = [reader objcClassReadOnlySection];
     IDEXPECT([objcConstantSection sectionName],@"__objc_const",@"text section section name");
     IDEXPECT([objcConstantSection segmentName],@"__DATA",@"text section segment name");
     
@@ -272,7 +272,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     STMachOReader *reader=[self readerForTestFile:@"class-with-method"];
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
     INTEXPECT( reader.numSections, 9 , @"sections");
-    MPWMachOSection *section=[reader objcClassNameSection];
+    STMachOSection *section=[reader objcClassNameSection];
     INTEXPECT( [section strings].count, 1, @"Objective-C classname");
     IDEXPECT( [section strings].firstObject, @"Hi", @"Objective-C classname");
 }
@@ -282,7 +282,7 @@ static NSString* metaClassSymbolForClass( NSString *className ) {
     STMachOReader *reader=[self readerForTestFile:@"two-classes"];
     INTEXPECT( reader.numLoadCommands, 4 , @"load commands");
     INTEXPECT( reader.numSections, 9 , @"sections");
-    MPWMachOSection *section=[reader objcClassNameSection];
+    STMachOSection *section=[reader objcClassNameSection];
     INTEXPECT( [section strings].count, 2, @"Objective-C classname");
     NSString *firstClassName = [section strings].firstObject;
     NSString *secondClassName = [section strings].lastObject;
@@ -302,10 +302,10 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
 {
     INTEXPECT( sizeof(Mach_O_Class_RO), 72, @"size of read-only part of class (in Mach-O)");
     STMachOReader *oneClassOneMethodReader=[self readerForTestFile:@"class-with-method"];
-    MPWMachOSection *readOnlyClassSectionOneClass = [oneClassOneMethodReader objcClassReadOnlySection];
+    STMachOSection *readOnlyClassSectionOneClass = [oneClassOneMethodReader objcClassReadOnlySection];
     INTEXPECT( readOnlyClassSectionOneClass.sectionData.length , sizeOfClassAndMetaClass(1,0), @"size of RO class part");
     STMachOReader *twoClassReader=[self readerForTestFile:@"two-classes"];
-    MPWMachOSection *readOnlyClassSectionTwoClasses = [twoClassReader objcClassReadOnlySection];
+    STMachOSection *readOnlyClassSectionTwoClasses = [twoClassReader objcClassReadOnlySection];
     INTEXPECT( readOnlyClassSectionTwoClasses.sectionData.length ,
               sizeOfClassAndMetaClass(3,0)+sizeOfClassAndMetaClass(1,0)  , @"size of RO class part for two clases, one with 3 instance methods, other with 1 instance method, not class methods");
 }
@@ -313,7 +313,7 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
 +(void)testReadObjectiveC_ClassStructsViaNames
 {
     STMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOSection *section=[reader objcClassNameSection];
+    STMachOSection *section=[reader objcClassNameSection];
     NSString *firstClassName = [section strings].firstObject;
 //    NSString *secondClassName = [section objcClassNames].lastObject;
 
@@ -325,7 +325,7 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
     INTEXPECT( firstClassReadOnlySymbolOffset,15,@"symbol table entry of FirstClass's RO class part");
     int sectionIndex = [reader sectionForSymbolAt:firstClassReadOnlySymbolOffset];
     INTEXPECT( sectionIndex,3,@"section that class RO part is in");
-    MPWMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
+    STMachOSection *readOnlyClassSection = [reader sectionAtIndex:sectionIndex];
     IDEXPECT([readOnlyClassSection sectionName],@"__objc_const",@"section of ObjC read only parts of class");
     IDEXPECT([readOnlyClassSection segmentName],@"__DATA",@"text section segment name");
     
@@ -347,7 +347,7 @@ static int sizeOfClassAndMetaClass( int instanceMethods, int classMethods ) {
 +(void)testRelocationEntriesInObjectiveCDataSection
 {
     STMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOSection *objcDataSection=[reader objcDataSection];
+    STMachOSection *objcDataSection=[reader objcDataSection];
     for (int i=0;i<[objcDataSection numRelocEntries];i++) {
         NSLog(@"reloc entry[%d] offset = %ld name = %@",i,[objcDataSection offsetOfRelocEntryAt:i],[objcDataSection nameOfRelocEntryAt:i]);
         //        if ([objcDataSection offsetOfRelocEntryAt:i]==offsetOfConstantPartWithinClass) {
@@ -369,7 +369,7 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
 +(void)testReadObjectiveClassDefinitionsViaClassList
 {
     STMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOSection *section=[reader objcClassListSection];
+    STMachOSection *section=[reader objcClassListSection];
     IDEXPECT( [section sectionName],@"__objc_classlist",@"it is the class list");
     IDEXPECT( [section segmentName],@"__DATA",@"segment of class list");
     INTEXPECT( [section numRelocEntries],2,@"two classes");
@@ -377,7 +377,7 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
     IDEXPECT( [section nameOfRelocEntryAt:0],@"_OBJC_CLASS_$_SecondClass",@"first pointer points to");
     IDEXPECT( [section nameOfRelocEntryAt:1],@"_OBJC_CLASS_$_FirstClass",@"second pointer points to");
     
-    MPWMachOSection *targetSection1=[section sectionForRelocEntryAt:0];
+    STMachOSection *targetSection1=[section sectionForRelocEntryAt:0];
     long offsetOfSecondClass = [section offsetInTargetSectionForRelocEntryAt:0];
     long offsetOfSecondConstantPartWithinClass = offsetOfSecondClass + offsetOfReadOnlyPointerFromBaseClass();
     INTEXPECT( offsetOfSecondClass, 0x78 , @"offset of class");
@@ -397,7 +397,7 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
 +(void)testReadObjectiveC_MethodNameList
 {
     STMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOSection *section=[reader objcMethodNamesSection];
+    STMachOSection *section=[reader objcMethodNamesSection];
     NSArray<NSString*>* methodNames=[section strings];
     INTEXPECT( methodNames.count, 4, @"Objective-C method names");
     IDEXPECT(methodNames[0],@"components:splitInto:",@"first method" );
@@ -410,14 +410,14 @@ static int offsetOfMethodListPointerFromBaseClassRO() {
 +(void)testReadObjectiveC_MethodListForClass
 {
     STMachOReader *reader=[self readerForTestFile:@"two-classes"];
-    MPWMachOSection *section=[reader objcClassListSection];
-    MPWMachOSection *objcDataSection=[section sectionForRelocEntryAt:0];
+    STMachOSection *section=[reader objcClassListSection];
+    STMachOSection *objcDataSection=[section sectionForRelocEntryAt:0];
     long offsetOfSecondConstantPartWithinClass = [section offsetInTargetSectionForRelocEntryAt:0] + offsetOfReadOnlyPointerFromBaseClass();
     
     int entry = [objcDataSection indexOfSymboltableEntryAtOffset:offsetOfSecondConstantPartWithinClass];
     INTEXPECT(entry,23,@"symtab entry");
     
-    MPWMachOSection *objcConstSection=[reader sectionAtIndex:[reader sectionForSymbolAt:entry]];
+    STMachOSection *objcConstSection=[reader sectionAtIndex:[reader sectionForSymbolAt:entry]];
     IDEXPECT( [objcConstSection sectionName], @"__objc_const" , @"objc const");
     long roClassOffset=[reader symbolOffsetAt:entry];
     INTEXPECT(roClassOffset, 0x1e0 , @"offset of RO-part of SecondClass");

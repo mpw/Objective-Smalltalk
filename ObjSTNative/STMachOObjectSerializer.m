@@ -7,7 +7,7 @@
 
 #import "STMachOObjectSerializer.h"
 #import "STMachOWriter.h"
-#import "MPWMachOSectionWriter.h"
+#import "STMachOSectionWriter.h"
 #import <mach-o/loader.h>
 
 @interface STMachOObjectSerializer ()
@@ -17,10 +17,10 @@
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *cstringSymbols;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *numberSymbols;
 @property (nonatomic, strong) NSMapTable<id, NSString *> *objectSymbols;
-@property (nonatomic, strong) MPWMachOSectionWriter *arrayDataWriter;
-@property (nonatomic, strong) MPWMachOSectionWriter *arrayObjWriter;
-@property (nonatomic, strong) MPWMachOSectionWriter *dictObjWriter;
-@property (nonatomic, strong) MPWMachOSectionWriter *intObjWriter;
+@property (nonatomic, strong) STMachOSectionWriter *arrayDataWriter;
+@property (nonatomic, strong) STMachOSectionWriter *arrayObjWriter;
+@property (nonatomic, strong) STMachOSectionWriter *dictObjWriter;
+@property (nonatomic, strong) STMachOSectionWriter *intObjWriter;
 @property (nonatomic, copy) NSString *lastSymbol;
 @property (nonatomic, assign) int stringCounter;
 @property (nonatomic, assign) int cstringCounter;
@@ -68,7 +68,7 @@
     }
     self.cstringCounter++;
     NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_CSTR_%d", self.cstringCounter];
-    MPWMachOSectionWriter *cstringWriter = [self.writer addSectionWriterWithSegName:@"__TEXT"
+    STMachOSectionWriter *cstringWriter = [self.writer addSectionWriterWithSegName:@"__TEXT"
                                                                            sectName:@"__cstring"
                                                                               flags:S_CSTRING_LITERALS];
     cstringWriter.alignment = 1;
@@ -94,7 +94,7 @@
     return label;
 }
 
-- (MPWMachOSectionWriter *)arrayDataSectionWriter {
+- (STMachOSectionWriter *)arrayDataSectionWriter {
     if (!self.arrayDataWriter) {
         self.arrayDataWriter = [self.writer addSectionWriterWithSegName:@"__DATA_CONST"
                                                                sectName:@"__objc_arraydata"
@@ -104,7 +104,7 @@
     return self.arrayDataWriter;
 }
 
-- (MPWMachOSectionWriter *)arrayObjSectionWriter {
+- (STMachOSectionWriter *)arrayObjSectionWriter {
     if (!self.arrayObjWriter) {
         self.arrayObjWriter = [self.writer addSectionWriterWithSegName:@"__DATA_CONST"
                                                               sectName:@"__objc_arrayobj"
@@ -114,7 +114,7 @@
     return self.arrayObjWriter;
 }
 
-- (MPWMachOSectionWriter *)dictObjSectionWriter {
+- (STMachOSectionWriter *)dictObjSectionWriter {
     if (!self.dictObjWriter) {
         self.dictObjWriter = [self.writer addSectionWriterWithSegName:@"__DATA_CONST"
                                                              sectName:@"__objc_dictobj"
@@ -124,7 +124,7 @@
     return self.dictObjWriter;
 }
 
-- (MPWMachOSectionWriter *)intObjSectionWriter {
+- (STMachOSectionWriter *)intObjSectionWriter {
     if (!self.intObjWriter) {
         self.intObjWriter = [self.writer addSectionWriterWithSegName:@"__DATA_CONST"
                                                             sectName:@"__objc_intobj"
@@ -152,7 +152,7 @@
     NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_INT_%d", self.numberCounter];
     
     NSString *typeSymbol = [self symbolForCString:@"i"];
-    MPWMachOSectionWriter *intWriter = [self intObjSectionWriter];
+    STMachOSectionWriter *intWriter = [self intObjSectionWriter];
     [intWriter declareLocalSymbol:label];
     
     [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantIntegerNumber"];
@@ -184,7 +184,7 @@
     
     self.arrayDataCounter++;
     NSString *dataLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_ARRAYDATA_%d", self.arrayDataCounter];
-    MPWMachOSectionWriter *arrayDataWriter = [self arrayDataSectionWriter];
+    STMachOSectionWriter *arrayDataWriter = [self arrayDataSectionWriter];
     [arrayDataWriter declareLocalSymbol:dataLabel];
     
     for (id element in array) {
@@ -196,7 +196,7 @@
     
     self.arrayCounter++;
     NSString *arrayLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_ARRAY_%d", self.arrayCounter];
-    MPWMachOSectionWriter *arrayObjWriter = [self arrayObjSectionWriter];
+    STMachOSectionWriter *arrayObjWriter = [self arrayObjSectionWriter];
     [arrayObjWriter declareLocalSymbol:arrayLabel];
     
     [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantArray"];
@@ -225,7 +225,7 @@
         return existing;
     }
     
-    MPWMachOSectionWriter *arrayDataWriter = [self arrayDataSectionWriter];
+    STMachOSectionWriter *arrayDataWriter = [self arrayDataSectionWriter];
     
     self.arrayDataCounter++;
     NSString *keysLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICTKEYS_%d", self.arrayDataCounter];
@@ -250,7 +250,7 @@
     
     self.dictCounter++;
     NSString *dictLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICT_%d", self.dictCounter];
-    MPWMachOSectionWriter *dictObjWriter = [self dictObjSectionWriter];
+    STMachOSectionWriter *dictObjWriter = [self dictObjSectionWriter];
     [dictObjWriter declareLocalSymbol:dictLabel];
     
     [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantDictionary"];

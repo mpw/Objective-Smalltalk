@@ -5,14 +5,14 @@
 //  Builds Mach-O exports trie data structure for dyld
 //
 
-#import "MPWExportsTrieWriter.h"
+#import "STExportsTrieWriter.h"
 
-@interface MPWExportsTrieWriter ()
+@interface STExportsTrieWriter ()
 @property(nonatomic, strong)
     NSMutableDictionary<NSString *, NSNumber *> *symbols;
 @end
 
-@implementation MPWExportsTrieWriter
+@implementation STExportsTrieWriter
 
 - (instancetype)init {
   self = [super init];
@@ -211,10 +211,10 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWExportsTrieWriter (testing)
+@implementation STExportsTrieWriter (testing)
 
 + (void)testEmptyTrieHasMinimalStructure {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   NSData *trie = [writer trieData];
 
   INTEXPECT(trie.length, 2, @"empty trie should be 2 bytes");
@@ -224,7 +224,7 @@
 }
 
 + (void)testSingleSymbolTrie {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   [writer addSymbol:@"_answer" atAddress:0x1000];
 
   NSData *trie = [writer trieData];
@@ -241,7 +241,7 @@
 }
 
 + (void)testTrieContainsAddress {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   [writer addSymbol:@"_test" atAddress:0x1234];
 
   NSData *trie = [writer trieData];
@@ -263,7 +263,7 @@
 }
 
 + (void)testMultipleSymbolsTrie {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   [writer addSymbol:@"_foo" atAddress:0x1000];
   [writer addSymbol:@"_bar" atAddress:0x2000];
 
@@ -276,7 +276,7 @@
 }
 
 + (void)testTrieSizeIsAligned {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   [writer addSymbol:@"_test" atAddress:0x1000];
 
   int size = [writer trieSize];
@@ -284,7 +284,7 @@
 }
 
 + (void)testULEB128EncodingSmallValue {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   NSData *encoded = [writer uleb128ForValue:0x7F];
 
   INTEXPECT(encoded.length, 1, @"0x7F fits in one byte");
@@ -293,7 +293,7 @@
 }
 
 + (void)testULEB128EncodingTwoBytes {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   NSData *encoded = [writer uleb128ForValue:0x80];
 
   INTEXPECT(encoded.length, 2, @"0x80 needs two bytes");
@@ -303,7 +303,7 @@
 }
 
 + (void)testULEB128EncodingTypicalAddress {
-  MPWExportsTrieWriter *writer = [[[self alloc] init] autorelease];
+  STExportsTrieWriter *writer = [[[self alloc] init] autorelease];
   // 0x1000 = 4096
   // ULEB128: 0x80 0x20
   NSData *encoded = [writer uleb128ForValue:0x1000];

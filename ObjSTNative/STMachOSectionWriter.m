@@ -5,14 +5,14 @@
 //  Created by Marcel Weiher on 14.10.22.
 //
 
-#import "MPWMachOSectionWriter.h"
+#import "STMachOSectionWriter.h"
 #import "STMachOWriter.h"
 #import <mach-o/loader.h>
 #import <mach-o/reloc.h>
 #import <mach-o/arm64/reloc.h>
 
 
-@implementation MPWMachOSectionWriter
+@implementation STMachOSectionWriter
 {
     struct relocation_info *relocations;
     NSMutableArray<NSString*> *relocationSymbolNames;
@@ -209,11 +209,11 @@
 
 #import <MPWFoundation/DebugMacros.h>
 
-@implementation MPWMachOSectionWriter(testing) 
+@implementation STMachOSectionWriter(testing) 
 
 +(void)testComputePadding
 {
-    MPWMachOSectionWriter *writer=[self stream];
+    STMachOSectionWriter *writer=[self stream];
     INTEXPECT( [writer padding],0,@"padding after 0 bytes");
     [writer appendBytes:"" length:1];
     INTEXPECT( [writer padding],7,@"padding after 1 byte");

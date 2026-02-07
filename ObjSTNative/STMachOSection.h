@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class STMachOReader;
 
-@interface MPWMachOSection : NSObject
+@interface STMachOSection : NSObject
 
 -(instancetype)initWithSectionHeader:(const void*)headerptr inMacho:(STMachOReader*)newReader;
 
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)indexOfSymboltableEntryAtOffset:(long)offset;
 -(int)numRelocEntries;
 -(int)relocEntryOffset;
--(MPWMachOSection*)sectionForRelocEntryAt:(int)which;
+-(STMachOSection*)sectionForRelocEntryAt:(int)which;
 -(NSArray<NSString*>*)strings;
 
 

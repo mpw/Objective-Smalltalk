@@ -9,17 +9,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MPWMachOSection,MPWMachOInSectionPointer;
+@class STMachOSection,MPWMachOInSectionPointer;
 
 @interface MPWMachORelocationPointer : NSObject
 
--(instancetype)initWithSection:(MPWMachOSection*)section relocEntryIndex:(int)relocEntryIndex;
--(MPWMachOSection*)targetSection;
+-(instancetype)initWithSection:(STMachOSection*)section relocEntryIndex:(int)relocEntryIndex;
+-(STMachOSection*)targetSection;
 -(long)targetOffset;
 -(int)indexOfSymtabEntry;
 -(MPWMachOInSectionPointer*)targetPointer;
 
-@property (readonly) MPWMachOSection *section;
+@property (readonly) STMachOSection *section;
 @property (readonly) long offset;
 @property (readonly) NSString *targetName;
 @property (readonly) int targetSectionIndex;

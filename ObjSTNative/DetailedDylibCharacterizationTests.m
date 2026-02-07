@@ -3,7 +3,7 @@
 #import "STMachODylibWriter.h"
 #import "STMachOLinker.h"
 #import "STMachOReader.h"
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 #import "STMachOSegment.h"
 #import "STNativeCompiler.h"
 #import <MPWFoundation/MPWFoundation.h>
@@ -274,7 +274,7 @@
   if (!reader.data)
     return -1;
   for (STMachOSegment *seg in reader.allSegments) {
-    MPWMachOSection *sect = [seg sectionNamed:sectname];
+    STMachOSection *sect = [seg sectionNamed:sectname];
     if (sect) {
       return [sect offset];
     }

@@ -8,7 +8,7 @@
 #import "STMachOWriter.h"
 #import "Mach_O_Structs.h"
 
-@class MPWMachOSectionWriter;
+@class STMachOSectionWriter;
 
 @interface STMachOWriter()
 
@@ -18,10 +18,10 @@
 @property (nonatomic, assign) int loadCommandSize;
 @property (nonatomic, assign) long totalSegmentSize;
 
-@property (nonatomic, strong) MPWMachOSectionWriter *textSectionWriter;
-@property (nonatomic, strong) NSMutableArray<MPWMachOSectionWriter*>* sectionWriters;
+@property (nonatomic, strong) STMachOSectionWriter *textSectionWriter;
+@property (nonatomic, strong) NSMutableArray<STMachOSectionWriter*>* sectionWriters;
 
--(NSArray<MPWMachOSectionWriter*>*)activeSectionWriters;
+-(NSArray<STMachOSectionWriter*>*)activeSectionWriters;
 -(int)segmentOffset;
 -(int)numSymbols;
 -(int)symbolTableSize;

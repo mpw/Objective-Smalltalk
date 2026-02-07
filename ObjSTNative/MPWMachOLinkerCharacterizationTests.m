@@ -12,7 +12,7 @@
 #import "STMachOLinker.h"
 #import "STMachODylibWriter.h"
 #import "STMachOWriter.h"
-#import "MPWMachOSectionWriter.h"
+#import "STMachOSectionWriter.h"
 #import "STNativeCompiler.h"
 #import <mach-o/loader.h>
 #import <dlfcn.h>
@@ -1337,7 +1337,7 @@ done:
 
     // Collect all symbols referenced by relocations
     NSMutableSet *referencedSymbols = [NSMutableSet set];
-    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+    for (STMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
         int numRelocs = [section numRelocationEntries];
         for (int i = 0; i < numRelocs; i++) {
             NSString *symbol = [section symbolNameForRelocationAtIndex:i];
@@ -1373,7 +1373,7 @@ done:
     // Also analyze section numbering
     NSLog(@"\n=== SECTION NUMBERING ===");
     int sectionNum = 1;
-    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+    for (STMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
         NSLog(@"  Section %d: %@,%@ (data size=%lu)", sectionNum, section.segname, section.sectname, (unsigned long)[section data].length);
         sectionNum++;
     }
@@ -1388,7 +1388,7 @@ done:
         // Find the section with this number
         sectionNum = 1;
         NSString *foundSectionName = nil;
-        for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+        for (STMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
             if (sectionNum == symbolSection) {
                 foundSectionName = [NSString stringWithFormat:@"%@,%@", section.segname, section.sectname];
                 break;
@@ -1409,7 +1409,7 @@ done:
     INTEXPECT(missingCount, 0, @"All internal symbols should have address info");
 
     NSLog(@"\n=== SECTION RELOCATIONS ===");
-    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+    for (STMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
         int numRelocs = [section numRelocationEntries];
         NSLog(@"\nSection %@,%@: %d relocation entries", section.segname, section.sectname, numRelocs);
 
@@ -1452,7 +1452,7 @@ done:
 
     // Get __DATA section data from object file
 //    NSLog(@"=== POINTER VALUES IN __DATA SECTIONS ===");
-    for (MPWMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
+    for (STMachOSectionWriter *section in [objectWriter activeSectionWriters]) {
         if (![section.segname isEqualToString:@"__DATA"]) continue;
 
         NSData *sectionData = [section data];

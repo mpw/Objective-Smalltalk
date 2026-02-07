@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class STMachOWriter;
 @protocol SymbolWriter;
 
-@interface MPWMachOSectionWriter : MPWByteStream 
+@interface STMachOSectionWriter : MPWByteStream 
 
 @property (nonatomic, assign) long offset;
 @property (nonatomic, assign) long address;

@@ -7,7 +7,7 @@
 
 #import "MPWMachOClassWriter.h"
 #import "STMachOWriter.h"
-#import "MPWMachOSectionWriter.h"
+#import "STMachOSectionWriter.h"
 #import "Mach_O_Structs.h"
 #import <mach-o/loader.h>
 #import "MPWMachOInSectionPointer.h"
@@ -16,7 +16,7 @@
 @interface MPWMachOClassWriter()
 
 @property (nonatomic,strong) STMachOWriter* writer;
-@property (nonatomic,strong) MPWMachOSectionWriter* typeWriter;
+@property (nonatomic,strong) STMachOSectionWriter* typeWriter;
 
 @end
 
@@ -66,7 +66,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     return [NSString stringWithFormat:@"_OBJC_METACLASS_$_%@",self.nameOfSuperClass];
 }
 
--(void)writeROPartOnSection:(MPWMachOSectionWriter*)classROWriter symbolName:(NSString*)roClassPartSymbol symbolNameOfClassName:(NSString*)symbolNameOfName instanceSize:(int)instanceSize flags:(int)flags methods:(NSString*)methodListSymbol
+-(void)writeROPartOnSection:(STMachOSectionWriter*)classROWriter symbolName:(NSString*)roClassPartSymbol symbolNameOfClassName:(NSString*)symbolNameOfName instanceSize:(int)instanceSize flags:(int)flags methods:(NSString*)methodListSymbol
 {
     Mach_O_Class_RO roClassPart={};
     long name_ptr_offset = ((void*)&roClassPart.name) - ((void*)&roClassPart);
@@ -84,18 +84,18 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     [classROWriter appendBytes:&roClassPart length:sizeof roClassPart];
 }
 
--(MPWMachOSectionWriter*)objcConstWriter
+-(STMachOSectionWriter*)objcConstWriter
 {
     return [self.writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_const" flags:0];
 }
 
--(MPWMachOSectionWriter*)objcMethNameWriter
+-(STMachOSectionWriter*)objcMethNameWriter
 {
-    MPWMachOSectionWriter *writer = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:S_CSTRING_LITERALS];
+    STMachOSectionWriter *writer = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methname" flags:S_CSTRING_LITERALS];
     return writer;
 }
 
--(MPWMachOSectionWriter*)objcMethTypeWriter
+-(STMachOSectionWriter*)objcMethTypeWriter
 {
     if ( !self.typeWriter) {
         self.typeWriter = [self.writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_methtype" flags:S_CSTRING_LITERALS];
@@ -103,7 +103,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     return self.typeWriter;
 }
 
--(void)writeRWPartOnSection:(MPWMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:(NSString*)superclassSymbol
+-(void)writeRWPartOnSection:(STMachOSectionWriter*)classWriter symbolName:(NSString*)classPartSymbol roPartSymbol:(NSString*)roClassPartSymbol metaclassSymbol:metaclassSymbol superclassSymbol:(NSString*)superclassSymbol
 {
     Mach_O_Class classInfo={};
     long ro_ptr_offset = ((void*)&classInfo.data) - ((void*)&classInfo);
@@ -131,14 +131,14 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     //  class name goes in its own section
     
     [writer declareExternalSymbol:@"__objc_empty_cache"];
-    MPWMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:S_CSTRING_LITERALS];
+    STMachOSectionWriter *classNameWriter = [writer addSectionWriterWithSegName:@"__TEXT" sectName:@"__objc_classname" flags:S_CSTRING_LITERALS];
     [classNameWriter declareGlobalSymbol:classNameSymbolName];
     [classNameWriter writeNullTerminatedString:self.nameOfClass];
     
     // RO Part
     
     NSString *roClassPartSymbol = [self roClassPartSymbol];
-    MPWMachOSectionWriter *classROWriter = self.objcConstWriter;
+    STMachOSectionWriter *classROWriter = self.objcConstWriter;
     [self writeROPartOnSection:classROWriter symbolName:roClassPartSymbol symbolNameOfClassName:classNameSymbolName instanceSize:self.instanceSize flags:0 methods:self.instanceMethodListSymbol] ;
     
     // RO Metaclass Part
@@ -150,7 +150,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     
     // RW Part
     
-    MPWMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
+    STMachOSectionWriter *classDataWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_data" flags:0];
     NSString *classPartSymbol = [self classPartSymbol];
     NSString *metaclassSymbol = [self metaclassSymbolName];
     NSString *superclassSymbol = [self superclassSymbolName];
@@ -165,7 +165,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     
     // Pointers
     
-    MPWMachOSectionWriter *classListWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classlist" flags:0];
+    STMachOSectionWriter *classListWriter = [writer addSectionWriterWithSegName:@"__DATA" sectName:@"__objc_classlist" flags:0];
     char zerobytes[80];
     memset(zerobytes,0,80);
     [classListWriter addRelocationEntryForSymbol:classPartSymbol atOffset:(int)classListWriter.length];
@@ -181,9 +181,9 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     BaseMethods *methods = calloc( 1, methodListSize);
     methods->count = (int)numberOfMethods;
     methods->entrysize = 24;
-    MPWMachOSectionWriter *methNameWriter=self.objcMethNameWriter;
-    MPWMachOSectionWriter *methTypeWriter=self.objcMethTypeWriter;
-    MPWMachOSectionWriter *objcConstWriter=self.objcConstWriter;
+    STMachOSectionWriter *methNameWriter=self.objcMethNameWriter;
+    STMachOSectionWriter *methTypeWriter=self.objcMethTypeWriter;
+    STMachOSectionWriter *objcConstWriter=self.objcConstWriter;
 
 
     for (int i=0;i<numberOfMethods;i++) {
@@ -233,7 +233,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
 {
     PropertyPathDef zeroDef={nil,nil,nil};
     
-    MPWMachOSectionWriter *objcConstWriter=self.objcConstWriter;
+    STMachOSectionWriter *objcConstWriter=self.objcConstWriter;
     [objcConstWriter declareGlobalSymbol:symbolName];
     [objcConstWriter appendBytes:theDefs length:sizeof *theDefs];
     for (int i=0;i<theDefs->count;i++) {
@@ -250,8 +250,8 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
 
 #import <MPWFoundation/DebugMacros.h>
 #import "STMachOReader.h"
-#import "MPWMachOClassReader.h"
-#import "MPWMachOSection.h"
+#import "STMachOClassReader.h"
+#import "STMachOSection.h"
 #import "MPWMachORelocationPointer.h"
 
 @implementation MPWMachOClassWriter(testing) 
@@ -280,7 +280,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     
     //  read classname
     
-    MPWMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]];
+    STMachOSection *classnameSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:classNameSymbolEntry]];
     EXPECTNOTNIL(classnameSection, @"have a class name section");
     IDEXPECT(classnameSection.sectionName,@"__objc_classname",@"");
     INTEXPECT( [classnameSection strings].count, 1, @"Objective-C classname");
@@ -291,7 +291,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     int roClassSmbolIndex=[machoReader indexOfSymbolNamed:[classWriter roClassPartSymbol]];
     INTEXPECT(roClassSmbolIndex, 2,@"symbol index");
     
-    MPWMachOSection *roClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:roClassSmbolIndex]];
+    STMachOSection *roClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:roClassSmbolIndex]];
     const struct Mach_O_Class_RO *roClassPartCheck=[roClassPartSection bytes];
     EXPECTNOTNIL(roClassPartSection, @"objc const section");
     IDEXPECT(roClassPartSection.sectionName,@"__objc_const",@"");
@@ -312,7 +312,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     
     int rwClassSmbolIndex=[machoReader indexOfSymbolNamed:[classWriter classPartSymbol]];
 //    INTEXPECT(rwClassSmbolIndex, 5,@"symbol index"); //  was 2, now 5, not sure this is stable
-    MPWMachOSection *rwClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:rwClassSmbolIndex]];
+    STMachOSection *rwClassPartSection=[machoReader sectionAtIndex:[machoReader sectionForSymbolAt:rwClassSmbolIndex]];
     MPWMachORelocationPointer *roClassViaRWPointer = [[[MPWMachORelocationPointer alloc] initWithSection:rwClassPartSection relocEntryIndex:0] autorelease];
 //    IDEXPECT( [roClassViaRWPointer targetName],@"__OBJC_CLASS_RO_TestClass",@"RO part of class def via RW part");
 }
@@ -335,14 +335,14 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     STMachOReader *machoReader = [STMachOReader readerWithData:macho];
 //    NSLog(@"relocations for class2_via_writer.o:");
 //    [machoReader dumpRelocationsOn:[MPWByteStream Stderr]];
-    MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
+    STMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,24,@"instance size");
     IDEXPECT(reader.superclassPointer.targetName,@"_OBJC_CLASS_$_NSObject",@"superclass pointer");
     INTEXPECT(reader.superclassPointer.targetSectionIndex ,0,@"");
     IDEXPECT( reader.cachePointer.targetName,@"__objc_empty_cache",@"name of cache ptr");
 
-    MPWMachOClassReader *metaclassReader=[reader metaclassReader];
+    STMachOClassReader *metaclassReader=[reader metaclassReader];
     INTEXPECT(metaclassReader.instanceSize,40,@"class size");
 }
 
@@ -387,7 +387,7 @@ CONVENIENCEANDINIT(writer, WithWriter:(STMachOWriter*)writer)
     
     
     STMachOReader *machoReader = [STMachOReader readerWithData:macho];
-    MPWMachOClassReader *reader=[machoReader classReaders].firstObject;
+    STMachOClassReader *reader=[machoReader classReaders].firstObject;
     IDEXPECT(reader.nameOfClass,@"TestClass",@"");
     INTEXPECT(reader.instanceSize,8,@"instance size");
     INTEXPECT(reader.numberOfMethods,1, @"number of methods");

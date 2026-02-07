@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MPWExportsTrieWriter : NSObject
+@interface STExportsTrieWriter : NSObject
 
 // Add a symbol name (address can be set later with setAddress:forSymbol:)
 -(void)addSymbol:(NSString*)symbol;

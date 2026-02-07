@@ -8,10 +8,10 @@
 #import "STMachODylibWriterTests.h"
 
 #import "STBindOpcodeWriter.h"
-#import "MPWChainedFixupWriter.h"
-#import "MPWExportsTrieWriter.h"
-#import "MPWMachOSection.h"
-#import "MPWMachOSectionWriter.h"
+#import "STChainedFixupWriter.h"
+#import "STExportsTrieWriter.h"
+#import "STMachOSection.h"
+#import "STMachOSectionWriter.h"
 #import "STMachOSegment.h"
 #import "MPWMachOWriter+Private.h"
 #import "MPWStringTableWriter.h"
@@ -520,7 +520,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
     
     // Add a __DATA section to force multiple segments
-    MPWMachOSectionWriter *dataSection =
+    STMachOSectionWriter *dataSection =
     [writer addSectionWriterWithSegName:@"__DATA"
                                sectName:@"__test_data"
                                   flags:0];
@@ -619,7 +619,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
                                                    length:sizeof(retCode)]];
     
     // Try to add a __DATA section - this is what ObjC class structures need
-    MPWMachOSectionWriter *dataSection =
+    STMachOSectionWriter *dataSection =
     [dylibWriter addSectionWriterWithSegName:@"__DATA"
                                     sectName:@"__objc_data"
                                        flags:0];
@@ -777,8 +777,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 }
 
 // Helper to find a section by name in a segment
-+ (MPWMachOSection *)findSectionNamed:(NSString *)sectionName inSegment:(STMachOSegment *)segment {
-    for (MPWMachOSection *section in segment.sections) {
++ (STMachOSection *)findSectionNamed:(NSString *)sectionName inSegment:(STMachOSegment *)segment {
+    for (STMachOSection *section in segment.sections) {
         if ([section.sectionName isEqualToString:sectionName]) {
             return section;
         }
@@ -852,15 +852,15 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 // Helper to log sections in a segment
 + (void)logSectionsInSegment:(STMachOSegment *)segment withPrefix:(NSString *)prefix {
     if (!segment) return;
-    for (MPWMachOSection *section in segment.sections) {
+    for (STMachOSection *section in segment.sections) {
         NSLog(@"%@ %@ section: %@", prefix, segment.name, section.sectionName);
     }
 }
 
 // Helper to find a section by name across all segments (dylibs have multiple segments)
-+ (MPWMachOSection *)sectionNamed:(NSString *)sectionName inReader:(STMachOReader *)reader {
++ (STMachOSection *)sectionNamed:(NSString *)sectionName inReader:(STMachOReader *)reader {
     for (STMachOSegment *segment in reader.segments) {
-        MPWMachOSection *section = [segment sectionNamed:sectionName];
+        STMachOSection *section = [segment sectionNamed:sectionName];
         if (section) {
             return section;
         }
@@ -872,7 +872,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
 + (void)expectClassListInReader:(STMachOReader *)reader
                      classNames:(NSArray<NSString *> *)classNames
                           label:(NSString *)label {
-    MPWMachOSection *classListSection = [self sectionNamed:@"__objc_classlist" inReader:reader];
+    STMachOSection *classListSection = [self sectionNamed:@"__objc_classlist" inReader:reader];
     EXPECTNOTNIL(classListSection, ([NSString stringWithFormat:@"%@: should have __objc_classlist", label]));
     if (!classListSection) return;
     
@@ -1015,7 +1015,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
     
     // Look for __stubs section in __TEXT
-    MPWMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
+    STMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
     
     if (stubsSection) {
         NSLog(@"Reference __stubs section: addr=0x%llx size=%lu offset=0x%lx",
@@ -1041,7 +1041,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     if (dataConstSeg) {
-        MPWMachOSection *gotSection = [self findSectionNamed:@"__got" inSegment:dataConstSeg];
+        STMachOSection *gotSection = [self findSectionNamed:@"__got" inSegment:dataConstSeg];
         
         if (gotSection) {
             NSLog(@"Reference __got section: addr=0x%llx size=%lu offset=0x%lx",
@@ -1064,7 +1064,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 3g. Characterize BL instruction in __text pointing to __stubs
-    MPWMachOSection *textSection = [reader textSection];
+    STMachOSection *textSection = [reader textSection];
     EXPECTNOTNIL(textSection, @"should have __text section");
     
     if (textSection && stubsSection) {
@@ -1212,7 +1212,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
     EXPECTNOTNIL(textSeg, @"should have __TEXT segment");
     
-    MPWMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
+    STMachOSection *stubsSection = [self findSectionNamed:@"__stubs" inSegment:textSeg];
     
     if (stubsSection) {
         NSLog(@"Generated __stubs section: addr=0x%lx size=%lu offset=0x%lx",
@@ -1238,7 +1238,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
         dataConstSeg = [reader segmentObjectNamed:@"__DATA"];
     }
     
-    MPWMachOSection *gotSection = [self findSectionNamed:@"__got" inSegment:dataConstSeg];
+    STMachOSection *gotSection = [self findSectionNamed:@"__got" inSegment:dataConstSeg];
     
     if (gotSection) {
         NSLog(@"Generated __got section: addr=0x%lx size=%lu offset=0x%lx",
@@ -1267,7 +1267,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     }
     
     // 7. Characterize BL instruction targeting __stubs
-    MPWMachOSection *textSection = [reader textSection];
+    STMachOSection *textSection = [reader textSection];
     EXPECTNOTNIL(textSection, @"should have __text section");
     
     if (textSection && stubsSection) {
@@ -1631,7 +1631,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     for (STMachOSegment *seg in segments) {
         NSLog(@"Reference segment: %@ vmaddr=0x%lx vmsize=0x%lx fileoff=0x%lx filesize=0x%lx",
               seg.name, seg.vmaddr, seg.vmsize, seg.fileoff, seg.filesize);
-        for (MPWMachOSection *section in seg.sections) {
+        for (STMachOSection *section in seg.sections) {
             NSLog(@"  Reference section: %@ addr=0x%llx size=0x%llx offset=0x%lx",
                   section.sectionName, section.address, (unsigned long long)section.size, section.offset);
         }
@@ -1651,7 +1651,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     // 7. CRITICAL: Check section relocation fields - dylibs should NOT have section-level relocations
     // (they use chained fixups instead). This was the nm error about "relocation entries at offset 0"
-    MPWMachOSection *stringSection = [self findSectionNamed:@"__string" inSegment:dataSeg];
+    STMachOSection *stringSection = [self findSectionNamed:@"__string" inSegment:dataSeg];
     if (stringSection) {
         NSLog(@"Reference __string section: relocEntryOffset=%d numRelocEntries=%d",
               stringSection.relocEntryOffset, stringSection.numRelocEntries);
@@ -1720,7 +1720,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     for (STMachOSegment *seg in segments) {
         NSLog(@"Generated segment: %@ vmaddr=0x%lx vmsize=0x%lx fileoff=0x%lx filesize=0x%lx",
               seg.name, seg.vmaddr, seg.vmsize, seg.fileoff, seg.filesize);
-        for (MPWMachOSection *section in seg.sections) {
+        for (STMachOSection *section in seg.sections) {
             NSLog(@"  Generated section: %@ addr=0x%llx size=0x%llx offset=0x%lx",
                   section.sectionName, section.address, (unsigned long long)section.size, section.offset);
         }
@@ -1738,7 +1738,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     // 3. CRITICAL: Check section relocation fields - dylibs should NOT have section-level relocations
     // This is the nm error: "section relocation entries at offset 0 with a size of 16"
-    MPWMachOSection *stringSection = [self findSectionNamed:@"__string" inSegment:dataSeg];
+    STMachOSection *stringSection = [self findSectionNamed:@"__string" inSegment:dataSeg];
     if (stringSection) {
         NSLog(@"Generated __string section: relocEntryOffset=%d numRelocEntries=%d",
               stringSection.relocEntryOffset, stringSection.numRelocEntries);
@@ -1825,7 +1825,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     [serializer symbolForObject:arrayLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -1923,8 +1923,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(refDataSeg, @"reference should have __DATA segment");
     EXPECTNOTNIL(genDataSeg, @"generated should have __DATA segment");
     
-    MPWMachOSection *refStringSection = [self findSectionNamed:@"__string" inSegment:refDataSeg];
-    MPWMachOSection *genStringSection = [self findSectionNamed:@"__string" inSegment:genDataSeg];
+    STMachOSection *refStringSection = [self findSectionNamed:@"__string" inSegment:refDataSeg];
+    STMachOSection *genStringSection = [self findSectionNamed:@"__string" inSegment:genDataSeg];
     
     EXPECTNOTNIL(refStringSection, @"reference should have __string section");
     EXPECTNOTNIL(genStringSection, @"generated should have __string section");
@@ -2149,7 +2149,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     [serializer symbolForObject:arrayLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -2174,10 +2174,10 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(genDataConst, @"generated should have __DATA_CONST");
     if (!refDataConst || !genDataConst) return;
     
-    MPWMachOSection *refArrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:refDataConst];
-    MPWMachOSection *refArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:refDataConst];
-    MPWMachOSection *genArrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:genDataConst];
-    MPWMachOSection *genArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:genDataConst];
+    STMachOSection *refArrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:refDataConst];
+    STMachOSection *refArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:refDataConst];
+    STMachOSection *genArrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:genDataConst];
+    STMachOSection *genArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:genDataConst];
     
     EXPECTNOTNIL(refArrayObj, @"reference should have __objc_arrayobj");
     EXPECTNOTNIL(refArrayData, @"reference should have __objc_arraydata");
@@ -2780,7 +2780,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *numberSymbol = [serializer symbolForObject:numberLiteral];
     NSString *stringSymbol = [serializer symbolForObject:stringLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -2855,7 +2855,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSString *stringLiteral = @"literal string";
     NSString *stringSymbol = [serializer symbolForObject:stringLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -2894,7 +2894,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSNumber *numberLiteral = @42;
     NSString *numberSymbol = [serializer symbolForObject:numberLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -2933,7 +2933,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -2975,7 +2975,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSArray *arrayLiteral = @[ @"string1", @"string2" ];
     NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -2998,8 +2998,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
-    MPWMachOSection *arrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:dataConstSeg];
-    MPWMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
+    STMachOSection *arrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:dataConstSeg];
+    STMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
     EXPECTNOTNIL(arrayObj, @"generated should have __objc_arrayobj");
     EXPECTNOTNIL(arrayData, @"generated should have __objc_arraydata");
     if (!arrayObj || !arrayData) return;
@@ -3032,7 +3032,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
     NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -3073,7 +3073,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
     NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
     
-    MPWMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
     uint64_t zero = 0;
@@ -3097,8 +3097,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
     
-    MPWMachOSection *dictObj = [self findSectionNamed:@"__objc_dictobj" inSegment:dataConstSeg];
-    MPWMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
+    STMachOSection *dictObj = [self findSectionNamed:@"__objc_dictobj" inSegment:dataConstSeg];
+    STMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
     EXPECTNOTNIL(dictObj, @"generated should have __objc_dictobj");
     EXPECTNOTNIL(arrayData, @"generated should have __objc_arraydata");
     if (!dictObj || !arrayData) return;

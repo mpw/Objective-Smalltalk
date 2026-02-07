@@ -6,13 +6,13 @@
 //
 
 #import "STMachOSegment.h"
-#import "MPWMachOSection.h"
+#import "STMachOSection.h"
 
 @implementation STMachOSegment
 
 - (instancetype)initWithSegmentCommand:(struct segment_command_64*)segmentCommand 
                                 data:(NSData*)data 
-                              sections:(NSArray<MPWMachOSection*>*)sections
+                              sections:(NSArray<STMachOSection*>*)sections
 {
     self = [super init];
     if (self) {
@@ -52,9 +52,9 @@
     return self.segmentCommand->filesize;
 }
 
-- (MPWMachOSection*)sectionNamed:(NSString*)sectionName
+- (STMachOSection*)sectionNamed:(NSString*)sectionName
 {
-    for (MPWMachOSection *section in self.sections) {
+    for (STMachOSection *section in self.sections) {
         if ([section.sectionName isEqualToString:sectionName]) {
             return section;
         }

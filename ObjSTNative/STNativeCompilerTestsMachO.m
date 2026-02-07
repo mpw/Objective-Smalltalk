@@ -31,7 +31,7 @@
 
 #import <MPWFoundation/DebugMacros.h>
 #import "STMachOReader.h"
-#import "MPWMachOClassReader.h"
+#import "STMachOClassReader.h"
 #import "MPWMachORelocationPointer.h"
 #import "MPWMachOInSectionPointer.h"
 #import "Mach_O_Structs.h"
@@ -50,7 +50,7 @@
     STMachOReader *reader = [STMachOReader readerWithData:macho];
     EXPECTTRUE(reader.isHeaderValid, @"got a macho");
     INTEXPECT([reader classReaders].count,1,@"number of classes" );
-    MPWMachOClassReader *classReader = [reader classReaders].firstObject;
+    STMachOClassReader *classReader = [reader classReaders].firstObject;
     IDEXPECT(classReader.nameOfClass, @"TestClass", @"name of class");
     IDEXPECT(classReader.superclassPointer.targetName, @"_OBJC_CLASS_$_NSObject", @"symbol for superclass");
     INTEXPECT(classReader.numberOfMethods, 1,@"number of methods");
@@ -71,7 +71,7 @@
     STMachOReader *reader = [STMachOReader readerWithData:macho];
     EXPECTTRUE(reader.isHeaderValid, @"got a macho");
     INTEXPECT([reader classReaders].count,1,@"number of classes" );
-    MPWMachOClassReader *classReader = [reader classReaders].firstObject;
+    STMachOClassReader *classReader = [reader classReaders].firstObject;
     IDEXPECT(classReader.nameOfClass, @"TestClass2Methods", @"name of class");
     IDEXPECT(classReader.superclassPointer.targetName, @"_OBJC_CLASS_$_NSObject", @"symbol for superclass");
     INTEXPECT(classReader.numberOfMethods, 2,@"number of methods");

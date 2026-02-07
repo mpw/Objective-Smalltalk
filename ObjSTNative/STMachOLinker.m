@@ -8,7 +8,7 @@
 #import "STMachOLinker.h"
 #import "STMachOWriter.h"
 #import "MPWMachOWriter+Private.h"
-#import "MPWMachOSectionWriter.h"
+#import "STMachOSectionWriter.h"
 #import "STMachODylibWriter.h"
 #import "STBindOpcodeWriter.h"
 #import "STNativeCompiler.h"
@@ -28,7 +28,7 @@
 }
 
 -(NSData*)linkToDylibWithInstallName:(NSString*)installName
-                     sectionWriters:(NSArray<MPWMachOSectionWriter*>*)sections
+                     sectionWriters:(NSArray<STMachOSectionWriter*>*)sections
                        symbolWriter:(STMachOWriter*)symbolSource
 {
     STMachODylibWriter *dylibWriter = [STMachODylibWriter stream];
@@ -41,20 +41,20 @@
     }
 
     // Track section mappings: original section -> dylib section
-    NSMutableDictionary<NSNumber*, MPWMachOSectionWriter*> *sectionMapping = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSNumber*, STMachOSectionWriter*> *sectionMapping = [NSMutableDictionary dictionary];
 
     // Sections that go in __DATA_CONST: __got, __objc_classlist, __objc_imageinfo, __cfstring
     NSSet *dataConstSectionNames = [NSSet setWithObjects:@"__got", @"__objc_classlist",
                                                           @"__objc_imageinfo", @"__cfstring", nil];
 
     // Copy all __TEXT sections
-    for (MPWMachOSectionWriter *section in sections) {
+    for (STMachOSectionWriter *section in sections) {
         if ([section.segname isEqualToString:@"__TEXT"]) {
             if ([section.sectname isEqualToString:@"__text"]) {
                 [dylibWriter addTextSectionData:[section data]];
                 sectionMapping[@((uintptr_t)section)] = dylibWriter.textSectionWriter;
             } else {
-                MPWMachOSectionWriter *dylibSection = [dylibWriter addSectionWriterWithSegName:@"__TEXT"
+                STMachOSectionWriter *dylibSection = [dylibWriter addSectionWriterWithSegName:@"__TEXT"
                                                                                       sectName:section.sectname
                                                                                          flags:section.flags];
                 [dylibSection appendBytes:[section data].bytes length:[section data].length];
@@ -65,7 +65,7 @@
 
     // Check if we'll have a __DATA_CONST segment
     BOOL hasDataConstSegment = NO;
-    for (MPWMachOSectionWriter *section in sections) {
+    for (STMachOSectionWriter *section in sections) {
         if ([section.segname isEqualToString:@"__DATA"] &&
             [dataConstSectionNames containsObject:section.sectname]) {
             hasDataConstSegment = YES;
@@ -88,9 +88,9 @@
     long dataCurrentOffset = 0;
 
     // Copy all __DATA sections and track their offsets within segments
-    for (MPWMachOSectionWriter *section in sections) {
+    for (STMachOSectionWriter *section in sections) {
         if ([section.segname isEqualToString:@"__DATA"]) {
-            MPWMachOSectionWriter *dylibSection = [dylibWriter addSectionWriterWithSegName:@"__DATA"
+            STMachOSectionWriter *dylibSection = [dylibWriter addSectionWriterWithSegName:@"__DATA"
                                                                                   sectName:section.sectname
                                                                                      flags:section.flags];
             [dylibSection appendBytes:[section data].bytes length:[section data].length];
@@ -127,11 +127,11 @@
     NSMutableArray<MPWInternalRelocation*> *internalRelocations = [NSMutableArray array];
 
     // Process relocations and generate bind/rebase opcodes
-    for (MPWMachOSectionWriter *section in sections) {
+    for (STMachOSectionWriter *section in sections) {
         int numRelocs = [section numRelocationEntries];
         if (numRelocs == 0) continue;
 
-        MPWMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
+        STMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
         if (!dylibSection) continue;
 
         // Determine segment index and base offset for this section
@@ -192,10 +192,10 @@
     // Patch internal pointers after section addresses are computed
     if (internalRelocations.count > 0) {
         // Build section number to dylib section mapping
-        NSMutableDictionary<NSNumber*, MPWMachOSectionWriter*> *sectionNumToDylibSection = [NSMutableDictionary dictionary];
+        NSMutableDictionary<NSNumber*, STMachOSectionWriter*> *sectionNumToDylibSection = [NSMutableDictionary dictionary];
         int sectionNum = 1;
-        for (MPWMachOSectionWriter *section in sections) {
-            MPWMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
+        for (STMachOSectionWriter *section in sections) {
+            STMachOSectionWriter *dylibSection = sectionMapping[@((uintptr_t)section)];
             if (dylibSection) {
                 sectionNumToDylibSection[@(sectionNum)] = dylibSection;
 //                NSLog(@"Linker: section %d (%@,%@) -> dylib section at vmaddr=0x%lx",
@@ -214,7 +214,7 @@
             int symbolSectionNum = [info[@"section"] intValue];
             long symbolOffset = [info[@"offset"] longValue];
 
-            MPWMachOSectionWriter *dylibSection = sectionNumToDylibSection[@(symbolSectionNum)];
+            STMachOSectionWriter *dylibSection = sectionNumToDylibSection[@(symbolSectionNum)];
             if (dylibSection) {
                 long symbolAddr = dylibSection.address + symbolOffset;
                 symbolAddresses[symbol] = @(symbolAddr);
@@ -335,7 +335,7 @@
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_dummy"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
 
-    MPWMachOSectionWriter *dataSection = [objectWriter addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataSection = [objectWriter addSectionWriterWithSegName:@"__DATA"
                                                                           sectName:@"__mydata"
                                                                              flags:0];
     unsigned char someData[] = { 0x01, 0x02, 0x03, 0x04 };
@@ -414,7 +414,7 @@
     [objectWriter.textSectionWriter declareGlobalTextSymbol:@"_testfunc"];
     [objectWriter addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
 
-    MPWMachOSectionWriter *dataSection = [objectWriter addSectionWriterWithSegName:@"__DATA"
+    STMachOSectionWriter *dataSection = [objectWriter addSectionWriterWithSegName:@"__DATA"
                                                                           sectName:@"__got"
                                                                              flags:0];
     [objectWriter declareExternalSymbol:@"_malloc"];
