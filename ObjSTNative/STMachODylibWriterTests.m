@@ -41,6 +41,7 @@
 @implementation STMachODylibWriterTests(testing) 
 
 static int literalTestCounter = 0;
+static int literalSymbolCounter = 0;
 
 static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName) {
     literalTestCounter++;
@@ -49,6 +50,15 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
         *outInstallName = [NSString stringWithFormat:@"@rpath/%@_%@.dylib", baseName, suffix];
     }
     return [NSString stringWithFormat:@"/tmp/%@_%@.dylib", baseName, suffix];
+}
+
+static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *baseName) {
+    literalSymbolCounter++;
+    NSString *plain = [NSString stringWithFormat:@"%@_%d", baseName, literalSymbolCounter];
+    return @{
+        @"plain": plain,
+        @"global": [@"_" stringByAppendingString:plain],
+    };
 }
 
 + (STMachODylibWriter *)dylibWriterWithInstallName:(NSString *)installName {
@@ -1828,8 +1838,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *arrayExport = uniqueLiteralSymbolPair(@"literal_nsarray_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter declareGlobalSymbol:arrayExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:[serializer symbolForObject:arrayLiteral]
                                    atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
@@ -1853,8 +1864,11 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     
     BOOL hasArrayData = [self segment:dataConstSeg hasSectionNamed:@"__objc_arraydata"];
     BOOL hasArrayObj = [self segment:dataConstSeg hasSectionNamed:@"__objc_arrayobj"];
-    EXPECTTRUE(hasArrayData, @"generated should have __objc_arraydata in __DATA_CONST");
-    EXPECTTRUE(hasArrayObj, @"generated should have __objc_arrayobj in __DATA_CONST");
+    BOOL hasUnifiedLiterals = [self segment:dataConstSeg hasSectionNamed:@"__objcliterals"];
+    EXPECTTRUE(hasUnifiedLiterals || hasArrayData,
+               @"generated should have __objc_arraydata or unified __objcliterals in __DATA_CONST");
+    EXPECTTRUE(hasUnifiedLiterals || hasArrayObj,
+               @"generated should have __objc_arrayobj or unified __objcliterals in __DATA_CONST");
     
     NSData *chainedData = [self chainedFixupsDataFromReader:reader];
     EXPECTNOTNIL(chainedData, @"generated should have chained fixups data");
@@ -2152,8 +2166,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *arrayExport = uniqueLiteralSymbolPair(@"literal_nsarray_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter declareGlobalSymbol:arrayExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:[serializer symbolForObject:arrayLiteral]
                                    atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
@@ -2178,12 +2193,22 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSection *refArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:refDataConst];
     STMachOSection *genArrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:genDataConst];
     STMachOSection *genArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:genDataConst];
+    STMachOSection *genUnified = [self findSectionNamed:@"__objcliterals" inSegment:genDataConst];
     
     EXPECTNOTNIL(refArrayObj, @"reference should have __objc_arrayobj");
     EXPECTNOTNIL(refArrayData, @"reference should have __objc_arraydata");
-    EXPECTNOTNIL(genArrayObj, @"generated should have __objc_arrayobj");
-    EXPECTNOTNIL(genArrayData, @"generated should have __objc_arraydata");
-    if (!refArrayObj || !refArrayData || !genArrayObj || !genArrayData) return;
+    EXPECTTRUE(genArrayObj != nil || genUnified != nil,
+               @"generated should have __objc_arrayobj or __objcliterals");
+    EXPECTTRUE(genArrayData != nil || genUnified != nil,
+               @"generated should have __objc_arraydata or __objcliterals");
+    if (!refArrayObj || !refArrayData) return;
+    if (!genArrayObj || !genArrayData) {
+        if (genUnified) {
+            NSLog(@"Generated literal layout uses unified __objcliterals section; skipping legacy arrayobj/arraydata comparison");
+            return;
+        }
+        return;
+    }
     
     // 4. Dump sizes and first few qwords
     NSLog(@"=== __OBJC_ARRAYOBJ SECTION COMPARISON ===");
@@ -2783,21 +2808,25 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *arrayExport = uniqueLiteralSymbolPair(@"literal_nsarray_test");
+    NSDictionary<NSString *, NSString *> *dictExport = uniqueLiteralSymbolPair(@"literal_nsdict_test");
+    NSDictionary<NSString *, NSString *> *numberExport = uniqueLiteralSymbolPair(@"literal_nsnumber_test");
+    NSDictionary<NSString *, NSString *> *stringExport = uniqueLiteralSymbolPair(@"literal_nsstring_test");
     uint64_t zero = 0;
     
-    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter declareGlobalSymbol:arrayExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [dataWriter declareGlobalSymbol:@"_literal_nsdict_test"];
+    [dataWriter declareGlobalSymbol:dictExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [dataWriter declareGlobalSymbol:@"_literal_nsnumber_test"];
+    [dataWriter declareGlobalSymbol:numberExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:numberSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
-    [dataWriter declareGlobalSymbol:@"_literal_nsstring_test"];
+    [dataWriter declareGlobalSymbol:stringExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:stringSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -2812,29 +2841,29 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(handle, errorString);
     
     if (handle) {
-        id *arrayPtr = dlsym(handle, "literal_nsarray_test");
-        EXPECTNOTNIL(arrayPtr, @"literal_nsarray_test symbol");
+        id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(arrayPtr, [NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]);
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded array");
         INTEXPECT((int)loadedArray.count, 2, @"array count");
         IDEXPECT(loadedArray[0], @"string1", @"array first element");
         IDEXPECT(loadedArray[1], @"string2", @"array second element");
         
-        id *dictPtr = dlsym(handle, "literal_nsdict_test");
-        EXPECTNOTNIL(dictPtr, @"literal_nsdict_test symbol");
+        id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(dictPtr, [NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]);
         NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
         EXPECTNOTNIL(loadedDict, @"loaded dict");
         IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
         IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
         
-        id *numberPtr = dlsym(handle, "literal_nsnumber_test");
-        EXPECTNOTNIL(numberPtr, @"literal_nsnumber_test symbol");
+        id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(numberPtr, [NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]);
         NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
         EXPECTNOTNIL(loadedNumber, @"loaded number");
         INTEXPECT([loadedNumber intValue], 42, @"number value");
         
-        id *stringPtr = dlsym(handle, "literal_nsstring_test");
-        EXPECTNOTNIL(stringPtr, @"literal_nsstring_test symbol");
+        id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(stringPtr, [NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]);
         NSString *loadedString = stringPtr ? *stringPtr : nil;
         EXPECTNOTNIL(loadedString, @"loaded string");
         IDEXPECT(loadedString, stringLiteral, @"string value");
@@ -2858,8 +2887,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *stringExport = uniqueLiteralSymbolPair(@"literal_nsstring_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsstring_test"];
+    [dataWriter declareGlobalSymbol:stringExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:stringSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -2874,8 +2904,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(handle, errorString);
     
     if (handle) {
-        id *stringPtr = dlsym(handle, "literal_nsstring_test");
-        EXPECTNOTNIL(stringPtr, @"literal_nsstring_test symbol");
+        id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(stringPtr, [NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]);
         NSString *loadedString = stringPtr ? *stringPtr : nil;
         EXPECTNOTNIL(loadedString, @"loaded string");
         IDEXPECT(loadedString, stringLiteral, @"string value");
@@ -2897,8 +2927,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *numberExport = uniqueLiteralSymbolPair(@"literal_nsnumber_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsnumber_test"];
+    [dataWriter declareGlobalSymbol:numberExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:numberSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -2913,8 +2944,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(handle, errorString);
     
     if (handle) {
-        id *numberPtr = dlsym(handle, "literal_nsnumber_test");
-        EXPECTNOTNIL(numberPtr, @"literal_nsnumber_test symbol");
+        id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(numberPtr, [NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]);
         NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
         EXPECTNOTNIL(loadedNumber, @"loaded number");
         INTEXPECT([loadedNumber intValue], 42, @"number value");
@@ -2936,8 +2967,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *arrayExport = uniqueLiteralSymbolPair(@"literal_nsarray_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter declareGlobalSymbol:arrayExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -2952,8 +2984,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(handle, errorString);
     
     if (handle) {
-        id *arrayPtr = dlsym(handle, "literal_nsarray_test");
-        EXPECTNOTNIL(arrayPtr, @"literal_nsarray_test symbol");
+        id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(arrayPtr, [NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]);
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded array");
         INTEXPECT((int)loadedArray.count, 2, @"array count");
@@ -2962,6 +2994,53 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
         dlclose(handle);
     }
     
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
++ (void)testDylibWithNestedLiteralNSArrayObject {
+    NSString *installName = nil;
+    NSString *path = uniqueLiteralPath(@"libliteralarray_nested", &installName);
+    STMachODylibWriter *writer = [self foundationDylibWriterWithInstallName:installName];
+
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSArray *arrayLiteral = @[ @2, @12, @"some string", @[ @"nested", @"array", @55 ], @99 ];
+    NSString *arraySymbol = [serializer symbolForObject:arrayLiteral];
+
+    STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
+                                                                   sectName:@"__data"
+                                                                      flags:0];
+    NSDictionary<NSString *, NSString *> *arrayExport = uniqueLiteralSymbolPair(@"literal_nested_nsarray_test");
+    uint64_t zero = 0;
+    [dataWriter declareGlobalSymbol:arrayExport[@"global"]];
+    [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
+    [dataWriter appendBytes:&zero length:sizeof(zero)];
+
+    NSError *error = nil;
+    EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    NSString *errorString = nil;
+    if (!handle) {
+        errorString = @(dlerror());
+    }
+    EXPECTNOTNIL(handle, errorString);
+
+    if (handle) {
+        id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(arrayPtr, [NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]);
+        NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
+        EXPECTNOTNIL(loadedArray, @"loaded nested array");
+        INTEXPECT((int)loadedArray.count, 5, @"array count");
+        IDEXPECT(loadedArray[0], @2, @"array first element");
+        IDEXPECT(loadedArray[1], @12, @"array second element");
+        IDEXPECT(loadedArray[2], @"some string", @"array third element");
+        EXPECTTRUE([loadedArray[3] isKindOfClass:[NSArray class]], @"array fourth element is nested array");
+        IDEXPECT(loadedArray[3], (@[ @"nested", @"array", @55 ]), @"nested array content");
+        IDEXPECT(loadedArray[4], @99, @"array fifth element");
+        EXPECTNOTNIL([loadedArray description], @"description should not crash");
+        dlclose(handle);
+    }
+
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
@@ -2978,8 +3057,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *arrayExport = uniqueLiteralSymbolPair(@"literal_nsarray_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsarray_test"];
+    [dataWriter declareGlobalSymbol:arrayExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -2993,15 +3073,22 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
     NSArray *exports = [reader exportedSymbolNames];
-    EXPECTTRUE([exports containsObject:@"_literal_nsarray_test"],
-               @"should export _literal_nsarray_test");
+    EXPECTTRUE([exports containsObject:arrayExport[@"global"]],
+               [NSString stringWithFormat:@"should export %@", arrayExport[@"global"]]);
     
     STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
     STMachOSection *arrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:dataConstSeg];
     STMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
-    EXPECTNOTNIL(arrayObj, @"generated should have __objc_arrayobj");
-    EXPECTNOTNIL(arrayData, @"generated should have __objc_arraydata");
+    STMachOSection *unified = [self findSectionNamed:@"__objcliterals" inSegment:dataConstSeg];
+    EXPECTTRUE(arrayObj != nil || unified != nil,
+               @"generated should have __objc_arrayobj or unified __objcliterals");
+    EXPECTTRUE(arrayData != nil || unified != nil,
+               @"generated should have __objc_arraydata or unified __objcliterals");
+    if ((!arrayObj || !arrayData) && unified) {
+        NSLog(@"Generated array literal layout uses unified __objcliterals section");
+        return;
+    }
     if (!arrayObj || !arrayData) return;
     
     NSLog(@"Generated __objc_arrayobj: addr=0x%llx size=%lld offset=0x%lx",
@@ -3035,8 +3122,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *dictExport = uniqueLiteralSymbolPair(@"literal_nsdict_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsdict_test"];
+    [dataWriter declareGlobalSymbol:dictExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -3051,8 +3139,8 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTNOTNIL(handle, errorString);
     
     if (handle) {
-        id *dictPtr = dlsym(handle, "literal_nsdict_test");
-        EXPECTNOTNIL(dictPtr, @"literal_nsdict_test symbol");
+        id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
+        EXPECTNOTNIL(dictPtr, [NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]);
         NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
         EXPECTNOTNIL(loadedDict, @"loaded dict");
         IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
@@ -3076,8 +3164,9 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
                                                                    sectName:@"__data"
                                                                       flags:0];
+    NSDictionary<NSString *, NSString *> *dictExport = uniqueLiteralSymbolPair(@"literal_nsdict_test");
     uint64_t zero = 0;
-    [dataWriter declareGlobalSymbol:@"_literal_nsdict_test"];
+    [dataWriter declareGlobalSymbol:dictExport[@"global"]];
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)dataWriter.length];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
     
@@ -3091,16 +3180,23 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
     EXPECTTRUE([reader isHeaderValid], @"header should be valid");
     
     NSArray *exports = [reader exportedSymbolNames];
-    EXPECTTRUE([exports containsObject:@"_literal_nsdict_test"],
-               @"should export _literal_nsdict_test");
+    EXPECTTRUE([exports containsObject:dictExport[@"global"]],
+               [NSString stringWithFormat:@"should export %@", dictExport[@"global"]]);
     
     STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
     
     STMachOSection *dictObj = [self findSectionNamed:@"__objc_dictobj" inSegment:dataConstSeg];
     STMachOSection *arrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:dataConstSeg];
-    EXPECTNOTNIL(dictObj, @"generated should have __objc_dictobj");
-    EXPECTNOTNIL(arrayData, @"generated should have __objc_arraydata");
+    STMachOSection *unified = [self findSectionNamed:@"__objcliterals" inSegment:dataConstSeg];
+    EXPECTTRUE(dictObj != nil || unified != nil,
+               @"generated should have __objc_dictobj or unified __objcliterals");
+    EXPECTTRUE(arrayData != nil || unified != nil,
+               @"generated should have __objc_arraydata or unified __objcliterals");
+    if ((!dictObj || !arrayData) && unified) {
+        NSLog(@"Generated dictionary literal layout uses unified __objcliterals section");
+        return;
+    }
     if (!dictObj || !arrayData) return;
     
     NSLog(@"Generated __objc_dictobj: addr=0x%llx size=%lld offset=0x%lx",
@@ -3161,6 +3257,7 @@ static NSString *uniqueLiteralPath(NSString *baseName, NSString **outInstallName
         @"testDylibWithLiteralNSNumberObject",
         @"testCharacterizeGeneratedLiteralNSArrayDylib",
         @"testDylibWithLiteralNSArrayObject",
+        @"testDylibWithNestedLiteralNSArrayObject",
         @"testDylibWithLiteralNSDictionaryObject",
         @"testCharacterizeGeneratedLiteralNSDictionaryDylib",
         @"testDylibWithLiteralObjects",

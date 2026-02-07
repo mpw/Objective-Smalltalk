@@ -297,6 +297,18 @@ IDEXPECT(msg,@"No error",@"compile and run");\
     IDEXPECT( array[1], @"string2",@"second element");
 }
 
++(void)testNestedLiteralArrayDescriptionDoesNotCrash
+{
+    COMPILEANDRUN(@"class TestNestedLiteralArray : STProgram { -main:args { [ 2, 12, 'some string', [ 'nested', 'array', 55 ], 99 ] description. 0. } }",
+                  @"testNestedLiteralArrayDescriptionDoesNotCrash");
+}
+
++(void)testNestedLiteralArrayPrintWithExactHelloShape
+{
+    COMPILEANDRUN(@"class Hello { -main:args { self Stdout println: [ 2, 12, 'some string', [ 'nested', 'array', 55 ], 99 ] description . 0. } }",
+                  @"testNestedLiteralArrayPrintWithExactHelloShape");
+}
+
 
 
 +(NSArray*)testSelectors
@@ -326,6 +338,8 @@ IDEXPECT(msg,@"No error",@"compile and run");\
        @"testMixingClassAndInstanceMethodsWorks",
 //       @"testDeclarAndReturnNativeIntVariables",
        @"testCanLoadNSArrayFromAFramework",
+       @"testNestedLiteralArrayDescriptionDoesNotCrash",
+       @"testNestedLiteralArrayPrintWithExactHelloShape",
 			];
 }
 
