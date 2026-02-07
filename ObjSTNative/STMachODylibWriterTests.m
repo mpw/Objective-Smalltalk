@@ -2842,7 +2842,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     if (handle) {
         id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(arrayPtr, [NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]);
+        EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded array");
         INTEXPECT((int)loadedArray.count, 2, @"array count");
@@ -2850,20 +2850,20 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         IDEXPECT(loadedArray[1], @"string2", @"array second element");
         
         id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(dictPtr, [NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]);
+        EXPECTNOTNIL(dictPtr, ([NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]));
         NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
         EXPECTNOTNIL(loadedDict, @"loaded dict");
         IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
         IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
         
         id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(numberPtr, [NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]);
+        EXPECTNOTNIL(numberPtr, ([NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]));
         NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
         EXPECTNOTNIL(loadedNumber, @"loaded number");
         INTEXPECT([loadedNumber intValue], 42, @"number value");
         
         id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(stringPtr, [NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]);
+        EXPECTNOTNIL(stringPtr, ([NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]));
         NSString *loadedString = stringPtr ? *stringPtr : nil;
         EXPECTNOTNIL(loadedString, @"loaded string");
         IDEXPECT(loadedString, stringLiteral, @"string value");
@@ -2905,7 +2905,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     if (handle) {
         id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(stringPtr, [NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]);
+        EXPECTNOTNIL(stringPtr, ([NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]));
         NSString *loadedString = stringPtr ? *stringPtr : nil;
         EXPECTNOTNIL(loadedString, @"loaded string");
         IDEXPECT(loadedString, stringLiteral, @"string value");
@@ -2945,7 +2945,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     if (handle) {
         id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(numberPtr, [NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]);
+        EXPECTNOTNIL(numberPtr, ([NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]));
         NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
         EXPECTNOTNIL(loadedNumber, @"loaded number");
         INTEXPECT([loadedNumber intValue], 42, @"number value");
@@ -2985,7 +2985,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     if (handle) {
         id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(arrayPtr, [NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]);
+        EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded array");
         INTEXPECT((int)loadedArray.count, 2, @"array count");
@@ -3027,7 +3027,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
     if (handle) {
         id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(arrayPtr, [NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]);
+        EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
         NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
         EXPECTNOTNIL(loadedArray, @"loaded nested array");
         INTEXPECT((int)loadedArray.count, 5, @"array count");
@@ -3074,7 +3074,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:arrayExport[@"global"]],
-               [NSString stringWithFormat:@"should export %@", arrayExport[@"global"]]);
+               ([NSString stringWithFormat:@"should export %@", arrayExport[@"global"]]));
     
     STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
@@ -3140,7 +3140,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     if (handle) {
         id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(dictPtr, [NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]);
+        EXPECTNOTNIL(dictPtr, ([NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]));
         NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
         EXPECTNOTNIL(loadedDict, @"loaded dict");
         IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
@@ -3181,7 +3181,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     NSArray *exports = [reader exportedSymbolNames];
     EXPECTTRUE([exports containsObject:dictExport[@"global"]],
-               [NSString stringWithFormat:@"should export %@", dictExport[@"global"]]);
+               ([NSString stringWithFormat:@"should export %@", dictExport[@"global"]]));
     
     STMachOSegment *dataConstSeg = [reader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(dataConstSeg, @"generated should have __DATA_CONST");
