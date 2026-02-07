@@ -12,10 +12,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class STMachOSectionWriter;
+@class STNativeCompiler;
 
 @interface STMachOWriter : STObjectFileWriter <SymbolWriter>
 
 @property (nonatomic, readonly) STMachOSectionWriter *textSectionWriter;
+@property (nonatomic, copy) NSString *outputDirectory;
+@property (nonatomic, copy) NSString *artifactBaseName;
+@property (nonatomic, copy, nullable) NSString *objectFileName;
+@property (nonatomic, copy, nullable) NSString *dylibFileName;
+@property (nonatomic, copy, nullable) NSString *dylibInstallNameOverride;
 
 -(void)generateMachO;
 -(NSData*)data;
@@ -27,9 +33,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addTextSectionData:(NSData*)data;
 -(NSString*)addClassReferenceForClass:(NSString*)className;
 -(NSString*)addClassReferenceForClass:(NSString*)className prefix:(NSString*)prefix;
-
-
-
+-(STNativeCompiler*)compiler;
+-(NSString*)objectPath;
+-(NSString*)dylibPath;
+-(NSString*)dylibInstallName;
+-(BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error;
+-(BOOL)writeSignedDylibWithDefaults:(NSError * _Nullable __autoreleasing *)error;
 
 @end
 

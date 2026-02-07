@@ -136,14 +136,21 @@
 }
 
 - (void)addExportedTextSymbol:(NSString *)symbol
-                      codeData:(NSData *)codeData
-                      atOffset:(NSUInteger)offset {
-  [self declareGlobalSymbol:symbol atOffset:(int)offset];
-  [self addTextSectionData:codeData];
+                     codeData:(NSData *)codeData
+                     atOffset:(NSUInteger)offset {
+    [self declareGlobalSymbol:symbol atOffset:(int)offset];
+    [self addTextSectionData:codeData];
+}
+
+- (void)addExportedTextSymbol:(NSString *)symbol
+                     codeData:(NSData *)codeData {
+    [self addExportedTextSymbol:symbol codeData:codeData atOffset:self.textSectionWriter.length];
 }
 
 - (BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error {
-  [self generateMachO];
+  if (self.installName.length == 0) {
+    self.installName = [self dylibInstallName];
+  }
   NSData *dylibData = [self data];
   if (![dylibData writeToFile:path atomically:YES]) {
     if (error) {
@@ -1577,6 +1584,9 @@
 #pragma mark - Main Write
 
 - (void)generateMachO {
+  if (self.installName.length == 0) {
+    self.installName = [self dylibInstallName];
+  }
   // Calculate sizes
   int idDylibSize = [self idDylibCommandSize];
   int textSegmentCmdSize = [self textSegmentCommandSize];

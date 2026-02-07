@@ -202,12 +202,10 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     (struct linkedit_data_command *)[reader
                                      loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
     EXPECTNOTNIL(chained, @"should have LC_DYLD_CHAINED_FIXUPS");
-    if (chained) {
-        NSLog(@"testDissectKnownCorrectDylib: LC_DYLD_CHAINED_FIXUPS: dataoff=0x%x "
-              @"datasize=0x%x",
-              chained->dataoff, chained->datasize);
-        INTEXPECT(chained->dataoff, 0x8000, @"chained fixups offset");
-    }
+    NSLog(@"testDissectKnownCorrectDylib: LC_DYLD_CHAINED_FIXUPS: dataoff=0x%x "
+          @"datasize=0x%x",
+          chained->dataoff, chained->datasize);
+    INTEXPECT(chained->dataoff, 0x8000, @"chained fixups offset");
 }
 
 + (void)testDylibExportsSymbol {
@@ -569,18 +567,25 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     }
 }
 
-+ (void)testMinimalDylibCanBeLoaded {
-    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
-    
-    // Simple function that returns 42
-    // mov w0, #42; ret
++(NSData*)codeForReturn42 {
     unsigned char code[] = {
         0x40, 0x05, 0x80, 0x52, // mov w0, #42
         0xc0, 0x03, 0x5f, 0xd6  // ret
     };
-    [writer addExportedTextSymbol:@"_answer"
-                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
-                         atOffset:0];
+    return [NSData dataWithBytes:code length:sizeof(code)];
+}
+
++(NSData*)codeForReturn0 {
+    unsigned char code[] = {
+        0x00, 0x00, 0x80, 0xd2, // mov x0, #0
+        0xc0, 0x03, 0x5f, 0xd6  // ret
+    };
+    return [NSData dataWithBytes:code length:sizeof(code)];
+}
+
++ (void)testMinimalDylibCanBeLoaded {
+    STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
+    [writer addExportedTextSymbol:@"_answer" codeData:[self codeForReturn42]];
     NSString *path = @"/tmp/libminimal_test.dylib";
     NSError *error = nil;
     EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
@@ -588,140 +593,35 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     // Try to load and call
     void *handle = dlopen([path fileSystemRepresentation], RTLD_NOW);
-    if (!handle) {
-        NSLog(@"dlopen error: %s", dlerror());
-    }
-    if (handle) {
-        int (*answer)(void) = dlsym(handle, "answer");
-        if (answer) {
-            INTEXPECT(answer(), 42, @"should return 42");
-        }
-        dlclose(handle);
-    }
     EXPECTNOTNIL(handle, @"dylib should load");
+    int (*answer)(void) = dlsym(handle, "answer");
+    EXPECTNOTNIL(answer, @"answer function pointr should load");
+        INTEXPECT(answer(), 42, @"should return 42");
+    dlclose(handle);
 }
 
-// Compiles an ObjectiveSmalltalk class directly to a dylib (no external
-// linker), loads it, and tests the class This test documents the goal:
-// STNativeCompiler should be able to use MPWMachODylibWriter to produce a
-// loadable framework directly, without going through .o files and ld.
-+ (void)testCompileSTClassDirectlyToDylibAndLoad {
-    // 1. Create a compiler that uses MPWMachODylibWriter instead of
-    // MPWMachOWriter
-    //    For now, we'll manually set up what STNativeCompiler would do
-    STMachODylibWriter *dylibWriter = [STMachODylibWriter stream];
-    dylibWriter.installName = @"@rpath/STTestClass.framework/STTestClass";
-    
-    // 2. Compile an ObjectiveSmalltalk class using the dylib writer
-    //    This is where the magic needs to happen - the compiler should:
-    //    - Generate code into __TEXT segment
-    //    - Generate ObjC metadata into __DATA segment
-    //    - Set up proper fixups/bindings for external symbols
-    
-    // For now, let's just verify the dylib writer can handle __DATA sections
-    // by checking that it doesn't crash when sections are added
-    
-    // Add a __TEXT section (code)
-    unsigned char retCode[] = {0x00, 0x00, 0x80, 0xD2,
-        0xC0, 0x03, 0x5F, 0xD6}; // mov x0, #0; ret
-    [dylibWriter.textSectionWriter declareGlobalTextSymbol:@"_testFunction"];
-    [dylibWriter addTextSectionData:[NSData dataWithBytes:retCode
-                                                   length:sizeof(retCode)]];
-    
-    // Try to add a __DATA section - this is what ObjC class structures need
-    STMachOSectionWriter *dataSection =
-    [dylibWriter addSectionWriterWithSegName:@"__DATA"
-                                    sectName:@"__objc_data"
-                                       flags:0];
-    EXPECTNOTNIL(dataSection, @"should be able to add __DATA section");
-    
-    // Write the file
-    [dylibWriter generateMachO];
-    NSData *dylibData = [dylibWriter data];
-    EXPECTNOTNIL(dylibData, @"should produce dylib data");
-    
-    // Write to framework structure
-    NSString *frameworkDir = @"/tmp/STTestClass.framework";
-    NSString *dylibPath =
-    [frameworkDir stringByAppendingPathComponent:@"STTestClass"];
-    
-    [[NSFileManager defaultManager] removeItemAtPath:frameworkDir error:nil];
-    [[NSFileManager defaultManager] createDirectoryAtPath:frameworkDir
-                              withIntermediateDirectories:YES
-                                               attributes:nil
-                                                    error:nil];
-    [dylibData writeToFile:dylibPath atomically:YES];
-    
-    // Code sign
-    NSString *codesignCmd =
-    [NSString stringWithFormat:@"codesign -f -s - %@", dylibPath];
-    int signResult = system([codesignCmd UTF8String]);
-    INTEXPECT(signResult, 0, @"codesign should succeed");
-    
-    // Try to load it - for now this just tests that our basic dylib loads
-    void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
-    if (!handle) {
-        NSLog(@"dlopen error: %s", dlerror());
-    }
-    EXPECTNOTNIL(handle, @"dylib with __DATA section should load");
-    
-    if (handle) {
-        // Verify our test function is exported
-        // Note: dlsym uses the symbol name WITHOUT the underscore prefix
-        void *fn = dlsym(handle, "testFunction");
-        EXPECTNOTNIL(fn, @"testFunction should be exported");
-        dlclose(handle);
-    }
-}
 
 + (void)testDylibWithMultipleFunctions {
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libmultifunc.dylib"];
     
-    // First function: returns 42
-    unsigned char answerCode[] = {
-        0x40, 0x05, 0x80, 0x52, // mov w0, #42
-        0xc0, 0x03, 0x5f, 0xd6  // ret
-    };
-    
-    // Second function: returns 0
-    unsigned char zeroCode[] = {
-        0x00, 0x00, 0x80, 0xd2, // mov x0, #0
-        0xc0, 0x03, 0x5f, 0xd6  // ret
-    };
-    
-    [writer addExportedTextSymbol:@"_answer"
-                         codeData:[NSData dataWithBytes:answerCode
-                                                 length:sizeof(answerCode)]
-                         atOffset:0];
-    NSLog(@"sizeof(answerCode): %ld", sizeof(answerCode));
-    
-    [writer addExportedTextSymbol:@"_zero"
-                         codeData:[NSData dataWithBytes:zeroCode
-                                                 length:sizeof(zeroCode)]
-                         atOffset:sizeof(answerCode)];
+    [writer addExportedTextSymbol:@"_answer" codeData:[self codeForReturn42]];
+    [writer addExportedTextSymbol:@"_zero" codeData:[self codeForReturn0]];
     NSString *path = @"/tmp/libmultifunc_test.dylib";
     NSError *error = nil;
     EXPECTTRUE([self writeSignedWriter:writer toPath:path error:&error],
                error.localizedDescription ?: @"should write and sign dylib");
-    
-    // Try to load and call all functions
     void *handle = dlopen([path fileSystemRepresentation], RTLD_NOW);
     EXPECTNOTNIL(handle, @"dylib should load");
-    if (handle) {
-        int (*answer)(void) = dlsym(handle, "answer");
-        EXPECTNOTNIL(answer, @"answer function should be found");
-        NSLog(@"address of answer function: %p", answer);
-        if (answer) {
-            INTEXPECT(answer(), 42, @"answer should return 42");
-        }
-        int (*zero)(void) = dlsym(handle, "zero");
-        EXPECTNOTNIL(zero, @"zero function should be found");
-        INTEXPECT((off_t)zero, (off_t)answer + 8,
-                  @"zero should be 8 bytes from answer");
-        INTEXPECT(zero(), 0, @"zero should return 0");
-        
-        dlclose(handle);
-    }
+    int (*answer)(void) = dlsym(handle, "answer");
+    EXPECTNOTNIL(answer, @"answer function should be found");
+    INTEXPECT(answer(), 42, @"answer should return 42");
+    int (*zero)(void) = dlsym(handle, "zero");
+    EXPECTNOTNIL(zero, @"zero function should be found");
+    INTEXPECT((off_t)zero, (off_t)answer + 8,
+              @"zero should be 8 bytes from answer");
+    INTEXPECT(zero(), 0, @"zero should return 0");
+    
+    dlclose(handle);
 }
 
 + (void)testDylibWithExternalCall {
@@ -753,19 +653,12 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     EXPECTNOTNIL(handle, @"dylib with external call should load");
     NSLog(@"did load");
     
-    if (handle) {
-        id (*wrap)(long) = dlsym(handle, "wrap_MPWCreateInteger");
-        EXPECTNOTNIL(wrap, @"wrapper function should be found");
-        if (wrap) {
-            NSLog(@"did find function");
-            id result = wrap(42);
-            EXPECTNOTNIL(result, @"should return an object");
-            if ([result isKindOfClass:[NSNumber class]]) {
-                INTEXPECT([result intValue], 42, @"should return number 42");
-            }
-        }
-        dlclose(handle);
-    }
+    id (*wrap)(long) = dlsym(handle, "wrap_MPWCreateInteger");
+    EXPECTNOTNIL(wrap, @"wrapper function should be found");
+    id result = wrap(42);
+    EXPECTNOTNIL(result, @"should return an object");
+    INTEXPECT([result intValue], 42, @"should return number 42");
+    dlclose(handle);
 }
 
 // Helper to extract chained fixups data from a dylib
@@ -884,7 +777,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
                           label:(NSString *)label {
     STMachOSection *classListSection = [self sectionNamed:@"__objc_classlist" inReader:reader];
     EXPECTNOTNIL(classListSection, ([NSString stringWithFormat:@"%@: should have __objc_classlist", label]));
-    if (!classListSection) return;
     
     long expectedSize = (long)classNames.count * 8;
     INTEXPECT(classListSection.size, expectedSize,
@@ -953,15 +845,14 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     (struct linkedit_data_command *)[reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
     EXPECTNOTNIL(chainedCmd, @"reference dylib should have LC_DYLD_CHAINED_FIXUPS");
     
-    if (chainedCmd) {
-        // 3b. Characterize chained fixups header
-        NSData *chainedData = [self chainedFixupsDataFromReader:reader];
-        EXPECTNOTNIL(chainedData, @"should have chained fixups data");
-        EXPECTTRUE(chainedData.length >= sizeof(struct dyld_chained_fixups_header),
-                   @"chained data should be large enough for header");
-        
-        const struct dyld_chained_fixups_header *header =
-        (const struct dyld_chained_fixups_header *)chainedData.bytes;
+    // 3b. Characterize chained fixups header
+    NSData *chainedData = [self chainedFixupsDataFromReader:reader];
+    EXPECTNOTNIL(chainedData, @"should have chained fixups data");
+    EXPECTTRUE(chainedData.length >= sizeof(struct dyld_chained_fixups_header),
+               @"chained data should be large enough for header");
+    
+    const struct dyld_chained_fixups_header *header =
+    (const struct dyld_chained_fixups_header *)chainedData.bytes;
         
         // Characterize header fields
         INTEXPECT(header->fixups_version, 0, @"fixups_version should be 0");
@@ -1008,15 +899,14 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         (const struct dyld_chained_import *)(chainedData.bytes + header->imports_offset);
         const char *symbolPool = (const char *)(chainedData.bytes + header->symbols_offset);
         
-        for (uint32_t i = 0; i < header->imports_count; i++) {
+    for (uint32_t i = 0; i < header->imports_count; i++) {
             const char *symbolName = symbolPool + imports[i].name_offset;
             NSLog(@"Reference import %u: lib_ordinal=%u weak=%u name='%s'",
                   i, imports[i].lib_ordinal, imports[i].weak_import, symbolName);
             
             // We expect _MPWCreateInteger to be imported
-            if (strcmp(symbolName, "_MPWCreateInteger") == 0) {
-                NSLog(@"Found _MPWCreateInteger at import index %u with lib_ordinal %u", i, imports[i].lib_ordinal);
-            }
+        if (strcmp(symbolName, "_MPWCreateInteger") == 0) {
+            NSLog(@"Found _MPWCreateInteger at import index %u with lib_ordinal %u", i, imports[i].lib_ordinal);
         }
     }
     
@@ -1077,7 +967,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     STMachOSection *textSection = [reader textSection];
     EXPECTNOTNIL(textSection, @"should have __text section");
     
-    if (textSection && stubsSection) {
+    if (stubsSection) {
         NSData *textData = [refDylibData subdataWithRange:NSMakeRange(textSection.offset, textSection.size)];
         const uint32_t *textWords = (const uint32_t *)textData.bytes;
         
@@ -1144,7 +1034,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     (struct linkedit_data_command *)[reader loadCommandOfTypeIfPresent:LC_DYLD_CHAINED_FIXUPS];
     EXPECTNOTNIL(chainedCmd, @"generated dylib should have LC_DYLD_CHAINED_FIXUPS");
     
-    if (chainedCmd) {
         // 2. Characterize chained fixups header
         NSData *chainedData = [self chainedFixupsDataFromReader:reader];
         EXPECTNOTNIL(chainedData, @"should have chained fixups data");
@@ -1216,7 +1105,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
                 }
             }
         }
-    }
     
     // 5. Characterize __stubs section
     STMachOSegment *textSeg = [reader segmentObjectNamed:@"__TEXT"];
@@ -1280,7 +1168,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     STMachOSection *textSection = [reader textSection];
     EXPECTNOTNIL(textSection, @"should have __text section");
     
-    if (textSection && stubsSection) {
+    if (stubsSection) {
         NSData *textData = [genDylibData subdataWithRange:NSMakeRange(textSection.offset, textSection.size)];
         const uint32_t *textWords = (const uint32_t *)textData.bytes;
         
@@ -1316,16 +1204,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     STMachODylibWriter *writer = [STMachODylibWriter stream];
     NSString *path = @"/tmp/libintra.dylib";
     writer.installName = @"@rpath/libintra.dylib";
-    
-    // Function 1: _helper - returns 42
-    unsigned char helperCode[] = {
-        0x40, 0x05, 0x80, 0x52, // mov w0, #42
-        0xc0, 0x03, 0x5f, 0xd6  // ret
-    };
-    
-    // Declare helper at offset 0
-    [writer declareGlobalSymbol:@"_helper" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:helperCode length:sizeof(helperCode)]];
+    NSData *helperCode=[self codeForReturn42];
+    [writer addExportedTextSymbol:@"_helper" codeData:helperCode];
+
     
     // Function 2: _caller - calls _helper and returns result
     STObjectCodeGeneratorARM *gen = [STObjectCodeGeneratorARM stream];
@@ -1337,7 +1218,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     }];
     
     // Declare caller at offset after helper
-    [writer declareGlobalSymbol:@"_caller" atOffset:sizeof(helperCode)];
+    [writer declareGlobalSymbol:@"_caller" atOffset:helperCode.length];
     [writer addTextSectionData:gen.generatedCode];
     
     [writer generateMachO];
@@ -1354,21 +1235,15 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     }
     EXPECTNOTNIL(handle, @"dylib with intra-library call should load");
     
-    if (handle) {
-        int (*caller)(void) = dlsym(handle, "caller");
-        EXPECTNOTNIL(caller, @"caller function should be found");
-        if (caller) {
-            INTEXPECT(caller(), 42, @"caller should return 42 (from helper)");
-        }
-        
-        int (*helper)(void) = dlsym(handle, "helper");
-        EXPECTNOTNIL(helper, @"helper function should also be exported");
-        if (helper) {
-            INTEXPECT(helper(), 42, @"helper should return 42 directly");
-        }
-        
-        dlclose(handle);
-    }
+    int (*caller)(void) = dlsym(handle, "caller");
+    EXPECTNOTNIL(caller, @"caller function should be found");
+    INTEXPECT(caller(), 42, @"caller should return 42 (from helper)");
+    
+    int (*helper)(void) = dlsym(handle, "helper");
+    EXPECTNOTNIL(helper, @"helper function should also be exported");
+    INTEXPECT(helper(), 42, @"helper should return 42 directly");
+    
+    dlclose(handle);
     
     // Cleanup
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
@@ -1454,16 +1329,11 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     // 7. Test that reference dylib actually loads and works
     void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
     EXPECTNOTNIL(handle, @"reference dylib should load");
-    
-    if (handle) {
-        id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
-        EXPECTNOTNIL(concatStrings, @"should find concatStrings");
-        if (concatStrings) {
-            NSString *result = concatStrings(@"Hello, ", @"World!");
-            IDEXPECT(result, @"Hello, World!", @"reference should work correctly");
-        }
-        dlclose(handle);
-    }
+    id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
+    EXPECTNOTNIL(concatStrings, @"should find concatStrings");
+    NSString *result = concatStrings(@"Hello, ", @"World!");
+    IDEXPECT(result, @"Hello, World!", @"reference should work correctly");
+    dlclose(handle);
     
     // Cleanup temp files
     [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
@@ -1580,18 +1450,13 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         NSLog(@"dlopen error: %s", dlerror());
     }
     EXPECTNOTNIL(handle, @"dylib with message send should load");
-    
-    if (handle) {
-        id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
-        EXPECTNOTNIL(concatStrings, @"concatStrings function should be found");
-        if (concatStrings) {
-            NSString *prefix = @"Hello, ";
-            NSString *suffix = @"World!";
-            NSString *result = concatStrings(prefix, suffix);
-            IDEXPECT(result, @"Hello, World!", @"should concatenate strings");
-        }
-        dlclose(handle);
-    }
+    id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
+    EXPECTNOTNIL(concatStrings, @"concatStrings function should be found");
+    NSString *prefix = @"Hello, ";
+    NSString *suffix = @"World!";
+    NSString *result = concatStrings(prefix, suffix);
+    IDEXPECT(result, @"Hello, World!", @"should concatenate strings");
+    dlclose(handle);
     
     // Cleanup
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
@@ -1684,15 +1549,11 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     // 9. Test that reference dylib actually loads
     void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
     EXPECTNOTNIL(handle, @"reference dylib should load");
-    if (handle) {
-        id (*returnString)(void) = dlsym(handle, "returnString");
-        EXPECTNOTNIL(returnString, @"should find returnString");
-        if (returnString) {
-            NSString *result = returnString();
-            IDEXPECT(result, @"Test String", @"reference should return correct string");
-        }
-        dlclose(handle);
-    }
+    id (*returnString)(void) = dlsym(handle, "returnString");
+    EXPECTNOTNIL(returnString, @"should find returnString");
+    NSString *result = returnString();
+    IDEXPECT(result, @"Test String", @"reference should return correct string");
+    dlclose(handle);
     
     // Cleanup temp files
     [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
@@ -1783,17 +1644,14 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testCharacterizeReferenceConstArrayFramework {
     NSURL *frameworkURL = [[NSBundle bundleForClass:self] URLForResource:@"ConstArray" withExtension:@"framework"];
     EXPECTNOTNIL(frameworkURL, @"ConstArray framework URL");
-    if (!frameworkURL) return;
     
     NSBundle *frameworkBundle = [NSBundle bundleWithURL:frameworkURL];
     EXPECTNOTNIL(frameworkBundle, @"ConstArray framework bundle");
     NSURL *executableURL = [frameworkBundle executableURL];
     EXPECTNOTNIL(executableURL, @"ConstArray framework executable URL");
-    if (!executableURL) return;
     
     NSData *refData = [NSData dataWithContentsOfURL:executableURL];
     EXPECTNOTNIL(refData, @"ConstArray framework data");
-    if (!refData) return;
     
     STMachOReader *reader = [STMachOReader readerWithData:refData];
     EXPECTNOTNIL(reader, @"reader should be created");
@@ -1848,7 +1706,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated dylib data");
-    if (!genData) return;
     
     STMachOReader *reader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(reader, @"reader should be created");
@@ -2136,17 +1993,14 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     // 1. Load reference framework executable
     NSURL *frameworkURL = [[NSBundle bundleForClass:self] URLForResource:@"ConstArray" withExtension:@"framework"];
     EXPECTNOTNIL(frameworkURL, @"ConstArray framework URL");
-    if (!frameworkURL) return;
     
     NSBundle *frameworkBundle = [NSBundle bundleWithURL:frameworkURL];
     EXPECTNOTNIL(frameworkBundle, @"ConstArray framework bundle");
     NSURL *executableURL = [frameworkBundle executableURL];
     EXPECTNOTNIL(executableURL, @"ConstArray executable URL");
-    if (!executableURL) return;
     
     NSData *refData = [NSData dataWithContentsOfURL:executableURL];
     EXPECTNOTNIL(refData, @"reference framework data");
-    if (!refData) return;
     
     STMachOReader *refReader = [STMachOReader readerWithData:refData];
     EXPECTNOTNIL(refReader, @"ref reader should be created");
@@ -2176,7 +2030,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated dylib data");
-    if (!genData) return;
     
     STMachOReader *genReader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(genReader, @"gen reader should be created");
@@ -2187,7 +2040,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     STMachOSegment *genDataConst = [genReader segmentObjectNamed:@"__DATA_CONST"];
     EXPECTNOTNIL(refDataConst, @"reference should have __DATA_CONST");
     EXPECTNOTNIL(genDataConst, @"generated should have __DATA_CONST");
-    if (!refDataConst || !genDataConst) return;
     
     STMachOSection *refArrayObj = [self findSectionNamed:@"__objc_arrayobj" inSegment:refDataConst];
     STMachOSection *refArrayData = [self findSectionNamed:@"__objc_arraydata" inSegment:refDataConst];
@@ -2391,10 +2243,10 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 }
 
 + (void)testKnownGoodExternalLinkerDylibWithConstantNSString {
-    STNativeCompiler *compiler = [STNativeCompiler compiler];
-    STMachOWriter *writer = compiler.writer;
-    NSString *objectPath = @"/tmp/justconstantstring-ref.o";
-    NSString *path = @"/tmp/libconstantstring-ref.dylib";
+    STMachOWriter *writer = [STMachOWriter stream];
+    writer.artifactBaseName = @"constantstring-ref";
+    STNativeCompiler *compiler = [writer compiler];
+    NSString *path = [writer dylibPath];
     
     NSString *stringToGeneratorAndCheck = @"Hello World Constant Strign in dylib";
     
@@ -2405,19 +2257,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     }];
     
     [writer addTextSectionData:(NSData*)gen.generatedCode];
-    [writer generateMachO];
-    [writer.data writeToFile:objectPath atomically:YES];
-    
-    // 2. Link with external linker
-    int linkResult = [compiler linkObjects:@[@"justconstantstring-ref"]
-                           toSharedLibrary:@"libconstantstring-ref.dylib"
-                                     inDir:@"/tmp"
-                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
-    INTEXPECT(linkResult, 0, @"external linker should succeed");
-    
-    
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
+               error.localizedDescription ?: @"external linker convenience should succeed");
     
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString=nil;
@@ -2438,9 +2280,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 + (void)testDylibWithConstantNSString {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
-    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
-    NSString *path = @"/tmp/libconstantstring.dylib";
-    writer.installName = @"@rpath/libconstantstring.dylib";
+    writer.artifactBaseName = @"constantstring";
+    STNativeCompiler *compiler = [writer compiler];
+    NSString *path = [writer dylibPath];
     // ___CFConstantStringClassReference is in CoreFoundation, need to link Foundation
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     
@@ -2453,11 +2295,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     }];
     
     [writer addTextSectionData:gen.generatedCode];
-    [writer generateMachO];
-    NSData *genDylibData = [writer data];
-    [genDylibData writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
+               error.localizedDescription ?: @"dylib writer convenience should succeed");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
@@ -2466,17 +2306,13 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     EXPECTNOTNIL(handle, errorString);
     NSLog(@"testDylibWithConstantNSString: dlopen result = %p", handle);
     
-    if (handle) {
-        id (*returnString)(void) = dlsym(handle, "returnString");
-        EXPECTNOTNIL(returnString, @"returnString function address");
-        if (returnString) {
-            NSLog(@"testDylibWithConstantNSString: About to call returnString()");
-            id result = returnString();
-            NSLog(@"testDylibWithConstantNSString: Got result = %@", result);
-            IDEXPECT(result, stringToGeneratorAndCheck, @"returned constant string");
-        }
-        dlclose(handle);
-    }
+    id (*returnString)(void) = dlsym(handle, "returnString");
+    EXPECTNOTNIL(returnString, @"returnString function address");
+    NSLog(@"testDylibWithConstantNSString: About to call returnString()");
+    id result = returnString();
+    NSLog(@"testDylibWithConstantNSString: Got result = %@", result);
+    IDEXPECT(result, stringToGeneratorAndCheck, @"returned constant string");
+    dlclose(handle);
     
     // Cleanup
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
@@ -2495,9 +2331,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 +(void)testDylibWithCompiledObjectiveSmalltalkClass
 {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
-    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
-    NSString *path = @"/tmp/compiled-st-class.dylib";
-    writer.installName = @"@rpath/compiled-st-class.dylib";
+    writer.artifactBaseName = @"compiled-st-class";
+    STNativeCompiler *compiler = [writer compiler];
+    NSString *path = [writer dylibPath];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     NSString *className = @"TestClassCode1";
@@ -2507,10 +2343,10 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     NSData *dylibdata = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
     
-    //    [writer addTextSectionData:gen.generatedCode];
-    [dylibdata writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -s - %@", path] UTF8String]);
+    EXPECTTRUE(dylibdata.length > 0, @"dylib data should be generated");
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
+               error.localizedDescription ?: @"dylib writer convenience should succeed");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
@@ -2534,30 +2370,20 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 +(void)testDylibWithCompiledObjectiveSmalltalkClassRef
 {
-    STNativeCompiler *compiler = [STNativeCompiler compiler];
-    NSString *path = @"/tmp/compiled-st-class-ref.o";
-    NSString *lib = @"libst-test-class.dylib";\
-    NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
+    STMachOWriter *writer = [STMachOWriter stream];
+    writer.artifactBaseName = @"st-test-class";
+    writer.objectFileName = @"compiled-st-class-ref.o";
+    STNativeCompiler *compiler = [writer compiler];
+    NSString *libpath = [writer dylibPath];
     NSString *className = @"TestClassCode2";
     
     NSString *classToCompile = [self testClassCodeWithName:className];
     
     NSData *compiled = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
-    
-    //    [writer addTextSectionData:gen.generatedCode];
-    [compiled writeToFile:path atomically:YES];
-    
-    // 2. Link with external linker
-    int linkResult = [compiler linkObjects:@[@"compiled-st-class-ref"]
-                           toSharedLibrary:lib
-                                     inDir:@"/tmp"
-                            withFrameworks:@[@"MPWFoundation", @"Foundation"]];
-    INTEXPECT(linkResult, 0, @"external linker should succeed");
-    
-    
-    
-    
-    system([[NSString stringWithFormat:@"codesign -s - /tmp/%@", @"libst-test-class.dylib"] UTF8String]);
+    EXPECTTRUE(compiled.length > 0, @"object data should be generated");
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
+               error.localizedDescription ?: @"external linker convenience should succeed");
     void *handle = dlopen([libpath UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
@@ -2582,9 +2408,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 +(void)testDylibWithTwoClasses
 {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
-    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
-    NSString *path = @"/tmp/two-compiled-st-classes.dylib";
-    writer.installName = @"@rpath/two-compiled-st-classes.dylib";
+    writer.artifactBaseName = @"two-compiled-st-classes";
+    STNativeCompiler *compiler = [writer compiler];
+    NSString *path = [writer dylibPath];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     NSString *class1Name = @"TestClassCode3";
@@ -2596,10 +2422,10 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     NSData *dylibdata = [compiler compileClassesToMachoO:@[ [compiler compile:class1ToCompile], [compiler compile:class2ToCompile]]];
     
-    //    [writer addTextSectionData:gen.generatedCode];
-    [dylibdata writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -s - %@", path] UTF8String]);
+    EXPECTTRUE(dylibdata.length > 0, @"dylib data should be generated");
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
+               error.localizedDescription ?: @"dylib writer convenience should succeed");
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
@@ -2672,8 +2498,8 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 +(void)testCharacterizeGeneratedTwoClassesDylib
 {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
-    STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
-    writer.installName = @"@rpath/two-classes-gen.dylib";
+    writer.artifactBaseName = @"two-classes-gen";
+    STNativeCompiler *compiler = [writer compiler];
     [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
     [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
     
@@ -2839,37 +2665,34 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         errorString = @(dlerror());
     }
     EXPECTNOTNIL(handle, errorString);
+    id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
+    NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
+    EXPECTNOTNIL(loadedArray, @"loaded array");
+    INTEXPECT((int)loadedArray.count, 2, @"array count");
+    IDEXPECT(loadedArray[0], @"string1", @"array first element");
+    IDEXPECT(loadedArray[1], @"string2", @"array second element");
     
-    if (handle) {
-        id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
-        NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
-        EXPECTNOTNIL(loadedArray, @"loaded array");
-        INTEXPECT((int)loadedArray.count, 2, @"array count");
-        IDEXPECT(loadedArray[0], @"string1", @"array first element");
-        IDEXPECT(loadedArray[1], @"string2", @"array second element");
-        
-        id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(dictPtr, ([NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]));
-        NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
-        EXPECTNOTNIL(loadedDict, @"loaded dict");
-        IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
-        IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
-        
-        id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(numberPtr, ([NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]));
-        NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
-        EXPECTNOTNIL(loadedNumber, @"loaded number");
-        INTEXPECT([loadedNumber intValue], 42, @"number value");
-        
-        id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(stringPtr, ([NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]));
-        NSString *loadedString = stringPtr ? *stringPtr : nil;
-        EXPECTNOTNIL(loadedString, @"loaded string");
-        IDEXPECT(loadedString, stringLiteral, @"string value");
-        
-        dlclose(handle);
-    }
+    id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(dictPtr, ([NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]));
+    NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
+    EXPECTNOTNIL(loadedDict, @"loaded dict");
+    IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
+    IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
+    
+    id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(numberPtr, ([NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]));
+    NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
+    EXPECTNOTNIL(loadedNumber, @"loaded number");
+    INTEXPECT([loadedNumber intValue], 42, @"number value");
+    
+    id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(stringPtr, ([NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]));
+    NSString *loadedString = stringPtr ? *stringPtr : nil;
+    EXPECTNOTNIL(loadedString, @"loaded string");
+    IDEXPECT(loadedString, stringLiteral, @"string value");
+    
+    dlclose(handle);
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
@@ -2902,15 +2725,12 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         errorString = @(dlerror());
     }
     EXPECTNOTNIL(handle, errorString);
-    
-    if (handle) {
-        id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(stringPtr, ([NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]));
-        NSString *loadedString = stringPtr ? *stringPtr : nil;
-        EXPECTNOTNIL(loadedString, @"loaded string");
-        IDEXPECT(loadedString, stringLiteral, @"string value");
-        dlclose(handle);
-    }
+    id *stringPtr = dlsym(handle, [stringExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(stringPtr, ([NSString stringWithFormat:@"%@ symbol", stringExport[@"plain"]]));
+    NSString *loadedString = stringPtr ? *stringPtr : nil;
+    EXPECTNOTNIL(loadedString, @"loaded string");
+    IDEXPECT(loadedString, stringLiteral, @"string value");
+    dlclose(handle);
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
@@ -2942,15 +2762,12 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         errorString = @(dlerror());
     }
     EXPECTNOTNIL(handle, errorString);
-    
-    if (handle) {
-        id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(numberPtr, ([NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]));
-        NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
-        EXPECTNOTNIL(loadedNumber, @"loaded number");
-        INTEXPECT([loadedNumber intValue], 42, @"number value");
-        dlclose(handle);
-    }
+    id *numberPtr = dlsym(handle, [numberExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(numberPtr, ([NSString stringWithFormat:@"%@ symbol", numberExport[@"plain"]]));
+    NSNumber *loadedNumber = numberPtr ? *numberPtr : nil;
+    EXPECTNOTNIL(loadedNumber, @"loaded number");
+    INTEXPECT([loadedNumber intValue], 42, @"number value");
+    dlclose(handle);
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
@@ -2982,17 +2799,14 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         errorString = @(dlerror());
     }
     EXPECTNOTNIL(handle, errorString);
-    
-    if (handle) {
-        id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
-        NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
-        EXPECTNOTNIL(loadedArray, @"loaded array");
-        INTEXPECT((int)loadedArray.count, 2, @"array count");
-        IDEXPECT(loadedArray[0], @"string1", @"array first element");
-        IDEXPECT(loadedArray[1], @"string2", @"array second element");
-        dlclose(handle);
-    }
+    id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
+    NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
+    EXPECTNOTNIL(loadedArray, @"loaded array");
+    INTEXPECT((int)loadedArray.count, 2, @"array count");
+    IDEXPECT(loadedArray[0], @"string1", @"array first element");
+    IDEXPECT(loadedArray[1], @"string2", @"array second element");
+    dlclose(handle);
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
@@ -3025,21 +2839,19 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     }
     EXPECTNOTNIL(handle, errorString);
 
-    if (handle) {
-        id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
-        NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
-        EXPECTNOTNIL(loadedArray, @"loaded nested array");
-        INTEXPECT((int)loadedArray.count, 5, @"array count");
-        IDEXPECT(loadedArray[0], @2, @"array first element");
-        IDEXPECT(loadedArray[1], @12, @"array second element");
-        IDEXPECT(loadedArray[2], @"some string", @"array third element");
-        EXPECTTRUE([loadedArray[3] isKindOfClass:[NSArray class]], @"array fourth element is nested array");
-        IDEXPECT(loadedArray[3], (@[ @"nested", @"array", @55 ]), @"nested array content");
-        IDEXPECT(loadedArray[4], @99, @"array fifth element");
-        EXPECTNOTNIL([loadedArray description], @"description should not crash");
-        dlclose(handle);
-    }
+    id *arrayPtr = dlsym(handle, [arrayExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(arrayPtr, ([NSString stringWithFormat:@"%@ symbol", arrayExport[@"plain"]]));
+    NSArray *loadedArray = arrayPtr ? *arrayPtr : nil;
+    EXPECTNOTNIL(loadedArray, @"loaded nested array");
+    INTEXPECT((int)loadedArray.count, 5, @"array count");
+    IDEXPECT(loadedArray[0], @2, @"array first element");
+    IDEXPECT(loadedArray[1], @12, @"array second element");
+    IDEXPECT(loadedArray[2], @"some string", @"array third element");
+    EXPECTTRUE([loadedArray[3] isKindOfClass:[NSArray class]], @"array fourth element is nested array");
+    IDEXPECT(loadedArray[3], (@[ @"nested", @"array", @55 ]), @"nested array content");
+    IDEXPECT(loadedArray[4], @99, @"array fifth element");
+    EXPECTNOTNIL([loadedArray description], @"description should not crash");
+    dlclose(handle);
 
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
@@ -3066,7 +2878,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated array dylib data");
-    if (!genData) return;
     
     STMachOReader *reader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(reader, @"reader should be created");
@@ -3137,16 +2948,13 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         errorString = @(dlerror());
     }
     EXPECTNOTNIL(handle, errorString);
-    
-    if (handle) {
-        id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
-        EXPECTNOTNIL(dictPtr, ([NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]));
-        NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
-        EXPECTNOTNIL(loadedDict, @"loaded dict");
-        IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
-        IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
-        dlclose(handle);
-    }
+    id *dictPtr = dlsym(handle, [dictExport[@"plain"] UTF8String]);
+    EXPECTNOTNIL(dictPtr, ([NSString stringWithFormat:@"%@ symbol", dictExport[@"plain"]]));
+    NSDictionary *loadedDict = dictPtr ? *dictPtr : nil;
+    EXPECTNOTNIL(loadedDict, @"loaded dict");
+    IDEXPECT(loadedDict[@"a"], @"b", @"dict value a");
+    IDEXPECT(loadedDict[@"c"], @"d", @"dict value c");
+    dlclose(handle);
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
@@ -3173,7 +2981,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [writer generateMachO];
     NSData *genData = [writer data];
     EXPECTNOTNIL(genData, @"generated dict dylib data");
-    if (!genData) return;
     
     STMachOReader *reader = [STMachOReader readerWithData:genData];
     EXPECTNOTNIL(reader, @"reader should be created");

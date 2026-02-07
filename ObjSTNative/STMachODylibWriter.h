@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addExportedTextSymbol:(NSString *)symbol
                       codeData:(NSData *)codeData
                       atOffset:(NSUInteger)offset;
+- (void)addExportedTextSymbol:(NSString *)symbol
+                     codeData:(NSData *)codeData;
 - (BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error;
 
 @end

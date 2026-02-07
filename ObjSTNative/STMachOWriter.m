@@ -15,6 +15,7 @@
 #import "Mach_O_Structs.h"
 #import "STMachOSectionWriter.h"
 #import "MPWStringTableWriter.h"
+#import "STNativeCompiler.h"
 
 @interface STMachOWriter()
 
@@ -43,6 +44,8 @@
 {
     symtab_entry *symtab;
 }
+
+static int sMachOWriterArtifactCounter = 0;
 
 
 -(void)addSectionWriter:(STMachOSectionWriter*)newWriter
@@ -102,6 +105,9 @@
 {
     self=[super initWithTarget:aTarget];
     if ( self ) {
+        sMachOWriterArtifactCounter++;
+        self.outputDirectory = @"/tmp";
+        self.artifactBaseName = [NSString stringWithFormat:@"stmacho_%d",sMachOWriterArtifactCounter];
         self.cputype = CPU_TYPE_ARM64;
         self.filetype = MH_OBJECT;
         self.classReferences=[NSMutableDictionary dictionary];
@@ -120,6 +126,120 @@
         
     }
     return self;
+}
+
+-(NSString*)resolvedPathForFileName:(NSString*)fileName
+{
+    if ( [fileName hasPrefix:@"/"] ) {
+        return fileName;
+    }
+    return [self.outputDirectory stringByAppendingPathComponent:fileName];
+}
+
+-(NSString*)defaultObjectFileName
+{
+    return [NSString stringWithFormat:@"%@.o",self.artifactBaseName];
+}
+
+-(NSString*)defaultDylibFileName
+{
+    return [NSString stringWithFormat:@"lib%@.dylib",self.artifactBaseName];
+}
+
+-(NSString*)objectPath
+{
+    return [self resolvedPathForFileName:(self.objectFileName ?: [self defaultObjectFileName])];
+}
+
+-(NSString*)dylibPath
+{
+    return [self resolvedPathForFileName:(self.dylibFileName ?: [self defaultDylibFileName])];
+}
+
+-(NSString*)dylibInstallName
+{
+    if ( self.dylibInstallNameOverride.length ) {
+        return self.dylibInstallNameOverride;
+    }
+    return [@"@rpath/" stringByAppendingString:[[self dylibPath] lastPathComponent]];
+}
+
+-(STNativeCompiler*)compiler
+{
+    return [[[STNativeCompiler alloc] initWithWriter:self] autorelease];
+}
+
+-(BOOL)codesignFileAtPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error
+{
+    NSTask *codesignTask = [[[NSTask alloc] init] autorelease];
+    codesignTask.launchPath = @"/usr/bin/codesign";
+    codesignTask.arguments = @[ @"-f", @"-s", @"-", path ];
+    [codesignTask launch];
+    [codesignTask waitUntilExit];
+    if (codesignTask.terminationStatus != 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"STMachOWriterErrorDomain"
+                                         code:3
+                                     userInfo:@{
+                NSLocalizedDescriptionKey:
+                    [NSString stringWithFormat:@"codesign failed for %@", path]
+            }];
+        }
+        return NO;
+    }
+    return YES;
+}
+
+-(BOOL)writeSignedDylibToPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error
+{
+    NSData *objectData = [self data];
+    NSString *objectPath = [self objectPath];
+    if (![objectData writeToFile:objectPath atomically:YES]) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"STMachOWriterErrorDomain"
+                                         code:1
+                                     userInfo:@{
+                NSLocalizedDescriptionKey:
+                    [NSString stringWithFormat:@"failed to write object file at %@", objectPath]
+            }];
+        }
+        return NO;
+    }
+    NSString *objectDir = [objectPath stringByDeletingLastPathComponent];
+    NSString *dylibDir = [path stringByDeletingLastPathComponent];
+    if (![objectDir isEqualToString:dylibDir]) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"STMachOWriterErrorDomain"
+                                         code:4
+                                     userInfo:@{
+                NSLocalizedDescriptionKey:
+                    [NSString stringWithFormat:@"object and dylib directories must match (%@ vs %@)", objectDir, dylibDir]
+            }];
+        }
+        return NO;
+    }
+    STNativeCompiler *linkCompiler = [self compiler];
+    int linkResult = [linkCompiler linkObjects:@[[[objectPath lastPathComponent] stringByDeletingPathExtension]]
+                               toSharedLibrary:[path lastPathComponent]
+                                         inDir:objectDir
+                                withFrameworks:@[@"MPWFoundation", @"Foundation"]];
+    if (linkResult != 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"STMachOWriterErrorDomain"
+                                         code:2
+                                     userInfo:@{
+                NSLocalizedDescriptionKey:
+                    [NSString stringWithFormat:@"linker failed with status %d", linkResult]
+            }];
+        }
+        return NO;
+    }
+    return [self codesignFileAtPath:path error:error];
+}
+
+-(BOOL)writeSignedDylibWithDefaults:(NSError * _Nullable __autoreleasing *)error
+{
+    return [self writeSignedDylibToPath:[self dylibPath] error:error];
 }
 
 
