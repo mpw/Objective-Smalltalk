@@ -13,3 +13,4 @@ raspi/raspish
 a.out
 default.profraw
 build
+*.xcuserstate
