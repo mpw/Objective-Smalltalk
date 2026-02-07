@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@interface MPWMethodDescriptor : NSObject
+@interface STMethodDescriptor : NSObject
 {
     NSString *symbol;
     NSString *name;

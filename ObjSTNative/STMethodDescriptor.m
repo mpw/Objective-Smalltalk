@@ -6,9 +6,9 @@
 //
 //
 
-#import "MPWMethodDescriptor.h"
+#import "STMethodDescriptor.h"
 
-@implementation MPWMethodDescriptor
+@implementation STMethodDescriptor
 
 
 objectAccessor(NSString*, symbol, setSymbol)
