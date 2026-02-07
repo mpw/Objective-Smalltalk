@@ -90,7 +90,7 @@
         writer.installName = installName;
     }
     for (NSString *frameworkPath in frameworks) {
-        [writer.frameworks addObject:frameworkPath];
+        [writer addExternalLibraryPath:frameworkPath];
     }
 
     NSArray<STClassDefinition *> *classes = [self compiledClassesWithCompiler:compiler];

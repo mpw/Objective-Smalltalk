@@ -51,9 +51,6 @@
   imp.symbolName = symbolName;
   imp.dylibOrdinal = dylibOrdinal;
   [imports addObject:imp];
-//  NSLog(
-//      @"MPWChainedFixupWriter: Added NEW import %@ from dylib %d at index %lu",
-//      symbolName, dylibOrdinal, (unsigned long)imports.count - 1);
   return (int)imports.count - 1;
 }
 

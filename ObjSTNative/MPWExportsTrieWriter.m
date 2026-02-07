@@ -121,22 +121,32 @@
   uint8_t numChildren = (uint8_t)symbolNames.count;
   [trie appendBytes:&numChildren length:1];
 
-  // 3. Calculate start of terminal nodes
-  // The terminal nodes will start after root header and all edges
-  long currentOffset = trie.length;
-  for (NSString *symbol in symbolNames) {
-    const char *name = [symbol UTF8String];
-    currentOffset += strlen(name) + 1; // name + null
-
-    // We need to know how many bytes the offset ULEB128 will take.
-    // For a flat trie, these offsets are small, but let's be safe.
-    // We'll assume 1 byte for now and verify, or use a fixed size if possible.
-    // Mach-O typically uses ULEB128.
-    currentOffset += 1; // Placeholder for offset byte(s)
+  // 3. Calculate start of terminal nodes (fixed-point because ULEB sizes depend on offsets)
+  long terminalNodeStart = trie.length;
+  long lastTerminalNodeStart = -1;
+  while (terminalNodeStart != lastTerminalNodeStart) {
+    lastTerminalNodeStart = terminalNodeStart;
+    long runningTerminalOffset = terminalNodeStart;
+    long edgesSize = 0;
+    for (int i = 0; i < symbolNames.count; i++) {
+      NSString *symbol = symbolNames[i];
+      const char *name = [symbol UTF8String];
+      int nameLen = (int)strlen(name) + 1;
+      // Compute ULEB128 size for the current terminal offset
+      uint64_t value = (uint64_t)runningTerminalOffset;
+      int ulebSize = 0;
+      do {
+        ulebSize++;
+        value >>= 7;
+      } while (value != 0);
+      edgesSize += nameLen + ulebSize;
+      NSData *terminalNode = terminalNodes[i];
+      runningTerminalOffset += terminalNode.length;
+    }
+    terminalNodeStart = 2 + edgesSize; // root header (2 bytes) + edges
   }
 
   // 4. Write edges
-  long terminalNodeStart = currentOffset;
   long runningTerminalOffset = terminalNodeStart;
 
   for (int i = 0; i < symbolNames.count; i++) {
