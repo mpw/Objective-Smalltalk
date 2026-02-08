@@ -1560,8 +1560,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
 }
 
-// Characterization test: Check the generated constant string dylib structure
-// and compare against reference to find differences
+
 + (void)testCharacterizeGeneratedConstantStringDylib {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
