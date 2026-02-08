@@ -154,11 +154,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testDylibHasMultipleSegments {
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
-    // Add some code
-    unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
-    [writer addExportedTextSymbol:@"_testfn"
-                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
-                         atOffset:0];
+    [writer addExportedTextSymbol:@"_testfn" codeData:[self codeForJustReturn]];
     STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have __TEXT and __LINKEDIT segments at minimum
@@ -170,11 +166,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testDylibHasExportsTrie {
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
-    // Add an exported function
-    unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
-    [writer addExportedTextSymbol:@"_testfn"
-                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
-                         atOffset:0];
+    [writer addExportedTextSymbol:@"_testfn" codeData:[self codeForJustReturn]];
     STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     // Should have LC_DYLD_EXPORTS_TRIE load command
@@ -238,11 +230,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testDylibExportsSymbol {
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libtest.dylib"];
     
-    // Add an exported function
-    unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
-    [writer addExportedTextSymbol:@"_testfn"
-                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
-                         atOffset:0];
+    [writer addExportedTextSymbol:@"_testfn" codeData:[self codeForJustReturn]];
     STMachOReader *reader = [self readerForWrittenWriter:writer];
     
     NSArray *exports = [reader exportedSymbolNames];
@@ -361,12 +349,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testGeneratedDylibFollowsLayoutAssumptions {
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     
-    unsigned char code[] = {
-        0x40, 0x05, 0x80, 0x52, // mov w0, #42
-        0xc0, 0x03, 0x5f, 0xd6  // ret
-    };
-    [writer declareGlobalSymbol:@"_answer" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
+    [writer addExportedTextSymbol:@"_answer" codeData:[self codeForReturn42]];
     [writer generateMachO];
     
     NSData *macho = [writer data];
@@ -429,13 +412,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testCompareSignedDylibStructure {
     // Create our dylib
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
-    unsigned char code[] = {
-        0x40, 0x05, 0x80, 0x52, // mov w0, #42
-        0xc0, 0x03, 0x5f, 0xd6  // ret
-    };
-    [writer addExportedTextSymbol:@"_answer"
-                         codeData:[NSData dataWithBytes:code length:sizeof(code)]
-                         atOffset:0];
+    [writer addExportedTextSymbol:@"_answer" codeData:[self codeForReturn42]];
     NSString *path = @"/tmp/libminimal_compare.dylib";
     NSError *error = nil;
     STMachOReader *ourReader = [self readerForSignedWriter:writer toPath:path error:&error];
@@ -531,14 +508,19 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     EXPECTTRUE(YES, @"comparison complete");
 }
 
++(NSData*)codeForJustReturn
+{
+    unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
+    return [NSData dataWithBytes:code length:sizeof(code)];
+}
+
 + (void)testDylibReaderCanParseMultipleSegments {
     STMachODylibWriter *writer = [self stream];
     writer.installName = @"@rpath/libmultiseg.dylib";
     
     // Add some code to create multiple segments
-    unsigned char code[] = {0xc0, 0x03, 0x5f, 0xd6}; // ret
     [writer declareGlobalSymbol:@"_test" atOffset:0];
-    [writer addTextSectionData:[NSData dataWithBytes:code length:sizeof(code)]];
+    [writer addTextSectionData:[self codeForJustReturn]];
     
     // Add a __DATA section to force multiple segments
     STMachOSectionWriter *dataSection =
@@ -1323,7 +1305,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testCharacterizeGeneratedMessageSendDylib {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
-    NSString *path = @"/tmp/libmsgsend_gen.dylib";
     writer.installName = @"@rpath/libmsgsend.dylib";
     
     STObjectCodeGeneratorARM *gen = compiler.codegen;
@@ -1339,9 +1320,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     //    [writer addTextSectionData:gen.generatedCode];
     [writer generateMachO];
     NSData *genDylibData = [writer data];
-    [genDylibData writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
     
     STMachOReader *reader = [STMachOReader readerWithData:genDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
@@ -1394,8 +1372,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [self segment:dataConstSeg hasSectionNamed:@"__objc_selrefs"];
     EXPECTTRUE(hasObjcSelrefs, @"should have __objc_selrefs section - BUG if missing");
     
-    // Cleanup
-    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
 + (void)testDylibWithMessageSend {
@@ -1543,7 +1519,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 + (void)testCharacterizeGeneratedConstantStringDylib {
     STMachODylibWriter *writer = [STMachODylibWriter stream];
     STNativeCompiler *compiler = [[[STNativeCompiler alloc] initWithWriter:writer] autorelease];
-    NSString *path = @"/tmp/libconststring_gen.dylib";
     writer.installName = @"@rpath/libconststring.dylib";
     
     STObjectCodeGeneratorARM *gen = compiler.codegen;
@@ -1555,9 +1530,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [writer addTextSectionData:gen.generatedCode];
     [writer generateMachO];
     NSData *genDylibData = [writer data];
-    [genDylibData writeToFile:path atomically:YES];
-    
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", path] UTF8String]);
     
     STMachOReader *reader = [STMachOReader readerWithData:genDylibData];
     EXPECTNOTNIL(reader, @"reader should be created");
@@ -1613,8 +1585,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     // 6. Log segment fixups structure
     [self logSegmentFixupsFromChainedData:chainedData withPrefix:@"Generated"];
     
-    // Cleanup
-    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
 // Characterization test: Examine a known-good framework containing a constant NSArray
@@ -1738,7 +1708,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
                                         inDir:tempDir
                                withFrameworks:@[@"Foundation"]];
     INTEXPECT(linkResult, 0, @"external linker should succeed");
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", refDylibPath] UTF8String]);
     
     NSData *refDylibData = [NSData dataWithContentsOfFile:refDylibPath];
     EXPECTNOTNIL(refDylibData, @"reference dylib should exist");
@@ -1758,10 +1727,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     [genWriter addTextSectionData:genGen.generatedCode];
     [genWriter generateMachO];
     NSData *genDylibData = [genWriter data];
-    
-    NSString *genDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_bincompare_gen.dylib"];
-    [genDylibData writeToFile:genDylibPath atomically:YES];
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", genDylibPath] UTF8String]);
     
     STMachOReader *genReader = [STMachOReader readerWithData:genDylibData];
     
@@ -1962,7 +1927,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     // Cleanup
     [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:refDylibPath error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:genDylibPath error:nil];
 }
 
 // Compare __objc_arrayobj and __objc_arraydata sections between the known-good framework
@@ -2143,7 +2107,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
                                         inDir:tempDir
                                withFrameworks:@[@"Foundation"]];
     INTEXPECT(linkResult, 0, @"external linker should succeed");
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", refDylibPath] UTF8String]);
     
     // 2. Generate CANDIDATE dylib using MPWMachODylibWriter
     STMachODylibWriter *genWriter = [STMachODylibWriter stream];
@@ -2162,7 +2125,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     
     NSString *genDylibPath = [tempDir stringByAppendingPathComponent:@"conststring_symcompare_gen.dylib"];
     [genDylibData writeToFile:genDylibPath atomically:YES];
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", genDylibPath] UTF8String]);
     
     // 3. Run nm on both and log output
     NSLog(@"=== REFERENCE DYLIB nm OUTPUT ===");
