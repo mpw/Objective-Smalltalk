@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		1F009D402A599BAB006724B5 /* define-pp-structs.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */; };
+		0DCF458D971C49E79BA5075E /* reference-conststring-hello.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = D8AF1BC7FB574F1382C0E2B4 /* reference-conststring-hello.macho-dylib */; };
+		131161825CDE497393B21955 /* reference-two-classes.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 337B6B4D1916449D8131D4D1 /* reference-two-classes.macho-dylib */; };
+		142AF44CFB104A7483E8BDE2 /* reference-msgsend.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 524FD7852E2448C9BE396827 /* reference-msgsend.macho-dylib */; };
+		901207453C0D4598B889ACF9 /* reference-layout.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */; };
+		EF551F7BFAAF4619964209A5 /* reference-class2.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */; };
 		1F00D791258A2331007C1F68 /* stapp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F00D790258A2331007C1F68 /* stapp.png */; };
 		1F02B9A1288EC6C30023588A /* MPWCommandBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F02B99F288EC6C30023588A /* MPWCommandBinding.h */; };
 		1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */; };
@@ -1658,6 +1663,11 @@
 		1FF860A52F2E330E00A99A0C /* verify_reference_framework.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = verify_reference_framework.st; sourceTree = "<group>"; };
 		1FF860AA2F2E393E00A99A0C /* ReferenceSTClass.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ReferenceSTClass.macho; sourceTree = "<group>"; };
 		1FF860AB2F2E393E00A99A0C /* ReferenceSTClass.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReferenceSTClass.st; sourceTree = "<group>"; };
+		337B6B4D1916449D8131D4D1 /* reference-two-classes.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-two-classes.macho-dylib"; sourceTree = "<group>"; };
+		430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-class2.macho-dylib"; sourceTree = "<group>"; };
+		524FD7852E2448C9BE396827 /* reference-msgsend.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-msgsend.macho-dylib"; sourceTree = "<group>"; };
+		7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-layout.macho-dylib"; sourceTree = "<group>"; };
+		D8AF1BC7FB574F1382C0E2B4 /* reference-conststring-hello.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-conststring-hello.macho-dylib"; sourceTree = "<group>"; };
 		1FF860AF2F315BA400A99A0C /* STMachOSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOSegment.h; sourceTree = "<group>"; };
 		1FF860B02F315BA400A99A0C /* STMachOSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOSegment.m; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
@@ -2285,6 +2295,11 @@
 				1F9AE9E528ED76BD00671748 /* two-classes.macho */,
 				1F9AE9DE28E825C600671748 /* call-external-fn.macho */,
 				1F9AE9DD28E825C600671748 /* class-with-method.macho */,
+				430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */,
+				D8AF1BC7FB574F1382C0E2B4 /* reference-conststring-hello.macho-dylib */,
+				7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */,
+				524FD7852E2448C9BE396827 /* reference-msgsend.macho-dylib */,
+				337B6B4D1916449D8131D4D1 /* reference-two-classes.macho-dylib */,
 				1F9AE9C428D75BC300671748 /* add.aarch64 */,
 				1F3466F328CB114E003257CB /* add.macho */,
 				1FB559E92907D179009AE4D0 /* testclass_objc.m */,
@@ -4211,6 +4226,11 @@
 				1F9AE9E028E825C600671748 /* call-external-fn.macho in Resources */,
 				1F9AE9DF28E825C600671748 /* class-with-method.macho in Resources */,
 				1F3466F428CB114E003257CB /* add.macho in Resources */,
+				EF551F7BFAAF4619964209A5 /* reference-class2.macho-dylib in Resources */,
+				0DCF458D971C49E79BA5075E /* reference-conststring-hello.macho-dylib in Resources */,
+				901207453C0D4598B889ACF9 /* reference-layout.macho-dylib in Resources */,
+				142AF44CFB104A7483E8BDE2 /* reference-msgsend.macho-dylib in Resources */,
+				131161825CDE497393B21955 /* reference-two-classes.macho-dylib in Resources */,
 				1F9AE9C528D75BC300671748 /* add.aarch64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

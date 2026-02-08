@@ -61,6 +61,33 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     };
 }
 
++ (NSBundle *)testBundle {
+    return [NSBundle bundleForClass:self];
+}
+
++ (NSURL *)fixtureURLNamed:(NSString *)name extension:(NSString *)extension {
+    NSURL *url = [[self testBundle] URLForResource:name withExtension:extension];
+    if (url) {
+        return url;
+    }
+    NSString *sourceFixturePath = [[[[NSString stringWithUTF8String:__FILE__]
+        stringByDeletingLastPathComponent]
+        stringByAppendingPathComponent:@"TestResources"]
+        stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", name, extension]];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sourceFixturePath]) {
+        return [NSURL fileURLWithPath:sourceFixturePath];
+    }
+    return nil;
+}
+
++ (NSData *)fixtureDataNamed:(NSString *)name extension:(NSString *)extension {
+    NSURL *url = [self fixtureURLNamed:name extension:extension];
+    if (!url) {
+        return nil;
+    }
+    return [NSData dataWithContentsOfURL:url];
+}
+
 + (STMachODylibWriter *)dylibWriterWithInstallName:(NSString *)installName {
     return [STMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
 }
@@ -224,12 +251,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 // Test that documents all load commands a working dylib has
 + (void)testDocumentReferenceLoadCommands {
-    // Create reference dylib with clang
-    system("echo 'int answer(void) { return 42; }' > /tmp/ref_src.c");
-    system("clang -shared -o /tmp/libref_test.dylib /tmp/ref_src.c -install_name "
-           "@rpath/libref.dylib");
-    
-    NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_test.dylib"];
+    NSData *refData = [self fixtureDataNamed:@"reference-layout" extension:@"macho-dylib"];
     EXPECTNOTNIL(refData, @"reference dylib should exist");
     
     STMachOReader *refReader =
@@ -288,12 +310,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 // These assumptions are derived from analyzing reference dylibs created by
 // clang/ld
 + (void)testDylibLayoutAssumptions {
-    // Create reference dylib with clang
-    system("echo 'int answer(void) { return 42; }' > /tmp/ref_src.c");
-    system("clang -shared -o /tmp/libref_test.dylib /tmp/ref_src.c -install_name "
-           "@rpath/libref.dylib");
-    
-    NSData *refData = [NSData dataWithContentsOfFile:@"/tmp/libref_test.dylib"];
+    NSData *refData = [self fixtureDataNamed:@"reference-layout" extension:@"macho-dylib"];
     EXPECTNOTNIL(refData, @"reference dylib should exist");
     
     STMachOReader *refReader =
@@ -410,11 +427,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 // Compare our dylib structure to reference AFTER codesign to find differences
 + (void)testCompareSignedDylibStructure {
-    // Create reference dylib
-    system("echo 'int answer(void) { return 42; }' > /tmp/ref_src.c");
-    system("clang -shared -o /tmp/libref_compare.dylib /tmp/ref_src.c "
-           "-install_name @rpath/libref.dylib");
-    
     // Create our dylib
     STMachODylibWriter *writer = [self dylibWriterWithInstallName:@"@rpath/libminimal.dylib"];
     unsigned char code[] = {
@@ -430,8 +442,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     EXPECTNOTNIL(ourReader, error.localizedDescription ?: @"should create reader for signed dylib");
     
     // Read both signed dylibs
-    NSData *refData =
-    [NSData dataWithContentsOfFile:@"/tmp/libref_compare.dylib"];
+    NSData *refData = [self fixtureDataNamed:@"reference-layout" extension:@"macho-dylib"];
     NSData *ourData = [NSData dataWithContentsOfFile:path];
     
     STMachOReader *refReader = [self readerWithData:refData];
@@ -502,7 +513,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
           ourLinkedit->fileoff + ourLinkedit->filesize);
     
     // Try loading reference to verify it works
-    void *refHandle = dlopen("/tmp/libref_compare.dylib", RTLD_NOW);
+    NSURL *refURL = [self fixtureURLNamed:@"reference-layout" extension:@"macho-dylib"];
+    EXPECTNOTNIL(refURL, @"reference layout fixture URL");
+    void *refHandle = dlopen([[refURL path] UTF8String], RTLD_NOW);
     NSLog(@"  Reference loads: %s", refHandle ? "YES" : dlerror());
     if (refHandle)
         dlclose(refHandle);
@@ -1252,39 +1265,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 // Characterization test: Create reference dylib with message send using ObjSTNative object file
 // linked with external linker. Documents structure for comparison with our generated version.
 + (void)testCharacterizeReferenceMessageSendDylib {
-    // 1. Generate object file with message send using MPWMachOWriter + STObjectCodeGeneratorARM
-    STNativeCompiler *compiler = [STNativeCompiler compiler];
-    NSString *tempDir = @"/tmp";
-    NSString *objectPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.o"];
-    NSString *dylibPath = [tempDir stringByAppendingPathComponent:@"msgsend_ref.dylib"];
-    
-    STMachOWriter *objectWriter = compiler.writer;
-    STObjectCodeGeneratorARM *gen = compiler.codegen;
-    
-    [compiler generateFunctionNamed:@"_concatStrings" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
-        [gen generateMoveRegisterFrom:1 to:2];
-        [gen generateMessageSendToSelector:@"stringByAppendingString:"];
-        
-        //        [codegen loadRegister:2 fromContentsOfAdressInRegister:2];
-        //        [codegen generateMoveConstant:0 to:0];
-    }];
-    [objectWriter addTextSectionData:gen.generatedCode];
-    
-    [objectWriter generateMachO];
-    [objectWriter.data writeToFile:objectPath atomically:YES];
-    
-    // 2. Link with external linker
-    int linkResult = [compiler linkObjects:@[@"msgsend_ref"]
-                           toSharedLibrary:@"msgsend_ref.dylib"
-                                     inDir:tempDir
-                            withFrameworks:@[@"Foundation"]];
-    INTEXPECT(linkResult, 0, @"external linker should succeed");
-    
-    // Sign the dylib
-    system([[NSString stringWithFormat:@"codesign -f -s - %@", dylibPath] UTF8String]);
-    
-    // 3. Read reference dylib
-    NSData *refDylibData = [NSData dataWithContentsOfFile:dylibPath];
+    NSURL *refURL = [self fixtureURLNamed:@"reference-msgsend" extension:@"macho-dylib"];
+    EXPECTNOTNIL(refURL, @"reference message-send fixture URL");
+    NSData *refDylibData = [NSData dataWithContentsOfURL:refURL];
     EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
     
     STMachOReader *reader = [STMachOReader readerWithData:refDylibData];
@@ -1327,7 +1310,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
                @"reference should have __objc_selrefs section in __DATA");
     
     // 7. Test that reference dylib actually loads and works
-    void *handle = dlopen([dylibPath UTF8String], RTLD_NOW);
+    void *handle = dlopen([[refURL path] UTF8String], RTLD_NOW);
     EXPECTNOTNIL(handle, @"reference dylib should load");
     id (*concatStrings)(id, id) = dlsym(handle, "concatStrings");
     EXPECTNOTNIL(concatStrings, @"should find concatStrings");
@@ -1335,9 +1318,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     IDEXPECT(result, @"Hello, World!", @"reference should work correctly");
     dlclose(handle);
     
-    // Cleanup temp files
-    [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
 }
 
 + (void)testCharacterizeGeneratedMessageSendDylib {
@@ -1554,7 +1534,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     NSString *result = returnString();
     IDEXPECT(result, @"Test String", @"reference should return correct string");
     dlclose(handle);
-    
     // Cleanup temp files
     [[NSFileManager defaultManager] removeItemAtPath:objectPath error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:dylibPath error:nil];
@@ -2242,24 +2221,10 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 }
 
 + (void)testKnownGoodExternalLinkerDylibWithConstantNSString {
-    STMachOWriter *writer = [STMachOWriter stream];
-    writer.artifactBaseName = @"constantstring-ref";
-    STNativeCompiler *compiler = [writer compiler];
-    NSString *path = [writer dylibPath];
-    
     NSString *stringToGeneratorAndCheck = @"Hello World Constant Strign in dylib";
-    
-    STObjectCodeGeneratorARM *gen = compiler.codegen;
-    
-    [compiler generateFunctionNamed:@"_returnString" body:^(STObjectCodeGeneratorARM * _Nonnull gen) {
-        [compiler generateStringLiteral:stringToGeneratorAndCheck];
-    }];
-    
-    [writer addTextSectionData:(NSData*)gen.generatedCode];
-    NSError *error = nil;
-    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
-               error.localizedDescription ?: @"external linker convenience should succeed");
-    
+    NSURL *refURL = [self fixtureURLNamed:@"reference-conststring-hello" extension:@"macho-dylib"];
+    EXPECTNOTNIL(refURL, @"known-good conststring fixture URL");
+    NSString *path = [refURL path];
     void *handle = dlopen([path UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
@@ -2369,20 +2334,10 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 +(void)testDylibWithCompiledObjectiveSmalltalkClassRef
 {
-    STMachOWriter *writer = [STMachOWriter stream];
-    writer.artifactBaseName = @"st-test-class";
-    writer.objectFileName = @"compiled-st-class-ref.o";
-    STNativeCompiler *compiler = [writer compiler];
-    NSString *libpath = [writer dylibPath];
+    NSURL *refURL = [self fixtureURLNamed:@"reference-class2" extension:@"macho-dylib"];
+    EXPECTNOTNIL(refURL, @"reference class fixture URL");
+    NSString *libpath = [refURL path];
     NSString *className = @"TestClassCode2";
-    
-    NSString *classToCompile = [self testClassCodeWithName:className];
-    
-    NSData *compiled = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
-    EXPECTTRUE(compiled.length > 0, @"object data should be generated");
-    NSError *error = nil;
-    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
-               error.localizedDescription ?: @"external linker convenience should succeed");
     void *handle = dlopen([libpath UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
@@ -2454,32 +2409,9 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 +(void)testCharacterizeReferenceTwoClassesDylib
 {
-    STNativeCompiler *compiler1 = [STNativeCompiler compiler];
-    STNativeCompiler *compiler2 = [STNativeCompiler compiler];
-    NSString *object_path1 = @"/tmp/two-classes-ref-1.o";
-    NSString *object_path2 = @"/tmp/two-classes-ref-2.o";
-    NSString *lib = @"two-classes-ref.dylib";
-    NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
-    
     NSString *class1Name = @"TestClassCode6";
     NSString *class2Name = @"TestClassCode7";
-    
-    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
-    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
-    
-    NSData *compiled1 = [compiler1 compileClassToMachoO:[compiler1 compile:class1ToCompile]];
-    NSData *compiled2 = [compiler2 compileClassToMachoO:[compiler2 compile:class2ToCompile]];
-    
-    [compiled1 writeToFile:object_path1 atomically:YES];
-    [compiled2 writeToFile:object_path2 atomically:YES];
-    
-    int linkResult = [compiler1 linkObjects:@[@"two-classes-ref-1", @"two-classes-ref-2"]
-                            toSharedLibrary:lib
-                                      inDir:@"/tmp"
-                             withFrameworks:@[@"MPWFoundation", @"Foundation"]];
-    INTEXPECT(linkResult, 0, @"external linker should succeed");
-    
-    NSData *refDylibData = [NSData dataWithContentsOfFile:libpath];
+    NSData *refDylibData = [self fixtureDataNamed:@"reference-two-classes" extension:@"macho-dylib"];
     EXPECTNOTNIL(refDylibData, @"reference dylib should be created");
     STMachOReader *refReader = [STMachOReader readerWithData:refDylibData];
     EXPECTNOTNIL(refReader, @"reference reader should be created");
@@ -2489,9 +2421,6 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
                        classNames:@[ class1Name, class2Name ]
                             label:@"Reference two-class dylib"];
     
-    [[NSFileManager defaultManager] removeItemAtPath:object_path1 error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:object_path2 error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:libpath error:nil];
 }
 
 +(void)testCharacterizeGeneratedTwoClassesDylib
@@ -2525,35 +2454,13 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
 
 +(void)testDylibWithTwoClassesRef
 {
-    STNativeCompiler *compiler1 = [STNativeCompiler compiler];
-    STNativeCompiler *compiler2 = [STNativeCompiler compiler];
-    NSString *object_path1 = @"/tmp/compiled-st-class1-ref.o";
-    NSString *object_path2 = @"/tmp/compiled-st-class2-ref.o";
-    NSString *lib = @"libst-test-class.dylib";\
-    NSString *libpath = [@"/tmp/" stringByAppendingPathComponent:lib];
+    NSURL *refURL = [self fixtureURLNamed:@"reference-two-classes" extension:@"macho-dylib"];
+    EXPECTNOTNIL(refURL, @"reference two-class fixture URL");
+    NSString *libpath = [refURL path];
     
     NSString *class1Name = @"TestClassCode6";
     NSString *class2Name = @"TestClassCode7";
     
-    NSString *class1ToCompile = [self testClassCodeWithName:class1Name];
-    NSString *class2ToCompile = [self testClassCodeWithName:class2Name];
-    
-    NSData *compiled1 = [compiler1 compileClassToMachoO:[compiler1 compile:class1ToCompile]];
-    NSData *compiled2 = [compiler2 compileClassToMachoO:[compiler2 compile:class2ToCompile]];
-    
-    //    [writer addTextSectionData:gen.generatedCode];
-    [compiled1 writeToFile:object_path1 atomically:YES];
-    [compiled2 writeToFile:object_path2 atomically:YES];
-    
-    // 2. Link with external linker
-    int linkResult = [compiler1 linkObjects:@[@"compiled-st-class1-ref", @"compiled-st-class2-ref"]
-                            toSharedLibrary:lib
-                                      inDir:@"/tmp"
-                             withFrameworks:@[@"MPWFoundation", @"Foundation"]];
-    INTEXPECT(linkResult, 0, @"external linker should succeed");
-    
-    
-    system([[NSString stringWithFormat:@"codesign -s - %@", libpath] UTF8String]);
     void *handle = dlopen([libpath UTF8String], RTLD_NOW);
     NSString *errorString=nil;
     if (!handle) {
