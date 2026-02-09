@@ -43,11 +43,16 @@ scheme WorkspaceSite {
     -renderPage {
         template := this:bundle resources at:'Workspace.html' | stringValue.
         template := template stringByReplacingOccurrencesOfString:'{code}' withString:(self escapeHtml:this:lastCode).
-        template := template stringByReplacingOccurrencesOfString:'{result}' withString:(self escapeHtml:this:lastResult).
         template dataUsingEncoding:4.
     }
 
-    /eval { 
+    /st-workspace.js {
+        get {
+            this:bundle resources at:'st-workspace.js'.
+        }
+    }
+
+    /eval {
         post { 
            code := newValue at:'code' | stringValue.
            self evaluateCode:code.
