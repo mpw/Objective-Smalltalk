@@ -25,10 +25,11 @@ scheme WorkspaceSite {
         this:lastResult.
     }
 
-    -at:ref post:data {
+    -at1:ref post:data {
+	stdout println: ref stringValue.
         code := data at:'code' | stringValue.
         self evaluateCode:code.
-        self renderPage.
+        ref stringValue = '/eval' ifTrue:{ this:lastResult asData } ifFalse:{ self renderPage }.
     }
 
     -escapeHtml:string {
@@ -46,9 +47,25 @@ scheme WorkspaceSite {
         template dataUsingEncoding:4.
     }
 
+    /eval { 
+        post { 
+           code := newValue at:'code' | stringValue.
+           self evaluateCode:code.
+           this:lastResult asData.
+        }
+    }
+    /hello {
+	get { 'World!'. }
+    }
+
     / {
         get {
             self renderPage.
+        }
+        post {
+	   code := newValue at:'code' | stringValue.
+           self evaluateCode:code.
+           self renderPage.
         }
     }
 

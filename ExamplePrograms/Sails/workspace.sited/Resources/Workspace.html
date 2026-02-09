@@ -136,24 +136,52 @@
             <code>x := 42. x * 2</code> - local variables
         </p>
         <p>
-            <strong>Keyboard shortcut:</strong> Press Cmd+Enter (or Ctrl+Enter) to evaluate
+            <strong>Keyboard shortcut:</strong> Cmd+Enter (or Ctrl+Enter) to evaluate<br>
+            <strong>Print It:</strong> Select an expression, then evaluate — result is inserted after the selection
         </p>
     </div>
 
     <script>
-        // Keyboard shortcut for evaluation
-        document.getElementById('code').addEventListener('keydown', function(e) {
+        var textarea = document.getElementById('code');
+
+        function evaluateCode() {
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var hasSelection = start !== end;
+            var code = hasSelection ? textarea.value.substring(start, end) : textarea.value;
+
+            var body = new URLSearchParams();
+            body.append('code', code);
+
+            fetch('/eval', { method: 'POST', body: body })
+                .then(function(r) { return r.text(); })
+                .then(function(result) {
+                    document.getElementById('result').textContent = result;
+                    if (hasSelection) {
+                        var insertion = ' ' + result;
+                        textarea.setRangeText(insertion, end, end, 'select');
+                        // setRangeText with 'select' selects the inserted text
+                        textarea.focus();
+                    }
+                });
+        }
+
+        textarea.addEventListener('keydown', function(e) {
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                 e.preventDefault();
-                document.getElementById('evalForm').submit();
+                evaluateCode();
             }
         });
 
-        function clearCode() {
-            document.getElementById('code').value = '';
-            document.getElementById('code').focus();
-        }
+        document.getElementById('evalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            evaluateCode();
+        });
 
+        function clearCode() {
+            textarea.value = '';
+            textarea.focus();
+        }
     </script>
 </body>
 </html>

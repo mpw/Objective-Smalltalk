@@ -22,3 +22,6 @@ class EarthquakesReader {
 	0.      
   }
 }
+
+reader ← #EarthquakesReader{}.
+reader main:nil.
