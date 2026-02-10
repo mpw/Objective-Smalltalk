@@ -7,12 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F009D402A599BAB006724B5 /* define-pp-structs.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */; };
 		0DCF458D971C49E79BA5075E /* reference-conststring-hello.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = D8AF1BC7FB574F1382C0E2B4 /* reference-conststring-hello.macho-dylib */; };
 		131161825CDE497393B21955 /* reference-two-classes.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 337B6B4D1916449D8131D4D1 /* reference-two-classes.macho-dylib */; };
 		142AF44CFB104A7483E8BDE2 /* reference-msgsend.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 524FD7852E2448C9BE396827 /* reference-msgsend.macho-dylib */; };
-		901207453C0D4598B889ACF9 /* reference-layout.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */; };
-		EF551F7BFAAF4619964209A5 /* reference-class2.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */; };
+		1F009D402A599BAB006724B5 /* define-pp-structs.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F009D3C2A599BAB006724B5 /* define-pp-structs.macho */; };
 		1F00D791258A2331007C1F68 /* stapp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F00D790258A2331007C1F68 /* stapp.png */; };
 		1F02B9A1288EC6C30023588A /* MPWCommandBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F02B99F288EC6C30023588A /* MPWCommandBinding.h */; };
 		1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B9A0288EC6C30023588A /* MPWCommandBinding.m */; };
@@ -20,6 +18,11 @@
 		1F032E202BEF5DC30000183E /* STARMObjectCodeGeneratorExternalTestsMachO.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F032E1D2BEF5DC30000183E /* STARMObjectCodeGeneratorExternalTestsMachO.h */; };
 		1F032E372BEF9A140000183E /* STNativeCompilerTestsMachO.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F032E352BEF9A140000183E /* STNativeCompilerTestsMachO.h */; };
 		1F032E382BEF9A140000183E /* STNativeCompilerTestsMachO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F032E362BEF9A140000183E /* STNativeCompilerTestsMachO.m */; };
+		1F0351052F3A59D1005F2ECA /* STExpressionTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351032F3A59D1005F2ECA /* STExpressionTests.h */; };
+		1F0351062F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
+		1F0351072F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
+		1F0351082F3A59D1005F2ECA /* STExpressionTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351032F3A59D1005F2ECA /* STExpressionTests.h */; };
+		1F0351092F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
 		1F04243C28D1D09B00486831 /* STMachOWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F04243A28D1D09B00486831 /* STMachOWriter.h */; };
 		1F04243D28D1D09B00486831 /* STMachOWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F04243B28D1D09B00486831 /* STMachOWriter.m */; };
 		1F05B53E2B441A00004C7772 /* STSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F05B53C2B441A00004C7772 /* STSystem.h */; };
@@ -835,6 +838,8 @@
 		1FFE3AD820B46BDD00E65B93 /* MPWSelfContainedBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFE3AD520B46BDD00E65B93 /* MPWSelfContainedBinding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFE3AD920B46BDD00E65B93 /* MPWSelfContainedBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFE3AD620B46BDD00E65B93 /* MPWSelfContainedBinding.m */; };
 		1FFE3ADA20B46BDD00E65B93 /* MPWSelfContainedBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFE3AD620B46BDD00E65B93 /* MPWSelfContainedBinding.m */; };
+		901207453C0D4598B889ACF9 /* reference-layout.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */; };
+		EF551F7BFAAF4619964209A5 /* reference-class2.macho-dylib in Resources */ = {isa = PBXBuildFile; fileRef = 430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1068,6 +1073,8 @@
 		1F032E1E2BEF5DC30000183E /* STARMObjectCodeGeneratorExternalTestsMachO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STARMObjectCodeGeneratorExternalTestsMachO.m; sourceTree = "<group>"; };
 		1F032E352BEF9A140000183E /* STNativeCompilerTestsMachO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STNativeCompilerTestsMachO.h; sourceTree = "<group>"; };
 		1F032E362BEF9A140000183E /* STNativeCompilerTestsMachO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STNativeCompilerTestsMachO.m; sourceTree = "<group>"; };
+		1F0351032F3A59D1005F2ECA /* STExpressionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STExpressionTests.h; sourceTree = "<group>"; };
+		1F0351042F3A59D1005F2ECA /* STExpressionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STExpressionTests.m; sourceTree = "<group>"; };
 		1F04243A28D1D09B00486831 /* STMachOWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOWriter.h; sourceTree = "<group>"; };
 		1F04243B28D1D09B00486831 /* STMachOWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOWriter.m; sourceTree = "<group>"; };
 		1F04A53121D253F300E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
@@ -1663,11 +1670,6 @@
 		1FF860A52F2E330E00A99A0C /* verify_reference_framework.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = verify_reference_framework.st; sourceTree = "<group>"; };
 		1FF860AA2F2E393E00A99A0C /* ReferenceSTClass.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ReferenceSTClass.macho; sourceTree = "<group>"; };
 		1FF860AB2F2E393E00A99A0C /* ReferenceSTClass.st */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReferenceSTClass.st; sourceTree = "<group>"; };
-		337B6B4D1916449D8131D4D1 /* reference-two-classes.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-two-classes.macho-dylib"; sourceTree = "<group>"; };
-		430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-class2.macho-dylib"; sourceTree = "<group>"; };
-		524FD7852E2448C9BE396827 /* reference-msgsend.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-msgsend.macho-dylib"; sourceTree = "<group>"; };
-		7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-layout.macho-dylib"; sourceTree = "<group>"; };
-		D8AF1BC7FB574F1382C0E2B4 /* reference-conststring-hello.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-conststring-hello.macho-dylib"; sourceTree = "<group>"; };
 		1FF860AF2F315BA400A99A0C /* STMachOSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOSegment.h; sourceTree = "<group>"; };
 		1FF860B02F315BA400A99A0C /* STMachOSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOSegment.m; sourceTree = "<group>"; };
 		1FFA166A2B970D8B004E63ED /* STTemplateStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTemplateStore.h; sourceTree = "<group>"; };
@@ -1697,6 +1699,11 @@
 		1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ConstArray.framework; sourceTree = "<group>"; };
 		1FFE3AD520B46BDD00E65B93 /* MPWSelfContainedBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSelfContainedBinding.h; sourceTree = "<group>"; };
 		1FFE3AD620B46BDD00E65B93 /* MPWSelfContainedBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSelfContainedBinding.m; sourceTree = "<group>"; };
+		337B6B4D1916449D8131D4D1 /* reference-two-classes.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-two-classes.macho-dylib"; sourceTree = "<group>"; };
+		430AA791A93B4C88860B7500 /* reference-class2.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-class2.macho-dylib"; sourceTree = "<group>"; };
+		524FD7852E2448C9BE396827 /* reference-msgsend.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-msgsend.macho-dylib"; sourceTree = "<group>"; };
+		7D989B355D304547B5DAB6D9 /* reference-layout.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-layout.macho-dylib"; sourceTree = "<group>"; };
+		D8AF1BC7FB574F1382C0E2B4 /* reference-conststring-hello.macho-dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "reference-conststring-hello.macho-dylib"; sourceTree = "<group>"; };
 		F5A74ABD00F0A61B015ADD82 /* STCompiler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = STCompiler.m; sourceTree = "<group>"; };
 		F5A74ABE00F0A61B015ADD82 /* STScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = STScanner.m; sourceTree = "<group>"; };
 		F5A74ABF00F0A61B015ADD82 /* MPWMessageExpression.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MPWMessageExpression.m; sourceTree = "<group>"; };
@@ -2561,6 +2568,8 @@
 			children = (
 				1FA741A40886DAFB00121867 /* STTests.h */,
 				1FA741A50886DAFB00121867 /* STTests.m */,
+				1F0351032F3A59D1005F2ECA /* STExpressionTests.h */,
+				1F0351042F3A59D1005F2ECA /* STExpressionTests.m */,
 				1F9BD22A2566505F006D7476 /* STPropertyPathTests.h */,
 				1F9BD22B2566505F006D7476 /* STPropertyPathTests.m */,
 				1F9BD24025665748006D7476 /* STConnectorTests.h */,
@@ -3163,6 +3172,7 @@
 				1F7AFACC260F78E5002DC530 /* MPWFastSuperMessage.h in Headers */,
 				1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */,
 				1FA1B3A1267CFCB500F463ED /* STAWK.h in Headers */,
+				1F0351082F3A59D1005F2ECA /* STExpressionTests.h in Headers */,
 				1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */,
 				1FFCBD522CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */,
@@ -3439,6 +3449,7 @@
 				1FE37BF31969612700C9A378 /* MPWMethodScheme.h in Headers */,
 				1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */,
 				1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */,
+				1F0351052F3A59D1005F2ECA /* STExpressionTests.h in Headers */,
 				1FE37BCB1969612400C9A378 /* MPWRefScheme.h in Headers */,
 				1FFCBD542CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */,
@@ -4717,6 +4728,7 @@
 				1F9BD24625665748006D7476 /* STConnectorTests.m in Sources */,
 				1F9BD2302566505F006D7476 /* STPropertyPathTests.m in Sources */,
 				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
+				1F0351072F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
 				1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4757,6 +4769,7 @@
 				1F50461D2118658F00073E1E /* STPropertyPathDefinition.m in Sources */,
 				1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
 				1F5E506D09B4B754000298D9 /* MPWMessageExpression.m in Sources */,
+				1F0351092F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
 				1F2B6651268CCC6A00DE4416 /* STTypeDescriptor.m in Sources */,
 				1FA5963E2A20CD8900C4EB45 /* STPostExpression.m in Sources */,
 				1F3C6E711E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m in Sources */,
@@ -5095,6 +5108,7 @@
 				1FE37BD21969612500C9A378 /* MPWTreeNode.m in Sources */,
 				1FE37B7D1969610600C9A378 /* MPWClassMirror.m in Sources */,
 				1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */,
+				1F0351062F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
 				1F6060202A249CF900783E17 /* MPWDyLibScheme.m in Sources */,
 				1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */,
 				1FA990302A96310400DB6FF4 /* STPort.m in Sources */,

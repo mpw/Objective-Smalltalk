@@ -1890,8 +1890,7 @@ idAccessor(solver, setSolver)
     STCompiler *compiler = [self compiler];
     NSString *dictReceiver=@" #{ } at:'a'";
     
-    compiler.closingBraceLiteralDictHack = false;           // succeds when hack is on, fails when hack is off (turn off to debug)
-    compiler.trace = true;
+    compiler.closingBraceLiteralDictHack = false;  // this used to only work with the hack, but is fixed now
     id parseResult=nil;
     BOOL didThrow=NO;
     @try {

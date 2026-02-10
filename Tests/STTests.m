@@ -74,82 +74,6 @@
 
 
 
-+(void)testThreePlusFour
-{
-    TESTEXPR(@"3+4",@"7");
-//    [self testexpr:@"3+4" expected:@"7"];
-}
-
-+(void)testSevenMinus4
-{
-    TESTEXPR(@"7-4",@"3");
-}
-
-+(void)stringConcat
-{
-    TESTEXPR(@"'Hi ' stringByAppendingString:'there'." ,@"Hi there");
-}
-
-+(void)nestedArgStringConcat
-{
-    [self testexpr:@"'Hi ' stringByAppendingString:'there' uppercaseString." expected:@"Hi THERE"];
-}
-
-+(void)testKeywordMessageWithBinaryAsArg    // test for a bug with nestes exprs.
-{
-    [self testexpr:@" a:= #( 1, 2, 3) mutableCopy. a replaceObjectAtIndex: 1+1 withObject:'there'. a at:2." expected:@"there"];
-}
-
-+(void)nestedReceiverStringConcat
-{
-    [self testexpr:@"'Hi 'uppercaseString stringByAppendingString:'there'." expected:@"HI there"];
-}
-
-+(void)stackedMappedConcat
-{
-    [self testexpr:@"'hi ' , 'there ' , 'to' uppercaseString" expected:@"hi there TO"];
-}
-
-+(void)mixedStackedMappedConcat
-{
-    [self testexpr:@"'hi ' uppercaseString , 'there ' , 'to' uppercaseString" expected:@"HI there TO"];
-}
-
-+(void)simpleLiteral
-{
-    [self testexpr:@"'Hi'" expected:@"Hi"];
-}
-
-+(void)arrayLiteral
-{
-    TESTEXPR(@"#(1, 2, 3)" , (@[@(1),@(2),@(3)]));
-}
-
-+(void)testSimpleLiteralDict
-{
-    TESTEXPR(@"#{ #key: 'value' }" , (@{ @"key": @"value"}) );
-}
-
-+(void)testLiteralDictWithNumberKey
-{
-    TESTEXPR(@"#{ 1 : 'value' }" , (@{ @(1) : @"value"}) );
-}
-
-+(void)testTwoElementLiteralDict
-{
-    TESTEXPR(@"#{ #key: 'firstValue', #hello: 'world' }" , (@{ @"key": @"firstValue", @"hello": @"world"}));
-}
-
-+(void)collectArrayLiteral
-{
-    TESTEXPR(@"[1, 2, 3] collect + 3" ,([NSMutableArray arrayWithObjects:@"4",@"5",@"6",nil]));
-}
-
-+(void)collectTwoArrayLiterals
-{
-    [self testexpr:@"[1, 2, 3] collect + [1, 2, 3] each" expected:[NSMutableArray arrayWithObjects:@"2",@"4",@"6",nil]];
-}
-
 +(void)testLocalVariables
 {
 	id a = @"hello world!";
@@ -171,16 +95,6 @@
 	IDEXPECT( [evaluator valueOfVariableNamed:@"a"], @"hello world", @"after assignment");
 }
 
-+(void)testFloatArithmetic
-{
-    [self testexpr:@"(3.2+4.4*10) intValue" expected:@"76"];
-}
-
-+(void)testAsFloat
-{
-    [self testexpr:@"3 floatValue / 2" expected:@"1.5"];
-}
-
 +(void)testUnknownSelector
 {
 	NSString *expr=@"3 a";
@@ -194,15 +108,6 @@
 	}
 }
 
-+(void)testNil
-{
-    id result=[self evaluate:@"nil"];
-//    NSLog(@"result %p",result);
-//    NSLog(@"result class: %@",[result class]);
-    EXPECTNIL( result, @"result of evaluating nil");
-}
-
-
 +(void)testAssignNil
 {
 	id expr1 = @"a:=3";
@@ -212,46 +117,6 @@
 	IDEXPECT( [evaluator valueOfVariableNamed:@"a"], [NSNumber numberWithInt:3], @"before nil assignment");
 	[evaluator evaluateScriptString:expr2];
 	IDEXPECT( [evaluator valueOfVariableNamed:@"a"], (id)nil, @"after nil assignment");
-}
-
-+(void)testMultipleStatments
-{
-    [self testexpr:@"a:=3. b:=4. a+b" expected:[NSNumber numberWithInt:7]];
-}
-
-+(void)testIfTrueIfFalse
-{
-    [self testexpr:@"true ifTrue: { 3. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:3]];
-}
-
-+(void)testIfTrueIfFalseWithExpressionValue
-{
-    [self testexpr:@"true ifTrue: { 3+4. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:7]];
-}
-
-+(void)testIfTrueIfFalseWithExpressionCondition
-{
-    [self testexpr:@"('hello world' hasPrefix:'hello') ifTrue: { 3+4. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:7]];
-}
-
-+(void)testBasicWhileTrue
-{
-    [self testexpr:@"a:=2.{ a<100. } whileTrue:{ a:=(2*a). }. a." expected:[NSNumber numberWithInt:128]];
-}
-
-+(void)testWhileTrueWithLongerBlock
-{
-    [self testexpr:@"a:=2.b:=1. { a<100. } whileTrue:{ a:=(2*a). b:=(b+1). }. b." expected:[NSNumber numberWithInt:7]];
-}
-
-+(void)testForLoop
-{
-    [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a." expected:[NSNumber numberWithInt:2048]];
-}
-
-+(void)testRecursiveInterpret
-{
-    [self testexpr:@"context evaluateScriptString:'3+4'" expected:[NSNumber numberWithInt:7]];
 }
 
 +(void)testScriptOnObjectKnowsSelf
@@ -349,40 +214,6 @@
     INTEXPECT([[statements statements] count],1,@"number of statements");
     MPWMessageExpression *first=[[statements statements] firstObject];
     EXPECTTRUE([first isKindOfClass:[MPWMessageExpression class]], @"should be a message expression");
-}
-
-+(void)testNegativeLiteralComputation
-{
-    [self testexpr:@"context evaluateScriptString:4*-2" expected:[NSNumber numberWithInt:-8]];
-}
-+(void)testNegativeLiteral
-{
-    [self testexpr:@"-2" expected:[NSNumber numberWithInt:-2]];
-}
-
-+(void)testCollectHOM
-{
-    TESTEXPR(@"#( 'Help ', 'Hello ', 'Hi ') collect , 'World!' ", (@[@"Help World!",@"Hello World!",@"Hi World!"]) );
-}
-
-+(void)testSelectHOM
-{
-    [self testexpr:@" #( 'Help', 'Hello World', 'Hello Marcel') select hasPrefix:'Hello' " expected:[NSArray arrayWithObjects:@"Hello World",@"Hello Marcel",nil]];
-}
-
-+(void)testNSRangeViaSubarray
-{
-    TESTEXPR(@" #( 'Help' , 'Hello World', 'Hello Marcel') subarrayWithRange:( 1 to: 2) ", ( @[@"Hello World",@"Hello Marcel"] ) )
-}
-
-+(void)testNSPointViaString
-{
-    [self testexpr:@" '{1,2}' point " expected:[MPWPoint pointWithX:1 y:2]];
-}
-
-+(void)testNSSizeViaString
-{
-    [self testexpr:@" '{1,2}' asSize " expected:[MPWPoint pointWithX:1 y:2]];
 }
 
 +(void)testAddMethodWithIntArg
@@ -705,11 +536,6 @@
     IDEXPECT( objcCode, @"[NSString stringWithString:@\"hello world!\"]", @"generating Objective-C didn't work");
 }
 
-+(void)testBlockArgs
-{
-    [self testexpr:@"{ :i | i } value: 2." expected:@"2"];
-}
-
 +(void)testParseBlockArgs
 {
     MPWBlockExpression *block= [self evaluate:@" { :a | a * 2. } block."];
@@ -732,39 +558,6 @@
 {
 
 	[self testexpr:@"a:=1. context addScript:'a:=2. a*2.' forClass:'NSString' methodHeaderString:'dummyMethodThatSetsA'. '' dummyMethodThatSetsA. a." expected:@"1"];
-}
-
-
-+(void)testToDo
-{
-	[self testexpr:@"a:=1. 1 to:10 do: { :i | a:=(a+1). }. a." expected:@"11"];
-}
-
-+(void)testBinarySelectorPrecedenceOverKeyword
-{
-	[self testexpr:@"(1+3 to:3+8) to." expected:@"11"];
-}
-
-+(void)testIntervalBlockCollect
-{
-	[self testexpr:@"((1 to:3) collect:{ :i | i+2. } ) lastObject" expected:@"5"];
-}
-
-+(void)testArrayBlockCollect
-{
-	TESTEXPR(@"( #( 1, 2, 7 ) collect:{ :i | i*2. } ) lastObject" ,@"14");
-}
-
-+(void)testNegativeDecimalFractions
-{
-	[self testexpr:@"(-1.2  * 10) intValue stringValue" expected:@"-12"];
-	[self testexpr:@"(1.2 negated * 10) intValue stringValue" expected:@"-12"];
-}
-
-+(void)testCommaSelector
-{
-	[self testexpr:@"'Hello ','World!'" expected:@"Hello World!"];
-	[self testexpr:@" #() , 'a', '2'" expected:[NSArray arrayWithObjects:@"a",[NSNumber numberWithInt:2],nil]];
 }
 
 
@@ -894,12 +687,6 @@
     }
 }
 
-+(void)testNestedLiteralArrays
-{
-    id result = [self evaluate: @"#( 1, 2, #( 2, 3 ) )"];
-    INTEXPECT([result count], 3, @"top level elements");
-}
-
 +(void)testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd
 {
     id result=[self evaluate:@"a:=3. b:=4. var:a. "];  
@@ -918,27 +705,6 @@
     INTEXPECT([result intValue], 3, @"value of identifier without terminating period, space follows");
 }
 
-+(void)testLeftArrowWorksLikeAssignment
-{
-    id result=[self evaluate:@"a <- 3. b <- 4. a"];  
-    INTEXPECT([result intValue], 3, @"left arrow didn't do assignment");
-}
-
-+(void)testPipeForTemporaryVariablesAllowed
-{
-    id result=[self evaluate:@"| a b | a := 3+4. a"];
-    INTEXPECT([result intValue], 7, @"3+4");
-}
-
-
-+(void)testSingleCharUnicodeIdentifiersAllowed
-{
-    unichar pichar=960;
-    NSString *script=[NSString stringWithFormat:@"%C := 314 . %C * 2.",pichar,pichar];
-    id result=[self evaluate:script];
-    INTEXPECT([result intValue], 628, @"2 * pi * 100");
-}
-
 +(void)testSmalltalkCascade
 {
     NSArray *result=[self evaluate:@" a:= NSMutableArray array. a addObject:'hi'; addObject:'there'. a."];
@@ -947,20 +713,6 @@
     IDEXPECT([result lastObject], @"there", @"last object");
 }
 
-
-+(void)testCompositionViaPipe
-{
-    NSString *result=[self evaluate:@"'a' stringByAppendingString:'b' | stringByAppendingString:'c'."];
-    IDEXPECT(result, @"abc", @"concated");
-}
-
-
-
-+(void)testCompositionViaPipeDoesntBlockFurtherEval
-{
-    NSString *result=[self evaluate:@"'a' stringByAppendingString:'b' | stringByAppendingString:'c'. 'hello'"];
-    IDEXPECT(result, @"hello", @"after");
-}
 
 +(void)testCompositionViaPipeDoesntBlockFurtherEval2
 {
@@ -971,11 +723,6 @@
 }
 
 
-
-+(void)testCurlyBracesAllowedForBlocks
-{
-    [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a).}. a." expected:[NSNumber numberWithInt:2048]];
-}
 
 +(void)testDefineClassMethod
 {
@@ -1288,12 +1035,6 @@
     IDEXPECT(result,@"block hello block world!",@"");
 }
 
-+(void)testReduceFactorial
-{
-    [self testexpr:@"(1 to: 5) reduce * 1" expected:@(120)];
-
-}
-
 +(void)testObjectTemplate
 {
     STCompiler *compiler=[STCompiler compiler];
@@ -1551,11 +1292,6 @@
     EXPECTNOTNIL(compiled, @"compiled");
 }
 
-+(void)testEvaluateQueryAsNextObject
-{
-    TESTEXPR( @"[ 'a', 'b'] each ? ",@"a");
-}
-
 +(void)testCanConnectFilterToSelfContainedBinding
 {
     TESTEXPR( @"filter toupper_test_selfcontaind |{ ^object uppercaseString. }. a := 20. (toupper_test_selfcontaind → ref:a) ! 'hello world'. a.",@"HELLO WORLD");
@@ -1564,52 +1300,23 @@
 +(NSArray*)testSelectors
 {
     return @[
-		@"testAddingMethodToClass", 
+        @"testAddingMethodToClass",
         @"testLocalVariables",
-		@"testThreePlusFour",
-		@"stringConcat",
-		@"nestedArgStringConcat",
-        @"testKeywordMessageWithBinaryAsArg",
-        @"nestedReceiverStringConcat",@"simpleLiteral",
-        @"stackedMappedConcat",@"mixedStackedMappedConcat",
-        @"arrayLiteral",
-        @"collectArrayLiteral",@"collectTwoArrayLiterals",
-		@"testAssignment",
-		@"testFloatArithmetic",
-		@"testAsFloat",
-		@"testUnknownSelector",
-		@"testNil",
-		@"testAssignNil",
-		@"testMultipleStatments",
-		@"testIfTrueIfFalse",
-		@"testIfTrueIfFalseWithExpressionValue",
-		@"testIfTrueIfFalseWithExpressionCondition",
-		@"testBasicWhileTrue",
-		@"testWhileTrueWithLongerBlock",
-		@"testForLoop",
-		@"testRecursiveInterpret",
-		@"testSevenMinus4",
-		@"testScriptOnObjectKnowsSelf",
-		@"testNegativeLiteral",
-		@"testNegativeLiteralComputation",
-        @"testCollectHOM",
-#if !GS_API_LATEST
-        @"testSelectHOM",
-#endif
-		@"testScriptWithParameters",
-		@"testNSRangeViaSubarray",
-		@"testNSPointViaString",
-		@"testNSSizeViaString",
-		@"testAddMethodWithIntArg",
-		@"testAddMethodWithIntArgAndReturn",
-		@"testAddMethodWithIntArgViaMethodHeader",
-		@"testAllClassesWithScripts",
-		@"testScriptNamesForClass",
-		@"testExternalDictForDefinedMethods",
-//		@"testDefinedMethodsForExternalDict",
-		@"testDefineMethodInUnknownClassDoesntCrash",
+        @"testAssignment",
+        @"testUnknownSelector",
+        @"testAssignNil",
+        @"testScriptOnObjectKnowsSelf",
+        @"testScriptWithParameters",
+        @"testAddMethodWithIntArg",
+        @"testAddMethodWithIntArgAndReturn",
+        @"testAddMethodWithIntArgViaMethodHeader",
+        @"testAllClassesWithScripts",
+        @"testScriptNamesForClass",
+        @"testExternalDictForDefinedMethods",
+//      @"testDefinedMethodsForExternalDict",
+        @"testDefineMethodInUnknownClassDoesntCrash",
         @"testRespondsToSelectorWorksFromScript",
-		@"testVariableDataFlowAnalysis",
+        @"testVariableDataFlowAnalysis",
         @"testCreateSubclass",
         @"testCreateSubclassWithInstanceVariables",
         @"testParseSubclassWithInstanceVariablesUsingSyntax",
@@ -1619,64 +1326,47 @@
         @"testCreateObjectiveCForConstants",
         @"testCreateObjectiveCForUnaryMessageSend",
         @"testCreateObjectiveCForMessageSendWithArg",
-		@"testGetInstanceVarDefByName",
-        @"testBlockArgs",
+        @"testGetInstanceVarDefByName",
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
         @"testParseNonSeqeuentialImplicitBlockArgs",
 #if 1 // !GS_API_LATEST
         @"testMethodVarsHaveLocalScope",
 #endif
-        @"testToDo",
-        @"testBinarySelectorPrecedenceOverKeyword",
-        @"testIntervalBlockCollect",
-        @"testArrayBlockCollect",
-        @"testNegativeDecimalFractions",
-		@"testCommaSelector",
-		@"testVariableReferenceWithURISchemeWorks",
-		@"testVariableAssignmentWithURISchemeWorks",
-		@"testVariableKnowsScheme",
-		@"testURIVariableCanHaveURISyntax",
-		@"testUnknownSchemeDoesntDefaultToVar",
-		@"testClassScheme",
-		@"testAccessingInstanceVariablesOfCreatedClass",
-		@"testVarSchemeWithKeyValuePath",
-		@"testRefSchemeAccessesBinding",
-		@"testRefSchemeWorksOnTopOfOtherScheme",
-		@"testDotAllowedInIdentifiers",
-		@"testMethodWithParameters",
-		@"testRedefiningMethod",
-			@"testHttpArgWithLeadingZero",
-			@"testStringToBinding",
-			@"testBinarySelectorPriorityOverKeyword",
-            @"testVarShemeWithPath",
-			@"testRelScheme",
-			@"testIdentifierInterpolation",
-			@"testGetReasonableCompilerErrorOnMissingBinaryArgument",
-            @"testNestedLiteralArrays",
-            @"testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd",
-            @"testPeriodAtEndOfIdentifierAndStatementAndEOFTreatedAsStatementEnd",
-            @"testBracketsTerminateIdentifier",
-            @"testLeftArrowWorksLikeAssignment",
-            @"testPipeForTemporaryVariablesAllowed",
-            @"testSingleCharUnicodeIdentifiersAllowed",
-            
-            @"testSmalltalkCascade",
-            @"testCompositionViaPipe",
-            @"testCompositionViaPipeDoesntBlockFurtherEval",
-//         @"testCompositionViaPipeDoesntBlockFurtherEval2",   FIXME, still buggy
-            @"testCurlyBracesAllowedForBlocks",
+        @"testVariableReferenceWithURISchemeWorks",
+        @"testVariableAssignmentWithURISchemeWorks",
+        @"testVariableKnowsScheme",
+        @"testURIVariableCanHaveURISyntax",
+        @"testUnknownSchemeDoesntDefaultToVar",
+        @"testClassScheme",
+        @"testAccessingInstanceVariablesOfCreatedClass",
+        @"testVarSchemeWithKeyValuePath",
+        @"testRefSchemeAccessesBinding",
+        @"testRefSchemeWorksOnTopOfOtherScheme",
+        @"testDotAllowedInIdentifiers",
+        @"testMethodWithParameters",
+        @"testRedefiningMethod",
+        @"testHttpArgWithLeadingZero",
+        @"testStringToBinding",
+        @"testBinarySelectorPriorityOverKeyword",
+        @"testVarShemeWithPath",
+        @"testRelScheme",
+        @"testIdentifierInterpolation",
+        @"testIdentifierInterpolationWorksAsAssignmentTarget",
+        @"testGetReasonableCompilerErrorOnMissingBinaryArgument",
+        @"testPeriodAtEndOfIdentifierAndStatementTreatedAsStatementEnd",
+        @"testPeriodAtEndOfIdentifierAndStatementAndEOFTreatedAsStatementEnd",
+        @"testBracketsTerminateIdentifier",
+        @"testSmalltalkCascade",
+//      @"testCompositionViaPipeDoesntBlockFurtherEval2",   FIXME, still buggy
 #if 1 // !GS_API_LATEST
-            @"testDefineClassMethod",
+        @"testDefineClassMethod",
 #endif
-            @"testSimpleBindingsAreUniquedInCompile",
-            @"testComplexBindingsAreUniquedInCompile",
-            @"testParseMethodSyntaxOneArg",
+        @"testSimpleBindingsAreUniquedInCompile",
+        @"testComplexBindingsAreUniquedInCompile",
+        @"testParseMethodSyntaxOneArg",
         @"testParseMethodSyntaxNoArgs",
-        @"testSimpleLiteralDict",
-        @"testLiteralDictWithNumberKey",
-            @"testTwoElementLiteralDict",
-            @"testLiteralArrayWithSpecifiedClass",
+        @"testLiteralArrayWithSpecifiedClass",
         @"testLiteralSet",
         @"testLiteralDictWithSpecifiedClass",
         @"testClassDefSyntax",
@@ -1684,7 +1374,7 @@
         @"testCreateSubclassUsingSnytax",
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
-        @"testProtocolDefSyntax", 
+        @"testProtocolDefSyntax",
         @"testProtocolDefSyntaxWithMessages",
         @"testNestedVarExprWithPath",
 #if 1 // !GS_API_LATEST
@@ -1703,7 +1393,6 @@
         @"testCanInterpolateStringWithScheme",
         @"testInterpolatedStringInBlockCapturedVar",
         @"testInterpolatedStringInBlockLocalVar",
-        @"testReduceFactorial",
         @"testObjectTemplate",
 #if 1 // !GS_API_LATEST
         @"testConnectFiltersInRightOrderWorks",
@@ -1716,7 +1405,7 @@
         @"testMappingStoreCanReferToSourceAsScheme",
         @"testSuperSend",
         @"testArraySubscriptExpressionAsArg",
-//        @"testChainedSubscriptExpressionsCompile",
+//      @"testChainedSubscriptExpressionsCompile",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         @"testTemplateMatchingStoreCanUseBlocks",
@@ -1734,9 +1423,8 @@
         @"testExecuteSimpleQueryWithContextVars",
         @"testNewlinesInStringConstants",
         @"testCanCompileQuery",
-        @"testEvaluateQueryAsNextObject",
         @"testCanConnectFilterToSelfContainedBinding",
-        ];
+    ];
 }
 
 
