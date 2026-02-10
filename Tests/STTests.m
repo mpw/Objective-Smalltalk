@@ -58,11 +58,17 @@
 @implementation STTests
 
 
++evaluateTestExpression:(NSString*)expr
+{
+    NSLog(@"%@ evaluateTestExpression: %@",[self className],expr);
+    return [super evaluate:expr];
+}
+
 +(void)testexpr:expr expected:expected
 {
 	id result=nil;
 	NS_DURING
-    result = (STExpression*)[self evaluate:expr];
+    result = (STExpression*)[self evaluateTestExpression:expr];
     result = [result stringValue];
     expected=[expected stringValue];
 	NS_HANDLER

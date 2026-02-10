@@ -23,6 +23,10 @@
 		1F0351072F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
 		1F0351082F3A59D1005F2ECA /* STExpressionTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351032F3A59D1005F2ECA /* STExpressionTests.h */; };
 		1F0351092F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
+		1F0351642F3B9657005F2ECA /* STMachOObjectFileLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */; };
+		1F0351652F3B9657005F2ECA /* STMachOObjectFileLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */; };
+		1F0351682F3BD875005F2ECA /* STJITExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351672F3BD875005F2ECA /* STJITExpressionTests.m */; };
+		1F0351692F3BD875005F2ECA /* STJITExpressionTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */; };
 		1F04243C28D1D09B00486831 /* STMachOWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F04243A28D1D09B00486831 /* STMachOWriter.h */; };
 		1F04243D28D1D09B00486831 /* STMachOWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F04243B28D1D09B00486831 /* STMachOWriter.m */; };
 		1F05B53E2B441A00004C7772 /* STSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F05B53C2B441A00004C7772 /* STSystem.h */; };
@@ -1075,6 +1079,10 @@
 		1F032E362BEF9A140000183E /* STNativeCompilerTestsMachO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STNativeCompilerTestsMachO.m; sourceTree = "<group>"; };
 		1F0351032F3A59D1005F2ECA /* STExpressionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STExpressionTests.h; sourceTree = "<group>"; };
 		1F0351042F3A59D1005F2ECA /* STExpressionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STExpressionTests.m; sourceTree = "<group>"; };
+		1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOObjectFileLoader.h; sourceTree = "<group>"; };
+		1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOObjectFileLoader.m; sourceTree = "<group>"; };
+		1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STJITExpressionTests.h; sourceTree = "<group>"; };
+		1F0351672F3BD875005F2ECA /* STJITExpressionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STJITExpressionTests.m; sourceTree = "<group>"; };
 		1F04243A28D1D09B00486831 /* STMachOWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOWriter.h; sourceTree = "<group>"; };
 		1F04243B28D1D09B00486831 /* STMachOWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOWriter.m; sourceTree = "<group>"; };
 		1F04A53121D253F300E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
@@ -2052,6 +2060,10 @@
 				1F2525C72F37692000C4C366 /* STMachODylibWriterTests.m */,
 				1F0B2C3D4E5F678901234565 /* STMachOObjectSerializer.h */,
 				1F0B2C3D4E5F678901234566 /* STMachOObjectSerializer.m */,
+				1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */,
+				1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */,
+				1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */,
+				1F0351672F3BD875005F2ECA /* STJITExpressionTests.m */,
 				1F08D3042F323E8E008AE661 /* DetailedDylibCharacterizationTests.m */,
 				1FF860AF2F315BA400A99A0C /* STMachOSegment.h */,
 				1FF860B02F315BA400A99A0C /* STMachOSegment.m */,
@@ -3110,6 +3122,7 @@
 				1FF8606A2F2C9B5800A99A0C /* STExportsTrieWriter.h in Headers */,
 				1F2525C92F37692000C4C366 /* STMachODylibWriterTests.h in Headers */,
 				1F08D3032F321279008AE661 /* STChainedFixupWriter.h in Headers */,
+				1F0351652F3B9657005F2ECA /* STMachOObjectFileLoader.h in Headers */,
 				1F3466EC28C4FBF2003257CB /* STObjectCodeGeneratorARM.h in Headers */,
 				1FF85FE12F2B9B4300A99A0C /* STMachODylibWriter.h in Headers */,
 				1F0B2C3D4E5F678901234569 /* STMachOObjectSerializer.h in Headers */,
@@ -3118,6 +3131,7 @@
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FE5D6E02C3080890018B09C /* MPWELFTextSection.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
+				1F0351692F3BD875005F2ECA /* STJITExpressionTests.h in Headers */,
 				1F084A2416DCFB3300ED2517 /* llvmincludes.h in Headers */,
 				1F8027D42C2FD8FA00770B11 /* MPWELFRelocationTable.h in Headers */,
 				1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */,
@@ -4695,6 +4709,7 @@
 				1F70BE58278E11DB002398CC /* MPWCPUSimulator.m in Sources */,
 				1FA5DF782BE8CF57001E5231 /* STObjectFileWriter.m in Sources */,
 				1F6060162A24803800783E17 /* MPWELFReader.m in Sources */,
+				1F0351642F3B9657005F2ECA /* STMachOObjectFileLoader.m in Sources */,
 				1FD22E2B2CBA8F3F0064490A /* STNativeMachOCompiler.m in Sources */,
 				1F032E1F2BEF5DC30000183E /* STARMObjectCodeGeneratorExternalTestsMachO.m in Sources */,
 				1FF8609F2F2D25D600A99A0C /* STBindOpcodeWriter.m in Sources */,
@@ -4707,6 +4722,7 @@
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */,
 				1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */,
+				1F0351682F3BD875005F2ECA /* STJITExpressionTests.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
 				1F08D3022F321279008AE661 /* STChainedFixupWriter.m in Sources */,
 			);
