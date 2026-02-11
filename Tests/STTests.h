@@ -13,6 +13,8 @@
 
 }
 
++evaluateTestExpression:(NSString*)expr;
+
 @end
 
 #define TESTEXPR( expr, expected )\

@@ -26,7 +26,7 @@
 
 +(void)testFloatArithmetic
 {
-    [self testexpr:@"(3.2+4.4*10) intValue" expected:@"76"];
+    TESTEXPR(@"(3.2+4.4*10) intValue",@"76");
 }
 
 +(void)testAsFloat
@@ -41,7 +41,7 @@
 
 +(void)testNegativeLiteralComputation
 {
-    [self testexpr:@"context evaluateScriptString:4*-2" expected:[NSNumber numberWithInt:-8]];
+    [self testexpr:@"4 * -2" expected:[NSNumber numberWithInt:-8]];
 }
 
 +(void)testNegativeDecimalFractions
@@ -59,7 +59,8 @@
 
 +(void)nestedArgStringConcat
 {
-    [self testexpr:@"'Hi ' stringByAppendingString:'there' uppercaseString." expected:@"Hi THERE"];
+    TESTEXPR(@"'Hi ' stringByAppendingString:'there' uppercaseString.",@"Hi THERE");
+//    [self testexpr:@"'Hi ' stringByAppendingString:'there' uppercaseString." expected:@"Hi THERE"];
 }
 
 +(void)nestedReceiverStringConcat
@@ -197,32 +198,32 @@
 
 +(void)testIfTrueIfFalseWithExpressionCondition
 {
-    [self testexpr:@"('hello world' hasPrefix:'hello') ifTrue: { 3+4. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:7]];
+    TESTEXPR(@"('hello world' hasPrefix:'hello') ifTrue: { 3+4.  } ifFalse: { 4. }." , @(7));
 }
 
 +(void)testBasicWhileTrue
 {
-    [self testexpr:@"a:=2.{ a<100. } whileTrue:{ a:=(2*a). }. a." expected:[NSNumber numberWithInt:128]];
+    TESTEXPR(@"| a | a:=2.{ a<100. } whileTrue:{ a:=(2*a). }. a.", @(128));
 }
 
 +(void)testWhileTrueWithLongerBlock
 {
-    [self testexpr:@"a:=2.b:=1. { a<100. } whileTrue:{ a:=(2*a). b:=(b+1). }. b." expected:[NSNumber numberWithInt:7]];
+    [self testexpr:@"| a b | a:=2.b:=1. { a<100. } whileTrue:{ a:=(2*a). b:=(b+1). }. b." expected:[NSNumber numberWithInt:7]];
 }
 
 +(void)testForLoop
 {
-    [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a." expected:[NSNumber numberWithInt:2048]];
+    [self testexpr:@"| a |  a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a." expected:[NSNumber numberWithInt:2048]];
 }
 
 +(void)testToDo
 {
-    [self testexpr:@"a:=1. 1 to:10 do: { :i | a:=(a+1). }. a." expected:@"11"];
+    TESTEXPR(@"var a.  a:=1. 1 to:10 do: { :i | a:=(a+1). }. a." ,@"11");
 }
 
 +(void)testCurlyBracesAllowedForBlocks
 {
-    [self testexpr:@"a:=2. (1 to:10) do:{ :i | a:=(2*a).}. a." expected:[NSNumber numberWithInt:2048]];
+    [self testexpr:@"| a | a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a." expected:[NSNumber numberWithInt:2048]];
 }
 
 // --- Blocks ---

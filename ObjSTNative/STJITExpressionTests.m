@@ -57,7 +57,62 @@
     EXPECTTRUE(false, @"not crashing");
 }
 
++(NSArray*)testSelectorsOfExpressionTests
+{
+    return [super testSelectors];
+}
+
++(NSArray*)testSelectorsToIgnore
+{
+    NSArray * const selectors = @[
+        @"testFloatArithmetic",
+        @"testAsFloat",
+        @"testNegativeLiteral",
+        @"testNegativeLiteralComputation",
+        @"testNegativeDecimalFractions",
+        @"stringConcat",
+        @"nestedArgStringConcat",
+        @"nestedReceiverStringConcat",
+        @"mixedStackedMappedConcat",
+        @"testNSRangeViaSubarray",
+        @"testMultipleStatments",
+        @"testIfTrueIfFalse",
+        @"testIfTrueIfFalseWithExpressionValue",
+        @"testIfTrueIfFalseWithExpressionCondition",
+        @"testBasicWhileTrue",
+        @"testWhileTrueWithLongerBlock",
+        @"testForLoop",
+        @"testToDo",
+        @"testBlockArgs",
+        @"testIntervalBlockCollect",
+        @"testArrayBlockCollect",
+        @"testBinarySelectorPrecedenceOverKeyword",
+        @"testKeywordMessageWithBinaryAsArg",
+        @"testRecursiveInterpret",
+        @"testCurlyBracesAllowedForBlocks",
+    ];
+    return selectors;
+}
+
++(NSArray*)computedTestSelectors
+{
+    NSSet *toIgnore = [NSSet setWithArray:[self testSelectorsToIgnore]];
+    NSArray *allSelectors = [self testSelectorsOfExpressionTests];
+    NSMutableArray *toRun = [NSMutableArray array];
+    for (NSString *selector in allSelectors) {
+        if ( ![toIgnore containsObject:selector]) {
+            [toRun addObject:selector];
+        }
+    }
+    return toRun;
+}
+
 +(NSArray*)testSelectors
+{
+    return [self computedTestSelectors];
+}
+
++(NSArray*)testSelectors_disabled
 {
     return @[];
 }
