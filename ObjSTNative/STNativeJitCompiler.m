@@ -131,7 +131,13 @@
 {
     static int numExpressions=0;
     NSString *className=[NSString stringWithFormat:@"STJitCompilerExpressionTester_%d",numExpressions++];
-    NSString *wrapper=[NSString stringWithFormat:@"class %@ { -expression { %@. }}",className,expr];
+    // Strip trailing periods/whitespace so wrapping doesn't produce ".."
+    NSString *trimmed = [expr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    while ([trimmed hasSuffix:@"."]) {
+        trimmed = [[trimmed substringToIndex:trimmed.length - 1]
+                   stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
+    NSString *wrapper=[NSString stringWithFormat:@"class %@ { -expression { %@. }}",className,trimmed];
     STNativeJitCompiler *compiler = [self compiler];
     STClassDefinition* classDef=[compiler compile:wrapper];
     [classDef defineJustTheClass];

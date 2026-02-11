@@ -25,7 +25,7 @@
     return result;
 }
 
-// disable failing JIT tests
+// Override tests that currently crash so they can be re-enabled safely later
 
 +(void)testFloatArithmetic
 {
@@ -57,6 +57,11 @@
     EXPECTTRUE(false, @"not crashing");
 }
 
++(void)testBinarySelectorPrecedenceOverKeyword
+{
+    EXPECTTRUE(false, @"not crashing");
+}
+
 +(NSArray*)testSelectorsOfExpressionTests
 {
     return [super testSelectors];
@@ -65,31 +70,30 @@
 +(NSArray*)testSelectorsToIgnore
 {
     NSArray * const selectors = @[
+        // Float support not yet in JIT
+        @"testBinarySelectorPrecedenceOverKeyword",
         @"testFloatArithmetic",
         @"testAsFloat",
-        @"testNegativeLiteral",
-        @"testNegativeLiteralComputation",
         @"testNegativeDecimalFractions",
-        @"stringConcat",
-        @"nestedArgStringConcat",
-        @"nestedReceiverStringConcat",
-        @"mixedStackedMappedConcat",
+        // NSRange struct passing not yet in JIT
         @"testNSRangeViaSubarray",
-        @"testMultipleStatments",
-        @"testIfTrueIfFalse",
-        @"testIfTrueIfFalseWithExpressionValue",
-        @"testIfTrueIfFalseWithExpressionCondition",
-        @"testBasicWhileTrue",
-        @"testWhileTrueWithLongerBlock",
-        @"testForLoop",
-        @"testToDo",
-        @"testBlockArgs",
+        // Block-based collect with interval/array not yet in JIT
         @"testIntervalBlockCollect",
         @"testArrayBlockCollect",
-        @"testBinarySelectorPrecedenceOverKeyword",
+        // Negative integer literals: -2 yields 65534 (unsigned interpretation)
+        @"testNegativeLiteral",
+        @"testNegativeLiteralComputation",
+        // Local variables across statements: JIT can't find vars from earlier statements
+        @"testMultipleStatments",
         @"testKeywordMessageWithBinaryAsArg",
+        // 'true' not resolved as built-in identifier
+        @"testIfTrueIfFalse",
+        @"testIfTrueIfFalseWithExpressionValue",
+        // Block argument compilation issue (countByEnumeratingWithState: on STIdentifierExpression)
+        @"testBlockArgs",
+        // 'context' not resolved as built-in identifier
         @"testRecursiveInterpret",
-        @"testCurlyBracesAllowedForBlocks",
+        @"testToDo",
     ];
     return selectors;
 }

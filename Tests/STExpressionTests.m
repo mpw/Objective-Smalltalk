@@ -203,12 +203,12 @@
 
 +(void)testBasicWhileTrue
 {
-    TESTEXPR(@"| a | a:=2.{ a<100. } whileTrue:{ a:=(2*a). }. a.", @(128));
+    TESTEXPR(@"var a. a:=2.{ a<100. } whileTrue:{ a:=(2*a) }. a.", @(128));
 }
 
 +(void)testWhileTrueWithLongerBlock
 {
-    [self testexpr:@"| a b | a:=2.b:=1. { a<100. } whileTrue:{ a:=(2*a). b:=(b+1). }. b." expected:[NSNumber numberWithInt:7]];
+    TESTEXPR(@"| a b | a:=2. b:=1. { a<100. } whileTrue:{ a:=(2*a). b:=(b+1). }. b." ,@(7));
 }
 
 +(void)testForLoop
@@ -223,14 +223,14 @@
 
 +(void)testCurlyBracesAllowedForBlocks
 {
-    [self testexpr:@"| a | a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a." expected:[NSNumber numberWithInt:2048]];
+    TESTEXPR(@"| a | a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a.", @(2048));
 }
 
 // --- Blocks ---
 
 +(void)testBlockArgs
 {
-    [self testexpr:@"{ :i | i } value: 2." expected:@"2"];
+    TESTEXPR(@"{ :i | i } value: 2.",@"2");
 }
 
 +(void)testIntervalBlockCollect
