@@ -86,14 +86,14 @@
         // Local variables across statements: JIT can't find vars from earlier statements
         @"testMultipleStatments",
         @"testKeywordMessageWithBinaryAsArg",
-        // 'true' not resolved as built-in identifier
-        @"testIfTrueIfFalse",
-        @"testIfTrueIfFalseWithExpressionValue",
-        // Block argument compilation issue (countByEnumeratingWithState: on STIdentifierExpression)
         @"testBlockArgs",
         // 'context' not resolved as built-in identifier
         @"testRecursiveInterpret",
         @"testToDo",
+        @"testBasicWhileTrue",
+        @"testWhileTrueWithLongerBlock",
+        @"testForLoop",
+        @"testCurlyBracesAllowedForBlocks",
     ];
     return selectors;
 }

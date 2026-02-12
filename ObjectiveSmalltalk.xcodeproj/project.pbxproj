@@ -389,8 +389,6 @@
 		1F7328912344C10000379386 /* MPWREPLViewPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F73288F2344C10000379386 /* MPWREPLViewPrinter.m */; };
 		1F74D043299A7CDF004A3DF0 /* STProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1A64742975C47600B8776C /* STProgram.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F75F7742B88B86B0075DE11 /* constant-webdav.py in Resources */ = {isa = PBXBuildFile; fileRef = 1F75F7702B88B86B0075DE11 /* constant-webdav.py */; };
-		1F78BD8C2CB6F78000AA41A3 /* STJittedMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F78BD8B2CB6F78000AA41A3 /* STJittedMethod.m */; };
-		1F78BD8D2CB6F78000AA41A3 /* STJittedMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F78BD8A2CB6F78000AA41A3 /* STJittedMethod.h */; };
 		1F7A21B91B779CDD00FF6C03 /* MPWDataflowConstraintExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC56391B1B99CE00BE3884 /* MPWDataflowConstraintExpression.m */; };
 		1F7AFACC260F78E5002DC530 /* MPWFastSuperMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7AFACA260F78E5002DC530 /* MPWFastSuperMessage.h */; };
 		1F7AFACD260F78E5002DC530 /* MPWFastSuperMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7AFACA260F78E5002DC530 /* MPWFastSuperMessage.h */; };
@@ -1440,8 +1438,6 @@
 		1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWREPLViewPrinter.h; sourceTree = "<group>"; };
 		1F73288F2344C10000379386 /* MPWREPLViewPrinter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWREPLViewPrinter.m; sourceTree = "<group>"; };
 		1F75F7702B88B86B0075DE11 /* constant-webdav.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "constant-webdav.py"; sourceTree = "<group>"; };
-		1F78BD8A2CB6F78000AA41A3 /* STJittedMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STJittedMethod.h; sourceTree = "<group>"; };
-		1F78BD8B2CB6F78000AA41A3 /* STJittedMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STJittedMethod.m; sourceTree = "<group>"; };
 		1F7AFACA260F78E5002DC530 /* MPWFastSuperMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWFastSuperMessage.h; sourceTree = "<group>"; };
 		1F7AFACB260F78E5002DC530 /* MPWFastSuperMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWFastSuperMessage.m; sourceTree = "<group>"; };
 		1F7B0C5A3B9C0A3E00A1B2C3 /* STBundle+ObjSTNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STBundle+ObjSTNative.h"; sourceTree = "<group>"; };
@@ -2180,8 +2176,6 @@
 				1FDDE95C29029887002A4AA4 /* MPWMachOClassWriter.m */,
 				1FDDE95728F98CE4002A4AA4 /* STMachOSectionWriter.h */,
 				1FDDE95828F98CE4002A4AA4 /* STMachOSectionWriter.m */,
-				1F78BD8A2CB6F78000AA41A3 /* STJittedMethod.h */,
-				1F78BD8B2CB6F78000AA41A3 /* STJittedMethod.m */,
 			);
 			path = ObjSTNative;
 			sourceTree = "<group>";
@@ -3216,7 +3210,6 @@
 				1FF85FE12F2B9B4300A99A0C /* STMachODylibWriter.h in Headers */,
 				1F0B2C3D4E5F678901234569 /* STMachOObjectSerializer.h in Headers */,
 				1FA5DF772BE8CF57001E5231 /* STObjectFileWriter.h in Headers */,
-				1F78BD8D2CB6F78000AA41A3 /* STJittedMethod.h in Headers */,
 				1F70BE57278E11DB002398CC /* MPWCPUSimulator.h in Headers */,
 				1FE5D6E02C3080890018B09C /* MPWELFTextSection.h in Headers */,
 				1FDDE94D28F1D6BF002A4AA4 /* MPWMachORelocationPointer.h in Headers */,
@@ -4856,7 +4849,6 @@
 				1FF860A22F2E320B00A99A0C /* MPWMachOLinkerCharacterizationTests.m in Sources */,
 				1FF860692F2C9B5800A99A0C /* STExportsTrieWriter.m in Sources */,
 				1F04243D28D1D09B00486831 /* STMachOWriter.m in Sources */,
-				1F78BD8C2CB6F78000AA41A3 /* STJittedMethod.m in Sources */,
 				1F3466ED28C4FBF2003257CB /* STObjectCodeGeneratorARM.m in Sources */,
 				1FDDE95A28F98CE4002A4AA4 /* STMachOSectionWriter.m in Sources */,
 				1F1380012BE66C0300CD023C /* MPWELFSymbolTable.m in Sources */,

@@ -303,6 +303,13 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
         
         [codegen loadRegister:0 fromContentsOfAdressInRegister:blockRegister offset:offset];
         return 0;
+    }  else if ( [name isEqual:@"true"]  )  {
+        return [self generateNumberObjectLiteral:@(1)];
+    }  else if ( [name isEqual:@"false"]  )  {
+        return [self generateNumberObjectLiteral:@(0)];
+    }  else if ( [name isEqual:@"nil"]  )  {
+        [codegen generateMoveConstant:0 to:0];
+        return 0;
     }  else {
         NSString *schemeName = [expr.identifier schemeName];
         if ( schemeName == nil || schemeName.length == 0 ) {
@@ -448,16 +455,21 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     [codegen generateCallToExternalFunctionNamed:@"_MPWCreateInteger"];
 }
 
+-(int)generateNumberObjectLiteral:(NSNumber*)theLiteral
+{
+    int value = [theLiteral intValue];
+    if ( value <= 0xffff) {
+        [codegen generateMoveConstant:value to:0];
+        [self generateCallToCreateObjectFromInteger];
+        return 0;
+    }
+}
+
 -(int)generateLiteralExpression:(MPWLiteralExpression*)expr
 {
     id theLiteral=expr.theLiteral;
     if ( [theLiteral isKindOfClass:[NSNumber class]]) {
-        int value = [theLiteral intValue];
-        if ( value <= 0xffff) {
-            [codegen generateMoveConstant:value to:0];
-            [self generateCallToCreateObjectFromInteger];
-            return 0;
-        }
+        return [self generateNumberObjectLiteral:theLiteral];
     } else  if ( [theLiteral isKindOfClass:[NSString class]] ) {
         return [self generateStringLiteral:theLiteral];
     }

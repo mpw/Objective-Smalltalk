@@ -184,16 +184,50 @@
     INTEXPECT([result intValue], 628, @"2 * pi * 100");
 }
 
+// --- Blocks ---
+
++(void)testBlockNoComputation
+{
+    TESTEXPR(@"{ 3. } value. ",@"3");
+}
+
++(void)testNoArgBlockWithComputation
+{
+    TESTEXPR(@"{ 3+2. } value. ",@"5");
+}
+
++(void)testBlockArgs
+{
+    TESTEXPR(@"{ :i | i*4 . } value: 2.",@"8");
+}
+
++(void)testIntervalBlockCollect
+{
+    [self testexpr:@"((1 to:3) collect:{ :i | i+2. } ) lastObject" expected:@"5"];
+}
+
++(void)testArrayBlockCollect
+{
+    TESTEXPR(@"( #( 1, 2, 7 ) collect:{ :i | i*2. } ) lastObject" ,@"14");
+}
+
+
+
 // --- Control flow ---
 
 +(void)testIfTrueIfFalse
 {
-    [self testexpr:@"true ifTrue: { 3. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:3]];
+    TESTEXPR( @"true ifTrue: { 3. } ifFalse: { 4. }.", @(3) );
+}
+
++(void)testIfTrueIfFalseWithIntegerCondition
+{
+    TESTEXPR( @"1 ifTrue: { 3. } ifFalse: { 4. }.", @(3) );
 }
 
 +(void)testIfTrueIfFalseWithExpressionValue
 {
-    [self testexpr:@"true ifTrue: { 3+4. } ifFalse: { 4. }." expected:[NSNumber numberWithInt:7]];
+    TESTEXPR( @"true ifTrue: { 3+4. } ifFalse: { 4. }.", @(7) );
 }
 
 +(void)testIfTrueIfFalseWithExpressionCondition
@@ -224,23 +258,6 @@
 +(void)testCurlyBracesAllowedForBlocks
 {
     TESTEXPR(@"| a | a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a.", @(2048));
-}
-
-// --- Blocks ---
-
-+(void)testBlockArgs
-{
-    TESTEXPR(@"{ :i | i } value: 2.",@"2");
-}
-
-+(void)testIntervalBlockCollect
-{
-    [self testexpr:@"((1 to:3) collect:{ :i | i+2. } ) lastObject" expected:@"5"];
-}
-
-+(void)testArrayBlockCollect
-{
-    TESTEXPR(@"( #( 1, 2, 7 ) collect:{ :i | i*2. } ) lastObject" ,@"14");
 }
 
 // --- Message precedence ---
@@ -336,6 +353,12 @@
         @"testLeftArrowWorksLikeAssignment",
         @"testPipeForTemporaryVariablesAllowed",
         @"testSingleCharUnicodeIdentifiersAllowed",
+        // Blocks
+        @"testBlockNoComputation",
+        @"testNoArgBlockWithComputation",
+        @"testBlockArgs",
+        @"testIntervalBlockCollect",
+        @"testArrayBlockCollect",
         // Control flow
         @"testIfTrueIfFalse",
         @"testIfTrueIfFalseWithExpressionValue",
@@ -345,10 +368,6 @@
         @"testForLoop",
         @"testToDo",
         @"testCurlyBracesAllowedForBlocks",
-        // Blocks
-        @"testBlockArgs",
-        @"testIntervalBlockCollect",
-        @"testArrayBlockCollect",
         // Message precedence
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testKeywordMessageWithBinaryAsArg",
@@ -362,6 +381,7 @@
         @"testRecursiveInterpret",
         // Query
         @"testEvaluateQueryAsNextObject",
+        @"testIfTrueIfFalseWithIntegerCondition",
     ];
 }
 
