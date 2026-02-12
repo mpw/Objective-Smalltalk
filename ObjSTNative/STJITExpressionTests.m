@@ -83,17 +83,13 @@
         // Negative integer literals: -2 yields 65534 (unsigned interpretation)
         @"testNegativeLiteral",
         @"testNegativeLiteralComputation",
-        // Local variables across statements: JIT can't find vars from earlier statements
         @"testMultipleStatments",
         @"testKeywordMessageWithBinaryAsArg",
         @"testBlockArgs",
-        // 'context' not resolved as built-in identifier
-        @"testRecursiveInterpret",
         @"testToDo",
         @"testBasicWhileTrue",
         @"testWhileTrueWithLongerBlock",
         @"testForLoop",
-        @"testCurlyBracesAllowedForBlocks",
     ];
     return selectors;
 }

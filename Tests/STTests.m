@@ -1303,6 +1303,14 @@
     TESTEXPR( @"filter toupper_test_selfcontaind |{ ^object uppercaseString. }. a := 20. (toupper_test_selfcontaind → ref:a) ! 'hello world'. a.",@"HELLO WORLD");
 }
 
+// --- Recursive interpret ---
+
++(void)testRecursiveInterpret
+{
+    [self testexpr:@"context evaluateScriptString:'3+4'" expected:[NSNumber numberWithInt:7]];
+}
+
+
 +(NSArray*)testSelectors
 {
     return @[
@@ -1430,6 +1438,8 @@
         @"testNewlinesInStringConstants",
         @"testCanCompileQuery",
         @"testCanConnectFilterToSelfContainedBinding",
+        // Recursive interpret
+        @"testRecursiveInterpret",
     ];
 }
 

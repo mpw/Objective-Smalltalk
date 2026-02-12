@@ -255,11 +255,6 @@
     TESTEXPR(@"var a.  a:=1. 1 to:10 do: { :i | a:=(a+1). }. a." ,@"11");
 }
 
-+(void)testCurlyBracesAllowedForBlocks
-{
-    TESTEXPR(@"| a | a:=2. (1 to:10) do:{ :i | a:=(2*a). }. a.", @(2048));
-}
-
 // --- Message precedence ---
 
 +(void)testBinarySelectorPrecedenceOverKeyword
@@ -298,12 +293,6 @@
     [self testexpr:@" '{1,2}' asSize " expected:[MPWPoint pointWithX:1 y:2]];
 }
 
-// --- Recursive interpret ---
-
-+(void)testRecursiveInterpret
-{
-    [self testexpr:@"context evaluateScriptString:'3+4'" expected:[NSNumber numberWithInt:7]];
-}
 
 // --- Query ---
 
@@ -367,7 +356,6 @@
         @"testWhileTrueWithLongerBlock",
         @"testForLoop",
         @"testToDo",
-        @"testCurlyBracesAllowedForBlocks",
         // Message precedence
         @"testBinarySelectorPrecedenceOverKeyword",
         @"testKeywordMessageWithBinaryAsArg",
@@ -377,8 +365,6 @@
         // Points/Geometry
         @"testNSPointViaString",
         @"testNSSizeViaString",
-        // Recursive interpret
-        @"testRecursiveInterpret",
         // Query
         @"testEvaluateQueryAsNextObject",
         @"testIfTrueIfFalseWithIntegerCondition",
