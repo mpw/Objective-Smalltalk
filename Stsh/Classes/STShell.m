@@ -331,8 +331,9 @@ idAccessor( retval, setRetval )
                 perror("failed to chdir");
             }
         }
-    } else {
-        exprString=[@"source ~/.bashrc \n " stringByAppendingString:[exprString substringFromIndex:1]];
+    } else if (exprString.length>1) {
+        exprString = [exprString substringFromIndex:1];
+//        exprString=[@"source ~/.bashrc \n " stringByAppendingString:exprString];
         system([exprString UTF8String]);
     }
 }
@@ -442,7 +443,7 @@ idAccessor( retval, setRetval )
 //            NSLog(@"hasBangPrexi: %d",hasBangPrefix);
             NSString *first = [[exprString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] firstObject];
             BOOL startsWithUnknownIdentifier=NO;
-            if ( ![first containsString:@":"] && ![[self evaluator] bindingForLocalVariableNamed:first]) {
+            if ( newString.length >0 && ![first containsString:@":"] && ![[self evaluator] bindingForLocalVariableNamed:first]) {
                 startsWithUnknownIdentifier=YES;
             }
             @try {
