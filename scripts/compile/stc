@@ -3,7 +3,8 @@
 framework:ObjSTNative load.
 basename := source stringValue stringByDeletingPathExtension.
 compiler := STNativeCompiler compiler.
-compiled := compiler compileProcessToMachoO: (compiler compile: file:{source}).
+ast := compiler compile: file:{source}.
+compiled := compiler compileProcessToMachoO: ast.
 objectFileName := basename , '.o'.
 file:{objectFileName} := compiled.
 compiler linkObjects: #[ basename ] toExecutable: basename inDir: nil additionalFrameworks:[ 'ObjectiveHttpd' ].
