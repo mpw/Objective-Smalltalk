@@ -2,16 +2,8 @@
 #-sqlite:dbpath
 
 
-scheme SQLiteScheme  {
-  var db.
-  var tables.
+scheme SQLiteScheme : SQLiteStore  {
 
-  -initWithPath: dbPath {
-     this:db := (MPWStreamQLite alloc initWithPath:dbPath).
-     this:db open.
-	 this:tables := this:db tables.
-     self.
-  }
 
   -<void>setClass:aClass forTable:tableName {
 	 (this:tables at:tableName) setTableClass:aClass.
