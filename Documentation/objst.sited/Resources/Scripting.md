@@ -1,16 +1,16 @@
 Scripting
 =======
 
-Objective-S has been carefully designed to remove barriers between scripts
+Objective-Smalltalk has been carefully designed to remove barriers between scripts
 and programs, to the point of making the differences disappear.  Scripts have
 direct access to the full power of the system frameworks, and methods written
-in Objective-S have all the power of a scripting language.
+in Objective-Smalltalk have all the power of a scripting language.
 
 
 In-App Scripting
 ---------------------
 
-Most of Objective-S comes as a framework, and can therefore be added to
+Most of Objective-Smalltalk comes as a framework, and can therefore be added to
 an application by linking in the framework.  
 
 	[MPWSmalltalkCompiler runScript:'a := 3+4'];
@@ -20,7 +20,7 @@ It is also easy to add methods to classes, and there is a *MethodServer*
 that enables loading classes into a running process via HTTP.  
 
 As one example, the [BookLightning](http://www.metaobject.com/Products/) imposition 
-program uses embedded Objective-S scripts to control the actual imposition process.
+program uses embedded Objective-Smalltalk scripts to control the actual imposition process.
 
     class ScriptedQuartoBookMaker : QuartoBookMaker
     {
@@ -57,7 +57,7 @@ program uses embedded Objective-S scripts to control the actual imposition proce
 Unix Scripting
 -------------------
 
-Objective-S comes with a Unix REPL called `stsh`.  This simple script 
+Objective-Smalltalk comes with a Unix REPL called `stsh`.  This simple script 
 prints the numbers between the two numbers given on the command line:
 
     #!/usr/local/bin/stsh
@@ -98,7 +98,7 @@ Although the `<ref>` type defaults to files, it can actually pass arbitrary
 Web-Scripting
 -------------
 
-Objective-S makes it easy to interact with web resources.  The following 
+Objective-Smalltalk makes it easy to interact with web resources.  The following 
 example looks up a zip-code using the zipTastic web service.
 
     #!/usr/local/bin/stsh

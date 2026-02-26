@@ -1,7 +1,7 @@
 Download
 ==========
 
-Objective-S source code is available on github:
+Objective-Smalltalk source code is available on github:
 
   [https://github.com/mpw/Objective-Smalltalk](https://github.com/mpw/Objective-Smalltalk).  
 
@@ -18,14 +18,14 @@ If you want to build the GUI components, including the Smalltalk application, yo
 Build
 -----------
 
-The two frameworks are best built together in a workspace.  You can use the one included in Objective-S or use your own.  Building either the Objective-Smalltalk target or one of the sample applications should build everything.
+The two frameworks are best built together in a workspace.  You can use the one included in Objective-Smalltalk or use your own.  Building either the Objective-Smalltalk target or one of the sample applications should build everything.
 
 
 
 Sample Applications
 ---------------------------
 
-Objective-S includes a number of sample applications
+Objective-Smalltalk includes a number of sample applications
 
 1. stsh
 

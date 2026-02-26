@@ -1,8 +1,8 @@
 URIs
 ====
 
-If you've looked at some of the samples, you may have noticed that Objective-S fully supports
-direct use of URIs in program text.  In fact, all identifiers in Objective-S are 
+If you've looked at some of the samples, you may have noticed that Objective-Smalltalk fully supports
+direct use of URIs in program text.  In fact, all identifiers in Objective-Smalltalk are 
 URIs, resolution of these *Polymorphic Identifiers* is flexible and to a large-extent
 user-defined.
 
@@ -39,7 +39,7 @@ with specific names:
 - `file:` access to the file system
 - `env:` environemnt variables
 - `defaults:` Cocoa defaults system
-- `class:` Objective-C/Objective-S classes
+- `class:` Objective-C/Objective-Smalltalk classes
 - `bundle:`, `mainbundle:` named resources in the class bundle or the main bundle
 
 Composite schemes include the following:

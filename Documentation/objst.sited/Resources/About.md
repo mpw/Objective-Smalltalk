@@ -1,21 +1,21 @@
-About Objective-S
+About Objective-Smalltalk
 ==============
 
-Objective-S is an architecture-oriented programming language based loosely on Smalltalk and Objective-C.
+Objective-Smalltalk is an architecture-oriented programming language based loosely on Smalltalk and Objective-C.
 It currently runs on macOS, iOS and Linux, the latter using GNUstep.  
 
-By allowing general architectures, Objective-S is the first general purpose programming language.
+By allowing general architectures, Objective-Smalltalk is the first general purpose programming language.
 
 What we currently call general purpose languages are actually domain specific languages for the
 domain of algorithms.
 
-Objective-S includes an Objective-C compatible runtime model, but using a much simpler and consistent
-Smalltalk-based syntax. Unlike Smalltalk, Objective-S has syntax for defining classes and so can
+Objective-Smalltalk includes an Objective-C compatible runtime model, but using a much simpler and consistent
+Smalltalk-based syntax. Unlike Smalltalk, Objective-Smalltalk has syntax for defining classes and so can
 be file-based and is "vi-hackable".
 
 
 
-Why Objective-S?
+Why Objective-Smalltalk?
 ------------------------
 
 Software development is too hard.  As Alan Kay put it: [code seems "large" and "complicated" for what it does](https://youtu.be/ubaX1Smg6pY?t=126).
@@ -31,9 +31,9 @@ layers of indirection.
 Software Architecture
 -----------------------------
 
-The theoretical foundation for Objective-S is Mary Shaw's [Procedure Calls Are the Assembly Language of Software Interconnection: Connectors Deserve First-Class Status](https://resources.sei.cmu.edu/library/asset-view.cfm?assetid=12137). 
+The theoretical foundation for Objective-Smalltalk is Mary Shaw's [Procedure Calls Are the Assembly Language of Software Interconnection: Connectors Deserve First-Class Status](https://resources.sei.cmu.edu/library/asset-view.cfm?assetid=12137). 
 
-Objective-S makes available mechanisms to define architectural styles via connector and component
+Objective-Smalltalk makes available mechanisms to define architectural styles via connector and component
 definitions, and comes with a library of such styles, supported by syntax that makes it possible to
 directly express systems in those styles.  The styles currently supported are:
 
@@ -84,11 +84,11 @@ but encouraged by providing useful libraries.
 Objective-C without the C
 ----------------------------------
 
-Objective-S is built on top of the Objective-C runtime, as a peer to 
+Objective-Smalltalk is built on top of the Objective-C runtime, as a peer to 
 Objective-C and other languages. It uses the host platform's C ABI.
 It dose not require a VM.
 
-Where Objective-C is C with Smalltalk extensions, Objective-S is  
+Where Objective-C is C with Smalltalk extensions, Objective-Smalltalk is  
 Smalltalk with C extensions and the (Objective-)C runtime model.
 
 
@@ -100,7 +100,7 @@ While Swift fixes some of Objective-C's most obvious flaws that were due to it b
 constructed by crashing two existing languages into each other, it discards the good 
 with the bad.  With a vengeance.
 
-Objective-S also discards the bad, while enhancing the good and taking it to an
+Objective-Smalltalk also discards the bad, while enhancing the good and taking it to an
 entirely new level.
 
 

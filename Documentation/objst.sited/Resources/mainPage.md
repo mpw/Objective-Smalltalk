@@ -35,4 +35,3 @@ A web server connected to a dictionary that contains the string 'world' at the k
 
 More [here](About).
 
-#### Try it out

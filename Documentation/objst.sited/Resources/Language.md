@@ -1,8 +1,7 @@
 ## Language
 
 
-Objective-S is an architectural construction language that
-superfically resembles a revamped Smalltalk. 
+Objective-Smalltalk is an architectural construction language that superfically resembles a revamped Smalltalk. 
 
 It makes most parts of the language polymorphic, provides
 primitives for the definition of architectural components and
@@ -30,7 +29,7 @@ and echo the user entered text to the console.
 #### URIs
 
 
-Objective-S uses URIs as its identifiers. 
+Objective-Smalltalk uses URIs as its identifiers. 
 
 
     var:name ← 'World'.
@@ -124,7 +123,7 @@ Objects:
 
 
 Like Smalltalk, virtually all of the basics of expressions are handlde by message conneectors, and again like
-Smalltalk, Objective-S  distinguishes three kinds of messaege:  unary, binary, keyword.
+Smalltalk, Objective-Smalltalk  distinguishes three kinds of messaege:  unary, binary, keyword.
 
 Unary:
 
@@ -140,7 +139,7 @@ Keyword:
 
 The statement separator is the period '`.`'.
 
-Objective-S has two mechanisms for chaining muliple messages.  The _cascade_, 
+Objective-Smalltalk has two mechanisms for chaining muliple messages.  The _cascade_, 
 denoted by a semicolon, sends multiple messages to the same receiver:
 
     receiver msg1;
@@ -167,7 +166,7 @@ The assignment connector uses the left arrow '←', but also accepts the Smallta
 
 #### Blocks and Control Structures
 
-Blocks in Objective-S use curly brackets.
+Blocks in Objective-Smalltalk use curly brackets.
 
      { 3+4 }.
 
