@@ -7,6 +7,7 @@
 
 #import "STDocument.h"
 #import "STProgramTextView.h"
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 
 @interface STDocument(st)
 
@@ -71,53 +72,41 @@
     return [[[self programTextView] text] asData];
 }
 
--(BOOL)importOldWindowBasedWorkspace:(NSFileWrapper *)fileWrapper error:(NSError **)outError
+- (BOOL)readBundle:(NSString *)path ofType:(NSString *)typeName error:(NSError **)outError
 {
-    NSError *unarchiveError=nil;
-    NSFileWrapper *windowsWrapper=[fileWrapper fileWrappers][@"windows"];
-    NSData *windowsArchive = [windowsWrapper regularFileContents];
-    NSLog(@"windowsArchive length: %ld",(long)windowsArchive.length);
-    if ( windowsArchive) {
-        NSArray *windowControllers = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSArray class] fromData:windowsArchive  error:&unarchiveError];
-        if ( !windowControllers && unarchiveError) {
-            NSLog(@"error unarchiving: %@",unarchiveError);
-            if ( outError ) {
-                *outError=unarchiveError;
-            }
-        }
-        for ( NSWindowController *c in windowControllers) {
-            if ( [c respondsToSelector:@selector(view)]) {
-                
-                MPWProgramTextView *view=(MPWProgramTextView*)[[c contentViewController] view];
-                
-                // FIXME:  part of this code assumes that view is a ClipView, others that it is a MPWProgramTextView
-                
-                NSWindow *w = [view openInWindow:@"Workspace"];
-                [c setWindow:w];
-                NSLog(@"workspace view: %@",view);
-                if ( [view respondsToSelector:@selector(setDefaultAttributes)] ) {
-                    [view setDefaultAttributes];
-                }
-                [[view documentView] setCompiler:[self compiler]];
-                [self.workspaces addObject:[view documentView]];
-            }
-            [self addWindowController:c];
-        }
-    }
+    id bundle = [STBundle bundleWithPath:path];
+    NSLog(@"path: %@",path);
+    NSLog(@"bundle: %@",bundle);
+    [self showWorkspace:nil];
+    id <MPWStorage> workspaces = [bundle storeForSubDir:@"Workspaces"];
+    NSLog(@"store: %@",workspaces);
+    [[self programTextView] setString:[workspaces[@"main.st"] stringValue]];
     return YES;
 }
 
--(BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
+-(BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
 {
-    if ( [fileWrapper isDirectory]) {
-        return [self importOldWindowBasedWorkspace:fileWrapper error:outError];
+    if ( [typeName isEqualToString:@"Software IC"]) {
+        return [self readBundle:[url path] ofType:typeName error:outError];
     } else {
-        return [self readFromData:[fileWrapper regularFileContents] ofType:typeName error:outError];
+        return [self readFromData:[NSData dataWithContentsOfURL:url] ofType:typeName error:outError];
     }
-
-    return YES;
+    
 }
 
+//
+//-(BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
+//{
+//    NSLog(@"typeName: %@",typeName);
+//    if ( [fileWrapper isDirectory]  && [typeName isEqualToString:@"Software IC"]) {
+//        return [self readBundle:[fileWrapper path] ofType:typeName error:outError];
+//    } else {
+//        return [self readFromData:[fileWrapper regularFileContents] ofType:typeName error:outError];
+//    }
+//
+//    return YES;
+//}
+//
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
     NSLog(@"will show workspace");
     [self showWorkspace:nil];

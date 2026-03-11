@@ -866,76 +866,6 @@
 			remoteGlobalIDString = 1FAFD9741855BC5500EC5221;
 			remoteInfo = StshFramework;
 		};
-		1F0D829C2F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1FF8FE2F09B49D0200652476;
-			remoteInfo = MPWFoundationFramework;
-		};
-		1F0D829E2F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F840DA5193F505700589595;
-			remoteInfo = MPWFoundationTouch;
-		};
-		1F0D82A02F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1FCF25D41CF3983B00AC64CE;
-			remoteInfo = MPWFoundationWatch;
-		};
-		1F0D82A22F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F4FC9731DF818AE00B35D27;
-			remoteInfo = TestMPWFoundation;
-		};
-		1F0D82A42F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F7045AF22313082005ED7FB;
-			remoteInfo = MPWFoundationUI;
-		};
-		1F0D82A62F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F7045C122313099005ED7FB;
-			remoteInfo = MPWFoundationUIKit;
-		};
-		1F0D82A82F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F93B8FD284DE20D00455231;
-			remoteInfo = ObjectiveSSH;
-		};
-		1F0D82AA2F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F61AE002DBBBFD6003E8229;
-			remoteInfo = WKStoreAdapter;
-		};
-		1F0D82AC2F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1F61AE122DBBBFF3003E8229;
-			remoteInfo = WKStoreAdapterTouch;
-		};
-		1F0D82AE2F3C84F700F5762D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1FEB28E12DC7E00000E37021;
-			remoteInfo = MPWDuckDB;
-		};
 		1F2924DC26D8EC430070A458 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F5A74ABA00F0A61B015ADD82 /* Project object */;
@@ -1179,7 +1109,6 @@
 		1F0A2B3409A0A09B00DF5622 /* MPWEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWEvaluable.h; sourceTree = "<group>"; };
 		1F0B2C3D4E5F678901234565 /* STMachOObjectSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOObjectSerializer.h; sourceTree = "<group>"; };
 		1F0B2C3D4E5F678901234566 /* STMachOObjectSerializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOObjectSerializer.m; sourceTree = "<group>"; };
-		1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MPWFoundation.xcodeproj; path = ../MPWFoundation/MPWFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F0F13E518D18C86008B5E80 /* STShell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STShell.h; sourceTree = "<group>"; };
 		1F137FFF2BE66C0300CD023C /* MPWELFSymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWELFSymbolTable.h; sourceTree = "<group>"; };
 		1F1380002BE66C0300CD023C /* MPWELFSymbolTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWELFSymbolTable.m; sourceTree = "<group>"; };
@@ -2199,23 +2128,6 @@
 			path = sl;
 			sourceTree = "<group>";
 		};
-		1F0D828F2F3C84F700F5762D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1F0D829D2F3C84F700F5762D /* MPWFoundation.framework */,
-				1F0D829F2F3C84F700F5762D /* MPWFoundation.framework */,
-				1F0D82A12F3C84F700F5762D /* MPWFoundationWatch.framework */,
-				1F0D82A32F3C84F700F5762D /* TestMPWFoundation.app */,
-				1F0D82A52F3C84F700F5762D /* MPWFoundationUI.framework */,
-				1F0D82A72F3C84F700F5762D /* MPWFoundationUIKit.framework */,
-				1F0D82A92F3C84F700F5762D /* ObjectiveSSH.framework */,
-				1F0D82AB2F3C84F700F5762D /* WKStoreAdapter.framework */,
-				1F0D82AD2F3C84F700F5762D /* WKStoreAdapter.framework */,
-				1F0D82AF2F3C84F700F5762D /* MPWDuckDB.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		1F222C881394CB90007AE2FB /* Schemes */ = {
 			isa = PBXGroup;
 			children = (
@@ -2948,7 +2860,6 @@
 		F5A74ABB00F0A61B015ADD82 /* MPWTalk */ = {
 			isa = PBXGroup;
 			children = (
-				1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */,
 				1FE6BCBF2E33E9B800E40B6D /* libtree-sitter.0.26.dylib */,
 				1F096D562B49690D0072DD85 /* sl.entitlements */,
 				1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */,
@@ -4247,10 +4158,6 @@
 					ProductGroup = 1F3755D628CF9088006198CF /* Products */;
 					ProjectRef = 1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */;
 				},
-				{
-					ProductGroup = 1F0D828F2F3C84F700F5762D /* Products */;
-					ProjectRef = 1F0D82762F3C84F700F5762D /* MPWFoundation.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -4284,76 +4191,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1F0D829D2F3C84F700F5762D /* MPWFoundation.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MPWFoundation.framework;
-			remoteRef = 1F0D829C2F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D829F2F3C84F700F5762D /* MPWFoundation.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MPWFoundation.framework;
-			remoteRef = 1F0D829E2F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82A12F3C84F700F5762D /* MPWFoundationWatch.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MPWFoundationWatch.framework;
-			remoteRef = 1F0D82A02F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82A32F3C84F700F5762D /* TestMPWFoundation.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = TestMPWFoundation.app;
-			remoteRef = 1F0D82A22F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82A52F3C84F700F5762D /* MPWFoundationUI.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MPWFoundationUI.framework;
-			remoteRef = 1F0D82A42F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82A72F3C84F700F5762D /* MPWFoundationUIKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MPWFoundationUIKit.framework;
-			remoteRef = 1F0D82A62F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82A92F3C84F700F5762D /* ObjectiveSSH.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ObjectiveSSH.framework;
-			remoteRef = 1F0D82A82F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82AB2F3C84F700F5762D /* WKStoreAdapter.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = WKStoreAdapter.framework;
-			remoteRef = 1F0D82AA2F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82AD2F3C84F700F5762D /* WKStoreAdapter.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = WKStoreAdapter.framework;
-			remoteRef = 1F0D82AC2F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1F0D82AF2F3C84F700F5762D /* MPWDuckDB.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MPWDuckDB.framework;
-			remoteRef = 1F0D82AE2F3C84F700F5762D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		1F3755DC28CF9088006198CF /* DrawingContext.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -5800,7 +5637,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = PE4436LT5M;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -5844,7 +5681,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = PE4436LT5M;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
