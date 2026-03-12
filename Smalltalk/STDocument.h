@@ -7,8 +7,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class STBundle;
+
 @interface STDocument : NSDocument
 
+@property (nonatomic, strong ) STBundle *bundle;
 
 @end
 

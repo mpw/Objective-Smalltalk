@@ -72,14 +72,42 @@
     return [[[self programTextView] text] asData];
 }
 
+-(id <MPWStorage>)workspacesStore
+{
+    return [self.bundle storeForSubDir:@"Workspaces"];
+}
+
+-(BOOL)autosavesDrafts
+{
+    return NO;
+}
+
+
+//  FIXME:  this is hack to work around the fact that STBundles currently only support saving in-place
+//          but NSDocument expects to safely write somewhere else and the move/copy
+//          It just writes to the original URL
+
+-(BOOL)writeSafelyToURL:(NSURL *)url ofType:(NSString *)type forSaveOperation:(NSSaveOperationType)op error:(NSError **)outError
+{
+    if ( self.bundle) {
+        [self.bundle save];
+        id <MPWStorage> workspaces = [self workspacesStore];
+        workspaces[@"main.st"] = [[[self programTextView] string] asData];
+        NSLog(@"did save to %@",url);
+        return YES;
+    } else {
+        return [[[[self programTextView] text] asData] writeToURL:url atomically:YES];
+    }
+}
+
+
 - (BOOL)readBundle:(NSString *)path ofType:(NSString *)typeName error:(NSError **)outError
 {
-    id bundle = [STBundle bundleWithPath:path];
+    self.bundle = [STBundle bundleWithPath:path];
     NSLog(@"path: %@",path);
-    NSLog(@"bundle: %@",bundle);
+    NSLog(@"bundle: %@",self.bundle);
     [self showWorkspace:nil];
-    id <MPWStorage> workspaces = [bundle storeForSubDir:@"Workspaces"];
-    NSLog(@"store: %@",workspaces);
+    id <MPWStorage> workspaces = [self workspacesStore];
     [[self programTextView] setString:[workspaces[@"main.st"] stringValue]];
     return YES;
 }
