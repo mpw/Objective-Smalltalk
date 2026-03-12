@@ -184,6 +184,8 @@
 		1F51A74810DA784A00753C9A /* MPWVARBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F51A74610DA784A00753C9A /* MPWVARBinding.m */; };
 		1F55020D15AECA4D00422A9E /* MPWBlockFilterScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */; };
 		1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
+		1F5620AC2F63338E00D998EF /* STBundleUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5620AB2F63338E00D998EF /* STBundleUI.m */; };
+		1F5620AD2F63338E00D998EF /* STBundleUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5620AA2F63338E00D998EF /* STBundleUI.h */; };
 		1F575D9D20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
@@ -1240,6 +1242,8 @@
 		1F51A74610DA784A00753C9A /* MPWVARBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWVARBinding.m; sourceTree = "<group>"; };
 		1F55020B15AECA4D00422A9E /* MPWBlockFilterScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWBlockFilterScheme.h; sourceTree = "<group>"; };
 		1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockFilterScheme.m; sourceTree = "<group>"; };
+		1F5620AA2F63338E00D998EF /* STBundleUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBundleUI.h; sourceTree = "<group>"; };
+		1F5620AB2F63338E00D998EF /* STBundleUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBundleUI.m; sourceTree = "<group>"; };
 		1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSelfContainedBindingsScheme.h; sourceTree = "<group>"; };
 		1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSelfContainedBindingsScheme.m; sourceTree = "<group>"; };
 		1F586CB127253A280078F9BC /* UIViewBuilderSmalltalkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewBuilderSmalltalkViewController.h; sourceTree = "<group>"; };
@@ -2630,6 +2634,8 @@
 				1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */,
 				1F94014C2C7353A900CD37ED /* STProgramTextView.h */,
 				1F94014D2C7353A900CD37ED /* STProgramTextView.m */,
+				1F5620AA2F63338E00D998EF /* STBundleUI.h */,
+				1F5620AB2F63338E00D998EF /* STBundleUI.m */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -3378,6 +3384,7 @@
 				1F2B179A261C680D005D873F /* STViewScheme.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
 				1F5A59A62AC1CC2000670E75 /* STProgressIndicator.h in Headers */,
+				1F5620AD2F63338E00D998EF /* STBundleUI.h in Headers */,
 				1FA749BD25F5508D001AA6A8 /* MPWColorStore.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
 			);
@@ -4968,6 +4975,7 @@
 			files = (
 				1F7045F522313EA2005ED7FB /* MPWClassMethodSwitchStore.m in Sources */,
 				1FA749E225F55664001AA6A8 /* MPWFontStore.m in Sources */,
+				1F5620AC2F63338E00D998EF /* STBundleUI.m in Sources */,
 				1F7045F022313E84005ED7FB /* MPWMethodBrowser.m in Sources */,
 				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
 				1FB13BF22AA5F5BA006D85CC /* STButton.m in Sources */,

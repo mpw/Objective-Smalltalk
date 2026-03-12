@@ -274,7 +274,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [self writeData:[NSJSONSerialization dataWithJSONObject:localInfo options:0 error:nil] at:@"Info.json"];
     if ( self.saveSource) {
         [self createDirectoryAt:@"Sources"];
-        [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
+//        [[self.interpreter methodStore] fileoutToStore:self.sourceDir];
         [self.cachedSources flush];
     }
     [self createDirectoryAt:@"Resources"];
