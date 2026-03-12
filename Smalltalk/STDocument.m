@@ -104,6 +104,9 @@
 - (BOOL)readBundle:(NSString *)path ofType:(NSString *)typeName error:(NSError **)outError
 {
     self.bundle = [STBundle bundleWithPath:path];
+    STCompiler* compiler = [[[NSApplication sharedApplication] delegate] compiler];
+    [self.bundle setInterpreter:compiler];
+    [compiler bindValue:self.bundle toVariableNamed:@"bundle"];
     NSLog(@"path: %@",path);
     NSLog(@"bundle: %@",self.bundle);
     [self showWorkspace:nil];
