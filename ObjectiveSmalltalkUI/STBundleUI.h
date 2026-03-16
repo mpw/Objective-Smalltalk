@@ -9,6 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol SourceCodeChanged<MPWNotificationProtocol>
+-(void)sourceCodeDidChange:sourceFile;
+@end
+
+@protocol ResourceChanged<MPWNotificationProtocol>
+-(void)resourceDidChange:sourceFile;
+@end
+
+
 @class MPWFileBrowser;
 
 @interface STBundle(UI)

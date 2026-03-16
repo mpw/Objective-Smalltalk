@@ -27,12 +27,17 @@
 
 -(MPWFileBrowser*)classBrowserLoggingTo:(id <Streaming>)logTarget
 {
-    return [self browserForStore:self.cachedSources loggingTo:logTarget];
+    MPWFileBrowser *browser = [self browserForStore:self.cachedSources loggingTo:logTarget];
+    self.errorReporter = browser;
+    return browser;
 }
 
 -(MPWFileBrowser*)classBrowser
 {
-    return [self classBrowserLoggingTo:nil];
+    return [self classBrowserLoggingTo:[[[MPWBlockTargetStream alloc] initWithBlock:^(id object) {
+        [self sourceCodeDidChange:object];
+    }] autorelease]];
+//    return [self classBrowserLoggingTo:[[[MPWEventSender alloc] initWithNotificationProtocol:@protocol(SourceCodeChanged) shouldPostOnMainThread:NO] autorelease]];
 }
 
 -(MPWFileBrowser*)resourceBrowserLoggingTo:(id <Streaming>)logTarget
@@ -42,7 +47,25 @@
 
 -(MPWFileBrowser*)resourceBrowser
 {
-    return [self resourceBrowserLoggingTo:nil];
+    return [self resourceBrowserLoggingTo:[self classBrowserLoggingTo:[[[MPWEventSender alloc] initWithNotificationProtocol:@protocol(ResourceChanged) shouldPostOnMainThread:NO] autorelease]]];
+}
+
+-(void)sourceCodeDidChange:(MPWRESTOperation*)restOp
+{
+    NSString *sourceName = restOp.identifier.path.lastPathComponent;
+    BOOL error=NO;
+    NSString *message=[NSString stringWithFormat:@"compiled %@",sourceName];
+    @try {
+        [self compileSourceFile:sourceName];
+    } @catch ( NSException* exception ) {
+        error=YES;
+        message=[NSString stringWithFormat:@"Error compiling %@: %@",sourceName,exception.reason];
+    }
+    if ( error ) {
+        [self.errorReporter reportError:message];
+    } else {
+        [self.errorReporter reportMessage:message];
+    }
 }
 
 

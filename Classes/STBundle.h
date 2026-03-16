@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign) BOOL saveSource;           // should probably be a temp hack
 @property (assign) BOOL useCache;      // should probably be a temp hack
 @property (nonatomic,strong) NSDictionary *info;
+@property (nonatomic, weak) id errorReporter;
 
 -(id <MPWHierarchicalStorage>)sourceDir;      // compatibility
 

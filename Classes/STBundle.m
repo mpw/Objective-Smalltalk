@@ -427,6 +427,6 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
         @"testExistsOnDisk",
         @"testWriteInfo",
         @"testWriteResources",
-    ];
+        ];
 }
 @end
