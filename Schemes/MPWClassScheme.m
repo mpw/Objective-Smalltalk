@@ -47,7 +47,18 @@
         if ( [className hasPrefix:@"/"]) {
             className=[className substringFromIndex:1];
         }
-        return NSClassFromString(className);
+        Class foundClass=nil;
+        
+        foundClass =  NSClassFromString(className);
+        if ( !foundClass && _prefixes) {
+            for ( NSString *prefix in _prefixes) {
+                foundClass = NSClassFromString( [prefix stringByAppendingString:className]);
+                if ( foundClass ) {
+                    return foundClass;
+                }
+            }
+        }
+        return foundClass;
     }
 }
 
@@ -77,14 +88,23 @@
 
 +(void)testSimpleClassResolve
 {
-	id resolver=[[self new] autorelease];
+    id resolver=[[self new] autorelease];
     INTEXPECT( [resolver at:[MPWGenericIdentifier referenceWithPath:@"NSString"]], [NSString class] , @"class resolver for NSString");
+}
+
++(void)testClassResolveWithPrefix
+{
+    MPWClassScheme* resolver=[[self new] autorelease];
+    EXPECTNIL(resolver[@"ClassScheme"], @"can't find without prefix");
+    resolver.prefixes = @[ @"MPW" ];
+    EXPECTNOTNIL(resolver[@"ClassScheme"], @"can find without prefix");
 }
 
 +testSelectors
 {
 	return [NSArray arrayWithObjects:
-				@"testSimpleClassResolve",
+            @"testSimpleClassResolve",
+            @"testClassResolveWithPrefix",
 			nil];
 }
 

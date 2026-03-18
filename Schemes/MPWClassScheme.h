@@ -10,9 +10,8 @@
 
 
 @interface MPWClassScheme : MPWScheme {
-
 }
 
-
+@property (nonatomic, strong )  NSArray* prefixes;
 
 @end
