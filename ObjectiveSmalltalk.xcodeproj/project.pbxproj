@@ -186,6 +186,9 @@
 		1F55021015AECA4D00422A9E /* MPWBlockFilterScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */; };
 		1F5620AC2F63338E00D998EF /* STBundleUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5620AB2F63338E00D998EF /* STBundleUI.m */; };
 		1F5620AD2F63338E00D998EF /* STBundleUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5620AA2F63338E00D998EF /* STBundleUI.h */; };
+		1F5620C02F6AF9ED00D998EF /* STViewHarness.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5620BF2F6AF9ED00D998EF /* STViewHarness.m */; };
+		1F5620C12F6AF9ED00D998EF /* STViewHarness.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5620BE2F6AF9ED00D998EF /* STViewHarness.h */; };
+		1F5620C32F6AFAC900D998EF /* STViewHarness.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F5620C22F6AFAC900D998EF /* STViewHarness.xib */; };
 		1F575D9D20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */; };
@@ -1244,6 +1247,9 @@
 		1F55020C15AECA4D00422A9E /* MPWBlockFilterScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWBlockFilterScheme.m; sourceTree = "<group>"; };
 		1F5620AA2F63338E00D998EF /* STBundleUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBundleUI.h; sourceTree = "<group>"; };
 		1F5620AB2F63338E00D998EF /* STBundleUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBundleUI.m; sourceTree = "<group>"; };
+		1F5620BE2F6AF9ED00D998EF /* STViewHarness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STViewHarness.h; sourceTree = "<group>"; };
+		1F5620BF2F6AF9ED00D998EF /* STViewHarness.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STViewHarness.m; sourceTree = "<group>"; };
+		1F5620C22F6AFAC900D998EF /* STViewHarness.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STViewHarness.xib; sourceTree = "<group>"; };
 		1F575D9B20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSelfContainedBindingsScheme.h; sourceTree = "<group>"; };
 		1F575D9C20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSelfContainedBindingsScheme.m; sourceTree = "<group>"; };
 		1F586CB127253A280078F9BC /* UIViewBuilderSmalltalkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewBuilderSmalltalkViewController.h; sourceTree = "<group>"; };
@@ -2591,6 +2597,7 @@
 		1FA859F41923731900F52396 /* ObjectiveSmalltalkUI */ = {
 			isa = PBXGroup;
 			children = (
+				1F5620C22F6AFAC900D998EF /* STViewHarness.xib */,
 				1F7045FA2231417E005ED7FB /* classdef-method-browser-scheme.stsh */,
 				1FD8C3B129E16F4A00E6A9C2 /* AppKitInit.st */,
 				1FD8C3B629E171E500E6A9C2 /* appkit-enums.json */,
@@ -2636,6 +2643,8 @@
 				1F94014D2C7353A900CD37ED /* STProgramTextView.m */,
 				1F5620AA2F63338E00D998EF /* STBundleUI.h */,
 				1F5620AB2F63338E00D998EF /* STBundleUI.m */,
+				1F5620BE2F6AF9ED00D998EF /* STViewHarness.h */,
+				1F5620BF2F6AF9ED00D998EF /* STViewHarness.m */,
 			);
 			path = ObjectiveSmalltalkUI;
 			sourceTree = "<group>";
@@ -3371,6 +3380,7 @@
 				1FA85A1E1923739E00F52396 /* ShellView.h in Headers */,
 				1F60964F25E788FC0018BB72 /* STUITests.h in Headers */,
 				1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */,
+				1F5620C12F6AF9ED00D998EF /* STViewHarness.h in Headers */,
 				1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */,
 				1FB13BF12AA5F5BA006D85CC /* STButton.h in Headers */,
 				1F5D76A525EA389200DCC82F /* STTextField.h in Headers */,
@@ -4381,6 +4391,7 @@
 				1FD8C3B729E171E500E6A9C2 /* appkit-enums.json in Resources */,
 				1F7045FB2231417E005ED7FB /* classdef-method-browser-scheme.stsh in Resources */,
 				1F7045F122313E84005ED7FB /* MPWMethodBrowser.xib in Resources */,
+				1F5620C32F6AFAC900D998EF /* STViewHarness.xib in Resources */,
 				1FD8C3B529E16F4A00E6A9C2 /* AppKitInit.st in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4995,6 +5006,7 @@
 				1F5A59A72AC1CC2000670E75 /* STProgressIndicator.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
 				1F5D76A625EA389200DCC82F /* STTextField.m in Sources */,
+				1F5620C02F6AF9ED00D998EF /* STViewHarness.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -40,6 +40,13 @@
 //    return [self classBrowserLoggingTo:[[[MPWEventSender alloc] initWithNotificationProtocol:@protocol(SourceCodeChanged) shouldPostOnMainThread:NO] autorelease]];
 }
 
+-(void)dummy
+{
+    NSLog(@"%@",@protocol(ResourceChanged));
+    NSLog(@"%@",@protocol(ClassCompiled));
+
+}
+
 -(MPWFileBrowser*)resourceBrowserLoggingTo:(id <Streaming>)logTarget
 {
     return [self browserForStore:self.cachedResources loggingTo:logTarget];

@@ -18,6 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@protocol ClassCompiled<MPWNotificationProtocol>
+-(void)didCompileClass:className;
+@end
+
+
 @class MPWFileBrowser;
 
 @interface STBundle(UI)

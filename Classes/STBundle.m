@@ -9,6 +9,7 @@
 #import "STCompiler.h"
 #import "MPWSchemeScheme.h"
 #import "MPWMethodStore.h"
+#import "MPWStatementList.h"
 
 @interface STBundle()
 
@@ -199,7 +200,15 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 -(void)compileSourceFile:(NSString*)sourceName
 {
     @autoreleasepool {
-        [self.interpreter evaluate:[self resultOfCompilingSourceFileNamed:sourceName]];
+        id classDef = [self resultOfCompilingSourceFileNamed:sourceName];
+        if ( [classDef isKindOfClass:[MPWStatementList class]]) {
+            classDef = [[classDef statements] firstObject];
+        }
+        [self.interpreter evaluate:classDef];
+        NSLog(@"class def: %@",classDef);
+        if ( [classDef respondsToSelector:@selector(name)] && [classDef name] ) {
+            [self.compileSuccessReporter writeObject:[classDef name]];
+        }
     }
 }
 
