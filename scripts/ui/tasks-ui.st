@@ -13,6 +13,6 @@ taskList ← #( #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, 
 stdout println:'hi'.
 stdout println: taskList.
 
-table ← #MPWTableView{items: taskList  }.
+table ← #MPWTableView{dicts: taskList  }.
 
 table inScrollView:(200@400 extent: 500@600).

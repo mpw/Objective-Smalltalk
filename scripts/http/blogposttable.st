@@ -8,5 +8,6 @@ blogid ← '8397311766319215218'.
 theRef ← ref:https://www.googleapis.com/blogger/v3/blogs/{blogid}/ 
 scheme:blogger ← theRef asScheme
 a := (scheme:blogger at:'posts/?fields=kind%2Citems(title%2Cid)' ) at:'items'
-table ← #MPWTableView{items:(a)}.
+stdline ! a.
+table ← #MPWTableView{dicts:(a)}.
 app runFromCLI:(table inScrollView:(200@400 extent: 500@600)).
