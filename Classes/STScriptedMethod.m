@@ -114,7 +114,6 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     [evaluator setContextClass:self.classOfMethod];
 //    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
-    [newSchemes setSchemeHandler:newSchemes forSchemeName:@"scheme"];
     MPWVarScheme *newVarScheme=[MPWVarScheme store];
     [newVarScheme setContext:evaluator];
     [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"var"];
@@ -160,52 +159,39 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 -evaluateOnObject:target parameters:(NSArray*)parameters
 {
     id returnVal=nil;
-   @autoreleasepool {
-    id compiledMethod = [self compiledScript];
-	STEvaluator* executionContext = [self executionContext];
-//    NSLog(@"compiledExecutionContext: %@ schemes: %@",[self compiledInExecutionContext],[[self compiledInExecutionContext] schemes]);
-    [executionContext bindValue:self toVariableNamed:@"thisMethod"];
-    [executionContext bindValue:self toVariableNamed:@"thisMethod"];
-    [executionContext bindValue:executionContext toVariableNamed:@"thisContext"];
-    [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
-    if ( [target conformsToProtocol:@protocol(MPWStorage)]) {
-           [[executionContext schemes] setSchemeHandler:target forSchemeName:@"self"];
-       }
-    if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
-//        NSLog(@"for %@, getting schemeNames: %@",[[self methodHeader] methodName],[target schemeNames]);
-        for ( NSString *schemeName in [target schemeNames]) {
-//            NSLog(@"install: %@",schemeName);
-            id <MPWStorage> store=[target valueForKey:schemeName];
-//            NSLog(@"install scheme: %@ in executionContext %p schemes: %p",store,executionContext,[executionContext schemes]);
-            if ( store ) {
-                [[executionContext schemes] setSchemeHandler:store forSchemeName:schemeName];
+    @autoreleasepool {
+        id compiledMethod = [self compiledScript];
+        STEvaluator* executionContext = [self executionContext];
+        [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
+        if ( [target conformsToProtocol:@protocol(MPWStorage)]) {
+            [[executionContext schemes] setSchemeHandler:target forSchemeName:@"self"];
+        }
+        if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
+            for ( NSString *schemeName in [target schemeNames]) {
+                id <MPWStorage> store=[target valueForKey:schemeName];
+                if ( store ) {
+                    [[executionContext schemes] setSchemeHandler:store forSchemeName:schemeName];
+                }
             }
         }
+        @autoreleasepool {
+            @try {
+                returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
+            } @catch (id exception) {
+                id newException = [self handleException:exception target:target];
+                NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);
+                Class c=NSClassFromString(@"MethodServer");
+                [c addException:newException];
+                NSLog(@"added exception to %@",c);
+                @throw newException;
+            }
+            [returnVal retain];
+            //    NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
+        }
+        [executionContext setSchemes:nil];           // manualy break cycle, fixes leak
+        // less than ideal... FIXME
     }
-//    NSLog(@"context %p/%@ schemes: %@",executionContext,[executionContext class],[executionContext schemes]);
-//    NSLog(@"evalute scripted method %@",[self header]);
-//    NSLog(@"methodBody %@",[self methodBody]);
-//	NSLog(@"will evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
-    @autoreleasepool {
-
-    @try {
-	returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
-    } @catch (id exception) {
-//        NSLog(@"exception evaluating scripted method: %@",[self methodHeader]);
-        id newException = [self handleException:exception target:target];
-        NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);
-        Class c=NSClassFromString(@"MethodServer");
-        [c addException:newException];
-        NSLog(@"added exception to %@",c);
-        @throw newException;
-    }
-        [returnVal retain];
-//	NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
-    }
-       [executionContext setSchemes:nil];           // manualy break cycle, fixes leak
-                                                    // less than ideal... FIXME
-    }
-	return [returnVal autorelease];
+    return [returnVal autorelease];
 }
 
 -(NSString *)stringValue

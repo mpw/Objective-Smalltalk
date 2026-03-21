@@ -76,7 +76,7 @@ typedef struct {
     }
     [schemes setSchemeHandler:[MPWBundleScheme mainBundleScheme]  forSchemeName:@"mainbundle"];
 
-    [schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
+//    [schemes setSchemeHandler:schemes forSchemeName:@"scheme"];
     [schemes setSchemeHandler:[MPWURLSchemeResolver httpScheme]  forSchemeName:@"http"];
     [schemes setSchemeHandler:[MPWURLSchemeResolver httpsScheme]  forSchemeName:@"https"];
     [schemes setSchemeHandler:[[[MPWURLSchemeResolver alloc] initWithSchemePrefix:@"ftp"  ]  autorelease] forSchemeName:@"ftp"];
@@ -101,7 +101,7 @@ typedef struct {
 
 -(id)at:(id)aReference
 {
-    return [[self schemes] objectForKey:[aReference path]];
+    return [self objectForKey:[aReference path]];
 }
 
 -(void)at:(id)aReference put:(id)theObject
@@ -126,7 +126,11 @@ typedef struct {
 
 -objectForKey:aKey
 {
-	return [[self schemes] objectForKey:aKey];
+    if ( [aKey isEqualToString:@"scheme"]) {
+        return self;
+    } else {
+        return [[self schemes] objectForKey:aKey];
+    }
 }
 
 -(NSArray<MPWIdentifier*>*)childrenOfReference:(MPWIdentifier*)aReference

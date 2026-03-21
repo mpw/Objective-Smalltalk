@@ -18,7 +18,6 @@
 }
 
 
-
 -(NSString*)symbolNameAt:(int)anIndex
 {
     return [self.reader stringAtOffset:[self symbols][anIndex].st_name];

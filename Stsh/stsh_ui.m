@@ -23,7 +23,7 @@ int main (int argc, const char *argv[])
 {
     [[NSAutoreleasePool alloc] init];
     [[NSProcessInfo processInfo] setProcessName:@"something else"];
-    NSLog(@"set the process name");
+//    NSLog(@"set the process name");
     NSMutableArray *args=[NSMutableArray array];
     for (int i=1;i<argc;i++) {
         [args addObject:[NSString stringWithUTF8String:argv[i]]];
