@@ -66,10 +66,14 @@ scheme DynamicSite {
 	string.
     }
     -inPage:html path:path {
-        templater := MPWByteStream stream.
-        env := #{ #body: html, #nav:(self nav:path)}.
-        templater writeInterpolatedString: rsrc:pageTemplate.html stringValue withEnvironment:env.
-        templater target.
+        pageHtml ← nil.
+        html ifNotNil: {
+	   templater := MPWByteStream stream.
+	   env := #{ #body: html, #nav:(self nav:path)}.
+	   templater writeInterpolatedString: rsrc:pageTemplate.html stringValue withEnvironment:env.
+	   pageHtml ← templater target.
+        }.
+        pageHtml.
     }
     /Publications  { |= { 
          pubs := mdhtml:Publications mutableCopy.
@@ -84,7 +88,7 @@ scheme DynamicSite {
          } ifFalse: {
               p.
 	 }.
-         result := path.
+         result := nil.
          html := rsrc:{path}.
          md := md:{path} .
          html ifNil:{
