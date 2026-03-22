@@ -90,9 +90,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 //  (they are inherited from parent), not linking means
 //  schemes are not inherited (and can't be modified)
 
-//    NSLog(@"==== freshExecutionContextForRealLocalVars ===");
-
-	STEvaluator *evaluator = [[[STCompiler alloc] initWithParent:nil] autorelease];
+    STEvaluator *evaluator = [[[STCompiler alloc] initWithParent:nil] autorelease];
     
     // HACK:  make stdout available to method if it is present in the
     //        context that defined the method.  This is a hard-coded
@@ -112,7 +110,6 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 //        [NSException raise:@"nilcontextclass" format:@"classOfMethod is nil in scripted method"];
 //    }
     [evaluator setContextClass:self.classOfMethod];
-//    NSLog(@"compiled-in schemes: %@",[[self compiledInExecutionContext] schemes]);
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
     MPWVarScheme *newVarScheme=[MPWVarScheme store];
     [newVarScheme setContext:evaluator];
@@ -122,8 +119,6 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     [newSchemes release];
 
     return evaluator;
-
- //   return [[[[self contextClass] alloc] initWithParent:[self compiledInExecutionContext]] autorelease];
 }
 
 -compiledInExecutionContext
@@ -133,13 +128,11 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 -executionContext
 {
-//    NSLog(@"executionContext");
-	return [self freshExecutionContextForRealLocalVars];
+    return [self freshExecutionContextForRealLocalVars];
 }
 
 -(NSException*)handleException:exception target:target
 {
-    NSLog(@"post-process exception: %@ with raw trace: %@",exception,[exception callStackSymbols]);
     NSException *newException;
     NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];
@@ -149,9 +142,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     NSString *frameDescription=[NSString stringWithFormat:@"%s[%@ %@] + %d",targetClass==target?"+":"-",targetClass,[self methodHeader],exceptionSourceOffset];
     [newException addScriptFrame: frameDescription];
     NSString *myselfInTrace=    @"-[STScriptedMethod evaluateOnObject:parameters:]";    
-    NSLog(@"addCombinedFrame: %@",frameDescription);
     [newException addCombinedFrame:frameDescription frameToReplace:myselfInTrace previousTrace:[exception callStackSymbols]];
-    NSLog(@"exception: %@/%@ in %@ with backtrace: %@",[exception name],[exception reason],frameDescription,[newException combinedStackTrace]);
     return newException;
 }
 
@@ -179,17 +170,13 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
                 returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
             } @catch (id exception) {
                 id newException = [self handleException:exception target:target];
-                NSLog(@"exception: %@ at %@",newException,[newException combinedStackTrace]);
                 Class c=NSClassFromString(@"MethodServer");
                 [c addException:newException];
-                NSLog(@"added exception to %@",c);
                 @throw newException;
             }
             [returnVal retain];
-            //    NSLog(@"did evaluate scripted method %@ with context %p",[self methodHeader],executionContext);
         }
         [executionContext setSchemes:nil];           // manualy break cycle, fixes leak
-        // less than ideal... FIXME
     }
     return [returnVal autorelease];
 }

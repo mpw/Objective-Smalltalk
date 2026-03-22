@@ -1619,6 +1619,9 @@ idAccessor(solver, setSolver)
     [scanner release];
     [solver release];
     [symbolTable release];
+    [methodStore release];
+    [connectorMap release];
+    [_classes release];
     [super dealloc];
 }
 
@@ -1955,4 +1958,18 @@ id objs_get_scheme_reference(NSString *schemeName, NSString *reference )
 {
     return [(MPWScheme*)[[MPWSchemeScheme currentScheme] at:schemeName] get:reference];
 }
+
+
+@implementation NSObject(creatLotsOfObjectsToCheckForLeaks)
+
++(void)creatLotsOfObjectsToCheckForLeaks:(long)numberOfIteratons
+{
+    for (long i=0;i<numberOfIteratons;i++) {
+        @autoreleasepool {
+            [[self new] autorelease];
+        }
+    }
+}
+
+@end
 

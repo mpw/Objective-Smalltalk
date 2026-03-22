@@ -78,6 +78,7 @@
 
 -(void)dealloc
 {
+    [_scheme release];
     [_value release];
     [_identifier release];
     [super dealloc];

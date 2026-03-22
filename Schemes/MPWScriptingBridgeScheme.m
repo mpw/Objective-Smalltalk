@@ -91,6 +91,12 @@ objectAccessor(NSMutableDictionary*, bridges, setBridges )
     return (NSArray*)[[self collect] bindingForName:[cleanedNames each] inContext:nil];
 }
 
+-(void)dealloc
+{
+    [bridges release];
+    [super dealloc];
+}
+
 @end
 
 

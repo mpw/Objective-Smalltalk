@@ -13,6 +13,6 @@
 @interface MPWVarScheme : MPWSelfContainedBindingsScheme {
 }
 
-@property (nonatomic, strong ) STEvaluator *context;
+@property (nonatomic, assign ) STEvaluator *context;
 
 @end
