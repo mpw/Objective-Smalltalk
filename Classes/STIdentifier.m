@@ -159,6 +159,7 @@
 
 -identifier { return self; }
 
+
 @end
 
 #import <MPWFoundation/DebugMacros.h>
