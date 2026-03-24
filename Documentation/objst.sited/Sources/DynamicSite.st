@@ -88,7 +88,7 @@ scheme DynamicSite {
          } ifFalse: {
               p.
 	 }.
-         result := nil.
+         result := ''.
          html := rsrc:{path}.
          md := md:{path} .
          html ifNil:{

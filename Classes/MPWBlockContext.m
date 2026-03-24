@@ -74,6 +74,7 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
         class_addMethod(blockClass, @selector(value:), oneArgImp, "@@:@");
         IMP zeroArgImp=imp_implementationWithBlock( ^(id blockSelf){ ((ZeroArgBlock)blockSelf)(); } );
         class_addMethod(blockClass, @selector(value), zeroArgImp, "@@:");
+        class_addMethod(blockClass, @selector(nextObject), zeroArgImp, "@@:");
         IMP varArgImp=imp_implementationWithBlock( valueWithArgsBlock );
         class_addMethod(blockClass, @selector(valueWithObjects:), varArgImp, "@@:@");
         initialized=YES;
@@ -200,7 +201,12 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
 
 -value
 {
-	return [self evaluateIn_block:[self evaluationContext] arguments:nil];
+    return [self evaluateIn_block:[self evaluationContext] arguments:nil];
+}
+
+-nextObject
+{
+    return [self value];
 }
 
 -valueWithObjects:(NSArray*)args
