@@ -48,12 +48,12 @@ CONVENIENCEANDINIT(scheme, WithView:(NSView*)aView )
 
 -(NSArray<MPWIdentifier *> *)childrenOfReference:(id<MPWIdentifying>)aReference
 {
-     return [[[[self at:aReference] subviews] collect] accessibilityIdentifier];
+     return (NSArray<MPWIdentifier *> *)[[[[self at:aReference] subviews] collect] accessibilityIdentifier];
 }
 
 -(BOOL)hasChildren:(id<MPWIdentifying>)aReference
 {
-    return [[[self at:aReference] subviews] count] > 0;
+    return [[self childrenOfReference:aReference] count] > 0;
 }
 
 @end

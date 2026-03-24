@@ -35,6 +35,7 @@
         errorMsg = [error description];
     }
     [self.logView setString:errorMsg];
+    [self.logView setTextColor:[NSColor redColor] range:NSMakeRange(0, errorMsg.length)];
 }
 
 -(IBAction)triggerRedisplay:(id)sender

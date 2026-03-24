@@ -126,9 +126,14 @@
     IDEXPECT( v.subviews.firstObject.accessibilityIdentifier, @"transparent", @"name of subview" );
 }
 
-+(void)testCanSpecifySeveralSubviewsAsDict
++(void)testCanSpecifySubviewsAsDict
 {
-    NSView *v=[STCompiler evaluate:@" #NSView{ subviews: [ #{ transparent:   #NSView{ alphaValue: 0.3 }, opaque:  #NSView{ alphaValue: 1.0 }}]}"];
+    NSView *v=[STCompiler evaluate:@" #NSView{ subviews:  #{  transparent:   #NSView{ alphaValue: 0.3 }, opaque:   #NSView{ alphaValue: 1 } } }."];
+    INTEXPECT( v.subviews.count, 2 ,@"number of subviews");
+    
+    EXPECTTRUE([v.subviews.firstObject isKindOfClass:[NSView class]], @"subview should be a view");
+    EXPECTTRUE([v.subviews.lastObject isKindOfClass:[NSView class]], @"subview should be a view");
+//    IDEXPECT( v.subviews.firstObject.accessibilityIdentifier, @"transparent", @"name of subview" );
 }
 
 
@@ -141,8 +146,8 @@
              @"testCanSpecifyAdditionalValues",
              @"testCanSpecifySubviewAsArray",
              @"testCanSpecifySubviewAsDict",
-             @"testCanSpecifySeveralSubviewsAsDict",
-             ];
+             @"testCanSpecifySubviewsAsDict",
+            ];
     
 }
 
