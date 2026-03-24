@@ -50,6 +50,20 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return [self initWithBinding:binding];
 }
 
+-(void)startNotifyingCompiles
+{
+    id reporter = [[[MPWEventSender alloc]  initWithNotificationProtocol:@protocol(ClassCompiled) shouldPostOnMainThread:true] autorelease];
+    NSLog(@"reporter: %@",reporter);
+    [self setCompileSuccessReporter: reporter];
+    
+}
+
+-(void)stopNotifyingCompiles
+{
+    [self setCompileSuccessReporter: nil];
+    
+}
+
 -(NSString*)path
 {
     return [self.binding path];

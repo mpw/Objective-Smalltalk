@@ -25,6 +25,7 @@
     return b;
 }
 
+
 -(MPWFileBrowser*)classBrowserLoggingTo:(id <Streaming>)logTarget
 {
     MPWFileBrowser *browser = [self browserForStore:self.cachedSources loggingTo:logTarget];

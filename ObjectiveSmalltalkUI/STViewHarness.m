@@ -18,7 +18,6 @@
 
 @implementation STViewHarness
 
-
 -(void)redisplayDisplayingErrors
 {
     NSString *errorMsg = @"";
@@ -53,8 +52,9 @@
 {
     self = [super initWithNibName:@"STViewHarness" bundle:[NSBundle bundleForClass:[self class]]];
     self.contentView = newContentView;
+    [self installProtocolNotifications];
     [self view];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didCompileClass:) name:@"ClassCompiled" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didCompileClass:) name:@"ClassCompiled" object:nil];
     NSLog(@"STViewHarness: %p",self);
     return self;
 }

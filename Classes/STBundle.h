@@ -5,10 +5,14 @@
 //  Created by Marcel Weiher on 05.08.20.
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
-@protocol MPWHierarchicalStorage,MPWIdentifying;
 @class STCompiler,MPWWriteBackCache;
+
+@protocol ClassCompiled<MPWNotificationProtocol>
+-(void)didCompileClass:className;
+@end
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(id)resultOfCompilingSourceFileNamed:(NSString*)sourceName;
 -(void)compileSourceFile:(NSString*)sourceName;
 -(void)compileAllSourceFiles;
+-(void)startNotifyingCompiles;
+-(void)stopNotifyingCompiles;
 
 
 @property (readonly) BOOL isPresentOnDisk;
@@ -43,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign) BOOL useCache;      // should probably be a temp hack
 @property (nonatomic,strong) NSDictionary *info;
 @property (nonatomic, weak) id errorReporter;
-@property (nonatomic, weak) id compileSuccessReporter;
+@property (nonatomic, strong) id compileSuccessReporter;
 
 -(id <MPWHierarchicalStorage>)sourceDir;      // compatibility
 

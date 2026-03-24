@@ -6,10 +6,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STViewHarness : NSViewController
+@interface STViewHarness : NSViewController <ClassCompiled>
 
 -(IBAction)triggerRedisplay:(id)sender;
 
