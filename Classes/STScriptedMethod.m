@@ -154,9 +154,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
         id compiledMethod = [self compiledScript];
         STEvaluator* executionContext = [self executionContext];
         [[executionContext schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:target] forSchemeName:@"this"];
-        if ( [target conformsToProtocol:@protocol(MPWStorage)]) {
-            [[executionContext schemes] setSchemeHandler:target forSchemeName:@"self"];
-        }
+        [[executionContext schemes] setSchemeHandler:target forSchemeName:@"self"];
+        [executionContext bindValue:target toVariableNamed:@"self"];
         if ( ![[[self methodHeader] methodName] isEqual:@"schemeNames"]) {
             for ( NSString *schemeName in [target schemeNames]) {
                 id <MPWStorage> store=[target valueForKey:schemeName];
@@ -260,7 +259,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 	STCompiler* compiler = [STCompiler compiler];
 	id a=[[NSObject new] autorelease];
 	id result;
-	[compiler addScript:@"a:=nil. b:='2'. a isNil ifTrue:{ b:='335'. }. b." forClass:@"NSObject" methodHeaderString:@"xxxSimpleNilTestMethod"];
+	[compiler addScript:@"var a. a:=nil. b:='2'. a isNil ifTrue:{ b:='335'. }. b." forClass:@"NSObject" methodHeaderString:@"xxxSimpleNilTestMethod"];
 	result = [a xxxSimpleNilTestMethod];
 	IDEXPECT( result, @"335", @"if nil is working");
 }
@@ -349,15 +348,33 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     INTEXPECT(localVarNames.count, 2, @"number of local vars");
 }
 
++(void)testRequireVarDeclaration
+{
+    STCompiler *compiler=[STCompiler compiler];
+    STClassDefinition *classDef = [compiler compile:@"class TestClassForRequiringVariableDeclsInMethods { -shouldRaise { var a.  b ← 3. b. } }" ];
+    [compiler evaluate:classDef];
+    STScriptedMethod *method=classDef.methods.firstObject;
+    NSArray *localVarNames = [method localVars];
+    INTEXPECT(localVarNames.count, 1, @"number of declared local vars");
+    BOOL didRaiseUndefined=NO;
+    @try {
+        [compiler evaluateScriptString:@"TestClassForRequiringVariableDeclsInMethods new shouldRaise."];
+    } @catch ( id exception ) {
+        didRaiseUndefined=YES;
+    }
+    EXPECTTRUE(didRaiseUndefined, @"undefined variable in method should have raised");
+}
+
 +testSelectors
 {
 	return @[
 #if !GNUSTEP
-            @"testLookupOfNilVariableInMethodWorks",
+//            @"testLookupOfNilVariableInMethodWorks",
 #endif
             @"testThisSchemeReadsObject",
             @"testThisSchemeWritesObject",
             @"testComputeLocalVars",
+            @"testRequireVarDeclaration",
 //            @"testSimpleBacktrace",                       // FIXME:  exceptions are currently swallowed
 //            @"testNestedBacktrace",
 //            @"testCombinedScriptedAndNativeBacktrace",

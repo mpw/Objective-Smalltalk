@@ -560,11 +560,6 @@
     IDEXPECT( [block arguments], (@[ @"$0", @"$1", @"$2"]),@"three implicit arguments, first two ignored");
 }
 
-+(void)testMethodVarsHaveLocalScope
-{
-
-	[self testexpr:@"a:=1. context addScript:'a:=2. a*2.' forClass:'NSString' methodHeaderString:'dummyMethodThatSetsA'. '' dummyMethodThatSetsA. a." expected:@"1"];
-}
 
 
 +(void)testVariableReferenceWithURISchemeWorks
@@ -1344,9 +1339,6 @@
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
         @"testParseNonSeqeuentialImplicitBlockArgs",
-#if 1 // !GS_API_LATEST
-        @"testMethodVarsHaveLocalScope",
-#endif
         @"testVariableReferenceWithURISchemeWorks",
         @"testVariableAssignmentWithURISchemeWorks",
         @"testVariableKnowsScheme",

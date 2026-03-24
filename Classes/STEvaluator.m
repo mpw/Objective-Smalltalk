@@ -66,6 +66,7 @@
 
 @implementation STEvaluator
 
+
 idAccessor( _schemes, _setSchemes )
 
 
@@ -102,6 +103,7 @@ idAccessor( localVars, setLocalVars )
 
 {
     self=[super init];
+    self.allowVariableDefinitionOnAssign=YES;
 	[self setSchemes:[aParent schemes]];
 	[self setLocalVars:[NSMutableDictionary dictionary]];
 	[self bindValue:@YES toVariableNamed:@"true"];
@@ -223,13 +225,27 @@ idAccessor( localVars, setLocalVars )
     return binding;
 }
 
+-(void)declareVariable:(NSString*)name
+{
+    MPWReference* binding=[[self schemeForName:@"var"] bindingForName:name inContext:self];
+    if ( !binding ) {
+        [self createLocalBindingForName:name];
+    } else {
+        [NSException raise:@"redefined" format:@"variable %@ already defined",name];
+    }
+}
+
 -(void)bindValue:value toVariableNamed:(NSString*)variableName withScheme:schemeName
 {
     MPWScheme* scheme=[self schemeForName:schemeName];
     if ( [scheme isKindOfClass:[MPWVarScheme class]]) {   // legacy workaround, FIXME
         MPWReference* binding=[scheme bindingForName:variableName inContext:self];
         if ( !binding ) {
-            binding = [self createLocalBindingForName:variableName];
+            if ( self.allowVariableDefinitionOnAssign ) {
+                binding = [self createLocalBindingForName:variableName];
+            } else {
+                [NSException raise:@"undefined" format:@"variable %@ not defined",variableName];
+            }
         }
 //        NSLog(@"binding  %@ setValue",binding);
         [binding setValue:value];
@@ -294,6 +310,8 @@ idAccessor( localVars, setLocalVars )
 {
 	[self applyParameters:params forFormals:formals];
 //	NSLog(@"context %x will evaluate",self);
+    self.allowVariableDefinitionOnAssign = NO;
+
 	return [self evaluateScript:script onObject:target];
 }
 

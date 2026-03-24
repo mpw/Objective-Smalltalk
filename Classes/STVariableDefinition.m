@@ -17,6 +17,11 @@
     return self;
 }
 
+-(id)evaluateIn:(id)aContext
+{
+    [aContext declareVariable:self.name];
+}
+
 -(void)accumulateLocalVars:(NSMutableArray*)vars
 {
     [vars addObject:self.name];

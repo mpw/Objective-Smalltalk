@@ -29,6 +29,7 @@
 
 @property (nonatomic, retain) id schemes;
 @property (nonatomic, assign) Class contextClass;
+@property (nonatomic, assign) bool allowVariableDefinitionOnAssign;
 
 -valueOfVariableNamed:aName;
 -(MPWReference*)bindingForLocalVariableNamed:(NSString*)localVarName;
