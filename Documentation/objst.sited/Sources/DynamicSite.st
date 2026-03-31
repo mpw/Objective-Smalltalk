@@ -16,20 +16,25 @@ scheme DynamicSite {
          #{ #Blog: 'https://blog.metaobject.com' }.
     }
     -navItemForName:name active:isActive {
+        var url.
         url := '/', name.
+        var alternate.
         alternate := self navURLs at:name.
         alternate ifNotNil:{ url := alternate. }.
+        var activeClass.
         activeClass := isActive ifTrue:{' class=''active'' ' . } ifFalse:{ ''. }.
         "<li><a  {activeClass} href='{url}'>{name}</a></li>".
     }
     -nav:path {
+         var urls.
          urls := self navURLs.
          urls.
+         var nb.
          nb := MPWByteStream stream.
          self navRootNames do: { :name | 
              nb writeString: (self navItemForName:name active:false).
          }.
-         
+         var navItems.
          navItems := nb target stringValue.
          " <nav>
    <div class='nav-container'>
@@ -66,9 +71,12 @@ scheme DynamicSite {
 	string.
     }
     -inPage:html path:path {
+        var pageHtml.
         pageHtml ← nil.
         html ifNotNil: {
+           var templater.
 	   templater := MPWByteStream stream.
+           var env.
 	   env := #{ #body: html, #nav:(self nav:path)}.
 	   templater writeInterpolatedString: rsrc:pageTemplate.html stringValue withEnvironment:env.
 	   pageHtml ← templater target.
@@ -83,17 +91,22 @@ scheme DynamicSite {
     } }
     -base:p { 
          stdout print:'GET '; println:p.
+         var path.
          path := (p length = 0) or:(p='/') |  ifTrue: {
              'mainPage'.
          } ifFalse: {
               p.
 	 }.
+         var result.
          result := ''.
+         var html.
          html := rsrc:{path}.
+         var md.
          md := md:{path} .
          html ifNil:{
             html := self inPage: mdhtml:{path} path:path.
          }.
+         var resource.
          resource := html.
 	 
          resource ifNotNil:{ result := resource. }.
@@ -101,6 +114,7 @@ scheme DynamicSite {
          result.
     }
     /*:p { |= {
+        var path.
         path := p path.
         stdout println:path.
         p := path path.
