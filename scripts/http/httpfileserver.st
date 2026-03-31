@@ -10,5 +10,7 @@ server setScheme: cache .
 #server setScheme: base.
 
 server start:nil.
+port ← server port.
+stdline ! "server on http://localhost:{port}/".
 shell runInteractiveLoop.
 
