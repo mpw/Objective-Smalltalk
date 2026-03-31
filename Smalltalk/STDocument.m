@@ -115,6 +115,11 @@
     return YES;
 }
 
+-(IBAction)openClassBrowser:sender
+{
+    [[self.bundle classBrowser] openInWindow:@"Class Browser"];
+}
+
 -(BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
 {
     if ( [typeName isEqualToString:@"Software IC"]) {

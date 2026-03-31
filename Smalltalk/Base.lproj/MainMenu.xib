@@ -367,7 +367,8 @@
                                                 <action selector="orderFrontFontPanel:" target="YLy-65-1bz" id="WHr-nq-2xA"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Bold" tag="2" keyEquivalent="b" id="GB9-OM-e27">
+                                        <menuItem title="Bold" tag="2" id="GB9-OM-e27">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="addFontTrait:" target="YLy-65-1bz" id="hqk-hr-sYV"/>
                                             </connections>
@@ -662,6 +663,11 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showREPL:" target="-1" id="5JO-Y3-1ji"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Browser..." keyEquivalent="b" id="Vyy-5f-5Tf">
+                                <connections>
+                                    <action selector="openClassBrowser:" target="-1" id="vXV-x6-gRK"/>
                                 </connections>
                             </menuItem>
                         </items>
