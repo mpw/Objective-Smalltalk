@@ -20,6 +20,9 @@
 -(id)evaluateIn:(id)aContext
 {
     [aContext declareVariable:self.name];
+    if ( self.initializer) {
+        [aContext bindValue:[self.initializer evaluateIn:aContext] toVariableNamed:self.name];
+    }
 }
 
 -(void)accumulateLocalVars:(NSMutableArray*)vars
@@ -31,6 +34,7 @@
 {
     [_name release];
     [_type release];
+    [_initializer release];
     [super dealloc];
 }
 

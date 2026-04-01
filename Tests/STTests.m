@@ -1305,6 +1305,11 @@
     [self testexpr:@"context evaluateScriptString:'3+4'" expected:[NSNumber numberWithInt:7]];
 }
 
++(void)testVarDeclarationCanHaveInitializer
+{
+    TESTEXPR( @"var a ← 'The var was initialized'. a.",@"The var was initialized");
+}
+
 
 +(NSArray*)testSelectors
 {
@@ -1432,6 +1437,7 @@
         @"testCanConnectFilterToSelfContainedBinding",
         // Recursive interpret
         @"testRecursiveInterpret",
+        @"testVarDeclarationCanHaveInitializer",
     ];
 }
 
