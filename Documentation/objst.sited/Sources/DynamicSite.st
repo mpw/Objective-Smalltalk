@@ -16,26 +16,19 @@ scheme DynamicSite {
          #{ #Blog: 'https://blog.metaobject.com' }.
     }
     -navItemForName:name active:isActive {
-        var url.
-        url := '/', name.
-        var alternate.
-        alternate := self navURLs at:name.
+        var url := '/', name.
+        var alternate := self navURLs at:name.
         alternate ifNotNil:{ url := alternate. }.
-        var activeClass.
-        activeClass := isActive ifTrue:{' class=''active'' ' . } ifFalse:{ ''. }.
+        var activeClass := isActive ifTrue:{' class=''active'' ' . } ifFalse:{ ''. }.
         "<li><a  {activeClass} href='{url}'>{name}</a></li>".
     }
     -nav:path {
-         var urls.
-         urls := self navURLs.
-         urls.
-         var nb.
-         nb := MPWByteStream stream.
+         var urls := self navURLs.
+         var nb := MPWByteStream stream.
          self navRootNames do: { :name | 
              nb writeString: (self navItemForName:name active:false).
          }.
-         var navItems.
-         navItems := nb target stringValue.
+         var navItems := nb target stringValue.
          " <nav>
    <div class='nav-container'>
         <div class='nav-logo'>
@@ -71,22 +64,19 @@ scheme DynamicSite {
 	string.
     }
     -inPage:html path:path {
-        var pageHtml.
-        pageHtml ← nil.
+        var pageHtml ← nil.
         html ifNotNil: {
-           var templater.
-	   templater := MPWByteStream stream.
-           var env.
-	   env := #{ #body: html, #nav:(self nav:path)}.
+           var templater := MPWByteStream stream.
+           var env := #{ #body: html, #nav:(self nav:path)}.
 	   templater writeInterpolatedString: rsrc:pageTemplate.html stringValue withEnvironment:env.
 	   pageHtml ← templater target.
         }.
         pageHtml.
     }
-    /Publications  { |= { 
-         pubs := mdhtml:Publications mutableCopy.
-         acm := rsrc:acmrefs.html.
-         pubs appendData:acm.
+    /Publications  { get  { 
+         var pubs := mdhtml:Publications mutableCopy.
+         var acm := rsrc:acmrefs.html.
+         var pubs := appendData:acm.
          self inPage: pubs  path:'Publications'.
     } }
     -base:p { 
@@ -97,25 +87,20 @@ scheme DynamicSite {
          } ifFalse: {
               p.
 	 }.
-         var result.
-         result := ''.
-         var html.
-         html := rsrc:{path}.
-         var md.
-         md := md:{path} .
+         var result := ''.
+         var html := rsrc:{path}.
+         var md := md:{path} .
          html ifNil:{
             html := self inPage: mdhtml:{path} path:path.
          }.
-         var resource.
-         resource := html.
+         var resource := html.
 	 
          resource ifNotNil:{ result := resource. }.
          stdout print:'result: '; println:result stringValue length.
          result.
     }
     /*:p { |= {
-        var path.
-        path := p path.
+        var path := p path.
         stdout println:path.
         p := path path.
         (p hasSuffix:'ico' ) ifTrue: {
