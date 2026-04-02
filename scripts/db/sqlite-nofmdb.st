@@ -38,14 +38,14 @@ scheme SQLiteScheme : SQLiteStore  {
   }
 
   -classDefForTable:table   {
-  	  classDef := STClassDefinition new.
+      var classDef := STClassDefinition new.
       classDef setName:table name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
       classDef setInstanceVariableDescriptions: table schema.
       classDef.  
   }
   -<void>createClassForTableNamed:name {
-      classDef := self classDefForTable: (this:tables at:name).
+      var classDef := self classDefForTable: (this:tables at:name).
 	  classDef defineClass.
       self setClass: classDef classToDefine forTable:name.
   }

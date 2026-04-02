@@ -13,11 +13,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STVariableDefinition : STExpression
 
-@property (nonatomic,strong) NSString *name;
-@property (nonatomic,strong) STTypeDescriptor *type;
+
+-initWithName:(NSString*)newName type:(MPWTypeDefinition*)newType;
+
 @property (nonatomic,strong) STExpression *initializer;
 
--initWithName:(NSString*)newName type:(STTypeDescriptor*)newType;
+@property (nonatomic,readonly) MPWVariableDefinition *definition;
+
+@property (nonatomic,readonly) NSString *name;
+@property (nonatomic,readonly) MPWTypeDefinition *type;
 
 
 @end

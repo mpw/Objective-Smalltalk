@@ -7,14 +7,27 @@
 
 #import "STVariableDefinition.h"
 
+@interface STVariableDefinition ()
+
+@property (nonatomic, strong ) MPWVariableDefinition *definition;
+
+@end
+
 @implementation STVariableDefinition
 
 -initWithName:(NSString*)newName type:(STTypeDescriptor*)newType
 {
     self=[super init];
-    [self setName:newName];
-    [self setType:newType];
+    self.definition = [[[MPWVariableDefinition alloc] initWithName:newName type:newType] autorelease];
     return self;
+}
+
+-(NSString*)name {
+    return self.definition.name;
+}
+
+-(NSString*)type {
+    return self.definition.type;
 }
 
 -(id)evaluateIn:(id)aContext
@@ -32,8 +45,7 @@
 
 -(void)dealloc
 {
-    [_name release];
-    [_type release];
+    [_definition release];
     [_initializer release];
     [super dealloc];
 }

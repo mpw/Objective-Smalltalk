@@ -41,9 +41,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
 	[[self methodKeyWords] addObject:keyWord];
 	if ( name && type ) {
-        STVariableDefinition *vardef=[[STVariableDefinition new] autorelease];
-        vardef.name = name;
-        vardef.type = [STTypeDescriptor descritptorForSTTypeName:type];
+        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:[STTypeDescriptor descritptorForSTTypeName:type]] autorelease];
         [[self parameterVars] addObject:vardef];
 	}
 }
