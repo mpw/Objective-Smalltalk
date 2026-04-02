@@ -11,6 +11,7 @@ j := #MPWJSONConverterStore{ mutable: true, converterClass: class:Person }  → 
 a ← j at:json.
 stdline !  a.
 table ← #MPWObjectArrayTable{ itemClass: class:Person , objects: a }.
+stdline ! table.
 tableView ← #MPWTableView{ table: table  }.
 app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).
 stdout do println: table objects each.
