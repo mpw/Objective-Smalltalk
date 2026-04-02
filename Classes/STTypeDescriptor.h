@@ -5,21 +5,14 @@
 //  Created by Marcel Weiher on 30.06.21.
 //
 
-#import <Foundation/Foundation.h>
+#import <MPWFoundation/MPWFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface STTypeDescriptor : NSObject
+@interface STTypeDescriptor : MPWTypeDefinition
 
-@property (nonatomic, assign, readonly) unsigned char objcTypeCode;
-@property (nonatomic, strong, readonly) NSString *name;
-@property (nonatomic, strong, readonly) NSString *cName;
 
-+(instancetype)descritptorForObjcCode:(unsigned char)typeCode;
-+(instancetype)descritptorForSTTypeName:(NSString*)typeName;
-+(instancetype)voidType;
-+(instancetype)idType;
 
 @end
 
