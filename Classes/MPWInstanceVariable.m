@@ -22,7 +22,6 @@ longAccessor( offset, setOffset )
 
 #define pointerToVarInObject( anObject )  ((id*)(((char*)anObject) + offset))
 
-
 -valueInContext:anObject
 {
 	id result=nil;
@@ -53,8 +52,8 @@ longAccessor( offset, setOffset )
 
     }
 //   NSLog(@"ivar %@ set Value: %@ at offset: %ld",name,newValue,offset);
-
 }
+
 
 -(NSString*)typeName
 {
