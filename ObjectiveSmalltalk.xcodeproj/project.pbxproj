@@ -1530,7 +1530,7 @@
 		1FBAABC3184BDBBA00086047 /* Stsh-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Stsh-Info.plist"; sourceTree = "<group>"; };
 		1FBAABC5184BDBBA00086047 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1FBAABC7184BDBBA00086047 /* Stsh-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stsh-Prefix.pch"; sourceTree = "<group>"; };
-		1FBAAC16184BDC6400086047 /* stsh */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stsh; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FBAAC16184BDC6400086047 /* st */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = st; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FBAAC19184BDC6400086047 /* stsh_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = stsh_main.m; sourceTree = "<group>"; };
 		1FBAAC1C184BDC6400086047 /* stsh-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stsh-Prefix.pch"; sourceTree = "<group>"; };
 		1FBAAC1D184BDC6400086047 /* stsh.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = stsh.1; sourceTree = "<group>"; };
@@ -3088,7 +3088,7 @@
 				1F7B75AF14629431002F38D1 /* SchemeFS.app */,
 				1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */,
 				1FC8F834181BF3A3003980D8 /* SchemeFUSE.framework */,
-				1FBAAC16184BDC6400086047 /* stsh */,
+				1FBAAC16184BDC6400086047 /* st */,
 				1FAFD98E1855BC5500EC5221 /* StshFramework.framework */,
 				1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */,
 				1FE37B4D19695FA600C9A378 /* ObjectiveSmalltalk.framework */,
@@ -3941,9 +3941,9 @@
 			productReference = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		1FBAAC15184BDC6400086047 /* stsh */ = {
+		1FBAAC15184BDC6400086047 /* st */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1FBAAC1F184BDC6400086047 /* Build configuration list for PBXNativeTarget "stsh" */;
+			buildConfigurationList = 1FBAAC1F184BDC6400086047 /* Build configuration list for PBXNativeTarget "st" */;
 			buildPhases = (
 				1FBAAC12184BDC6400086047 /* Sources */,
 				1FBAAC13184BDC6400086047 /* Frameworks */,
@@ -3953,9 +3953,9 @@
 			);
 			dependencies = (
 			);
-			name = stsh;
+			name = st;
 			productName = stsh;
-			productReference = 1FBAAC16184BDC6400086047 /* stsh */;
+			productReference = 1FBAAC16184BDC6400086047 /* st */;
 			productType = "com.apple.product-type.tool";
 		};
 		1FC8F833181BF3A3003980D8 /* SchemeFUSE */ = {
@@ -4188,7 +4188,7 @@
 				1FE63E0121061BE10066B335 /* MPWCSourceKit */,
 				1F084A0D16DCE6A200ED2517 /* ObjSTNative */,
 				1FC8F833181BF3A3003980D8 /* SchemeFUSE */,
-				1FBAAC15184BDC6400086047 /* stsh */,
+				1FBAAC15184BDC6400086047 /* st */,
 				1F81C05F19699AE00066DF43 /* MethodServerTouch */,
 				1F4348481E21676F002750C3 /* S3Scheme */,
 				1F59A70F202C7ADA00BE06F6 /* X11Scheme */,
@@ -8282,7 +8282,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1FBAAC1F184BDC6400086047 /* Build configuration list for PBXNativeTarget "stsh" */ = {
+		1FBAAC1F184BDC6400086047 /* Build configuration list for PBXNativeTarget "st" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1FBAAC20184BDC6400086047 /* Debug */,

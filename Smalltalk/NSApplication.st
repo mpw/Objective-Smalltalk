@@ -8,20 +8,20 @@ extension NSApplication {
            NSBundle mainBundle bundlePath lastPathComponent  stringByDeletingPathExtension.
      }
      -<void>setMenuAppName:newName  {
-          menuBar := self mainMenu.
-          appMenu := menuBar itemArray firstObject.
-          helpMenu := menuBar itemArray lastObject.
-          originalName := appMenu title.
-          appSubmenu := appMenu submenu.
+          var menuBar := self mainMenu.
+          var appMenu := menuBar itemArray firstObject.
+          var helpMenu := menuBar itemArray lastObject.
+          var originalName := appMenu title.
+          var appSubmenu := appMenu submenu.
           appMenu setTitle:newName.
           appSubmenu setTitle:newName.
-          items := appSubmenu itemArray.
+          var items := appSubmenu itemArray.
 
           items firstObject setTitle:'About ', newName.
           (items at:(items count -2 ))  setTitle:'Quit ', newName.
      }
      -<void>changeTitleIfNecessary {
-          appName := self appName.
+          var appName := self appName.
           appName ≠ self mainMenuTitle ifTrue: {
               self setMenuAppName:appName.
           }.
