@@ -67,8 +67,7 @@ lazyAccessor(STSiteBundle*, bundle, setBundle, createBundle )
     def.superclassName = superclassName ?: @"STEntity";
     NSMutableArray *ivarDefs=[NSMutableArray array];
     for ( NSString *name in ivarnames ) {
-        MPWInstanceVariable *vardef=[[MPWInstanceVariable new] autorelease];
-        vardef.name = name;
+        MPWInstanceVariableDefinition *vardef=[[[MPWInstanceVariableDefinition alloc] initWithName:name type:nil] autorelease];
         [ivarDefs addObject:vardef];
     }
     def.instanceVariableDescriptions=ivarDefs;

@@ -1277,7 +1277,7 @@ idAccessor(solver, setSolver)
     return [self parseClassDefinition];
 }
 
--(MPWInstanceVariable *)parseVariableDefinition:(Class)variableDefClass
+-(MPWInstanceVariableDefinition *)parseVariableDefinition:(Class)variableDefClass
 {
     NSString *next=nil;
     
@@ -1311,12 +1311,12 @@ idAccessor(solver, setSolver)
     }
 }
 
--(MPWInstanceVariable *)parseInstanceVariableDefinition
+-(MPWInstanceVariableDefinition *)parseInstanceVariableDefinition
 {
-    return [self parseVariableDefinition:[MPWInstanceVariable class]];
+    return [self parseVariableDefinition:[MPWInstanceVariableDefinition class]];
 }
 
--(STVariableDefinition*)parseLocalVariableDefinition
+-(MPWVariableDefinition*)parseLocalVariableDefinition
 {
     return [self parseVariableDefinition:[STVariableDefinition class]];
 }

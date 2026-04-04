@@ -63,6 +63,10 @@ stdline ! '# Artists: ',artists count.
 stdline ! class:Artists
 
 table ← MPWObjectArrayTable alloc initWithObjects: db:albums.
+columns ← table columns.
+stdline ! columns.
+columns ← [ columns[1] ].
+table setColumns: columns.
 tableView ← #MPWTableView{ table: table  }.
 
 app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).

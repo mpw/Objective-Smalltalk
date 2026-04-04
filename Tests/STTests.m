@@ -455,11 +455,11 @@
     STCompiler *compiler=[STCompiler compiler];
     STClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
     
-    MPWInstanceVariable *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
+    MPWInstanceVariableDefinition *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
     IDEXPECT( [variableDescription typeName], @"id", @"type of ivar" );
-    MPWInstanceVariable *ivar2 = [[classDef instanceVariableDescriptions] lastObject];
+    MPWInstanceVariableDefinition *ivar2 = [[classDef instanceVariableDescriptions] lastObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 typeName], @"id", @"type of ivar" );
@@ -471,11 +471,11 @@
     Class aClass = NSClassFromString( @"__TestClassWithIVarsFromSyntax" );
     EXPECTNOTNIL(aClass, @"defined the class");
     NSArray <MPWInstanceVariable*>* variableDescriptions = [aClass instanceVariables];
-    MPWInstanceVariable *variableDescription = variableDescriptions[1];
+    MPWInstanceVariableDefinition *variableDescription = variableDescriptions[1];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
     IDEXPECT( [variableDescription objcType], @"@", @"type of ivar" );
-    MPWInstanceVariable *ivar2 = [variableDescriptions lastObject];
+    MPWInstanceVariableDefinition *ivar2 = [variableDescriptions lastObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 objcType], @"@", @"type of ivar" );

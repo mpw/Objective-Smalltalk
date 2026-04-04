@@ -55,10 +55,10 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
 		if ( ivars  && ivarCount > 0) {
 			for (i=0;i < ivarCount; i++ ){
 				Ivar ivar=ivars[i];
-				MPWInstanceVariable *varDescription;
-                STTypeDescriptor *type=[STTypeDescriptor descritptorForObjcCode:ivar_getTypeEncoding(ivar)[0]];
-				varDescription = [[[MPWInstanceVariable alloc] initWithName:[NSString stringWithCString:ivar_getName(ivar) encoding:NSASCIIStringEncoding]
-																	 offset: (int)ivar_getOffset(ivar) 
+				MPWInstanceVariableDefinition *varDescription;
+                MPWTypeDefinition *type=[MPWTypeDefinition descritptorForObjcCode:ivar_getTypeEncoding(ivar)[0]];
+				varDescription = [[[MPWInstanceVariableDefinition alloc] initWithName:[NSString stringWithCString:ivar_getName(ivar) encoding:NSASCIIStringEncoding]
+																	 offset:(int)ivar_getOffset(ivar)
 																	   type:type]
 								  autorelease];
 				[varNames addObject:varDescription];
@@ -85,7 +85,7 @@ static void __collectInstanceVariables( Class aClass, NSMutableArray *varNames )
     NSArray *varNames=[varsAsString componentsSeparatedByString:@" "];\
     NSMutableArray *variableDefinitions=[NSMutableArray array];
     for ( NSString *name in varNames ) {
-        MPWInstanceVariable *theVar=[[[MPWInstanceVariable alloc] initWithName:name offset:0 type:[STTypeDescriptor descritptorForObjcCode:'@']] autorelease];
+        MPWInstanceVariableDefinition *theVar=[[[MPWInstanceVariableDefinition alloc] initWithName:name offset:0 type:[STTypeDescriptor descritptorForObjcCode:'@']] autorelease];
         [variableDefinitions addObject:theVar];
     }
     return [self createSubclassWithName:className instanceVariableArray:variableDefinitions];
