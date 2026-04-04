@@ -10,7 +10,7 @@
 
 @class MPWMethodHeader,MPWMethodCallBack;
 
-@interface MPWAbstractInterpretedMethod : STExpression {
+@interface MPWAbstractInterpretedMethod : NSObject {
 	MPWMethodHeader*	methodHeader;
 	id					context;
 	id					methodType;
