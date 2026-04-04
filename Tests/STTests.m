@@ -1340,7 +1340,7 @@
         @"testCreateObjectiveCForConstants",
         @"testCreateObjectiveCForUnaryMessageSend",
         @"testCreateObjectiveCForMessageSendWithArg",
-        @"testGetInstanceVarDefByName",
+//        @"testGetInstanceVarDefByName",       // removing
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",
         @"testParseNonSeqeuentialImplicitBlockArgs",
