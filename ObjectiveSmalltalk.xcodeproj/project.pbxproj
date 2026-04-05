@@ -540,6 +540,7 @@
 		1FAB448C19031343009EEE6D /* MPWShellCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448319031343009EEE6D /* MPWShellCompiler.h */; };
 		1FAB448D19031343009EEE6D /* MPWShellProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448419031343009EEE6D /* MPWShellProcess.h */; };
 		1FAB448E19031343009EEE6D /* MPWUpcaseFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAB448519031343009EEE6D /* MPWUpcaseFilter.h */; };
+		1FAFC83F2F824D60005A17BF /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FAFC83E2F824D60005A17BF /* MPWExpression+autocomplete.m */; };
 		1FAFD9731855B98200EC5221 /* STScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAFD9721855B98200EC5221 /* STScript.h */; };
 		1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC38184BDF6A00086047 /* MPWExternalCommand.m */; };
 		1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBAAC36184BDF6A00086047 /* MPWEchoCommand.m */; };
@@ -650,7 +651,6 @@
 		1FDDE95D29029887002A4AA4 /* MPWMachOClassWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDDE95B29029887002A4AA4 /* MPWMachOClassWriter.h */; };
 		1FDDE95E29029887002A4AA4 /* MPWMachOClassWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDDE95C29029887002A4AA4 /* MPWMachOClassWriter.m */; };
 		1FE37B6A1969610600C9A378 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37B6D1969610600C9A378 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
 		1FE37B721969610600C9A378 /* MPWAssignmentExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A74ADF00F0A95F015ADD82 /* MPWAssignmentExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -837,7 +837,6 @@
 		1FFCBD542CECCF880043BFC1 /* STQueryExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFCBD4F2CECCF880043BFC1 /* STQueryExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFD20D819250337009052B1 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FFD20DA19254A31009052B1 /* MPWExpression+autocomplete.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */; };
 		1FFD20DE19278611009052B1 /* MPWLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD20DC19278611009052B1 /* MPWLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFD20DF19278611009052B1 /* MPWLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD20DD19278611009052B1 /* MPWLiteralExpression.m */; };
 		1FFDEE9529C4ADED00A4DFCF /* ConstArray.framework in Resources */ = {isa = PBXBuildFile; fileRef = 1FFDEE9429C4ADE700A4DFCF /* ConstArray.framework */; };
@@ -1092,8 +1091,6 @@
 		1F04A53221D25A1800E19C3F /* testobjectivesmalltalk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = testobjectivesmalltalk.m; path = TestObjectiveSmalltalk/testobjectivesmalltalk.m; sourceTree = "<group>"; };
 		1F04A53421D25AEB00E19C3F /* makeheaderdir */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = makeheaderdir; sourceTree = "<group>"; };
 		1F04A53521D25AF200E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = base.make; sourceTree = "<group>"; };
-		1F04A53E21D3D55A00E19C3F /* base.make */ = {isa = PBXFileReference; lastKnownFileType = text; name = base.make; path = Stsh/base.make; sourceTree = SOURCE_ROOT; };
-		1F04A53F21D3D55A00E19C3F /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; name = GNUmakefile; path = Stsh/GNUmakefile; sourceTree = SOURCE_ROOT; };
 		1F05B53C2B441A00004C7772 /* STSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSystem.h; sourceTree = "<group>"; };
 		1F05B53D2B441A00004C7772 /* STSystem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSystem.m; sourceTree = "<group>"; };
 		1F084A0E16DCE6A200ED2517 /* ObjSTNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjSTNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1202,7 +1199,7 @@
 		1F2F8DC7192E28AA00A5D1B5 /* MPWShellPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPWShellPrinter.m; path = ../MPWShellPrinter.m; sourceTree = "<group>"; };
 		1F321C65213334F3001BE6CC /* MPWPropertyPathMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWPropertyPathMethod.h; sourceTree = "<group>"; };
 		1F321C66213334F3001BE6CC /* MPWPropertyPathMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWPropertyPathMethod.m; sourceTree = "<group>"; };
-		1F34669B28B0CFC1003257CB /* stsh_ui.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = stsh_ui.m; path = Stsh/stsh_ui.m; sourceTree = SOURCE_ROOT; };
+		1F34669B28B0CFC1003257CB /* stsh_ui.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = stsh_ui.m; path = StshFramework/st/stsh_ui.m; sourceTree = SOURCE_ROOT; };
 		1F3466EA28C4FBF2003257CB /* STObjectCodeGeneratorARM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STObjectCodeGeneratorARM.h; sourceTree = "<group>"; };
 		1F3466EB28C4FBF2003257CB /* STObjectCodeGeneratorARM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STObjectCodeGeneratorARM.m; sourceTree = "<group>"; };
 		1F3466EE28CB10F7003257CB /* STMachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOReader.h; sourceTree = "<group>"; };
@@ -1485,7 +1482,6 @@
 		1FA7C1682BA1A072007F869B /* objs-interop.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "objs-interop.py"; sourceTree = "<group>"; };
 		1FA7C16D2BA1C99D007F869B /* env-scheme-webdav.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "env-scheme-webdav.py"; sourceTree = "<group>"; };
 		1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPWExpression+autocomplete.h"; sourceTree = "<group>"; };
-		1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MPWExpression+autocomplete.m"; path = "../Stsh/Classes/MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
 		1FA859F21923731900F52396 /* ObjectiveSmalltalkUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalkUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FA859F61923731900F52396 /* ObjectiveSmalltalkUI-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjectiveSmalltalkUI-Info.plist"; sourceTree = "<group>"; };
 		1FA859F81923731900F52396 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1507,6 +1503,7 @@
 		1FAB448319031343009EEE6D /* MPWShellCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWShellCompiler.h; sourceTree = "<group>"; };
 		1FAB448419031343009EEE6D /* MPWShellProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWShellProcess.h; sourceTree = "<group>"; };
 		1FAB448519031343009EEE6D /* MPWUpcaseFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWUpcaseFilter.h; sourceTree = "<group>"; };
+		1FAFC83E2F824D60005A17BF /* MPWExpression+autocomplete.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MPWExpression+autocomplete.m"; sourceTree = "<group>"; };
 		1FAFD9721855B98200EC5221 /* STScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STScript.h; sourceTree = "<group>"; };
 		1FAFD98E1855BC5500EC5221 /* StshFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StshFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "StshFramework-Info.plist"; path = "/Users/marcel/programming/Kits/ObjectiveSmalltalk/StshFramework-Info.plist"; sourceTree = "<absolute>"; };
@@ -1532,7 +1529,7 @@
 		1FBAABC7184BDBBA00086047 /* Stsh-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stsh-Prefix.pch"; sourceTree = "<group>"; };
 		1FBAAC16184BDC6400086047 /* st */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = st; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FBAAC19184BDC6400086047 /* stsh_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = stsh_main.m; sourceTree = "<group>"; };
-		1FBAAC1C184BDC6400086047 /* stsh-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stsh-Prefix.pch"; sourceTree = "<group>"; };
+		1FBAAC1C184BDC6400086047 /* Stsh-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Stsh-Prefix.pch"; path = "../Stsh-Prefix.pch"; sourceTree = "<group>"; };
 		1FBAAC1D184BDC6400086047 /* stsh.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = stsh.1; sourceTree = "<group>"; };
 		1FBAAC34184BDF6A00086047 /* MPWCommandFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWCommandFilter.m; sourceTree = "<group>"; };
 		1FBAAC36184BDF6A00086047 /* MPWEchoCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWEchoCommand.m; sourceTree = "<group>"; };
@@ -2667,7 +2664,7 @@
 				1FBAAC18184BDC6400086047 /* stsh */,
 			);
 			name = StshFramwork;
-			path = Stsh;
+			path = StshFramework;
 			sourceTree = "<group>";
 		};
 		1FBAABC2184BDBBA00086047 /* Supporting Files */ = {
@@ -2690,6 +2687,7 @@
 				1F73288E2344C10000379386 /* MPWREPLViewPrinter.h */,
 				1F73288F2344C10000379386 /* MPWREPLViewPrinter.m */,
 				1FA859BD1922320F00F52396 /* MPWExpression+autocomplete.h */,
+				1FAFC83E2F824D60005A17BF /* MPWExpression+autocomplete.m */,
 				1FAB447D19031343009EEE6D /* MPWCommandFilter.h */,
 				1FBAAC34184BDF6A00086047 /* MPWCommandFilter.m */,
 				1FAB447F19031343009EEE6D /* MPWEchoCommand.h */,
@@ -2721,21 +2719,19 @@
 		1FBAAC18184BDC6400086047 /* stsh */ = {
 			isa = PBXGroup;
 			children = (
-				1F04A53E21D3D55A00E19C3F /* base.make */,
-				1F04A53F21D3D55A00E19C3F /* GNUmakefile */,
 				1FBAAC19184BDC6400086047 /* stsh_main.m */,
 				1FBAAC1D184BDC6400086047 /* stsh.1 */,
 				1FBAAC1B184BDC6400086047 /* Supporting Files */,
 				1F34669B28B0CFC1003257CB /* stsh_ui.m */,
 			);
 			name = stsh;
-			path = ../stsh;
+			path = st;
 			sourceTree = "<group>";
 		};
 		1FBAAC1B184BDC6400086047 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1FBAAC1C184BDC6400086047 /* stsh-Prefix.pch */,
+				1FBAAC1C184BDC6400086047 /* Stsh-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2975,7 +2971,6 @@
 				F5A74AE600F0AAB8015ADD82 /* STExpression.h */,
 				F5A74AE500F0AAB8015ADD82 /* STExpression.m */,
 				1FFD20D919254A31009052B1 /* MPWExpression+autocomplete.h */,
-				1FA859BE1922320F00F52396 /* MPWExpression+autocomplete.m */,
 				1FE7B4190AB3C45300475AFD /* MPWFastMessage.h */,
 				1FE7B41A0AB3C45300475AFD /* MPWFastMessage.m */,
 				1F7AFACA260F78E5002DC530 /* MPWFastSuperMessage.h */,
@@ -4802,7 +4797,6 @@
 				1F5E506E09B4B754000298D9 /* MPWAssignmentExpression.m in Sources */,
 				1F5E506F09B4B754000298D9 /* STExpression.m in Sources */,
 				1F5E507009B4B754000298D9 /* STIdentifierExpression.m in Sources */,
-				1FFD20DB19254A68009052B1 /* MPWExpression+autocomplete.m in Sources */,
 				1F697A8225E15D1600D015DB /* STMessageConnector.m in Sources */,
 				1F5E507109B4B754000298D9 /* MPWMessage.m in Sources */,
 				1F5E507209B4B754000298D9 /* MPWBindingLegacy.m in Sources */,
@@ -5018,6 +5012,7 @@
 				1F02B9A2288EC6C30023588A /* MPWCommandBinding.m in Sources */,
 				1FAFD9761855BC5500EC5221 /* MPWExternalCommand.m in Sources */,
 				1FAFD9771855BC5500EC5221 /* MPWEchoCommand.m in Sources */,
+				1FAFC83F2F824D60005A17BF /* MPWExpression+autocomplete.m in Sources */,
 				1FAFD9781855BC5500EC5221 /* STScript.m in Sources */,
 				1FAFD9791855BC5500EC5221 /* MPWUpcaseFilter.m in Sources */,
 				1FAFD97A1855BC5500EC5221 /* MPWObjectPipeCommand.m in Sources */,
@@ -5135,7 +5130,6 @@
 				1FE37BFE1969612800C9A378 /* MPWBlockFilterScheme.m in Sources */,
 				1FE37BD21969612500C9A378 /* MPWTreeNode.m in Sources */,
 				1FE37B7D1969610600C9A378 /* MPWClassMirror.m in Sources */,
-				1FE37B6B1969610600C9A378 /* MPWExpression+autocomplete.m in Sources */,
 				1F0351062F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
 				1F6060202A249CF900783E17 /* MPWDyLibScheme.m in Sources */,
 				1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */,
@@ -7243,8 +7237,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Stsh/Stsh-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "StshFramework/Stsh-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7295,8 +7289,8 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Stsh/Stsh-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "StshFramework/Stsh-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
