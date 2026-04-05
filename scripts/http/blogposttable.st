@@ -9,5 +9,7 @@ theRef ← ref:https://www.googleapis.com/blogger/v3/blogs/{blogid}/
 scheme:blogger ← theRef asScheme
 a := (scheme:blogger at:'posts/?fields=kind%2Citems(title%2Cid)' ) at:'items'
 stdline ! a.
-table ← #MPWTableView{dicts:(a)}.
-app runFromCLI:(table inScrollView:(200@400 extent: 500@600)).
+table ← MPWDictArrayTable alloc initWithObjects: a.
+table setColumns: [ table columns lastObject ].
+tableView ← #MPWTableView{ table:table}.
+tableView inScrollView:(200@400 extent: 500@600).
