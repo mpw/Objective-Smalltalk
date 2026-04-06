@@ -30,7 +30,8 @@ scheme BlogSite {
       }
     /posts/*:rest {
       get {
-	result ← ref:postsList:{rest} value.
+	var result ← ref:postsList:{rest} value.
+        result.
       }
     }
     
