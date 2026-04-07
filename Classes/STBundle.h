@@ -55,6 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(NSString*)path;
 
+-(BOOL)loadFrameworks;
+
+@property (nonatomic, readonly) bool frameworksLoaded;
+@property (nonatomic, readonly) bool sourcesCompiled;
+
 @end
 
 NS_ASSUME_NONNULL_END

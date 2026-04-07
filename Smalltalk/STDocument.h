@@ -9,7 +9,7 @@
 
 @class STBundle;
 
-@interface STDocument : NSDocument
+@interface STDocument : NSDocument <NSToolbarDelegate>
 
 @property (nonatomic, strong ) STBundle *bundle;
 

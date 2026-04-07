@@ -12,15 +12,12 @@ extension STDocument {
       scrollView := NSScrollView alloc initWithFrame: (0@0 extent: 500@400) | autorelease.
       scrollView setAutoresizingMask: 18.
       scrollView setHasVerticalScroller: true.
-      var workspace.
-      workspace := STProgramTextView alloc initWithFrame: (0@0 extent: 500@400).
+      var workspace := STProgramTextView alloc initWithFrame: (0@0 extent: 500@400).
       workspace setAutoresizingMask: 18.
       scrollView setDocumentView:workspace.
-      var windowController.
-      windowController := scrollView openInWindowController:'Workspace'.
+      var windowController := scrollView openInWindowController:'Workspace'.
       self addWindowController:windowController.
-      var window.
-      window := windowController window.
+      var window := windowController window.
       window setDelegate:self.
       workspace setCompiler: self compiler.
       workspace setDelegate: self.

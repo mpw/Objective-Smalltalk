@@ -10,11 +10,14 @@
 #import "MPWSchemeScheme.h"
 #import "MPWMethodStore.h"
 #import "MPWStatementList.h"
+#import "MPWFrameworkScheme.h"
 
 @interface STBundle()
 
 @property (nonatomic,strong) MPWReference *binding;
 @property (readonly) NSString *path;
+@property (nonatomic, assign) bool frameworksLoaded;
+@property (nonatomic, assign) bool sourcesCompiled;
 
 @end
 
@@ -26,6 +29,7 @@
     NSDictionary      *methodDict;
     MPWWriteBackCache *cachedResources;
     MPWWriteBackCache *cachedSources;
+    NSArray *frameworkList;
 }
 
 lazyAccessor(NSDictionary*, info, setInfo, readInfo)
@@ -33,6 +37,7 @@ lazyAccessor(STCompiler*, interpreter, setInterpreter, createInterpreter)
 lazyAccessor(NSDictionary*, methodDict, setMethodDict, methodDictForSourceFiles)
 lazyAccessor(MPWWriteBackCache*, cachedResources, setCachedResources, createCachedResources)
 lazyAccessor(MPWWriteBackCache*, cachedSources, setCachedSources, createCachedSources)
+lazyAccessor(NSArray*, frameworkList, setFrameworkList, readFrameworks)
 @dynamic info;
 
 CONVENIENCEANDINIT( bundle, WithBinding:newBinding )
@@ -183,6 +188,29 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     return infoData ?  [NSJSONSerialization JSONObjectWithData:infoData options:0 error:nil] : nil;
 }
 
+-(NSArray*)readFrameworks
+{
+    NSString *path = [self.path stringByAppendingPathComponent:@"Ports/Frameworks.json"];
+    NSData *fwkData = [NSData dataWithContentsOfFile:path];
+    // FIXME:  the following does not work on Android/GNUstep
+    // NSLog(@"data via stores: %@",[[self rawStoreForSubDir:@""][@"Info.json"] stringValue]);
+    return fwkData ?  [NSJSONSerialization JSONObjectWithData:fwkData options:0 error:nil] : nil;
+}
+
+-(BOOL)loadFrameworks
+{
+    if (!self.frameworksLoaded) {
+        NSArray *names = [self frameworkList];
+        MPWFrameworkScheme *fwks=[MPWFrameworkScheme scheme];
+        BOOL allLoaded = YES;
+        for ( NSString *name in names ) {
+            allLoaded = allLoaded && [[fwks at:name] load];
+        }
+        self.frameworksLoaded = allLoaded;
+    }
+    return self.frameworksLoaded;
+}
+
 -(void)configureInterpreter:(STCompiler*)newInterpreter
 {
     [[newInterpreter schemes] setSchemeHandler:self.cachedResources   forSchemeName:@"rsrc"];
@@ -228,14 +256,16 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
 
 -(void)compileAllSourceFiles
 {
-    NSLog(@"=== compile all source files ===");
+    [self loadFrameworks];
     for ( NSString *filename in [self sourceNames] ) {
         @autoreleasepool {
             NSLog(@"compile %@",filename);
             [self compileSourceFile:filename];
         }
     }
-    NSLog(@"=== done compiling ===");
+    NSLog(@"compiled all sources, setting flag");
+    self.sourcesCompiled=YES;
+    NSLog(@"compiled all sources, flag: %d",self.sourcesCompiled);
 }
 
 -(NSDictionary*)methodDictForSourceFiles

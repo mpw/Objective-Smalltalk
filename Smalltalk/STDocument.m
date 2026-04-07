@@ -41,7 +41,7 @@
 }
 
 + (BOOL)autosavesInPlace {
-    return YES;
+    return NO;
 }
 
 -(void)windowWillClose:(NSNotification*)closeNotification
@@ -100,16 +100,116 @@
     }
 }
 
+-(BOOL)validateToolbarItem:(NSToolbarItem *)item
+{
+    NSLog(@"validate: %@ %@",item.itemIdentifier,item);
+    if ( [item.itemIdentifier isEqual:LinkDependencies] ) {
+        return !self.bundle.frameworksLoaded;
+    } else if ( [item.itemIdentifier isEqual:Compile] ) {
+        return !self.bundle.sourcesCompiled;
+    }
+    return YES;
+}
+
+static NSString *LinkDependencies = @"LinkDependencies";
+static NSString *Compile = @"Compile";
+static NSString *Browse = @"Browse";
+
+
+- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
+    NSLog(@"toolbarAllowedItemIdentifiers: %@",toolbar);
+    return @[
+        NSToolbarToggleInspectorItemIdentifier,
+        NSToolbarShowColorsItemIdentifier,
+        Compile, LinkDependencies, Browse,
+        NSToolbarFlexibleSpaceItemIdentifier,
+            NSToolbarSpaceItemIdentifier,
+            NSToolbarSeparatorItemIdentifier,
+    ];
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
+{
+    NSLog(@"toolbarDefaultItemIdentifiers %@",toolbar);
+    NSArray *items = @[
+        Compile, LinkDependencies, Browse,
+    ];
+    NSLog(@"toolbarDefaultItemIdentifiers items: %@",items);
+    return items;
+}
+
+- (void) toolbarWillAddItem:(NSNotification *) notification{
+    NSLog(@"will add item: %@",notification.object);
+}
+
+- (BOOL) toolbar:(NSToolbar *) toolbar
+  itemIdentifier:(NSToolbarItemIdentifier) itemIdentifier
+canBeInsertedAtIndex:(NSInteger) index
+{
+    NSLog(@"canBeInserted: %@",itemIdentifier);
+    return YES;
+}
+
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
+     itemForItemIdentifier:(NSString *)itemIdentifier
+ willBeInsertedIntoToolbar:(BOOL)flag
+{
+    NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+    
+    if ([itemIdentifier isEqualTo:Compile]) {
+        [toolbarItem setLabel:@"Compile"];
+//        [toolbarItem setPaletteLabel:[toolbarItem label]];
+        [toolbarItem setToolTip:@"Compile all code"];
+        [toolbarItem setTarget:self];
+        [toolbarItem setAction:@selector(compileAllSourceFiles)];
+    }  else if ([itemIdentifier isEqualTo:LinkDependencies]) {
+        [toolbarItem setLabel:@"Link"];
+        //        [toolbarItem setPaletteLabel:[toolbarItem label]];
+        [toolbarItem setToolTip:@"Link all dependenies"];
+        [toolbarItem setTarget:self];
+        [toolbarItem setAction:@selector(linkDependencies)];
+    }  else if ([itemIdentifier isEqualTo:Browse]) {
+        [toolbarItem setLabel:@"Browse"];
+        //        [toolbarItem setPaletteLabel:[toolbarItem label]];
+        [toolbarItem setToolTip:@"Browse source code"];
+        [toolbarItem setTarget:self];
+        [toolbarItem setAction:@selector(openClassBrowser:)];
+    }
+    NSLog(@"toolbar item: %@",toolbarItem);
+    return [toolbarItem autorelease];
+}
+
+-(void)compileAllSourceFiles
+{
+    [self.bundle compileAllSourceFiles];
+}
+
+-(void)linkDependencies
+{
+    [self.bundle loadFrameworks];
+}
+
+-(void)configureToolbar
+{
+    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"main"] autorelease];
+    toolbar.delegate = self;
+
+    [[[[self windowControllers] firstObject] window] setToolbar:toolbar];
+    NSLog(@"toolbar: %@",toolbar);
+}
 
 - (BOOL)readBundle:(NSString *)path ofType:(NSString *)typeName error:(NSError **)outError
 {
     self.bundle = [STBundle bundleWithPath:path];
     STCompiler* compiler = [[[NSApplication sharedApplication] delegate] compiler];
+    [compiler evaluateScriptString:@"scheme:builder setPrefixes: [ 'MPW' , 'ST']. "];
     [self.bundle setInterpreter:compiler];
     [compiler bindValue:self.bundle toVariableNamed:@"bundle"];
     NSLog(@"path: %@",path);
     NSLog(@"bundle: %@",self.bundle);
     [self showWorkspace:nil];
+    [self configureToolbar];
+    
     id <MPWStorage> workspaces = [self workspacesStore];
     [[self programTextView] setString:[workspaces[@"main.st"] stringValue]];
     return YES;
@@ -130,23 +230,8 @@
     
 }
 
-//
-//-(BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError * _Nullable *)outError
-//{
-//    NSLog(@"typeName: %@",typeName);
-//    if ( [fileWrapper isDirectory]  && [typeName isEqualToString:@"Software IC"]) {
-//        return [self readBundle:[fileWrapper path] ofType:typeName error:outError];
-//    } else {
-//        return [self readFromData:[fileWrapper regularFileContents] ofType:typeName error:outError];
-//    }
-//
-//    return YES;
-//}
-//
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
-    NSLog(@"will show workspace");
     [self showWorkspace:nil];
-    NSLog(@"did show workspace");
     [[self programTextView] setString:[data stringValue]];
     return YES;
 }
