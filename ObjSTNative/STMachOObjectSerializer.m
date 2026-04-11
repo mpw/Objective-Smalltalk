@@ -13,6 +13,7 @@
 #import "STMachOSegment.h"
 #import "STMachOSection.h"
 #import <mach-o/loader.h>
+#import "STSymbolCounter.h"
 
 @interface STMachOObjectSerializer ()
 
@@ -29,6 +30,7 @@
 @property (nonatomic, assign) int arrayCounter;
 @property (nonatomic, assign) int dictCounter;
 @property (nonatomic, assign) int arrayDataCounter;
+@property (nonatomic, strong) STSymbolCounter *arrayDataSymbolCounter;
 
 @end
 
@@ -54,6 +56,7 @@
         self.numberSymbols = [NSMutableDictionary dictionary];
         self.objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
                                                valueOptions:NSMapTableStrongMemory];
+        self.arrayDataSymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAYDATA_%d"];
     }
     return self;
 }
@@ -160,8 +163,7 @@
         [elementSymbols addObject:elementSymbol];
     }
 
-    self.arrayDataCounter++;
-    NSString *dataLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_ARRAYDATA_%d", self.arrayDataCounter];
+    NSString *dataLabel = [self.arrayDataSymbolCounter nextObject];
     [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
 
     self.arrayCounter++;

@@ -433,6 +433,8 @@
 		1F821AC02C01031E00D936E3 /* call-external-fn.elf-o in Resources */ = {isa = PBXBuildFile; fileRef = 1F821ABC2C01031D00D936E3 /* call-external-fn.elf-o */; };
 		1F845DFD0F183D4700B085CD /* MPWClassScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F845DFB0F183D4700B085CD /* MPWClassScheme.h */; };
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
+		1F848FD22F8A293000D78CAC /* STSymbolCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F848FD12F8A293000D78CAC /* STSymbolCounter.m */; };
+		1F848FD32F8A293000D78CAC /* STSymbolCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F848FD02F8A293000D78CAC /* STSymbolCounter.h */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F854E6B28A11B7B0085034C /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1F854E6C28A11B7B0085034C /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -1414,6 +1416,8 @@
 		1F8448AC19695B7F00CB8DD1 /* libMPWFoundationTouch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMPWFoundationTouch.a; path = ../../Build/Release/libMPWFoundationTouch.a; sourceTree = "<group>"; };
 		1F845DFB0F183D4700B085CD /* MPWClassScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassScheme.h; sourceTree = "<group>"; };
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
+		1F848FD02F8A293000D78CAC /* STSymbolCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSymbolCounter.h; sourceTree = "<group>"; };
+		1F848FD12F8A293000D78CAC /* STSymbolCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSymbolCounter.m; sourceTree = "<group>"; };
 		1F854E7428A11B7B0085034C /* stui */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stui; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWWindowsScheme.h; sourceTree = "<group>"; };
 		1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWWindowsScheme.m; sourceTree = "<group>"; };
@@ -2063,6 +2067,8 @@
 				1F2525C72F37692000C4C366 /* STMachODylibWriterTests.m */,
 				1F0B2C3D4E5F678901234565 /* STMachOObjectSerializer.h */,
 				1F0B2C3D4E5F678901234566 /* STMachOObjectSerializer.m */,
+				1F848FD02F8A293000D78CAC /* STSymbolCounter.h */,
+				1F848FD12F8A293000D78CAC /* STSymbolCounter.m */,
 				1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */,
 				1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */,
 				1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */,
@@ -3146,6 +3152,7 @@
 				1F1380022BE66C0300CD023C /* MPWELFSymbolTable.h in Headers */,
 				1F93D4712A5F326A00C9BA2A /* STMethodSymbols.h in Headers */,
 				1FF860B22F315BA400A99A0C /* STMachOSegment.h in Headers */,
+				1F848FD32F8A293000D78CAC /* STSymbolCounter.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* STMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
 				1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */,
@@ -4726,6 +4733,7 @@
 				1FF860B12F315BA400A99A0C /* STMachOSegment.m in Sources */,
 				1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */,
 				1FE5D6E12C3080890018B09C /* MPWELFTextSection.m in Sources */,
+				1F848FD22F8A293000D78CAC /* STSymbolCounter.m in Sources */,
 				1FEA9C952BE3CCAD002D237B /* MPWELFSection.m in Sources */,
 				1F0351682F3BD875005F2ECA /* STJITExpressionTests.m in Sources */,
 				1FDDE94E28F1D6BF002A4AA4 /* MPWMachORelocationPointer.m in Sources */,
