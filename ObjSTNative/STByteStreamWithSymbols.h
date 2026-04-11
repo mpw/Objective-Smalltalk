@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset;
 -(int)declareGlobalSymbol:(NSString*)symbol atOffset:(int)offset type:(int)theType section:(int)theSection;
+-(int)declareExternalSymbol:(NSString*)symbol;
 
 @end
 

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong ) NSString *template;
 
--(instancetype)counterWithTemplate:(NSString*)template;
++(instancetype)counterWithTemplate:(NSString*)template;
 -(NSString*)nextObject;
 
 @end

@@ -25,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)generateMachO;
 -(NSData*)data;
--(int)declareExternalSymbol:(NSString*)symbol;
 -(STMachOSectionWriter*)addSectionWriterWithSegName:(NSString*)segname sectName:(NSString*)sectname flags:(int)flags;
 -(void)writeNSStringLiteral:(NSString*)theString label:(NSString*)label;
 -(NSString*)writeBlockDescritorWithCodeAtSymbol:(NSString*)codeSymbol blockSymbol:(NSString*)blockSymbol signature:(NSString*)signature;

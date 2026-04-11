@@ -138,11 +138,23 @@
     }
 }
 
+-(void)writeInt64:(u_int64_t)integer
+{
+    [self appendBytes:&integer length:sizeof integer];
+}
+
 -(void)writePointerForSymbol:(NSString*)symbol
 {
     [self addRelocationEntryForSymbol:symbol atOffset:(int)[self length]];
     uint64_t zero = 0;
     [self appendBytes:&zero length:sizeof(zero)];
+}
+
+-(void)writeClassReference:(NSString*)className
+{
+    NSString *classSymbol=[NSString stringWithFormat:@"_OBJC_CLASS_$_%@",className];
+    [self.symbolWriter declareExternalSymbol:classSymbol];
+    [self writePointerForSymbol:classSymbol];
 }
 
 -(void)writeArrayOfPointers:(NSArray*)symbols atLabel:(NSString*)dataLabel

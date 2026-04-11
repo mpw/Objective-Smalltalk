@@ -31,6 +31,7 @@
 @property (nonatomic, assign) int dictCounter;
 @property (nonatomic, assign) int arrayDataCounter;
 @property (nonatomic, strong) STSymbolCounter *arrayDataSymbolCounter;
+@property (nonatomic, strong) STSymbolCounter *arraySymbolCounter;
 
 @end
 
@@ -57,6 +58,7 @@
         self.objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
                                                valueOptions:NSMapTableStrongMemory];
         self.arrayDataSymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAYDATA_%d"];
+        self.arraySymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAY_%d"];
     }
     return self;
 }
@@ -130,63 +132,50 @@
     STMachOSectionWriter *intWriter = self.literalSectionWriter;
     [intWriter declareLocalSymbol:label];
     
-    [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantIntegerNumber"];
     
-    uint64_t value = (uint64_t)[number longLongValue];
-    struct {
-        uint64_t isa;
-        uint64_t type;
-        uint64_t value;
-    } obj = {0, 0, value};
-    
-    [intWriter addRelocationEntryForSymbol:@"_OBJC_CLASS_$_NSConstantIntegerNumber"
-                                  atOffset:(int)[intWriter length]];
-    [intWriter addRelocationEntryForSymbol:typeSymbol
-                                  atOffset:(int)([intWriter length] + sizeof(uint64_t))];
-    [intWriter appendBytes:&obj length:sizeof(obj)];
-    
+    [intWriter writeClassReference:@"NSConstantIntegerNumber"];
+    [intWriter writePointerForSymbol:typeSymbol];
+    [intWriter writeInt64:[number longLongValue]];
+
     self.numberSymbols[key] = label;
     self.lastSymbol = label;
     return label;
 }
 
+-(NSArray*)symbolsForObjects:(NSArray*)objects
+{
+    NSMutableArray<NSString *> *elementSymbols = [NSMutableArray arrayWithCapacity:objects.count];
+    for (id element in objects) {
+        NSString *elementSymbol = [self symbolForObject:element];
+        [elementSymbols addObject:elementSymbol];
+    }
+    return elementSymbols;
+}
+
 - (NSString *)symbolForArray:(NSArray *)array {
+    STMachOSectionWriter *arrayObjWriter = self.literalSectionWriter;
     NSString *existing = [self.objectSymbols objectForKey:array];
     if (existing) {
         self.lastSymbol = existing;
         return existing;
     }
 
-    NSMutableArray<NSString *> *elementSymbols = [NSMutableArray arrayWithCapacity:array.count];
-    for (id element in array) {
-        NSString *elementSymbol = [self symbolForObject:element];
-        [elementSymbols addObject:elementSymbol];
-    }
-
+    NSArray *elementSymbols = [self symbolsForObjects:array];
+    
     NSString *dataLabel = [self.arrayDataSymbolCounter nextObject];
-    [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
+    [arrayObjWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
 
-    self.arrayCounter++;
-    NSString *arrayLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_ARRAY_%d", self.arrayCounter];
+
+    NSString *arrayLabel = [self.arraySymbolCounter nextObject];
     [self alignLiteralSectionToPointerBoundary];
-    STMachOSectionWriter *arrayObjWriter = self.literalSectionWriter;
     [arrayObjWriter declareLocalSymbol:arrayLabel];
     
-    [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantArray"];
-    
-    struct {
-        uint64_t isa;
-        uint64_t count;
-        uint64_t objects;
-    } arrayObj = {0, (uint64_t)array.count, 0};
-    
-    [arrayObjWriter addRelocationEntryForSymbol:@"_OBJC_CLASS_$_NSConstantArray"
-                                       atOffset:(int)[arrayObjWriter length]];
-    [arrayObjWriter addRelocationEntryForSymbol:dataLabel
-                                       atOffset:(int)([arrayObjWriter length] + sizeof(uint64_t) * 2)];
-    [arrayObjWriter appendBytes:&arrayObj length:sizeof(arrayObj)];
-    
-//    NSLog(@"arrayLabel: %@",arrayLabel);
+
+    [arrayObjWriter writeClassReference:@"NSConstantArray"];
+    [arrayObjWriter writeInt64:array.count];
+    [arrayObjWriter writePointerForSymbol:dataLabel];
+
+
     [self.objectSymbols setObject:arrayLabel forKey:array];
     self.lastSymbol = arrayLabel;
     return arrayLabel;

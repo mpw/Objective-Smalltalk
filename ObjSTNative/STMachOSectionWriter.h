@@ -53,7 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)alignToPointerBoundary;
 -(void)writePointerForSymbol:(NSString*)symbol;
+-(void)writeClassReference:(NSString*)className;
 -(void)writeArrayOfPointers:(NSArray*)symbols atLabel:(NSString*)dataLabel;
+-(void)writeInt64:(u_int64_t)integer;
 
 @end
 
