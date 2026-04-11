@@ -47,12 +47,12 @@
             literalSectionWriter:(STMachOSectionWriter *)literalSectionWriter {
     self = [super initWithTarget:[NSMutableData data]];
     if (self) {
-        _writer = writer;
-        _literalSectionWriter = literalSectionWriter;
-        _stringSymbols = [NSMutableDictionary dictionary];
-        _cstringSymbols = [NSMutableDictionary dictionary];
-        _numberSymbols = [NSMutableDictionary dictionary];
-        _objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
+        self.writer = writer;
+        self.literalSectionWriter = literalSectionWriter;
+        self.stringSymbols = [NSMutableDictionary dictionary];
+        self.cstringSymbols = [NSMutableDictionary dictionary];
+        self.numberSymbols = [NSMutableDictionary dictionary];
+        self.objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
                                                valueOptions:NSMapTableStrongMemory];
     }
     return self;

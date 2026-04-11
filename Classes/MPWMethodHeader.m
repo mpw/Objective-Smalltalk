@@ -26,7 +26,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 	self=[super init];
 	[self setParameterVars:[NSMutableArray array]];
 	[self setMethodKeyWords:[NSMutableArray array]];
-    [self setReturnType:[STTypeDescriptor descritptorForObjcCode:'@']];
+    [self setReturnType:[STTypeDescriptor descriptorForObjcCode:'@']];
 	return self;
 }
 

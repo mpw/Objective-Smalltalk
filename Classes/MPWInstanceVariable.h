@@ -16,6 +16,8 @@
 
 @property (assign, nonatomic, readonly) unsigned char objcTypeCode;
 
+-(void*)pointerToVarRelativeToBase:(void*)base;
+
 -(instancetype)initWithName:(NSString*)newName offset:(int)newOffset type:(STTypeDescriptor*)newType;
 -(long)offset;
 -valueInContext:anObject;

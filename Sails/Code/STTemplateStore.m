@@ -28,7 +28,6 @@
     }
 }
 
-
 -(MPWStringTemplate*)applyContext:aContext toTemplateNamed:templateName {
     NSString *templateString = [[self.bundle.resources at:templateName]  stringValue];
     return [templateString evaluateAsTemplateWith: aContext];

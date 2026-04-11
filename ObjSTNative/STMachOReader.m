@@ -34,8 +34,9 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
         self=[super init];
         self.data = machodata;
         self.sections = [NSMutableDictionary dictionary];
-
-        [self parseSegments];
+        if ( [self isHeaderValid]) {
+            [self parseSegments];
+        }
         return self;
     } else {
         return nil;
@@ -54,7 +55,6 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 
 -(BOOL)isHeaderValid
 {
-    
     struct mach_header_64 *header=[self header];
     return (self.data.length >= sizeof *header) &&
             (header->magic == MH_MAGIC_64);
@@ -530,7 +530,7 @@ CONVENIENCEANDINIT(reader, WithData:(NSData*)machodata)
 {
     STMachOReader *reader=[self readerForAdd];
     EXPECTTRUE([reader isHeaderValid], @"got the right header");
-    NSData *notamacho = [@"Hello World!" asData];
+    NSData *notamacho = [@"Hello World! paddingpaddingpaddingpaddingpaddingpaddingpaddingpadding" asData];
     reader=[[[self alloc] initWithData:notamacho] autorelease];
     EXPECTFALSE([reader isHeaderValid], @"not a Mach-O header");
 }

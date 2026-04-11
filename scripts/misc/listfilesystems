@@ -1,0 +1,8 @@
+#!env st
+
+framework:FSKit load.
+fsc ← FSClient sharedInstance
+fsc fetchInstalledExtensionsWithCompletionHandler: { :modules | stdout println: modules. }
+NSThread sleep:2.
+
+extensions ← fsc fetchInstalledExtensions.
