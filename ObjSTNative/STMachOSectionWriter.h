@@ -51,6 +51,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)offsetForRelocationAtIndex:(int)index;
 -(int)typeOfRelocationAtIndex:(int)index;
 
+-(void)alignToPointerBoundary;
+-(void)writePointerForSymbol:(NSString*)symbol;
+-(void)writeArrayOfPointers:(NSArray*)symbols atLabel:(NSString*)dataLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END

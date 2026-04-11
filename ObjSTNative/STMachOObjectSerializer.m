@@ -102,10 +102,7 @@
 }
 
 - (void)alignLiteralSectionToPointerBoundary {
-    while (([self.literalSectionWriter length] & 7) != 0) {
-        uint8_t zero = 0;
-        [self.literalSectionWriter appendBytes:&zero length:1];
-    }
+    [self.literalSectionWriter alignToPointerBoundary];
 }
 
 - (NSString *)symbolForNumber:(NSNumber *)number {
@@ -165,14 +162,7 @@
 
     self.arrayDataCounter++;
     NSString *dataLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_ARRAYDATA_%d", self.arrayDataCounter];
-    [self alignLiteralSectionToPointerBoundary];
-    STMachOSectionWriter *arrayDataWriter = self.literalSectionWriter;
-    [arrayDataWriter declareLocalSymbol:dataLabel];
-    for (NSString *elementSymbol in elementSymbols) {
-        [arrayDataWriter addRelocationEntryForSymbol:elementSymbol atOffset:(int)[arrayDataWriter length]];
-        uint64_t zero = 0;
-        [arrayDataWriter appendBytes:&zero length:sizeof(zero)];
-    }
+    [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
 
     self.arrayCounter++;
     NSString *arrayLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_ARRAY_%d", self.arrayCounter];
@@ -194,6 +184,7 @@
                                        atOffset:(int)([arrayObjWriter length] + sizeof(uint64_t) * 2)];
     [arrayObjWriter appendBytes:&arrayObj length:sizeof(arrayObj)];
     
+//    NSLog(@"arrayLabel: %@",arrayLabel);
     [self.objectSymbols setObject:arrayLabel forKey:array];
     self.lastSymbol = arrayLabel;
     return arrayLabel;
@@ -220,23 +211,11 @@
 
     self.arrayDataCounter++;
     NSString *keysLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICTKEYS_%d", self.arrayDataCounter];
-    [self alignLiteralSectionToPointerBoundary];
-    [arrayDataWriter declareLocalSymbol:keysLabel];
-    for (NSString *keySymbol in keySymbols) {
-        [arrayDataWriter addRelocationEntryForSymbol:keySymbol atOffset:(int)[arrayDataWriter length]];
-        uint64_t zero = 0;
-        [arrayDataWriter appendBytes:&zero length:sizeof(zero)];
-    }
+    [arrayDataWriter writeArrayOfPointers:keySymbols atLabel:keysLabel];
     
     self.arrayDataCounter++;
     NSString *valuesLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICTVALS_%d", self.arrayDataCounter];
-    [self alignLiteralSectionToPointerBoundary];
-    [arrayDataWriter declareLocalSymbol:valuesLabel];
-    for (NSString *valueSymbol in valueSymbols) {
-        [arrayDataWriter addRelocationEntryForSymbol:valueSymbol atOffset:(int)[arrayDataWriter length]];
-        uint64_t zero = 0;
-        [arrayDataWriter appendBytes:&zero length:sizeof(zero)];
-    }
+    [arrayDataWriter writeArrayOfPointers:valueSymbols atLabel:valuesLabel];
     
     self.dictCounter++;
     NSString *dictLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICT_%d", self.dictCounter];

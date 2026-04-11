@@ -131,6 +131,30 @@
     return remainder == 0 ? 0 : (8-remainder);
 }
 
+- (void)alignToPointerBoundary {
+    while (([self length] & 7) != 0) {
+        uint8_t zero = 0;
+        [self appendBytes:&zero length:1];
+    }
+}
+
+-(void)writePointerForSymbol:(NSString*)symbol
+{
+    [self addRelocationEntryForSymbol:symbol atOffset:(int)[self length]];
+    uint64_t zero = 0;
+    [self appendBytes:&zero length:sizeof(zero)];
+}
+
+-(void)writeArrayOfPointers:(NSArray*)symbols atLabel:(NSString*)dataLabel
+{
+    [self alignToPointerBoundary];
+    [self declareLocalSymbol:dataLabel];
+    for (NSString *elementSymbol in symbols) {
+        [self writePointerForSymbol:elementSymbol];
+    }
+
+}
+
 -(long)sectionDataSize
 {
     return [self data].length + [self padding];
