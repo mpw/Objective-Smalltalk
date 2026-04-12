@@ -435,6 +435,10 @@
 		1F845DFE0F183D4700B085CD /* MPWClassScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F845DFC0F183D4700B085CD /* MPWClassScheme.m */; };
 		1F848FD22F8A293000D78CAC /* STSymbolCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F848FD12F8A293000D78CAC /* STSymbolCounter.m */; };
 		1F848FD32F8A293000D78CAC /* STSymbolCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F848FD02F8A293000D78CAC /* STSymbolCounter.h */; };
+		1F848FDC2F8A8E4200D78CAC /* STEntityTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F848FDA2F8A8E4200D78CAC /* STEntityTable.h */; };
+		1F848FDD2F8A8E4200D78CAC /* STEntityTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F848FDB2F8A8E4200D78CAC /* STEntityTable.m */; };
+		1F848FDE2F8A8E4200D78CAC /* STEntityTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F848FDA2F8A8E4200D78CAC /* STEntityTable.h */; };
+		1F848FDF2F8A8E4200D78CAC /* STEntityTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F848FDB2F8A8E4200D78CAC /* STEntityTable.m */; };
 		1F84EC8E1E22366B00EF48A4 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1F854E6B28A11B7B0085034C /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1F854E6C28A11B7B0085034C /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
@@ -1284,7 +1288,7 @@
 		1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSTTouchUITests.m; sourceTree = "<group>"; };
 		1F5D77CF25EBF5EA00DCC82F /* STUIKitAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUIKitAdditions.m; sourceTree = "<group>"; };
 		1F5D781B25ECDE6600DCC82F /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib; sourceTree = DEVELOPER_DIR; };
-		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist"; sourceTree = "<group>"; };
+		1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk_Framework.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ObjectiveSmalltalk_Framework.plist"; sourceTree = "<group>"; };
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
 		1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWComplexLiteralExpression.m; sourceTree = "<group>"; };
@@ -1418,6 +1422,8 @@
 		1F845DFC0F183D4700B085CD /* MPWClassScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassScheme.m; sourceTree = "<group>"; };
 		1F848FD02F8A293000D78CAC /* STSymbolCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSymbolCounter.h; sourceTree = "<group>"; };
 		1F848FD12F8A293000D78CAC /* STSymbolCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSymbolCounter.m; sourceTree = "<group>"; };
+		1F848FDA2F8A8E4200D78CAC /* STEntityTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STEntityTable.h; sourceTree = "<group>"; };
+		1F848FDB2F8A8E4200D78CAC /* STEntityTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STEntityTable.m; sourceTree = "<group>"; };
 		1F854E7428A11B7B0085034C /* stui */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stui; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F86CE162031DE84000F0B81 /* MPWWindowsScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWWindowsScheme.h; sourceTree = "<group>"; };
 		1F86CE172031DE84000F0B81 /* MPWWindowsScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWWindowsScheme.m; sourceTree = "<group>"; };
@@ -2858,6 +2864,8 @@
 				1FFA16782B971564004E63ED /* STEntity.m */,
 				1FFA167B2B9728D8004E63ED /* STEntityList.h */,
 				1FFA167C2B9728D8004E63ED /* STEntityList.m */,
+				1F848FDA2F8A8E4200D78CAC /* STEntityTable.h */,
+				1F848FDB2F8A8E4200D78CAC /* STEntityTable.m */,
 				1FFA167F2B974F05004E63ED /* STPathToTemplateNameMapper.h */,
 				1FFA16802B974F05004E63ED /* STPathToTemplateNameMapper.m */,
 				1FFCB57B2B43154E002DC40A /* SailsGenerator.h */,
@@ -2913,7 +2921,7 @@
 				1F660FFD2E7473EC0066D017 /* STZ3 */,
 				1F2E6EFC142EF26E00B5C827 /* Frameworks */,
 				F5A74ACE00F0A61B015ADD82 /* Products */,
-				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk__Framework___Upgraded_.plist */,
+				1F5E508E09B4B754000298D9 /* Info-ObjectiveSmalltalk_Framework.plist */,
 				1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */,
 			);
 			name = MPWTalk;
@@ -3319,6 +3327,7 @@
 				1F61AE522DBBDF13003E8229 /* STEntity.h in Headers */,
 				1F61AE6B2DBBF493003E8229 /* STSiteServer.h in Headers */,
 				1F61AE532DBBDF13003E8229 /* SailsGenerator.h in Headers */,
+				1F848FDE2F8A8E4200D78CAC /* STEntityTable.h in Headers */,
 				1F61AE542DBBDF13003E8229 /* STRootMapper.h in Headers */,
 				1F61AE552DBBDF13003E8229 /* STPathToTemplateNameMapper.h in Headers */,
 				1F61AE562DBBDF13003E8229 /* STHypertextProcessor.h in Headers */,
@@ -3574,6 +3583,7 @@
 				1FFA16812B974F05004E63ED /* STPathToTemplateNameMapper.h in Headers */,
 				1FFA16792B971564004E63ED /* STEntity.h in Headers */,
 				1FFA166C2B970D8B004E63ED /* STTemplateStore.h in Headers */,
+				1F848FDC2F8A8E4200D78CAC /* STEntityTable.h in Headers */,
 				1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */,
 				1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */,
 				1F61AE682DBBF493003E8229 /* STSiteServer.h in Headers */,
@@ -4920,6 +4930,7 @@
 				1F61AE4F2DBBDF13003E8229 /* STPathToTemplateNameMapper.m in Sources */,
 				1F61AE6A2DBBF493003E8229 /* STSiteServer.m in Sources */,
 				1F61AE502DBBDF13003E8229 /* STHypertextProcessor.m in Sources */,
+				1F848FDF2F8A8E4200D78CAC /* STEntityTable.m in Sources */,
 				1F61AE512DBBDF13003E8229 /* STEntityList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5189,6 +5200,7 @@
 				1F61AE692DBBF493003E8229 /* STSiteServer.m in Sources */,
 				1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */,
 				1FFA167E2B9728D8004E63ED /* STEntityList.m in Sources */,
+				1F848FDD2F8A8E4200D78CAC /* STEntityTable.m in Sources */,
 				1FFA167A2B971564004E63ED /* STEntity.m in Sources */,
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,
 				1FFA16822B974F05004E63ED /* STPathToTemplateNameMapper.m in Sources */,
@@ -5983,7 +5995,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_SHADOW = YES;
-				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk_Framework.plist";
 				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
@@ -6030,7 +6042,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_WARN_SHADOW = YES;
-				INFOPLIST_FILE = "Info-ObjectiveSmalltalk__Framework___Upgraded_.plist";
+				INFOPLIST_FILE = "Info-ObjectiveSmalltalk_Framework.plist";
 				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
