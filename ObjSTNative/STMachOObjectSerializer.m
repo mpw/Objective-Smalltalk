@@ -224,13 +224,11 @@
         uint64_t values;
     } dictObj = {0, 1, (uint64_t)dict.count, 0, 0};
     
-    [dictObjWriter addRelocationEntryForSymbol:@"_OBJC_CLASS_$_NSConstantDictionary"
-                                      atOffset:(int)[dictObjWriter length]];
-    [dictObjWriter addRelocationEntryForSymbol:keysLabel
-                                      atOffset:(int)([dictObjWriter length] + sizeof(uint64_t) * 3)];
-    [dictObjWriter addRelocationEntryForSymbol:valuesLabel
-                                      atOffset:(int)([dictObjWriter length] + sizeof(uint64_t) * 4)];
-    [dictObjWriter appendBytes:&dictObj length:sizeof(dictObj)];
+    [dictObjWriter writeClassReference:@"NSConstantDictionary"];
+    [dictObjWriter writeInt64:1];
+    [dictObjWriter writeInt64:dict.count];
+    [dictObjWriter writePointerForSymbol:keysLabel];
+    [dictObjWriter writePointerForSymbol:valuesLabel];
     
     [self.objectSymbols setObject:dictLabel forKey:dict];
     self.lastSymbol = dictLabel;
