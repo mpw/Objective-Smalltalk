@@ -42,6 +42,11 @@ objectAccessor(NSString*, uniqueID, setUniqueID)
 static id defaultMethodServer=nil;
 
 
++(MethodServer)defaultMethodServer
+{
+    return defaultMethodServer;
+}
+
 -(void)setAsDefault
 {
     defaultMethodServer=[self retain];

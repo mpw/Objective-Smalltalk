@@ -41,7 +41,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
 	[[self methodKeyWords] addObject:keyWord];
 	if ( name && type ) {
-        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:[STTypeDescriptor descritptorForSTTypeName:type]] autorelease];
+        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:[STTypeDescriptor descriptorForSTTypeName:type]] autorelease];
         [[self parameterVars] addObject:vardef];
 	}
 }
@@ -101,7 +101,9 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 	if ( [next isEqual:@"<"] ) {
 		typeName = [scanner nextToken];
 		IDEXPECT( [scanner nextToken] , @">" , ([NSString stringWithFormat:@"required close of optional type declaration: %@ scanner: %@",typeName,scanner]) );
-	} else {
+    } else if ( [next isEqual:@"("]) {
+        [NSException raise:@"syntaxerror" format:@"left round bracket in method declaration: %@",scanner];
+    } else {
 		[scanner pushBack:next];
 	}
 	return typeName;
@@ -151,7 +153,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
     id optionalReturnType;
     self = [self init];
     if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
-        [self setReturnType:[STTypeDescriptor descritptorForSTTypeName:optionalReturnType]];
+        [self setReturnType:[STTypeDescriptor descriptorForSTTypeName:optionalReturnType]];
     }
     while ( [self parseAKeyWordFromScanner:scanner] )  {
     }

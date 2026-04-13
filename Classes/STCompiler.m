@@ -1295,7 +1295,7 @@ idAccessor(solver, setSolver)
         }
         NSString *name=[self nextToken];
 //        next=[self nextToken];   // skip over ".", but that's actually needed
-        STTypeDescriptor *type=[STTypeDescriptor descritptorForSTTypeName:typeName];
+        STTypeDescriptor *type=[STTypeDescriptor descriptorForSTTypeName:typeName];
 
         NSString *possibleInitializationToken = [self nextToken];
         STVariableDefinition *def = [[[variableDefClass alloc] initWithName:name type:type] autorelease];
@@ -1915,6 +1915,20 @@ idAccessor(solver, setSolver)
 }
 
 
++(void)testTryingToUseRoundBracketsForReturnTypeRaises
+{
+    STCompiler *compiler = [self compiler];
+    NSString *roundBrackets=@"class hi { -(void)there { 32. } }";
+    BOOL didRaise;
+    @try {
+        STClassDefinition *def = [compiler compile:roundBrackets];
+        didRaise=NO;
+    } @catch (id exception ) {
+        didRaise=YES;
+    }
+    EXPECTTRUE(didRaise, @"did raise");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1945,6 +1959,7 @@ idAccessor(solver, setSolver)
               @"testParseNestedDictionaries",
               @"testParseEmptyDictionary",
               @"testParseEmptyLiteralDictAsReceiver",
+              @"testTryingToUseRoundBracketsForReturnTypeRaises",
     ];
 }
 
