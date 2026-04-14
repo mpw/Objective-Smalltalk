@@ -1,4 +1,4 @@
-#!env stsh
+#!env st
 #-<void>taskbench:<ref>dbref
 #
 
@@ -27,13 +27,13 @@ scheme todo : MPWAbstractStore {
 	    this:tasksTable := this:db tables at:'tasks'.
 	}
 	-createTaskListToInsert:<int>log10ofSize {
-		baseList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
-	    taskList ← NSMutableArray array.	
+	    var baseList ← #( #Task{  #title: 'Clean Room', #done: false }, #Task{  #title: 'Check Twitter', #done: true } ).
+	    var taskList ← NSMutableArray array.	
 		1 to:5 do: {
 			taskList addObjectsFromArray: baseList.	
 		}.
 		1 to: log10ofSize - 1 do: { 
-			nextTen := NSMutableArray array.
+			var nextTen := NSMutableArray array.
 			1 to: 10 do: {
 	            nextTen addObjectsFromArray: taskList.
 			}.
@@ -42,7 +42,7 @@ scheme todo : MPWAbstractStore {
 		taskList.
 	}
 	-<void>insertTasks {
-	    taskList := self createTaskListToInsert:3.
+	    var taskList := self createTaskListToInsert:3.
 		1 to:10 do: {
 			this:tasksTable insert:taskList.
 		}.

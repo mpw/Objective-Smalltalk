@@ -14,6 +14,7 @@
 }
 
 +evaluateTestExpression:(NSString*)expr;
++(void)testexpr:expr expected:expected;
 
 @end
 

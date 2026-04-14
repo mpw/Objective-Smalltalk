@@ -22,12 +22,10 @@
 {
     NSArray *fields=[aString componentsSeparatedByString:self.separator];
     NSMutableArray *whitespaceCoalescedFields=[NSMutableArray array];
-    NSString *last=nil;
     for (NSString *field in fields) {
         if ( field.length) {
             [whitespaceCoalescedFields addObject:field];
         }
-        last=field;
     }
     switch ( whitespaceCoalescedFields.count) {
         case 0:

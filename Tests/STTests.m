@@ -467,10 +467,10 @@
 
 +(void)testCreateSubclassWithInstanceVariablesUsingSyntax
 {
-    id a=[self evaluate:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
+    [self evaluate:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
     Class aClass = NSClassFromString( @"__TestClassWithIVarsFromSyntax" );
     EXPECTNOTNIL(aClass, @"defined the class");
-    NSArray <MPWInstanceVariable*>* variableDescriptions = [aClass instanceVariables];
+    NSArray <MPWInstanceVariableDefinition*>* variableDescriptions = [aClass instanceVariables];
     MPWInstanceVariableDefinition *variableDescription = variableDescriptions[1];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
@@ -590,9 +590,8 @@
 
 +(void)testUnknownSchemeDoesntDefaultToVar
 {
-	id result=nil;
 	NS_DURING
-	result = [self evaluate:@"a:=3. bozo:a"];
+	[self evaluate:@"a:=3. bozo:a"];
 	NS_HANDLER
 		return;
 	NS_ENDHANDLER
@@ -1171,7 +1170,7 @@
 {
     STCompiler *compiler=[STCompiler compiler];
     @try {
-        MPWMessageExpression* compiled = [compiler compile:@"2 + a[1]"];
+        [compiler compile:@"2 + a[1]"];
     } @catch ( NSException *e) {
         IDEXPECT(e,@"No error",@"shouldn't be an error");
     }
@@ -1181,7 +1180,7 @@
 {
     STCompiler *compiler=[STCompiler compiler];
     @try {
-        MPWMessageExpression* compiled = [compiler compile:@"2 + a[1][2]"];
+        [compiler compile:@"2 + a[1][2]"];
     } @catch ( NSException *e) {
         IDEXPECT(e,@"No error",@"shouldn't be an error");
     }
@@ -1282,7 +1281,7 @@
     IDEXPECT( result,@"\n",@"linefeed literal ");
     NSString *moreThanJustLfLiteral=@"'Hello World\\n'";
     NSString* longerResult=[compiler evaluateScriptString:moreThanJustLfLiteral];
-//    IDEXPECT( longerResult,@"Hello World\n",@"linefeed literal ");
+    IDEXPECT( longerResult,@"Hello World\n",@"linefeed literal ");
 }
 
 +(void)testCanCompileQuery

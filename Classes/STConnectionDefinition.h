@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STConnectionDefinition : STExpression
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSArray<MPWInstanceVariable*>  *instanceVariableDescriptions;
+@property (nonatomic, strong) NSArray<MPWInstanceVariableDefinition*>  *instanceVariableDescriptions;
 @property (nonatomic, strong) NSArray<STScriptedMethod*>    *methods;
 @property (nonatomic, strong) NSArray<STScriptedMethod*>    *classMethods;
 @property (nonatomic, strong) NSArray                        *propertyPathDefinitions;
