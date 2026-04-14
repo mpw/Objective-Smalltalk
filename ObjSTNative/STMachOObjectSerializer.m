@@ -65,9 +65,17 @@
 
 - (NSString *)symbolForObject:(id)object {
     self.lastSymbol = nil;
+    NSString *existing = [self.objectSymbols objectForKey:object];
+    if (existing) {
+        self.lastSymbol = existing;
+        return existing;
+    }
+
     [self writeObject:object];
     if (!self.lastSymbol) {
         [NSException raise:@"unsupported" format:@"No Mach-O symbol for object: %@ (%@)", object, [object class]];
+    } else {
+        [self.objectSymbols setObject:self.lastSymbol forKey:object];
     }
     return self.lastSymbol;
 }
@@ -89,11 +97,11 @@
 }
 
 - (NSString *)symbolForString:(NSString *)string {
-    NSString *existing = [self.objectSymbols objectForKey:string];
-    if (existing) {
-        self.lastSymbol = existing;
-        return existing;
-    }
+//    NSString *existing = [self.objectSymbols objectForKey:string];
+//    if (existing) {
+//        self.lastSymbol = existing;
+//        return existing;
+//    }
     self.stringCounter++;
     NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_CFSTR_%d", self.stringCounter];
     [self.writer writeNSStringLiteral:string label:label];
@@ -114,11 +122,11 @@
         [NSException raise:@"unsupported" format:@"Unsupported NSNumber objCType '%s'", type ? type : "(null)"];
     }
     NSString *key = [NSString stringWithFormat:@"i:%lld", [number longLongValue]];
-    NSString *existing = [self.objectSymbols objectForKey:key];
-    if (existing) {
-        self.lastSymbol = existing;
-        return existing;
-    }
+//    NSString *existing = [self.objectSymbols objectForKey:key];
+//    if (existing) {
+//        self.lastSymbol = existing;
+//        return existing;
+//    }
     
     self.numberCounter++;
     NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_INT_%d", self.numberCounter];
@@ -150,11 +158,11 @@
 
 - (NSString *)symbolForArray:(NSArray *)array {
     STMachOSectionWriter *arrayObjWriter = self.literalSectionWriter;
-    NSString *existing = [self.objectSymbols objectForKey:array];
-    if (existing) {
-        self.lastSymbol = existing;
-        return existing;
-    }
+//    NSString *existing = [self.objectSymbols objectForKey:array];
+//    if (existing) {
+//        self.lastSymbol = existing;
+//        return existing;
+//    }
 
     NSArray *elementSymbols = [self symbolsForObjects:array];
     
@@ -178,11 +186,11 @@
 }
 
 - (NSString *)symbolForDictionary:(NSDictionary *)dict {
-    NSString *existing = [self.objectSymbols objectForKey:dict];
-    if (existing) {
-        self.lastSymbol = existing;
-        return existing;
-    }
+//    NSString *existing = [self.objectSymbols objectForKey:dict];
+//    if (existing) {
+//        self.lastSymbol = existing;
+//        return existing;
+//    }
     
     STMachOSectionWriter *arrayDataWriter = self.literalSectionWriter;
     NSArray *orderedKeys = [[dict allKeys] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
@@ -211,15 +219,7 @@
     [dictObjWriter declareLocalSymbol:dictLabel];
     
     [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantDictionary"];
-    
-    struct {
-        uint64_t isa;
-        uint64_t flags;
-        uint64_t count;
-        uint64_t keys;
-        uint64_t values;
-    } dictObj = {0, 1, (uint64_t)dict.count, 0, 0};
-    
+        
     [dictObjWriter writeClassReference:@"NSConstantDictionary"];
     [dictObjWriter writeInt64:1];
     [dictObjWriter writeInt64:dict.count];
