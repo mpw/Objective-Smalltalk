@@ -120,20 +120,16 @@
                    type[0] == 'B')) {
         [NSException raise:@"unsupported" format:@"Unsupported NSNumber objCType '%s'", type ? type : "(null)"];
     }
-    NSString *key = [NSString stringWithFormat:@"i:%lld", [number longLongValue]];
-    NSString *label = [self nextSymbolForTemplate:[number symbolTemplate]];
     
     NSString *typeSymbol = [self symbolForCString:@"i"];
-    [self alignLiteralSectionToPointerBoundary];
-    STMachOSectionWriter *intWriter = self.literalSectionWriter;
-    [intWriter declareLocalSymbol:label];
-    
-    
-    [intWriter writeClassReference:@"NSConstantIntegerNumber"];
-    [intWriter writePointerForSymbol:typeSymbol];
-    [intWriter writeInt64:[number longLongValue]];
 
-    self.lastSymbol = label;
+    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
+        [MPWVariableDefinition idWithName:typeSymbol],
+        [MPWVariableDefinition int64WithName:@"value"],
+    ]];
+    
+    
+    [self writeValues:@[ @"" ,number ] withStructure:def  object:number];
 }
 
 -(NSArray*)symbolsForObjects:(NSArray*)objects
@@ -219,7 +215,6 @@
 
 
     [self writeValues:@[ @(1), @(dict.count), @"",@"" ] withStructure:def  object:dict];
-
 }
 
 @end
@@ -266,7 +261,10 @@
     return @"_OBJC_LITERAL_INT";
 }
 
-
++(NSString*)machOLiteralClassName
+{
+    return @"NSConstantIntegerNumber";
+}
 
 @end
 
