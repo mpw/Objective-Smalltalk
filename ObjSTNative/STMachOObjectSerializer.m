@@ -22,13 +22,13 @@
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *cstringSymbols;
 @property (nonatomic, strong) NSMapTable<id, NSString *> *objectSymbols;
 @property (nonatomic, copy) NSString *lastSymbol;
-@property (nonatomic, assign) int stringCounter;
-@property (nonatomic, assign) int cstringCounter;
-@property (nonatomic, assign) int numberCounter;
-@property (nonatomic, assign) int arrayCounter;
-@property (nonatomic, assign) int dictCounter;
-@property (nonatomic, assign) int arrayDataCounter;
 @property (nonatomic, strong) STMultiSymbolCounter *symbolCounter;
+
+@end
+
+@interface NSObject(symbolTemplate)
+
+-(NSString*)symbolTemplate;
 
 @end
 
@@ -93,8 +93,7 @@
     if (existing) {
         return existing;
     }
-    self.cstringCounter++;
-    NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_CSTR_%d", self.cstringCounter];
+    NSString *label = [self nextSymbolForTemplate:[string symbolTemplate]];
     [self.literalSectionWriter declareLocalSymbol:label];
     const char *bytes = [string UTF8String];
     [self.literalSectionWriter appendBytes:bytes length:strlen(bytes)];
@@ -104,25 +103,17 @@
     return label;
 }
 
-- (NSString *)symbolForString:(NSString *)string {
-//    NSString *existing = [self.objectSymbols objectForKey:string];
-//    if (existing) {
-//        self.lastSymbol = existing;
-//        return existing;
-//    }
-    self.stringCounter++;
-    NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_CFSTR_%d", self.stringCounter];
+- (void)writeString:(NSString *)string {
+    NSString *label = [self nextSymbolForTemplate:[string symbolTemplate]];
     [self.writer writeNSStringLiteral:string label:label];
-    [self.objectSymbols setObject:label forKey:string];
     self.lastSymbol = label;
-    return label;
 }
 
 - (void)alignLiteralSectionToPointerBoundary {
     [self.literalSectionWriter alignToPointerBoundary];
 }
 
-- (NSString *)symbolForNumber:(NSNumber *)number {
+- (void)writeNumber:(NSNumber *)number {
     const char *type = [number objCType];
     if (!type || !(type[0] == 'c' || type[0] == 'i' || type[0] == 's' || type[0] == 'l' || type[0] == 'q' ||
                    type[0] == 'C' || type[0] == 'I' || type[0] == 'S' || type[0] == 'L' || type[0] == 'Q' ||
@@ -130,14 +121,7 @@
         [NSException raise:@"unsupported" format:@"Unsupported NSNumber objCType '%s'", type ? type : "(null)"];
     }
     NSString *key = [NSString stringWithFormat:@"i:%lld", [number longLongValue]];
-//    NSString *existing = [self.objectSymbols objectForKey:key];
-//    if (existing) {
-//        self.lastSymbol = existing;
-//        return existing;
-//    }
-    
-    self.numberCounter++;
-    NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_INT_%d", self.numberCounter];
+    NSString *label = [self nextSymbolForTemplate:[number symbolTemplate]];
     
     NSString *typeSymbol = [self symbolForCString:@"i"];
     [self alignLiteralSectionToPointerBoundary];
@@ -149,9 +133,7 @@
     [intWriter writePointerForSymbol:typeSymbol];
     [intWriter writeInt64:[number longLongValue]];
 
-    [self.objectSymbols setObject:label forKey:key];
     self.lastSymbol = label;
-    return label;
 }
 
 -(NSArray*)symbolsForObjects:(NSArray*)objects
@@ -164,48 +146,55 @@
     return elementSymbols;
 }
 
-- (NSString *)symbolForArray:(NSArray *)array {
-    STMachOSectionWriter *arrayObjWriter = self.literalSectionWriter;
-//    NSString *existing = [self.objectSymbols objectForKey:array];
-//    if (existing) {
-//        self.lastSymbol = existing;
-//        return existing;
-//    }
-
-    NSArray *elementSymbols = [self symbolsForObjects:array];
-    
-    
-    // @"_OBJC_LITERAL_ARRAYDATA_%d"
-    // @"_OBJC_LITERAL_ARRAY_%d"
-
-    
-    NSString *dataLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAYDATA"];
-    [arrayObjWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
-
-
-    NSString *arrayLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAY"];
+-(void)writeValues:(NSArray*)values symbols:(NSArray*)symbols withStructure:(MPWStructureDefinition*)structure object:anObject
+{
+    NSArray *fields=structure.fields;
+    NSString *objectLabel = [self nextSymbolForTemplate:[anObject symbolTemplate]];
     [self alignLiteralSectionToPointerBoundary];
-    [arrayObjWriter declareLocalSymbol:arrayLabel];
-    
+    [self.literalSectionWriter declareLocalSymbol:objectLabel];
 
-    [arrayObjWriter writeClassReference:@"NSConstantArray"];
-    [arrayObjWriter writeInt64:array.count];
-    [arrayObjWriter writePointerForSymbol:dataLabel];
-
-
-    [self.objectSymbols setObject:arrayLabel forKey:array];
-    self.lastSymbol = arrayLabel;
-    return arrayLabel;
+    [self.literalSectionWriter writeClassReference:[[anObject class] machOLiteralClassName]];
+    for (long i=0,max=fields.count;i<max;i++) {
+        MPWVariableDefinition *var=fields[i];
+        MPWTypeDefinition *type=var.type;
+        switch ( type.objcTypeCode ) {
+            case 'L':
+            case 'l':
+                [self.literalSectionWriter writeInt64:[values[i] longValue]];
+                break;
+            case '@':
+                [self.literalSectionWriter writePointerForSymbol:symbols[i]];
+                break;
+            default:
+                [NSException raise:@"unknowntype" format:@"unknonw type %c in serialize",type.objcTypeCode];
+                break;
+        }
+    }
+    [self.objectSymbols setObject:objectLabel forKey:anObject];
+    self.lastSymbol = objectLabel;
 }
 
-- (NSString *)symbolForDictionary:(NSDictionary *)dict {
-//    NSString *existing = [self.objectSymbols objectForKey:dict];
-//    if (existing) {
-//        self.lastSymbol = existing;
-//        return existing;
-//    }
+
+
+- (void)writeArray:(NSArray *)array {
+    NSArray *elementSymbols = [self symbolsForObjects:array];
+    NSString *dataLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAYDATA"];
+    [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
+
+
+
+    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
+        [MPWVariableDefinition int64WithName:@"count"],
+        [MPWVariableDefinition idWithName:@"arrayData"],
+    ]];
+
+    [self writeValues:@[ @(array.count), @""] symbols:@[ @(0),dataLabel ] withStructure:def  object:array];
+}
+
+- (void)writeDictionary:(NSDictionary *)dict {
+    STMachOSectionWriter *dictObjWriter = self.literalSectionWriter;
+
     
-    STMachOSectionWriter *arrayDataWriter = self.literalSectionWriter;
     NSArray *orderedKeys = [[dict allKeys] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         return [[obj1 description] compare:[obj2 description]];
     }];
@@ -217,22 +206,28 @@
         [valueSymbols addObject:[self symbolForObject:dict[key]]];
     }
 
-    self.arrayDataCounter++;
-    NSString *keysLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICTKEYS_%d", self.arrayDataCounter];
-    [arrayDataWriter writeArrayOfPointers:keySymbols atLabel:keysLabel];
+    NSString *keysLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_DICTKEYS"];
+    [dictObjWriter writeArrayOfPointers:keySymbols atLabel:keysLabel];
     
-    self.arrayDataCounter++;
-    NSString *valuesLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICTVALS_%d", self.arrayDataCounter];
-    [arrayDataWriter writeArrayOfPointers:valueSymbols atLabel:valuesLabel];
+    NSString *valuesLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_DICTVALS"];
+    [dictObjWriter writeArrayOfPointers:valueSymbols atLabel:valuesLabel];
     
-    self.dictCounter++;
-    NSString *dictLabel = [NSString stringWithFormat:@"_OBJC_LITERAL_DICT_%d", self.dictCounter];
+    NSString *dictLabel = [self nextSymbolForTemplate:[dict symbolTemplate]];
     [self alignLiteralSectionToPointerBoundary];
-    STMachOSectionWriter *dictObjWriter = self.literalSectionWriter;
+
     [dictObjWriter declareLocalSymbol:dictLabel];
+
+    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
+        [MPWVariableDefinition int64WithName:@"flags"],
+        [MPWVariableDefinition int64WithName:@"count"],
+        [MPWVariableDefinition idWithName:@"keys"],
+        [MPWVariableDefinition idWithName:@"values"],
+    ]];
     
-    [self.writer declareExternalSymbol:@"_OBJC_CLASS_$_NSConstantDictionary"];
-        
+//    [self writeValues:@[ @(1), @(dict.count), @"",@"" ] symbols:@[ @(0),@(0),keysLabel, valuesLabel ] withStructure:def  object:dict];
+
+    
+    
     [dictObjWriter writeClassReference:@"NSConstantDictionary"];
     [dictObjWriter writeInt64:1];
     [dictObjWriter writeInt64:dict.count];
@@ -241,42 +236,88 @@
     
     [self.objectSymbols setObject:dictLabel forKey:dict];
     self.lastSymbol = dictLabel;
-    return dictLabel;
 }
 
 @end
 
 #pragma mark - Streaming Categories
 
+@implementation NSObject(MPWMachOObjectStreaming)
+
++(NSString*)symbolTemplate
+{
+    return [NSString stringWithFormat:@"_OBJC_LITERAL_%@",[self className]];
+}
+
+-(NSString*)symbolTemplate
+{
+    return [[self class] symbolTemplate];
+}
+
+@end
+
 @implementation NSString (MPWMachOObjectStreaming)
 
 - (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
-    writer.lastSymbol = [writer symbolForString:self];
+    [writer writeString:self];
 }
+
++(NSString*)symbolTemplate
+{
+    return @"_OBJC_LITERAL_CFSTR";
+}
+
+
 
 @end
 
 @implementation NSNumber (MPWMachOObjectStreaming)
 
 - (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
-    writer.lastSymbol = [writer symbolForNumber:self];
+    [writer writeNumber:self];
 }
+
++(NSString*)symbolTemplate
+{
+    return @"_OBJC_LITERAL_INT";
+}
+
+
 
 @end
 
 @implementation NSArray (MPWMachOObjectStreaming)
 
 - (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
-    writer.lastSymbol = [writer symbolForArray:self];
+    [writer writeArray:self];
 }
+
++(NSString*)symbolTemplate
+{
+    return @"_OBJC_LITERAL_ARRAY";
+}
+
++(NSString*)machOLiteralClassName
+{
+    return @"NSConstantArray";
+}
+
 
 @end
 
 @implementation NSDictionary (MPWMachOObjectStreaming)
 
 - (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
-    writer.lastSymbol = [writer symbolForDictionary:self];
+    [writer writeDictionary:self];
 }
+
++(NSString*)symbolTemplate
+{
+    return @"_OBJC_LITERAL_DICT";
+}
+
+
+
 
 @end
 
