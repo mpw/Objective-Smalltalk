@@ -13,7 +13,7 @@
 #import "STMachOSegment.h"
 #import "STMachOSection.h"
 #import <mach-o/loader.h>
-#import "STSymbolCounter.h"
+#import "STMultiSymbolCounter.h"
 
 @interface STMachOObjectSerializer ()
 
@@ -28,8 +28,7 @@
 @property (nonatomic, assign) int arrayCounter;
 @property (nonatomic, assign) int dictCounter;
 @property (nonatomic, assign) int arrayDataCounter;
-@property (nonatomic, strong) STSymbolCounter *arrayDataSymbolCounter;
-@property (nonatomic, strong) STSymbolCounter *arraySymbolCounter;
+@property (nonatomic, strong) STMultiSymbolCounter *symbolCounter;
 
 @end
 
@@ -53,12 +52,15 @@
         self.cstringSymbols = [NSMutableDictionary dictionary];
         self.objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
                                                    valueOptions:NSMapTableStrongMemory];
-        self.arrayDataSymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAYDATA_%d"];
-        self.arraySymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAY_%d"];
+        self.symbolCounter = [[STMultiSymbolCounter new] autorelease];
     }
     return self;
 }
 
+-(NSString*)nextSymbolForTemplate:(NSString*)string
+{
+    return [self.symbolCounter nextSymbolForTemplate:string];
+}
 - (SEL)streamWriterMessage {
     return @selector(writeOnMachOObject:);
 }
@@ -172,11 +174,16 @@
 
     NSArray *elementSymbols = [self symbolsForObjects:array];
     
-    NSString *dataLabel = [self.arrayDataSymbolCounter nextObject];
+    
+    // @"_OBJC_LITERAL_ARRAYDATA_%d"
+    // @"_OBJC_LITERAL_ARRAY_%d"
+
+    
+    NSString *dataLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAYDATA"];
     [arrayObjWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
 
 
-    NSString *arrayLabel = [self.arraySymbolCounter nextObject];
+    NSString *arrayLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAY"];
     [self alignLiteralSectionToPointerBoundary];
     [arrayObjWriter declareLocalSymbol:arrayLabel];
     

@@ -291,6 +291,8 @@
 		1F5EE2BD25D0627100C7C71C /* MPWComplexLiteralExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5EE2BE25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
 		1F5EE2BF25D0627100C7C71C /* MPWComplexLiteralExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */; };
+		1F5FC78B2F8E3D4B00626BF0 /* STMultiSymbolCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5FC7892F8E3D4B00626BF0 /* STMultiSymbolCounter.h */; };
+		1F5FC78C2F8E3D4B00626BF0 /* STMultiSymbolCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5FC78A2F8E3D4B00626BF0 /* STMultiSymbolCounter.m */; };
 		1F605FF92A2231D300783E17 /* PyObjS.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1F605FF82A2231D300783E17 /* PyObjS.docc */; };
 		1F605FFA2A2231D300783E17 /* PyObjS.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F605FF72A2231D300783E17 /* PyObjS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F6060032A22420700783E17 /* STPython.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F6060012A22420700783E17 /* STPython.h */; };
@@ -1292,6 +1294,8 @@
 		1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectiveSmalltalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5EE2BA25D0627100C7C71C /* MPWComplexLiteralExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWComplexLiteralExpression.h; sourceTree = "<group>"; };
 		1F5EE2BB25D0627100C7C71C /* MPWComplexLiteralExpression.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWComplexLiteralExpression.m; sourceTree = "<group>"; };
+		1F5FC7892F8E3D4B00626BF0 /* STMultiSymbolCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMultiSymbolCounter.h; sourceTree = "<group>"; };
+		1F5FC78A2F8E3D4B00626BF0 /* STMultiSymbolCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMultiSymbolCounter.m; sourceTree = "<group>"; };
 		1F605FF52A2231D300783E17 /* PyObjS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PyObjS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F605FF72A2231D300783E17 /* PyObjS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PyObjS.h; sourceTree = "<group>"; };
 		1F605FF82A2231D300783E17 /* PyObjS.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = PyObjS.docc; sourceTree = "<group>"; };
@@ -2075,6 +2079,8 @@
 				1F0B2C3D4E5F678901234566 /* STMachOObjectSerializer.m */,
 				1F848FD02F8A293000D78CAC /* STSymbolCounter.h */,
 				1F848FD12F8A293000D78CAC /* STSymbolCounter.m */,
+				1F5FC7892F8E3D4B00626BF0 /* STMultiSymbolCounter.h */,
+				1F5FC78A2F8E3D4B00626BF0 /* STMultiSymbolCounter.m */,
 				1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */,
 				1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */,
 				1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */,
@@ -3163,6 +3169,7 @@
 				1F848FD32F8A293000D78CAC /* STSymbolCounter.h in Headers */,
 				1FDDE95928F98CE4002A4AA4 /* STMachOSectionWriter.h in Headers */,
 				1F60601A2A2481D100783E17 /* features.h in Headers */,
+				1F5FC78B2F8E3D4B00626BF0 /* STMultiSymbolCounter.h in Headers */,
 				1F60601D2A24957E00783E17 /* MPWDyLibScheme.h in Headers */,
 				1F6060192A2481D100783E17 /* elf.h in Headers */,
 				1FD22E302CBA8F730064490A /* STNativeJitCompiler.h in Headers */,
@@ -4710,6 +4717,7 @@
 				1FD22E2F2CBA8F730064490A /* STNativeJitCompiler.m in Sources */,
 				1F2525C82F37692000C4C366 /* STMachODylibWriterTests.m in Sources */,
 				1F2F8DBC192C691900A5D1B5 /* STMethodDescriptor.m in Sources */,
+				1F5FC78C2F8E3D4B00626BF0 /* STMultiSymbolCounter.m in Sources */,
 				1FA5DF712BE8BFF8001E5231 /* MPWStringTableWriter.m in Sources */,
 				1F3466F128CB10F7003257CB /* STMachOReader.m in Sources */,
 				1F032E382BEF9A140000183E /* STNativeCompilerTestsMachO.m in Sources */,
