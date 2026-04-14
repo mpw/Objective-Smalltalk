@@ -45,14 +45,14 @@
 }
 
 - (instancetype)initWithWriter:(STMachOWriter *)writer
-            literalSectionWriter:(STMachOSectionWriter *)literalSectionWriter {
+          literalSectionWriter:(STMachOSectionWriter *)literalSectionWriter {
     self = [super initWithTarget:[NSMutableData data]];
     if (self) {
         self.writer = writer;
         self.literalSectionWriter = literalSectionWriter;
         self.cstringSymbols = [NSMutableDictionary dictionary];
         self.objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
-                                               valueOptions:NSMapTableStrongMemory];
+                                                   valueOptions:NSMapTableStrongMemory];
         self.arrayDataSymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAYDATA_%d"];
         self.arraySymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAY_%d"];
     }
@@ -63,20 +63,26 @@
     return @selector(writeOnMachOObject:);
 }
 
-- (NSString *)symbolForObject:(id)object {
+
+
+- (void)writeObject:(id)object {
     self.lastSymbol = nil;
     NSString *existing = [self.objectSymbols objectForKey:object];
     if (existing) {
         self.lastSymbol = existing;
-        return existing;
+        return;
     }
-
-    [self writeObject:object];
+    
+    [super writeObject:object];
     if (!self.lastSymbol) {
         [NSException raise:@"unsupported" format:@"No Mach-O symbol for object: %@ (%@)", object, [object class]];
     } else {
         [self.objectSymbols setObject:self.lastSymbol forKey:object];
     }
+}
+
+- (NSString *)symbolForObject:(id)object {
+    [self writeObject:object];
     return self.lastSymbol;
 }
 
