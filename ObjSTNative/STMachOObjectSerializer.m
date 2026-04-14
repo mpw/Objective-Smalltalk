@@ -146,7 +146,7 @@
     return elementSymbols;
 }
 
--(void)writeValues:(NSArray*)values symbols:(NSArray*)symbols withStructure:(MPWStructureDefinition*)structure object:anObject
+-(void)writeValues:(NSArray*)values withStructure:(MPWStructureDefinition*)structure object:anObject
 {
     NSArray *fields=structure.fields;
     NSString *objectLabel = [self nextSymbolForTemplate:[anObject symbolTemplate]];
@@ -163,7 +163,7 @@
                 [self.literalSectionWriter writeInt64:[values[i] longValue]];
                 break;
             case '@':
-                [self.literalSectionWriter writePointerForSymbol:symbols[i]];
+                [self.literalSectionWriter writePointerForSymbol:var.name];
                 break;
             default:
                 [NSException raise:@"unknowntype" format:@"unknonw type %c in serialize",type.objcTypeCode];
@@ -181,14 +181,12 @@
     NSString *dataLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAYDATA"];
     [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
 
-
-
     MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
         [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:@"arrayData"],
+        [MPWVariableDefinition idWithName:dataLabel],
     ]];
 
-    [self writeValues:@[ @(array.count), @""] symbols:@[ @(0),dataLabel ] withStructure:def  object:array];
+    [self writeValues:@[ @(array.count), @""]  withStructure:def  object:array];
 }
 
 - (void)writeDictionary:(NSDictionary *)dict {
@@ -212,30 +210,16 @@
     NSString *valuesLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_DICTVALS"];
     [dictObjWriter writeArrayOfPointers:valueSymbols atLabel:valuesLabel];
     
-    NSString *dictLabel = [self nextSymbolForTemplate:[dict symbolTemplate]];
-    [self alignLiteralSectionToPointerBoundary];
-
-    [dictObjWriter declareLocalSymbol:dictLabel];
-
     MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
         [MPWVariableDefinition int64WithName:@"flags"],
         [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:@"keys"],
-        [MPWVariableDefinition idWithName:@"values"],
+        [MPWVariableDefinition idWithName:keysLabel],
+        [MPWVariableDefinition idWithName:valuesLabel],
     ]];
-    
-//    [self writeValues:@[ @(1), @(dict.count), @"",@"" ] symbols:@[ @(0),@(0),keysLabel, valuesLabel ] withStructure:def  object:dict];
 
-    
-    
-    [dictObjWriter writeClassReference:@"NSConstantDictionary"];
-    [dictObjWriter writeInt64:1];
-    [dictObjWriter writeInt64:dict.count];
-    [dictObjWriter writePointerForSymbol:keysLabel];
-    [dictObjWriter writePointerForSymbol:valuesLabel];
-    
-    [self.objectSymbols setObject:dictLabel forKey:dict];
-    self.lastSymbol = dictLabel;
+
+    [self writeValues:@[ @(1), @(dict.count), @"",@"" ] withStructure:def  object:dict];
+
 }
 
 @end
@@ -314,6 +298,11 @@
 +(NSString*)symbolTemplate
 {
     return @"_OBJC_LITERAL_DICT";
+}
+
++(NSString*)machOLiteralClassName
+{
+    return @"NSConstantDictionary";
 }
 
 
