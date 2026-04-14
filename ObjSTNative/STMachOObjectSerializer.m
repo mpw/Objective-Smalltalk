@@ -19,9 +19,7 @@
 
 @property (nonatomic, assign, readwrite) STMachOWriter *writer;
 @property (nonatomic, assign, readwrite) STMachOSectionWriter *literalSectionWriter;
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *stringSymbols;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *cstringSymbols;
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *numberSymbols;
 @property (nonatomic, strong) NSMapTable<id, NSString *> *objectSymbols;
 @property (nonatomic, copy) NSString *lastSymbol;
 @property (nonatomic, assign) int stringCounter;
@@ -52,9 +50,7 @@
     if (self) {
         self.writer = writer;
         self.literalSectionWriter = literalSectionWriter;
-        self.stringSymbols = [NSMutableDictionary dictionary];
         self.cstringSymbols = [NSMutableDictionary dictionary];
-        self.numberSymbols = [NSMutableDictionary dictionary];
         self.objectSymbols = [NSMapTable mapTableWithKeyOptions:NSMapTableObjectPointerPersonality
                                                valueOptions:NSMapTableStrongMemory];
         self.arrayDataSymbolCounter = [STSymbolCounter counterWithTemplate:@"_OBJC_LITERAL_ARRAYDATA_%d"];
@@ -93,7 +89,7 @@
 }
 
 - (NSString *)symbolForString:(NSString *)string {
-    NSString *existing = self.stringSymbols[string];
+    NSString *existing = [self.objectSymbols objectForKey:string];
     if (existing) {
         self.lastSymbol = existing;
         return existing;
@@ -101,7 +97,7 @@
     self.stringCounter++;
     NSString *label = [NSString stringWithFormat:@"_OBJC_LITERAL_CFSTR_%d", self.stringCounter];
     [self.writer writeNSStringLiteral:string label:label];
-    self.stringSymbols[string] = label;
+    [self.objectSymbols setObject:label forKey:string];
     self.lastSymbol = label;
     return label;
 }
@@ -118,7 +114,7 @@
         [NSException raise:@"unsupported" format:@"Unsupported NSNumber objCType '%s'", type ? type : "(null)"];
     }
     NSString *key = [NSString stringWithFormat:@"i:%lld", [number longLongValue]];
-    NSString *existing = self.numberSymbols[key];
+    NSString *existing = [self.objectSymbols objectForKey:key];
     if (existing) {
         self.lastSymbol = existing;
         return existing;
@@ -137,7 +133,7 @@
     [intWriter writePointerForSymbol:typeSymbol];
     [intWriter writeInt64:[number longLongValue]];
 
-    self.numberSymbols[key] = label;
+    [self.objectSymbols setObject:label forKey:key];
     self.lastSymbol = label;
     return label;
 }
