@@ -313,7 +313,7 @@
 
 @end
 
-@interface MachOSerializationTestClass : NSObject {
+@interface MachOSerializationPersonTestClass : NSObject {
 }
 
 @property (nonatomic, strong) NSString *first,*last;
@@ -322,7 +322,7 @@
 
 @end
 
-@implementation MachOSerializationTestClass
+@implementation MachOSerializationPersonTestClass
 
 -(void)dealloc
 {
@@ -377,35 +377,35 @@
     STMachODylibWriter *writer = [STMachODylibWriter stream];
     writer.installName = @"@rpath/libserializer-test.dylib";
     [writer useFoundationRuntimeLibraries];
-
+    
     STMachOSectionWriter *literalWriter =
     [writer addSectionWriterWithSegName:@"__DATA_CONST"
                                sectName:@"__objclitcust"
                                   flags:0];
     literalWriter.alignment = 3;
-
+    
     STMachOObjectSerializer *serializer =
     [[[STMachOObjectSerializer alloc] initWithWriter:writer
-                                  literalSectionWriter:literalWriter] autorelease];
-
+                                literalSectionWriter:literalWriter] autorelease];
+    
     NSDictionary *plistLikeLiteral = @{
         @"number": @42,
         @"array": @[ @2, @12, @"some string", @[ @"nested", @"array", @55 ], @99 ]
     };
     NSString *rootSymbol = [serializer symbolForObject:plistLikeLiteral];
-
+    
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
-                                                                   sectName:@"__data"
-                                                                      flags:0];
+                                                                  sectName:@"__data"
+                                                                     flags:0];
     [dataWriter declareGlobalSymbol:@"_serializer_root_literal"];
     [dataWriter addRelocationEntryForSymbol:rootSymbol atOffset:(int)[dataWriter length]];
     uint64_t zero = 0;
     [dataWriter appendBytes:&zero length:sizeof(zero)];
-
+    
     [writer generateMachO];
     STMachOReader *reader = [STMachOReader readerWithData:writer.data];
     EXPECTTRUE([reader isHeaderValid], @"generated Mach-O should be valid");
-
+    
     EXPECTNOTNIL([self sectionNamed:@"__objclitcust" inReader:reader],
                  @"custom literal section should exist");
     EXPECTNIL([self sectionNamed:@"__objc_arrayobj" inReader:reader],
@@ -416,7 +416,7 @@
               @"legacy __objc_dictobj section should not be needed");
     EXPECTNIL([self sectionNamed:@"__objc_intobj" inReader:reader],
               @"legacy __objc_intobj section should not be needed");
-
+    
     NSArray<NSString *> *symbols = [self allSymbolNamesInReader:reader];
     EXPECTTRUE([self symbols:symbols containName:rootSymbol],
                @"root dictionary symbol should be present");
@@ -432,49 +432,49 @@
     STMachODylibWriter *writer = [STMachODylibWriter stream];
     writer.installName = @"@rpath/libserializer-incremental.dylib";
     [writer useFoundationRuntimeLibraries];
-
+    
     STMachOObjectSerializer *serializer =
     [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
-
+    
     NSString *numberSymbol = [serializer symbolForObject:@42];
     NSString *numberSymbolAgain = [serializer symbolForObject:@42];
     IDEXPECT(numberSymbol, numberSymbolAgain,
              @"re-serializing identical number should reuse symbol");
-
+    
     NSArray *nestedArray = @[ @2, @12, @"some string", @[ @"nested", @"array", @55 ], @99 ];
     NSString *arraySymbol = [serializer symbolForObject:nestedArray];
     NSString *arraySymbolAgain = [serializer symbolForObject:nestedArray];
     IDEXPECT(arraySymbol, arraySymbolAgain,
              @"re-serializing same array object should reuse symbol");
-
+    
     NSDictionary *dict = @{ @"number": @42, @"array": nestedArray };
     NSString *dictSymbol = [serializer symbolForObject:dict];
     EXPECTTRUE([dictSymbol hasPrefix:@"_OBJC_LITERAL_DICT_"],
                @"top-level dictionary symbol should be dictionary symbol");
-
+    
     STMachOSectionWriter *dataWriter = [writer addSectionWriterWithSegName:@"__DATA"
-                                                                   sectName:@"__data"
-                                                                      flags:0];
+                                                                  sectName:@"__data"
+                                                                     flags:0];
     uint64_t zero = 0;
     [dataWriter declareGlobalSymbol:@"_serializer_number_root"];
     [dataWriter addRelocationEntryForSymbol:numberSymbol atOffset:(int)[dataWriter length]];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
-
+    
     [dataWriter declareGlobalSymbol:@"_serializer_array_root"];
     [dataWriter addRelocationEntryForSymbol:arraySymbol atOffset:(int)[dataWriter length]];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
-
+    
     [dataWriter declareGlobalSymbol:@"_serializer_dict_root"];
     [dataWriter addRelocationEntryForSymbol:dictSymbol atOffset:(int)[dataWriter length]];
     [dataWriter appendBytes:&zero length:sizeof(zero)];
-
+    
     [writer generateMachO];
     STMachOReader *reader = [STMachOReader readerWithData:writer.data];
     EXPECTTRUE([reader isHeaderValid], @"generated Mach-O should be valid");
-
+    
     EXPECTNOTNIL([self sectionNamed:@"__objcliterals" inReader:reader],
                  @"default serializer should use one literal section");
-
+    
     NSArray<NSString *> *symbols = [self allSymbolNamesInReader:reader];
     EXPECTTRUE([self symbols:symbols containName:numberSymbol], @"number symbol should exist");
     EXPECTTRUE([self symbols:symbols containName:arraySymbol], @"array symbol should exist");
@@ -492,6 +492,7 @@
     
     STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
     NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
+
     NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
     EXPECTTRUE( [dictSymbol hasPrefix:@"_"], @"global symbol");
     dictSymbol = [dictSymbol substringFromIndex:1];
@@ -509,12 +510,48 @@
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++ (void)testSerializeCustomObjectToMachOAndaLoadDylib {
+    MachOSerializationPersonTestClass *person1=[[MachOSerializationPersonTestClass new] autorelease];
+    person1.age = 52;
+    person1.first = @"Alan";
+    person1.last = @"Kay";
+
+    NSString *installName = nil;
+    NSString *path = @"/tmp/person-object-serialized-1.dylib";
+    STMachODylibWriter *writer = [STMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
+    [writer useFoundationRuntimeLibraries];
+    
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    
+    NSString *personSymbol = [serializer symbolForObject:person1];
+    EXPECTTRUE( [personSymbol hasPrefix:@"_"], @"global symbol");
+    personSymbol = [personSymbol substringFromIndex:1];
+    
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibToPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    EXPECTNOTNIL(handle, @(dlerror()));
+    
+    
+    MachOSerializationPersonTestClass *loadedPerson = dlsym(handle,[personSymbol UTF8String] );
+    EXPECTNOTNIL(loadedPerson, @"loaded dict");
+    IDEXPECT(loadedPerson.first, @"Alan", @"first");
+    IDEXPECT(loadedPerson.last, @"Kay", @"last");
+    INTEXPECT(loadedPerson.age, 52,@"age");
+    dlclose(handle);
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+
+    
+    
+}
 
 + (NSArray *)testSelectors {
     return @[
         @"testUsesSingleConfiguredLiteralSectionForNestedStructures",
         @"testIncrementalSymbolWritingKeepsStableTopLevelSymbols",
         @"testSerializeNSDictionaryToMachOAndaLoadDylib",
+//        @"testSerializeCustomObjectToMachOAndaLoadDylib",
     ];
 }
 
