@@ -125,12 +125,12 @@
     NSString *typeSymbol = [self symbolForCString:@"i"];
 
     MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[number machOLiteralClassName] fields:@[
-        [MPWVariableDefinition idWithName:typeSymbol],
+        [MPWVariableDefinition idWithName:@"ctype"],
         [MPWVariableDefinition int64WithName:@"value"],
     ]];
     
     
-    [self writeValues:@[ @"" ,number ] withStructure:def  object:number];
+    [self writeValues:@[ typeSymbol ,number ] withStructure:def  object:number];
 }
 
 -(NSArray*)symbolsForObjects:(NSArray*)objects
@@ -160,7 +160,7 @@
                 [self.literalSectionWriter writeInt64:[values[i] longValue]];
                 break;
             case '@':
-                [self.literalSectionWriter writePointerForSymbol:var.name];
+                [self.literalSectionWriter writePointerForSymbol:values[i]];
                 break;
             default:
                 [NSException raise:@"unknowntype" format:@"unknonw type %c in serialize",type.objcTypeCode];
@@ -182,10 +182,10 @@
 - (void)writeArray:(NSArray *)array {
     MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[array machOLiteralClassName] fields:@[
         [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:[self symbolForPointerToArrayOfObjects:array baseSymbol:@"_OBJC_LITERAL_ARRAYDATA"]],
+        [MPWVariableDefinition idWithName:@"arraydata"],
     ]];
 
-    [self writeValues:@[ @(array.count), @""]  withStructure:def  object:array];
+    [self writeValues:@[ @(array.count), [self symbolForPointerToArrayOfObjects:array baseSymbol:@"_OBJC_LITERAL_ARRAYDATA"]]  withStructure:def  object:array];
 }
 
 - (void)writeDictionary:(NSDictionary *)dict {
@@ -203,12 +203,12 @@
     MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[dict machOLiteralClassName] fields:@[
         [MPWVariableDefinition int64WithName:@"flags"],
         [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:[self symbolForPointerToArrayOfObjects:keys baseSymbol:@"_OBJC_LITERAL_DICTKEYS"]],
-        [MPWVariableDefinition idWithName:[self symbolForPointerToArrayOfObjects:values baseSymbol:@"_OBJC_LITERAL_DICTVALUES"]],
+        [MPWVariableDefinition idWithName:@"keys"],
+        [MPWVariableDefinition idWithName:@"value"],
     ]];
 
 
-    [self writeValues:@[ @(1), @(dict.count), @"",@"" ] withStructure:def  object:dict];
+    [self writeValues:@[ @(1), @(dict.count), [self symbolForPointerToArrayOfObjects:keys baseSymbol:@"_OBJC_LITERAL_DICTKEYS"],[self symbolForPointerToArrayOfObjects:values baseSymbol:@"_OBJC_LITERAL_DICTVALUES"] ] withStructure:def  object:dict];
 }
 
 @end
