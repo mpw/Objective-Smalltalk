@@ -26,9 +26,10 @@
 
 @end
 
-@interface NSObject(symbolTemplate)
+@interface NSObject(MPWMachOObjectStreaming)
 
 -(NSString*)symbolTemplate;
+-(NSString*)machOLiteralClassName;
 
 @end
 
@@ -123,7 +124,7 @@
     
     NSString *typeSymbol = [self symbolForCString:@"i"];
 
-    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
+    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[number machOLiteralClassName] fields:@[
         [MPWVariableDefinition idWithName:typeSymbol],
         [MPWVariableDefinition int64WithName:@"value"],
     ]];
@@ -149,7 +150,7 @@
     [self alignLiteralSectionToPointerBoundary];
     [self.literalSectionWriter declareLocalSymbol:objectLabel];
 
-    [self.literalSectionWriter writeClassReference:[[anObject class] machOLiteralClassName]];
+    [self.literalSectionWriter writeClassReference:structure.name];
     for (long i=0,max=fields.count;i<max;i++) {
         MPWVariableDefinition *var=fields[i];
         MPWTypeDefinition *type=var.type;
@@ -170,47 +171,40 @@
     self.lastSymbol = objectLabel;
 }
 
-
+-(NSString*)symbolForPointerToArrayOfObjects:(NSArray*)array baseSymbol:(NSString*)base
+{
+    NSArray *elementSymbols = [self symbolsForObjects:array];
+    NSString *dataLabel = [self nextSymbolForTemplate:base];
+    [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
+    return dataLabel;
+}
 
 - (void)writeArray:(NSArray *)array {
-    NSArray *elementSymbols = [self symbolsForObjects:array];
-    NSString *dataLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_ARRAYDATA"];
-    [self.literalSectionWriter writeArrayOfPointers:elementSymbols atLabel:dataLabel];
-
-    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
+    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[array machOLiteralClassName] fields:@[
         [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:dataLabel],
+        [MPWVariableDefinition idWithName:[self symbolForPointerToArrayOfObjects:array baseSymbol:@"_OBJC_LITERAL_ARRAYDATA"]],
     ]];
 
     [self writeValues:@[ @(array.count), @""]  withStructure:def  object:array];
 }
 
 - (void)writeDictionary:(NSDictionary *)dict {
-    STMachOSectionWriter *dictObjWriter = self.literalSectionWriter;
-
-    
     NSArray *orderedKeys = [[dict allKeys] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         return [[obj1 description] compare:[obj2 description]];
     }];
 
-    NSMutableArray<NSString *> *keySymbols = [NSMutableArray arrayWithCapacity:orderedKeys.count];
-    NSMutableArray<NSString *> *valueSymbols = [NSMutableArray arrayWithCapacity:orderedKeys.count];
+    NSMutableArray<NSString *> *keys = [NSMutableArray arrayWithCapacity:orderedKeys.count];
+    NSMutableArray<NSString *> *values = [NSMutableArray arrayWithCapacity:orderedKeys.count];
     for (id key in orderedKeys) {
-        [keySymbols addObject:[self symbolForObject:key]];
-        [valueSymbols addObject:[self symbolForObject:dict[key]]];
+        [keys addObject:key];
+        [values addObject:dict[key]];
     }
-
-    NSString *keysLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_DICTKEYS"];
-    [dictObjWriter writeArrayOfPointers:keySymbols atLabel:keysLabel];
     
-    NSString *valuesLabel = [self nextSymbolForTemplate:@"_OBJC_LITERAL_DICTVALS"];
-    [dictObjWriter writeArrayOfPointers:valueSymbols atLabel:valuesLabel];
-    
-    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:@"MachOArray" fields:@[
+    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[dict machOLiteralClassName] fields:@[
         [MPWVariableDefinition int64WithName:@"flags"],
         [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:keysLabel],
-        [MPWVariableDefinition idWithName:valuesLabel],
+        [MPWVariableDefinition idWithName:[self symbolForPointerToArrayOfObjects:keys baseSymbol:@"_OBJC_LITERAL_DICTKEYS"]],
+        [MPWVariableDefinition idWithName:[self symbolForPointerToArrayOfObjects:values baseSymbol:@"_OBJC_LITERAL_DICTVALUES"]],
     ]];
 
 
@@ -232,6 +226,17 @@
 {
     return [[self class] symbolTemplate];
 }
+
++(NSString*)machOLiteralClassName
+{
+    return [self className];
+}
+
+-(NSString*)machOLiteralClassName
+{
+    return [[self class] machOLiteralClassName];
+}
+
 
 @end
 
@@ -308,7 +313,28 @@
 
 @end
 
+@interface MachOSerializationTestClass : NSObject {
+}
+
+@property (nonatomic, strong) NSString *first,*last;
+@property (assign) long age;
+
+
+@end
+
+@implementation MachOSerializationTestClass
+
+-(void)dealloc
+{
+    [_first release];
+    [_last release];
+    [super dealloc];
+}
+
+@end
+
 #import <MPWFoundation/DebugMacros.h>
+#include <dlfcn.h>
 
 @implementation STMachOObjectSerializer(testing)
 
@@ -457,10 +483,38 @@
                @"nested structures should create multiple array symbols");
 }
 
+
++ (void)testSerializeNSDictionaryToMachOAndaLoadDylib {
+    NSString *installName = nil;
+    NSString *path = @"/tmp/nsdictionary-serialized-1.dylib";
+    STMachODylibWriter *writer = [STMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
+    [writer useFoundationRuntimeLibraries];
+    
+    STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
+    NSDictionary *dictLiteral = @{ @"a": @"b", @"c": @"d" };
+    NSString *dictSymbol = [serializer symbolForObject:dictLiteral];
+    EXPECTTRUE( [dictSymbol hasPrefix:@"_"], @"global symbol");
+    dictSymbol = [dictSymbol substringFromIndex:1];
+    
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibToPath:path error:&error],
+               error.localizedDescription ?: @"should write and sign dylib");
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    EXPECTNOTNIL(handle, @(dlerror()));
+    id loadedDict = dlsym(handle,[dictSymbol UTF8String] );
+    EXPECTNOTNIL(loadedDict, @"loaded dict");
+    IDEXPECT(loadedDict[@"a"], @"b", @"dict[a]");
+    IDEXPECT(loadedDict[@"c"], @"d", @"dict[c]");
+    dlclose(handle);
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+}
+
+
 + (NSArray *)testSelectors {
     return @[
         @"testUsesSingleConfiguredLiteralSectionForNestedStructures",
         @"testIncrementalSymbolWritingKeepsStableTopLevelSymbols",
+        @"testSerializeNSDictionaryToMachOAndaLoadDylib",
     ];
 }
 
