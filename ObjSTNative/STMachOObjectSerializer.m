@@ -14,6 +14,7 @@
 #import "STMachOSection.h"
 #import <mach-o/loader.h>
 #import "STMultiSymbolCounter.h"
+#import "STMachOStructure.h"
 
 @interface STMachOObjectSerializer ()
 
@@ -30,6 +31,8 @@
 
 -(NSString*)symbolTemplate;
 -(NSString*)machOLiteralClassName;
+-(void)writeOnMachOObject:(STMachOObjectSerializer *)writer;
+-(MPWStructureDefinition*)machOStructureDefinition;
 
 @end
 
@@ -128,9 +131,9 @@
         [MPWVariableDefinition idWithName:@"ctype"],
         [MPWVariableDefinition int64WithName:@"value"],
     ]];
+    STMachOStructure *structure=[[[STMachOStructure alloc] initWithStructure:def values:@[ typeSymbol ,number ]] autorelease];
     
-    
-    [self writeValues:@[ typeSymbol ,number ] withStructure:def  object:number];
+    [self writeContent:structure forObject:number];
 }
 
 -(NSArray*)symbolsForObjects:(NSArray*)objects
@@ -143,20 +146,23 @@
     return elementSymbols;
 }
 
--(void)writeValues:(NSArray*)values withStructure:(MPWStructureDefinition*)structure object:anObject
+-(void)writeContent:(STMachOStructure*)structure forObject:anObject
 {
-    NSArray *fields=structure.fields;
+    MPWStructureDefinition *def=structure.definition;
+    NSArray *values=structure.values;
+    NSArray *fields=def.fields;
     NSString *objectLabel = [self nextSymbolForTemplate:[anObject symbolTemplate]];
     [self alignLiteralSectionToPointerBoundary];
     [self.literalSectionWriter declareLocalSymbol:objectLabel];
-
-    [self.literalSectionWriter writeClassReference:structure.name];
+    
+    [self.literalSectionWriter writeClassReference:def.name];
     for (long i=0,max=fields.count;i<max;i++) {
         MPWVariableDefinition *var=fields[i];
         MPWTypeDefinition *type=var.type;
         switch ( type.objcTypeCode ) {
             case 'L':
             case 'l':
+            case 'q':
                 [self.literalSectionWriter writeInt64:[values[i] longValue]];
                 break;
             case '@':
@@ -184,8 +190,10 @@
         [MPWVariableDefinition int64WithName:@"count"],
         [MPWVariableDefinition idWithName:@"arraydata"],
     ]];
+    STMachOStructure *structure=[[[STMachOStructure alloc] initWithStructure:def values:@[ @(array.count), [self symbolForPointerToArrayOfObjects:array baseSymbol:@"_OBJC_LITERAL_ARRAYDATA"]]] autorelease];
+    
 
-    [self writeValues:@[ @(array.count), [self symbolForPointerToArrayOfObjects:array baseSymbol:@"_OBJC_LITERAL_ARRAYDATA"]]  withStructure:def  object:array];
+    [self writeContent:structure forObject:array];
 }
 
 - (void)writeDictionary:(NSDictionary *)dict {
@@ -200,15 +208,35 @@
         [values addObject:dict[key]];
     }
     
-    MPWStructureDefinition *def=[MPWStructureDefinition structureWithName:[dict machOLiteralClassName] fields:@[
-        [MPWVariableDefinition int64WithName:@"flags"],
-        [MPWVariableDefinition int64WithName:@"count"],
-        [MPWVariableDefinition idWithName:@"keys"],
-        [MPWVariableDefinition idWithName:@"value"],
-    ]];
+    MPWStructureDefinition *def=[dict machOStructureDefinition];
+    
+    STMachOStructure *structure=[[[STMachOStructure alloc] initWithStructure:def values:@[ @(1), @(dict.count), [self symbolForPointerToArrayOfObjects:keys baseSymbol:@"_OBJC_LITERAL_DICTKEYS"],[self symbolForPointerToArrayOfObjects:values baseSymbol:@"_OBJC_LITERAL_DICTVALUES"] ]] autorelease];
+    
+    [self writeContent:structure forObject:dict];
 
+}
 
-    [self writeValues:@[ @(1), @(dict.count), [self symbolForPointerToArrayOfObjects:keys baseSymbol:@"_OBJC_LITERAL_DICTKEYS"],[self symbolForPointerToArrayOfObjects:values baseSymbol:@"_OBJC_LITERAL_DICTVALUES"] ] withStructure:def  object:dict];
+-(STMachOStructure*)structureForDefinition:(MPWStructureDefinition*)structDef object:anObject
+{
+    NSMutableArray *values=[NSMutableArray array];
+    for ( MPWVariableDefinition *vardef in structDef.fields ) {
+        id value=[anObject valueForKey:vardef.name];
+        switch (vardef.type.objcTypeCode) {
+            case '@':
+                value = [self symbolForObject:value];
+                break;
+        }
+        [values addObject:value];
+    }
+    return [[[STMachOStructure alloc] initWithStructure:structDef values:values] autorelease];
+}
+
+-(void)writeNSObject:anObject
+{
+    MPWStructureDefinition *def=[anObject machOStructureDefinition];
+    def.name = [anObject className];
+    STMachOStructure *machOStructure=[self structureForDefinition:def object:anObject];
+    [self writeContent:machOStructure forObject:anObject];
 }
 
 @end
@@ -237,6 +265,14 @@
     return [[self class] machOLiteralClassName];
 }
 
+- (void)writeOnMachOObject:(STMachOObjectSerializer *)writer {
+    [writer writeNSObject:self];
+}
+
+-(MPWStructureDefinition*)machOStructureDefinition
+{
+    return [[self class] structure];
+}
 
 @end
 
@@ -308,8 +344,16 @@
     return @"NSConstantDictionary";
 }
 
+-(MPWStructureDefinition*)machOStructureDefinition
+{
+    return [MPWStructureDefinition structureWithName:[self machOLiteralClassName] fields:@[
+        [MPWVariableDefinition int64WithName:@"flags"],
+        [MPWVariableDefinition int64WithName:@"count"],
+        [MPWVariableDefinition idWithName:@"keys"],
+        [MPWVariableDefinition idWithName:@"value"],
+    ]];
 
-
+}
 
 @end
 
@@ -520,12 +564,12 @@
     NSString *path = @"/tmp/person-object-serialized-1.dylib";
     STMachODylibWriter *writer = [STMachODylibWriter streamWithInstallName:installName externalLibraries:@[]];
     [writer useFoundationRuntimeLibraries];
-    
     STMachOObjectSerializer *serializer = [[[STMachOObjectSerializer alloc] initWithWriter:writer] autorelease];
-    
+
     NSString *personSymbol = [serializer symbolForObject:person1];
     EXPECTTRUE( [personSymbol hasPrefix:@"_"], @"global symbol");
     personSymbol = [personSymbol substringFromIndex:1];
+
     
     NSError *error = nil;
     EXPECTTRUE([writer writeSignedDylibToPath:path error:&error],

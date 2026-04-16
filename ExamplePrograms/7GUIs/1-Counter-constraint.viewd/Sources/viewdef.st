@@ -6,5 +6,5 @@ var:label/intValue |= model:count.
 stdline ! 'hello world!'.
 #Grid{ frame: (0@0 extent: 80 @ 16), #rows: [   
  [ label, button ]
-] }. 
+] }.  
   

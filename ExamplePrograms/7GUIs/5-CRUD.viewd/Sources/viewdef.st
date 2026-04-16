@@ -13,12 +13,13 @@ model:cursor := MPWArrayCursor alloc initWithArray: model:people.
 scheme:cur ← #MPWInstanceVarStore{ baseReference: model:cursor }.
  
 model:cursor setSelectionChanges: protocol:ModelDidChange. 
-table ← #MPWTableView{ frame: (200@300), cursor: model:cursor , binding: ref:model:filtered   }.
+table ← #MPWTableView{ frame: (200@300),dicts: model:people , cursor: model:cursor }.
+
 
 prefixField ← #TextField{}. 
-prefixField → { :filterValue | model:filtered ← model:people select: { :dict | (dict at:'first') containsString:filterValue  .  }.  stdout println: model:filtered. table setItems:model:filtered. table reloadData. }.
+prefixField → { :filterValue | model:filtered ← model:people select: { :dict | (dict at:'first') containsString:filterValue  .  }.  stdout println: model:filtered. table setDicts: model:filtered. table reloadData. }.
 
-table setItems: model:filtered.
+table setDicts: model:filtered.
  
 #VStack{ views: [   
  #HStack{ views:[ #Label{ stringValue: 'Filter prefix:'  }, prefixField ] }, 
@@ -29,3 +30,4 @@ table setItems: model:filtered.
     ] } , 
    #HStack{ views:[  #Button{ title: 'Create' }, #Button{ title: 'Update' }, #Button{ title: 'Delete' } ] },
 ] }. 
+ 

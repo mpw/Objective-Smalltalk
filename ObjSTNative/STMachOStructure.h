@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong ) MPWStructureDefinition *definition;
 @property (nonatomic, strong ) NSArray *values;
 
+-initWithStructure:(MPWStructureDefinition*)newDef values:(NSArray*)newValues;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
