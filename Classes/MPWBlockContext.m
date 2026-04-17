@@ -286,10 +286,27 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
 
 }
 
+-(long)peakBytesUsed
+{
+    long before = [MPWMStats bytesUsed];
+    [MPWMStats resetPeak];
+    [self value];
+    return [MPWMStats peak]-before;
+}
+
+-(long)bytesUsed;
+{
+    long before = [MPWMStats bytesUsed];
+    [self value];
+    return [MPWMStats bytesUsed]-before;
+}
+
+
 -(NSString*)description
 {
     return [NSString stringWithFormat:@"<%@:%p: block: %@>",[self class],self,block];
 }
+
 
 
 @end

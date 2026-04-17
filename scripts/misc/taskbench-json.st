@@ -1,4 +1,4 @@
-#!env stsh
+#!env st
 #-<void>taskbench:<ref>dbref
 #
 

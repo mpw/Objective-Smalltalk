@@ -1,0 +1,18 @@
+#!env stui
+framework:ObjectiveHTTPD load.
+
+class Task {
+	var id.
+	var <bool> done.
+	var title.
+        -stringId { this:id stringValue. }
+	-description { "Task: {this:title} done: {this:done}". }
+}
+
+taskList ← #MPWObjectArrayTable[ #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, title: 'Write code', done: true } ].
+
+stdout println: taskList.
+
+tableView ← #MPWTableView{ table: taskList  }.
+app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).
+
