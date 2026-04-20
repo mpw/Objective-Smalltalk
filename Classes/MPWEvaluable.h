@@ -9,9 +9,12 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol STEvaluation;
+
+
 @protocol MPWEvaluable
 
--(NSObject<MPWEvaluable>*)evaluateIn:aContext;
+-(NSObject<MPWEvaluable>*)evaluateIn:(id <STEvaluation>)aContext;
 -(NSObject<MPWEvaluable>*)evaluate;
 
 @end

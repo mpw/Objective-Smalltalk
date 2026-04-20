@@ -8,6 +8,10 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
+@protocol STEvaluation
+
+@end
+
 @class MPWReference,MPWScheme,MPWSchemeScheme;
 
 @interface STEvaluator : MPWObject {
