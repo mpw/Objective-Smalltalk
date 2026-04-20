@@ -32,7 +32,7 @@ idAccessor( lhs, setLhs )
 	[NSException raise:@"abstract" format:@"doAssign: is only here to satisfy the compiler/SEL mapping"];
 }
 
--(NSObject<MPWEvaluable>*)evaluateIn:aContext
+-(NSObject<STEvaluable>*)evaluateIn:(id <STEvaluation>)aContext
 {
 	id value = [aContext evaluate:[self rhs]];
 //	NSLog(@"rhs: %@ value: %@, lhs: %@",[self rhs],value,lhs);

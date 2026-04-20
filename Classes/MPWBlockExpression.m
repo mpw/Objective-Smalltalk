@@ -44,7 +44,7 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
 	return [[[self alloc] initWithStatements:newStatements arguments:newArgNames] autorelease];
 }
 
--evaluateIn:aContext
+-evaluateIn:(id <STEvaluation>)aContext
 {
 	return [MPWBlockContext blockContextWithBlock:self context:aContext];
 }

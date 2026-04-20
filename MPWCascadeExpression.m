@@ -20,7 +20,7 @@ objectAccessor(NSMutableArray*, messageExpressions, setMessageExpressions)
     return self;
 }
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     id result=nil;
     for ( id expr in messageExpressions) {

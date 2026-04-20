@@ -66,7 +66,7 @@ scalarAccessor( char , returnType, setReturnType )
     return [self messageName];
 }
 
--(NSObject<MPWEvaluable>*)evaluateIn:aContext
+-(NSObject<STEvaluable>*)evaluateIn:(id <STEvaluation>)aContext
 {
 	id retval = nil;
     @try {
@@ -130,7 +130,7 @@ scalarAccessor( char , returnType, setReturnType )
 
 @implementation NSProxy(evaluate)
 
--evaluateIn:aContext
+-evaluateIn:(id <STEvaluation>)aContext
 {
 //    [NSException raise:@"help" format:@"evaluateInContext" ];
     return self;

@@ -9,7 +9,7 @@
 
 @implementation STPostExpression
 
--(NSObject<MPWEvaluable>*)evaluateIn:aContext
+-(NSObject<STEvaluable>*)evaluateIn:(id <STEvaluation>)aContext
 {
     id value = [aContext evaluate:[self rhs]];
 

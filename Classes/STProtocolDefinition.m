@@ -28,7 +28,7 @@
     objc_registerProtocol(p);
 }
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     [self defineProtocol];
     return self;

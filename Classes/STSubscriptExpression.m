@@ -49,7 +49,7 @@ lazyAccessor(MPWMessageExpression*, setter, setSetter, computeSetter)
     return value;
 }
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     return [[self getter] evaluateIn:aContext];
 }

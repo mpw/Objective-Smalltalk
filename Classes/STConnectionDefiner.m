@@ -71,7 +71,7 @@ id st_connect_components( id left, id right )
 }
 
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     id left=[[self lhs] evaluateIn:aContext];
     id right=[[self rhs] evaluateIn:aContext];

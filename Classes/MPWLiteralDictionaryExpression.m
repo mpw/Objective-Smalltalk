@@ -82,7 +82,7 @@
 //             this is almost certainly wrong, so fix to
 //             evaluate in reverse order
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
 //    NSLog(@"evaluate literal dict: %@",self);
     MPWScheme *templates=[aContext schemeForName:@"template"];

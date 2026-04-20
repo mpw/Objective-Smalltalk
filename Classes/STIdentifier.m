@@ -120,7 +120,7 @@
 }
 
 
--evaluateIn:aContext
+-evaluateIn:(id <STEvaluation>)aContext
 {
     MPWScheme *evaluatedScheme = [aContext schemeForName:[self schemeName]];
 //    NSLog(@"did get scheme (%@) from context %p/%@: schmes: %p evaluated: %@",[self schemeName],aContext,[aContext class],[aContext schemes],evaluatedScheme);

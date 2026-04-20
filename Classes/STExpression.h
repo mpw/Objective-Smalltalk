@@ -7,9 +7,9 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
-#import <ObjectiveSmalltalk/MPWEvaluable.h>
+#import <ObjectiveSmalltalk/STEvaluable.h>
 
-@interface STExpression : MPWObject <MPWEvaluable> {
+@interface STExpression : MPWObject <STEvaluable> {
     long textOffset,len;
 }
 
@@ -31,7 +31,7 @@ longAccessor_h(len, setLen)
 
 -(void)addToVariablesRead:(NSMutableSet*)variableList;
 -(void)addToVariablesWritten:(NSMutableSet*)variableList;
--evaluateIn:aContext;
+-evaluateIn:(id <STEvaluation>)aContext;
 
 @end
 

@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign) BOOL useCache;      // should probably be a temp hack
 @property (nonatomic,strong) NSDictionary *info;
 @property (nonatomic, weak) id errorReporter;
-@property (nonatomic, strong) id compileSuccessReporter;
+@property (nonatomic, strong,nullable) id compileSuccessReporter;
 
 -(id <MPWHierarchicalStorage>)sourceDir;      // compatibility
 

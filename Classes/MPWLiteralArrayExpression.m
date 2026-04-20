@@ -28,7 +28,7 @@
     return nil;
 }
 
--evaluateIn:aContext
+-evaluateIn:(id <STEvaluation>)aContext
 {
 //    NSLog(@"will evaluate literal array: %@",[self objects]);
 #define STACKMAX 200

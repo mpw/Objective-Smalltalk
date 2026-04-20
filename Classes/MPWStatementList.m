@@ -44,7 +44,7 @@ objectAccessor( NSMutableArray*, statements, setStatements )
 	[statements addObject:aStatement];
 }
 
--evaluateIn:aContext
+-evaluateIn:(id <STEvaluation>)aContext
 {
 	if ( [statements count] > 1 ) {
 		[[aContext do] evaluate:[[statements subarrayWithRange:NSMakeRange(0,[statements count]-1 )] each]];

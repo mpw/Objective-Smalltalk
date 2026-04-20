@@ -16,7 +16,7 @@
 
 idAccessor(theLiteral, setTheLiteral)
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
 //    NSLog(@"literalExpression '%@' evaluatIn: %@",theLiteral,aContext);
 //    NSLog(@"aContext var scheme: %@",[aContext schemeForName:@"var"]);

@@ -12,7 +12,7 @@
 
 @implementation MPWBidirectionalDataflowConstraintExpression
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     id lhobject=[lhs evaluateIn:aContext];
     if ( [lhobject  respondsToSelector:@selector(setBinding:)]) {

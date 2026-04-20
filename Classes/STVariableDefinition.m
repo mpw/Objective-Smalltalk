@@ -30,12 +30,13 @@
     return self.definition.type;
 }
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     [aContext declareVariable:self.name];
     if ( self.initializer) {
-        [aContext bindValue:[self.initializer evaluateIn:aContext] toVariableNamed:self.name];
+         [aContext bindValue:[self.initializer evaluateIn:aContext] toVariableNamed:self.name];
     }
+    return nil;
 }
 
 -(void)accumulateLocalVars:(NSMutableArray*)vars

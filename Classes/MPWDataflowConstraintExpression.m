@@ -47,7 +47,7 @@
 @implementation MPWDataflowConstraintExpression
 
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     if ( [lhs isKindOfClass:[STIdentifierExpression class]] ) {
         return [rhs syncToTarget:lhs inContext:aContext];

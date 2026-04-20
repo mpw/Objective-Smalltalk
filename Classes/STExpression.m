@@ -16,12 +16,12 @@ longAccessor(textOffset , setTextOffset)
 longAccessor(len, setLen)
 
 
--(NSObject<MPWEvaluable>*)evaluateIn:aContext
+-(NSObject<STEvaluable>*)evaluateIn:(id <STEvaluation>)aContext
 {
 	return self;
 }
 
--(NSObject<MPWEvaluable>*)evaluate
+-(NSObject<STEvaluable>*)evaluate
 {
 	return self;
 }
@@ -118,7 +118,7 @@ longAccessor(len, setLen)
 }
 
 
--evaluateIn:aContext
+-evaluateIn:(id <STEvaluation>)aContext
 {
 	return self;
 }

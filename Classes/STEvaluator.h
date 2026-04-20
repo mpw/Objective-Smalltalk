@@ -7,14 +7,19 @@
 //
 
 #import <MPWFoundation/MPWFoundation.h>
+#import <ObjectiveSmalltalk/STEvaluable.h>
 
 @protocol STEvaluation
+
+-evaluate:(id <STEvaluable>)expr;
+-(void)declareVariable:(NSString*)name;
+-(void)bindValue:aValie toVariableNamed:(NSString*)name;
 
 @end
 
 @class MPWReference,MPWScheme,MPWSchemeScheme;
 
-@interface STEvaluator : MPWObject {
+@interface STEvaluator : MPWObject <STEvaluation> {
 	id localVars;
 	id parent;
 	id messageCache;
@@ -46,7 +51,6 @@
 
 -valueForUndefinedVariableNamed:aName;
 
--evaluate:expr;
 -evaluateScript:aString onObject:anObject;
 -evaluate:aScriptString withFormalParameterList:formalParameterList actualParameters:parameterList;
 -evaluateScript:script onObject:target formalParameters:formals parameters:params;

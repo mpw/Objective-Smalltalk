@@ -31,7 +31,7 @@
 
 -(instancetype)init {
     self=[super init];
-    self.paths=[self basePaths];
+    self.paths=[[[self basePaths] mutableCopy] autorelease];
     return self;
 }
 

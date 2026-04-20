@@ -150,7 +150,7 @@
     return NSClassFromString(self.name);
 }
 
--(id)evaluateIn:(id)aContext
+-(id)evaluateIn:(id <STEvaluation>)aContext
 {
     Class theClassToDefine=[self classToDefine];
     if (!theClassToDefine) {

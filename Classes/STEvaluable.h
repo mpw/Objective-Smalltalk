@@ -1,5 +1,5 @@
 //
-//  MPWEvaluable.h
+//  STEvaluable.h
 //  Arch-S
 //
 //  Created by marcel on Mon Feb 13 2006.
@@ -12,10 +12,10 @@
 @protocol STEvaluation;
 
 
-@protocol MPWEvaluable
+@protocol STEvaluable
 
--(NSObject<MPWEvaluable>*)evaluateIn:(id <STEvaluation>)aContext;
--(NSObject<MPWEvaluable>*)evaluate;
+-(NSObject<STEvaluable>*)evaluateIn:(id <STEvaluation>)aContext;
+-(NSObject<STEvaluable>*)evaluate;
 
 @end
 
