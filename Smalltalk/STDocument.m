@@ -102,7 +102,7 @@
 
 -(BOOL)validateToolbarItem:(NSToolbarItem *)item
 {
-    NSLog(@"validate: %@ %@",item.itemIdentifier,item);
+//    NSLog(@"validate: %@ %@",item.itemIdentifier,item);
     if ( [item.itemIdentifier isEqual:LinkDependencies] ) {
         return !self.bundle.frameworksLoaded;
     } else if ( [item.itemIdentifier isEqual:Compile] ) {
@@ -117,7 +117,7 @@ static NSString *Browse = @"Browse";
 
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
-    NSLog(@"toolbarAllowedItemIdentifiers: %@",toolbar);
+//    NSLog(@"toolbarAllowedItemIdentifiers: %@",toolbar);
     return @[
         NSToolbarToggleInspectorItemIdentifier,
         NSToolbarShowColorsItemIdentifier,
@@ -130,23 +130,23 @@ static NSString *Browse = @"Browse";
 
 - (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
 {
-    NSLog(@"toolbarDefaultItemIdentifiers %@",toolbar);
+//    NSLog(@"toolbarDefaultItemIdentifiers %@",toolbar);
     NSArray *items = @[
         Compile, LinkDependencies, Browse,
     ];
-    NSLog(@"toolbarDefaultItemIdentifiers items: %@",items);
+//    NSLog(@"toolbarDefaultItemIdentifiers items: %@",items);
     return items;
 }
 
 - (void) toolbarWillAddItem:(NSNotification *) notification{
-    NSLog(@"will add item: %@",notification.object);
+//    NSLog(@"will add item: %@",notification.object);
 }
 
 - (BOOL) toolbar:(NSToolbar *) toolbar
   itemIdentifier:(NSToolbarItemIdentifier) itemIdentifier
 canBeInsertedAtIndex:(NSInteger) index
 {
-    NSLog(@"canBeInserted: %@",itemIdentifier);
+//    NSLog(@"canBeInserted: %@",itemIdentifier);
     return YES;
 }
 
