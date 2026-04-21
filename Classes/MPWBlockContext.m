@@ -288,7 +288,7 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
 
 -(long)peakBytesUsed
 {
-    long before = [MPWMStats bytesUsed];
+    long before = [MPWMStats peak];
     [MPWMStats resetPeak];
     [self value];
     return [MPWMStats peak]-before;
@@ -299,6 +299,12 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
     long before = [MPWMStats bytesUsed];
     [self value];
     return [MPWMStats bytesUsed]-before;
+}
+
+
+-(void)writeOnMPWStream:aStream
+{
+    [aStream writeBlock:self];
 }
 
 

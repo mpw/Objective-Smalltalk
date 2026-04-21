@@ -437,6 +437,7 @@ idAccessor( localVars, setLocalVars )
     [localVars release];
     [bindingCache release];
     [_schemes release];
+    [messageCache  release];
     [super dealloc];
 }
 

@@ -19,6 +19,22 @@ scheme todohtml : MPWMappingStore {
 	/tasks { 
 	   get { 
 		var table ← self taskList.
+                var hs ← MPWXmlGeneratorStream stream.
+                hs html:{
+                      hs body:{
+			hs table:{
+			 this:taskList objects do: { :task |
+			   hs tr:{ hs td: task title. }.
+                     }.
+                   }.
+                  }.
+                }.
+                hs target target.
+		}
+           }
+       /tasks1 {
+	   get { 
+		var table ← self taskList.
                 var hs ← MPWByteStream stream.
                 hs ! '<html><head></head><body>\n'.
 		hs ! '<table>'.
@@ -52,6 +68,9 @@ scheme todohtml : MPWMappingStore {
 
 todo ← #todohtml{ #taskList: taskList }.
 server ← #MPWSchemeHttpServer{ scheme: todo , #port: 8082 }.
+server server setThreadPoolSize:20.
+
+MPWXmlGeneratorStream do installElementNameWriter:[ 'body', 'table', 'tr', 'td' ] each.
 
 scheme:todo := todo.
 server start.
