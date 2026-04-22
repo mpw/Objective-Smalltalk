@@ -30,9 +30,9 @@
 -(void)writeTableHeader:(MPWTable*)aTable
 {
     NSArray <MPWTableColumn*>*columns=aTable.columns;
-    [self th:^{
+    [self thead:^{
         for (MPWTableColumn *column in columns ) {
-            [self td:column.title];
+            [self th:column.title];
         }
     }];
 }
@@ -41,8 +41,10 @@
 {
     [self table:^{
         [self writeTableHeader:aTable];
-        [aTable rowsDo:^(id anObject){
-            [self writeTableRow:anObject ofTable:aTable];
+        [self tbody:^{
+            [aTable rowsDo:^(id anObject){
+                [self writeTableRow:anObject ofTable:aTable];
+            }];
         }];
     }];
 }
@@ -52,7 +54,7 @@
 {
     static int initialized=NO;
     if (!initialized) {
-        NSArray *tags=@[ @"body", @"table", @"tr", @"td" , @"th" ];
+        NSArray *tags=@[ @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody"];
         [[self do] installElementNameWriter:[tags each]];
         initialized=YES;
     }
