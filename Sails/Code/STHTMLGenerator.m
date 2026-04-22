@@ -16,12 +16,12 @@
     return @selector(generateHtml:);
 }
 
--(void)writeTableRow:aRow ofTable:(MPWTable*)aTable
+-(void)writeTableRow:(int)rowIndex ofTable:(MPWTable*)aTable
 {
     NSArray <MPWTableColumn*>*columns=aTable.columns;
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
-            id value = [aRow at:column.key];
+            id value = [column objectAtIndex:rowIndex];
             [self td: value];
         }
     }];
@@ -42,8 +42,8 @@
     [self table:^{
         [self writeTableHeader:aTable];
         [self tbody:^{
-            [aTable rowsDo:^(id anObject){
-                [self writeTableRow:anObject ofTable:aTable];
+            [aTable rowsDo:^(NSNumber *rowIndex){
+                [self writeTableRow:rowIndex.intValue ofTable:aTable];
             }];
         }];
     }];

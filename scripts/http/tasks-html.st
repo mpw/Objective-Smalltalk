@@ -19,6 +19,13 @@ taskList ← #MPWObjectArrayTable[
 
 stdout println: taskList. 
 
+columns ← taskList columns.
+stdline ! columns.
+columns ← [ columns[2], columns[1] ].
+taskList setColumns: columns.
+
+stdline ! taskList columns.
+
 class HTMLGenerator : STHTMLGenerator {
 }.
 
