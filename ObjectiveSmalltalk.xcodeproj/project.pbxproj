@@ -609,6 +609,10 @@
 		1FC8F85D181BF3D4003980D8 /* OSXFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FC8F85C181BF3D4003980D8 /* OSXFUSE.framework */; };
 		1FC8F85E181BF42E003980D8 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FC8F85F181BF434003980D8 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
+		1FD0582F2F97D6BC007C13EB /* STHTMLGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0582E2F97D6BC007C13EB /* STHTMLGenerator.m */; };
+		1FD058302F97D6BC007C13EB /* STHTMLGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD0582D2F97D6BC007C13EB /* STHTMLGenerator.h */; };
+		1FD058312F97D6BC007C13EB /* STHTMLGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0582E2F97D6BC007C13EB /* STHTMLGenerator.m */; };
+		1FD058322F97D6BC007C13EB /* STHTMLGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD0582D2F97D6BC007C13EB /* STHTMLGenerator.h */; };
 		1FD0D42D1A935F8D006CA1D7 /* MPWClassMethodStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD0D42B1A935F8D006CA1D7 /* MPWClassMethodStore.h */; };
 		1FD0D42F1A935F8D006CA1D7 /* MPWClassMethodStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD0D42B1A935F8D006CA1D7 /* MPWClassMethodStore.h */; };
 		1FD0D4301A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */; };
@@ -1584,6 +1588,8 @@
 		1FCD360608D5D9B10098DA56 /* MPWAbstractInterpretedMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWAbstractInterpretedMethod.m; sourceTree = "<group>"; };
 		1FCEB7EA099C03ED00867A95 /* STConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STConnector.h; sourceTree = "<group>"; };
 		1FCEB7EB099C03ED00867A95 /* STConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConnector.m; sourceTree = "<group>"; };
+		1FD0582D2F97D6BC007C13EB /* STHTMLGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STHTMLGenerator.h; sourceTree = "<group>"; };
+		1FD0582E2F97D6BC007C13EB /* STHTMLGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STHTMLGenerator.m; sourceTree = "<group>"; };
 		1FD0D42B1A935F8D006CA1D7 /* MPWClassMethodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWClassMethodStore.h; sourceTree = "<group>"; };
 		1FD0D42C1A935F8D006CA1D7 /* MPWClassMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWClassMethodStore.m; sourceTree = "<group>"; };
 		1FD22E292CBA8F3F0064490A /* STNativeMachOCompiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STNativeMachOCompiler.h; sourceTree = "<group>"; };
@@ -2890,6 +2896,8 @@
 				1FFA166B2B970D8B004E63ED /* STTemplateStore.m */,
 				1F61AE662DBBF493003E8229 /* STSiteServer.h */,
 				1F61AE672DBBF493003E8229 /* STSiteServer.m */,
+				1FD0582D2F97D6BC007C13EB /* STHTMLGenerator.h */,
+				1FD0582E2F97D6BC007C13EB /* STHTMLGenerator.m */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -3344,6 +3352,7 @@
 				1F848FDE2F8A8E4200D78CAC /* STEntityTable.h in Headers */,
 				1F61AE542DBBDF13003E8229 /* STRootMapper.h in Headers */,
 				1F61AE552DBBDF13003E8229 /* STPathToTemplateNameMapper.h in Headers */,
+				1FD058302F97D6BC007C13EB /* STHTMLGenerator.h in Headers */,
 				1F61AE562DBBDF13003E8229 /* STHypertextProcessor.h in Headers */,
 				1F61AE572DBBDF13003E8229 /* STEntityList.h in Headers */,
 				1F61AE582DBBDF13003E8229 /* STTemplateStore.h in Headers */,
@@ -3600,6 +3609,7 @@
 				1F848FDC2F8A8E4200D78CAC /* STEntityTable.h in Headers */,
 				1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */,
 				1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */,
+				1FD058322F97D6BC007C13EB /* STHTMLGenerator.h in Headers */,
 				1F61AE682DBBF493003E8229 /* STSiteServer.h in Headers */,
 				1FFA167D2B9728D8004E63ED /* STEntityList.h in Headers */,
 				1FFCB5722B431492002DC40A /* Sails.h in Headers */,
@@ -4946,6 +4956,7 @@
 				1F61AE4F2DBBDF13003E8229 /* STPathToTemplateNameMapper.m in Sources */,
 				1F61AE6A2DBBF493003E8229 /* STSiteServer.m in Sources */,
 				1F61AE502DBBDF13003E8229 /* STHypertextProcessor.m in Sources */,
+				1FD0582F2F97D6BC007C13EB /* STHTMLGenerator.m in Sources */,
 				1F848FDF2F8A8E4200D78CAC /* STEntityTable.m in Sources */,
 				1F61AE512DBBDF13003E8229 /* STEntityList.m in Sources */,
 			);
@@ -5216,6 +5227,7 @@
 				1F61AE692DBBF493003E8229 /* STSiteServer.m in Sources */,
 				1FFA166D2B970D8B004E63ED /* STTemplateStore.m in Sources */,
 				1FFA167E2B9728D8004E63ED /* STEntityList.m in Sources */,
+				1FD058312F97D6BC007C13EB /* STHTMLGenerator.m in Sources */,
 				1F848FDD2F8A8E4200D78CAC /* STEntityTable.m in Sources */,
 				1FFA167A2B971564004E63ED /* STEntity.m in Sources */,
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,

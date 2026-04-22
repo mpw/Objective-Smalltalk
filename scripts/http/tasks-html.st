@@ -1,5 +1,7 @@
 #!env st
 framework:ObjectiveHTTPD load.
+framework:Sails load.
+
 
 class Task {
 	var id.
@@ -10,28 +12,33 @@ class Task {
         -checked {  this:done ifTrue:'checked' ifFalse:''. }
 }
 
-taskList ← #MPWObjectArrayTable[ #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, title: 'Write code', done: true } ].
+taskList ← #MPWObjectArrayTable[
+     #Task{ id:0, title: 'Submit paper', done: true },
+     #Task{ id:1, title: 'Write code', done: true },
+     #Task{ id:2, title: 'Write thesis', done:false } ].
 
-stdout println: taskList.
+stdout println: taskList. 
+
+class HTMLGenerator : STHTMLGenerator {
+}.
+
+stdline ! STHTMLGenerator.
+stdline ! HTMLGenerator.
 
 scheme todohtml : MPWMappingStore {
         var taskList.
 	/tasks { 
 	   get { 
 		var table ← self taskList.
-                var hs ← MPWXmlGeneratorStream stream.
-                hs html:{
-                      hs body:{
-			hs table:{
-			 this:taskList objects do: { :task |
-			   hs tr:{ hs td: task title. }.
-                     }.
-                   }.
+                var hs ← HTMLGenerator stream.
+                hs html:{ 
+                  hs body:{
+		    hs ! this:taskList.
                   }.
-                }.
+		}.
                 hs target target.
-		}
            }
+       }
        /tasks1 {
 	   get { 
 		var table ← self taskList.
@@ -68,9 +75,7 @@ scheme todohtml : MPWMappingStore {
 
 todo ← #todohtml{ #taskList: taskList }.
 server ← #MPWSchemeHttpServer{ scheme: todo , #port: 8082 }.
-server server setThreadPoolSize:20.
-
-MPWXmlGeneratorStream do installElementNameWriter:[ 'body', 'table', 'tr', 'td' ] each.
+server server setThreadPoolSize:1.
 
 scheme:todo := todo.
 server start.
