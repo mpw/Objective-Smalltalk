@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STHTMLGenerator : MPWXmlGeneratorStream
+@interface STHTMLGenerator : MPWXmlGenerator
 
 -(void)tr:anObject;
 -(void)th:anObject;

@@ -64,7 +64,7 @@
 
 @implementation NSObject(htmlGeneration)
 
--(void)generateHtml:(MPWXmlGeneratorStream*)aStream
+-(void)generateHtml:(MPWXmlGenerator*)aStream
 {
     [self generateXmlContentOnto:aStream];
 }
@@ -73,7 +73,7 @@
 
 @implementation MPWTable(htmlGeneration)
 
--(void)generateHtml:(MPWXmlGeneratorStream*)aStream
+-(void)generateHtml:(MPWXmlGenerator*)aStream
 {
     [aStream writeTable:self];
 }
