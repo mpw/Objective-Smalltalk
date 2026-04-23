@@ -18,19 +18,13 @@ taskList ← #MPWObjectArrayTable[
      #Task{ id:2, title: 'Write thesis', done:false } ].
 
 stdout println: taskList. 
+taskList columns at:0 | setVisible: false.
+columns ← taskList visibleColumns.
+taskList setVisibleColumns: [ columns[1], columns[0] ].
 
-columns ← taskList columns.
-stdline ! columns.
-columns ← [ columns[2], columns[1] ].
-taskList setColumns: columns.
-
-stdline ! taskList columns.
 
 class HTMLGenerator : STHTMLGenerator {
 }.
-
-stdline ! STHTMLGenerator.
-stdline ! HTMLGenerator.
 
 scheme todohtml : MPWMappingStore {
         var taskList.
@@ -46,20 +40,6 @@ scheme todohtml : MPWMappingStore {
                 hs target target.
            }
        }
-       /tasks1 {
-	   get { 
-		var table ← self taskList.
-                var hs ← MPWByteStream stream.
-                hs ! '<html><head></head><body>\n'.
-		hs ! '<table>'.
-		this:taskList objects do: { :task |
-		    hs  writeInterpolatedString:'<tr><td>{title}</td><td><input type=checkbox {checked}></input></td></tr>' withEnvironment: task.
-                }.
-		hs ! '</table>'.
-		hs ! '</body></html>'.
-                hs target.
-		}
-	}
 	/complete/:id {
 		put {
 			(this:taskDict at:id) setDone:true.
