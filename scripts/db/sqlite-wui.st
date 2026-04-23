@@ -1,6 +1,8 @@
-#!env stui
+#!env st
 #-sqlite:tableName
 
+framework:ObjectiveHTTPD load
+framework:Sails load
 
 scheme SQLiteScheme : SQLiteStore  {
 
@@ -57,11 +59,24 @@ scheme:db do createClassForTableNamed: #('artists', 'albums' ) each.
 extension Artists { -description { "Artist: {this:Name} ". }  }
 extension Albums { -description { "Album: {this:Title} ". }  }
 
-table ← MPWObjectArrayTable alloc initWithObjects: db:{tableName}.
-columns ← table columns.
-stdline ! columns.
-columns ← [ columns[1] ].
-table setColumns: columns.
-tableView ← #MPWTableView{ table: table  }.
 
-app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).
+table ← MPWObjectArrayTable alloc initWithObjects: db:{tableName}.
+
+scheme webdb {
+    var list.
+    /table { get {
+          var hs ← STHTMLGenerator stream.
+          hs html:{ 
+             hs body:{
+              hs ! this:list.
+             }.
+          }.
+          hs target target.
+    } }
+}
+
+server ← #MPWSchemeHttpServer{ scheme: #webdb{ list: table }  , #port: 8082 }.
+server server setThreadPoolSize:1.
+server start.
+shell runInteractiveLoop.
+
