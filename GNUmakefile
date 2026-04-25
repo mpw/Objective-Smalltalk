@@ -27,10 +27,11 @@ ObjectiveSmalltalk_HEADER_FILES_INSTALL_DIR = /ObjectiveSmalltalk
 
 libObjectiveSmalltalk_OBJC_FILES = \
     Classes/STIdentifier.m \
+    Classes/STQueryPredicate.m \
     Classes/MPWScheme.m \
-	Classes/STPropertyMethodHeader.m \
+    Classes/STPropertyMethodHeader.m \
     Classes/STExpression.m \
-    Stsh/Classes/MPWExpression+autocomplete.m \
+    StshFramework/Classes/MPWExpression+autocomplete.m \
     Classes/MPWBindingLegacy.m \
     Classes/STScanner.m \
     Classes/MPWMessage.m \

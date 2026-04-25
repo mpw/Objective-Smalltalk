@@ -286,6 +286,8 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
 
 }
 
+#ifndef GNUSTEP
+
 -(long)peakBytesUsed
 {
     long before = [MPWMStats peak];
@@ -300,7 +302,9 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
     [self value];
     return [MPWMStats bytesUsed]-before;
 }
-
+#else
+#warning Not compilings block MStats utilities
+#endif
 
 -(void)writeOnMPWStream:aStream
 {
