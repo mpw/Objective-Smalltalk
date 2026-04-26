@@ -23,6 +23,7 @@ libSails_OBJC_FILES = \
 	Code/STEntity.m \
 	Code/STEntityList.m \
 	Code/STHypertextProcessor.m \
+	Code/STHTMLGenerator.m \
 	Code/STPathToTemplateNameMapper.m \
 	Code/STRootMapper.m \
 	Code/STSiteBundle.m \
