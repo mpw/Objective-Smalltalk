@@ -26,18 +26,11 @@ taskList setVisibleColumns: [ columns[1], columns[0] ].
 class HTMLGenerator : STHTMLGenerator {
 }.
 
-scheme todohtml : MPWMappingStore {
+scheme Tasks : MPWMappingStore {
         var taskList.
 	/tasks { 
 	   get { 
-		var table ← self taskList.
-                var hs ← HTMLGenerator stream.
-                hs html:{ 
-                  hs body:{
-		    hs ! this:taskList.
-                  }.
-		}.
-                hs target target.
+	       this:taskList.
            }
        }
 	/complete/:id {
@@ -60,13 +53,26 @@ scheme todohtml : MPWMappingStore {
 	}
 }.
 
-todo ← #todohtml{ #taskList: taskList }.
+scheme Obj2Html : MPWMappingStore {
+     -mapRetrievedObject:anObject forReference:aRef {
+                var hs ← HTMLGenerator stream.
+                hs html:{ 
+                  hs body:{
+		    hs ! anObject.
+                  }.
+		}.
+                hs target target.
+
+     }
+}.
+
+todo ← #Obj2Html{ } → #Tasks{ #taskList: taskList }.
 server ← #MPWSchemeHttpServer{ scheme: todo , #port: 8082 }.
 server server setThreadPoolSize:1.
 
 scheme:todo := todo.
 server start.
-stdout println:'number of tasks: ', todo taskList count stringValue.
+stdout println:'number of tasks: ', todo source taskList count stringValue.
 stdout println:'port: ', server port stringValue.
 shell runInteractiveLoop.
 
