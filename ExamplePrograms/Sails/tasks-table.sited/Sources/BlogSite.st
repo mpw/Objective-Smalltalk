@@ -7,16 +7,16 @@ scheme BlogSite {
        this:postsList ← 
                 #STTemplateStore{ bundle:aBundle, templateName: 'Site.html' } →  
                 #STTemplateStore{ bundle: aBundle } →
-                #STEntityTable{  initialData: (self initialData), location: '/posts/' }.
+                #STEntityList{ entityClass: Post, initialData: (self initialData), location: '/posts/' }.
        self.
     }
 
     -initialData {
-      #MPWObjectArrayTable[
+      [
           #Post{ id: 1, title: 'Sails is very Cool' , body:'Sailing the Web'},
           #Post{ id: 2, title: 'Architecture' , body:'for the win'},
           #Post{ id: 3, title: 'Objective-S' , body:'Small Teams for large projects'},
-      ].
+      ] mutableDictionaryByKey:'id'.
     }
 
     -init {
