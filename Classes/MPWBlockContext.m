@@ -70,13 +70,18 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
     static int initialized=NO;
     if  ( !initialized) {
         Class blockClass=NSClassFromString(@"NSBlock");
+        if (!blockClass) {
+            blockClass=NSClassFromString(@"_NSBlock");   // for GNUstep
+            [blockClass initialize];
+        }
         IMP oneArgImp=imp_implementationWithBlock( ^(id blockSelf, id argument){ ((OneArgBlock)blockSelf)(argument); } );
-        class_addMethod(blockClass, @selector(value:), oneArgImp, "@@:@");
+        BOOL success = class_addMethod(blockClass, @selector(value:), oneArgImp, "@@:@");
         IMP zeroArgImp=imp_implementationWithBlock( ^(id blockSelf){ ((ZeroArgBlock)blockSelf)(); } );
-        class_addMethod(blockClass, @selector(value), zeroArgImp, "@@:");
-        class_addMethod(blockClass, @selector(nextObject), zeroArgImp, "@@:");
+        success = success && class_addMethod(blockClass, @selector(value), zeroArgImp, "@@:");
+        success = success &&class_addMethod(blockClass, @selector(nextObject), zeroArgImp, "@@:");
         IMP varArgImp=imp_implementationWithBlock( valueWithArgsBlock );
-        class_addMethod(blockClass, @selector(valueWithObjects:), varArgImp, "@@:@");
+        success = success && class_addMethod(blockClass, @selector(valueWithObjects:), varArgImp, "@@:@");
+        NSLog(@"==== couldn't install block value: methods");
         initialized=YES;
     }
 }
