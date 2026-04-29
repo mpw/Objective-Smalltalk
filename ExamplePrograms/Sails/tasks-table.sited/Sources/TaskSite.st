@@ -1,8 +1,10 @@
 
 scheme TaskSite : MPWMappingStore {
+        var bundle.
         var taskList.
         -initWithBundle:aBundle {
            self ← super init.
+           this:bundle ← aBundle.
            this:taskList ←  #MPWObjectArrayTable[
                     #Task{ id:0, title: 'Submit paper', done: true },
                     #Task{ id:1, title: 'Write code', done: true },
@@ -13,16 +15,14 @@ scheme TaskSite : MPWMappingStore {
 
            self. 
         }
-        -setupSite {
-
-        }
-        -createTemplater {
-	   Obj2Html store.
-        }
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
                 hs html:{
+                  hs head:{
+                     hs title:'Tasks List'.
+                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
+                  }.
                   hs body:{
                     hs ! this:taskList.
                   }.
@@ -36,6 +36,11 @@ scheme TaskSite : MPWMappingStore {
 			self persist.
 		}
 	}
+        /style.css { 
+               get {
+                   this:bundle resources at:'style.css'.
+               }
+         }
 	/task/:id {
 		get {
 			this:taskDict at:id .
@@ -45,6 +50,7 @@ scheme TaskSite : MPWMappingStore {
 			self persist.
 		}
 	}
+        /* { get {  stdout ! 'fetch of something. } } 
 	-<void>persist {
 		source:tasks := self taskList.
 	}

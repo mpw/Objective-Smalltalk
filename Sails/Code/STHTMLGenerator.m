@@ -49,12 +49,21 @@
     }];
 }
 
+-(void)closeEmptyElement
+{
+    FORWARDCHARS(">\n");
+}
+
+
 
 +(void)initialize
 {
     static int initialized=NO;
     if (!initialized) {
-        NSArray *tags=@[ @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody"];
+        NSArray *tags=@[
+            @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody",
+            @"head",@"title",
+        ];
         [[self do] installElementNameWriter:[tags each]];
         initialized=YES;
     }

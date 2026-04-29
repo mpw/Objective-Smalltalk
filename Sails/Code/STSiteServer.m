@@ -16,11 +16,17 @@
 
 objectAccessor(MPWHTTPServer*, server, setServer)
 objectAccessor(MPWSiteMap*, sitemap, setSitemap)
-objectAccessor(MPWTemplater*, templater, setTemplater )
+objectAccessor(MPWTemplater*, templater, _setTemplater )
 objectAccessor(MPWWriteThroughCache*, cache , setCache )
 objectAccessor(STCompiler*, interpreter , setInterpreter )
 objectAccessor(MethodServer*, methodServer , setMethodServer)
 //objectAccessor(STHTMLRenderScheme*, renderer , setRenderer)
+
+-(void)setTemplater:(MPWTemplater *)newVar
+{
+    NSLog(@"templater: %@",newVar);
+    [self _setTemplater:newVar];
+}
 
 -(void)initializeAndClearCache
 {
