@@ -68,7 +68,7 @@ lazyAccessor(STSiteServer*, siteServer, setSiteServer, createSiteServer)
 
 -(STSiteServer*)createSiteServer
 {
-    NSAssert([self siteServerClass]!=nil, @"MPWSiteServer not linked into program, can't set up a site");
+    NSAssert([self siteServerClass]!=nil, @"STSiteServer not linked into program, can't set up a site");
     Class siteClass = [self siteClass];
     NSAssert(siteClass != nil, @"should have a siteClass at this point");
     NSLog(@"siteClass: %@",siteClass);

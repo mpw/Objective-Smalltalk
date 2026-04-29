@@ -15,6 +15,9 @@ scheme TaskSite : MPWMappingStore {
 
            self. 
         }
+	-<void>persist {
+		source:tasks := self taskList.
+	}
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
@@ -24,6 +27,7 @@ scheme TaskSite : MPWMappingStore {
                      hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
                   }.
                   hs body:{
+                    hs ! 'This is the task list'.
                     hs ! this:taskList.
                   }.
                 }.
@@ -49,10 +53,6 @@ scheme TaskSite : MPWMappingStore {
 			this:taskDict at:id put:newValue.
 			self persist.
 		}
-	}
-        /* { get {  stdout ! 'fetch of something. } } 
-	-<void>persist {
-		source:tasks := self taskList.
 	}
 }.
 

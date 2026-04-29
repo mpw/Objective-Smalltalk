@@ -4,9 +4,15 @@ scheme DynamicSite {
     var text.
     var md.
     var mdhtml.
-    -sitemap {
+    -initWithBundle:aBunde {
+      self ← super init.
        stdout print:'-sitemap, rsrc scheme: '.
        stdout println: scheme:rsrc. 
+      self setMd: #MPWExtensionStore{ #extension: 'md', #source: scheme:rsrc }.
+      self setMdhtml: #MPWBlockFilterScheme{ #source: (self md), #valueFilter: { :md | md markdownToHtml. } }.
+      self.
+    }
+    -sitemap {
        self.
     }
     -navRootNames {
@@ -49,8 +55,6 @@ scheme DynamicSite {
     -<void>setRenderer:aRenderer {
        stdout print:'-setRenderer:, rsrc scheme: '.
        stdout println: scheme:rsrc. 
-	self setMd: #MPWExtensionStore{ #extension: 'md', #source: scheme:rsrc }.
-        self setMdhtml: #MPWBlockFilterScheme{ #source: (self md), #valueFilter: { :md | md markdownToHtml. } }.
         self.
     }
     -createTemplater {

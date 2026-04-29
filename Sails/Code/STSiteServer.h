@@ -1,5 +1,5 @@
 //
-//  MPWSiteServer.h
+//  STSiteServer.h
 //  ObjectiveHTTPD
 //
 //  Created by Marcel Weiher on 2/11/12.

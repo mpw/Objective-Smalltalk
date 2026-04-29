@@ -35,9 +35,14 @@
 
 -(BOOL)load
 {
-    if ( !handle ) {
+    NSLog(@"will load, handle = %p",handle);
+   if ( !handle ) {
         handle=dlopen( [self.path UTF8String], RTLD_NOW );
+        if (!handle ) {
+            NSLog(@"couldn't load dynamic library %@: %s",self.path,dlerror());
+        }
     }
+    NSLog(@"did load, handle = %p",handle);
     return [self loaded];
 }
 

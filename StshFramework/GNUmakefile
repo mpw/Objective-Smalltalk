@@ -71,4 +71,4 @@ after-clean ::
 
 
 stsh  : libstsh
-	$(CC) -g -fobjc-runtime=gnustep-2.1  -fblocks -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh stsh_main.m -L ${HOME}/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc -lreadline -ledit 
+	$(CC) -g -fobjc-runtime=gnustep-2.1  -fblocks -IClasses -I/usr/GNUstep/Local/Library/Headers/  -I../../MPWFoundation/.headers/ -I.headers -o stsh st/stsh_main.m -L ${HOME}/Build/obj -L/usr/GNUstep/Local/Library/Libraries -lstsh -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc -lreadline -ledit 

@@ -147,4 +147,4 @@ test    : libObjectiveSmalltalk tester
 	LD_LIBRARY_PATH=/usr/GNUstep/Local/Library/Libraries:/usr/local/lib:${HOME}/Build/obj/  ./TestObjectiveSmalltalk/testobjectivesmalltalk
 
 tester  :
-	$(CC) -g -fobjc-runtime=gnustep-2.1 -fblocks -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc
+	$(CC) -g -fobjc-runtime=gnustep-2.1 -fblocks -I../MPWFoundation/.headers/ -I.headers -I/usr/GNUstep/Local/Library/Headers/ -o TestObjectiveSmalltalk/testobjectivesmalltalk TestObjectiveSmalltalk/testobjectivesmalltalk.m -L/usr/GNUstep/Local/Library/Libraries/ -L ${HOME}/Build/obj/ -lObjectiveHTTPD  -lObjectiveSmalltalk -lMPWFoundation -lgnustep-base -lgnustep-corebase -L/usr/local/lib/ -lobjc
