@@ -22,7 +22,25 @@
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
-            [self td: value attributes:@{ @"class": column.key}];
+            char typeCode = column.type.objcTypeCode;
+            switch ( typeCode ) {
+                case 'B':
+                {
+                    NSMutableDictionary *attributes=
+                    [[@{ @"class": column.key,
+                         @"type": @"checkbox",
+                         @"disabled" : @"true" } mutableCopy] autorelease];
+                    if ( [value boolValue]) {
+                        attributes[@"checked"] = @"true";
+                    }
+                    [self td: ^{
+                        [self input:@"" attributes:attributes];
+                    } attributes:@{ @"class": column.key}];
+                }
+                    break;
+                default:
+                    [self td: value attributes:@{ @"class": column.key}];
+           }
         }
     }];
 }
@@ -62,7 +80,7 @@
     if (!initialized) {
         NSArray *tags=@[
             @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody",
-            @"head",@"title",
+            @"head",@"title",@"input",
         ];
         [[self do] installElementNameWriter:[tags each]];
         initialized=YES;
