@@ -22,7 +22,7 @@
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
-            [self td: value];
+            [self td: value attributes:@{ @"class": column.key}];
         }
     }];
 }
@@ -32,7 +32,7 @@
     NSArray <MPWTableColumn*>*columns=aTable.columns;
     [self thead:^{
         for (MPWTableColumn *column in columns ) {
-            [self th:column.title];
+            [self th:column.title attributes:@{ @"class": column.key}];
         }
     }];
 }
@@ -46,7 +46,7 @@
                 [self writeTableRow:rowIndex.intValue ofTable:aTable];
             }];
         }];
-    }];
+    }  attributes:@{ @"class": aTable.tableIdentifier}];
 }
 
 -(void)closeEmptyElement

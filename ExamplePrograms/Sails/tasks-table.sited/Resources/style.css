@@ -19,11 +19,15 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	font-weight: 300;
 }
-
+.id {
+    display:none;
+}
 .hidden {
 	display: none;
 }
-
+thead {
+    display: none;
+}
 table {
 	font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 } 
