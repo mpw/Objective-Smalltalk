@@ -23,15 +23,10 @@ scheme TaskSite : MPWMappingStore {
                 ref:var:/tasks. 
          }
         -at:uri post: value  {
-                stdline ! 'POST value'.
-                ref:var:/tasks. 
+                stdline ! value.
+                this:taskList insertObject: #Task{ title: value at:'title' } atIndex:0. 
+                ref:var://tasks. 
          }
-         /newTask {
-             post { 
-                stdline ! 'newTask'.
-                ref:var:/tasks/ .
-             }
-        }
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
