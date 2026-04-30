@@ -18,6 +18,20 @@ scheme TaskSite : MPWMappingStore {
 	-<void>persist {
 		source:tasks := self taskList.
 	}
+        -post:value at:uri {
+                stdline ! 'POST value'.
+                ref:var:/tasks. 
+         }
+        -at:uri post: value  {
+                stdline ! 'POST value'.
+                ref:var:/tasks. 
+         }
+         /newTask {
+             post { 
+                stdline ! 'newTask'.
+                ref:var:/tasks/ .
+             }
+        }
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
@@ -28,8 +42,15 @@ scheme TaskSite : MPWMappingStore {
                   }.
                   hs body:{
                     hs ! 'This is the task list'.
-                    hs ! this:taskList.
-                  }.
+                    hs br: nil.
+                    hs ! ''.
+                    hs br: nil.
+                   hs form:{ 
+                       hs input:'' attributes:#{ type: 'text' , name: 'title' } .
+                       hs input:'' attributes:#{ type: 'submit' , value:'create' } .
+                       } attributes:#{ method: 'post' , action: 'newToDo'  } .
+                   } .
+                   hs ! this:taskList.
                 }.
                 hs target target.
            }

@@ -16,6 +16,7 @@
     return @selector(generateHtml:);
 }
 
+
 -(void)writeTableRow:(int)rowIndex ofTable:(MPWTable*)aTable
 {
     NSArray <MPWTableColumn*>*columns=aTable.columns;
@@ -78,11 +79,15 @@
 {
     static int initialized=NO;
     if (!initialized) {
-        NSArray *tags=@[
+        NSArray *elements=@[
             @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody",
-            @"head",@"title",@"input",
+            @"head",@"title",@"input",@"form",@"div",
         ];
-        [[self do] installElementNameWriter:[tags each]];
+        [[self do] installElementNameWriter:[elements each]];
+        NSArray *tags=@[
+            @"p", @"br",
+        ];
+        [[self do] installEmptyElementNameWriter:[tags each]];
         initialized=YES;
     }
 }
