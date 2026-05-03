@@ -4,10 +4,11 @@ scheme DynamicSite {
     var text.
     var md.
     var mdhtml.
-    -initWithBundle:aBunde {
+    -initWithBundle: aBundle {
       self ← super init.
-       stdout print:'-sitemap, rsrc scheme: '.
-       stdout println: scheme:rsrc. 
+      stdout print:'-sitemap, rsrc scheme: '.
+      stdout println: scheme:rsrc. 
+      this:bundle ← aBundle.
       self setMd: #MPWExtensionStore{ #extension: 'md', #source: scheme:rsrc }.
       self setMdhtml: #MPWBlockFilterScheme{ #source: (self md), #valueFilter: { :md | md markdownToHtml. } }.
       self.
@@ -79,8 +80,8 @@ scheme DynamicSite {
     }
     /Publications  { get  { 
          var pubs := mdhtml:Publications mutableCopy.
-         var acm := rsrc:acmrefs.html.
-         var pubs := appendData:acm.
+         var acm := self bundle resources at:'acmrefs.html'.
+         pubs appendData:acm.
          self inPage: pubs  path:'Publications'.
     } }
     -base:p { 

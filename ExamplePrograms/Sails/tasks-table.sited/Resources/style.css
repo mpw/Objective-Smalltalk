@@ -6,7 +6,7 @@ body {
 	padding: 20;
 }
 
-
+tr:nth-child(even) {background: #CCC}
 body {
 	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	line-height: 1.4em;

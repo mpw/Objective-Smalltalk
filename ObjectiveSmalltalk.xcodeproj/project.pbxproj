@@ -483,6 +483,10 @@
 		1F9AE9E328EC696200671748 /* STMachOSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AE9E128EC696200671748 /* STMachOSection.h */; };
 		1F9AE9E428EC696200671748 /* STMachOSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AE9E228EC696200671748 /* STMachOSection.m */; };
 		1F9AE9E628ED76BD00671748 /* two-classes.macho in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AE9E528ED76BD00671748 /* two-classes.macho */; };
+		1F9AF4182FA7E41300441A5A /* SailsControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AF4162FA7E41300441A5A /* SailsControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F9AF4192FA7E41300441A5A /* SailsControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AF4172FA7E41300441A5A /* SailsControl.m */; };
+		1F9AF41A2FA7E41300441A5A /* SailsControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AF4172FA7E41300441A5A /* SailsControl.m */; };
+		1F9AF41B2FA7E41300441A5A /* SailsControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9AF4162FA7E41300441A5A /* SailsControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F9BD1CB2562D6F9006D7476 /* MPWFoundationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; };
 		1F9BD1CC2562D6F9006D7476 /* MPWFoundationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7045F622313F4B005ED7FB /* MPWFoundationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F9BD22C2566505F006D7476 /* STPropertyPathTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F9BD22A2566505F006D7476 /* STPropertyPathTests.h */; };
@@ -1468,6 +1472,8 @@
 		1F9AE9E128EC696200671748 /* STMachOSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOSection.h; sourceTree = "<group>"; };
 		1F9AE9E228EC696200671748 /* STMachOSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOSection.m; sourceTree = "<group>"; };
 		1F9AE9E528ED76BD00671748 /* two-classes.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "two-classes.macho"; sourceTree = "<group>"; };
+		1F9AF4162FA7E41300441A5A /* SailsControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SailsControl.h; sourceTree = "<group>"; };
+		1F9AF4172FA7E41300441A5A /* SailsControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SailsControl.m; sourceTree = "<group>"; };
 		1F9BD22A2566505F006D7476 /* STPropertyPathTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPropertyPathTests.h; sourceTree = "<group>"; };
 		1F9BD22B2566505F006D7476 /* STPropertyPathTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPropertyPathTests.m; sourceTree = "<group>"; };
 		1F9BD24025665748006D7476 /* STConnectorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STConnectorTests.h; sourceTree = "<group>"; };
@@ -2888,6 +2894,8 @@
 				1FFA16802B974F05004E63ED /* STPathToTemplateNameMapper.m */,
 				1FFCB57B2B43154E002DC40A /* SailsGenerator.h */,
 				1FFCB57C2B43154E002DC40A /* SailsGenerator.m */,
+				1F9AF4162FA7E41300441A5A /* SailsControl.h */,
+				1F9AF4172FA7E41300441A5A /* SailsControl.m */,
 				1F096D5E2B49903C0072DD85 /* STSiteBundle.h */,
 				1F096D5D2B49903C0072DD85 /* STSiteBundle.m */,
 				1F9774572B6D096C0037DC95 /* STHypertextProcessor.h */,
@@ -3353,6 +3361,7 @@
 				1F61AE542DBBDF13003E8229 /* STRootMapper.h in Headers */,
 				1F61AE552DBBDF13003E8229 /* STPathToTemplateNameMapper.h in Headers */,
 				1FD058302F97D6BC007C13EB /* STHTMLGenerator.h in Headers */,
+				1F9AF41B2FA7E41300441A5A /* SailsControl.h in Headers */,
 				1F61AE562DBBDF13003E8229 /* STHypertextProcessor.h in Headers */,
 				1F61AE572DBBDF13003E8229 /* STEntityList.h in Headers */,
 				1F61AE582DBBDF13003E8229 /* STTemplateStore.h in Headers */,
@@ -3610,6 +3619,7 @@
 				1F9774592B6D096C0037DC95 /* STHypertextProcessor.h in Headers */,
 				1FFA16752B970F8B004E63ED /* STRootMapper.h in Headers */,
 				1FD058322F97D6BC007C13EB /* STHTMLGenerator.h in Headers */,
+				1F9AF4182FA7E41300441A5A /* SailsControl.h in Headers */,
 				1F61AE682DBBF493003E8229 /* STSiteServer.h in Headers */,
 				1FFA167D2B9728D8004E63ED /* STEntityList.h in Headers */,
 				1FFCB5722B431492002DC40A /* Sails.h in Headers */,
@@ -4950,6 +4960,7 @@
 			files = (
 				1F61AE4A2DBBDF13003E8229 /* STRootMapper.m in Sources */,
 				1F61AE4B2DBBDF13003E8229 /* STTemplateStore.m in Sources */,
+				1F9AF41A2FA7E41300441A5A /* SailsControl.m in Sources */,
 				1F61AE4C2DBBDF13003E8229 /* STEntity.m in Sources */,
 				1F61AE4D2DBBDF13003E8229 /* SailsGenerator.m in Sources */,
 				1F61AE4E2DBBDF13003E8229 /* STSiteBundle.m in Sources */,
@@ -5230,6 +5241,7 @@
 				1FD058312F97D6BC007C13EB /* STHTMLGenerator.m in Sources */,
 				1F848FDD2F8A8E4200D78CAC /* STEntityTable.m in Sources */,
 				1FFA167A2B971564004E63ED /* STEntity.m in Sources */,
+				1F9AF4192FA7E41300441A5A /* SailsControl.m in Sources */,
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,
 				1FFA16822B974F05004E63ED /* STPathToTemplateNameMapper.m in Sources */,
 				1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */,

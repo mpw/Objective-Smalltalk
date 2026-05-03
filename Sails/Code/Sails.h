@@ -19,4 +19,5 @@ FOUNDATION_EXPORT const unsigned char SailsVersionString[];
 #import <Sails/SailsGenerator.h>
 #import <Sails/STTemplateStore.h>
 #import <Sails/STSiteServer.h>
+#import <Sails/SailsControl.h>
 

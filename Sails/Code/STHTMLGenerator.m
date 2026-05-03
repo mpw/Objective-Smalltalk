@@ -81,7 +81,7 @@
     if (!initialized) {
         NSArray *elements=@[
             @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody",
-            @"head",@"title",@"input",@"form",@"div",
+            @"head",@"title",@"input",@"form",@"div",@"script",
         ];
         [[self do] installElementNameWriter:[elements each]];
         NSArray *tags=@[
