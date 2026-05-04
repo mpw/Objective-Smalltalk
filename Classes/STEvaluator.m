@@ -166,6 +166,11 @@ idAccessor( localVars, setLocalVars )
     return value;
 }
 
+-(void)at:ref put:value
+{
+    [self bindValue:value toVariableNamed:ref];
+}
+
 -referenceForPath:(NSString*)aPath
 {
     // FIXME:  workaround for the fact that Stores have  referenceForPath:.

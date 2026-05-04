@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) STSiteServer *siteServer;
 @property (readonly) id renderer;
+@property (nonatomic,assign) BOOL shouldCache;
 
 @end
 

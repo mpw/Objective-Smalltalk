@@ -129,6 +129,9 @@ lazyAccessor(STSiteServer*, siteServer, setSiteServer, createSiteServer)
         }
     }
     self.siteServer = [[[[self httpServerClass] alloc] init] autorelease];
+    if ( self.shouldCache ) {
+       sitemap = [MPWCachingStore storeWithSource:sitemap];
+    }
     [self.siteServer setDelegate:sitemap];
 }
 
@@ -152,6 +155,7 @@ lazyAccessor(STSiteServer*, siteServer, setSiteServer, createSiteServer)
     // FIXME:  this really does return an MPWHTTPServer
     //         so why is the type for self.siteServer wrong?
     MPWHTTPServer *httpServer=(MPWHTTPServer*)self.siteServer;
+    [httpServer setThreadPoolSize:1];
     [httpServer setType:@"_http._tcp."];
     [httpServer setBonjourName:[self siteClassName]];
     [httpServer setPort:port];

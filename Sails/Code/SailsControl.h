@@ -8,11 +8,15 @@
 #import <Foundation/Foundation.h>
 
 // NS_ASSUME_NONNULL_BEGIN
+@class STCompiler;
 
 @interface SailsControl : NSObject
 
--(int)main:(int)argc argv:(const char**)argv stsh:stsh;
--(int)main:(NSArray*)args stsh:stsh;
+-(int)main:(int)argc argv:(const char**)argv;
+-(int)main:(NSArray*)args;
+
+@property (nonatomic,strong) STCompiler* compiler;
+@property (nonatomic,assign) Class httpServerClass;
 
 @end
 

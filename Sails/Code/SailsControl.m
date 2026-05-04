@@ -16,39 +16,66 @@ void help(void )
     fprintf(stderr,"-run <bundle>, -generate, -port <n>\n");
 }
 
+@interface SailsControl()
+
+@property (nonatomic,strong) STSiteBundle *bundle;
+@property (nonatomic,assign) int port;
+@property (nonatomic,assign) BOOL shouldCache;
+
+@end
+
 @implementation SailsControl
 
--(int)main:(int)argc argv:(const char**)argv stsh:stsh
+-(int)defaultPort
 {
-    NSMutableArray *args=[NSMutableArray array];
-    for (int i=1;i<=argc;i++) {
-        [args addObject:@(argv[0])];
-    }
-    return [self main:args stsh:stsh];
+    return 8081;
 }
 
--(int)main:(NSArray*)args stsh:stsh
+-(instancetype)init
+{
+    self=[super init];
+    self.port=[self defaultPort];
+    self.shouldCache = NO;
+    return self;
+}
+
+-(int)main:(int)argc argv:(const char**)argv
+{
+    NSMutableArray *args=[NSMutableArray array];
+    for (int i=1;i<argc;i++) {
+        [args addObject:@(argv[i])];
+    }
+    return [self main:args];
+}
+
+-(BOOL)run:(NSString*)bundlePath
+{
+    self.bundle = [STSiteBundle bundleWithPath:bundlePath];
+    [self.bundle setShouldCache:self.shouldCache];
+    [self.bundle runSimpleSite:self.port];
+    [self.compiler at:@"bundle" put:self.bundle];
+    [self.compiler at:@"site" put:[[self.bundle siteServer] delegate] ];
+    [self.compiler evaluateScriptString:@"scheme:site ← site."];
+    return YES;
+}
+
+
+-(int)main:(NSArray*)args
 {
     @autoreleasepool {
         BOOL actionDone=NO;
-        STSiteBundle* bundle=nil;
-        int port=8081;
         for (int i=0;i<args.count;i++) {
             NSString *arg = args[i];
             if ( [arg hasPrefix:@"-"]) {
                 if ( [arg isEqual:@"-run"]) {
                     i++;
-                    NSString *path = args[i];
-                    bundle = [STSiteBundle bundleWithPath:path];
-                    [bundle runSimpleSite:port];
-                    [[stsh evaluator] bindValue:bundle toVariableNamed:@"bundle"];
-                    [[stsh evaluator] bindValue:[[bundle siteServer] delegate] toVariableNamed:@"site"];
-                    [[stsh evaluator] evaluateScriptString:@"scheme:site ← site."];
-                    actionDone=YES;
+                    actionDone=[self run:args[i]];
                     break;
                 } else if ( [arg isEqual:@"-port"]) {
                     i++;
-                    port=[args[i] intValue];;
+                    self.port=[args[i] intValue];
+                } else if ( [arg isEqual:@"-cache"]) {
+                    self.shouldCache=YES;
                 } else if ( [arg isEqual:@"-generate"]) {
                     i++;
                     NSString *type=@"-static";
@@ -66,7 +93,7 @@ void help(void )
                     return 0;
                 }
             } else {
-                fprintf(stderr,"invalid argument: %@\n",args[i]);
+                fprintf(stderr,"invalid argument: %s\n",[args[i] UTF8String]);
                 help();
                 break;
             }
@@ -76,7 +103,7 @@ void help(void )
             help();
             return 1;
         }
-        fprintf(stderr,"run %s on port %d!\n",[[[[bundle siteServer] delegate] description] UTF8String],port);
+        fprintf(stderr,"run %s on port %d!\n",[[[[self.bundle siteServer] delegate] description] UTF8String],self.port);
     }
     return 0;      // ...and make main fit the ANSI spec.
 }
