@@ -115,6 +115,8 @@ lazyAccessor(STSiteServer*, siteServer, setSiteServer, createSiteServer)
     return NSClassFromString(@"MPWHTTPServer");
 }
 
+
+
 -(void)setupSimpleSite
 {
     NSAssert([self httpServerClass]!=nil, @"MPWHTTPServer not linked into program, can't start site");

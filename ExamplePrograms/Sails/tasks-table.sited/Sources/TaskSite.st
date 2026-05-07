@@ -19,23 +19,34 @@ scheme TaskSite : MPWMappingStore {
 		source:tasks := self taskList.
 	}
         -post:value at:uri {
-                stdline ! 'POST value'.
+                stdline ! 'POST value: ', value.
                 ref:var:/tasks. 
          }
         -at:uri post: value  {
+                bozoNewAt:Post: .
                 stdline ! value.
                 this:taskList insertObject: #Task{ title: value at:'title' } atIndex:0. 
-                ref:var://tasks. 
+		stdout ! this:taskList. 
+                'site:/tasks/'.
          }
+        /newTask {
+		post {
+                    this:taskList insertObject: #Task{ title: newValue at:'title' } atIndex:0. 
+                    ref:site:/tasks.
+                }
+
+        }
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
+                stdline ! 'get tasks'.
                 hs html:{
                   hs head:{
                      hs title:'Tasks List'.
                      hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
                   }.
                   hs body:{
+                    hs script:'' attributes:#{ src: 'htmx.js' }.
                     hs ! 'This is the task list'.
                     hs br: nil.
                     hs ! ''.
@@ -43,10 +54,12 @@ scheme TaskSite : MPWMappingStore {
                    hs form:{ 
                        hs input:'' attributes:#{ type: 'text' , name: 'title' } .
                        hs input:'' attributes:#{ type: 'submit' , value:'create' } .
-                       } attributes:#{ method: 'post' , action: 'newToDo'  } .
-                   } .
+                       hs input:'' attributes:#{ type: 'hidden' , name:'verb', value:'post' } .
+                       } attributes:#{ hx-post:'/newTask'    } .
+                   } attributes: #{ id: 'body' , hx-target: '#body'  } .
                    hs ! this:taskList.
                 }.
+                stdline ! 'got tasks'.
                 hs target target.
            }
        }
@@ -56,6 +69,17 @@ scheme TaskSite : MPWMappingStore {
 			self persist.
 		}
 	}
+
+        /htmx.js { 
+               get {
+                   this:bundle resources at:'htmx.js'.
+               }
+         }
+        /style.css { 
+               get {
+                   this:bundle resources at:'style.css'.
+               }
+         }
         /style.css { 
                get {
                    this:bundle resources at:'style.css'.

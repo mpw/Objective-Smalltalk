@@ -30,6 +30,7 @@ libSails_OBJC_FILES = \
 	Code/STSiteServer.m \
 	Code/STTemplateStore.m \
 	Code/SailsGenerator.m \
+	Code/SailsControl.m \
 
 
 Sails_HEADER_FILES = \
