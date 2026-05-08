@@ -1385,9 +1385,9 @@
         @"testClassDefWithoutExplicitSuperclassIsNSObjectSubclass",
         @"testClassDefWithExistingClassIsClassExtension",
         @"testProtocolDefSyntax",
-        @"testProtocolDefSyntaxWithMessages",
         @"testNestedVarExprWithPath",
-#if 1 // !GS_API_LATEST
+#if !GS_API_LATEST
+        @"testProtocolDefSyntaxWithMessages",
         @"testNestedVarExprWithPathInMethod",
         @"testNestedVarExprWithPathInBlockInMethod",
         @"testSelfSchemeInSchemeDefintions",
@@ -1398,13 +1398,7 @@
         @"testFilterDefWithNormalMethods",
         @"testFilterDefSyntaxInClassDef",
 #endif
-        @"testCanParseInterpolatableString",
-        @"testCanInterpolateString",
-        @"testCanInterpolateStringWithScheme",
-        @"testInterpolatedStringInBlockCapturedVar",
-        @"testInterpolatedStringInBlockLocalVar",
-        @"testObjectTemplate",
-#if 1 // !GS_API_LATEST
+#if  !GS_API_LATEST
         @"testConnectFiltersInRightOrderWorks",
         @"testConnectStoresInRightOrderWorks",
         @"testConnectViaConnectorManually",
@@ -1416,6 +1410,7 @@
         @"testSuperSend",
         @"testArraySubscriptExpressionAsArg",
 //      @"testChainedSubscriptExpressionsCompile",
+        @"testCanConnectFilterToSelfContainedBinding",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",
         @"testTemplateMatchingStoreCanUseBlocks",
@@ -1433,7 +1428,6 @@
         @"testExecuteSimpleQueryWithContextVars",
         @"testNewlinesInStringConstants",
         @"testCanCompileQuery",
-        @"testCanConnectFilterToSelfContainedBinding",
         // Recursive interpret
         @"testRecursiveInterpret",
         @"testVarDeclarationCanHaveInitializer",

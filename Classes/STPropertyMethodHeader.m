@@ -23,7 +23,7 @@
 {
     if ( self = [super init]) {
         verb=newVerb;
-        if (verb == MPWRESTVerbPUT || verb == MPWRESTVerbPOST) {
+        if (verb == MPWRESTVerbPUT ) {
             self.returnType = [STTypeDescriptor voidType];
         } else {
             self.returnType = [STTypeDescriptor idType];
@@ -69,6 +69,8 @@
     MPWReferenceTemplate *t=[MPWReferenceTemplate templateWithReference:@"/property/:arg1/param/:p2"];
     STPropertyMethodHeader *header_put=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbPUT] autorelease];
     IDEXPECT( @([header_put typeSignature]),@"v@:@@@@", @"method signature for PUT with 2 path matches")
+    STPropertyMethodHeader *header_post=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbPOST] autorelease];
+    IDEXPECT( @([header_post typeSignature]),@"@@:@@@@", @"method signature for POST with 2 path matches")
     STPropertyMethodHeader *header_get=[[[self alloc] initWithTemplate:t verb:MPWRESTVerbGET] autorelease];
     IDEXPECT( @([header_get typeSignature]), @"@@:@@@", @"method signature for GET with 2 path matches");
 }

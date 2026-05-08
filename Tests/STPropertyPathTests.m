@@ -159,7 +159,7 @@
     id path=def.propertyPath;
     IDEXPECT( [path name], @"propertyB", @"path");
     STScriptedMethod *method=[def methodForVerb:MPWRESTVerbPOST];
-    IDEXPECT( [method.header stringValue], @"<void>ref:theRef value:newValue", @"method");
+    IDEXPECT( [method.header stringValue], @"ref:theRef value:newValue", @"method");
 }
 
 +(void)testCompileAndRunPropertyPathPostSyntax
