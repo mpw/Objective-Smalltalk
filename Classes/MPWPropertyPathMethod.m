@@ -35,7 +35,7 @@
     } defaults[] = {
         {MPWRESTVerbGET, 1,@"at:aReference" },
         {MPWRESTVerbPUT, 2,@"<void>at:aReference put:newValue"},
-        {MPWRESTVerbPOST, 2,@"<void>at:aReference post:newValue"},
+        {MPWRESTVerbPOST, 2,@"at:aReference post:newValue"},
     };
     if ( self=[super init] ) {
         int whichDefault=-1;

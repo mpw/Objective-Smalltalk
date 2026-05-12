@@ -48,10 +48,10 @@ static void runTests()
 				@try {
 					tests++;
 					fprintf(stderr,"                  %s:%s",[className UTF8String],[testName UTF8String]);
-					NSLog(@"%@:%@ -- will test",className,testName);
+//					NSLog(@"%@:%@ -- will test",className,testName);
 					[fixture performSelector:testSel];
 					fprintf(stderr,"\r                                                                              \r");
-					NSLog(@"%@:%@ -- success",className,testName);
+//					NSLog(@"%@:%@ -- success",className,testName);
 					success++;
 				} @catch (NSException *error)  {
 					fprintf(stderr,"\r                                                                              \r");
