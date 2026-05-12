@@ -18,24 +18,19 @@ scheme TaskSite : MPWMappingStore {
 	-<void>persist {
 		source:tasks := self taskList.
 	}
-        -post:value at:uri {
-                stdline ! 'POST value: ', value.
-                ref:var:/tasks. 
-         }
-        -at:uri post: value  {
-                bozoNewAt:Post: .
-                stdline ! value.
-                this:taskList insertObject: #Task{ title: value at:'title' } atIndex:0. 
-		stdout ! this:taskList. 
-                'site:/tasks/'.
-         }
         /newTask {
 		post {
-                    this:taskList insertObject: #Task{ title: newValue at:'title' } atIndex:0. 
-                    ref:site:/tasks.
+                    this:taskList insertObject: #Task{ title: ((newValue at:'title'), ' - newTask' ) } atIndex:0. 
+		    ref:this:tasks.
                 }
-
         }
+        
+        -renderForm: html {
+                   html form:{ 
+                       html input:'' attributes:#{ type: 'text' , name: 'title' } .
+                       } attributes:#{ hx-post:'/newTask'    } .
+         }
+
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
@@ -51,25 +46,15 @@ scheme TaskSite : MPWMappingStore {
                     hs br: nil.
                     hs ! ''.
                     hs br: nil.
-                   hs form:{ 
-                       hs input:'' attributes:#{ type: 'text' , name: 'title' } .
-                       hs input:'' attributes:#{ type: 'submit' , value:'create' } .
-                       hs input:'' attributes:#{ type: 'hidden' , name:'verb', value:'post' } .
-                       } attributes:#{ hx-post:'/newTask'    } .
-                   } attributes: #{ id: 'body' , hx-target: '#body'  } .
-                   hs ! this:taskList.
+                    self renderForm: hs.
+                    hs ! this:taskList.
+
+                  } attributes: #{ id: 'body' , hx-target: '#body'  } .
                 }.
                 stdline ! 'got tasks'.
                 hs target target.
            }
        }
-	/complete/:id {
-		put {
-			(this:taskDict at:id) setDone:true.
-			self persist.
-		}
-	}
-
         /htmx.js { 
                get {
                    this:bundle resources at:'htmx.js'.
@@ -85,14 +70,6 @@ scheme TaskSite : MPWMappingStore {
                    this:bundle resources at:'style.css'.
                }
          }
-	/task/:id {
-		get {
-			this:taskDict at:id .
-		}
-		put {
-			this:taskDict at:id put:newValue.
-			self persist.
-		}
-	}
+        /  {  get { ref:this:/tasks . } }     
 }.
 
