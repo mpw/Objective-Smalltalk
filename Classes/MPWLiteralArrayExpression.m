@@ -28,6 +28,13 @@
     return nil;
 }
 
+-(NSString*)defaultLiteralClassName
+{
+    return @"NSArray";
+}
+
+
+
 -evaluateIn:(id <STEvaluation>)aContext
 {
 //    NSLog(@"will evaluate literal array: %@",[self objects]);
@@ -55,8 +62,12 @@
         baseClass=finalClass;
     }
     NSArray *result= [baseClass arrayWithObjects:evalResults count:max];
-    if ( finalClass && finalClass != baseClass && [finalClass instancesRespondToSelector:@selector(initWithArray:)] ) {
-        result=[[[finalClass alloc] initWithArray:result] autorelease];
+    if ( finalClass && finalClass != baseClass ) {
+        if (  [finalClass instancesRespondToSelector:@selector(initWithArray:)] ) {
+            result=[[[finalClass alloc] initWithArray:result] autorelease];
+        } else {
+            [NSException raise:@"invalidarrayclass" format:@"Class %@ does not implement -initWithArray:",finalClass];
+        }
     }
     free(heapEvalResults);
     return result;

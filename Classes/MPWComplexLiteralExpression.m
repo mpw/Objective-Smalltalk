@@ -16,17 +16,22 @@
     return (id <MPWStorage>)[aContext schemeForName:@"builder"];
 }
 
+-(NSString*)defaultLiteralClassName
+{
+    return @"NSMutableDictionary";
+}
+
 -(Class)classForContext:(STEvaluator*)aContext
 {
     id <MPWStorage> builder = [self builderForContext:aContext];
     NSAssert2(builder!= nil, @"builder for context: %@ schemes: %@",aContext,[aContext schemeForName:@"scheme"]);
     NSString *className = self.literalClassName;
     if (!className) {
-        className = @"NSMutableDictionary";
+        className = [self defaultLiteralClassName];
     }
     Class finalClass=[builder at:className];
     if (!finalClass) {
-//        NSLog(@"builder %@ from context %@ did not deliver a class for name '%@'",builder,aContext,className);
+        [NSException raise:@"classnotfound" format:@"Class '%@' not found in literal expression",className];
     }
     return finalClass;
 }

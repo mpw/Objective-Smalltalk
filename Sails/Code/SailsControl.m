@@ -70,6 +70,7 @@ void help(void )
                 if ( [arg isEqual:@"-run"]) {
                     i++;
                     actionDone=[self run:args[i]];
+                    fprintf(stderr,"run %s on port %d!\n",[[[[self.bundle siteServer] delegate] description] UTF8String],self.port);
                     break;
                 } else if ( [arg isEqual:@"-port"]) {
                     i++;
@@ -98,12 +99,6 @@ void help(void )
                 break;
             }
         }
-        if (!actionDone) {
-            fprintf(stderr,"no action specified!\n");
-            help();
-            return 1;
-        }
-        fprintf(stderr,"run %s on port %d!\n",[[[[self.bundle siteServer] delegate] description] UTF8String],self.port);
     }
     return 0;      // ...and make main fit the ANSI spec.
 }

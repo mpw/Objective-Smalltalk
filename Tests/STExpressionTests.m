@@ -93,7 +93,7 @@
 
 +(void)arrayLiteral
 {
-    TESTEXPR(@"#(1, 2, 3)" , (@[@(1),@(2),@(3)]));
+    TESTEXPR(@" [ 1, 2, 3] " , (@[@(1),@(2),@(3)]));
 }
 
 +(void)testSimpleLiteralDict
