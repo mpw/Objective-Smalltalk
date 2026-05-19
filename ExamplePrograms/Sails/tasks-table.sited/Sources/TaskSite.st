@@ -55,6 +55,15 @@ scheme TaskSite : MPWMappingStore {
                 hs target target.
            }
        }
+       /item/:row/done {  put { 
+            var task ← this:taskList at: row intValue.
+            stdout println: task.
+            stdout println:  task done intValue .
+            stdout println:  task done intValue not.
+
+            task setDone: task done intValue not.
+            ref:this:/tasks .
+        } }
         /htmx.js { 
                get {
                    this:bundle resources at:'htmx.js'.
