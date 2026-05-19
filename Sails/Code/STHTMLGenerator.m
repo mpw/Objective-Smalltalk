@@ -30,7 +30,8 @@
                     NSMutableDictionary *attributes=
                     [[@{ @"class": column.key,
                          @"type": @"checkbox",
-                         @"disabled" : @"true" } mutableCopy] autorelease];
+                         @"hx-put": [NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key],
+                        /* @"disabled" : @"false" */ } mutableCopy] autorelease];
                     if ( [value boolValue]) {
                         attributes[@"checked"] = @"true";
                     }
@@ -68,6 +69,34 @@
     }  attributes:@{ @"class": aTable.tableIdentifier}];
 }
 
+-(void)writeHTMXFormStruct:(MPWStructureDefinition*)theStruct postAction:(NSString*)actionString
+{
+    BOOL hasMoreThanOneField = [theStruct fields].count > 1;
+    [self form:^{
+        for ( MPWVariableDefinition *aField in theStruct.fields) {
+            if ( hasMoreThanOneField ) {
+                [self label:aField.title attributes:@{ @"for": aField.name} ];
+            }
+            NSString *type=nil;
+            switch  ( aField.type.objcTypeCode) {
+                case 'B':
+                    type=@"checkbox";
+                    break;
+                default:
+                    type=@"text";
+                    break;
+            }
+            [self input:nil attributes:@{ @"type": type, @"name": aField.name }];
+        }
+    }attributes:@{ @"hx-post": actionString  , @"id": theStruct.name , @"class": @"form-grid"}];
+}
+
+-(void)writeForm:(MPWForm*)aForm
+{
+    [self writeHTMXFormStruct: aForm.def  postAction: aForm.formAction];
+
+}
+
 -(void)closeEmptyElement
 {
     FORWARDCHARS(">\n");
@@ -81,7 +110,7 @@
     if (!initialized) {
         NSArray *elements=@[
             @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody",
-            @"head",@"title",@"input",@"form",@"div",@"script",
+            @"head",@"title",@"input",@"form",@"div",@"script",@"label",
         ];
         [[self do] installElementNameWriter:[elements each]];
         NSArray *tags=@[
