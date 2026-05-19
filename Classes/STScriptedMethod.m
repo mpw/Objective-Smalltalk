@@ -133,6 +133,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 -(NSException*)handleException:exception target:target
 {
+    NSLog(@"handleException:target:");
+    NSLog(@"handleException: %@ target: %@",exception,target);
     NSException *newException;
     NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];
@@ -143,6 +145,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     [newException addScriptFrame: frameDescription];
     NSString *myselfInTrace=    @"-[STScriptedMethod evaluateOnObject:parameters:]";    
     [newException addCombinedFrame:frameDescription frameToReplace:myselfInTrace previousTrace:[exception callStackSymbols]];
+    NSLog(@"new exception %@",newException);
     return newException;
 }
 
@@ -168,6 +171,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
             @try {
                 returnVal = [executionContext evaluateScript:compiledMethod onObject:target formalParameters:[self formalParameters] parameters:parameters];
             } @catch (id exception) {
+                NSLog(@"exception in evaluateObObject:parameters:");
                 id newException = [self handleException:exception target:target];
                 Class c=NSClassFromString(@"MethodServer");
                 [c addException:newException];
