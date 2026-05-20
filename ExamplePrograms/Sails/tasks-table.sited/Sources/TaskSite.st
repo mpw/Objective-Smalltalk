@@ -21,36 +21,25 @@ scheme TaskSite : MPWMappingStore {
         /newTask {
 		post {
                     this:taskList insertObject: #Task{ title: ((newValue at:'title'), ' - newTask' ) } atIndex:0. 
-		    ref:this:tasks.
+		    stdline ! ref:this:/ .
+		    ref:special:/ .
                 }
         }
         
-        -renderForm: html {
+        -renderFormOn: html {
                    html form:{ 
                        html input:'' attributes:#{ type: 'text' , name: 'title' } .
                        } attributes:#{ hx-post:'/newTask'    } .
          }
-
+        -renderTableOn: html {
+                   html div: {
+                          html ! this:taskList.
+                   } attributes: #{}.
+         }
 	/tasks { 
 	   get { 
                 var hs ← STHTMLGenerator stream.
-                stdline ! 'get tasks'.
-                hs html:{
-                  hs head:{
-                     hs title:'Tasks List'.
-                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
-                  }.
-                  hs body:{
-                    hs script:'' attributes:#{ src: 'htmx.js' }.
-                    hs ! 'This is the task list'.
-                    hs br: nil.
-                    hs ! ''.
-                    hs br: nil.
-                    self renderForm: hs.
-                    hs ! this:taskList.
-
-                  } attributes: #{ id: 'body' , hx-target: '#body'  } .
-                }.
+                    self renderTableOn: hs.
                 stdline ! 'got tasks'.
                 hs target target.
            }
@@ -62,8 +51,8 @@ scheme TaskSite : MPWMappingStore {
             stdout println:  task done intValue not.
 
             task setDone: task done intValue not.
-            ref:this:/tasks .
-        } }
+            ref:special:/ .
+        }   get  {  ref:special:/ .  } }
         /htmx.js { 
                get {
                    this:bundle resources at:'htmx.js'.
@@ -79,6 +68,28 @@ scheme TaskSite : MPWMappingStore {
                    this:bundle resources at:'style.css'.
                }
          }
-        /  {  get { ref:this:/tasks . } }     
+        / {  get { 
+                var hs ← STHTMLGenerator stream.
+                stdline ! 'get tasks'.
+                hs html:{
+                  hs head:{
+                     hs title:'Tasks List'.
+                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
+                  }.
+                  hs body:{
+                    hs script:'' attributes:#{ src: 'htmx.js' }.
+                    hs ! 'This is the task list'.
+                    hs br: nil.
+                    hs ! ''.
+                    hs br: nil.
+                    self renderFormOn: hs.
+                    self renderTableOn: hs.
+
+                  } attributes: #{ id: 'body' , hx-target: '#body'  } .
+                }.
+                stdline ! 'got tasks'.
+                hs target target.
+
+     } }  
 }.
 
