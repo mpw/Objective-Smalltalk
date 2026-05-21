@@ -24,25 +24,32 @@
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
             char typeCode = column.type.objcTypeCode;
+            NSMutableDictionary *attributes=
+            [[@{ @"class": column.key,
+                 @"name": column.key,
+                 @"hx-put": [NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key],
+                 /* @"disabled" : @"false" */ } mutableCopy] autorelease];
+            if ( [value boolValue]) {
+                attributes[@"checked"] = @"true";
+            }
+
             switch ( typeCode ) {
                 case 'B':
                 {
-                    NSMutableDictionary *attributes=
-                    [[@{ @"class": column.key,
-                         @"type": @"checkbox",
-                         @"hx-put": [NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key],
-                        /* @"disabled" : @"false" */ } mutableCopy] autorelease];
+                    attributes[@"type"] = @"checkbox";
                     if ( [value boolValue]) {
                         attributes[@"checked"] = @"true";
                     }
-                    [self td: ^{
-                        [self input:@"" attributes:attributes];
-                    } attributes:@{ @"class": column.key}];
-                }
+                 }
                     break;
                 default:
-                    [self td: value attributes:@{ @"class": column.key}];
+                    attributes[@"value"]=[value stringValue];
+                    break;
            }
+            [self td: ^{
+                [self input:@"" attributes:attributes];
+            } attributes:@{ @"class": column.key}];
+
         }
     }];
 }

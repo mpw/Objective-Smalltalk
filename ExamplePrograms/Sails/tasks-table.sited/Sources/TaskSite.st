@@ -44,13 +44,31 @@ scheme TaskSite : MPWMappingStore {
                 hs target target.
            }
        }
-       /item/:row/done {  put { 
-            var task ← this:taskList at: row intValue.
-            stdout println: task.
-            stdout println:  task done intValue .
-            stdout println:  task done intValue not.
+       -columnForName: aName { 
+               var columns ← this:taskList columns.
+               var foundColumn ← nil.
+               columns do: { :column |
+                       column key = aName ifTrue: {
+                             foundColumn ← column.
+                       }.
+               }.
+               foundColumn.
+       }
 
-            task setDone: task done intValue not.
+       /item/:row/:columnName {  put { 
+            stdout println:'put at item'.
+            newValue count > 0 ifTrue: {
+                   newValue ←newValue at: columnName.
+            } ifFalse: { 
+                   newValue ← false.
+            }.
+            newValue = 'on' ifTrue: {
+                    newValue ← true.
+            }.
+            var column ← self columnForName: columnName.
+            stdout println: column.
+            stdout println: newValue.
+ 	    column replaceObjectAtIndex: row intValue withObject: newValue.
             ref:special:/ .
         }   get  {  ref:special:/ .  } }
         /htmx.js { 
