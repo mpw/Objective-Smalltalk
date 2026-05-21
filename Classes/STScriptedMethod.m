@@ -133,8 +133,8 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 -(NSException*)handleException:exception target:target
 {
-    NSLog(@"handleException:target:");
-    NSLog(@"handleException: %@ target: %@",exception,target);
+    NSLog(@"-[STScriptedMethod handleException:target:]");
+    NSLog(@"-[STScriptedMethod handleException: %@ target: %@ for method: %@]",exception,target,[self methodName]);
     NSException *newException;
     NSMutableDictionary *newUserInfo=[NSMutableDictionary dictionaryWithCapacity:2];
     [newUserInfo addEntriesFromDictionary:[exception userInfo]];

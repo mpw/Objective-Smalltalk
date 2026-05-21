@@ -29,9 +29,6 @@
                  @"name": column.key,
                  @"hx-put": [NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key],
                  /* @"disabled" : @"false" */ } mutableCopy] autorelease];
-            if ( [value boolValue]) {
-                attributes[@"checked"] = @"true";
-            }
 
             switch ( typeCode ) {
                 case 'B':

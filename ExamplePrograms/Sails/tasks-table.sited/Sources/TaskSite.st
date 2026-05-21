@@ -44,16 +44,6 @@ scheme TaskSite : MPWMappingStore {
                 hs target target.
            }
        }
-       -columnForName: aName { 
-               var columns ← this:taskList columns.
-               var foundColumn ← nil.
-               columns do: { :column |
-                       column key = aName ifTrue: {
-                             foundColumn ← column.
-                       }.
-               }.
-               foundColumn.
-       }
 
        /item/:row/:columnName {  put { 
             stdout println:'put at item'.
@@ -65,7 +55,7 @@ scheme TaskSite : MPWMappingStore {
             newValue = 'on' ifTrue: {
                     newValue ← true.
             }.
-            var column ← self columnForName: columnName.
+            var column ← this:taskList columnForKey: columnName.
             stdout println: column.
             stdout println: newValue.
  	    column replaceObjectAtIndex: row intValue withObject: newValue.
