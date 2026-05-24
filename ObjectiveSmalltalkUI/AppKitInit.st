@@ -1,32 +1,32 @@
 left := c:NSTextAlignmentLeft.
 
 object Label : #STTextField{
-    #bordered: false,
-    #selectable: false,
-    #drawsBackground: false,
-    #alignment: c:NSTextAlignmentLeft ,
-    #textColor: color:systemGray
+    bordered: false,
+    selectable: false,
+    drawsBackground: false,
+    alignment: c:NSTextAlignmentLeft ,
+    textColor: color:systemGray
 
 }.
 
 object Body : #STTextField{
-    #bordered: false,
-    #selectable: false,
-    #drawsBackground: false,
-    #alignment: c:NSTextAlignmentLeft ,
-    #textColor: color:systemGray
+    bordered: false,
+    selectable: false,
+    drawsBackground: false,
+    alignment: c:NSTextAlignmentLeft ,
+    textColor: color:systemGray
 }.
 
 object Title : #STTextField{
-    #bordered: false,
-    #selectable: false,
-    #drawsBackground: false,
-    #alignment: c:NSTextAlignmentLeft ,
-    #textColor: color:white
+    bordered: false,
+    selectable: false,
+    drawsBackground: false,
+    alignment: c:NSTextAlignmentLeft ,
+    textColor: color:white
 }.
 
 object TextField : #STTextField{
-     #continuous: true
+     continuous: true
 }.
 
 object PopUp : #STPopUpButton{
@@ -42,31 +42,31 @@ object ProgressIndicator : #STProgressIndicator{
 }.
 
 object Button : #STButton{
-     #continuous: true
+     continuous: true
 }.
 
 object NumberField : #STTextField{
-     #continuous: true,
-     #alignment: c:NSTextAlignmentRight
+     continuous: true,
+     alignment: c:NSTextAlignmentRight
 }.
 
 object VStack : #NSStackView {
-        #alignment:     c:NSLayoutAttributeLeft ,
-        #distribution:  c:NSStackViewDistributionFillEqually ,
-        #orientation:   c:NSUserInterfaceLayoutOrientationVertical
+        alignment:     c:NSLayoutAttributeLeft ,
+        distribution:  c:NSStackViewDistributionFillEqually ,
+        orientation:   c:NSUserInterfaceLayoutOrientationVertical
 }.
 
 object HStack : #NSStackView {
-        #distribution:  c:NSStackViewDistributionFillEqually ,
-        #orientation:   c:NSUserInterfaceLayoutOrientationHorizontal
+        distribution:  c:NSStackViewDistributionFillEqually ,
+        orientation:   c:NSUserInterfaceLayoutOrientationHorizontal
 }.
 
 object Row : #NSStackView {
-        #distribution:  c:NSStackViewDistributionFillEqually ,
-        #orientation:   c:NSUserInterfaceLayoutOrientationHorizontal
+        distribution:  c:NSStackViewDistributionFillEqually ,
+        orientation:   c:NSUserInterfaceLayoutOrientationHorizontal
 }.
 
 object Grid : #NSGridView {
-    #frame:  (150@100),
+    frame:  (150@100),
 }.
 

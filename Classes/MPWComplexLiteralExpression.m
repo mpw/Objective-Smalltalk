@@ -30,9 +30,7 @@
         className = [self defaultLiteralClassName];
     }
     Class finalClass=[builder at:className];
-    if (!finalClass) {
-        [NSException raise:@"classnotfound" format:@"Class '%@' not found in literal expression",className];
-    }
+    // this can be nil if the literal expression specifies a template
     return finalClass;
 }
 

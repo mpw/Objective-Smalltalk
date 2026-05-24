@@ -14,5 +14,6 @@ taskList ← #MPWObjectArrayTable[ #Task{ id:0, title: 'Submit paper', done: fal
 stdout println: taskList.
 
 tableView ← #MPWTableView{ table: taskList  }.
-app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).
+v ← #VStack{ frame: 400 , views: [ #Label{ text: 'Tasks' },  tableView ] }.
+app runFromCLI:(v inScrollView:(200@400 extent: 500@600)).
 
