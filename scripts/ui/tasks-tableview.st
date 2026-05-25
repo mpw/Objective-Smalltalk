@@ -2,19 +2,37 @@
 framework:ObjectiveHTTPD load.
 
 class Task {
-	var id.
 	var <bool> done.
 	var title.
-        -stringId { this:id stringValue. }
 	-description { "Task: {this:title} done: {this:done}". }
 }
 
-taskList ← #MPWObjectArrayTable[ #Task{ id:0, title: 'Submit paper', done: false }, #Task{ id:1, title: 'Write code', done: true } ].
 
+scheme TaskSite  {
+    var taskList.
+    /newTask {
+       put {
+         stdout println:'new Task'. 
+         stdout println:'new Task, title: ', newValue. 
+         var task ←  #Task{ title: (newValue, ' - newTask' ) }.
+         stdout println:'new Task: ',task.
+         this:taskList insertObject: task  atIndex:0. 
+         stdout println: this:taskList.
+         protocol:ModelDidChange notify.
+         }
+      }
+
+
+}
+
+taskList ← #MPWObjectArrayTable[ #Task{  title: 'Submit paper', done: false }, #Task{  title: 'Write code', done: true } ].
+
+scheme:site ← #TaskSite{ taskList: taskList }.
 stdout println: taskList.
 
 tableView ← #MPWTableView{ table: taskList  }.
 taskInput ← #STTextField{ } 
+taskInput → ref:site:/newTask.
 v ← #VStack{ frame: 400 , views: [ #Label{ text:'New Task'} , taskInput ,(tableView  inScrollView:(200@400 extent: 500@600)) ] }.
 app runFromCLI:v.
 
