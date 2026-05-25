@@ -1393,12 +1393,12 @@
         @"testSelfSchemeInSchemeDefintions",
         @"testSimpleSchemeDefSyntax",
         @"testSimpleFilterDefSyntax",
-        @"testSimpleFilterDefSyntax",
         @"testUseStReturnAsForward",
         @"testFilterDefWithNormalMethods",
         @"testFilterDefSyntaxInClassDef",
 #endif
 #if  !GS_API_LATEST
+        @"testObjectTemplate",
         @"testConnectFiltersInRightOrderWorks",
         @"testConnectStoresInRightOrderWorks",
         @"testConnectViaConnectorManually",
