@@ -1398,6 +1398,11 @@
         @"testFilterDefSyntaxInClassDef",
 #endif
 #if  !GS_API_LATEST
+        @"testCanParseInterpolatableString",
+        @"testCanInterpolateString",
+        @"testCanInterpolateStringWithScheme",
+        @"testInterpolatedStringInBlockCapturedVar",
+        @"testInterpolatedStringInBlockLocalVar",
         @"testObjectTemplate",
         @"testConnectFiltersInRightOrderWorks",
         @"testConnectStoresInRightOrderWorks",
@@ -1409,7 +1414,7 @@
         @"testMappingStoreCanReferToSourceAsScheme",
         @"testSuperSend",
         @"testArraySubscriptExpressionAsArg",
-//      @"testChainedSubscriptExpressionsCompile",
+//        @"testChainedSubscriptExpressionsCompile",
         @"testCanConnectFilterToSelfContainedBinding",
 #endif
         @"testBugTwoRefsCreatedTogetherShouldHaveDifferentPaths",

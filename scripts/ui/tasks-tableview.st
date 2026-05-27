@@ -12,12 +12,8 @@ scheme TaskSite  {
     var taskList.
     /newTask {
        put {
-         stdout println:'new Task'. 
-         stdout println:'new Task, title: ', newValue. 
-         var task ←  #Task{ title: (newValue, ' - newTask' ) }.
-         stdout println:'new Task: ',task.
+         var task ←  #Task{ title: newValue }.
          this:taskList insertObject: task  atIndex:0. 
-         stdout println: this:taskList.
          protocol:ModelDidChange notify.
          }
       }

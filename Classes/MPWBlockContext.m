@@ -81,7 +81,9 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
         success = success &&class_addMethod(blockClass, @selector(nextObject), zeroArgImp, "@@:");
         IMP varArgImp=imp_implementationWithBlock( valueWithArgsBlock );
         success = success && class_addMethod(blockClass, @selector(valueWithObjects:), varArgImp, "@@:@");
-        NSLog(@"==== couldn't install block value: methods");
+        if (!success) {
+            NSLog(@"==== couldn't install block value: methods");
+        }
         initialized=YES;
     }
 }

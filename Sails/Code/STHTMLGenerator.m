@@ -16,6 +16,31 @@
     return @selector(generateHtml:);
 }
 
+-(NSMutableDictionary*)inputAttributesForType:(MPWTypeDefinition*)type name:(NSString*)name value:value
+{
+    NSMutableDictionary *attributes=
+    [[@{ @"class": name,
+         @"name": name,
+         /* @"disabled" : @"false" */ } mutableCopy] autorelease];
+    
+    char typeCode = type.objcTypeCode;
+    switch ( typeCode ) {
+        case 'B':
+        {
+            attributes[@"type"] = @"checkbox";
+            if ( [value boolValue]) {
+                attributes[@"checked"] = @"true";
+            }
+        }
+            break;
+        default:
+            attributes[@"type"] = @"text";
+            attributes[@"value"]=[value stringValue];
+            break;
+    }
+    return attributes;
+}
+
 
 -(void)writeTableRow:(int)rowIndex ofTable:(MPWTable*)aTable
 {
@@ -24,26 +49,10 @@
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
             char typeCode = column.type.objcTypeCode;
-            NSMutableDictionary *attributes=
-            [[@{ @"class": column.key,
-                 @"name": column.key,
-                 @"hx-put": [NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key],
-                 /* @"disabled" : @"false" */ } mutableCopy] autorelease];
-
-            switch ( typeCode ) {
-                case 'B':
-                {
-                    attributes[@"type"] = @"checkbox";
-                    if ( [value boolValue]) {
-                        attributes[@"checked"] = @"true";
-                    }
-                 }
-                    break;
-                default:
-                    attributes[@"value"]=[value stringValue];
-                    break;
-           }
-            [self td: ^{
+            NSMutableDictionary *attributes=[self inputAttributesForType:column.type name:column.key value:value];
+            
+            attributes[@"hx-put"]=[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key];
+             [self td: ^{
                 [self input:@"" attributes:attributes];
             } attributes:@{ @"class": column.key}];
 
@@ -81,16 +90,8 @@
             if ( hasMoreThanOneField ) {
                 [self label:aField.title attributes:@{ @"for": aField.name} ];
             }
-            NSString *type=nil;
-            switch  ( aField.type.objcTypeCode) {
-                case 'B':
-                    type=@"checkbox";
-                    break;
-                default:
-                    type=@"text";
-                    break;
-            }
-            [self input:nil attributes:@{ @"type": type, @"name": aField.name }];
+            NSDictionary *attributes=[self inputAttributesForType:aField.type name:aField.name value:@""];
+            [self input:nil attributes:attributes];
         }
     }attributes:@{ @"hx-post": actionString  , @"id": theStruct.name , @"class": @"form-grid"}];
 }
