@@ -11,11 +11,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STHTMLGenerator : MPWXmlGenerator
 
--(void)tr:anObject;
--(void)th:anObject;
--(void)td:anObject;
--(void)table:anObject;
 
 @end
+
+@interface STHTMLGenerator(generated)
+
+-(void)tr:anObject;
+-(void)tr:anObject attributes:attrs;
+-(void)th:anObject attributes:attrs;
+-(void)td:anObject attributes:attrs;
+-(void)table:anObject attributes:attrs;
+-(void)thead:anObject;
+-(void)tbody:anObject;
+-(void)input:anObject attributes:attrs;
+-(void)label:anObject attributes:attrs;
+-(void)form:anObject attributes:attrs;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

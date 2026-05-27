@@ -48,7 +48,6 @@
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
-            char typeCode = column.type.objcTypeCode;
             NSMutableDictionary *attributes=[self inputAttributesForType:column.type name:column.key value:value];
             
             attributes[@"hx-put"]=[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key];
