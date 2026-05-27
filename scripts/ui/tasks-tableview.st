@@ -28,11 +28,11 @@ scheme TaskSite  {
 taskList ← #MPWObjectArrayTable[ #Task{  title: 'Submit paper', done: false }, #Task{  title: 'Write code', done: true } ].
 
 scheme:site ← #TaskSite{ taskList: taskList }.
-stdout println: taskList.
 
 tableView ← #MPWTableView{ table: taskList  }.
+tableView reloadData.
 taskInput ← #STTextField{ } 
 taskInput → ref:site:/newTask.
 v ← #VStack{ frame: 400 , views: [ #Label{ text:'New Task'} , taskInput ,(tableView  inScrollView:(200@400 extent: 500@600)) ] }.
 app runFromCLI:v.
-
+taskList.
