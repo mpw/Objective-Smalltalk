@@ -19,6 +19,11 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	font-weight: 300;
 }
+tr:has(td.done input:checked) td.title input {
+    text-decoration: line-through;
+    color: #777;
+}
+
 .id {
     display:none;
 }
