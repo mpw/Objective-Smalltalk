@@ -41,7 +41,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
 	[[self methodKeyWords] addObject:keyWord];
 	if ( name && type ) {
-        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:[STTypeDescriptor descriptorForSTTypeName:type]] autorelease];
+        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:[STTypeDescriptor descriptorForTypeName:type]] autorelease];
         [[self parameterVars] addObject:vardef];
 	}
 }
@@ -153,7 +153,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
     id optionalReturnType;
     self = [self init];
     if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
-        [self setReturnType:[STTypeDescriptor descriptorForSTTypeName:optionalReturnType]];
+        [self setReturnType:[STTypeDescriptor descriptorForTypeName:optionalReturnType]];
     }
     while ( [self parseAKeyWordFromScanner:scanner] )  {
     }

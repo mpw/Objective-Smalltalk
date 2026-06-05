@@ -84,6 +84,7 @@
 @interface STCompiler()
 
 @property (nonatomic, strong) NSMutableDictionary <NSString*,STClassDefinition*> *classes;
+@property (nonatomic, strong) MPWTypeStore *types;
 
 @end
 
@@ -126,6 +127,7 @@ idAccessor(solver, setSolver)
     [self resetSmbolTable];
     self.classes = [NSMutableDictionary dictionary];
     self.closingBraceLiteralDictHack = false;
+    self.types = [MPWTypeStore store];
 	return self;
 }
 
@@ -1295,7 +1297,7 @@ idAccessor(solver, setSolver)
         }
         NSString *name=[self nextToken];
 //        next=[self nextToken];   // skip over ".", but that's actually needed
-        STTypeDescriptor *type=[STTypeDescriptor descriptorForSTTypeName:typeName];
+        STTypeDescriptor *type=self.types[typeName];
 
         NSString *possibleInitializationToken = [self nextToken];
         STVariableDefinition *def = [[[variableDefClass alloc] initWithName:name type:type] autorelease];
@@ -1631,6 +1633,7 @@ idAccessor(solver, setSolver)
     [methodStore release];
     [connectorMap release];
     [_classes release];
+    [_types release];
     [super dealloc];
 }
 
