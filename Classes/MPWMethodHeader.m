@@ -14,11 +14,13 @@
 @implementation MPWMethodHeader
 {
     NSArray *parameterNames;
+    MPWTypeStore *types;
 }
 
 objectAccessor(NSString*, methodName, setMethodName )
 objectAccessor(NSMutableArray*, parameterVars, setParameterVars )
 objectAccessor(NSMutableArray*, methodKeyWords, setMethodKeyWords )
+objectAccessor(MPWTypeStore*, types, setTypes )
 lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 
 -init
@@ -26,7 +28,8 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 	self=[super init];
 	[self setParameterVars:[NSMutableArray array]];
 	[self setMethodKeyWords:[NSMutableArray array]];
-    [self setReturnType:[STTypeDescriptor descriptorForObjcCode:'@']];
+    [self setTypes:[MPWTypeStore store]];
+    [self setReturnType:types[@"id"]];
 	return self;
 }
 
@@ -41,7 +44,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
 	[[self methodKeyWords] addObject:keyWord];
 	if ( name && type ) {
-        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:[STTypeDescriptor descriptorForTypeName:type]] autorelease];
+        STVariableDefinition *vardef=[[[STVariableDefinition alloc] initWithName:name type:types[type]] autorelease];
         [[self parameterVars] addObject:vardef];
 	}
 }
@@ -153,7 +156,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
     id optionalReturnType;
     self = [self init];
     if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
-        [self setReturnType:[STTypeDescriptor descriptorForTypeName:optionalReturnType]];
+        [self setReturnType:types[optionalReturnType]];
     }
     while ( [self parseAKeyWordFromScanner:scanner] )  {
     }
@@ -225,6 +228,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 	[returnType release];
 	[parameterVars release];
 	[methodKeyWords release];
+    [types release];
 	[super dealloc];
 }
 

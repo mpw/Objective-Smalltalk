@@ -65,6 +65,7 @@ typedef struct {
         { @"keychain", @"MPWKeychainStore" },
         { @"app", @"MPWScriptingBridgeScheme" },
         { @"dl", @"MPWDyLibScheme" },
+        { @"type", @"MPWTypeStore" },
         { nil, nil }
     };
   
