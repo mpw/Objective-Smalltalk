@@ -6,39 +6,49 @@
 //
 
 #import "STHTMLGenerator.h"
+#import "SLInputField.h"
 
+@interface STHTMLGenerator()
+
+@property (nonatomic,strong) MPWTypeToObjectMapper *mapper;
+
+@end
 
 
 @implementation STHTMLGenerator
+
+
+
+-(instancetype)initWithTarget:(id)aTarget
+{
+    self=[super initWithTarget:aTarget];
+    self.mapper = [MPWTypeToObjectMapper store];
+    self.mapper[@"bool"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"checkbox"}];
+    self.mapper[@"id"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"text"}];
+
+    return self;
+}
+
 
 -(SEL)streamWriterMessage
 {
     return @selector(generateHtml:);
 }
 
--(NSMutableDictionary*)inputAttributesForType:(MPWTypeDefinition*)type name:(NSString*)name value:value
+-(SLInputField*)inputElementForType:(MPWTypeDefinition*)type name:(NSString*)name value:value
 {
-    NSMutableDictionary *attributes=
-    [[@{ @"class": name,
-         @"name": name,
-         /* @"disabled" : @"false" */ } mutableCopy] autorelease];
-    
-    char typeCode = type.objcTypeCode;
-    switch ( typeCode ) {
-        case 'B':
-        {
-            attributes[@"type"] = @"checkbox";
-            if ( [value boolValue]) {
-                attributes[@"checked"] = @"true";
-            }
-        }
-            break;
-        default:
-            attributes[@"type"] = @"text";
-            attributes[@"value"]=[value stringValue];
-            break;
-    }
-    return attributes;
+    SLInputField *field = [self.mapper at:type.name];
+    field.name = name;
+    field.value = value;    
+//    switch ( type.objcTypeCode ) {
+//        case 'B':
+//            field.type = @"checkbox";
+//            break;
+//        default:
+//            field.type = @"text";
+//            break;
+//    }
+    return field;
 }
 
 
@@ -48,11 +58,10 @@
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
-            NSMutableDictionary *attributes=[self inputAttributesForType:column.type name:column.key value:value];
-            
-            attributes[@"hx-put"]=[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key];
+            SLInputField *field = [self inputElementForType:column.type name:column.key value:value];
+            field.htmx_put=[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key];
              [self td: ^{
-                [self input:@"" attributes:attributes];
+                [self writeObject:field];
             } attributes:@{ @"class": column.key}];
 
         }
@@ -89,8 +98,8 @@
             if ( hasMoreThanOneField ) {
                 [self label:aField.title attributes:@{ @"for": aField.name} ];
             }
-            NSDictionary *attributes=[self inputAttributesForType:aField.type name:aField.name value:@""];
-            [self input:nil attributes:attributes];
+            SLInputField *field=[self inputElementForType:aField.type name:aField.name value:@""];
+            [self writeObject:field];
         }
     }attributes:@{ @"hx-post": actionString  , @"id": theStruct.name , @"class": @"form-grid"}];
 }

@@ -651,6 +651,10 @@
 		1FD713E91522DAA6004A5E15 /* MPWObjectMirror.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */; };
 		1FD8C3B529E16F4A00E6A9C2 /* AppKitInit.st in Resources */ = {isa = PBXBuildFile; fileRef = 1FD8C3B129E16F4A00E6A9C2 /* AppKitInit.st */; };
 		1FD8C3B729E171E500E6A9C2 /* appkit-enums.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FD8C3B629E171E500E6A9C2 /* appkit-enums.json */; };
+		1FD93EA32FD4376000228D39 /* SLInputField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD93EA22FD4376000228D39 /* SLInputField.m */; };
+		1FD93EA42FD4376000228D39 /* SLInputField.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD93EA12FD4376000228D39 /* SLInputField.h */; };
+		1FD93EA52FD4376000228D39 /* SLInputField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD93EA22FD4376000228D39 /* SLInputField.m */; };
+		1FD93EA62FD4376000228D39 /* SLInputField.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD93EA12FD4376000228D39 /* SLInputField.h */; };
 		1FDB6CB41855BE1400623042 /* StshFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAFD98E1855BC5500EC5221 /* StshFramework.framework */; };
 		1FDC758A11DC35CB0084E2B2 /* MPWSchemeScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDC758B11DC35CB0084E2B2 /* MPWSchemeScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */; };
@@ -1632,6 +1636,8 @@
 		1FD713E31522DAA6004A5E15 /* MPWObjectMirror.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjectMirror.m; sourceTree = "<group>"; };
 		1FD8C3B129E16F4A00E6A9C2 /* AppKitInit.st */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AppKitInit.st; sourceTree = "<group>"; };
 		1FD8C3B629E171E500E6A9C2 /* appkit-enums.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "appkit-enums.json"; sourceTree = "<group>"; };
+		1FD93EA12FD4376000228D39 /* SLInputField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLInputField.h; sourceTree = "<group>"; };
+		1FD93EA22FD4376000228D39 /* SLInputField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLInputField.m; sourceTree = "<group>"; };
 		1FDC758811DC35CB0084E2B2 /* MPWSchemeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSchemeScheme.h; sourceTree = "<group>"; };
 		1FDC758911DC35CB0084E2B2 /* MPWSchemeScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWSchemeScheme.m; sourceTree = "<group>"; };
 		1FDCCB36139A60FC00F5F273 /* MPWDefaultsScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWDefaultsScheme.h; sourceTree = "<group>"; };
@@ -2906,6 +2912,8 @@
 				1F61AE672DBBF493003E8229 /* STSiteServer.m */,
 				1FD0582D2F97D6BC007C13EB /* STHTMLGenerator.h */,
 				1FD0582E2F97D6BC007C13EB /* STHTMLGenerator.m */,
+				1FD93EA12FD4376000228D39 /* SLInputField.h */,
+				1FD93EA22FD4376000228D39 /* SLInputField.m */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -3365,6 +3373,7 @@
 				1F61AE562DBBDF13003E8229 /* STHypertextProcessor.h in Headers */,
 				1F61AE572DBBDF13003E8229 /* STEntityList.h in Headers */,
 				1F61AE582DBBDF13003E8229 /* STTemplateStore.h in Headers */,
+				1FD93EA42FD4376000228D39 /* SLInputField.h in Headers */,
 				1F61AE592DBBDF13003E8229 /* Sails.h in Headers */,
 				1F61AE5A2DBBDF13003E8229 /* STSiteBundle.h in Headers */,
 			);
@@ -3623,6 +3632,7 @@
 				1F61AE682DBBF493003E8229 /* STSiteServer.h in Headers */,
 				1FFA167D2B9728D8004E63ED /* STEntityList.h in Headers */,
 				1FFCB5722B431492002DC40A /* Sails.h in Headers */,
+				1FD93EA62FD4376000228D39 /* SLInputField.h in Headers */,
 				1FFCB57D2B43154E002DC40A /* SailsGenerator.h in Headers */,
 				1F096D602B49903C0072DD85 /* STSiteBundle.h in Headers */,
 			);
@@ -4967,6 +4977,7 @@
 				1F61AE4F2DBBDF13003E8229 /* STPathToTemplateNameMapper.m in Sources */,
 				1F61AE6A2DBBF493003E8229 /* STSiteServer.m in Sources */,
 				1F61AE502DBBDF13003E8229 /* STHypertextProcessor.m in Sources */,
+				1FD93EA32FD4376000228D39 /* SLInputField.m in Sources */,
 				1FD0582F2F97D6BC007C13EB /* STHTMLGenerator.m in Sources */,
 				1F848FDF2F8A8E4200D78CAC /* STEntityTable.m in Sources */,
 				1F61AE512DBBDF13003E8229 /* STEntityList.m in Sources */,
@@ -5243,6 +5254,7 @@
 				1FFA167A2B971564004E63ED /* STEntity.m in Sources */,
 				1F9AF4192FA7E41300441A5A /* SailsControl.m in Sources */,
 				1F096D5F2B49903C0072DD85 /* STSiteBundle.m in Sources */,
+				1FD93EA52FD4376000228D39 /* SLInputField.m in Sources */,
 				1FFA16822B974F05004E63ED /* STPathToTemplateNameMapper.m in Sources */,
 				1F97745A2B6D096C0037DC95 /* STHypertextProcessor.m in Sources */,
 				1FFA16762B970F8B004E63ED /* STRootMapper.m in Sources */,
