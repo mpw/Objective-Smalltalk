@@ -35,19 +35,13 @@
     return @selector(generateHtml:);
 }
 
--(SLInputField*)inputElementForType:(MPWTypeDefinition*)type name:(NSString*)name value:value
+-(SLInputField*)inputElementForType:(MPWTypeDefinition*)type name:(NSString*)name value:value put:(NSString*)putUrl
 {
     SLInputField *field = [self.mapper at:type.name];
     field.name = name;
-    field.value = value;    
-//    switch ( type.objcTypeCode ) {
-//        case 'B':
-//            field.type = @"checkbox";
-//            break;
-//        default:
-//            field.type = @"text";
-//            break;
-//    }
+    field.value = value;
+    field.htmx_put=putUrl;
+
     return field;
 }
 
@@ -58,8 +52,7 @@
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
-            SLInputField *field = [self inputElementForType:column.type name:column.key value:value];
-            field.htmx_put=[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key];
+            SLInputField *field = [self inputElementForType:column.type name:column.key value:value put:[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key] ];
              [self td: ^{
                 [self writeObject:field];
             } attributes:@{ @"class": column.key}];
@@ -98,7 +91,7 @@
             if ( hasMoreThanOneField ) {
                 [self label:aField.title attributes:@{ @"for": aField.name} ];
             }
-            SLInputField *field=[self inputElementForType:aField.type name:aField.name value:@""];
+            SLInputField *field=[self inputElementForType:aField.type name:aField.name value:@"" put:nil];
             [self writeObject:field];
         }
     }attributes:@{ @"hx-post": actionString  , @"id": theStruct.name , @"class": @"form-grid"}];
@@ -114,8 +107,6 @@
 {
     FORWARDCHARS(">\n");
 }
-
-
 
 +(void)initialize
 {

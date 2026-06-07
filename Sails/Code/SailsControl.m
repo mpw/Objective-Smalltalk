@@ -59,6 +59,14 @@ void help(void )
     return YES;
 }
 
+-(void)openInBrowser
+{
+    NSLog(@"openInBrowser");
+    NSString *open=[NSString stringWithFormat:@"open http://localhost:%d/",self.port];
+    NSLog(@"%@",open);
+    system([open UTF8String]);
+}
+
 
 -(int)main:(NSArray*)args
 {
@@ -66,15 +74,17 @@ void help(void )
         BOOL actionDone=NO;
         for (int i=0;i<args.count;i++) {
             NSString *arg = args[i];
-            if ( [arg hasPrefix:@"-"]) {
+           if ( [arg hasPrefix:@"-"]) {
                 if ( [arg isEqual:@"-run"]) {
                     i++;
                     actionDone=[self run:args[i]];
                     fprintf(stderr,"run %s on port %d!\n",[[[[self.bundle siteServer] delegate] description] UTF8String],self.port);
-                    break;
                 } else if ( [arg isEqual:@"-port"]) {
                     i++;
                     self.port=[args[i] intValue];
+                } else if ( [arg isEqual:@"-open"]) {
+                    i++;
+                    [self openInBrowser];
                 } else if ( [arg isEqual:@"-cache"]) {
                     self.shouldCache=YES;
                 } else if ( [arg isEqual:@"-generate"]) {
