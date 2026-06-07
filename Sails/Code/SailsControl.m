@@ -72,6 +72,7 @@ void help(void )
 {
     @autoreleasepool {
         BOOL actionDone=NO;
+        BOOL shouldOpen=NO;
         for (int i=0;i<args.count;i++) {
             NSString *arg = args[i];
            if ( [arg hasPrefix:@"-"]) {
@@ -83,8 +84,7 @@ void help(void )
                     i++;
                     self.port=[args[i] intValue];
                 } else if ( [arg isEqual:@"-open"]) {
-                    i++;
-                    [self openInBrowser];
+                    shouldOpen=YES;
                 } else if ( [arg isEqual:@"-cache"]) {
                     self.shouldCache=YES;
                 } else if ( [arg isEqual:@"-generate"]) {
@@ -108,6 +108,9 @@ void help(void )
                 help();
                 break;
             }
+        }
+        if ( shouldOpen ) {
+            [self openInBrowser];
         }
     }
     return 0;      // ...and make main fit the ANSI spec.
