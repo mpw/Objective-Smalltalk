@@ -1282,12 +1282,13 @@ idAccessor(solver, setSolver)
 -(MPWInstanceVariableDefinition *)parseVariableDefinition:(Class)variableDefClass
 {
     NSString *next=nil;
-    
+
     if ( [(next=[self nextToken]) isEqualToString:@"var"]) {
         NSString *typeName=@"id";
         next = [self nextToken];
         if ( [next isEqualToString:@"<"]) {
             typeName=[self nextToken];
+//            NSLog(@"typeName in parseVariableDefinition: %@",typeName);
             next=[self nextToken];
             if ( ![next isEqualToString:@">"]) {
                 PARSEERROR(@"> expected as close of instance variable definition", next);
@@ -1298,6 +1299,7 @@ idAccessor(solver, setSolver)
         NSString *name=[self nextToken];
 //        next=[self nextToken];   // skip over ".", but that's actually needed
         STTypeDescriptor *type=self.types[typeName];
+//        NSLog(@"type in parseVariableDefinition: %@",type);
 
         NSString *possibleInitializationToken = [self nextToken];
         STVariableDefinition *def = [[[variableDefClass alloc] initWithName:name type:type] autorelease];

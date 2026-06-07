@@ -20,6 +20,7 @@
 
 -(void)generateHtml:(STHTMLGenerator*)htmlGen
 {
+    BOOL isTextArea = [self.type isEqual:@"textarea"];
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     
     attributes[@"type"]=self.type;
@@ -29,13 +30,16 @@
         if (  [[self value] boolValue]) {
             attributes[@"checked"]=@"true";
         }
-    } else {
+    } else if ( !isTextArea ){
         attributes[@"value"]=self.value;
     }
     attributes[@"hx-put"]=self.htmx_put;
     attributes[@"hx-post"]=self.htmx_post;
-
-    [htmlGen input:@"" attributes:attributes];
+    if ( isTextArea) {
+        [htmlGen textarea:self.value attributes:attributes];
+    } else {
+        [htmlGen input:@"" attributes:attributes];
+    }
 }
 
 @end

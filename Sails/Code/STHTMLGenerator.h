@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)input:anObject attributes:attrs;
 -(void)label:anObject attributes:attrs;
 -(void)form:anObject attributes:attrs;
+-(void)textarea:anObject attributes:attrs;
 
 @end
 

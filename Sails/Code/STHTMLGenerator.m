@@ -25,6 +25,7 @@
     self.mapper = [MPWTypeToObjectMapper store];
     self.mapper[@"bool"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"checkbox"}];
     self.mapper[@"id"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"text"}];
+    self.mapper[@"Text"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"textarea"}];
 
     return self;
 }
@@ -115,6 +116,7 @@
         NSArray *elements=@[
             @"body", @"table", @"tr", @"td" , @"th" ,@"thead", @"tbody",
             @"head",@"title",@"input",@"form",@"div",@"script",@"label",
+            @"textarea",
         ];
         [[self do] installElementNameWriter:[elements each]];
         NSArray *tags=@[

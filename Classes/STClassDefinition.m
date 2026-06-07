@@ -138,9 +138,15 @@
     return NO;
 }
 
+-(void)saveStructureDefinition
+{
+    [[self classToDefine] setStructureDefinition:[self instanceVariableDescriptions]];
+}
+
 -(void)defineClass
 {
     if ([self defineJustTheClass]) {
+        [self saveStructureDefinition];
         [self generateAccessors];
     }
 }
