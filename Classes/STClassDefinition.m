@@ -140,7 +140,7 @@
 
 -(void)saveStructureDefinition
 {
-    [[self classToDefine] setStructureDefinition:[self instanceVariableDescriptions]];
+    [[self classToDefine] setStructureDefinition:[[[MPWStructureDefinition alloc] initWithName:self.name fields:[self instanceVariableDescriptions]] autorelease]];
 }
 
 -(void)defineClass

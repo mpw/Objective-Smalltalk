@@ -84,7 +84,7 @@
     }  attributes:@{ @"class": aTable.tableIdentifier}];
 }
 
--(void)writeHTMXFormStruct:(MPWStructureDefinition*)theStruct postAction:(NSString*)actionString
+-(void)writeHTMXFormStruct:(MPWStructureDefinition*)theStruct postAction:(NSString*)actionString values:store
 {
     BOOL hasMoreThanOneField = [theStruct fields].count > 1;
     [self form:^{
@@ -92,6 +92,7 @@
             if ( hasMoreThanOneField ) {
                 [self label:aField.title attributes:@{ @"for": aField.name} ];
             }
+            
             SLInputField *field=[self inputElementForType:aField.type name:aField.name value:@"" put:nil];
             [self writeObject:field];
         }
@@ -100,8 +101,7 @@
 
 -(void)writeForm:(MPWForm*)aForm
 {
-    [self writeHTMXFormStruct: aForm.def  postAction: aForm.formAction];
-
+    [self writeHTMXFormStruct: aForm.def  postAction: aForm.formAction values:nil];
 }
 
 -(void)closeEmptyElement
