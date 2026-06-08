@@ -23,9 +23,10 @@
 {
     self=[super initWithTarget:aTarget];
     self.mapper = [MPWTypeToObjectMapper store];
-    self.mapper[@"bool"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"checkbox"}];
-    self.mapper[@"id"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"text"}];
-    self.mapper[@"Text"] = [MPWObjectTemplate templateWithClass:[SLInputField class] values:@{ @"type": @"textarea"}];
+    self.mapper[@"bool"] = [SLInputField templateWithValues:@{ @"type": @"checkbox"}];
+    self.mapper[@"id"] = [SLInputField templateWithValues:@{ @"type": @"text"}];
+    self.mapper[@"Text"] = [SLInputField templateWithValues:@{ @"type": @"textarea"}];
+    self.mapper[@"Date"] = [SLInputField templateWithValues:@{ @"type": @"date"}];
 
     return self;
 }
