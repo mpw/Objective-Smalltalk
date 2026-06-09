@@ -403,7 +403,12 @@
     Class aClass = NSClassFromString( className );
 	id variableDescriptions;
     IDEXPECT( aClass, nil, @"class shouldn't exist yet");
-    [NSString createSubclassWithName:className instanceVariables:@"variable1 variable2"];
+    MPWStructureDefinition *def=[[[MPWStructureDefinition alloc] initWithName:className fields:@[
+        [MPWInstanceVariableDefinition idWithName:@"variable1"],
+        [MPWInstanceVariableDefinition idWithName:@"variable2"],
+    ] ] autorelease];
+    
+    [NSString createSubclassWithStructure:def];
     aClass = NSClassFromString( className );
     IDEXPECT( NSStringFromClass(aClass), className, @"class should exist and be named as expected");
 //    INTEXPECT(  aClass->instance_size, [NSString class]->instance_size+2 * sizeof(id), @"new class should have space for 2 id variables");
@@ -429,7 +434,10 @@
 	id variableName = @"variable1";
 	id instance;
 	Class aClass;
-    [NSString createSubclassWithName:className instanceVariables:variableName];
+    MPWStructureDefinition *def=[[[MPWStructureDefinition alloc] initWithName:className fields:@[
+        [MPWVariableDefinition idWithName:variableName],
+    ]] autorelease];
+    [NSString createSubclassWithStructure:def];
     aClass = NSClassFromString( className );
 	variableDescription = [[aClass instanceVariables] lastObject];
 	instance = [[aClass new] autorelease];
@@ -455,11 +463,11 @@
     STCompiler *compiler=[STCompiler compiler];
     STClassDefinition *classDef=[compiler parseClassDefinitionFromString:@"class __TestClassWithIVarsFromSyntax { var myIvar.  var ivar2. } "];
     
-    MPWInstanceVariableDefinition *variableDescription = [[classDef instanceVariableDescriptions] firstObject];
+    MPWInstanceVariableDefinition *variableDescription = [[[classDef structureDefinition] fields] firstObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [variableDescription name], @"myIvar", @"name of ivar" );
     IDEXPECT( [variableDescription typeName], @"id", @"type of ivar" );
-    MPWInstanceVariableDefinition *ivar2 = [[classDef instanceVariableDescriptions] lastObject];
+    MPWInstanceVariableDefinition *ivar2 = [[[classDef structureDefinition] fields] lastObject];
     //    INTEXPECT( [variableDescription offset], sizeof(id), @"offset of variable" );
     IDEXPECT( [ivar2 name], @"ivar2", @"name of ivar" );
     IDEXPECT( [ivar2 typeName], @"id", @"type of ivar" );

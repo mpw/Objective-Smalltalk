@@ -102,8 +102,8 @@
 
 -(NSArray *)allIvarNames
 {
-    if ( [[self instanceVariableDescriptions] count] >0 ) {
-        return (NSArray *)[[[self instanceVariableDescriptions] collect] name];
+    if ( [[[self structureDefinition] fields] count] >0 ) {
+        return (NSArray *)[[[[self structureDefinition] fields] collect] name];
     } else {
         return @[];
     }
@@ -132,7 +132,7 @@
     Class superclass=NSClassFromString([self superclassNameToUse]);
     NSAssert1( NSClassFromString(self.name) == nil, @"Class '%@' should not exist when I try to defien it",self.name);
     if ( superclass ) {
-        [superclass createSubclassWithName:self.name instanceVariableArray:[self instanceVariableDescriptions]];
+        [superclass createSubclassWithStructure:self.structureDefinition];
         return YES;
     }
     return NO;

@@ -11,11 +11,10 @@
 
 extern void amIHereFunc( void );
 
-@class MPWInstanceVariable;
+@class MPWInstanceVariable,MPWStructureDefinition;
 
 @interface NSObject(smalltalkScripting)
-+(BOOL)createSubclassWithName:(NSString*)className instanceVariableArray:(NSArray*)vars;
-+(BOOL)createSubclassWithName:(NSString*)className instanceVariables:(NSString*)varsAsString;
++(BOOL)createSubclassWithStructure:(MPWStructureDefinition*)structureDef;
 +(BOOL)createSubclassWithName:(NSString*)className;
 +instanceVariables;
 +(MPWInstanceVariable*)ivarForName:(NSString*)name;

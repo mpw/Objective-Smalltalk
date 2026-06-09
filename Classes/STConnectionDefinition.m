@@ -9,10 +9,15 @@
 
 @implementation STConnectionDefinition
 
+-instanceVariableDescriptions
+{
+    return self.structureDefinition.fields;
+}
+
 -(void)dealloc
 {
     [_name release];
-    [_instanceVariableDescriptions release];
+    [_structureDefinition release];
     [_methods release];
     [_propertyPathDefinitions release];
    [super dealloc];

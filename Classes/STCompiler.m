@@ -1416,6 +1416,7 @@ idAccessor(solver, setSolver)
     } else  if ( [s isEqualToString:@"system"]) {
         defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
+        NSLog(@"filter definition");
         defClass=[STFilterDefinition class];
     }
     STClassDefinition *classDef=[[defClass new] autorelease];
@@ -1436,10 +1437,12 @@ idAccessor(solver, setSolver)
             classDef.superclassName=superclassName;
             separator=[self nextToken];
         }
+        NSLog(@"after superclass processing");
         NSMutableArray *methods=[NSMutableArray array];
         NSMutableArray *classMethods=[NSMutableArray array];
         NSMutableArray<MPWInstanceVariable*> *instanceVariables=[NSMutableArray array];
         NSMutableArray *propertyDefinitions=[NSMutableArray array];
+        NSLog(@"before first brace processing");
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
             while (nil != (next=[self nextToken])) {
@@ -1487,7 +1490,8 @@ idAccessor(solver, setSolver)
             }
             classDef.methods=methods;
             classDef.classMethods=classMethods;
-            classDef.instanceVariableDescriptions=instanceVariables;
+            classDef.structureDefinition=[[MPWStructureDefinition alloc] initWithName:classDef.name fields:instanceVariables];
+            NSLog(@"structureDef: %@",classDef.structureDefinition);
             classDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
@@ -1496,11 +1500,15 @@ idAccessor(solver, setSolver)
 //            NSLog(@"parsed: %@",filterMethod);
             [methods addObject:filterMethod];
             classDef.methods=methods;
+            classDef.structureDefinition=[[MPWStructureDefinition alloc] initWithName:classDef.name fields:instanceVariables];
+
 //            NSLog(@"methods: %@",methods);
 
         } else {
             PARSEERROR(@"expected { in class definition", separator);
         }
+    } else {
+        NSLog(@"did not get a classDef");
     }
     
     return classDef;
@@ -1554,7 +1562,7 @@ idAccessor(solver, setSolver)
                 PARSEERROR(@"incomplete protocol definition", @"");
             }
             protoDef.methods=methods;
-            protoDef.instanceVariableDescriptions=instanceVariables;
+            protoDef.structureDefinition=[[MPWStructureDefinition alloc] initWithName:protoDef.name fields:instanceVariables];
             protoDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
