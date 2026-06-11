@@ -1437,12 +1437,12 @@ idAccessor(solver, setSolver)
             classDef.superclassName=superclassName;
             separator=[self nextToken];
         }
-        NSLog(@"after superclass processing");
+//        NSLog(@"after superclass processing");
         NSMutableArray *methods=[NSMutableArray array];
         NSMutableArray *classMethods=[NSMutableArray array];
         NSMutableArray<MPWInstanceVariable*> *instanceVariables=[NSMutableArray array];
         NSMutableArray *propertyDefinitions=[NSMutableArray array];
-        NSLog(@"before first brace processing");
+//        NSLog(@"before first brace processing");
         if ( [separator isEqualToString:@"{"]) {
             NSString *next=nil;
             while (nil != (next=[self nextToken])) {
@@ -1491,7 +1491,7 @@ idAccessor(solver, setSolver)
             classDef.methods=methods;
             classDef.classMethods=classMethods;
             classDef.structureDefinition=[[MPWStructureDefinition alloc] initWithName:classDef.name fields:instanceVariables];
-            NSLog(@"structureDef: %@",classDef.structureDefinition);
+//            NSLog(@"structureDef: %@",classDef.structureDefinition);
             classDef.propertyPathDefinitions=propertyDefinitions;
         } else if ( [separator isEqualToString:@"|{"]) {
             MPWMethodHeader *header=[MPWMethodHeader methodHeaderWithString:@"<void>writeObject:object sender:aSender"];
