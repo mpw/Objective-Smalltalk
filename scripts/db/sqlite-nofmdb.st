@@ -41,11 +41,16 @@ scheme SQLiteScheme : SQLiteStore  {
       var classDef := STClassDefinition new.
       classDef setName:table name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
+      var schema ← table schema.
+      schema setName: classDef name.
       classDef setStructureDefinition: table schema.
       classDef.  
   }
   -<void>createClassForTableNamed:name {
       var classDef := self classDefForTable: (this:tables at:name).
+      stdout println:'class name to define: ',classDef name.
+      stdout println:'structure name to define: ',classDef name.
+      stdout println:'class structure: ',classDef structureDefinition.
 	  classDef defineClass.
       self setClass: classDef classToDefine forTable:name.
   }

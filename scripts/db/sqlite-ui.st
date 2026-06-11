@@ -41,12 +41,15 @@ scheme SQLiteScheme : SQLiteStore  {
       var classDef := STClassDefinition new.
       classDef setName:table name capitalizedString.
       classDef setSuperclassName: 'NSObject'.
-      classDef setInstanceVariableDescriptions: table schema fields.
+      var schema ← table schema.
+      schema setName: classDef name.
+      classDef setStructureDefinition: schema.
       classDef.  
   }
   -<void>createClassForTableNamed:name {
       var classDef := self classDefForTable: (this:tables at:name).
-	  classDef defineClass.
+      stdline ! classDef.
+      classDef defineClass.
       self setClass: classDef classToDefine forTable:name.
   }
 }.
@@ -57,11 +60,9 @@ scheme:db do createClassForTableNamed: #('artists', 'albums' ) each.
 extension Artists { -description { "Artist: {this:Name} ". }  }
 extension Albums { -description { "Album: {this:Title} ". }  }
 
-table ← MPWObjectArrayTable alloc initWithObjects: db:{tableName}.
-columns ← table columns.
-stdline ! columns.
-columns ← [ columns[1] ].
-table setColumns: columns.
+table ← MPWObjectArrayTable alloc initWithObjects: db:{tableName}
+stdline ! table columns.
 tableView ← #MPWTableView{ table: table  }.
+tableView reloadData.
 
 app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).

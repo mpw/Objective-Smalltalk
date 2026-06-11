@@ -18,5 +18,6 @@ stdline ! table.
 fullDef ← #MPWVariableDefinition{ name: 'full', operations: 0 }.
 table setItemStructure: (table itemStructure, fullDef ).
 tableView ← #MPWTableView{ table: table  }.
+tableView reloadData.
 app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).
 stdout do println: table objects each.
