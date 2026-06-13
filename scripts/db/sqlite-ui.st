@@ -60,7 +60,7 @@ scheme:db do createClassForTableNamed: #('artists', 'albums' ) each.
 extension Artists { -description { "Artist: {this:Name} ". }  }
 extension Albums { -description { "Album: {this:Title} ". }  }
 
-table ← MPWObjectArrayTable alloc initWithObjects: db:{tableName}
+table ←  db:{tableName}
 stdline ! table columns.
 tableView ← #MPWTableView{ table: table  }.
 tableView reloadData.
