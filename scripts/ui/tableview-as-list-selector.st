@@ -7,13 +7,7 @@ tableview reloadData.
 
 class SelectionChanger { 
    var array.
-   -<void>tableViewSelectionDidChange: someInfo {
-       var selection ← someInfo['NSTableViewCurrentRowSelectionUserInfoKey'].
-       stdout println: 'selection: ', selection.
-       var index ← selection firstIndex.
-       stdout println: 'index: ', index stringValue.
-       var selected ← this:array at:index.
-
+   -<void>didSelect: selected {
        stdout ! selected.
        
    }

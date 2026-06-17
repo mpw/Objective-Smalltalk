@@ -9,6 +9,7 @@ scheme SQLiteScheme : SQLiteStore  {
 	 (this:tables at:tableName) setTableClass:aClass.
   }
 
+
   /. { 
      get {
        self listForNames: this:tables allKeys.
@@ -52,6 +53,14 @@ scheme SQLiteScheme : SQLiteStore  {
       classDef defineClass.
       self setClass: classDef classToDefine forTable:name.
   }
+  -<void>didSelect: tableItem {
+      var tableName ← tableItem['name'].
+      var table ←  self at:tableName.
+      stdline ! table columns.
+      var tableView ← #MPWTableView{ table: table  }.
+      tableView reloadData.
+      tableView inScrollView:(200@400 extent: 500@600) | openInWindow:tableName.
+  }
 }.
 
 scheme:db := SQLiteScheme alloc initWithPath: 'chinook.db'.
@@ -60,9 +69,20 @@ scheme:db do createClassForTableNamed: #('artists', 'albums' ) each.
 extension Artists { -description { "Artist: {this:Name} ". }  }
 extension Albums { -description { "Album: {this:Title} ". }  }
 
-table ←  db:{tableName}
-stdline ! table columns.
-tableView ← #MPWTableView{ table: table  }.
+tables ← scheme:db tables allKeys.
+tables ← tables collect:{ :name |  #{ name: name }. }.
+
+tablesTable ← MPWDictArrayTable alloc initWithObjects: tables. 
+stdline ! 'tables:'.
+stdline ! tablesTable.
+stdline ! 'now the table view'.
+tableView ← #MPWTableView{ table: tablesTable  }.
+stdline ! 'got the table view'.
+stdline ! tableView. 
+
 tableView reloadData.
+
+tableView setMpwDelegate: scheme:db.
+
 
 app runFromCLI:(tableView inScrollView:(200@400 extent: 500@600)).
