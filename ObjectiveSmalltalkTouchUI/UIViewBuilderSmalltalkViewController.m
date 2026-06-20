@@ -9,6 +9,8 @@
 #import "UIViewBuilderSmalltalkViewController.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 #import <MPWFoundation/MPWFoundation.h>
+#import <MPWFoundationUIKit/MPWFoundationUIKit.h>
+#import <MPWFoundationUIKit/MPWUIKitUIGenerator.h>
 
 @interface UIImageFromData : MPWMappingStore
 @end
@@ -126,8 +128,10 @@ lazyAccessor( MPWByteStream*, consoleStream, setConsoleStream, createConsoleStre
 {
     [self.log.textStorage replaceCharactersInRange:NSMakeRange(0,self.log.text.length) withString:@""];
     @try {
+        MPWUIKitUIGenerator *generator = [MPWUIKitUIGenerator stream];
         [self.compiler bindValue:self.consoleStream toVariableNamed:@"stdout"];
         [self.compiler bindValue:self.preview toVariableNamed:@"preview"];
+        [self.compiler bindValue:generator toVariableNamed:@"gui"];
 //        [self stashProgramTextInTmp];
         id result = [self.compiler evaluateScriptString:self.programText];
         if ( [result isKindOfClass:[UIView class]]) {

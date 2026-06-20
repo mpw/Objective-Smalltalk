@@ -7,7 +7,7 @@
 
 #import <ObjectiveSmalltalk/STExpression.h>
 
-@class MPWInstanceVariable,STScriptedMethod;
+@class MPWInstanceVariable,STScriptedMethod,MPWStructureDefinition;
 
 NS_ASSUME_NONNULL_BEGIN
 

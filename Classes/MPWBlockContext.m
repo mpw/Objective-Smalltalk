@@ -293,7 +293,7 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
 
 }
 
-#ifndef GNUSTEP
+#if ! TARGET_OS_IPHONE && ! GNUSTEP
 
 -(long)peakBytesUsed
 {
