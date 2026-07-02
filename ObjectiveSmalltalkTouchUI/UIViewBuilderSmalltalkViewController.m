@@ -127,6 +127,7 @@ lazyAccessor( MPWByteStream*, consoleStream, setConsoleStream, createConsoleStre
 -(void)evaluate
 {
     [self.log.textStorage replaceCharactersInRange:NSMakeRange(0,self.log.text.length) withString:@""];
+    UIView *resultView=nil;
     @try {
         MPWUIKitUIGenerator *generator = [MPWUIKitUIGenerator stream];
         [self.compiler bindValue:self.consoleStream toVariableNamed:@"stdout"];
@@ -134,8 +135,14 @@ lazyAccessor( MPWByteStream*, consoleStream, setConsoleStream, createConsoleStre
         [self.compiler bindValue:generator toVariableNamed:@"gui"];
 //        [self stashProgramTextInTmp];
         id result = [self.compiler evaluateScriptString:self.programText];
+        resultView = [generator target];
+        NSLog(@"resultView direct from generator: %@",resultView);
+        NSLog(@"result of executing: %@",result);
         if ( [result isKindOfClass:[UIView class]]) {
-            UIView *resultView = result;
+            NSLog(@"set the resultView from the result: %@",result);
+            resultView = result;
+        }
+        if ( resultView ) {
             [[[self.preview subviews] do] removeFromSuperview];
             
             if ( resultView.frame.size.width < 1 || resultView.frame.size.height < 1 ) {
