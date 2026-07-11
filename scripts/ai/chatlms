@@ -1,0 +1,5 @@
+#!env st
+scheme:ai := ref:http://127.0.0.1:1234/api/v1 asScheme.
+chat := ref:ai:chat.
+response := chat post:'What is the capital of Germany?'
+stdout ! response.
