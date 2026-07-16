@@ -1,5 +1,12 @@
 #!env st
 scheme:ai := ref:http://127.0.0.1:1234/api/v1 asScheme.
+scheme:ai source setHeaders: #{ Content-Type: 'application/json' }.
+stdline ! ai:models/
 chat := ref:ai:chat.
-response := chat post:'What is the capital of Germany?'
-stdout ! response.
+response := chat post: #{ input: 'What is the capital of Germany?', model: 'qwen/qwen3.6-27b@4bit' } asJSON.
+response ← response value.
+output ← response at:'output'.
+output do: { :aResponse | 
+   content ← aResponse at:'content'.
+   stdout println: content.
+}.
