@@ -66,6 +66,22 @@
 @end
 
 
+@implementation NSSegmentedControl(dictionary)
+
+-(instancetype)initWithDictionary:(NSDictionary *)dict
+{
+    self=[self initWithDictionary:dict ignoringKeys:[NSSet setWithObject:@"segments"]];
+    NSArray *segments=dict[@"segments"];
+    self.segmentCount=segments.count;
+    for (long i=0,max=self.segmentCount;i<max;i++) {
+        [self setLabel:segments[i] forSegment:i];
+    }
+    return self;
+}
+
+@end
+
+
 @interface NSViewFromDictTesting : NSView {}
 @end
 
