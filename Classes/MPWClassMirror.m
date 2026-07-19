@@ -83,6 +83,7 @@
                            @"MPWNamedIdentifier",
                            @"NSLayoutXAxisAnchor",
                            @"MPWDirectForwardingTrampoline",
+                           @"UINSServiceViewController",
 
                            
 #if WINDOWS						   
