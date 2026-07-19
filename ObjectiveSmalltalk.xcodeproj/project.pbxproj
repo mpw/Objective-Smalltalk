@@ -144,8 +144,6 @@
 		1F35095C262C1B3700B8DEDC /* STSimpleDataflowConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */; };
 		1F35095D262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */; };
 		1F35095E262C1B3700B8DEDC /* STSimpleDataflowConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */; };
-		1F35AD3E2ABD917B00541C02 /* STPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F35AD3C2ABD917B00541C02 /* STPopUpButton.h */; };
-		1F35AD3F2ABD917B00541C02 /* STPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F35AD3D2ABD917B00541C02 /* STPopUpButton.m */; };
 		1F3C6E691E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F3C6E6A1E350BF200AEA56E /* MPWLiteralArrayExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F3C6E6B1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */; };
@@ -208,10 +206,6 @@
 		1F59A722202C7D7800BE06F6 /* win_xcb.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F59A71C202C7D7800BE06F6 /* win_xcb.m */; };
 		1F59A723202C7D7800BE06F6 /* x11fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F59A71D202C7D7800BE06F6 /* x11fs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F59A724202C7E8400BE06F6 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
-		1F5A59A22AC1C26300670E75 /* STSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5A59A02AC1C26300670E75 /* STSlider.h */; };
-		1F5A59A32AC1C26300670E75 /* STSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A59A12AC1C26300670E75 /* STSlider.m */; };
-		1F5A59A62AC1CC2000670E75 /* STProgressIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5A59A42AC1CC2000670E75 /* STProgressIndicator.h */; };
-		1F5A59A72AC1CC2000670E75 /* STProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A59A52AC1CC2000670E75 /* STProgressIndicator.m */; };
 		1F5BBA282941DFA500C3D345 /* STNativeCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB559EF290D61E0009AE4D0 /* STNativeCompiler.m */; };
 		1F5BBA2A29434BD600C3D345 /* use_st_block.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F5BBA2929434BD600C3D345 /* use_st_block.mfile */; };
 		1F5BBA342943BC4000C3D345 /* use_class_with_if.mfile in Resources */ = {isa = PBXBuildFile; fileRef = 1F5BBA332943BC4000C3D345 /* use_class_with_if.mfile */; };
@@ -220,8 +214,6 @@
 		1F5D769025E98F6E00DCC82F /* STPortScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D768D25E98F6E00DCC82F /* STPortScheme.h */; };
 		1F5D769125E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
 		1F5D769225E98F6E00DCC82F /* STPortScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D768E25E98F6E00DCC82F /* STPortScheme.m */; };
-		1F5D76A525EA389200DCC82F /* STTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76A325EA389200DCC82F /* STTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F5D76A625EA389200DCC82F /* STTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76A425EA389200DCC82F /* STTextField.m */; };
 		1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */; };
 		1F5D76D125EBC9AF00DCC82F /* MPWSTTouchUITests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */; };
 		1F5D76D225EBC9AF00DCC82F /* MPWSTTouchUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */; };
@@ -572,8 +564,6 @@
 		1FAFD9851855BC5500EC5221 /* MPWFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F50B9CF05AC60E200A22012 /* MPWFoundation.framework */; };
 		1FAFD9861855BC5500EC5221 /* ObjectiveSmalltalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5E508F09B4B754000298D9 /* ObjectiveSmalltalk.framework */; };
 		1FAFD9891855BC5500EC5221 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAABC4184BDBBA00086047 /* InfoPlist.strings */; };
-		1FB13BF12AA5F5BA006D85CC /* STButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB13BEF2AA5F5BA006D85CC /* STButton.h */; };
-		1FB13BF22AA5F5BA006D85CC /* STButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB13BF02AA5F5BA006D85CC /* STButton.m */; };
 		1FB559F0290D61E0009AE4D0 /* STNativeCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB559EE290D61E0009AE4D0 /* STNativeCompiler.h */; };
 		1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB7AE3124DB0F3000CCBE86 /* STBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB7AE2E24DB0F3000CCBE86 /* STBundle.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1229,8 +1219,6 @@
 		1F3466F328CB114E003257CB /* add.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = add.macho; sourceTree = "<group>"; };
 		1F350959262C1B3700B8DEDC /* STSimpleDataflowConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSimpleDataflowConstraint.h; sourceTree = "<group>"; };
 		1F35095A262C1B3700B8DEDC /* STSimpleDataflowConstraint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSimpleDataflowConstraint.m; sourceTree = "<group>"; };
-		1F35AD3C2ABD917B00541C02 /* STPopUpButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPopUpButton.h; sourceTree = "<group>"; };
-		1F35AD3D2ABD917B00541C02 /* STPopUpButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPopUpButton.m; sourceTree = "<group>"; };
 		1F3755D528CF9088006198CF /* DrawingContext.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawingContext.xcodeproj; path = ../DrawingContext/DrawingContext.xcodeproj; sourceTree = "<group>"; };
 		1F3C6E671E350BF200AEA56E /* MPWLiteralArrayExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLiteralArrayExpression.h; sourceTree = "<group>"; };
 		1F3C6E681E350BF200AEA56E /* MPWLiteralArrayExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLiteralArrayExpression.m; sourceTree = "<group>"; };
@@ -1286,10 +1274,6 @@
 		1F59A71C202C7D7800BE06F6 /* win_xcb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = win_xcb.m; sourceTree = "<group>"; };
 		1F59A71D202C7D7800BE06F6 /* x11fs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x11fs.h; sourceTree = "<group>"; };
 		1F59AD4329130D69009282D4 /* use_concatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = use_concatter.m; sourceTree = "<group>"; };
-		1F5A59A02AC1C26300670E75 /* STSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STSlider.h; sourceTree = "<group>"; };
-		1F5A59A12AC1C26300670E75 /* STSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STSlider.m; sourceTree = "<group>"; };
-		1F5A59A42AC1CC2000670E75 /* STProgressIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STProgressIndicator.h; sourceTree = "<group>"; };
-		1F5A59A52AC1CC2000670E75 /* STProgressIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STProgressIndicator.m; sourceTree = "<group>"; };
 		1F5BBA2929434BD600C3D345 /* use_st_block.mfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = use_st_block.mfile; sourceTree = "<group>"; };
 		1F5BBA332943BC4000C3D345 /* use_class_with_if.mfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = use_class_with_if.mfile; sourceTree = "<group>"; };
 		1F5BBA35294DEC1200C3D345 /* use_class.macho */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = use_class.macho; sourceTree = "<group>"; };
@@ -1297,8 +1281,6 @@
 		1F5D767A25E9838600DCC82F /* STTargetActionSenderPort.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTargetActionSenderPort.m; sourceTree = "<group>"; };
 		1F5D768D25E98F6E00DCC82F /* STPortScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPortScheme.h; sourceTree = "<group>"; };
 		1F5D768E25E98F6E00DCC82F /* STPortScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPortScheme.m; sourceTree = "<group>"; };
-		1F5D76A325EA389200DCC82F /* STTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTextField.h; sourceTree = "<group>"; };
-		1F5D76A425EA389200DCC82F /* STTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTextField.m; sourceTree = "<group>"; };
 		1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STUIAppKitAdditions.m; sourceTree = "<group>"; };
 		1F5D76CF25EBC9AF00DCC82F /* MPWSTTouchUITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWSTTouchUITests.h; sourceTree = "<group>"; };
 		1F5D76D025EBC9AF00DCC82F /* MPWSTTouchUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWSTTouchUITests.m; sourceTree = "<group>"; };
@@ -1539,8 +1521,6 @@
 		1FAFD9721855B98200EC5221 /* STScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STScript.h; sourceTree = "<group>"; };
 		1FAFD98E1855BC5500EC5221 /* StshFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StshFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FAFD98F1855BC5600EC5221 /* StshFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "StshFramework-Info.plist"; path = "/Users/marcel/programming/Kits/ObjectiveSmalltalk/StshFramework-Info.plist"; sourceTree = "<absolute>"; };
-		1FB13BEF2AA5F5BA006D85CC /* STButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STButton.h; sourceTree = "<group>"; };
-		1FB13BF02AA5F5BA006D85CC /* STButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STButton.m; sourceTree = "<group>"; };
 		1FB39EF5088F0AD2008FC5C6 /* MPWInstanceVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWInstanceVariable.h; sourceTree = "<group>"; };
 		1FB39EF6088F0AD2008FC5C6 /* MPWInstanceVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWInstanceVariable.m; sourceTree = "<group>"; };
 		1FB39F9D088FDAE4008FC5C6 /* MPWSetAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWSetAccessor.h; sourceTree = "<group>"; };
@@ -2665,16 +2645,6 @@
 				1FA85A1A1923739E00F52396 /* ShellView.h */,
 				1FA85A1B1923739E00F52396 /* ShellView.m */,
 				1FA859F51923731900F52396 /* Supporting Files */,
-				1F5D76A325EA389200DCC82F /* STTextField.h */,
-				1F5D76A425EA389200DCC82F /* STTextField.m */,
-				1F5A59A02AC1C26300670E75 /* STSlider.h */,
-				1F5A59A12AC1C26300670E75 /* STSlider.m */,
-				1F5A59A42AC1CC2000670E75 /* STProgressIndicator.h */,
-				1F5A59A52AC1CC2000670E75 /* STProgressIndicator.m */,
-				1F35AD3C2ABD917B00541C02 /* STPopUpButton.h */,
-				1F35AD3D2ABD917B00541C02 /* STPopUpButton.m */,
-				1FB13BEF2AA5F5BA006D85CC /* STButton.h */,
-				1FB13BF02AA5F5BA006D85CC /* STButton.m */,
 				1F60964D25E788FC0018BB72 /* STUITests.h */,
 				1F60964E25E788FC0018BB72 /* STUITests.m */,
 				1F5D76BD25EBC94200DCC82F /* STUIAppKitAdditions.m */,
@@ -3434,18 +3404,13 @@
 				1F7045F92231412A005ED7FB /* ObjectiveSmalltalkUI.h in Headers */,
 				1F5620C12F6AF9ED00D998EF /* STViewHarness.h in Headers */,
 				1F2D95F0225115CF00D025D8 /* MPWAppDelegate.h in Headers */,
-				1FB13BF12AA5F5BA006D85CC /* STButton.h in Headers */,
-				1F5D76A525EA389200DCC82F /* STTextField.h in Headers */,
 				1F7045EF22313E84005ED7FB /* MPWMethodBrowser.h in Headers */,
 				1F7045F422313EA2005ED7FB /* MPWClassMethodSwitchStore.h in Headers */,
 				1FA85A1C1923739E00F52396 /* CLIView.h in Headers */,
 				1FA749E125F55664001AA6A8 /* MPWFontStore.h in Headers */,
 				1FA85A261923746B00F52396 /* FSCommandHistory.h in Headers */,
-				1F5A59A22AC1C26300670E75 /* STSlider.h in Headers */,
-				1F35AD3E2ABD917B00541C02 /* STPopUpButton.h in Headers */,
 				1F2B179A261C680D005D873F /* STViewScheme.h in Headers */,
 				1F19EFB61EF2573900CB9E01 /* NSView+dictionary.h in Headers */,
-				1F5A59A62AC1CC2000670E75 /* STProgressIndicator.h in Headers */,
 				1F5620AD2F63338E00D998EF /* STBundleUI.h in Headers */,
 				1FA749BD25F5508D001AA6A8 /* MPWColorStore.h in Headers */,
 				1F8E81D11924229B00821570 /* MPWDocumentScheme.h in Headers */,
@@ -5051,10 +5016,8 @@
 				1F5620AC2F63338E00D998EF /* STBundleUI.m in Sources */,
 				1F7045F022313E84005ED7FB /* MPWMethodBrowser.m in Sources */,
 				1FA85A271923746B00F52396 /* FSCommandHistory.m in Sources */,
-				1FB13BF22AA5F5BA006D85CC /* STButton.m in Sources */,
 				1F94014E2C7353A900CD37ED /* STProgramTextView.m in Sources */,
 				1F86CE1B2033386B000F0B81 /* MPWWindowsScheme.m in Sources */,
-				1F5A59A32AC1C26300670E75 /* STSlider.m in Sources */,
 				1F86CE2220334B2E000F0B81 /* MPWSpotlightScheme.m in Sources */,
 				1F2B179B261C680D005D873F /* STViewScheme.m in Sources */,
 				1F60965025E788FC0018BB72 /* STUITests.m in Sources */,
@@ -5062,12 +5025,9 @@
 				1FA85A1F1923739E00F52396 /* ShellView.m in Sources */,
 				1FA85A1D1923739E00F52396 /* CLIView.m in Sources */,
 				1F2D95F1225115CF00D025D8 /* MPWAppDelegate.m in Sources */,
-				1F35AD3F2ABD917B00541C02 /* STPopUpButton.m in Sources */,
 				1F5D76BE25EBC94200DCC82F /* STUIAppKitAdditions.m in Sources */,
 				1FA749BE25F5508D001AA6A8 /* MPWColorStore.m in Sources */,
-				1F5A59A72AC1CC2000670E75 /* STProgressIndicator.m in Sources */,
 				1F8E81D21924229B00821570 /* MPWDocumentScheme.m in Sources */,
-				1F5D76A625EA389200DCC82F /* STTextField.m in Sources */,
 				1F5620C02F6AF9ED00D998EF /* STViewHarness.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
