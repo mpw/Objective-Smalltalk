@@ -27,7 +27,7 @@
     self.mapper[@"id"] = [SLInputField templateWithValues:@{ @"type": @"text"}];
     self.mapper[@"Text"] = [SLInputField templateWithValues:@{ @"type": @"textarea"}];
     self.mapper[@"Date"] = [SLInputField templateWithValues:@{ @"type": @"date"}];
-
+    self.basePath = @"";
     return self;
 }
 
@@ -54,7 +54,7 @@
     [self tr:^{
         for (MPWTableColumn *column in columns ) {
             id value = [column objectAtIndex:rowIndex];
-            SLInputField *field = [self inputElementForType:column.type name:column.key value:value put:[NSString stringWithFormat:@"/item/%d/%@",rowIndex,column.key] ];
+            SLInputField *field = [self inputElementForType:column.type name:column.key value:value put:[NSString stringWithFormat:@"%@/item/%d/%@",self.basePath,rowIndex,column.key] ];
              [self td: ^{
                 [self writeObject:field];
             } attributes:@{ @"class": column.key}];

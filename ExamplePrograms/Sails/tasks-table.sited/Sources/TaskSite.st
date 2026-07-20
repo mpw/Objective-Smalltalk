@@ -37,7 +37,7 @@ scheme TaskSite : MPWMappingStore {
                    } attributes: #{}.
          }
 
-       /item/:row/:columnName {  put { 
+       /tasks/item/:row/:columnName {  put { 
             stdout println:'put at item'.
             newValue count > 0 ifTrue: {
                    newValue ←newValue at: columnName.
@@ -66,6 +66,7 @@ scheme TaskSite : MPWMappingStore {
          }
         /tasks/items {  get { 
                 var hs ← STHTMLGenerator stream.
+                hs setBasePath:'/tasks'.
                 stdline ! 'get tasks'.
                 hs html:{
                   hs head:{
