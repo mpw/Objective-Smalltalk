@@ -18,9 +18,9 @@ scheme TaskSite : MPWMappingStore {
 	-<void>persist {
 		source:tasks := self taskList.
 	}
-        /newTask {
+        /tasks/newItem {
 		post {
-                    this:taskList insertObject: #Task{ title: ((newValue at:'title'), ' - newTask' ) } atIndex:0. 
+                    this:taskList insertObject: #Task{ title: ((newValue at:'title') ) } atIndex:0. 
 		    stdline ! ref:this:/ .
 		    ref:special:/ .
                 }
@@ -29,21 +29,13 @@ scheme TaskSite : MPWMappingStore {
         -renderFormOn: html {
                    html form:{ 
                        html input:'' attributes:#{ type: 'text' , name: 'title' } .
-                       } attributes:#{ hx-post:'/newTask'    } .
+                       } attributes:#{ hx-post:'/tasks/newItem'    } .
          }
         -renderTableOn: html {
                    html div: {
                           html ! this:taskList.
                    } attributes: #{}.
          }
-	/tasks { 
-	   get { 
-                var hs ← STHTMLGenerator stream.
-                    self renderTableOn: hs.
-                stdline ! 'got tasks'.
-                hs target target.
-           }
-       }
 
        /item/:row/:columnName {  put { 
             stdout println:'put at item'.
@@ -59,8 +51,9 @@ scheme TaskSite : MPWMappingStore {
             stdout println: column.
             stdout println: newValue.
  	    column replaceObjectAtIndex: row intValue withObject: newValue.
-            ref:special:/ .
-        }   get  {  ref:special:/ .  } }
+            stdout println: 'did replace'.
+            ref:this:/tasks/items .
+        }   get  { ref:this:/tasks/items .  } }
         /htmx.js { 
                get {
                    this:bundle resources at:'htmx.js'.
@@ -71,21 +64,16 @@ scheme TaskSite : MPWMappingStore {
                    this:bundle resources at:'style.css'.
                }
          }
-        /style.css { 
-               get {
-                   this:bundle resources at:'style.css'.
-               }
-         }
-        / {  get { 
+        /tasks/items {  get { 
                 var hs ← STHTMLGenerator stream.
                 stdline ! 'get tasks'.
                 hs html:{
                   hs head:{
                      hs title:'Tasks List'.
-                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
+                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: '/style.css'}.
                   }.
                   hs body:{
-                    hs script:'' attributes:#{ src: 'htmx.js' }.
+                    hs script:'' attributes:#{ src: '/htmx.js' }.
                     hs ! 'This is the task list'.
                     hs br: nil.
                     hs ! ''.
@@ -99,5 +87,6 @@ scheme TaskSite : MPWMappingStore {
                 hs target target.
 
      } }  
+     /  { get { ref:this:/tasks/items } }
 }.
 
