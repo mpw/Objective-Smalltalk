@@ -2,6 +2,8 @@
 scheme TaskSite : MPWMappingStore {
         var bundle.
         var taskList.
+        var tableStore.
+        -schemeNames { [ 'tableStore' ] }
         -initWithBundle:aBundle {
            self ← super init.
            this:bundle ← aBundle.
@@ -12,6 +14,7 @@ scheme TaskSite : MPWMappingStore {
            this:taskList columns at:0 | setVisible: false.
            var columns ← this:taskList visibleColumns.
            this:taskList setVisibleColumns: [ columns[1], columns[0] ].
+           this:tableStore ← #TableStore{ theList: this:taskList }.
 
            self. 
         }
@@ -22,37 +25,16 @@ scheme TaskSite : MPWMappingStore {
 		post {
                     this:taskList insertObject: #Task{ title: ((newValue at:'title') ) } atIndex:0. 
 		    stdline ! ref:this:/ .
-		    ref:special:/ .
+		    ref:this:/tasks/items .
                 }
         }
         
-        -renderFormOn: html {
-                   html form:{ 
-                       html input:'' attributes:#{ type: 'text' , name: 'title' } .
-                       } attributes:#{ hx-post:'/tasks/newItem'    } .
-         }
-        -renderTableOn: html {
-                   html div: {
-                          html ! this:taskList.
-                   } attributes: #{}.
-         }
 
        /tasks/item/:row/:columnName {  put { 
-            stdout println:'put at item'.
-            newValue count > 0 ifTrue: {
-                   newValue ←newValue at: columnName.
-            } ifFalse: { 
-                   newValue ← false.
-            }.
-            newValue = 'on' ifTrue: {
-                    newValue ← true.
-            }.
-            var column ← this:taskList columnForKey: columnName.
-            stdout println: column.
-            stdout println: newValue.
- 	    column replaceObjectAtIndex: row intValue withObject: newValue.
-            stdout println: 'did replace'.
-            ref:this:/tasks/items .
+            stdout println:'put at item in tasks'.
+            tableStore:item/{row}/{columnName} ← newValue.
+            stdout println:'tasks in TaskSite:'.
+            stdout println: this:taskList.
         }   get  { ref:this:/tasks/items .  } }
         /htmx.js { 
                get {
@@ -79,8 +61,8 @@ scheme TaskSite : MPWMappingStore {
                     hs br: nil.
                     hs ! ''.
                     hs br: nil.
-                    self renderFormOn: hs.
-                    self renderTableOn: hs.
+                    this:tableStore renderFormOn: hs.
+                    this:tableStore renderTableOn: hs.
 
                   } attributes: #{ id: 'body' , hx-target: '#body'  } .
                 }.
