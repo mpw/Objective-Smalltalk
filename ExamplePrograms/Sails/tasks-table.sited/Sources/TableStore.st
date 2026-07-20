@@ -34,6 +34,15 @@ scheme TableStore : MPWMappingStore {
           ref:this:/tasks/items .
         }   get  { ref:this:/{this:basePath}/items .  } }
 
+      /newItem {
+                post {
+                    stdout println:'post in the TableStore'.
+                    this:theList insertObject: #Task{ title: ((newValue at:'title') ) } atIndex:0.
+                    stdline ! ref:this:/ .
+                    ref:this:/tasks/items .
+                }
+        }
+
 
                     
 

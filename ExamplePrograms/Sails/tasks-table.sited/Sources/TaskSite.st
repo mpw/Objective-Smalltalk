@@ -23,7 +23,9 @@ scheme TaskSite : MPWMappingStore {
 	}
         /tasks/newItem {
 		post {
-                    this:taskList insertObject: #Task{ title: ((newValue at:'title') ) } atIndex:0. 
+                    stdout println:'post in the TaskSite, will forward'.
+                    this:tableStore at:'newItem' post: newValue.
+                    stdout println:'did forward'.
 		    stdline ! ref:this:/ .
 		    ref:this:/tasks/items .
                 }
@@ -31,11 +33,9 @@ scheme TaskSite : MPWMappingStore {
         
 
        /tasks/item/:row/:columnName {  put { 
-            stdout println:'put at item in tasks'.
             tableStore:item/{row}/{columnName} ← newValue.
-            stdout println:'tasks in TaskSite:'.
-            stdout println: this:taskList.
         }   get  { ref:this:/tasks/items .  } }
+
         /htmx.js { 
                get {
                    this:bundle resources at:'htmx.js'.
