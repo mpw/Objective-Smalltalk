@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STHTMLGenerator : MPWXmlGenerator
 
+@property (nonatomic,strong) NSString *basePath;
 
 @end
 

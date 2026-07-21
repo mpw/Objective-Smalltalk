@@ -2,6 +2,8 @@
 scheme TaskSite : MPWMappingStore {
         var bundle.
         var taskList.
+        var tableStore.
+        -schemeNames { [ 'tableStore' ] }
         -initWithBundle:aBundle {
            self ← super init.
            this:bundle ← aBundle.
@@ -12,55 +14,28 @@ scheme TaskSite : MPWMappingStore {
            this:taskList columns at:0 | setVisible: false.
            var columns ← this:taskList visibleColumns.
            this:taskList setVisibleColumns: [ columns[1], columns[0] ].
+           this:tableStore ← #TableStore{ theList: this:taskList }.
 
            self. 
         }
 	-<void>persist {
 		source:tasks := self taskList.
 	}
-        /newTask {
+        /tasks/newItem {
 		post {
-                    this:taskList insertObject: #Task{ title: ((newValue at:'title'), ' - newTask' ) } atIndex:0. 
+                    stdout println:'post in the TaskSite, will forward'.
+                    this:tableStore at:'newItem' post: newValue.
+                    stdout println:'did forward'.
 		    stdline ! ref:this:/ .
-		    ref:special:/ .
+		    ref:this:/tasks/items .
                 }
         }
         
-        -renderFormOn: html {
-                   html form:{ 
-                       html input:'' attributes:#{ type: 'text' , name: 'title' } .
-                       } attributes:#{ hx-post:'/newTask'    } .
-         }
-        -renderTableOn: html {
-                   html div: {
-                          html ! this:taskList.
-                   } attributes: #{}.
-         }
-	/tasks { 
-	   get { 
-                var hs ← STHTMLGenerator stream.
-                    self renderTableOn: hs.
-                stdline ! 'got tasks'.
-                hs target target.
-           }
-       }
 
-       /item/:row/:columnName {  put { 
-            stdout println:'put at item'.
-            newValue count > 0 ifTrue: {
-                   newValue ←newValue at: columnName.
-            } ifFalse: { 
-                   newValue ← false.
-            }.
-            newValue = 'on' ifTrue: {
-                    newValue ← true.
-            }.
-            var column ← this:taskList columnForKey: columnName.
-            stdout println: column.
-            stdout println: newValue.
- 	    column replaceObjectAtIndex: row intValue withObject: newValue.
-            ref:special:/ .
-        }   get  {  ref:special:/ .  } }
+       /tasks/item/:row/:columnName {  put { 
+            tableStore:item/{row}/{columnName} ← newValue.
+        }   get  { ref:this:/tasks/items .  } }
+
         /htmx.js { 
                get {
                    this:bundle resources at:'htmx.js'.
@@ -71,27 +46,23 @@ scheme TaskSite : MPWMappingStore {
                    this:bundle resources at:'style.css'.
                }
          }
-        /style.css { 
-               get {
-                   this:bundle resources at:'style.css'.
-               }
-         }
-        / {  get { 
+        /tasks/items {  get { 
                 var hs ← STHTMLGenerator stream.
+                hs setBasePath:'/tasks'.
                 stdline ! 'get tasks'.
                 hs html:{
                   hs head:{
                      hs title:'Tasks List'.
-                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: 'style.css'}.
+                     hs link:#{ rel: 'stylesheet',  type: 'text/css',  href: '/style.css'}.
                   }.
                   hs body:{
-                    hs script:'' attributes:#{ src: 'htmx.js' }.
+                    hs script:'' attributes:#{ src: '/htmx.js' }.
                     hs ! 'This is the task list'.
                     hs br: nil.
                     hs ! ''.
                     hs br: nil.
-                    self renderFormOn: hs.
-                    self renderTableOn: hs.
+                    this:tableStore renderFormOn: hs.
+                    this:tableStore renderTableOn: hs.
 
                   } attributes: #{ id: 'body' , hx-target: '#body'  } .
                 }.
@@ -99,5 +70,6 @@ scheme TaskSite : MPWMappingStore {
                 hs target target.
 
      } }  
+     /  { get { ref:this:/tasks/items } }
 }.
 

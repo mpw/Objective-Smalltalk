@@ -6011,7 +6011,7 @@
 				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MODULEMAP_FILE = ObjectiveSmalltalk.map;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -6058,7 +6058,7 @@
 				INSTALL_PATH = "@rpath/";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MODULEMAP_FILE = ObjectiveSmalltalk.map;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -7174,7 +7174,7 @@
 					/Library/Frameworks/,
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7229,7 +7229,7 @@
 					/Library/Frameworks/,
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -7282,7 +7282,7 @@
 					"$(inherited)",
 					/Library/Frameworks/,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = StshFramework;
@@ -7333,7 +7333,7 @@
 					"$(inherited)",
 					/Library/Frameworks/,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metaobject.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = StshFramework;
 				WRAPPER_EXTENSION = framework;
@@ -8067,7 +8067,7 @@
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -8118,7 +8118,7 @@
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
