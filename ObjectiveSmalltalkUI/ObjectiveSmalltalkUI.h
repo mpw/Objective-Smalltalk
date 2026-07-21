@@ -12,4 +12,5 @@
 #import <ObjectiveSmalltalkUI/STProgramTextView.h>
 #import <ObjectiveSmalltalkUI/MPWColorStore.h>
 #import <ObjectiveSmalltalkUI/MPWFontStore.h>
-#import <MPWFoundationUI/STTextField.h>
+//#import <MPWFoundationUI/STTextField.h>
+#import <ObjectiveSmalltalkUI/STViewScheme.h>

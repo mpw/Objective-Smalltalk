@@ -30,10 +30,10 @@ int main (int argc, const char *argv[])
     }
     STShell *stsh=[[[MPWStshUI alloc] initWithArgs:args] autorelease];
     stsh.shouldEvaluateReturnValue=true;
-
-    NSData* initCode = [[STTextField class] frameworkResource:@"AppKitInit" category:@"st"];
+    Class resourceClass = [STViewScheme class];
+    NSData* initCode = [resourceClass frameworkResource:@"AppKitInit" category:@"st"];
 //    NSLog(@"initCode: %@",[initCode stringValue]);
-    NSData *data=[[STTextField class] frameworkResource:@"appkit-enums" category:@"json"];
+    NSData *data=[resourceClass frameworkResource:@"appkit-enums" category:@"json"];
     NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     MPWDictStore *enumStore=[MPWDictStore storeWithDictionary:(NSMutableDictionary*)dict];
     STCompiler *compiler=[stsh evaluator];
