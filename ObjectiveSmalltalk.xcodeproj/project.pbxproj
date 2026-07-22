@@ -101,7 +101,7 @@
 		1F29D7FC21B42BE900AB14D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D7FA21B42BE900AB14D8 /* LaunchScreen.storyboard */; };
 		1F29D7FF21B42BE900AB14D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F29D7FE21B42BE900AB14D8 /* main.m */; };
 		1F29D80621B42D2A00AB14D8 /* ClassesToTest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F29D80521B42D2A00AB14D8 /* ClassesToTest.plist */; };
-		1F2B179A261C680D005D873F /* STViewScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B1798261C680D005D873F /* STViewScheme.h */; };
+		1F2B179A261C680D005D873F /* STViewScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B1798261C680D005D873F /* STViewScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2B179B261C680D005D873F /* STViewScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B1799261C680D005D873F /* STViewScheme.m */; };
 		1F2B664F268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B664D268CCC6A00DE4416 /* STTypeDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F2B6650268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2B664D268CCC6A00DE4416 /* STTypeDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
