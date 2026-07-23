@@ -1,0 +1,15 @@
+#!env st
+#-<void>askai: question
+
+uri ← ref:http://127.0.0.1:1234/api/v1/models URL.
+stdout println: uri.
+
+fetcher ← MPWURLFetchStream streamWithTarget: stdout.
+
+fetcher setHeaderDict: #{ Content-Type: 'application/json' }.
+fetcher get: uri.
+fetcher awaitResultForSeconds: 2.
+query ← #{ input: question , model: 'qwen/qwen3.6-27b@4bit' } asJSON.
+chaturi ← ref:http://127.0.0.1:1234/api/v1/chat URL.
+fetcher post: query toURL: chaturi.
+fetcher awaitResultForSeconds: 20.
