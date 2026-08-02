@@ -81,6 +81,16 @@ static ArrayArgBlock valueWithArgsBlock = (id)^(id blockSelf, NSArray *a){
         success = success &&class_addMethod(blockClass, @selector(nextObject), zeroArgImp, "@@:");
         IMP varArgImp=imp_implementationWithBlock( valueWithArgsBlock );
         success = success && class_addMethod(blockClass, @selector(valueWithObjects:), varArgImp, "@@:@");
+        // whileTrue: has a block as its receiver, so native blocks need it too
+        // (e.g. transpiled `{ cond } whileTrue:{ body }`).  Mirrors -[MPWBlockContext whileTrue:].
+        IMP whileTrueImp=imp_implementationWithBlock( ^id(id blockSelf, id bodyBlock){
+            id retval=nil;
+            while ( [((ZeroArgBlock)blockSelf)() boolValue] ) {
+                retval=[bodyBlock value];
+            }
+            return retval;
+        } );
+        success = success && class_addMethod(blockClass, @selector(whileTrue:), whileTrueImp, "@@:@");
         if (!success) {
             NSLog(@"==== couldn't install block value: methods");
         }
