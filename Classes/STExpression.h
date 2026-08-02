@@ -9,7 +9,11 @@
 #import <MPWFoundation/MPWFoundation.h>
 #import <ObjectiveSmalltalk/STEvaluable.h>
 
-@interface STExpression : MPWObject <STEvaluable> {
+// NSObject (atomic refcounting), not MPWObject: the compiled AST is shared
+// across evaluation threads, and MPWObject's fast non-atomic refcount races
+// under concurrent retain/release.  MPWObject's fast path is kept for the
+// data-plane classes (streams, parsers) that actually need it.
+@interface STExpression : NSObject <STEvaluable> {
     long textOffset,len;
 }
 

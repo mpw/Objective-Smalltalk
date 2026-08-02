@@ -98,7 +98,7 @@ objectAccessor(STIdentifier*, identifier, setIdentifier )
 
 -(void)generateObjectiveCOn:aStream
 {
-    [aStream generateVariableWithName:[self name]];
+    [aStream generateIdentifier:[self identifier]];
 }
 
 @end

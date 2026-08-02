@@ -33,6 +33,8 @@
 #import "STTypeDescriptor.h"
 #import "STSubscriptExpression.h"
 #import "STQueryExpression.h"
+#import "MPWSchemeScheme.h"
+#import <dlfcn.h>
 
 @interface NSString(methodsDynamicallyAddedDuringTesting)
 
@@ -548,6 +550,163 @@
     id parsed = [@"NSString stringWithString:'hello world!'." compileIn:compiler];
     id objcCode = [MPWObjCGenerator process:parsed];
     IDEXPECT( objcCode, @"[NSString stringWithString:@\"hello world!\"]", @"generating Objective-C didn't work");
+}
+
++(void)testCreateObjectiveCForAssignment
+{
+    id parsed = [@"a := 'hello'." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"a = @\"hello\"", @"assignment generation");
+}
+
++(void)testCreateObjectiveCForEscapedString
+{
+    MPWLiteralExpression *literal=[[[MPWLiteralExpression alloc] init] autorelease];
+    literal.theLiteral=@"a\"b\nc";
+    IDEXPECT([MPWObjCGenerator process:literal], @"@\"a\\\"b\\nc\"", @"Objective-C string escaping");
+}
+
++(void)testCreateObjectiveCForLiteralArray
+{
+    id parsed = [@"#( 'one', 'two' )." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"@[@\"one\", @\"two\"]", @"array literal generation");
+}
+
++(void)testCreateObjectiveCForBlock
+{
+    id parsed = [@"{ :item | item class. }." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"^id(id item) {\nreturn [item class];\n}", @"block generation");
+}
+
++(void)testCreateObjectiveCForMethod
+{
+    STScriptedMethod *method=[[self compiler] parseMethodDefinition:@"-answerFor:value { value class. }"];
+    IDEXPECT([MPWObjCGenerator process:method], @"- (id)answerFor:(id)value\n{\nreturn [value class];\n}\n", @"method generation");
+}
+
++(void)testCreateObjectiveCForClass
+{
+    STClassDefinition *classDef=[[self compiler] compile:@"class __GeneratedObjC : NSObject { var value. -valueClass { value class. } }"];
+    NSString *generated=[MPWObjCGenerator process:classDef];
+    EXPECTTRUE([generated containsString:@"@interface __GeneratedObjC : NSObject"], @"class interface");
+    EXPECTTRUE([generated containsString:@"id value;"], @"class ivar");
+    EXPECTTRUE([generated containsString:@"@implementation __GeneratedObjC"], @"class implementation");
+    EXPECTTRUE([generated containsString:@"return [value class];"], @"class method body");
+}
+
++(int)runObjectiveCGeneratorSmokeTask:(NSString*)launchPath arguments:(NSArray*)arguments output:(NSString**)output
+{
+    NSTask *task=[[[NSTask alloc] init] autorelease];
+    NSPipe *pipe=[NSPipe pipe];
+    task.launchPath=launchPath;
+    task.arguments=arguments;
+    task.standardOutput=pipe;
+    task.standardError=pipe;
+    [task launch];
+    [task waitUntilExit];
+    NSData *data=[[pipe fileHandleForReading] readDataToEndOfFile];
+    if (output) {
+        *output=[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    }
+    return task.terminationStatus;
+}
+
++(Class)loadObjectiveCGeneratorSmokeFixture
+{
+    static Class smokeClass=nil;
+    if (smokeClass) return smokeClass;
+
+    STCompiler *compiler=[self compiler];
+    NSArray *definitions=@[
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } }"],
+        [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
+        [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
+    ];
+    NSMutableString *source=[NSMutableString stringWithString:
+        @"#import <Foundation/Foundation.h>\n"
+         "#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>\n\n"];
+    for (id definition in definitions) {
+        [source appendString:[MPWObjCGenerator process:definition]];
+        [source appendString:@"\n"];
+    }
+
+    NSString *stem=[NSString stringWithFormat:@"objst-objc-generator-smoke-%d",[[NSProcessInfo processInfo] processIdentifier]];
+    NSString *sourcePath=[NSTemporaryDirectory() stringByAppendingPathComponent:[stem stringByAppendingPathExtension:@"m"]];
+    NSString *dylibPath=[NSTemporaryDirectory() stringByAppendingPathComponent:[stem stringByAppendingPathExtension:@"dylib"]];
+    NSError *writeError=nil;
+    BOOL wrote=[source writeToFile:sourcePath atomically:YES encoding:NSUTF8StringEncoding error:&writeError];
+    EXPECTTRUE(wrote, ([NSString stringWithFormat:@"write generated Objective-C: %@",writeError]));
+    if (!wrote) return Nil;
+
+    NSString *frameworkPath=[[NSBundle bundleForClass:self] bundlePath];
+    NSString *frameworkDirectory=[frameworkPath stringByDeletingLastPathComponent];
+    NSString *compilerOutput=nil;
+    int status=[self runObjectiveCGeneratorSmokeTask:@"/usr/bin/xcrun"
+        arguments:@[ @"clang", @"-dynamiclib", @"-fblocks", @"-Wno-objc-method-access",
+                     @"-F", frameworkDirectory, @"-framework", @"ObjectiveSmalltalk",
+                     @"-framework", @"MPWFoundation", @"-framework", @"Foundation",
+                     sourcePath, @"-o", dylibPath ]
+        output:&compilerOutput];
+    INTEXPECT(status,0,([NSString stringWithFormat:@"compile generated Objective-C:\n%@\nSource:\n%@",compilerOutput,source]));
+    if (status) return Nil;
+
+    NSString *signOutput=nil;
+    status=[self runObjectiveCGeneratorSmokeTask:@"/usr/bin/codesign"
+        arguments:@[ @"--force", @"--sign", @"-", dylibPath ] output:&signOutput];
+    INTEXPECT(status,0,([NSString stringWithFormat:@"sign generated dylib: %@",signOutput]));
+    if (status) return Nil;
+
+    void *handle=dlopen(dylibPath.fileSystemRepresentation,RTLD_NOW|RTLD_GLOBAL);
+    NSString *loadError=handle ? nil : [NSString stringWithUTF8String:dlerror()];
+    EXPECTNOTNIL((id)handle,([NSString stringWithFormat:@"load generated dylib: %@",loadError]));
+    smokeClass=NSClassFromString(@"__ObjCGeneratorSmokeClass");
+    EXPECTNOTNIL(smokeClass,@"generated smoke class registered with Objective-C runtime");
+    return smokeClass;
+}
+
++(void)testObjectiveCGeneratorEndToEndMessagePassingAndLiterals
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"messagePassing")],@"HELLO",@"generated message passing");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"literalResult")],@"value",@"generated dictionary literal");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"arrayLiteralResult")],@"second",@"generated array literal");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"numberLiteralResult")],@(42),@"generated numeric literal");
+}
+
++(void)testObjectiveCGeneratorEndToEndBlocks
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"blockResult")],@"BLOCK",@"generated block invocation");
+}
+
++(void)testObjectiveCGeneratorEndToEndIdentifiersAgainstStores
+{
+    MPWSchemeScheme *schemes=[MPWSchemeScheme currentScheme];
+    MPWDictStore *store=[MPWDictStore store];
+    [store at:@"value" put:@"from store"];
+    [schemes setSchemeHandler:store forSchemeName:@"smokestore"];
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"storeResult")],@"from store",@"generated scheme identifier lookup");
+}
+
++(void)testObjectiveCGeneratorEndToEndClassAndStoreDefinitions
+{
+    [self loadObjectiveCGeneratorSmokeFixture];
+    Class storeClass=NSClassFromString(@"__ObjCGeneratorSmokeStore");
+    EXPECTNOTNIL(storeClass,@"generated store definition");
+    id store=[storeClass store];
+    [store at:@"key" put:@"stored"];
+    IDEXPECT([store at:@"key"],@"stored",@"generated store subclass behavior");
+}
+
++(void)testObjectiveCGeneratorEndToEndFilterDefinition
+{
+    [self loadObjectiveCGeneratorSmokeFixture];
+    Class filterClass=NSClassFromString(@"__ObjCGeneratorSmokeFilter");
+    EXPECTNOTNIL(filterClass,@"generated filter definition");
+    NSMutableArray *target=[NSMutableArray array];
+    id filter=[filterClass streamWithTarget:target];
+    [filter writeObject:@"mixed Case"];
+    IDEXPECT(target.firstObject,@"MIXED CASE",@"generated filter method and forwarding");
 }
 
 +(void)testParseBlockArgs
@@ -1347,6 +1506,17 @@
         @"testCreateObjectiveCForConstants",
         @"testCreateObjectiveCForUnaryMessageSend",
         @"testCreateObjectiveCForMessageSendWithArg",
+        @"testCreateObjectiveCForAssignment",
+        @"testCreateObjectiveCForEscapedString",
+        @"testCreateObjectiveCForLiteralArray",
+        @"testCreateObjectiveCForBlock",
+        @"testCreateObjectiveCForMethod",
+        @"testCreateObjectiveCForClass",
+        @"testObjectiveCGeneratorEndToEndMessagePassingAndLiterals",
+        @"testObjectiveCGeneratorEndToEndBlocks",
+        @"testObjectiveCGeneratorEndToEndIdentifiersAgainstStores",
+        @"testObjectiveCGeneratorEndToEndClassAndStoreDefinitions",
+        @"testObjectiveCGeneratorEndToEndFilterDefinition",
 //        @"testGetInstanceVarDefByName",       // removing
         @"testParseBlockArgs",
         @"testParseImplicitBlockArgs",

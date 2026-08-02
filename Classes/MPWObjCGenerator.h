@@ -14,8 +14,11 @@
 }
 
 -(void)generateVariableWithName:aName;
+-(void)generateIdentifier:(id)identifier;
 -(void)writeMessage:selector toReceiver:receiver withArgs:args;
+-(void)writeMessage:selector toReceiver:receiver withArgs:args superSend:(BOOL)isSuperSend;
 -(void)writeStatements:aList;
+-(void)writeStatements:aList returningLast:(BOOL)returnLast;
 
 
 @end

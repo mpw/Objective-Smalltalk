@@ -9,7 +9,8 @@
 #import <MPWFoundation/MPWFoundation.h>
 
 
-@interface MPWMethodType : MPWObject {
+// NSObject, not MPWObject: shared across evaluation threads (see STExpression).
+@interface MPWMethodType : NSObject {
 	NSString*	typeName;
 	NSString*	methodClassName;
 }
