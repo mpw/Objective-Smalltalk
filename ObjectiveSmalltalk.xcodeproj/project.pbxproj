@@ -23,6 +23,11 @@
 		1F0351072F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
 		1F0351082F3A59D1005F2ECA /* STExpressionTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351032F3A59D1005F2ECA /* STExpressionTests.h */; };
 		1F0351092F3A59D1005F2ECA /* STExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351042F3A59D1005F2ECA /* STExpressionTests.m */; };
+		1FDEC0DE0000000000000B1 /* MPWObjCGeneratorTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000A1 /* MPWObjCGeneratorTests.h */; };
+		1FDEC0DE0000000000000B2 /* MPWObjCGeneratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000A2 /* MPWObjCGeneratorTests.m */; };
+		1FDEC0DE0000000000000B3 /* MPWObjCGeneratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000A2 /* MPWObjCGeneratorTests.m */; };
+		1FDEC0DE0000000000000B4 /* MPWObjCGeneratorTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000A1 /* MPWObjCGeneratorTests.h */; };
+		1FDEC0DE0000000000000B5 /* MPWObjCGeneratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000A2 /* MPWObjCGeneratorTests.m */; };
 		1F0351642F3B9657005F2ECA /* STMachOObjectFileLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */; };
 		1F0351652F3B9657005F2ECA /* STMachOObjectFileLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */; };
 		1F0351682F3BD875005F2ECA /* STJITExpressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0351672F3BD875005F2ECA /* STJITExpressionTests.m */; };
@@ -1093,6 +1098,8 @@
 		1F032E362BEF9A140000183E /* STNativeCompilerTestsMachO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STNativeCompilerTestsMachO.m; sourceTree = "<group>"; };
 		1F0351032F3A59D1005F2ECA /* STExpressionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STExpressionTests.h; sourceTree = "<group>"; };
 		1F0351042F3A59D1005F2ECA /* STExpressionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STExpressionTests.m; sourceTree = "<group>"; };
+		1FDEC0DE0000000000000A1 /* MPWObjCGeneratorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWObjCGeneratorTests.h; sourceTree = "<group>"; };
+		1FDEC0DE0000000000000A2 /* MPWObjCGeneratorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPWObjCGeneratorTests.m; sourceTree = "<group>"; };
 		1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOObjectFileLoader.h; sourceTree = "<group>"; };
 		1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOObjectFileLoader.m; sourceTree = "<group>"; };
 		1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STJITExpressionTests.h; sourceTree = "<group>"; };
@@ -2605,6 +2612,8 @@
 				1FA741A50886DAFB00121867 /* STTests.m */,
 				1F0351032F3A59D1005F2ECA /* STExpressionTests.h */,
 				1F0351042F3A59D1005F2ECA /* STExpressionTests.m */,
+				1FDEC0DE0000000000000A1 /* MPWObjCGeneratorTests.h */,
+				1FDEC0DE0000000000000A2 /* MPWObjCGeneratorTests.m */,
 				1F9BD22A2566505F006D7476 /* STPropertyPathTests.h */,
 				1F9BD22B2566505F006D7476 /* STPropertyPathTests.m */,
 				1F9BD24025665748006D7476 /* STConnectorTests.h */,
@@ -3213,6 +3222,7 @@
 				1F7328902344C10000379386 /* MPWREPLViewPrinter.h in Headers */,
 				1FA1B3A1267CFCB500F463ED /* STAWK.h in Headers */,
 				1F0351082F3A59D1005F2ECA /* STExpressionTests.h in Headers */,
+				1FDEC0DE0000000000000B4 /* MPWObjCGeneratorTests.h in Headers */,
 				1F5E504F09B4B754000298D9 /* MPWMessageExpression.h in Headers */,
 				1FFCBD522CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F5E505309B4B754000298D9 /* MPWMessage.h in Headers */,
@@ -3491,6 +3501,7 @@
 				1F575D9E20BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.h in Headers */,
 				1FE37B6C1969610600C9A378 /* MPWLiteralExpression.h in Headers */,
 				1F0351052F3A59D1005F2ECA /* STExpressionTests.h in Headers */,
+				1FDEC0DE0000000000000B1 /* MPWObjCGeneratorTests.h in Headers */,
 				1FE37BCB1969612400C9A378 /* MPWRefScheme.h in Headers */,
 				1FFCBD542CECCF880043BFC1 /* STQueryExpression.h in Headers */,
 				1F22E0201A35FFAD00F664C8 /* MPWBoxerUnboxer+MPWBoxingAdditions.h in Headers */,
@@ -4779,6 +4790,7 @@
 				1F9BD2302566505F006D7476 /* STPropertyPathTests.m in Sources */,
 				1F29D7FF21B42BE900AB14D8 /* main.m in Sources */,
 				1F0351072F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
+				1FDEC0DE0000000000000B3 /* MPWObjCGeneratorTests.m in Sources */,
 				1F29D7F121B42BE600AB14D8 /* TestObjectiveSmalltalkAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4820,6 +4832,7 @@
 				1F575DA020BC58FA00B6C1A9 /* MPWSelfContainedBindingsScheme.m in Sources */,
 				1F5E506D09B4B754000298D9 /* MPWMessageExpression.m in Sources */,
 				1F0351092F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
+				1FDEC0DE0000000000000B5 /* MPWObjCGeneratorTests.m in Sources */,
 				1F2B6651268CCC6A00DE4416 /* STTypeDescriptor.m in Sources */,
 				1FA5963E2A20CD8900C4EB45 /* STPostExpression.m in Sources */,
 				1F3C6E711E3511DF00AEA56E /* MPWLiteralDictionaryExpression.m in Sources */,
@@ -5159,6 +5172,7 @@
 				1FE37BD21969612500C9A378 /* MPWTreeNode.m in Sources */,
 				1FE37B7D1969610600C9A378 /* MPWClassMirror.m in Sources */,
 				1F0351062F3A59D1005F2ECA /* STExpressionTests.m in Sources */,
+				1FDEC0DE0000000000000B2 /* MPWObjCGeneratorTests.m in Sources */,
 				1F6060202A249CF900783E17 /* MPWDyLibScheme.m in Sources */,
 				1FE37BF81969612700C9A378 /* MPWTreeNodeScheme.m in Sources */,
 				1FA990302A96310400DB6FF4 /* STPort.m in Sources */,
