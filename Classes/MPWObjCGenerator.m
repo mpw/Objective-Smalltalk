@@ -21,12 +21,21 @@
 #import "STIdentifier.h"
 #import "STIdentifierExpression.h"
 #import "STScriptedMethod.h"
+#import "STExpression.h"
 #import "STSubscriptExpression.h"
 #import "STTypeDescriptor.h"
 #import "STVariableDefinition.h"
 
 @interface MPWObjCGenerator ()
+// Names already declared in the method/block scope currently being generated,
+// so a `var` definition for an already-hoisted local doesn't redeclare it.
+@property (nonatomic, assign) NSMutableSet *declaredLocals;
+// Instance variable names of the class currently being generated; these are
+// members, not locals, so assignments to them must not be declared as locals.
+@property (nonatomic, assign) NSSet *currentIvarNames;
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type;
+-(BOOL)isLocalScheme:(NSString*)scheme;
+-(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method;
 @end
 
 @implementation NSObject(generateObjectiveCOn)
@@ -125,6 +134,21 @@
     [self writeMessage:selector toReceiver:receiver withArgs:args superSend:NO];
 }
 
+// Comparison selectors (the mapped forms of < > <= >= = ≠) return a primitive
+// BOOL, but Objective-Smalltalk uses their result as a boolean object (e.g. as
+// the receiver of ifTrue:/whileTrue: or as a block's value).  Box those so the
+// generated code type-checks and matches the interpreter.
+-(BOOL)selectorReturnsBool:(NSString*)selector
+{
+    static NSSet *boolSelectors=nil;
+    if (!boolSelectors) {
+        boolSelectors=[[NSSet alloc] initWithObjects:
+            @"isLessThan:", @"isGreaterThan:", @"isLessThanOrEqualTo:",
+            @"isGreaterThanOrEqualTo:", @"isNotEqualTo:", @"isEqual:", nil];
+    }
+    return [boolSelectors containsObject:selector];
+}
+
 -(void)writeMessage:selector toReceiver:receiver withArgs:args superSend:(BOOL)isSuperSend
 {
     if ( [receiver isKindOfClass:[MPWBlockExpression class]] &&
@@ -139,6 +163,8 @@
         [self writeString:@")"];
         return;
     }
+    BOOL boxResult=[self selectorReturnsBool:selector];
+    if ( boxResult ) [self writeString:@"@("];
     [self writeString:@"["];
     if ( isSuperSend ) {
         [self writeString:@"super"];
@@ -152,6 +178,7 @@
         [[self do] writeKeyWord:[[selector componentsSeparatedByString:@":"] each] andArg:[args each]];
     }
     [self writeString:@"]"];
+    if ( boxResult ) [self writeString:@")"];
 }
 
 -(void)writeStatements:aList
@@ -178,6 +205,57 @@
     }
     if ( returnLast && count == 0 ) {
         [self writeString:@"return nil;\n"];
+    }
+}
+
+-(BOOL)isLocalScheme:(NSString*)scheme
+{
+    // The schemes the assignment generator emits as a plain C assignment,
+    // excluding self/this (which denote instance variables, not locals).
+    return scheme.length == 0 || [scheme isEqual:@"default"] || [scheme isEqual:@"var"];
+}
+
+-(NSSet*)localNamesWrittenIn:(NSSet*)writtenIdentifiers
+{
+    NSMutableSet *names=[NSMutableSet set];
+    for (id ident in writtenIdentifiers) {
+        if ( [ident respondsToSelector:@selector(schemeName)] &&
+             [self isLocalScheme:[ident schemeName]] ) {
+            [names addObject:[ident identifierName]];
+        }
+    }
+    return names;
+}
+
+-(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method
+{
+    STExpression *body=method.methodBody;
+    NSMutableSet *locals=[[[self localNamesWrittenIn:[body variablesWritten]] mutableCopy] autorelease];
+    [locals addObjectsFromArray:method.localVars];      // explicit `var` definitions
+
+    MPWMethodHeader *header=method.header;
+    for (int i=0;i<header.numArguments;i++) {
+        [locals removeObject:[header argumentNameAtIndex:i]];
+    }
+    if ( self.currentIvarNames ) {
+        [locals minusSet:self.currentIvarNames];
+    }
+    // Locals assigned inside a block must be __block so the mutation is shared
+    // with the enclosing scope, matching the interpreter's flattened scoping.
+    NSMutableSet *writtenInBlocks=[NSMutableSet set];
+    for ( MPWBlockExpression *block in method.blocks ) {
+        [writtenInBlocks unionSet:[self localNamesWrittenIn:[block variablesWritten]]];
+        [locals removeObjectsInArray:block.arguments];  // block parameters are not locals
+    }
+
+    for ( NSString *name in [locals.allObjects sortedArrayUsingSelector:@selector(compare:)] ) {
+        if ( [writtenInBlocks containsObject:name] ) {
+            [self writeString:@"__block "];
+        }
+        [self writeString:@"id "];
+        [self writeString:name];
+        [self writeString:@";\n"];
+        [self.declaredLocals addObject:name];
     }
 }
 
@@ -352,10 +430,17 @@
 
 -(void)generateObjectiveCOn:(MPWObjCGenerator*)generator
 {
-    NSString *typeName=[generator objectiveCTypeFor:[self type]];
-    [generator writeString:typeName];
-    [generator writeString:@" "];
-    [generator writeString:self.name];
+    // When the enclosing method has already hoisted this local (so it can be
+    // shared with blocks via __block), emit a plain assignment instead of a
+    // second declaration.
+    if ( [generator.declaredLocals containsObject:self.name] ) {
+        [generator writeString:self.name];
+    } else {
+        [generator writeString:[generator objectiveCTypeFor:[self type]]];
+        [generator writeString:@" "];
+        [generator writeString:self.name];
+        [generator.declaredLocals addObject:self.name];
+    }
     if (self.initializer) {
         [generator writeString:@" = "];
         [generator writeObject:self.initializer];
@@ -388,9 +473,13 @@
     [generator writeString:@"\n{\n"];
     id body=self.methodBody;
     NSArray *statements=[body isKindOfClass:[MPWStatementList class]] ? [body statements] : @[ body ];
+    NSMutableSet *savedLocals=generator.declaredLocals;
+    generator.declaredLocals=[NSMutableSet set];
+    [generator writeLocalDeclarationsForMethod:self];
     BOOL returnsValue=header.returnType.objcTypeCode != 'v';
     [generator writeStatements:statements returningLast:returnsValue];
     [generator writeString:@"}\n"];
+    generator.declaredLocals=savedLocals;
 }
 
 @end
@@ -418,9 +507,16 @@
     [generator writeString:@"\n@end\n\n@implementation "];
     [generator writeString:self.name];
     [generator writeString:@"\n"];
+    NSMutableSet *ivarNames=[NSMutableSet set];
+    for (id ivar in ivars) {
+        [ivarNames addObject:[ivar name]];
+    }
+    NSSet *savedIvarNames=generator.currentIvarNames;
+    generator.currentIvarNames=ivarNames;
     for (STScriptedMethod *method in self.methods) {
         [generator writeObject:method];
     }
+    generator.currentIvarNames=savedIvarNames;
     for (STScriptedMethod *method in self.classMethods) {
         NSMutableString *methodCode=[NSMutableString stringWithString:[MPWObjCGenerator process:method]];
         if ([methodCode hasPrefix:@"-"]) [methodCode replaceCharactersInRange:NSMakeRange(0, 1) withString:@"+"];

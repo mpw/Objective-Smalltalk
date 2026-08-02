@@ -120,7 +120,7 @@
 
     STCompiler *compiler=[self compiler];
     NSArray *definitions=@[
-        [compiler compile:@"class __ObjCGeneratorSmokeClass { -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } }"],
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } }"],
         [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
         [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
     ];
@@ -181,6 +181,17 @@
     IDEXPECT([instance performSelector:NSSelectorFromString(@"blockResult")],@"BLOCK",@"generated block invocation");
 }
 
++(void)testObjectiveCGeneratorEndToEndLocalsControlFlowAndLoops
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"localsResult")],@(7),@"generated locals + arithmetic");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"conditionalResult:") withObject:@(1)],@"small",@"generated ifTrue: branch");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"conditionalResult:") withObject:@(5)],@"big",@"generated ifFalse: branch");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"loopResult:") withObject:@(4)],@(10),@"generated to:do: accumulator (__block local)");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"whileResult")],@(128),@"generated whileTrue: accumulator");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"collectResult")],@(6),@"generated collect: higher-order message");
+}
+
 +(void)testObjectiveCGeneratorEndToEndIdentifiersAgainstStores
 {
     MPWSchemeScheme *schemes=[MPWSchemeScheme currentScheme];
@@ -212,9 +223,49 @@
     IDEXPECT(target.firstObject,@"MIXED CASE",@"generated filter method and forwarding");
 }
 
+#pragma mark - local variable declarations
+
++(NSString*)generateMethod:(NSString*)methodSource
+{
+    return [MPWObjCGenerator process:[[self compiler] parseMethodDefinition:methodSource]];
+}
+
++(void)testBareAssignmentsDeclaredAsLocals
+{
+    NSString *generated=[self generateMethod:@"-compute { a := 3. b := 4. a+b. }"];
+    EXPECTTRUE([generated containsString:@"id a;"], @"local a declared");
+    EXPECTTRUE([generated containsString:@"id b;"], @"local b declared");
+    EXPECTTRUE([generated containsString:@"return [a add:b];"], @"uses the locals");
+}
+
++(void)testMethodArgumentsAreNotRedeclaredAsLocals
+{
+    NSString *generated=[self generateMethod:@"-double:n { n add:n. }"];
+    EXPECTFALSE([generated containsString:@"id n;"], @"argument n must not be redeclared");
+}
+
++(void)testLocalAssignedInsideBlockUsesBlockStorage
+{
+    NSString *generated=[self generateMethod:@"-sum:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. }"];
+    EXPECTTRUE([generated containsString:@"__block id total;"], @"local mutated in a block needs __block");
+    EXPECTFALSE([generated containsString:@"id n;"], @"argument n must not be redeclared");
+}
+
++(void)testExplicitVarDefinitionIsHoistedOnce
+{
+    NSString *generated=[self generateMethod:@"-count { var a. a := 1. { a < 4. } whileTrue:{ a := a * 2. }. a. }"];
+    // a is mutated inside the whileTrue: block, so it must be a single __block declaration.
+    EXPECTTRUE([generated containsString:@"__block id a;"], @"var mutated in block needs __block");
+    INTEXPECT([[generated componentsSeparatedByString:@"id a"] count]-1, 1, @"declared exactly once");
+}
+
 +(NSArray*)testSelectors
 {
     return @[
+        @"testBareAssignmentsDeclaredAsLocals",
+        @"testMethodArgumentsAreNotRedeclaredAsLocals",
+        @"testLocalAssignedInsideBlockUsesBlockStorage",
+        @"testExplicitVarDefinitionIsHoistedOnce",
         @"testCreateObjectiveCForVariable",
         @"testCreateObjectiveCForConstants",
         @"testCreateObjectiveCForUnaryMessageSend",
@@ -227,6 +278,7 @@
         @"testCreateObjectiveCForClass",
         @"testObjectiveCGeneratorEndToEndMessagePassingAndLiterals",
         @"testObjectiveCGeneratorEndToEndBlocks",
+        @"testObjectiveCGeneratorEndToEndLocalsControlFlowAndLoops",
         @"testObjectiveCGeneratorEndToEndIdentifiersAgainstStores",
         @"testObjectiveCGeneratorEndToEndClassAndStoreDefinitions",
         @"testObjectiveCGeneratorEndToEndFilterDefinition",
