@@ -3,9 +3,9 @@
 
 fetcher ← MPWURLStreamingStream streamWithTarget: stdout.
 fetcher setHeaderDict: #{ Content-Type: 'application/json' }.
-query ← #{ input: question , model: 'qwen/qwen3.6-27b@4bit' } asJSON.
+query ← #{ input: question , model: 'qwen/qwen3.6-27b@4bit' , stream: true } asJSON.
 chaturi ← ref:http://127.0.0.1:1234/api/v1/chat URL.
 modelsuri ← ref:http://127.0.0.1:1234/api/v1/models URL.
 #fetcher get: modelsuri.
 fetcher post: query toURL: chaturi .
-fetcher awaitResultForSeconds: 20.
+fetcher awaitResultForSeconds: 3600.
