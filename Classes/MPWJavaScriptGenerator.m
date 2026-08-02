@@ -24,6 +24,7 @@
 @interface MPWJavaScriptGenerator ()
 @property (nonatomic, strong) NSString *currentClassName;
 @property (nonatomic, strong) NSString *currentSuperclassName;
+@property (nonatomic, strong) NSSet *currentIvarNames;
 -(void)writeJavaScriptString:(NSString*)string;
 -(void)writeMethod:(STScriptedMethod*)method className:(NSString*)className;
 @end
@@ -62,6 +63,7 @@
     else if ([name isEqual:@"false"]) [self writeString:@"false"];
     else if (scheme.length == 0 || [scheme isEqual:@"default"] || [scheme isEqual:@"var"] ||
              [scheme isEqual:@"self"] || [scheme isEqual:@"this"] || [scheme isEqual:@"class"]) {
+        if ([self.currentIvarNames containsObject:name]) [self writeString:@"self."];
         [self writeString:name];
     } else {
         [self writeString:@"objst_scheme_get("];
@@ -140,7 +142,10 @@
         [self writeString:[header argumentNameAtIndex:i]];
     }
     [self writeString:@") {\n"];
-    NSArray *body=[method.methodBody isKindOfClass:[MPWStatementList class]] ? [(MPWStatementList*)method.methodBody statements] : @[ method.methodBody ];
+    NSArray *body=nil;
+    if ([method.methodBody isKindOfClass:[MPWStatementList class]]) body=[(MPWStatementList*)method.methodBody statements];
+    else if ([(id)method.methodBody isKindOfClass:[NSArray class]]) body=(NSArray*)method.methodBody;
+    else body=@[ method.methodBody ];
     [self writeStatements:body returningLast:header.returnType.objcTypeCode != 'v'];
     [self writeString:@"}, ["];
     [self writeJavaScriptString:header.returnType.name ?: @"id"];
@@ -155,6 +160,7 @@
 {
     [_currentClassName release];
     [_currentSuperclassName release];
+    [_currentIvarNames release];
     [super dealloc];
 }
 
@@ -256,6 +262,7 @@
 {
     generator.currentClassName=self.name;
     generator.currentSuperclassName=self.superclassNameToUse;
+    generator.currentIvarNames=[NSSet setWithArray:(NSArray*)[[self.structureDefinition.fields collect] name]];
     [generator writeString:@"{var the_class = objj_allocateClassPair(objj_getClass("];
     [generator writeJavaScriptString:self.superclassNameToUse];
     [generator writeString:@"), "];
