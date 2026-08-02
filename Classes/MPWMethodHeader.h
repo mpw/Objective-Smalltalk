@@ -10,7 +10,8 @@
 
 @class STScanner,STVariableDefinition,STTypeDescriptor;
 
-@interface MPWMethodHeader : MPWObject {
+// NSObject, not MPWObject: shared across evaluation threads (see STExpression).
+@interface MPWMethodHeader : NSObject {
 	NSString	*methodName;
     STTypeDescriptor	*returnType;
 	NSMutableArray		*parameterVars;

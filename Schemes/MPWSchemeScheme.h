@@ -20,3 +20,6 @@
 +(instancetype)createGlobalSchemeScheme;
 
 @end
+
+FOUNDATION_EXPORT id st_scheme_at(NSString *scheme, NSString *identifier);
+FOUNDATION_EXPORT void st_scheme_at_put(NSString *scheme, NSString *identifier, id value);

@@ -110,7 +110,10 @@ scalarAccessor( char , returnType, setReturnType )
 
 -(void)generateObjectiveCOn:aGenerator
 {
-    [aGenerator writeMessage:NSStringFromSelector([self selector]) toReceiver:[self receiver] withArgs:[self args]];
+    [aGenerator writeMessage:NSStringFromSelector([self selector])
+                  toReceiver:[self receiver]
+                    withArgs:[self args]
+                   superSend:self.isSuperSend];
 }
 
 -(const char*)argtypes

@@ -68,7 +68,7 @@ scheme Obj2Html : MPWMappingStore {
 
 todo ← #Obj2Html{ } → #Tasks{ #taskList: taskList }.
 server ← #MPWSchemeHttpServer{ scheme: todo , #port: 8082 }.
-server server setThreadPoolSize:1.
+#server server setThreadPoolSize:1.
 
 scheme:todo := todo.
 server start.
