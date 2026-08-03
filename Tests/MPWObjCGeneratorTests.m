@@ -120,7 +120,7 @@
 
     STCompiler *compiler=[self compiler];
     NSArray *definitions=@[
-        [compiler compile:@"class __ObjCGeneratorSmokeClass { -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } }"],
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } }"],
         [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
         [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
     ];
@@ -192,6 +192,13 @@
     IDEXPECT([instance performSelector:NSSelectorFromString(@"collectResult")],@(6),@"generated collect: higher-order message");
 }
 
++(void)testObjectiveCGeneratorEndToEndPrimitiveComputation
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    id result=[instance performSelector:NSSelectorFromString(@"primitiveSum:to:") withObject:@(3) withObject:@(4)];
+    IDEXPECT(result,@(7),@"generated unbox → C primitive add → box round-trips");
+}
+
 +(void)testObjectiveCGeneratorEndToEndIdentifiersAgainstStores
 {
     MPWSchemeScheme *schemes=[MPWSchemeScheme currentScheme];
@@ -251,6 +258,21 @@
     EXPECTFALSE([generated containsString:@"id n;"], @"argument n must not be redeclared");
 }
 
++(void)testGeneratesPrimitiveArithmeticAsCOperators
+{
+    NSString *generated=[self generateMethod:@"-primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. }"];
+    EXPECTTRUE([generated containsString:@"long x;"], @"declared primitive local gets its C type");
+    EXPECTTRUE([generated containsString:@"x = [a longValue];"], @"object argument unboxed into the primitive local");
+    EXPECTTRUE([generated containsString:@"(x + y)"], @"primitive addition lowered to a C operator");
+    EXPECTTRUE([generated containsString:@"return @((x + y));"], @"primitive result boxed at the object return boundary");
+}
+
++(void)testGeneratesPrimitiveComparisonAsCOperator
+{
+    NSString *generated=[self generateMethod:@"-less: a than: b { var x:int := a. var y:int := b. x < y. }"];
+    EXPECTTRUE([generated containsString:@"(x < y)"], @"primitive comparison lowered to a C operator");
+}
+
 +(void)testExplicitVarDefinitionIsHoistedOnce
 {
     NSString *generated=[self generateMethod:@"-count { var a. a := 1. { a < 4. } whileTrue:{ a := a * 2. }. a. }"];
@@ -262,6 +284,8 @@
 +(NSArray*)testSelectors
 {
     return @[
+        @"testGeneratesPrimitiveArithmeticAsCOperators",
+        @"testGeneratesPrimitiveComparisonAsCOperator",
         @"testBareAssignmentsDeclaredAsLocals",
         @"testMethodArgumentsAreNotRedeclaredAsLocals",
         @"testLocalAssignedInsideBlockUsesBlockStorage",
@@ -279,6 +303,7 @@
         @"testObjectiveCGeneratorEndToEndMessagePassingAndLiterals",
         @"testObjectiveCGeneratorEndToEndBlocks",
         @"testObjectiveCGeneratorEndToEndLocalsControlFlowAndLoops",
+        @"testObjectiveCGeneratorEndToEndPrimitiveComputation",
         @"testObjectiveCGeneratorEndToEndIdentifiersAgainstStores",
         @"testObjectiveCGeneratorEndToEndClassAndStoreDefinitions",
         @"testObjectiveCGeneratorEndToEndFilterDefinition",

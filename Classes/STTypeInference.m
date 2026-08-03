@@ -10,6 +10,7 @@
 #import <MPWFoundation/MPWTypeDefinition.h>
 #import "MPWLiteralExpression.h"
 #import "MPWMessageExpression.h"
+#import "MPWBlockExpression.h"
 #import "MPWAssignmentExpression.h"
 #import "STIdentifierExpression.h"
 #import "STIdentifier.h"
@@ -389,10 +390,38 @@ static NSSet *arithmeticSelectors(void)
     return self.primitiveResultType ?: [MPWTypeDefinition idType];
 }
 
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    return self;   // already resolved; receiver and args were annotated at creation
+}
+
 -(void)dealloc
 {
     [_primitiveResultType release];
     [super dealloc];
+}
+
+@end
+
+
+@implementation STCoerce (resultCoercion)
+
++(id)coerceResultOf:(id)body to:(MPWTypeDefinition*)toType in:(STTypeContext*)context
+{
+    if ( [body isKindOfClass:[MPWStatementList class]] ) {
+        NSMutableArray *statements=[[[body statements] mutableCopy] autorelease];
+        for ( NSInteger i=(NSInteger)statements.count-1; i>=0; i-- ) {
+            if ( ![statements[i] isKindOfClass:[STVariableDefinition class]] ) {
+                statements[i]=[self coerceExpression:statements[i] to:toType in:context];
+                break;
+            }
+        }
+        [body setStatements:statements];
+        return body;
+    } else if ( body ) {
+        return [self coerceExpression:body to:toType in:context];
+    }
+    return body;
 }
 
 @end
@@ -489,6 +518,20 @@ static NSSet *arithmeticSelectors(void)
         }
     }
     [self setStatements:newStatements];
+    return self;
+}
+
+@end
+
+
+@implementation MPWBlockExpression (typeAnnotation)
+
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    // Blocks are generated as ^id(...), so the block's value is coerced to id.
+    id body=[[self statements] typeAnnotateIn:context];
+    body=[STCoerce coerceResultOf:body to:[MPWTypeDefinition idType] in:context];
+    [self setStatements:body];
     return self;
 }
 

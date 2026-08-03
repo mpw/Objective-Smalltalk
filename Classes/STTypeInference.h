@@ -76,6 +76,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Returns expression wrapped in a coercion iff crossing the object/primitive
 // boundary; otherwise returns expression unchanged.
 +(STExpression*)coerceExpression:(STExpression*)expression to:(MPWTypeDefinition*)toType in:(nullable STTypeContext*)context;
+// Coerces the value a method/block body (statement list or single expression)
+// yields — its last non-definition statement — to toType.  Returns the body.
++(id)coerceResultOf:(id)body to:(MPWTypeDefinition*)toType in:(nullable STTypeContext*)context;
 
 -(BOOL)isBoxing;      // primitive → object
 -(BOOL)isUnboxing;    // object → primitive
