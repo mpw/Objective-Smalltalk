@@ -101,4 +101,18 @@ NS_ASSUME_NONNULL_BEGIN
 -(id)typeAnnotateIn:(nullable STTypeContext*)context;
 @end
 
+
+// Permissive static typechecker.  It reports a message send only when the
+// receiver's static type is a known class that does not respond to the
+// selector — the same target-port compatibility the connector protocol embodies
+// (STMessageConnector's isCompatible).  id / unknown / primitive receivers pass,
+// so existing dynamically-typed code is never flagged.
+@interface STTypeChecker : NSObject
++(NSArray<NSString*>*)diagnosticsFor:(id)node in:(nullable STTypeContext*)context;
+@end
+
+@interface NSObject (typeChecking)
+-(void)typeCheckIn:(nullable STTypeContext*)context diagnostics:(NSMutableArray<NSString*>*)diagnostics;
+@end
+
 NS_ASSUME_NONNULL_END

@@ -203,6 +203,38 @@
     EXPECTTRUE( [secondStatement isKindOfClass:[STPrimitiveMessageExpression class]], @"k+k early-bound via local var type");
 }
 
+#pragma mark - typechecking (send compatibility)
+
++(NSArray*)diagnosticsFor:(NSString*)source
+{
+    return [STTypeChecker diagnosticsFor:[self parseExpr:source] in:[STTypeContext context]];
+}
+
++(void)testUnknownSelectorOnKnownTypeIsFlagged
+{
+    NSArray *diagnostics=[self diagnosticsFor:@"'hello' bogusSelector"];
+    INTEXPECT( diagnostics.count, 1, @"one diagnostic for an unknown selector");
+    EXPECTTRUE( [[diagnostics firstObject] containsString:@"bogusSelector"], @"diagnostic names the selector");
+    EXPECTTRUE( [[diagnostics firstObject] containsString:@"NSString"], @"diagnostic names the receiver type");
+}
+
++(void)testKnownSelectorOnKnownTypeIsNotFlagged
+{
+    INTEXPECT( [[self diagnosticsFor:@"'hello' uppercaseString"] count], 0, @"a valid send is not flagged");
+}
+
++(void)testSelectorOnDynamicReceiverIsNotFlagged
+{
+    INTEXPECT( [[self diagnosticsFor:@"anObject bogusSelector"] count], 0, @"an id receiver is checked dynamically, not flagged");
+}
+
++(void)testDiagnosticInArgumentPositionIsFound
+{
+    NSArray *diagnostics=[self diagnosticsFor:@"'hello' stringByAppendingString:('x' bogusSelector)"];
+    INTEXPECT( diagnostics.count, 1, @"the checker recurses into arguments");
+    EXPECTTRUE( [[diagnostics firstObject] containsString:@"bogusSelector"], @"the argument's bad send is reported");
+}
+
 #pragma mark - runtime type provider
 
 +(void)testRuntimeProviderReportsPrimitiveReturnType
@@ -255,6 +287,10 @@
         @"testAssignmentToUntypedVariableIsNotCoerced",
         @"testVariableDefinitionInitializerIsCoerced",
         @"testStatementListPropagatesLocalTypesToEarlyBinding",
+        @"testUnknownSelectorOnKnownTypeIsFlagged",
+        @"testKnownSelectorOnKnownTypeIsNotFlagged",
+        @"testSelectorOnDynamicReceiverIsNotFlagged",
+        @"testDiagnosticInArgumentPositionIsFound",
         @"testRuntimeProviderReportsPrimitiveReturnType",
         @"testRuntimeProviderReportsObjectReturnType",
         @"testRuntimeProviderReturnsNilForUnknownReceiverType",

@@ -536,3 +536,95 @@ static NSSet *arithmeticSelectors(void)
 }
 
 @end
+
+
+#pragma mark - the typechecking pass
+
+@implementation STTypeChecker
+
++(NSArray<NSString*>*)diagnosticsFor:(id)node in:(STTypeContext*)context
+{
+    NSMutableArray *diagnostics=[NSMutableArray array];
+    [node typeCheckIn:context diagnostics:diagnostics];
+    return diagnostics;
+}
+
+@end
+
+
+@implementation NSObject (typeChecking)
+
+-(void)typeCheckIn:(STTypeContext*)context diagnostics:(NSMutableArray*)diagnostics
+{
+    // leaf: literals, identifiers, bare values have nothing to check
+}
+
+@end
+
+
+@implementation MPWMessageExpression (typeChecking)
+
+-(void)typeCheckIn:(STTypeContext*)context diagnostics:(NSMutableArray*)diagnostics
+{
+    [self.receiver typeCheckIn:context diagnostics:diagnostics];
+    for ( id arg in self.args ) {
+        [arg typeCheckIn:context diagnostics:diagnostics];
+    }
+    // Permissive: only a statically-known object class is checked; id / unknown /
+    // primitive receivers are left to the dynamic runtime.
+    MPWTypeDefinition *receiverType=[self.receiver resultTypeIn:context];
+    if ( isObjectType(receiverType) ) {
+        Class receiverClass=NSClassFromString(receiverType.name);
+        if ( receiverClass && ![receiverClass instancesRespondToSelector:self.selector] ) {
+            [diagnostics addObject:[NSString stringWithFormat:@"'%@' does not respond to '%@'",
+                receiverType.name, NSStringFromSelector(self.selector)]];
+        }
+    }
+}
+
+@end
+
+
+@implementation MPWStatementList (typeChecking)
+
+-(void)typeCheckIn:(STTypeContext*)context diagnostics:(NSMutableArray*)diagnostics
+{
+    for ( id statement in [self statements] ) {
+        [statement typeCheckIn:context diagnostics:diagnostics];
+        if ( [statement isKindOfClass:[STVariableDefinition class]] ) {
+            [context declareName:[statement name] type:[statement type]];
+        }
+    }
+}
+
+@end
+
+
+@implementation MPWAssignmentExpression (typeChecking)
+
+-(void)typeCheckIn:(STTypeContext*)context diagnostics:(NSMutableArray*)diagnostics
+{
+    [self.rhs typeCheckIn:context diagnostics:diagnostics];
+}
+
+@end
+
+
+@implementation STVariableDefinition (typeChecking)
+
+-(void)typeCheckIn:(STTypeContext*)context diagnostics:(NSMutableArray*)diagnostics
+{
+    [self.initializer typeCheckIn:context diagnostics:diagnostics];
+}
+
+@end
+
+
+@implementation MPWBlockExpression (typeChecking)
+
+-(void)typeCheckIn:(STTypeContext*)context diagnostics:(NSMutableArray*)diagnostics
+{
+    [[self statements] typeCheckIn:context diagnostics:diagnostics];
+}
+
+@end
