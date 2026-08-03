@@ -130,6 +130,33 @@ static BOOL isPrimitiveNumericType(MPWTypeDefinition *type)
     }
 }
 
+static BOOL isObjectType(MPWTypeDefinition *type)
+{
+    return type.objcTypeCode == '@';
+}
+
+// The mapped forms of  <  >  <=  >=  =  != , which all yield BOOL.
+static NSSet *comparisonSelectors(void)
+{
+    static NSSet *selectors=nil;
+    if ( !selectors ) {
+        selectors=[[NSSet alloc] initWithObjects:
+            @"isLessThan:", @"isGreaterThan:", @"isLessThanOrEqualTo:",
+            @"isGreaterThanOrEqualTo:", @"isEqual:", @"isNotEqualTo:", nil];
+    }
+    return selectors;
+}
+
+// The mapped forms of  + - * /  ; result type follows the operand.
+static NSSet *arithmeticSelectors(void)
+{
+    static NSSet *selectors=nil;
+    if ( !selectors ) {
+        selectors=[[NSSet alloc] initWithObjects:@"add:", @"sub:", @"mul:", @"div:", nil];
+    }
+    return selectors;
+}
+
 @implementation STHardcodedTypeProvider
 
 +(instancetype)provider
@@ -139,16 +166,8 @@ static BOOL isPrimitiveNumericType(MPWTypeDefinition *type)
 
 -(MPWTypeDefinition*)returnTypeForSelector:(SEL)selector receiverType:(MPWTypeDefinition*)receiverType
 {
-    static NSSet *comparisons=nil;
-    static NSSet *arithmetic=nil;
     static NSDictionary *extractors=nil;
-    if ( !comparisons ) {
-        // The mapped forms of  <  >  <=  >=  =  != , which all return BOOL.
-        comparisons=[[NSSet alloc] initWithObjects:
-            @"isLessThan:", @"isGreaterThan:", @"isLessThanOrEqualTo:",
-            @"isGreaterThanOrEqualTo:", @"isEqual:", @"isNotEqualTo:", nil];
-        // The mapped forms of  + - * /  ; result type follows the operand.
-        arithmetic=[[NSSet alloc] initWithObjects:@"add:", @"sub:", @"mul:", @"div:", nil];
+    if ( !extractors ) {
         // Selectors that conventionally yield a primitive on any object.
         extractors=[[NSDictionary alloc] initWithObjectsAndKeys:
             @"int", @"intValue", @"int", @"integerValue", @"long", @"longValue",
@@ -156,14 +175,14 @@ static BOOL isPrimitiveNumericType(MPWTypeDefinition *type)
             @"int", @"length", @"int", @"count", nil];
     }
     NSString *name=NSStringFromSelector(selector);
-    if ( [comparisons containsObject:name] ) {
+    if ( [comparisonSelectors() containsObject:name] ) {
         return [MPWTypeDefinition descriptorForTypeName:@"bool"];
     }
     NSString *extractorType=extractors[name];
     if ( extractorType ) {
         return [MPWTypeDefinition descriptorForTypeName:extractorType];
     }
-    if ( [arithmetic containsObject:name] && isPrimitiveNumericType(receiverType) ) {
+    if ( [arithmeticSelectors() containsObject:name] && isPrimitiveNumericType(receiverType) ) {
         return receiverType;
     }
     return nil;
@@ -288,6 +307,189 @@ static BOOL isPrimitiveNumericType(MPWTypeDefinition *type)
 -(MPWTypeDefinition*)resultTypeIn:(STTypeContext*)context
 {
     return (MPWTypeDefinition*)self.type ?: [MPWTypeDefinition idType];
+}
+
+@end
+
+
+#pragma mark - coercion and early-bound-message nodes
+
+@implementation STCoerce
+
++(instancetype)coerce:(STExpression*)expression from:(MPWTypeDefinition*)fromType to:(MPWTypeDefinition*)toType
+{
+    STCoerce *coerce=[[[self alloc] init] autorelease];
+    coerce.expression=expression;
+    coerce.fromType=fromType;
+    coerce.toType=toType;
+    return coerce;
+}
+
++(STExpression*)coerceExpression:(STExpression*)expression to:(MPWTypeDefinition*)toType in:(STTypeContext*)context
+{
+    MPWTypeDefinition *fromType=[expression resultTypeIn:context];
+    // Only object <-> primitive boundaries need a coercion; skip same-kind and
+    // void targets.
+    if ( toType && toType.objcTypeCode != 'v' && (isObjectType(fromType) != isObjectType(toType)) ) {
+        return [self coerce:expression from:fromType to:toType];
+    }
+    return expression;
+}
+
+-(BOOL)isBoxing
+{
+    return !isObjectType(self.fromType) && isObjectType(self.toType);
+}
+
+-(BOOL)isUnboxing
+{
+    return isObjectType(self.fromType) && !isObjectType(self.toType);
+}
+
+-(MPWTypeDefinition*)resultTypeIn:(STTypeContext*)context
+{
+    return self.toType;
+}
+
+-(id)evaluateIn:(id <STEvaluation>)context
+{
+    // The interpreter keeps everything boxed, so a coercion is a pass-through.
+    return [self.expression evaluateIn:context];
+}
+
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"<%@:%@→%@ %@>",[self class],self.fromType.name,self.toType.name,self.expression];
+}
+
+-(void)dealloc
+{
+    [_expression release];
+    [_fromType release];
+    [_toType release];
+    [super dealloc];
+}
+
+@end
+
+
+@implementation STPrimitiveMessageExpression
+
++(instancetype)fromMessage:(MPWMessageExpression*)message resultType:(MPWTypeDefinition*)resultType
+{
+    STPrimitiveMessageExpression *primitive=[[[self alloc] initWithReceiver:[message receiver]] autorelease];
+    [primitive setSelector:[message selector]];
+    [primitive setArgs:[message args]];
+    primitive.primitiveResultType=resultType;
+    return primitive;
+}
+
+-(MPWTypeDefinition*)resultTypeIn:(STTypeContext*)context
+{
+    return self.primitiveResultType ?: [MPWTypeDefinition idType];
+}
+
+-(void)dealloc
+{
+    [_primitiveResultType release];
+    [super dealloc];
+}
+
+@end
+
+
+#pragma mark - the annotation pass
+
+@implementation NSObject (typeAnnotation)
+
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    return self;   // leaf: literals, identifiers, blocks, bare values pass through
+}
+
+@end
+
+
+@implementation MPWMessageExpression (typeAnnotation)
+
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    id newReceiver=[self.receiver typeAnnotateIn:context];
+    NSMutableArray *newArgs=[NSMutableArray arrayWithCapacity:[self.args count]];
+    for ( id arg in self.args ) {
+        [newArgs addObject:[arg typeAnnotateIn:context]];
+    }
+    [self setReceiver:newReceiver];
+    [self setArgs:newArgs];
+
+    NSString *selectorName=NSStringFromSelector(self.selector);
+    BOOL isPrimitiveOperator=[comparisonSelectors() containsObject:selectorName] ||
+                             [arithmeticSelectors() containsObject:selectorName];
+    MPWTypeDefinition *receiverType=[newReceiver resultTypeIn:context];
+    BOOL argsArePrimitive=YES;
+    for ( id arg in newArgs ) {
+        argsArePrimitive = argsArePrimitive && isPrimitiveNumericType([arg resultTypeIn:context]);
+    }
+    if ( isPrimitiveOperator && isPrimitiveNumericType(receiverType) && argsArePrimitive ) {
+        MPWTypeDefinition *resultType=[context.typeProvider returnTypeForSelector:self.selector receiverType:receiverType];
+        return [STPrimitiveMessageExpression fromMessage:self resultType:resultType];
+    }
+    // Late-bound send: a primitive receiver must be boxed to be messaged.
+    if ( isPrimitiveNumericType(receiverType) ) {
+        [self setReceiver:[STCoerce coerceExpression:newReceiver to:[MPWTypeDefinition idType] in:context]];
+    }
+    return self;
+}
+
+@end
+
+
+@implementation MPWAssignmentExpression (typeAnnotation)
+
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    self.rhs=[self.rhs typeAnnotateIn:context];
+    if ( [self.lhs isKindOfClass:[STIdentifierExpression class]] ) {
+        NSString *name=[[(STIdentifierExpression*)self.lhs identifier] identifierName];
+        MPWTypeDefinition *lhsType=[context typeForName:name];
+        if ( lhsType ) {
+            self.rhs=[STCoerce coerceExpression:self.rhs to:lhsType in:context];
+        }
+    }
+    return self;
+}
+
+@end
+
+
+@implementation STVariableDefinition (typeAnnotation)
+
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    if ( self.initializer ) {
+        id annotated=[self.initializer typeAnnotateIn:context];
+        self.initializer=[STCoerce coerceExpression:annotated to:(MPWTypeDefinition*)self.type in:context];
+    }
+    return self;
+}
+
+@end
+
+
+@implementation MPWStatementList (typeAnnotation)
+
+-(id)typeAnnotateIn:(STTypeContext*)context
+{
+    NSMutableArray *newStatements=[NSMutableArray arrayWithCapacity:[[self statements] count]];
+    for ( id statement in [self statements] ) {
+        [newStatements addObject:[statement typeAnnotateIn:context]];
+        // Later statements can see the types of earlier local definitions.
+        if ( [statement isKindOfClass:[STVariableDefinition class]] ) {
+            [context declareName:[statement name] type:[statement type]];
+        }
+    }
+    [self setStatements:newStatements];
+    return self;
 }
 
 @end

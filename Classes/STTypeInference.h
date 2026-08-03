@@ -10,6 +10,7 @@
 //
 
 #import <ObjectiveSmalltalk/STExpression.h>
+#import <ObjectiveSmalltalk/MPWMessageExpression.h>
 
 @class MPWTypeDefinition, STScriptedMethod;
 
@@ -60,6 +61,41 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSObject (typeInference)
 // The static type of this expression's result.  Defaults to id; never nil.
 -(MPWTypeDefinition*)resultTypeIn:(nullable STTypeContext*)context;
+@end
+
+
+// An explicit box (primitive → object) or unbox (object → primitive) inserted
+// at a type boundary.  Backend-agnostic: the ObjC generator and native compiler
+// lower it; the interpreter treats it as a pass-through (values are boxed there).
+@interface STCoerce : STExpression
+@property (nonatomic, strong) STExpression *expression;
+@property (nonatomic, strong) MPWTypeDefinition *fromType;
+@property (nonatomic, strong) MPWTypeDefinition *toType;
+
++(instancetype)coerce:(STExpression*)expression from:(MPWTypeDefinition*)fromType to:(MPWTypeDefinition*)toType;
+// Returns expression wrapped in a coercion iff crossing the object/primitive
+// boundary; otherwise returns expression unchanged.
++(STExpression*)coerceExpression:(STExpression*)expression to:(MPWTypeDefinition*)toType in:(nullable STTypeContext*)context;
+
+-(BOOL)isBoxing;      // primitive → object
+-(BOOL)isUnboxing;    // object → primitive
+@end
+
+
+// A message send resolved to an early-bound primitive operation because its
+// operands are primitive-typed (e.g. int + int).  It is a message send, so
+// backends that don't special-case it fall back to the correct late-bound send;
+// the ObjC generator / native compiler lower it to a C operator / instruction.
+@interface STPrimitiveMessageExpression : MPWMessageExpression
+@property (nonatomic, strong) MPWTypeDefinition *primitiveResultType;
++(instancetype)fromMessage:(MPWMessageExpression*)message resultType:(nullable MPWTypeDefinition*)resultType;
+@end
+
+
+@interface NSObject (typeAnnotation)
+// Returns this node with early-bound bindings resolved and coercions inserted.
+// May return a different node; callers must use the return value.
+-(id)typeAnnotateIn:(nullable STTypeContext*)context;
 @end
 
 NS_ASSUME_NONNULL_END

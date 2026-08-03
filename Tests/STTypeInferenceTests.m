@@ -6,6 +6,10 @@
 #import "STTypeInferenceTests.h"
 #import "STTypeInference.h"
 #import "STScriptedMethod.h"
+#import "MPWMessageExpression.h"
+#import "MPWAssignmentExpression.h"
+#import "STVariableDefinition.h"
+#import "MPWStatementList.h"
 #import <MPWFoundation/MPWTypeDefinition.h>
 
 @implementation STTypeInferenceTests
@@ -126,6 +130,79 @@
     IDEXPECT( [self inferredTypeNameFor:@"anObject frobnicate" in:[STTypeContext context]], @"id", @"unknown selector on id falls back to id");
 }
 
+#pragma mark - binding resolution + coercion (the annotation pass)
+
++(STTypeContext*)contextWithInts:(NSArray*)names
+{
+    STTypeContext *context=[STTypeContext context];
+    for ( NSString *name in names ) {
+        [context declareName:name type:[MPWTypeDefinition descriptorForTypeName:@"int"]];
+    }
+    return context;
+}
+
++(id)annotate:(NSString*)source in:(STTypeContext*)context
+{
+    return [[self parseExpr:source] typeAnnotateIn:context];
+}
+
++(void)testPrimitiveArithmeticResolvesToEarlyBoundMessage
+{
+    id annotated=[self annotate:@"a + b" in:[self contextWithInts:@[@"a", @"b"]]];
+    EXPECTTRUE( [annotated isKindOfClass:[STPrimitiveMessageExpression class]], @"int + int is early-bound");
+    IDEXPECT( [[annotated primitiveResultType] name], @"int", @"early-bound result type");
+}
+
++(void)testPrimitiveComparisonResolvesToEarlyBoundBool
+{
+    id annotated=[self annotate:@"a < b" in:[self contextWithInts:@[@"a", @"b"]]];
+    EXPECTTRUE( [annotated isKindOfClass:[STPrimitiveMessageExpression class]], @"int < int is early-bound");
+    IDEXPECT( [[annotated primitiveResultType] name], @"bool", @"comparison result is bool");
+}
+
++(void)testObjectArithmeticStaysLateBound
+{
+    id annotated=[self annotate:@"3 + 4" in:[STTypeContext context]];
+    EXPECTFALSE( [annotated isKindOfClass:[STPrimitiveMessageExpression class]], @"NSNumber arithmetic stays a normal send");
+    EXPECTTRUE( [annotated isKindOfClass:[MPWMessageExpression class]], @"still a message expression");
+}
+
++(void)testMessagingAPrimitiveBoxesTheReceiver
+{
+    MPWMessageExpression *annotated=[self annotate:@"a printString" in:[self contextWithInts:@[@"a"]]];
+    EXPECTTRUE( [[annotated receiver] isKindOfClass:[STCoerce class]], @"primitive receiver is boxed to be messaged");
+    EXPECTTRUE( [(STCoerce*)[annotated receiver] isBoxing], @"the coercion is a box");
+}
+
++(void)testAssignmentToPrimitiveVariableUnboxesObjectValue
+{
+    STTypeContext *context=[self contextWithInts:@[@"x"]];
+    MPWAssignmentExpression *annotated=[self annotate:@"x := 3" in:context];
+    EXPECTTRUE( [annotated.rhs isKindOfClass:[STCoerce class]], @"object rhs is coerced to the primitive lhs");
+    EXPECTTRUE( [(STCoerce*)annotated.rhs isUnboxing], @"the coercion is an unbox");
+}
+
++(void)testAssignmentToUntypedVariableIsNotCoerced
+{
+    MPWAssignmentExpression *annotated=[self annotate:@"y := 3" in:[STTypeContext context]];
+    EXPECTFALSE( [annotated.rhs isKindOfClass:[STCoerce class]], @"no coercion without a declared primitive type");
+}
+
++(void)testVariableDefinitionInitializerIsCoerced
+{
+    STVariableDefinition *annotated=[self annotate:@"var n:int := 3." in:[STTypeContext context]];
+    EXPECTTRUE( [annotated.initializer isKindOfClass:[STCoerce class]], @"initializer coerced to declared type");
+    EXPECTTRUE( [(STCoerce*)annotated.initializer isUnboxing], @"object literal unboxed to int");
+}
+
++(void)testStatementListPropagatesLocalTypesToEarlyBinding
+{
+    id list=[@"var k:int. k + k." compileIn:[self compiler]];
+    list=[list typeAnnotateIn:[STTypeContext context]];
+    id secondStatement=[[list statements] objectAtIndex:1];
+    EXPECTTRUE( [secondStatement isKindOfClass:[STPrimitiveMessageExpression class]], @"k+k early-bound via local var type");
+}
+
 #pragma mark - runtime type provider
 
 +(void)testRuntimeProviderReportsPrimitiveReturnType
@@ -170,6 +247,14 @@
         @"testMessageReturningPrimitiveInfersPrimitive",
         @"testPrimitiveExtractorOnUnknownReceiverInfersPrimitive",
         @"testUnknownSelectorOnUnknownReceiverInfersId",
+        @"testPrimitiveArithmeticResolvesToEarlyBoundMessage",
+        @"testPrimitiveComparisonResolvesToEarlyBoundBool",
+        @"testObjectArithmeticStaysLateBound",
+        @"testMessagingAPrimitiveBoxesTheReceiver",
+        @"testAssignmentToPrimitiveVariableUnboxesObjectValue",
+        @"testAssignmentToUntypedVariableIsNotCoerced",
+        @"testVariableDefinitionInitializerIsCoerced",
+        @"testStatementListPropagatesLocalTypesToEarlyBinding",
         @"testRuntimeProviderReportsPrimitiveReturnType",
         @"testRuntimeProviderReportsObjectReturnType",
         @"testRuntimeProviderReturnsNilForUnknownReceiverType",
