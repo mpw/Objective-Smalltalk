@@ -35,6 +35,7 @@
 -mapConnector:aConnectorExpression;
 -(MPWReference*)bindingForString:(NSString*)fullPath;
 -(BOOL)isValidSyntax:(NSString*)stString;
+-(NSString*)transpileToJavaScript:(NSString*)source;
 
 //---- method store 
 
@@ -57,4 +58,3 @@ idAccessor_h(solver, setSolver)
 -(STClassDefinition*)classForName:(NSString*)className;
 
 @end
-

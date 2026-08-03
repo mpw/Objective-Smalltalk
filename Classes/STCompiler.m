@@ -1,6 +1,7 @@
 /* STCompiler.m created by marcel on Mon 03-Jul-2000 */
 
 #import "STCompiler.h"
+#import "MPWJavaScriptGenerator.h"
 #import "STScanner.h"
 #import "MPWMessageExpression.h"
 #import "STIdentifierExpression.h"
@@ -1218,6 +1219,14 @@ idAccessor(solver, setSolver)
     return expr;
 }
 
+-(NSString*)transpileToJavaScript:(NSString*)source
+{
+    NSMutableString *javascript=[NSMutableString string];
+    MPWJavaScriptGenerator *generator=[MPWJavaScriptGenerator streamWithTarget:javascript];
+    [generator writeObject:[self compile:source]];
+    return javascript;
+}
+
 -(STScriptedMethod*)parseMethodDefinition:aString
 {
     [self setScanner:[STScanner scannerWithData:[aString asData]]];
@@ -2009,4 +2018,3 @@ id objs_get_scheme_reference(NSString *schemeName, NSString *reference )
 }
 
 @end
-

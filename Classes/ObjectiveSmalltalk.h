@@ -8,6 +8,8 @@
 #ifndef ObjectiveSmalltalk_h
 #define ObjectiveSmalltalk_h
 
+#import <ObjectiveSmalltalk/MPWJavaScriptGenerator.h>
+
 #import <MPWFoundation/MPWFoundation.h>
 
 #import <ObjectiveSmalltalk/MPWAbstractInterpretedMethod.h>
