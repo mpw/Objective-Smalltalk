@@ -44,7 +44,20 @@ NS_ASSUME_NONNULL_BEGIN
 +(instancetype)provider;
 @end
 
-@interface STExpression (typeInference)
+// Built-in knowledge of the core selectors whose result type is fixed or
+// operand-driven rather than discoverable from a class: comparisons (→ bool),
+// arithmetic on a primitive receiver (→ that primitive), and the common
+// primitive extractors (intValue, length, …).
+@interface STHardcodedTypeProvider : NSObject <STTypeProvider>
++(instancetype)provider;
+@end
+
+// Tries each provider in order, first non-nil answer wins.
+@interface STCompositeTypeProvider : NSObject <STTypeProvider>
++(instancetype)providerWithProviders:(NSArray<id<STTypeProvider>>*)providers;
+@end
+
+@interface NSObject (typeInference)
 // The static type of this expression's result.  Defaults to id; never nil.
 -(MPWTypeDefinition*)resultTypeIn:(nullable STTypeContext*)context;
 @end

@@ -77,6 +77,55 @@
     IDEXPECT( [[context typeForName:@"k"] name], @"int", @"local var def seeded into context");
 }
 
+#pragma mark - message-send return-type inference
+
++(STTypeContext*)contextWithIntNamed:(NSString*)name
+{
+    STTypeContext *context=[STTypeContext context];
+    [context declareName:name type:[MPWTypeDefinition descriptorForTypeName:@"int"]];
+    return context;
+}
+
++(void)testArithmeticOnPrimitiveReceiverInfersPrimitive
+{
+    IDEXPECT( [self inferredTypeNameFor:@"a + 4" in:[self contextWithIntNamed:@"a"]], @"int", @"int + literal infers int");
+}
+
++(void)testComparisonOnPrimitiveReceiverInfersBool
+{
+    IDEXPECT( [self inferredTypeNameFor:@"a < 4" in:[self contextWithIntNamed:@"a"]], @"bool", @"int comparison infers bool");
+}
+
++(void)testArithmeticOnObjectReceiverInfersId
+{
+    IDEXPECT( [self inferredTypeNameFor:@"3 + 4" in:[STTypeContext context]], @"id", @"NSNumber arithmetic stays an object");
+}
+
++(void)testComparisonOnObjectReceiverInfersBool
+{
+    IDEXPECT( [self inferredTypeNameFor:@"3 < 4" in:[STTypeContext context]], @"bool", @"object comparison infers bool");
+}
+
++(void)testMessageReturningObjectInfersId
+{
+    IDEXPECT( [self inferredTypeNameFor:@"'hello' uppercaseString" in:[STTypeContext context]], @"id", @"uppercaseString returns an object");
+}
+
++(void)testMessageReturningPrimitiveInfersPrimitive
+{
+    IDEXPECT( [self inferredTypeNameFor:@"'hello' length" in:[STTypeContext context]], @"long", @"length returns an integer");
+}
+
++(void)testPrimitiveExtractorOnUnknownReceiverInfersPrimitive
+{
+    IDEXPECT( [self inferredTypeNameFor:@"anObject intValue" in:[STTypeContext context]], @"int", @"intValue infers int even for an id receiver");
+}
+
++(void)testUnknownSelectorOnUnknownReceiverInfersId
+{
+    IDEXPECT( [self inferredTypeNameFor:@"anObject frobnicate" in:[STTypeContext context]], @"id", @"unknown selector on id falls back to id");
+}
+
 #pragma mark - runtime type provider
 
 +(void)testRuntimeProviderReportsPrimitiveReturnType
@@ -113,6 +162,14 @@
         @"testVariableDefinitionResultTypeIsDeclaredType",
         @"testMethodArgumentSeededIntoContext",
         @"testLocalVariableDefinitionSeededIntoContext",
+        @"testArithmeticOnPrimitiveReceiverInfersPrimitive",
+        @"testComparisonOnPrimitiveReceiverInfersBool",
+        @"testArithmeticOnObjectReceiverInfersId",
+        @"testComparisonOnObjectReceiverInfersBool",
+        @"testMessageReturningObjectInfersId",
+        @"testMessageReturningPrimitiveInfersPrimitive",
+        @"testPrimitiveExtractorOnUnknownReceiverInfersPrimitive",
+        @"testUnknownSelectorOnUnknownReceiverInfersId",
         @"testRuntimeProviderReportsPrimitiveReturnType",
         @"testRuntimeProviderReportsObjectReturnType",
         @"testRuntimeProviderReturnsNilForUnknownReceiverType",
