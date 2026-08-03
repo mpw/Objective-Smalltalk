@@ -7,6 +7,7 @@
 
 #import "STNativeCompiler.h"
 #import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
+#import <ObjectiveSmalltalk/STTypeInference.h>
 #import "STMachOWriter.h"
 #import "STObjectCodeGeneratorARM.h"
 #import "MPWMachOClassWriter.h"
@@ -39,6 +40,8 @@
 -(int)generateLoadClassReference:(NSString*)className;
 -(int)generateConnectionFrom:(id)left to:(id)right;
 -(int)generateLoadIdentifier:(NSString*)identifierName withScheme:(NSString*)scheme;
+-(int)generatePrimitiveBinaryOp:(STPrimitiveMessageExpression*)expr;
+-(int)generateCoercion:(STCoerce*)coerce;
 
 
 @property (nonatomic,strong) NSMutableDictionary *variableToRegisterMap;
@@ -127,6 +130,24 @@
     return [compiler generateMessageSend:self];
 }
 
+
+@end
+
+@implementation STPrimitiveMessageExpression(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generatePrimitiveBinaryOp:self];
+}
+
+@end
+
+@implementation STCoerce(nativeCode)
+
+-(int)generateNativeCodeOn:(STNativeCompiler*)compiler
+{
+    return [compiler generateCoercion:self];
+}
 
 @end
 
@@ -498,6 +519,53 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
     }
 }
 
+-(int)generatePrimitiveBinaryOp:(STPrimitiveMessageExpression*)expr
+{
+    NSString *selector=NSStringFromSelector(expr.selector);
+    // Evaluate lhs, stash it in a scratch register (evaluating rhs may reuse x0),
+    // evaluate rhs, then emit a single register arithmetic instruction.
+    int lhsRegister=[expr.receiver generateNativeCodeOn:self];
+    int savedStack=self.currentLocalRegStack;
+    int stashRegister=[self allocateRegister];
+    [self moveRegister:lhsRegister toRegister:stashRegister];
+    int rhsRegister=[[expr.args firstObject] generateNativeCodeOn:self];
+    if ( [selector isEqual:@"add:"] ) {
+        [codegen generateAddDest:0 source1:stashRegister source2:rhsRegister];
+    } else if ( [selector isEqual:@"sub:"] ) {
+        [codegen generateSubDest:0 source1:stashRegister source2:rhsRegister];
+    } else if ( [selector isEqual:@"mul:"] ) {
+        [codegen generateMulDest:0 source1:stashRegister source2:rhsRegister];
+    } else {
+        [NSException raise:@"unsupported" format:@"native compiler does not yet lower primitive '%@'",selector];
+    }
+    self.currentLocalRegStack=savedStack;   // release the scratch register
+    return 0;
+}
+
+-(int)generateCoercion:(STCoerce*)coerce
+{
+    unsigned char code=(coerce.isUnboxing ? coerce.toType : coerce.fromType).objcTypeCode;
+    if ( [coerce isUnboxing] ) {
+        int valueRegister=[coerce.expression generateNativeCodeOn:self];
+        [self moveRegister:valueRegister toRegister:0];
+        NSString *unboxSelector=(code=='B') ? @"boolValue" :
+                                (code=='d' || code=='f') ? @"doubleValue" : @"longValue";
+        [self generateMessageSendToSelector:unboxSelector];
+        return 0;
+    }
+    // Boxing: floating-point boxing needs a float-register calling convention; not yet.
+    if ( code=='d' || code=='f' ) {
+        [NSException raise:@"unsupported" format:@"native compiler does not yet box %@",coerce.fromType.name];
+    }
+    // Integer / bool → NSNumber via [NSNumber numberWithLong: value].  Receiver
+    // goes in x0, the single argument in x2 (see generateMessageSendOf:).
+    int valueRegister=[coerce.expression generateNativeCodeOn:self];
+    [self moveRegister:valueRegister toRegister:2];
+    [self generateLoadClassReference:@"NSNumber"];   // into x0
+    [self generateMessageSendToSelector:@"numberWithLong:"];
+    return 0;
+}
+
 -(int)allocateRegister
 {
     int theRegister = self.currentLocalRegStack;
@@ -739,6 +807,16 @@ objectAccessor(MPWMachOClassWriter*, classwriter, setClasswriter)
 {
     self.currentLocalRegStack=self.localRegisterMin;
     self.savedRegisterMax=self.localRegisterMin;
+
+    // Resolve early-bound primitive operations (int + int → register add) and
+    // insert box/unbox coercions, including at the declared return type.
+    STTypeContext *typeContext=[STTypeContext contextForMethod:method];
+    id annotatedBody=[method.methodBody typeAnnotateIn:typeContext];
+    MPWTypeDefinition *returnType=method.methodHeader.returnType;
+    if ( returnType && returnType.objcTypeCode != 'v' ) {
+        annotatedBody=[STCoerce coerceResultOf:annotatedBody to:returnType in:typeContext];
+    }
+    [method setMethodBody:annotatedBody];
 
     [self saveLocalRegistersAndMoveArgs:method];
     int returnRegister =  [method.methodBody generateNativeCodeOn:self];

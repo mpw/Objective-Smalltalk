@@ -235,6 +235,31 @@
     EXPECTTRUE( [[diagnostics firstObject] containsString:@"bogusSelector"], @"the argument's bad send is reported");
 }
 
+#pragma mark - interpreter consistency (the annotated tree evaluates the same)
+
++(void)testInterpreterEvaluatesEarlyBoundArithmeticConsistently
+{
+    id evaluator=[[[self alloc] init] autorelease];
+    [evaluator bindValue:@(3) toVariableNamed:@"a"];
+    [evaluator bindValue:@(4) toVariableNamed:@"b"];
+    id rawResult=[[self parseExpr:@"a + b"] evaluateIn:evaluator];
+    id annotated=[[self parseExpr:@"a + b"] typeAnnotateIn:[self contextWithInts:@[@"a", @"b"]]];
+    EXPECTTRUE( [annotated isKindOfClass:[STPrimitiveMessageExpression class]], @"resolved to an early-bound node");
+    id annotatedResult=[annotated evaluateIn:evaluator];
+    IDEXPECT( annotatedResult, rawResult, @"early-bound node evaluates identically to the raw send");
+    IDEXPECT( annotatedResult, @(7), @"...and to the expected value");
+}
+
++(void)testInterpreterEvaluatesCoercionAsPassThrough
+{
+    id evaluator=[[[self alloc] init] autorelease];
+    [evaluator bindValue:@(42) toVariableNamed:@"n"];
+    STCoerce *coerce=[STCoerce coerce:[self parseExpr:@"n"]
+                                  from:[MPWTypeDefinition idType]
+                                    to:[MPWTypeDefinition descriptorForTypeName:@"int"]];
+    IDEXPECT( [coerce evaluateIn:evaluator], @(42), @"a coercion is a pass-through in the all-boxed interpreter");
+}
+
 #pragma mark - runtime type provider
 
 +(void)testRuntimeProviderReportsPrimitiveReturnType
@@ -291,6 +316,8 @@
         @"testKnownSelectorOnKnownTypeIsNotFlagged",
         @"testSelectorOnDynamicReceiverIsNotFlagged",
         @"testDiagnosticInArgumentPositionIsFound",
+        @"testInterpreterEvaluatesEarlyBoundArithmeticConsistently",
+        @"testInterpreterEvaluatesCoercionAsPassThrough",
         @"testRuntimeProviderReportsPrimitiveReturnType",
         @"testRuntimeProviderReportsObjectReturnType",
         @"testRuntimeProviderReturnsNilForUnknownReceiverType",
