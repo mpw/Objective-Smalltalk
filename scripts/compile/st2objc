@@ -1,0 +1,10 @@
+#!env st
+#-<void>compile:source
+basename := source stringValue stringByDeletingPathExtension.
+compiler := STCompiler compiler.
+ast := compiler compile: file:{source}.
+stdout println: '#import <Foundation/Foundation.h>'
+generator ← MPWObjCGenerator streamWithTarget: stdout.
+generator ! ast.
+#objectFileName := basename , '.m'.
+#file:{objectFileName} := compiled.
