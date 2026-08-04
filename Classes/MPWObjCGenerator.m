@@ -43,8 +43,6 @@
 // Types of the names in scope for the method currently being generated, so
 // primitive locals can be declared with their C type.
 @property (nonatomic, assign) STTypeContext *currentTypeContext;
-// Counter for generating unique C loop-counter names.
-@property (nonatomic, assign) int loopCounter;
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type;
 -(BOOL)isLocalScheme:(NSString*)scheme;
 -(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method;
@@ -329,6 +327,11 @@
 // itself, an object unboxed with -longValue.
 -(void)writeLoopBound:bound
 {
+    // The arg-coercion pass boxes the bound because to:do: takes objects; for a
+    // C loop counter we want the raw primitive back.
+    if ( [bound isKindOfClass:[STCoerce class]] && [(STCoerce*)bound isBoxing] ) {
+        bound=[(STCoerce*)bound expression];
+    }
     id literal=[bound isKindOfClass:[MPWLiteralExpression class]] ? [bound theLiteral] : bound;
     if ( [literal isKindOfClass:[NSNumber class]] ) {
         [self writeString:[literal stringValue]];
@@ -372,23 +375,19 @@
 {
     MPWBlockExpression *body=[forMessage args][1];
     NSString *loopVar=[body arguments][0];
-    NSString *counter=[NSString stringWithFormat:@"_stLoop%d",self.loopCounter++];
-    // for ( long _stLoopN = start; _stLoopN <= end; _stLoopN++ ) { id i = @(_stLoopN); … }
+    // for ( long i = start; i <= end; i++ ) { … }  — the loop variable is a
+    // plain primitive integer; the annotator boxes it where the body needs an object.
     [self writeString:@"for ( long "];
-    [self writeString:counter];
+    [self writeString:loopVar];
     [self writeString:@" = "];
     [self writeLoopBound:[forMessage receiver]];
     [self writeString:@"; "];
-    [self writeString:counter];
+    [self writeString:loopVar];
     [self writeString:@" <= "];
     [self writeLoopBound:[forMessage args][0]];
     [self writeString:@"; "];
-    [self writeString:counter];
-    [self writeString:@"++ ) {\nid "];
     [self writeString:loopVar];
-    [self writeString:@" = @("];
-    [self writeString:counter];
-    [self writeString:@");\n"];
+    [self writeString:@"++ ) {\n"];
     [self writeStatements:[body statementArray] returningLast:NO];
     [self writeString:@"}\n"];
 }
@@ -429,10 +428,14 @@
         if ( !lastReturns && [self isLowerableControlStructure:aList[i]] ) {
             [self writeControlStructure:aList[i]];
         } else {
+            id statement=aList[i];
             if ( lastReturns ) {
                 [self writeString:@"return "];
+            } else if ( [statement isKindOfClass:[STCoerce class]] ) {
+                // The value is discarded, so a box/unbox coercion of it is pointless.
+                statement=[(STCoerce*)statement expression];
             }
-            [self writeObject:aList[i]];
+            [self writeObject:statement];
             [self writeString:@";\n"];
         }
         if ( returnLast && i == count-1 && !lastReturns ) {
@@ -827,10 +830,14 @@
 
 -(void)generateObjectiveCOn:(MPWObjCGenerator*)generator
 {
+    id literal=[self.expression isKindOfClass:[MPWLiteralExpression class]] ? [self.expression theLiteral] : nil;
     if ( [self isBoxing] ) {
         [generator writeString:@"@("];
         [generator writeObject:self.expression];
         [generator writeString:@")"];
+    } else if ( [self isUnboxing] && [literal isKindOfClass:[NSNumber class]] ) {
+        // Unboxing a numeric literal is just the raw C number.
+        [generator writeString:[literal stringValue]];
     } else if ( [self isUnboxing] ) {
         [generator writeString:@"["];
         [generator writeObject:self.expression];

@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 // hardcoded-table and header-file sources behind the same protocol.
 @protocol STTypeProvider <NSObject>
 -(nullable MPWTypeDefinition*)returnTypeForSelector:(SEL)selector receiverType:(nullable MPWTypeDefinition*)receiverType;
+-(nullable MPWTypeDefinition*)argumentType:(int)index forSelector:(SEL)selector receiverType:(nullable MPWTypeDefinition*)receiverType;
 @end
 
 // A symbol table of in-scope names → types, plus the type of `self`.
