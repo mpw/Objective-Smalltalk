@@ -93,6 +93,41 @@
 	
 }
 
++(id)parsedVariableDefinitionFor:(NSString*)source
+{
+    id compiler=[[[self alloc] init] autorelease];
+    id parsed=[source compileIn:compiler];
+    return [parsed respondsToSelector:@selector(statements)] ? [[parsed statements] firstObject] : parsed;
+}
+
++(void)testColonSuffixVariableDefinitionParsesType
+{
+    id def=[self parsedVariableDefinitionFor:@"var x:int."];
+    IDEXPECT( [def name], @"x", @"colon-suffix variable name");
+    IDEXPECT( [[def type] name], @"int", @"colon-suffix variable type");
+}
+
++(void)testColonSuffixVariableDefinitionWithInitializer
+{
+    id def=[self parsedVariableDefinitionFor:@"var n:int := 3."];
+    IDEXPECT( [def name], @"n", @"name with type and initializer");
+    IDEXPECT( [[def type] name], @"int", @"type with initializer present");
+}
+
++(void)testDeprecatedBracketVariableDefinitionStillParses
+{
+    id def=[self parsedVariableDefinitionFor:@"var <int> y."];
+    IDEXPECT( [def name], @"y", @"bracket-alias variable name");
+    IDEXPECT( [[def type] name], @"int", @"bracket-alias variable type");
+}
+
++(void)testUntypedVariableDefinitionDefaultsToId
+{
+    id def=[self parsedVariableDefinitionFor:@"var z."];
+    IDEXPECT( [def name], @"z", @"untyped variable name");
+    IDEXPECT( [[def type] name], @"id", @"untyped variable defaults to id");
+}
+
 +(void)testAssignment
 {
 	id expr = @"a:='hello world'";
@@ -303,7 +338,7 @@
 
 +(void)testExternalDictForDefinedMethods
 {
-	NSString *originalMethodHeader = @"lengthMultipliedByInt:<int>a";
+	NSString *originalMethodHeader = @"lengthMultipliedByInt:a:int";
 	NSString *originalScript = @"self length*a.";
 	NSDictionary *externalDict;
 	NSDictionary *methodDict;
@@ -1288,6 +1323,10 @@
     return @[
         @"testAddingMethodToClass",
         @"testLocalVariables",
+        @"testColonSuffixVariableDefinitionParsesType",
+        @"testColonSuffixVariableDefinitionWithInitializer",
+        @"testDeprecatedBracketVariableDefinitionStillParses",
+        @"testUntypedVariableDefinitionDefaultsToId",
         @"testAssignment",
         @"testUnknownSelector",
         @"testAssignNil",

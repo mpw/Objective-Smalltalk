@@ -127,22 +127,30 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 	[self setMethodName:[current stringByAppendingString:newFragment]];
 }
 #endif
+-(BOOL)isHeaderTerminator:token
+{
+    // '{'/'.' end the header; a lone ':' introduces a colon-suffix return type.
+    return [token isEqualToString:@"{"] || [token isEqualToString:@"."] || [token isEqualToString:@":"];
+}
+
 -(id)parseAKeyWordFromScanner:scanner
 {
 	id next = [scanner nextToken];
-    if ( next && ![next isEqualToString:@"{"] && ![next isEqualToString:@"."]) {
-		id type;
+    if ( next && ![self isHeaderTerminator:next]) {
 		id keyword = next;
-//		[self addToMethodName:next];
-		type = [self parseOptionalTypeNameFromScanner:scanner];
+		id type = [self parseOptionalTypeNameFromScanner:scanner];    // deprecated <type> prefix
+		next = [scanner nextToken];                                   // parameter name (or terminator)
+        if ( [self isHeaderTerminator:next]) {
+            [scanner pushBack:next];
+            next=nil;
+        } else if ( [next isKeyword] ) {
+            // colon-suffix type annotation:  keyword: name:Type
+            next = [next substringToIndex:[next length]-1];          // strip trailing ':'
+            type = [scanner nextToken];                              // the type name
+        }
 		if ( type == nil ) {
 			type=@"id";
 		}
-		next = [scanner nextToken];
-        if ( [next isEqualToString:@"{"] || [next isEqualToString:@"."]) {
-            [scanner pushBack:next];
-            next=nil;
-        }
         [self addParameterName:next type:type keyWord:keyword];
     } else {
         [scanner pushBack:next];
@@ -155,10 +163,17 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
     id optionalReturnType;
     self = [self init];
-    if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
+    if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {   // deprecated <type> prefix
         [self setReturnType:types[optionalReturnType]];
     }
     while ( [self parseAKeyWordFromScanner:scanner] )  {
+    }
+    // colon-suffix return type:  a trailing ": Type" after the keywords
+    id afterKeywords = [scanner nextToken];
+    if ( [afterKeywords isEqualToString:@":"] ) {
+        [self setReturnType:types[[scanner nextToken]]];
+    } else if ( afterKeywords ) {
+        [scanner pushBack:afterKeywords];
     }
     [self setMethodName:[[self methodKeyWords] componentsJoinedByString:@""]];
     return self;
@@ -174,9 +189,6 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 -(NSString*)headerString
 {
 	NSMutableString *headerString = [NSMutableString string];
-	if ( [[self returnType] objcTypeCode] != '@' ) {
-		[headerString appendFormat:@"<%@>",[[self returnType] name]];
-	}
 	if ( [parameterVars count] == 0 ) {
 		[headerString appendString:[self methodName]];
 	} else {
@@ -189,14 +201,17 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 				if ( [typeName isEqual:@"id"] ) {
 					[headerString appendString:parametername];
 				} else {
-					[headerString appendFormat:@"<%@>%@",typeName,parametername];
+					[headerString appendFormat:@"%@:%@",parametername,typeName];
 				}
 				if ( i < max-1 ) {
 					[headerString appendString:@" "];
 				}
 			}
 		}
-		
+
+	}
+	if ( [[self returnType] objcTypeCode] != '@' ) {
+		[headerString appendFormat:@" : %@",[[self returnType] name]];
 	}
 	return headerString;
 }
@@ -353,11 +368,52 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
 	NSArray *testHeaders=[NSArray arrayWithObjects:
 		@"count",
-		@"<int>count",
-		@"addInt:<int>a",
-		@"<float>addInt:<int>a additionalArg:b",
+		@"count : int",
+		@"addInt:a:int",
+		@"addInt:a:int additionalArg:b : float",
 		nil];
 	[[self do] _parseHeaderStringAndCompareGeneratedWithOriginal:[testHeaders each]];
+}
+
++(void)testParseColonSuffixParamType
+{
+	MPWMethodHeader *header = [self methodHeaderWithString:@"addInt: anInteger:int"];
+	IDEXPECT( [header methodName] , @"addInt:" ,@"method name" );
+	IDEXPECT( [header argumentNameAtIndex:0], @"anInteger" , @"argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:0], @"int" , @"argument type");
+}
+
++(void)testParseColonSuffixReturnType
+{
+	MPWMethodHeader *header = [self methodHeaderWithString:@"count : int"];
+	IDEXPECT( [header methodName] , @"count" ,@"method name" );
+	IDEXPECT( [[header returnType] name] , @"int", @"return type" );
+	INTEXPECT( [header numArguments], 0 , @"numArguments");
+}
+
++(void)testParseColonSuffixParamAndReturn
+{
+	MPWMethodHeader *header = [self methodHeaderWithString:@"sumTo: n:int : int"];
+	IDEXPECT( [header methodName] , @"sumTo:" ,@"method name" );
+	IDEXPECT( [header argumentNameAtIndex:0], @"n" , @"argument name");
+	IDEXPECT( [header argumentTypeNameAtIndex:0], @"int" , @"argument type");
+	IDEXPECT( [[header returnType] name] , @"int", @"return type" );
+	IDEXPECT( [header typeString], @"l@:l", @"type signature");
+}
+
++(void)testDeprecatedBracketSyntaxStillParses
+{
+	MPWMethodHeader *header = [self methodHeaderWithString:@"<float>addInt:<int>a additionalArg:b"];
+	IDEXPECT( [header methodName] , @"addInt:additionalArg:" ,@"method name" );
+	IDEXPECT( [header argumentTypeNameAtIndex:0], @"int" , @"first argument type via bracket alias");
+	IDEXPECT( [header argumentTypeNameAtIndex:1], @"id" , @"second argument type");
+	IDEXPECT( [[header returnType] name] , @"float", @"return type via bracket alias" );
+}
+
++(void)testBracketSyntaxIsCanonicalizedToColonSuffix
+{
+	[self _parseHeaderString:@"<int>count" andCompareGeneratedWithCanonical:@"count : int"];
+	[self _parseHeaderString:@"addInt:<int>a" andCompareGeneratedWithCanonical:@"addInt:a:int"];
 }
 
 +(void)testCanonicalParameterString
@@ -388,6 +444,11 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 		@"testReconstitutedParameterString",
 		@"testCanonicalParameterString",
         @"testMethodHeaderFollowedByPeriod",
+		@"testParseColonSuffixParamType",
+		@"testParseColonSuffixReturnType",
+		@"testParseColonSuffixParamAndReturn",
+		@"testDeprecatedBracketSyntaxStillParses",
+		@"testBracketSyntaxIsCanonicalizedToColonSuffix",
         ];
 
 }
