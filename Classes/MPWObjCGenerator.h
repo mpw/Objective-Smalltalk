@@ -13,6 +13,9 @@
 
 }
 
+// The imports a generated Objective-Smalltalk compilation unit needs.
++(NSString*)standardImports;
+
 -(void)generateVariableWithName:aName;
 -(void)generateIdentifier:(id)identifier;
 -(void)writeMessage:selector toReceiver:receiver withArgs:args;

@@ -120,13 +120,11 @@
 
     STCompiler *compiler=[self compiler];
     NSArray *definitions=@[
-        [compiler compile:@"class __ObjCGeneratorSmokeClass { -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } }"],
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } }"],
         [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
         [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
     ];
-    NSMutableString *source=[NSMutableString stringWithString:
-        @"#import <Foundation/Foundation.h>\n"
-         "#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>\n\n"];
+    NSMutableString *source=[NSMutableString stringWithString:[MPWObjCGenerator standardImports]];
     for (id definition in definitions) {
         [source appendString:[MPWObjCGenerator process:definition]];
         [source appendString:@"\n"];
@@ -190,6 +188,32 @@
     IDEXPECT([instance performSelector:NSSelectorFromString(@"loopResult:") withObject:@(4)],@(10),@"generated to:do: accumulator (__block local)");
     IDEXPECT([instance performSelector:NSSelectorFromString(@"whileResult")],@(128),@"generated whileTrue: accumulator");
     IDEXPECT([instance performSelector:NSSelectorFromString(@"collectResult")],@(6),@"generated collect: higher-order message");
+}
+
++(void)testObjectiveCGeneratorEndToEndStringInterpolation
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"greet:") withObject:@"World"],@"Hello, World!",@"generated string interpolation");
+}
+
++(void)testObjectiveCGeneratorEndToEndForeachLoop
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"countItems:") withObject:(@[@"a",@"b",@"c"])],@(3),@"generated C foreach counts elements");
+}
+
++(void)testObjectiveCGeneratorEndToEndLoweredIfStatement
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"labelFor:") withObject:@"big"],@"BIG",@"lowered C if fired");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"labelFor:") withObject:@"other"],@"small",@"lowered C if skipped");
+}
+
++(void)testObjectiveCGeneratorEndToEndInstanceVariableAccessors
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    [instance performSelector:NSSelectorFromString(@"setLabel:") withObject:@"hello ivar"];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"label")],@"hello ivar",@"generated instance-variable accessor round-trips");
 }
 
 +(void)testObjectiveCGeneratorEndToEndPrimitiveComputation
@@ -258,6 +282,94 @@
     EXPECTFALSE([generated containsString:@"id n;"], @"argument n must not be redeclared");
 }
 
++(NSString*)generateClass:(NSString*)source
+{
+    return [MPWObjCGenerator process:[[self compiler] compile:source]];
+}
+
++(void)testObjectIvarUsesAsteriskTypeAndObjectAccessor
+{
+    NSString *generated=[self generateClass:@"class __IvarObject : NSObject { var name:NSString. }"];
+    EXPECTTRUE([generated containsString:@"NSString* name;"], @"object ivar type keeps its asterisk");
+    EXPECTTRUE([generated containsString:@"objectAccessor( NSString*, name, setName )"], @"object ivar accessor");
+}
+
++(void)testIdIvarUsesIdAccessor
+{
+    NSString *generated=[self generateClass:@"class __IvarId : NSObject { var value. }"];
+    EXPECTTRUE([generated containsString:@"id value;"], @"id ivar");
+    EXPECTTRUE([generated containsString:@"idAccessor( value, setValue )"], @"id ivar accessor");
+}
+
++(void)testPrimitiveIvarUsesCTypeAndScalarAccessor
+{
+    NSString *generated=[self generateClass:@"class __IvarInt : NSObject { var count:int. }"];
+    EXPECTTRUE([generated containsString:@"long count;"], @"primitive ivar uses its C type");
+    EXPECTTRUE([generated containsString:@"scalarAccessor( long, count, setCount )"], @"primitive ivar accessor");
+}
+
++(void)testSemanticTypeWithoutObjcClassPuntsToId
+{
+    NSString *generated=[self generateClass:@"class __IvarMDA : NSObject { var t:Text. }"];
+    EXPECTTRUE([generated containsString:@"id t;"], @"a semantic/MDA object type with no ObjC class maps to id");
+    EXPECTFALSE([generated containsString:@"Text"], @"the MDA type name is not emitted");
+}
+
++(void)testToDoLowersToCForLoop
+{
+    NSString *generated=[self generateMethod:@"-loop:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. }"];
+    EXPECTTRUE([generated containsString:@"for ( long _stLoop0 = 1; _stLoop0 <= [n longValue]; _stLoop0++ ) {"], @"to:do: becomes a C for loop");
+    EXPECTTRUE([generated containsString:@"id i = @(_stLoop0);"], @"loop variable is boxed for the body");
+}
+
++(void)testWhileTrueLowersToCWhileLoop
+{
+    NSString *generated=[self generateMethod:@"-whi { var a. a := 1. { a < 100 } whileTrue:{ a := a * 2 }. a. }"];
+    EXPECTTRUE([generated containsString:@"while ( [a isLessThan:@(100)] ) {"], @"whileTrue: becomes a C while loop");
+}
+
++(void)testDoLowersToCForeachLoop
+{
+    NSString *generated=[self generateMethod:@"-each: coll { r := 0. coll do:{ :x | r := r + 1 }. r. }"];
+    EXPECTTRUE([generated containsString:@"for ( id x in coll ) {"], @"do: becomes a C fast-enumeration loop");
+}
+
++(void)testInterpolatedStringGeneratesStringWithFormat
+{
+    id parsed=[@"\"hello {name}!\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"[NSString stringWithFormat:@\"hello %@!\", name]", @"one placeholder");
+}
+
++(void)testInterpolatedStringWithMultiplePlaceholders
+{
+    id parsed=[@"\"{greeting} {name}\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"[NSString stringWithFormat:@\"%@ %@\", greeting, name]", @"two placeholders");
+}
+
++(void)testDoubleQuotedStringWithoutPlaceholdersIsPlainString
+{
+    id parsed=[@"\"no placeholder\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"@\"no placeholder\"", @"no interpolation → plain string");
+}
+
++(void)testThisSchemeReadGeneratesGetter
+{
+    id parsed=[@"a := this:hi." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"a = [self hi]", @"this: read generates a property getter");
+}
+
++(void)testThisSchemeWriteGeneratesSetter
+{
+    id parsed=[@"this:hi := 2." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"[self setHi:@(2)]", @"this: write generates a property setter");
+}
+
++(void)testStdoutGeneratesByteStreamStdout
+{
+    id parsed=[@"stdout." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed], @"[MPWByteStream Stdout]", @"stdout is a special identifier");
+}
+
 +(void)testGeneratesPrimitiveArithmeticAsCOperators
 {
     NSString *generated=[self generateMethod:@"-primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. }"];
@@ -265,6 +377,26 @@
     EXPECTTRUE([generated containsString:@"x = [a longValue];"], @"object argument unboxed into the primitive local");
     EXPECTTRUE([generated containsString:@"(x + y)"], @"primitive addition lowered to a C operator");
     EXPECTTRUE([generated containsString:@"return @((x + y));"], @"primitive result boxed at the object return boundary");
+}
+
++(void)testDiscardedPrimitiveConditionalBecomesCIf
+{
+    NSString *generated=[self generateMethod:@"-check: age:int { r := 0. age > 10 ifTrue:{ r := 2 }. r. }"];
+    EXPECTTRUE([generated containsString:@"if ( (age > 10) ) {"], @"lowered to a C if with a primitive condition");
+    EXPECTFALSE([generated containsString:@"ifTrue:"], @"the ifTrue: message is gone");
+}
+
++(void)testDiscardedConditionalWithElseBecomesCIfElse
+{
+    NSString *generated=[self generateMethod:@"-classify: x { r := 0. x < 3 ifTrue:{ r := 1 } ifFalse:{ r := 2 }. r. }"];
+    EXPECTTRUE([generated containsString:@"if ( [x isLessThan:@(3)] ) {"], @"lowered to a C if");
+    EXPECTTRUE([generated containsString:@"} else {"], @"with an else clause");
+}
+
++(void)testValuePositionConditionalStaysAnExpression
+{
+    NSString *generated=[self generateMethod:@"-valuePos: x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. }"];
+    EXPECTTRUE([generated containsString:@"ifTrue:^id()"], @"a returned conditional keeps its expression form so its value survives");
 }
 
 +(void)testGeneratesPrimitiveComparisonAsCOperator
@@ -284,7 +416,23 @@
 +(NSArray*)testSelectors
 {
     return @[
+        @"testObjectIvarUsesAsteriskTypeAndObjectAccessor",
+        @"testIdIvarUsesIdAccessor",
+        @"testPrimitiveIvarUsesCTypeAndScalarAccessor",
+        @"testSemanticTypeWithoutObjcClassPuntsToId",
+        @"testToDoLowersToCForLoop",
+        @"testWhileTrueLowersToCWhileLoop",
+        @"testDoLowersToCForeachLoop",
+        @"testInterpolatedStringGeneratesStringWithFormat",
+        @"testInterpolatedStringWithMultiplePlaceholders",
+        @"testDoubleQuotedStringWithoutPlaceholdersIsPlainString",
+        @"testThisSchemeReadGeneratesGetter",
+        @"testThisSchemeWriteGeneratesSetter",
+        @"testStdoutGeneratesByteStreamStdout",
         @"testGeneratesPrimitiveArithmeticAsCOperators",
+        @"testDiscardedPrimitiveConditionalBecomesCIf",
+        @"testDiscardedConditionalWithElseBecomesCIfElse",
+        @"testValuePositionConditionalStaysAnExpression",
         @"testGeneratesPrimitiveComparisonAsCOperator",
         @"testBareAssignmentsDeclaredAsLocals",
         @"testMethodArgumentsAreNotRedeclaredAsLocals",
@@ -303,6 +451,10 @@
         @"testObjectiveCGeneratorEndToEndMessagePassingAndLiterals",
         @"testObjectiveCGeneratorEndToEndBlocks",
         @"testObjectiveCGeneratorEndToEndLocalsControlFlowAndLoops",
+        @"testObjectiveCGeneratorEndToEndStringInterpolation",
+        @"testObjectiveCGeneratorEndToEndForeachLoop",
+        @"testObjectiveCGeneratorEndToEndLoweredIfStatement",
+        @"testObjectiveCGeneratorEndToEndInstanceVariableAccessors",
         @"testObjectiveCGeneratorEndToEndPrimitiveComputation",
         @"testObjectiveCGeneratorEndToEndIdentifiersAgainstStores",
         @"testObjectiveCGeneratorEndToEndClassAndStoreDefinitions",

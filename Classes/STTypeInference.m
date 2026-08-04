@@ -136,6 +136,15 @@ static BOOL isObjectType(MPWTypeDefinition *type)
     return type.objcTypeCode == '@';
 }
 
+static BOOL isNumericLiteralExpression(id expression)
+{
+    id literal=expression;
+    if ( [literal isKindOfClass:[MPWLiteralExpression class]] ) {
+        literal=[literal theLiteral];
+    }
+    return [literal isKindOfClass:[NSNumber class]];
+}
+
 // The mapped forms of  <  >  <=  >=  =  != , which all yield BOOL.
 static NSSet *comparisonSelectors(void)
 {
@@ -455,9 +464,12 @@ static NSSet *arithmeticSelectors(void)
     BOOL isPrimitiveOperator=[comparisonSelectors() containsObject:selectorName] ||
                              [arithmeticSelectors() containsObject:selectorName];
     MPWTypeDefinition *receiverType=[newReceiver resultTypeIn:context];
+    // A numeric literal can act as a primitive operand, so `age > 10` (age:int)
+    // is an early-bound C comparison, not a boxed message.
     BOOL argsArePrimitive=YES;
     for ( id arg in newArgs ) {
-        argsArePrimitive = argsArePrimitive && isPrimitiveNumericType([arg resultTypeIn:context]);
+        argsArePrimitive = argsArePrimitive &&
+            (isPrimitiveNumericType([arg resultTypeIn:context]) || isNumericLiteralExpression(arg));
     }
     if ( isPrimitiveOperator && isPrimitiveNumericType(receiverType) && argsArePrimitive ) {
         MPWTypeDefinition *resultType=[context.typeProvider returnTypeForSelector:self.selector receiverType:receiverType];

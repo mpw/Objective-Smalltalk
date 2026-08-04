@@ -36,6 +36,11 @@ lazyAccessor(NSArray *, capturedVariables, setCapturedVariables, computeCaptured
     while ( [actualStatements isKindOfClass:[MPWStatementList class]]) {
         actualStatements=[actualStatements statements];
     }
+    // A block with a single statement and no trailing period stores that bare
+    // statement directly; callers all expect an array, so normalize.
+    if ( actualStatements && ![actualStatements isKindOfClass:[NSArray class]] ) {
+        actualStatements = @[ actualStatements ];
+    }
     return actualStatements;
 }
 

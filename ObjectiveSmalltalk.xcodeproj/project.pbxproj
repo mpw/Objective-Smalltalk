@@ -1126,7 +1126,6 @@
 		A20000000000000000000009 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		1FDEC0DE0000000000000E1 /* STTypeInferenceTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTypeInferenceTests.h; sourceTree = "<group>"; };
 		1FDEC0DE0000000000000E2 /* STTypeInferenceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTypeInferenceTests.m; sourceTree = "<group>"; };
->>>>>>> BetterPrimitiveTypes
 		1F0351622F3B9657005F2ECA /* STMachOObjectFileLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMachOObjectFileLoader.h; sourceTree = "<group>"; };
 		1F0351632F3B9657005F2ECA /* STMachOObjectFileLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STMachOObjectFileLoader.m; sourceTree = "<group>"; };
 		1F0351662F3BD875005F2ECA /* STJITExpressionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STJITExpressionTests.h; sourceTree = "<group>"; };

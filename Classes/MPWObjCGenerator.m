@@ -26,6 +26,12 @@
 #import "STTypeDescriptor.h"
 #import "STVariableDefinition.h"
 #import "STTypeInference.h"
+#import <MPWFoundation/MPWStringTemplate.h>
+
+// Interpolatable "..." strings are MPWStringLiteral with hasSingleQuotes == NO.
+@interface NSObject(hasSingleQuotes)
+-(BOOL)hasSingleQuotes;
+@end
 
 @interface MPWObjCGenerator ()
 // Names already declared in the method/block scope currently being generated,
@@ -37,11 +43,18 @@
 // Types of the names in scope for the method currently being generated, so
 // primitive locals can be declared with their C type.
 @property (nonatomic, assign) STTypeContext *currentTypeContext;
+// Counter for generating unique C loop-counter names.
+@property (nonatomic, assign) int loopCounter;
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type;
 -(BOOL)isLocalScheme:(NSString*)scheme;
 -(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method;
 -(NSString*)cOperatorForSelector:(NSString*)selector;
 -(NSString*)unboxSelectorForType:(MPWTypeDefinition*)type;
+-(void)writeAccessorForName:(NSString*)name type:(MPWTypeDefinition*)type;
+-(BOOL)isLowerableControlStructure:statement;
+-(void)writeControlStructure:(MPWMessageExpression*)message;
+-(void)writePrimitiveOperand:operand;
+-(void)writeInterpolatedString:(NSString*)string;
 @end
 
 @implementation NSObject(generateObjectiveCOn)
@@ -81,9 +94,16 @@
         [self writeString:@"@NO"];
     } else if ( [name isEqual:@"nil"] ) {
         [self writeString:@"nil"];
+    } else if ( [name isEqual:@"stdout"] ) {
+        [self writeString:@"[MPWByteStream Stdout]"];
+    } else if ( [scheme isEqual:@"this"] ) {
+        // this:hi resolves to the property/instance variable via its getter.
+        [self writeString:@"[self "];
+        [self writeString:name];
+        [self writeString:@"]"];
     } else if ( scheme.length == 0 || [scheme isEqual:@"default"] ||
         [scheme isEqual:@"var"] || [scheme isEqual:@"class"] ||
-        [scheme isEqual:@"self"] || [scheme isEqual:@"this"] ) {
+        [scheme isEqual:@"self"] ) {
         [self generateVariableWithName:name];
     } else {
         [self writeString:@"st_scheme_at("];
@@ -96,15 +116,45 @@
 
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type
 {
-    NSString *name=type.name ?: @"id";
-    if ( type.objcTypeCode == '@' ) {
-        if ( ![name isEqual:@"id"] && ![name hasSuffix:@"*"] ) {
-            return [name stringByAppendingString:@" *"];
+    // cName is the Objective-C spelling: primitives (int→long, bool→BOOL),
+    // object classes with a trailing asterisk (NSString*), "id" for id and for
+    // semantic/MDA object types (Text, EmailAddress, …) that have no mapped
+    // Objective-C class.
+    return type.cName ?: @"id";
+}
+
++(NSString*)standardImports
+{
+    return @"#import <Foundation/Foundation.h>\n"
+            "#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>\n\n";
+}
+
+-(void)writeAccessorForName:(NSString*)name type:(MPWTypeDefinition*)type
+{
+    NSString *setterName=[NSString stringWithFormat:@"set%@%@",
+        [[name substringToIndex:1] uppercaseString], [name substringFromIndex:1]];
+    NSString *cType=type ? [self objectiveCTypeFor:type] : @"id";
+    if ( !type || type.objcTypeCode == '@' ) {
+        if ( [cType isEqual:@"id"] ) {
+            [self writeString:[NSString stringWithFormat:@"idAccessor( %@, %@ )\n",name,setterName]];
+        } else {
+            [self writeString:[NSString stringWithFormat:@"objectAccessor( %@, %@, %@ )\n",cType,name,setterName]];
         }
-        return name;
+    } else {
+        [self writeString:[NSString stringWithFormat:@"scalarAccessor( %@, %@, %@ )\n",cType,name,setterName]];
     }
-    // Primitive: use the C spelling (int→long, bool→BOOL, float→double, …).
-    return type.cName ?: name;
+}
+
+-(void)writePrimitiveOperand:operand
+{
+    // Inside a lowered primitive operation a numeric literal is a raw C number,
+    // not a boxed @(n).
+    id literal=[operand isKindOfClass:[MPWLiteralExpression class]] ? [operand theLiteral] : operand;
+    if ( [literal isKindOfClass:[NSNumber class]] ) {
+        [self writeString:[literal stringValue]];
+    } else {
+        [self writeObject:operand];
+    }
 }
 
 -(NSString*)cOperatorForSelector:(NSString*)selector
@@ -152,6 +202,34 @@
     [self writeString:@"@\""];
     [self writeString:[self escapedObjectiveCString:aString]];
     [self writeString:@"\""];
+}
+
+// A "..." string with {placeholder}s becomes [NSString stringWithFormat:@"…%@…", placeholder…].
+-(void)writeInterpolatedString:(NSString*)string
+{
+    NSArray *fragments=[MPWStringTemplate parseString:string];
+    NSMutableString *format=[NSMutableString string];
+    NSMutableArray *placeholders=[NSMutableArray array];
+    for (id fragment in fragments) {
+        if ( [fragment isKindOfClass:[NSString class]] ) {
+            // A literal % must be doubled for the format string.
+            [format appendString:[fragment stringByReplacingOccurrencesOfString:@"%" withString:@"%%"]];
+        } else {
+            [format appendString:@"%@"];
+            [placeholders addObject:[fragment identifierName]];
+        }
+    }
+    if ( placeholders.count == 0 ) {
+        [self writeNSString:format];    // no placeholders: an ordinary string
+        return;
+    }
+    [self writeString:@"[NSString stringWithFormat:"];
+    [self writeNSString:format];
+    for (NSString *placeholder in placeholders) {
+        [self writeString:@", "];
+        [self writeString:placeholder];
+    }
+    [self writeString:@"]"];
 }
 
 -(void)writeKeyWord:aKeyWord andArg:arg
@@ -204,16 +282,159 @@
     }
 }
 
+-(BOOL)isBlock:node { return [node isKindOfClass:[MPWBlockExpression class]]; }
+
+// A control-structure message (ifTrue:/whileTrue:/to:do:/do:) with block arms,
+// lowerable to a native C control structure when its value is not needed.
+-(BOOL)isLowerableControlStructure:statement
+{
+    if ( ![statement isKindOfClass:[MPWMessageExpression class]] ) {
+        return NO;
+    }
+    NSString *selector=NSStringFromSelector([statement selector]);
+    NSArray *args=[statement args];
+    id receiver=[statement receiver];
+    if ( [selector isEqual:@"ifTrue:"] || [selector isEqual:@"ifTrue:ifFalse:"] ) {
+        for (id arg in args) { if ( ![self isBlock:arg] ) return NO; }
+        return YES;
+    }
+    if ( [selector isEqual:@"whileTrue:"] ) {
+        // { cond } whileTrue:{ body } — cond must be a single-statement block.
+        return [self isBlock:receiver] && args.count == 1 && [self isBlock:args[0]] &&
+               [[receiver statementArray] count] == 1;
+    }
+    if ( [selector isEqual:@"to:do:"] ) {
+        return args.count == 2 && [self isBlock:args[1]] && [[args[1] arguments] count] == 1;
+    }
+    if ( [selector isEqual:@"do:"] ) {
+        return args.count == 1 && [self isBlock:args[0]] && [[args[0] arguments] count] == 1;
+    }
+    return NO;
+}
+
+// Emit a C boolean expression from an Objective-Smalltalk condition, unwrapping
+// the box the annotator added so a primitive comparison stays raw.
+-(void)writeCCondition:condition
+{
+    if ( [condition isKindOfClass:[STCoerce class]] && [(STCoerce*)condition isBoxing] ) {
+        [self writeObject:[(STCoerce*)condition expression]];
+    } else {
+        [self writeString:@"["];
+        [self writeObject:condition];
+        [self writeString:@" boolValue]"];
+    }
+}
+
+// Emit a loop bound as a raw C long: a numeric literal verbatim, a primitive as
+// itself, an object unboxed with -longValue.
+-(void)writeLoopBound:bound
+{
+    id literal=[bound isKindOfClass:[MPWLiteralExpression class]] ? [bound theLiteral] : bound;
+    if ( [literal isKindOfClass:[NSNumber class]] ) {
+        [self writeString:[literal stringValue]];
+        return;
+    }
+    MPWTypeDefinition *type=[bound resultTypeIn:self.currentTypeContext];
+    if ( type.objcTypeCode != '@' && type.objcTypeCode != 'v' ) {
+        [self writeObject:bound];
+    } else {
+        [self writeString:@"["];
+        [self writeObject:bound];
+        [self writeString:@" longValue]"];
+    }
+}
+
+-(void)writeConditionalStatement:(MPWMessageExpression*)conditional
+{
+    [self writeString:@"if ( "];
+    [self writeCCondition:[conditional receiver]];
+    [self writeString:@" ) {\n"];
+    [self writeStatements:[[conditional args][0] statementArray] returningLast:NO];
+    [self writeString:@"}"];
+    if ( [conditional args].count >= 2 ) {
+        [self writeString:@" else {\n"];
+        [self writeStatements:[[conditional args][1] statementArray] returningLast:NO];
+        [self writeString:@"}"];
+    }
+    [self writeString:@"\n"];
+}
+
+-(void)writeWhileStatement:(MPWMessageExpression*)whileMessage
+{
+    [self writeString:@"while ( "];
+    [self writeCCondition:[[whileMessage receiver] statementArray][0]];
+    [self writeString:@" ) {\n"];
+    [self writeStatements:[[whileMessage args][0] statementArray] returningLast:NO];
+    [self writeString:@"}\n"];
+}
+
+-(void)writeForStatement:(MPWMessageExpression*)forMessage
+{
+    MPWBlockExpression *body=[forMessage args][1];
+    NSString *loopVar=[body arguments][0];
+    NSString *counter=[NSString stringWithFormat:@"_stLoop%d",self.loopCounter++];
+    // for ( long _stLoopN = start; _stLoopN <= end; _stLoopN++ ) { id i = @(_stLoopN); … }
+    [self writeString:@"for ( long "];
+    [self writeString:counter];
+    [self writeString:@" = "];
+    [self writeLoopBound:[forMessage receiver]];
+    [self writeString:@"; "];
+    [self writeString:counter];
+    [self writeString:@" <= "];
+    [self writeLoopBound:[forMessage args][0]];
+    [self writeString:@"; "];
+    [self writeString:counter];
+    [self writeString:@"++ ) {\nid "];
+    [self writeString:loopVar];
+    [self writeString:@" = @("];
+    [self writeString:counter];
+    [self writeString:@");\n"];
+    [self writeStatements:[body statementArray] returningLast:NO];
+    [self writeString:@"}\n"];
+}
+
+-(void)writeForeachStatement:(MPWMessageExpression*)doMessage
+{
+    MPWBlockExpression *body=[doMessage args][0];
+    [self writeString:@"for ( id "];
+    [self writeString:[body arguments][0]];
+    [self writeString:@" in "];
+    [self writeObject:[doMessage receiver]];
+    [self writeString:@" ) {\n"];
+    [self writeStatements:[body statementArray] returningLast:NO];
+    [self writeString:@"}\n"];
+}
+
+-(void)writeControlStructure:(MPWMessageExpression*)message
+{
+    NSString *selector=NSStringFromSelector([message selector]);
+    if ( [selector isEqual:@"whileTrue:"] ) {
+        [self writeWhileStatement:message];
+    } else if ( [selector isEqual:@"to:do:"] ) {
+        [self writeForStatement:message];
+    } else if ( [selector isEqual:@"do:"] ) {
+        [self writeForeachStatement:message];
+    } else {
+        [self writeConditionalStatement:message];
+    }
+}
+
 -(void)writeStatements:(NSArray*)aList returningLast:(BOOL)returnLast
 {
     NSUInteger count=aList.count;
     for (NSUInteger i=0;i<count;i++) {
         BOOL lastReturns=returnLast && i == count-1 && ![aList[i] isKindOfClass:[STVariableDefinition class]];
-        if ( lastReturns ) {
-            [self writeString:@"return "];
+        // Lower control-structure sends to native C control flow, but only where
+        // the value is discarded — a returned one keeps its expression form.
+        if ( !lastReturns && [self isLowerableControlStructure:aList[i]] ) {
+            [self writeControlStructure:aList[i]];
+        } else {
+            if ( lastReturns ) {
+                [self writeString:@"return "];
+            }
+            [self writeObject:aList[i]];
+            [self writeString:@";\n"];
         }
-        [self writeObject:aList[i]];
-        [self writeString:@";\n"];
         if ( returnLast && i == count-1 && !lastReturns ) {
             [self writeString:@"return nil;\n"];
         }
@@ -296,7 +517,13 @@
 
 -(void)generateObjectiveCOn:aGenerator
 {
-    [aGenerator writeObject:[self theLiteral]];
+    id literal=[self theLiteral];
+    // A double-quoted "..." string interpolates its {placeholder}s.
+    if ( [literal respondsToSelector:@selector(hasSingleQuotes)] && ![literal hasSingleQuotes] ) {
+        [aGenerator writeInterpolatedString:literal];
+    } else {
+        [aGenerator writeObject:literal];
+    }
 }
 
 @end
@@ -324,8 +551,17 @@
         ? (STIdentifier*)[(STIdentifierExpression*)self.lhs identifier]
         : nil;
     NSString *scheme=[identifier schemeName];
-    if ( scheme.length && ![scheme isEqual:@"default"] && ![scheme isEqual:@"var"] &&
-        ![scheme isEqual:@"self"] && ![scheme isEqual:@"this"] ) {
+    if ( [scheme isEqual:@"this"] ) {
+        // this:hi := rhs  →  [self setHi:rhs]
+        NSString *name=[identifier identifierName];
+        [generator writeString:@"[self set"];
+        [generator writeString:[[name substringToIndex:1] uppercaseString]];
+        [generator writeString:[name substringFromIndex:1]];
+        [generator writeString:@":"];
+        [generator writeObject:self.rhs];
+        [generator writeString:@"]"];
+    } else if ( scheme.length && ![scheme isEqual:@"default"] && ![scheme isEqual:@"var"] &&
+        ![scheme isEqual:@"self"] ) {
         [generator writeString:@"st_scheme_at_put("];
         [generator writeNSString:scheme];
         [generator writeString:@", "];
@@ -528,8 +764,8 @@
     if (ivars.count) {
         [generator writeString:@" {\n"];
         for (id ivar in ivars) {
-            NSString *type=[ivar respondsToSelector:@selector(typeName)] ? [ivar typeName] : @"id";
-            [generator writeString:type ?: @"id"];
+            MPWTypeDefinition *ivarType=[ivar respondsToSelector:@selector(type)] ? [ivar type] : nil;
+            [generator writeString:ivarType ? [generator objectiveCTypeFor:ivarType] : @"id"];
             [generator writeString:@" "];
             [generator writeString:[ivar name]];
             [generator writeString:@";\n"];
@@ -539,6 +775,11 @@
     [generator writeString:@"\n@end\n\n@implementation "];
     [generator writeString:self.name];
     [generator writeString:@"\n"];
+    // Give each instance variable accessors so it is reachable as a property.
+    for (id ivar in ivars) {
+        MPWTypeDefinition *ivarType=[ivar respondsToSelector:@selector(type)] ? [ivar type] : nil;
+        [generator writeAccessorForName:[ivar name] type:ivarType];
+    }
     NSMutableSet *ivarNames=[NSMutableSet set];
     for (id ivar in ivars) {
         [ivarNames addObject:[ivar name]];
@@ -567,11 +808,11 @@
     NSString *cOperator=[generator cOperatorForSelector:NSStringFromSelector(self.selector)];
     if ( cOperator && self.args.count == 1 ) {
         [generator writeString:@"("];
-        [generator writeObject:self.receiver];
+        [generator writePrimitiveOperand:self.receiver];
         [generator writeString:@" "];
         [generator writeString:cOperator];
         [generator writeString:@" "];
-        [generator writeObject:self.args[0]];
+        [generator writePrimitiveOperand:self.args[0]];
         [generator writeString:@")"];
     } else {
         // Not a lowered binary operator; fall back to a normal message send.
