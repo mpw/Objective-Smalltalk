@@ -2294,6 +2294,43 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
     //    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 }
 
++(void)testDylibWithPrimitiveArithmeticMethod
+{
+    STMachODylibWriter *writer = [STMachODylibWriter stream];
+    writer.artifactBaseName = @"compiled-primitive-arith";
+    STNativeCompiler *compiler = [writer compiler];
+    NSString *path = [writer dylibPath];
+    [writer addExternalLibraryPath:@"/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"];
+    [writer addExternalLibraryPath:@"/Library/Frameworks/MPWFoundation.framework/Versions/A/MPWFoundation"];
+    NSString *className = @"PrimitiveArithClass";
+    // int params, int return, int op int → early-bound register instructions (no boxing).
+    NSString *classToCompile = [NSString stringWithFormat:
+        @"class %@ { -addRaw: a:int to: b:int : int { a + b. }"
+                    " -subRaw: a:int from: b:int : int { b - a. }"
+                    " -mulRaw: a:int by: b:int : int { a * b. } }", className];
+
+    NSData *dylibdata = [compiler compileClassToMachoO:[compiler compile:classToCompile]];
+    EXPECTTRUE(dylibdata.length > 0, @"dylib data should be generated");
+    NSError *error = nil;
+    EXPECTTRUE([writer writeSignedDylibWithDefaults:&error],
+               error.localizedDescription ?: @"dylib writer convenience should succeed");
+    void *handle = dlopen([path UTF8String], RTLD_NOW);
+    EXPECTNOTNIL(handle, handle ? nil : @(dlerror()));
+    if (handle) {
+        Class cls = NSClassFromString(className);
+        EXPECTNOTNIL(cls, @"loaded the primitive-arithmetic class");
+        id instance = [cls new];
+        long (*addRaw)(id, SEL, long, long) = (long(*)(id, SEL, long, long))[instance methodForSelector:@selector(addRaw:to:)];
+        long (*subRaw)(id, SEL, long, long) = (long(*)(id, SEL, long, long))[instance methodForSelector:@selector(subRaw:from:)];
+        long (*mulRaw)(id, SEL, long, long) = (long(*)(id, SEL, long, long))[instance methodForSelector:@selector(mulRaw:by:)];
+        INTEXPECT( (int)addRaw(instance, @selector(addRaw:to:), 3, 4), 7, @"native register add computes 3 + 4");
+        INTEXPECT( (int)addRaw(instance, @selector(addRaw:to:), 20, 22), 42, @"native register add computes 20 + 22");
+        INTEXPECT( (int)subRaw(instance, @selector(subRaw:from:), 3, 10), 7, @"native register sub computes 10 - 3");
+        INTEXPECT( (int)mulRaw(instance, @selector(mulRaw:by:), 6, 7), 42, @"native register mul computes 6 * 7");
+        dlclose(handle);
+    }
+}
+
 +(void)testDylibWithCompiledObjectiveSmalltalkClassRef
 {
     NSURL *refURL = [self fixtureURLNamed:@"reference-class2" extension:@"macho-dylib"];
@@ -2922,6 +2959,7 @@ static NSDictionary<NSString *, NSString *> *uniqueLiteralSymbolPair(NSString *b
         @"testKnownGoodExternalLinkerDylibWithConstantNSString",
         @"testDylibWithConstantNSString",
         @"testDylibWithCompiledObjectiveSmalltalkClass",
+        @"testDylibWithPrimitiveArithmeticMethod",
         @"testDylibWithCompiledObjectiveSmalltalkClassRef",
         @"testCharacterizeReferenceTwoClassesDylib",
         @"testCharacterizeGeneratedTwoClassesDylib",

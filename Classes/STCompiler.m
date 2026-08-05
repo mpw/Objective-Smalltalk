@@ -1299,19 +1299,20 @@ idAccessor(solver, setSolver)
 
     if ( [(next=[self nextToken]) isEqualToString:@"var"]) {
         NSString *typeName=@"id";
-        next = [self nextToken];
-        if ( [next isEqualToString:@"<"]) {
+        NSString *name=[self nextToken];
+        if ( [name isEqualToString:@"<"]) {
+            // deprecated bracket-prefix syntax:  var <Type> name
             typeName=[self nextToken];
-//            NSLog(@"typeName in parseVariableDefinition: %@",typeName);
             next=[self nextToken];
             if ( ![next isEqualToString:@">"]) {
                 PARSEERROR(@"> expected as close of instance variable definition", next);
             }
-        } else {
-            [self pushBack:next];
+            name=[self nextToken];
+        } else if ( [name isKeyword] ) {
+            // colon-suffix syntax:  var name:Type
+            name=[name substringToIndex:[name length]-1];   // strip trailing ':'
+            typeName=[self nextToken];
         }
-        NSString *name=[self nextToken];
-//        next=[self nextToken];   // skip over ".", but that's actually needed
         STTypeDescriptor *type=self.types[typeName];
 //        NSLog(@"type in parseVariableDefinition: %@",type);
 

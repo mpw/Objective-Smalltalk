@@ -25,6 +25,7 @@
 #import "STSubscriptExpression.h"
 #import "STTypeDescriptor.h"
 #import "STVariableDefinition.h"
+#import "STTypeInference.h"
 
 @interface MPWObjCGenerator ()
 // Names already declared in the method/block scope currently being generated,
@@ -33,9 +34,14 @@
 // Instance variable names of the class currently being generated; these are
 // members, not locals, so assignments to them must not be declared as locals.
 @property (nonatomic, assign) NSSet *currentIvarNames;
+// Types of the names in scope for the method currently being generated, so
+// primitive locals can be declared with their C type.
+@property (nonatomic, assign) STTypeContext *currentTypeContext;
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type;
 -(BOOL)isLocalScheme:(NSString*)scheme;
 -(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method;
+-(NSString*)cOperatorForSelector:(NSString*)selector;
+-(NSString*)unboxSelectorForType:(MPWTypeDefinition*)type;
 @end
 
 @implementation NSObject(generateObjectiveCOn)
@@ -91,10 +97,37 @@
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type
 {
     NSString *name=type.name ?: @"id";
-    if ( type.objcTypeCode == '@' && ![name isEqual:@"id"] && ![name hasSuffix:@"*"] ) {
-        return [name stringByAppendingString:@" *"];
+    if ( type.objcTypeCode == '@' ) {
+        if ( ![name isEqual:@"id"] && ![name hasSuffix:@"*"] ) {
+            return [name stringByAppendingString:@" *"];
+        }
+        return name;
     }
-    return name;
+    // Primitive: use the C spelling (int→long, bool→BOOL, float→double, …).
+    return type.cName ?: name;
+}
+
+-(NSString*)cOperatorForSelector:(NSString*)selector
+{
+    static NSDictionary *operators=nil;
+    if (!operators) {
+        operators=[[NSDictionary alloc] initWithObjectsAndKeys:
+            @"+", @"add:", @"-", @"sub:", @"*", @"mul:", @"/", @"div:",
+            @"<", @"isLessThan:", @">", @"isGreaterThan:",
+            @"<=", @"isLessThanOrEqualTo:", @">=", @"isGreaterThanOrEqualTo:",
+            @"==", @"isEqual:", @"!=", @"isNotEqualTo:", nil];
+    }
+    return operators[selector];
+}
+
+-(NSString*)unboxSelectorForType:(MPWTypeDefinition*)type
+{
+    switch ( type.objcTypeCode ) {
+        case 'B':                       return @"boolValue";
+        case 'd': case 'f':             return @"doubleValue";
+        case 'l': case 'q': case 'L': case 'Q':  return @"longValue";
+        default:                        return @"intValue";
+    }
 }
 
 -(NSString*)escapedObjectiveCString:(NSString*)source
@@ -134,21 +167,6 @@
     [self writeMessage:selector toReceiver:receiver withArgs:args superSend:NO];
 }
 
-// Comparison selectors (the mapped forms of < > <= >= = ≠) return a primitive
-// BOOL, but Objective-Smalltalk uses their result as a boolean object (e.g. as
-// the receiver of ifTrue:/whileTrue: or as a block's value).  Box those so the
-// generated code type-checks and matches the interpreter.
--(BOOL)selectorReturnsBool:(NSString*)selector
-{
-    static NSSet *boolSelectors=nil;
-    if (!boolSelectors) {
-        boolSelectors=[[NSSet alloc] initWithObjects:
-            @"isLessThan:", @"isGreaterThan:", @"isLessThanOrEqualTo:",
-            @"isGreaterThanOrEqualTo:", @"isNotEqualTo:", @"isEqual:", nil];
-    }
-    return [boolSelectors containsObject:selector];
-}
-
 -(void)writeMessage:selector toReceiver:receiver withArgs:args superSend:(BOOL)isSuperSend
 {
     if ( [receiver isKindOfClass:[MPWBlockExpression class]] &&
@@ -163,8 +181,6 @@
         [self writeString:@")"];
         return;
     }
-    BOOL boxResult=[self selectorReturnsBool:selector];
-    if ( boxResult ) [self writeString:@"@("];
     [self writeString:@"["];
     if ( isSuperSend ) {
         [self writeString:@"super"];
@@ -178,7 +194,6 @@
         [[self do] writeKeyWord:[[selector componentsSeparatedByString:@":"] each] andArg:[args each]];
     }
     [self writeString:@"]"];
-    if ( boxResult ) [self writeString:@")"];
 }
 
 -(void)writeStatements:aList
@@ -252,7 +267,11 @@
         if ( [writtenInBlocks containsObject:name] ) {
             [self writeString:@"__block "];
         }
-        [self writeString:@"id "];
+        // A declared primitive local gets its C type; everything else is id.
+        MPWTypeDefinition *type=[self.currentTypeContext typeForName:name];
+        NSString *cType=(type && type.objcTypeCode != '@') ? [self objectiveCTypeFor:type] : @"id";
+        [self writeString:cType];
+        [self writeString:@" "];
         [self writeString:name];
         [self writeString:@";\n"];
         [self.declaredLocals addObject:name];
@@ -471,6 +490,18 @@
         }
     }
     [generator writeString:@"\n{\n"];
+    // Resolve early-bound primitive operations and insert box/unbox coercions,
+    // including coercing the method's result to its declared return type.  The
+    // pass is idempotent, so regenerating the same method is safe.
+    STTypeContext *typeContext=[STTypeContext contextForMethod:self];
+    id annotatedBody=[self.methodBody typeAnnotateIn:typeContext];
+    if ( header.returnType.objcTypeCode != 'v' ) {
+        annotatedBody=[STCoerce coerceResultOf:annotatedBody to:header.returnType in:typeContext];
+    }
+    [self setMethodBody:annotatedBody];
+    STTypeContext *savedContext=generator.currentTypeContext;
+    generator.currentTypeContext=typeContext;
+
     id body=self.methodBody;
     NSArray *statements=[body isKindOfClass:[MPWStatementList class]] ? [body statements] : @[ body ];
     NSMutableSet *savedLocals=generator.declaredLocals;
@@ -480,6 +511,7 @@
     [generator writeStatements:statements returningLast:returnsValue];
     [generator writeString:@"}\n"];
     generator.declaredLocals=savedLocals;
+    generator.currentTypeContext=savedContext;
 }
 
 @end
@@ -523,6 +555,50 @@
         [generator writeString:methodCode];
     }
     [generator writeString:@"@end\n"];
+}
+
+@end
+
+
+@implementation STPrimitiveMessageExpression(generateObjectiveCOn)
+
+-(void)generateObjectiveCOn:(MPWObjCGenerator*)generator
+{
+    NSString *cOperator=[generator cOperatorForSelector:NSStringFromSelector(self.selector)];
+    if ( cOperator && self.args.count == 1 ) {
+        [generator writeString:@"("];
+        [generator writeObject:self.receiver];
+        [generator writeString:@" "];
+        [generator writeString:cOperator];
+        [generator writeString:@" "];
+        [generator writeObject:self.args[0]];
+        [generator writeString:@")"];
+    } else {
+        // Not a lowered binary operator; fall back to a normal message send.
+        [generator writeMessage:NSStringFromSelector(self.selector) toReceiver:self.receiver withArgs:self.args];
+    }
+}
+
+@end
+
+
+@implementation STCoerce(generateObjectiveCOn)
+
+-(void)generateObjectiveCOn:(MPWObjCGenerator*)generator
+{
+    if ( [self isBoxing] ) {
+        [generator writeString:@"@("];
+        [generator writeObject:self.expression];
+        [generator writeString:@")"];
+    } else if ( [self isUnboxing] ) {
+        [generator writeString:@"["];
+        [generator writeObject:self.expression];
+        [generator writeString:@" "];
+        [generator writeString:[generator unboxSelectorForType:self.toType]];
+        [generator writeString:@"]"];
+    } else {
+        [generator writeObject:self.expression];
+    }
 }
 
 @end
