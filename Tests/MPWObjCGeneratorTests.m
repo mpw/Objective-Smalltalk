@@ -120,7 +120,7 @@
 
     STCompiler *compiler=[self compiler];
     NSArray *definitions=@[
-        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. var counter:int. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } -primitiveSumTo: n { var limit:int := n. var sum:int := 0. 1 to:limit do:{ :i | sum := sum + i. }. sum. } -bumpAndGet { this:counter := this:counter + 1. this:counter. } }"],
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. var counter:int. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } -primitiveSumTo: n { var limit:int := n. var sum:int := 0. 1 to:limit do:{ :i | sum := sum + i. }. sum. } -bumpAndGet { this:counter := this:counter + 1. this:counter. } -describeWith: x { \"got {x} and label {this:label}\". } }"],
         [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
         [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
     ];
@@ -207,6 +207,16 @@
 {
     id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
     IDEXPECT([instance performSelector:NSSelectorFromString(@"greet:") withObject:@"World"],@"Hello, World!",@"generated string interpolation");
+}
+
++(void)testObjectiveCGeneratorEndToEndSchemeInterpolation
+{
+    // {this:label} resolves against self through the runtime environment while the
+    // bare local {x} is bound as a local — the wrapped-interpolation path.
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    [instance performSelector:NSSelectorFromString(@"setLabel:") withObject:@"L"];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"describeWith:") withObject:@"X"],
+             @"got X and label L",@"this: interpolation resolves against self via the runtime environment");
 }
 
 +(void)testObjectiveCGeneratorEndToEndForeachLoop
@@ -379,6 +389,25 @@
     IDEXPECT([MPWObjCGenerator process:parsed], @"@\"no placeholder\"", @"no interpolation → plain string");
 }
 
++(void)testSchemeQualifiedInterpolationDefersToRuntime
+{
+    // A this: placeholder can't be a stringWithFormat %@ arg — its scheme is
+    // resolved by the environment at runtime, so we emit a wrapped interpolation.
+    id parsed=[@"\"Person: {this:name}\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed],
+             @"[STEvaluator interpolate:@\"Person: {this:name}\" forObject:self locals:@{}]",
+             @"this: placeholder defers to the runtime environment");
+}
+
++(void)testMixedInterpolationBindsBareLocals
+{
+    // Scheme-qualified paths go to self; bare names are bound as locals.
+    id parsed=[@"\"{greeting} {this:name}\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed],
+             @"[STEvaluator interpolate:@\"{greeting} {this:name}\" forObject:self locals:@{@\"greeting\": greeting}]",  // NB double-@ was a bug
+             @"bare local bound, this: left to self");
+}
+
 +(void)testThisSchemeReadGeneratesGetter
 {
     id parsed=[@"a := this:hi." compileIn:[self compiler]];
@@ -455,6 +484,8 @@
         @"testInterpolatedStringGeneratesStringWithFormat",
         @"testInterpolatedStringWithMultiplePlaceholders",
         @"testDoubleQuotedStringWithoutPlaceholdersIsPlainString",
+        @"testSchemeQualifiedInterpolationDefersToRuntime",
+        @"testMixedInterpolationBindsBareLocals",
         @"testThisSchemeReadGeneratesGetter",
         @"testThisSchemeWriteGeneratesSetter",
         @"testStdoutGeneratesByteStreamStdout",
@@ -483,6 +514,7 @@
         @"testObjectiveCGeneratorEndToEndTypedInstanceVariable",
         @"testObjectiveCGeneratorEndToEndPrimitiveForLoop",
         @"testObjectiveCGeneratorEndToEndStringInterpolation",
+        @"testObjectiveCGeneratorEndToEndSchemeInterpolation",
         @"testObjectiveCGeneratorEndToEndForeachLoop",
         @"testObjectiveCGeneratorEndToEndLoweredIfStatement",
         @"testObjectiveCGeneratorEndToEndInstanceVariableAccessors",

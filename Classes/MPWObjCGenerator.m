@@ -54,6 +54,10 @@
 -(void)writeControlStructure:(MPWMessageExpression*)message;
 -(void)writePrimitiveOperand:operand;
 -(void)writeInterpolatedString:(NSString*)string;
+-(void)writeStaticInterpolation:(NSArray*)fragments placeholders:(NSArray*)placeholders;
+-(void)writeWrappedInterpolation:(NSString*)string placeholders:(NSArray*)placeholders;
+-(BOOL)placeholderIsBareName:(id)identifier;
+-(BOOL)placeholderIsStatic:(id)identifier;
 @end
 
 @implementation NSObject(generateObjectiveCOn)
@@ -83,10 +87,8 @@
     [self writeString:aName];
 }
 
--(void)generateIdentifier:(STIdentifier*)identifier
+-(void)writeIdentifierWithScheme:(NSString*)scheme name:(NSString*)name
 {
-    NSString *scheme=[identifier schemeName];
-    NSString *name=[identifier identifierName];
     if ( [name isEqual:@"true"] ) {
         [self writeString:@"@YES"];
     } else if ( [name isEqual:@"false"] ) {
@@ -111,6 +113,11 @@
         [self writeNSString:name];
         [self writeString:@")"];
     }
+}
+
+-(void)generateIdentifier:(STIdentifier*)identifier
+{
+    [self writeIdentifierWithScheme:[identifier schemeName] name:[identifier identifierName]];
 }
 
 -(NSString*)objectiveCTypeFor:(MPWTypeDefinition*)type
@@ -203,19 +210,69 @@
     [self writeString:@"\""];
 }
 
-// A "..." string with {placeholder}s becomes [NSString stringWithFormat:@"…%@…", placeholder…].
+// Writes a placeholder value for a stringWithFormat %@ slot: the bare identifier,
+// boxed when it is a primitive so it fits the object format.
+-(void)writeInterpolationPlaceholder:identifier
+{
+    MPWTypeDefinition *type=[self.currentTypeContext typeForName:[identifier identifierName]];
+    BOOL isPrimitive=type && type.objcTypeCode != '@' && type.objcTypeCode != 'v';
+    if ( isPrimitive ) [self writeString:@"@("];
+    [self generateIdentifier:identifier];
+    if ( isPrimitive ) [self writeString:@")"];
+}
+
+// A bare name — no scheme (this:), no path (a/b, a.b).  Bare names can be emitted
+// as a plain C reference; scheme-qualified / path placeholders can't.
+-(BOOL)placeholderIsBareName:(id)identifier
+{
+    NSString *path=[identifier identifierName];
+    return [path rangeOfString:@":"].location == NSNotFound
+        && [path rangeOfString:@"/"].location == NSNotFound
+        && [path rangeOfString:@"."].location == NSNotFound;
+}
+
+// Static (stringWithFormat) resolution is only valid when every placeholder is a
+// bare name that is a local/argument — not an instance variable, whose value the
+// interpreter reaches through the environment, and not a scheme/path placeholder.
+-(BOOL)placeholderIsStatic:(id)identifier
+{
+    return [self placeholderIsBareName:identifier]
+        && !self.currentIvarTypes[[identifier identifierName]];
+}
+
+// A "..." string with {placeholder}s.  When all placeholders are simple locals we
+// emit a plain [NSString stringWithFormat:…]; otherwise we defer to the runtime,
+// mirroring the interpreter, so scheme-qualified paths (this:name) and the fuller
+// interpolation grammar resolve exactly as they do when interpreted.
 -(void)writeInterpolatedString:(NSString*)string
 {
     NSArray *fragments=[MPWStringTemplate parseString:string];
-    NSMutableString *format=[NSMutableString string];
     NSMutableArray *placeholders=[NSMutableArray array];
+    for (id fragment in fragments) {
+        if ( ![fragment isKindOfClass:[NSString class]] ) {
+            [placeholders addObject:fragment];   // an MPWGenericIdentifier
+        }
+    }
+    BOOL allStatic=YES;
+    for (id placeholder in placeholders) {
+        if ( ![self placeholderIsStatic:placeholder] ) { allStatic=NO; break; }
+    }
+    if ( allStatic ) {
+        [self writeStaticInterpolation:fragments placeholders:placeholders];
+    } else {
+        [self writeWrappedInterpolation:string placeholders:placeholders];
+    }
+}
+
+-(void)writeStaticInterpolation:(NSArray*)fragments placeholders:(NSArray*)placeholders
+{
+    NSMutableString *format=[NSMutableString string];
     for (id fragment in fragments) {
         if ( [fragment isKindOfClass:[NSString class]] ) {
             // A literal % must be doubled for the format string.
             [format appendString:[fragment stringByReplacingOccurrencesOfString:@"%" withString:@"%%"]];
         } else {
             [format appendString:@"%@"];
-            [placeholders addObject:[fragment identifierName]];
         }
     }
     if ( placeholders.count == 0 ) {
@@ -224,11 +281,34 @@
     }
     [self writeString:@"[NSString stringWithFormat:"];
     [self writeNSString:format];
-    for (NSString *placeholder in placeholders) {
+    for (id placeholder in placeholders) {
         [self writeString:@", "];
-        [self writeString:placeholder];
+        [self writeInterpolationPlaceholder:placeholder];
     }
     [self writeString:@"]"];
+}
+
+-(void)writeWrappedInterpolation:(NSString*)string placeholders:(NSArray*)placeholders
+{
+    // self resolves scheme-qualified paths ({this:name}); bare names are handed to
+    // the environment as bound locals (a bare ivar is emitted as its own field).
+    [self writeString:@"[STEvaluator interpolate:"];
+    [self writeNSString:string];
+    [self writeString:@" forObject:self locals:@{"];
+    BOOL first=YES;
+    NSMutableSet *bound=[NSMutableSet set];
+    for (id placeholder in placeholders) {
+        if ( ![self placeholderIsBareName:placeholder] ) continue;   // self handles it
+        NSString *name=[placeholder identifierName];
+        if ( [bound containsObject:name] ) continue;
+        [bound addObject:name];
+        if ( !first ) [self writeString:@", "];
+        first=NO;
+        [self writeNSString:name];   // writeNSString: already emits the @"…" literal
+        [self writeString:@": "];
+        [self writeInterpolationPlaceholder:placeholder];
+    }
+    [self writeString:@"}]"];
 }
 
 -(void)writeKeyWord:aKeyWord andArg:arg

@@ -20,6 +20,7 @@
 #import "MPWFrameworkScheme.h"
 #import "MPWSelfContainedBinding.h"
 #import <MPWFoundation/MPWGenericIdentifier.h>
+#import <MPWFoundation/MPWPropertyStore.h>
 #import "STProtocolScheme.h"
 #import "STPortScheme.h"
 #import "MPWFastSuperMessage.h"
@@ -127,6 +128,25 @@ idAccessor( localVars, setLocalVars )
 -init
 {
 	return [self initWithParent:nil];
+}
+
++(NSString*)interpolate:(NSString*)templateString forObject:object locals:(NSDictionary*)locals
+{
+    // Mirrors -[MPWLiteralExpression evaluateIn:]: a fresh byte stream writes the
+    // interpolated template against an environment.  Scheme-qualified paths such as
+    // {this:name} resolve through the `this` scheme (the object's properties); bare
+    // {name} placeholders resolve against the locals bound below.
+    NSMutableString *result=[NSMutableString string];
+    MPWByteStream *stream=[MPWByteStream streamWithTarget:result];
+    STEvaluator *env=[[[self alloc] init] autorelease];
+    [[env schemes] setSchemeHandler:[MPWPropertyStore storeWithObject:object] forSchemeName:@"this"];
+    [[env schemes] setSchemeHandler:object forSchemeName:@"self"];
+    [env bindValue:object toVariableNamed:@"self"];
+    for ( NSString *name in locals ) {
+        [env bindValue:[locals objectForKey:name] toVariableNamed:name];
+    }
+    [stream writeInterpolatedString:templateString withEnvironment:(MPWAbstractStore*)env];
+    return result;
 }
 
 -bindingClass

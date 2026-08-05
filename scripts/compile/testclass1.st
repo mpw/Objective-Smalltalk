@@ -1,9 +1,7 @@
 class Person {
    var name.
    var age:int.
-   -description {
-      'Person: ', this:name.
-   }
+
    -<void>sayHelloIf {
      this:age > 30 ifTrue: { stdout println:'hello'. }.
    }
@@ -15,5 +13,8 @@ class Person {
    } 
    -<void>advance {
        this:age ← this:age + 1.
+    }
+    -description { 
+	    "Person: {this:name} age: {this:age}".
     }
 }
