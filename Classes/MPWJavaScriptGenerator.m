@@ -10,6 +10,8 @@
 #import "MPWStatementList.h"
 #import "STClassDefinition.h"
 #import "STCompiler.h"
+#import "STConnectionDefiner.h"
+#import "STExpression.h"
 #import "STIdentifier.h"
 #import "STIdentifierExpression.h"
 #import "STScriptedMethod.h"
@@ -22,11 +24,11 @@
 @end
 
 @interface MPWJavaScriptGenerator ()
-@property (nonatomic, strong) NSString *currentClassName;
-@property (nonatomic, strong) NSString *currentSuperclassName;
-@property (nonatomic, strong) NSSet *currentIvarNames;
--(void)writeJavaScriptString:(NSString*)string;
--(void)writeMethod:(STScriptedMethod*)method className:(NSString*)className;
+@property (nonatomic, assign) NSSet *currentIvarNames;
+@property (nonatomic, assign) NSMutableSet *declaredLocals;
+-(void)writeObjectiveJString:(NSString*)string;
+-(void)writeMethod:(STScriptedMethod*)method classMethod:(BOOL)isClassMethod;
+-(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method;
 @end
 
 @implementation MPWJavaScriptGenerator
@@ -36,21 +38,24 @@
 
 +(NSString*)transpile:(NSString*)source
 {
-    NSMutableString *javascript=[NSMutableString string];
-    MPWJavaScriptGenerator *generator=[self streamWithTarget:javascript];
-    [generator writeObject:[[STCompiler compiler] compile:source]];
-    return javascript;
+    return [self transpileToObjectiveJ:source];
 }
 
-+testSelectors
++(NSString*)transpileToObjectiveJ:(NSString*)source
 {
-    return @[];
+    NSMutableString *objectiveJ=[NSMutableString string];
+    MPWJavaScriptGenerator *generator=[self streamWithTarget:objectiveJ];
+    [generator writeObject:[[STCompiler compiler] compile:source]];
+    return objectiveJ;
 }
 
--(void)writeJavaScriptString:(NSString*)source
++testSelectors { return @[]; }
+
+-(void)writeObjectiveJString:(NSString*)source
 {
     NSData *data=[NSJSONSerialization dataWithJSONObject:@[ source ?: @"" ] options:0 error:NULL];
     NSString *array=[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    [self writeString:@"@"];
     [self writeString:[array substringWithRange:NSMakeRange(1, array.length-2)]];
 }
 
@@ -58,27 +63,18 @@
 {
     NSString *scheme=identifier.schemeName;
     NSString *name=identifier.identifierName;
-    if ([name isEqual:@"nil"]) [self writeString:@"null"];
-    else if ([name isEqual:@"true"]) [self writeString:@"true"];
-    else if ([name isEqual:@"false"]) [self writeString:@"false"];
+    if ([name isEqual:@"nil"]) [self writeString:@"nil"];
+    else if ([name isEqual:@"true"]) [self writeString:@"YES"];
+    else if ([name isEqual:@"false"]) [self writeString:@"NO"];
     else if (scheme.length == 0 || [scheme isEqual:@"default"] || [scheme isEqual:@"var"] ||
              [scheme isEqual:@"self"] || [scheme isEqual:@"this"] || [scheme isEqual:@"class"]) {
-        if ([self.currentIvarNames containsObject:name]) [self writeString:@"self."];
         [self writeString:name];
     } else {
         [self writeString:@"objst_scheme_get("];
-        [self writeJavaScriptString:scheme];
+        [self writeObjectiveJString:scheme];
         [self writeString:@", "];
-        [self writeJavaScriptString:name];
+        [self writeObjectiveJString:name];
         [self writeString:@")"];
-    }
-}
-
--(void)writeArguments:(NSArray*)args
-{
-    for (NSUInteger i=0;i<args.count;i++) {
-        [self writeString:@", "];
-        [self writeObject:args[i]];
     }
 }
 
@@ -90,27 +86,34 @@
         [self writeObject:[args isKindOfClass:[NSArray class]] ? args[0] : args];
         return;
     }
-    if (isSuperSend) {
-        [self writeString:@"objj_msgSendSuper({ receiver: self, super_class: objj_getClass("];
-        [self writeJavaScriptString:self.currentSuperclassName];
-        [self writeString:@") }, "];
-        [self writeJavaScriptString:selector];
-        [self writeArguments:args];
+    if ([receiver isKindOfClass:[MPWBlockExpression class]] &&
+        ([selector isEqual:@"value"] || [selector hasPrefix:@"value:"])) {
+        [self writeString:@"("];
+        [self writeObject:receiver];
+        [self writeString:@")("];
+        for (NSUInteger i=0;i<args.count;i++) {
+            if (i) [self writeString:@", "];
+            [self writeObject:args[i]];
+        }
         [self writeString:@")"];
         return;
     }
-    [self writeString:@"("];
-    [self writeObject:receiver];
-    [self writeString:@" == null ? "];
-    [self writeObject:receiver];
-    [self writeString:@" : "];
-    [self writeObject:receiver];
-    [self writeString:@".isa.objj_msgSend("];
-    [self writeObject:receiver];
-    [self writeString:@", "];
-    [self writeJavaScriptString:selector];
-    [self writeArguments:args];
-    [self writeString:@"))"];
+    [self writeString:@"["];
+    if (isSuperSend) [self writeString:@"super"];
+    else [self writeObject:receiver];
+    if (args.count == 0) {
+        [self writeString:@" "];
+        [self writeString:selector];
+    } else {
+        NSArray *parts=[selector componentsSeparatedByString:@":"];
+        for (NSUInteger i=0;i<args.count;i++) {
+            [self writeString:@" "];
+            [self writeString:i < parts.count ? parts[i] : @""];
+            [self writeString:@":"];
+            [self writeObject:args[i]];
+        }
+    }
+    [self writeString:@"]"];
 }
 
 -(void)writeStatements:(NSArray*)statements returningLast:(BOOL)returnLast
@@ -123,45 +126,72 @@
         [self writeString:@";\n"];
     }
     if (returnLast && (statements.count == 0 || [statements.lastObject isKindOfClass:[STVariableDefinition class]]))
-        [self writeString:@"return null;\n"];
+        [self writeString:@"return nil;\n"];
 }
 
--(void)writeMethod:(STScriptedMethod*)method className:(NSString*)className
+-(BOOL)isLocalScheme:(NSString*)scheme
+{
+    return scheme.length == 0 || [scheme isEqual:@"default"] || [scheme isEqual:@"var"];
+}
+
+-(NSSet*)localNamesWrittenIn:(NSSet*)writtenIdentifiers
+{
+    NSMutableSet *names=[NSMutableSet set];
+    for (id identifier in writtenIdentifiers) {
+        if ([identifier respondsToSelector:@selector(schemeName)] &&
+            [self isLocalScheme:[identifier schemeName]]) {
+            [names addObject:[identifier identifierName]];
+        }
+    }
+    return names;
+}
+
+-(void)writeLocalDeclarationsForMethod:(STScriptedMethod*)method
+{
+    STExpression *body=method.methodBody;
+    NSMutableSet *locals=[[[self localNamesWrittenIn:[body variablesWritten]] mutableCopy] autorelease];
+    [locals addObjectsFromArray:method.localVars];
+    for (int i=0;i<method.header.numArguments;i++)
+        [locals removeObject:[method.header argumentNameAtIndex:i]];
+    if (self.currentIvarNames) [locals minusSet:self.currentIvarNames];
+    for (MPWBlockExpression *block in method.blocks)
+        [locals removeObjectsInArray:block.arguments];
+    for (NSString *name in [locals.allObjects sortedArrayUsingSelector:@selector(compare:)]) {
+        [self writeString:@"var "];
+        [self writeString:name];
+        [self writeString:@";\n"];
+        [self.declaredLocals addObject:name];
+    }
+}
+
+-(void)writeMethod:(STScriptedMethod*)method classMethod:(BOOL)isClassMethod
 {
     MPWMethodHeader *header=method.header;
-    NSString *selector=header.methodName;
-    [self writeString:@"new objj_method(sel_getUid("];
-    [self writeJavaScriptString:selector];
-    [self writeString:@"), function $"];
-    [self writeString:className];
-    [self writeString:@"__"];
-    [self writeString:[selector stringByReplacingOccurrencesOfString:@":" withString:@"_"]];
-    [self writeString:@"(self, _cmd"];
-    for (int i=0;i<header.numArguments;i++) {
-        [self writeString:@", "];
-        [self writeString:[header argumentNameAtIndex:i]];
+    [self writeString:isClassMethod ? @"+ (" : @"- ("];
+    [self writeString:header.returnType.name ?: @"id"];
+    [self writeString:@")"];
+    if (header.numArguments == 0) {
+        [self writeString:header.methodName];
+    } else {
+        NSArray *parts=[header.methodName componentsSeparatedByString:@":"];
+        for (int i=0;i<header.numArguments;i++) {
+            if (i) [self writeString:@" "];
+            [self writeString:parts[i]];
+            [self writeString:@":("];
+            [self writeString:[header argumentTypeNameAtIndex:i] ?: @"id"];
+            [self writeString:@")"];
+            [self writeString:[header argumentNameAtIndex:i]];
+        }
     }
-    [self writeString:@") {\n"];
-    NSArray *body=nil;
-    if ([method.methodBody isKindOfClass:[MPWStatementList class]]) body=[(MPWStatementList*)method.methodBody statements];
-    else if ([(id)method.methodBody isKindOfClass:[NSArray class]]) body=(NSArray*)method.methodBody;
-    else body=@[ method.methodBody ];
+    [self writeString:@"\n{\n"];
+    NSArray *body=[method.methodBody isKindOfClass:[MPWStatementList class]]
+        ? [(MPWStatementList*)method.methodBody statements] : @[ method.methodBody ];
+    NSMutableSet *savedLocals=self.declaredLocals;
+    self.declaredLocals=[NSMutableSet set];
+    [self writeLocalDeclarationsForMethod:method];
     [self writeStatements:body returningLast:header.returnType.objcTypeCode != 'v'];
-    [self writeString:@"}, ["];
-    [self writeJavaScriptString:header.returnType.name ?: @"id"];
-    for (int i=0;i<header.numArguments;i++) {
-        [self writeString:@", "];
-        [self writeJavaScriptString:[header argumentTypeNameAtIndex:i] ?: @"id"];
-    }
-    [self writeString:@"])"];
-}
-
--(void)dealloc
-{
-    [_currentClassName release];
-    [_currentSuperclassName release];
-    [_currentIvarNames release];
-    [super dealloc];
+    [self writeString:@"}\n"];
+    self.declaredLocals=savedLocals;
 }
 
 @end
@@ -171,13 +201,13 @@
 @end
 
 @implementation NSString(generateJavaScriptOn)
--(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator { [generator writeJavaScriptString:self]; }
+-(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator { [generator writeObjectiveJString:self]; }
 @end
 
 @implementation NSNumber(generateJavaScriptOn)
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
 {
-    if (!strcmp(self.objCType, @encode(BOOL))) [generator writeString:self.boolValue ? @"true" : @"false"];
+    if (!strcmp(self.objCType, @encode(BOOL))) [generator writeString:self.boolValue ? @"YES" : @"NO"];
     else [generator writeString:self.stringValue];
 }
 @end
@@ -193,15 +223,27 @@
 @implementation MPWAssignmentExpression(generateJavaScriptOn)
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
 {
-    [generator writeObject:self.lhs]; [generator writeString:@" = "]; [generator writeObject:self.rhs];
+    STIdentifier *identifier=[self.lhs isKindOfClass:[STIdentifierExpression class]]
+        ? (STIdentifier*)[(STIdentifierExpression*)self.lhs identifier] : nil;
+    NSString *scheme=identifier.schemeName;
+    if (scheme.length && ![scheme isEqual:@"default"] && ![scheme isEqual:@"var"] &&
+        ![scheme isEqual:@"self"] && ![scheme isEqual:@"this"]) {
+        [generator writeString:@"objst_scheme_set("];
+        [generator writeObjectiveJString:scheme];
+        [generator writeString:@", "];
+        [generator writeObjectiveJString:identifier.identifierName];
+        [generator writeString:@", "];
+        [generator writeObject:self.rhs];
+        [generator writeString:@")"];
+    } else {
+        [generator writeObject:self.lhs]; [generator writeString:@" = "]; [generator writeObject:self.rhs];
+    }
 }
 @end
 
 @implementation MPWMessageExpression(generateJavaScriptOn)
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
-{
-    [generator writeMessage:NSStringFromSelector(self.selector) toReceiver:self.receiver withArgs:self.args superSend:self.isSuperSend];
-}
+{ [generator writeMessage:NSStringFromSelector(self.selector) toReceiver:self.receiver withArgs:self.args superSend:self.isSuperSend]; }
 @end
 
 @implementation MPWBlockExpression(generateJavaScriptOn)
@@ -225,9 +267,16 @@
 @implementation MPWLiteralArrayExpression(generateJavaScriptOn)
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
 {
-    [generator writeString:@"["];
-    for (NSUInteger i=0;i<self.objects.count;i++) { if (i) [generator writeString:@", "]; [generator writeObject:self.objects[i]]; }
-    [generator writeString:@"]"];
+    if (self.literalClassName) {
+        [generator writeString:@"[["];
+        [generator writeString:self.literalClassName];
+        [generator writeString:@" alloc] initWithArray:@["];
+    } else [generator writeString:@"@["];
+    for (NSUInteger i=0;i<self.objects.count;i++) {
+        if (i) [generator writeString:@", "];
+        [generator writeObject:self.objects[i]];
+    }
+    [generator writeString:self.literalClassName ? @"]]" : @"]"];
 }
 @end
 
@@ -235,12 +284,16 @@
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
 {
     NSArray *keys=[self valueForKey:@"keys"], *values=[self valueForKey:@"values"];
-    [generator writeString:@"{"];
+    if (self.literalClassName) {
+        [generator writeString:@"[["];
+        [generator writeString:self.literalClassName];
+        [generator writeString:@" alloc] initWithDictionary:@{"];
+    } else [generator writeString:@"@{"];
     for (NSUInteger i=0;i<MIN(keys.count, values.count);i++) {
         if (i) [generator writeString:@", "];
-        [generator writeString:@"["]; [generator writeObject:keys[i]]; [generator writeString:@"]: "]; [generator writeObject:values[i]];
+        [generator writeObject:keys[i]]; [generator writeString:@": "]; [generator writeObject:values[i]];
     }
-    [generator writeString:@"}"];
+    [generator writeString:self.literalClassName ? @"}]" : @"}"];
 }
 @end
 
@@ -249,45 +302,59 @@
 { [generator writeObject:self.receiver]; [generator writeString:@"["]; [generator writeObject:self.subscript]; [generator writeString:@"]"]; }
 @end
 
+@implementation STConnectionDefiner(generateJavaScriptOn)
+-(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
+{ [generator writeString:@"objst_connect_components("]; [generator writeObject:self.lhs]; [generator writeString:@", "]; [generator writeObject:self.rhs]; [generator writeString:@")"]; }
+@end
+
+@implementation MPWCascadeExpression(generateJavaScriptOn)
+-(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
+{
+    NSArray *messages=[self valueForKey:@"messageExpressions"];
+    [generator writeString:@"("];
+    for (NSUInteger i=0;i<messages.count;i++) { if (i) [generator writeString:@", "]; [generator writeObject:messages[i]]; }
+    [generator writeString:@")"];
+}
+@end
+
 @implementation STVariableDefinition(generateJavaScriptOn)
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
 {
-    [generator writeString:@"var "]; [generator writeString:self.name];
+    if ([generator.declaredLocals containsObject:self.name]) [generator writeString:self.name];
+    else { [generator writeString:@"var "]; [generator writeString:self.name]; [generator.declaredLocals addObject:self.name]; }
     if (self.initializer) { [generator writeString:@" = "]; [generator writeObject:self.initializer]; }
 }
+@end
+
+@implementation STScriptedMethod(generateJavaScriptOn)
+-(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator { [generator writeMethod:self classMethod:NO]; }
 @end
 
 @implementation STClassDefinition(generateJavaScriptOn)
 -(void)generateJavaScriptOn:(MPWJavaScriptGenerator*)generator
 {
-    generator.currentClassName=self.name;
-    generator.currentSuperclassName=self.superclassNameToUse;
-    generator.currentIvarNames=[NSSet setWithArray:(NSArray*)[[self.structureDefinition.fields collect] name]];
-    [generator writeString:@"{var the_class = objj_allocateClassPair(objj_getClass("];
-    [generator writeJavaScriptString:self.superclassNameToUse];
-    [generator writeString:@"), "];
-    [generator writeJavaScriptString:self.name];
-    [generator writeString:@"),\nmeta_class = the_class.isa;\n"];
+    [generator writeString:@"@implementation "];
+    [generator writeString:self.name];
+    [generator writeString:@" : "];
+    [generator writeString:self.superclassNameToUse];
     NSArray *ivars=self.structureDefinition.fields;
     if (ivars.count) {
-        [generator writeString:@"class_addIvars(the_class, ["];
-        for (NSUInteger i=0;i<ivars.count;i++) {
-            id ivar=ivars[i]; if (i) [generator writeString:@", "];
-            [generator writeString:@"new objj_ivar("]; [generator writeJavaScriptString:[ivar name]]; [generator writeString:@", "];
-            [generator writeJavaScriptString:[ivar respondsToSelector:@selector(typeName)] ? [ivar typeName] : @"id"]; [generator writeString:@")"];
+        [generator writeString:@"\n{\n"];
+        for (id ivar in ivars) {
+            [generator writeString:[ivar respondsToSelector:@selector(typeName)] ? ([ivar typeName] ?: @"id") : @"id"];
+            [generator writeString:@" "];
+            [generator writeString:[ivar name]];
+            [generator writeString:@";\n"];
         }
-        [generator writeString:@"]);\n"];
-    }
-    if (self.methods.count) {
-        [generator writeString:@"class_addMethods(the_class, ["];
-        for (NSUInteger i=0;i<self.methods.count;i++) { if (i) [generator writeString:@",\n"]; [generator writeMethod:self.methods[i] className:self.name]; }
-        [generator writeString:@"]);\n"];
-    }
-    if (self.classMethods.count) {
-        [generator writeString:@"class_addMethods(meta_class, ["];
-        for (NSUInteger i=0;i<self.classMethods.count;i++) { if (i) [generator writeString:@",\n"]; [generator writeMethod:self.classMethods[i] className:self.name]; }
-        [generator writeString:@"]);\n"];
-    }
-    [generator writeString:@"objj_registerClassPair(the_class);\n}\n"];
+        [generator writeString:@"}\n"];
+    } else [generator writeString:@"\n"];
+    NSMutableSet *ivarNames=[NSMutableSet set];
+    for (id ivar in ivars) [ivarNames addObject:[ivar name]];
+    NSSet *savedIvars=generator.currentIvarNames;
+    generator.currentIvarNames=ivarNames;
+    for (STScriptedMethod *method in self.methods) [generator writeMethod:method classMethod:NO];
+    generator.currentIvarNames=savedIvars;
+    for (STScriptedMethod *method in self.classMethods) [generator writeMethod:method classMethod:YES];
+    [generator writeString:@"@end\n"];
 }
 @end

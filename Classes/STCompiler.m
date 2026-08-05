@@ -1221,10 +1221,15 @@ idAccessor(solver, setSolver)
 
 -(NSString*)transpileToJavaScript:(NSString*)source
 {
-    NSMutableString *javascript=[NSMutableString string];
-    MPWJavaScriptGenerator *generator=[MPWJavaScriptGenerator streamWithTarget:javascript];
+    return [self transpileToObjectiveJ:source];
+}
+
+-(NSString*)transpileToObjectiveJ:(NSString*)source
+{
+    NSMutableString *objectiveJ=[NSMutableString string];
+    MPWJavaScriptGenerator *generator=[MPWJavaScriptGenerator streamWithTarget:objectiveJ];
     [generator writeObject:[self compile:source]];
-    return javascript;
+    return objectiveJ;
 }
 
 -(STScriptedMethod*)parseMethodDefinition:aString
