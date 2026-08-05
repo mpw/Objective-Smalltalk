@@ -1,0 +1,9 @@
+#!env st
+#-<void>compile:source
+basename := source stringValue stringByDeletingPathExtension.
+compiler := STCompiler compiler.
+ast := compiler compile: file:{source}.
+generator ← MPWJavaScriptGenerator streamWithTarget: stdout.
+generator ! ast.
+#objectFileName := basename , '.m'.
+#file:{objectFileName} := compiled.
