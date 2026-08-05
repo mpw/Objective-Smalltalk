@@ -120,7 +120,7 @@
 
     STCompiler *compiler=[self compiler];
     NSArray *definitions=@[
-        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } -primitiveSumTo: n { var limit:int := n. var sum:int := 0. 1 to:limit do:{ :i | sum := sum + i. }. sum. } }"],
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. var counter:int. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } -primitiveSumTo: n { var limit:int := n. var sum:int := 0. 1 to:limit do:{ :i | sum := sum + i. }. sum. } -bumpAndGet { this:counter := this:counter + 1. this:counter. } }"],
         [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
         [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
     ];
@@ -188,6 +188,13 @@
     IDEXPECT([instance performSelector:NSSelectorFromString(@"loopResult:") withObject:@(4)],@(10),@"generated to:do: accumulator (__block local)");
     IDEXPECT([instance performSelector:NSSelectorFromString(@"whileResult")],@(128),@"generated whileTrue: accumulator");
     IDEXPECT([instance performSelector:NSSelectorFromString(@"collectResult")],@(6),@"generated collect: higher-order message");
+}
+
++(void)testObjectiveCGeneratorEndToEndTypedInstanceVariable
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"bumpAndGet")],@(1),@"typed int ivar increments through its accessors");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"bumpAndGet")],@(2),@"...and holds state");
 }
 
 +(void)testObjectiveCGeneratorEndToEndPrimitiveForLoop
@@ -314,6 +321,13 @@
     EXPECTTRUE([generated containsString:@"scalarAccessor( long, count, setCount )"], @"primitive ivar accessor");
 }
 
++(void)testTypedInstanceVariableIsRespectedThroughThisScheme
+{
+    NSString *generated=[self generateClass:@"class __TypedIvarPerson : NSObject { var age:int. -<void>advance { this:age := this:age + 1. } }"];
+    EXPECTTRUE([generated containsString:@"[self setAge:([self age] + 1)]"], @"an int ivar's arithmetic stays primitive C through its accessors");
+    EXPECTFALSE([generated containsString:@"add:"], @"not the boxed object-arithmetic form");
+}
+
 +(void)testSemanticTypeWithoutObjcClassPuntsToId
 {
     NSString *generated=[self generateClass:@"class __IvarMDA : NSObject { var t:Text. }"];
@@ -432,6 +446,7 @@
         @"testObjectIvarUsesAsteriskTypeAndObjectAccessor",
         @"testIdIvarUsesIdAccessor",
         @"testPrimitiveIvarUsesCTypeAndScalarAccessor",
+        @"testTypedInstanceVariableIsRespectedThroughThisScheme",
         @"testSemanticTypeWithoutObjcClassPuntsToId",
         @"testToDoLowersToCForLoopWithPrimitiveVariable",
         @"testToDoWithPrimitiveAccumulatorStaysPrimitive",
@@ -465,6 +480,7 @@
         @"testObjectiveCGeneratorEndToEndMessagePassingAndLiterals",
         @"testObjectiveCGeneratorEndToEndBlocks",
         @"testObjectiveCGeneratorEndToEndLocalsControlFlowAndLoops",
+        @"testObjectiveCGeneratorEndToEndTypedInstanceVariable",
         @"testObjectiveCGeneratorEndToEndPrimitiveForLoop",
         @"testObjectiveCGeneratorEndToEndStringInterpolation",
         @"testObjectiveCGeneratorEndToEndForeachLoop",

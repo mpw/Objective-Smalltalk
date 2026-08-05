@@ -37,9 +37,10 @@
 // Names already declared in the method/block scope currently being generated,
 // so a `var` definition for an already-hoisted local doesn't redeclare it.
 @property (nonatomic, assign) NSMutableSet *declaredLocals;
-// Instance variable names of the class currently being generated; these are
-// members, not locals, so assignments to them must not be declared as locals.
-@property (nonatomic, assign) NSSet *currentIvarNames;
+// Instance variables (name → type) of the class currently being generated:
+// members, not locals, so they aren't declared as locals, and `this:` accesses
+// them with their declared type.
+@property (nonatomic, assign) NSDictionary *currentIvarTypes;
 // Types of the names in scope for the method currently being generated, so
 // primitive locals can be declared with their C type.
 @property (nonatomic, assign) STTypeContext *currentTypeContext;
@@ -476,8 +477,8 @@
     for (int i=0;i<header.numArguments;i++) {
         [locals removeObject:[header argumentNameAtIndex:i]];
     }
-    if ( self.currentIvarNames ) {
-        [locals minusSet:self.currentIvarNames];
+    if ( self.currentIvarTypes ) {
+        [locals minusSet:[NSSet setWithArray:self.currentIvarTypes.allKeys]];
     }
     // Locals assigned inside a block must be __block so the mutation is shared
     // with the enclosing scope, matching the interpreter's flattened scoping.
@@ -733,6 +734,13 @@
     // including coercing the method's result to its declared return type.  The
     // pass is idempotent, so regenerating the same method is safe.
     STTypeContext *typeContext=[STTypeContext contextForMethod:self];
+    // Instance variables are in scope with their declared types (this:age → int),
+    // but a same-named argument or local shadows them.
+    for (NSString *ivarName in generator.currentIvarTypes) {
+        if ( ![typeContext typeForName:ivarName] ) {
+            [typeContext declareName:ivarName type:generator.currentIvarTypes[ivarName]];
+        }
+    }
     id annotatedBody=[self.methodBody typeAnnotateIn:typeContext];
     if ( header.returnType.objcTypeCode != 'v' ) {
         annotatedBody=[STCoerce coerceResultOf:annotatedBody to:header.returnType in:typeContext];
@@ -783,16 +791,17 @@
         MPWTypeDefinition *ivarType=[ivar respondsToSelector:@selector(type)] ? [ivar type] : nil;
         [generator writeAccessorForName:[ivar name] type:ivarType];
     }
-    NSMutableSet *ivarNames=[NSMutableSet set];
+    NSMutableDictionary *ivarTypes=[NSMutableDictionary dictionary];
     for (id ivar in ivars) {
-        [ivarNames addObject:[ivar name]];
+        MPWTypeDefinition *ivarType=[ivar respondsToSelector:@selector(type)] ? [ivar type] : nil;
+        ivarTypes[[ivar name]]=ivarType ?: [MPWTypeDefinition idType];
     }
-    NSSet *savedIvarNames=generator.currentIvarNames;
-    generator.currentIvarNames=ivarNames;
+    NSDictionary *savedIvarTypes=generator.currentIvarTypes;
+    generator.currentIvarTypes=ivarTypes;
     for (STScriptedMethod *method in self.methods) {
         [generator writeObject:method];
     }
-    generator.currentIvarNames=savedIvarNames;
+    generator.currentIvarTypes=savedIvarTypes;
     for (STScriptedMethod *method in self.classMethods) {
         NSMutableString *methodCode=[NSMutableString stringWithString:[MPWObjCGenerator process:method]];
         if ([methodCode hasPrefix:@"-"]) [methodCode replaceCharactersInRange:NSMakeRange(0, 1) withString:@"+"];
