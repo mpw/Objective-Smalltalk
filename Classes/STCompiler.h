@@ -36,6 +36,7 @@
 -(MPWReference*)bindingForString:(NSString*)fullPath;
 -(BOOL)isValidSyntax:(NSString*)stString;
 -(NSString*)transpileToJavaScript:(NSString*)source;
+-(NSString*)transpileToObjectiveJ:(NSString*)source;
 
 //---- method store 
 
