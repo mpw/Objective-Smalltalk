@@ -163,8 +163,10 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 {
     id optionalReturnType;
     self = [self init];
-    if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {   // deprecated <type> prefix
+    if ( (optionalReturnType = [self parseOptionalTypeNameFromScanner:scanner]) ) {
+//        NSLog(@"return type: %@",optionalReturnType);
         [self setReturnType:types[optionalReturnType]];
+    } else {
     }
     while ( [self parseAKeyWordFromScanner:scanner] )  {
     }
@@ -273,10 +275,20 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 
 +(void)testUnaryIntReturnTypedTypeString
 {
-	NSString *testMethodHeader = @"<int>count";
-	NSString *typeString=@"l@:";
-	MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
-	IDEXPECT( [header typeString] , typeString , @"method type string for int return" );
+    NSString *testMethodHeader = @"<int>count";
+    NSString *typeString=@"l@:";
+    MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
+    IDEXPECT( [header typeString] , typeString , @"method type string for int return" );
+}
+
++(void)testUnarySELReturnTypedTypeString
+{
+    NSLog(@"====testUnarySELReturnTypedTypeString===");
+    NSString *testMethodHeader = @"<SEL>streamWriterMessage";
+    NSString *typeString=@":@:";
+    MPWMethodHeader *header = [self methodHeaderWithString:testMethodHeader];
+    NSLog(@"====DONE testUnarySELReturnTypedTypeString: %@===",[header typeString]);
+    IDEXPECT( [header typeString] , typeString , @"method type string for SEL return" );
 }
 
 +(void)testParseKeywordMethodHeader
@@ -438,6 +450,7 @@ lazyAccessor(NSArray*, parameterNames, setParameterNames, computeParameterNames)
 		@"testParseLongKeywordMethodHeader",
 		@"testLongKeywordMethodHeaderTypeString",
 		@"testUnaryIntReturnTypedTypeString",
+        @"testUnarySELReturnTypedTypeString",
 		@"testParseTypedKeywordMethodHeader",
 		@"testTypedKeywordTypeString",
 		@"testTypedKeywordFloatTypeString",

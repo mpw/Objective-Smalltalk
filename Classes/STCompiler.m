@@ -1431,7 +1431,7 @@ idAccessor(solver, setSolver)
     } else  if ( [s isEqualToString:@"system"]) {
         defClass=[STClassDefinition class];
     } else  if ( [s isEqualToString:@"filter"]) {
-        NSLog(@"filter definition");
+//        NSLog(@"filter definition");
         defClass=[STFilterDefinition class];
     }
     STClassDefinition *classDef=[[defClass new] autorelease];

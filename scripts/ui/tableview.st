@@ -4,6 +4,7 @@ j := #MPWJSONConverterStore{ mutable: true }  → scheme:file
 a ← j at:json.
 table ← MPWDictArrayTable alloc initWithArray: a.
 tableview ← #MPWTableView{ table: table }.
+tableview setDebug:true.
 tableview reloadData.
 app runFromCLI:(tableview inScrollView:(200@400 extent: 500@600)).
 stdout do println: table objects each.

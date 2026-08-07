@@ -1,10 +1,10 @@
 class Person {
-   var name.
+   var name:String.
    var age:int.
    -description {
       'Person: ', name.
    }
    -hello {
-     age > 30 ifTrue:{ 'hi'. } ifFalse: { 'howdy'. }.
+     this:age > 30 ifTrue:{ 'hi'. } ifFalse: { 'howdy'. }.
    } 
 }
