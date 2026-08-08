@@ -3,46 +3,59 @@
 framework:EGOS load.
 framework:EGOS_Cocoa load.
 
+
+class Line {
+   var x.
+   var y.
+   var text:String.
+
+   -<int>inRange {
+      (this:y < 750) and: (this:y > 52).
+   }
+   -description {
+      "x: {this:x} '{this:text}' y: {this:y}".
+   }
+   -<int>compare:other {
+       other y - this:y.
+   }
+}.
+
 class TextDumper : MPWGraphicDumper
 {
-   var lastY:int.
-   var line:String.
-   var scene:String.
-   var scenes:NSOrderedSet.
-   var character:String.
+   var line.
+   var pageLines:NSMutableArray.
        
    -initWithTarget:aTarget {
       self ← super initWithTarget:aTarget.
-      this:line ← ''.
-      this:scenes ← NSMutableOrderedSet new.
-      this:scene ← ''.
+      this:line ← #Line{}.
+      this:pageLines ← NSMutableArray array.
       self.
    }
 
    -<void>writeText:text withGstate:gstate {
       var newY:int ← gstate ctm objectAtIndex:5 | intValue.
-      newY = this:lastY ifFalse: {
-        (this:line containsString:'Scene ' ) ifTrue:{
-           this:scene ← this:line.
+      var oldY:int ← this:line y.
+      newY = oldY ifFalse: {
+        this:line inRange ifTrue: {
+             this:pageLines addObject: this:line.
         }.
-        (this:line containsString: this:character) ifTrue:{
-	   this:scenes addObject: this:scene.
-        }.
-        this:lastY ← newY.
-        this:line ← ''.
+        this:line ← #Line{ text:'', y: newY, x: (gstate ctm objectAtIndex:4 | intValue) }.
       }.
-      this:line ← this:line , text.
+      this:line setText:  this:line text stringValue , text stringValue.
+   }
+   -<void>processPage {
+       var sorted ← this:pageLines sorted.   
+       stdout do println: sorted each.
+       this:pageLines ← NSMutableArray array.
+
    }
 }.
 
-
-data ← file value.
-stdout println: data length.
 pdf ← MPWPDFFile alloc initWithPdfData: file value .
-sceneLister ← #TextDumper{ target: stdout, character: 'HERTZ' }.
-pdf graphicsInterpreter setTarget: sceneLister.
+writer ← #TextDumper{ target: stdout }.
+pdf graphicsInterpreter setTarget: writer.
 0 to: pdf pageCount - 1 do: { :i  | 
    pdf renderPageNo:i.
+   writer processPage.
+   stdout println:'===== page ===='.
 }.
-stdout println: sceneLister character.
-stdout println: sceneLister scenes.

@@ -1,5 +1,5 @@
 #!env st
-#-scenesFor: character
+#-<void>scenesFor: character
 framework:EGOS load.
 framework:EGOS_Cocoa load.
 
@@ -43,4 +43,4 @@ pdf graphicsInterpreter setTarget: sceneLister.
    pdf renderPageNo:i.
 }.
 stdout println: sceneLister character.
-stdout println: sceneLister scenes.
+stdout do println: sceneLister scenes allObjects each.
