@@ -1,5 +1,5 @@
 #!env st
-#-convert: <ref>file
+#-scenesFor: character
 framework:EGOS load.
 framework:EGOS_Cocoa load.
 
@@ -36,10 +36,8 @@ class TextDumper : MPWGraphicDumper
 }.
 
 
-data ← file value.
-stdout println: data length.
-pdf ← MPWPDFFile alloc initWithPdfData: file value .
-sceneLister ← #TextDumper{ target: stdout, character: 'HERTZ' }.
+pdf ← MPWPDFFile alloc initWithPdfData: file:libretto.pdf .
+sceneLister ← #TextDumper{ target: stdout, character: character }.
 pdf graphicsInterpreter setTarget: sceneLister.
 0 to: pdf pageCount - 1 do: { :i  | 
    pdf renderPageNo:i.
