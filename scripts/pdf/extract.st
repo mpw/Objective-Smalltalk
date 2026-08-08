@@ -1,5 +1,5 @@
 #!env st
-#-convert: <ref>file
+#-<void>convert: <ref>file
 framework:EGOS load.
 framework:EGOS_Cocoa load.
 
@@ -9,7 +9,7 @@ class Line {
    var y.
    var text:String.
 
-   -<int>inRange {
+   -inRange {
       (this:y < 750) and: (this:y > 52).
    }
    -description {
@@ -17,6 +17,9 @@ class Line {
    }
    -<int>compare:other {
        other y - this:y.
+   }
+   -closeTo: y:int {
+      (y - this:y) abs < 8.
    }
 }.
 
@@ -35,7 +38,7 @@ class TextDumper : MPWGraphicDumper
    -<void>writeText:text withGstate:gstate {
       var newY:int ← gstate ctm objectAtIndex:5 | intValue.
       var oldY:int ← this:line y.
-      newY = oldY ifFalse: {
+      (this:line closeTo: newY ) ifFalse: {
         this:line inRange ifTrue: {
              this:pageLines addObject: this:line.
         }.
@@ -55,7 +58,8 @@ pdf ← MPWPDFFile alloc initWithPdfData: file value .
 writer ← #TextDumper{ target: stdout }.
 pdf graphicsInterpreter setTarget: writer.
 0 to: pdf pageCount - 1 do: { :i  | 
+   var pageNo ← i+1.
+   stdout println:"===== page {pageNo} ====".
    pdf renderPageNo:i.
    writer processPage.
-   stdout println:'===== page ===='.
 }.
