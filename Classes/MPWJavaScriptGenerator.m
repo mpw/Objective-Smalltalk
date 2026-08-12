@@ -9,7 +9,6 @@
 #import "MPWMethodHeader.h"
 #import "MPWStatementList.h"
 #import "STClassDefinition.h"
-#import "STCompiler.h"
 #import "STIdentifier.h"
 #import "STIdentifierExpression.h"
 #import "STScriptedMethod.h"
@@ -31,16 +30,8 @@
 
 @implementation MPWJavaScriptGenerator
 
-+defaultTarget { return [NSMutableString string]; }
+// +defaultTarget and +transpile: are inherited from MPWLanguageGenerator.
 -(SEL)streamWriterMessage { return @selector(generateJavaScriptOn:); }
-
-+(NSString*)transpile:(NSString*)source
-{
-    NSMutableString *javascript=[NSMutableString string];
-    MPWJavaScriptGenerator *generator=[self streamWithTarget:javascript];
-    [generator writeObject:[[STCompiler compiler] compile:source]];
-    return javascript;
-}
 
 +testSelectors
 {

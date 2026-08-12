@@ -8,6 +8,7 @@
 #ifndef ObjectiveSmalltalk_h
 #define ObjectiveSmalltalk_h
 
+#import <ObjectiveSmalltalk/MPWLanguageGenerator.h>
 #import <ObjectiveSmalltalk/MPWJavaScriptGenerator.h>
 
 #import <MPWFoundation/MPWFoundation.h>

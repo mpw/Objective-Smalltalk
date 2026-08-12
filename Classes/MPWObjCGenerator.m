@@ -72,11 +72,7 @@
 
 @implementation MPWObjCGenerator
 
-+defaultTarget
-{
-    return [NSMutableString string];
-}
-
+// +defaultTarget and +transpile: are inherited from MPWLanguageGenerator.
 -(SEL)streamWriterMessage
 {
     return @selector(generateObjectiveCOn:);

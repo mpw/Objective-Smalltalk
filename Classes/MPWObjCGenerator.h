@@ -6,10 +6,10 @@
 //  Copyright 2005 Marcel Weiher. All rights reserved.
 //
 
-#import <MPWFoundation/MPWFoundation.h>
+#import <ObjectiveSmalltalk/MPWLanguageGenerator.h>
 
 
-@interface MPWObjCGenerator : MPWByteStream {
+@interface MPWObjCGenerator : MPWLanguageGenerator {
 
 }
 

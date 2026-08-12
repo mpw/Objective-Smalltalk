@@ -261,6 +261,7 @@
 		1F5E505B09B4B754000298D9 /* MPWMethodHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1F57FA083395A000D3275A /* MPWMethodHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E505C09B4B754000298D9 /* STTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA741A40886DAFB00121867 /* STTests.h */; };
 		1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */; };
+		1F5E505D09B4B754000298E0 /* MPWLanguageGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6734F0887EDF000412DE0 /* MPWLanguageGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDEC0DE0000000000000D1 /* STTypeInference.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000C1 /* STTypeInference.h */; };
 		1F5E505E09B4B754000298D9 /* MPWInstanceVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB39EF5088F0AD2008FC5C6 /* MPWInstanceVariable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F5E505F09B4B754000298D9 /* MPWSetAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB39F9D088FDAE4008FC5C6 /* MPWSetAccessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -287,6 +288,7 @@
 		1F5E507909B4B754000298D9 /* MPWMethodHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1F57FB083395A000D3275A /* MPWMethodHeader.m */; };
 		1F5E507A09B4B754000298D9 /* STTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA741A50886DAFB00121867 /* STTests.m */; };
 		1F5E507B09B4B754000298D9 /* MPWObjCGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */; };
+		1F5E507B09B4B754000298E1 /* MPWLanguageGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD673500887EDF000412DE1 /* MPWLanguageGenerator.m */; };
 		1FDEC0DE0000000000000D2 /* STTypeInference.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000C2 /* STTypeInference.m */; };
 		A10000000000000000000001 /* MPWJavaScriptGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* MPWJavaScriptGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A10000000000000000000002 /* MPWJavaScriptGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* MPWJavaScriptGenerator.m */; };
@@ -737,8 +739,10 @@
 		1FE37BA71969610700C9A378 /* MPWMethodType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FC9640B0985472C00C193FC /* MPWMethodType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BA81969610700C9A378 /* MPWMethodType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC9640C0985472C00C193FC /* MPWMethodType.m */; };
 		1FE37BAB1969610700C9A378 /* MPWObjCGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1FE37BAB1969610700C9A3E0 /* MPWLanguageGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD6734F0887EDF000412DE0 /* MPWLanguageGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FDEC0DE0000000000000D3 /* STTypeInference.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000C1 /* STTypeInference.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FE37BAC1969610700C9A378 /* MPWObjCGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */; };
+		1FE37BAC1969610700C9A3E1 /* MPWLanguageGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD673500887EDF000412DE1 /* MPWLanguageGenerator.m */; };
 		1FDEC0DE0000000000000D4 /* STTypeInference.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDEC0DE0000000000000C2 /* STTypeInference.m */; };
 		A10000000000000000000003 /* MPWJavaScriptGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* MPWJavaScriptGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A10000000000000000000004 /* MPWJavaScriptGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* MPWJavaScriptGenerator.m */; };
@@ -1634,6 +1638,8 @@
 		1FD48C4B15B7241000BDCECA /* MPWTaggedFloat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWTaggedFloat.m; sourceTree = "<group>"; };
 		1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWObjCGenerator.h; sourceTree = "<group>"; };
 		1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWObjCGenerator.m; sourceTree = "<group>"; };
+		1FD6734F0887EDF000412DE0 /* MPWLanguageGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPWLanguageGenerator.h; sourceTree = "<group>"; };
+		1FD673500887EDF000412DE1 /* MPWLanguageGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWLanguageGenerator.m; sourceTree = "<group>"; };
 		1FDEC0DE0000000000000C1 /* STTypeInference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTypeInference.h; sourceTree = "<group>"; };
 		1FDEC0DE0000000000000C2 /* STTypeInference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTypeInference.m; sourceTree = "<group>"; };
 		A10000000000000000000005 /* MPWJavaScriptGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPWJavaScriptGenerator.h; sourceTree = "<group>"; };
@@ -3081,6 +3087,8 @@
 				1FC9640C0985472C00C193FC /* MPWMethodType.m */,
 				1FD6734F0887EDF000412DD2 /* MPWObjCGenerator.h */,
 				1FD673500887EDF000412DD2 /* MPWObjCGenerator.m */,
+				1FD6734F0887EDF000412DE0 /* MPWLanguageGenerator.h */,
+				1FD673500887EDF000412DE1 /* MPWLanguageGenerator.m */,
 				1FDEC0DE0000000000000C1 /* STTypeInference.h */,
 				1FDEC0DE0000000000000C2 /* STTypeInference.m */,
 				A10000000000000000000005 /* MPWJavaScriptGenerator.h */,
@@ -3277,6 +3285,7 @@
 				1F5E505C09B4B754000298D9 /* STTests.h in Headers */,
 				1FB7AE3024DB0F3000CCBE86 /* STBundle.h in Headers */,
 				1F5E505D09B4B754000298D9 /* MPWObjCGenerator.h in Headers */,
+				1F5E505D09B4B754000298E0 /* MPWLanguageGenerator.h in Headers */,
 				1FDEC0DE0000000000000D1 /* STTypeInference.h in Headers */,
 				A10000000000000000000001 /* MPWJavaScriptGenerator.h in Headers */,
 				1F2B664F268CCC6A00DE4416 /* STTypeDescriptor.h in Headers */,
@@ -3582,6 +3591,7 @@
 				1FE37BB51969610700C9A378 /* STScriptedMethod.h in Headers */,
 				1FE37BEB1969612600C9A378 /* MPWScriptingBridgeScheme.h in Headers */,
 				1FE37BAB1969610700C9A378 /* MPWObjCGenerator.h in Headers */,
+				1FE37BAB1969610700C9A3E0 /* MPWLanguageGenerator.h in Headers */,
 				1FDEC0DE0000000000000D3 /* STTypeInference.h in Headers */,
 				A10000000000000000000003 /* MPWJavaScriptGenerator.h in Headers */,
 				1F321C68213334F3001BE6CC /* MPWPropertyPathMethod.h in Headers */,
@@ -4909,6 +4919,7 @@
 				1F5E507909B4B754000298D9 /* MPWMethodHeader.m in Sources */,
 				1F5E507A09B4B754000298D9 /* STTests.m in Sources */,
 				1F5E507B09B4B754000298D9 /* MPWObjCGenerator.m in Sources */,
+				1F5E507B09B4B754000298E1 /* MPWLanguageGenerator.m in Sources */,
 				1FDEC0DE0000000000000D2 /* STTypeInference.m in Sources */,
 				A10000000000000000000002 /* MPWJavaScriptGenerator.m in Sources */,
 				1FD0D4301A935F8D006CA1D7 /* MPWClassMethodStore.m in Sources */,
@@ -5169,6 +5180,7 @@
 				1FE37B9A1969610600C9A378 /* MPWMessageExpression.m in Sources */,
 				1F3C6E6C1E350BF200AEA56E /* MPWLiteralArrayExpression.m in Sources */,
 				1FE37BAC1969610700C9A378 /* MPWObjCGenerator.m in Sources */,
+				1FE37BAC1969610700C9A3E1 /* MPWLanguageGenerator.m in Sources */,
 				1FDEC0DE0000000000000D4 /* STTypeInference.m in Sources */,
 				A10000000000000000000004 /* MPWJavaScriptGenerator.m in Sources */,
 				1FD6CAE525BB026500639458 /* MPWGlobalVariableStore.m in Sources */,
