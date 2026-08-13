@@ -202,6 +202,7 @@ canBeInsertedAtIndex:(NSInteger) index
 {
     self.bundle = [STBundle bundleWithPath:path];
     STCompiler* compiler = [[[NSApplication sharedApplication] delegate] compiler];
+    [self.bundle configureInterpreter:compiler];
     [compiler evaluateScriptString:@"scheme:builder setPrefixes: [ 'MPW' , 'ST']. "];
     [self.bundle setInterpreter:compiler];
     [compiler bindValue:self.bundle toVariableNamed:@"bundle"];

@@ -322,7 +322,7 @@ idAccessor( localVars, setLocalVars )
     @try {
          result =  [self evaluateScriptString:aString];
     } @catch ( id exception) {
-        NSLog(@"Exception %@ in evaluateScript",exception);
+//        NSLog(@"Exception %@ in evaluateScript",exception);
         @throw exception;
     }
     @finally {

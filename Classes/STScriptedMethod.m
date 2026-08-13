@@ -97,6 +97,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     //        version of dynamic scope / environment / context
     //        (see also:  https://openjdk.org/jeps/446 )
     
+//    NSLog(@"%@ (parent) context: %@",self.methodHeader, context);
     
     id parentStdout = [context valueOfVariableNamed:@"stdout"];
     if ( parentStdout ) {
@@ -112,9 +113,12 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     [evaluator setContextClass:self.classOfMethod];
     MPWSchemeScheme *newSchemes=[[[self compiledInExecutionContext] schemes] copy];
     MPWVarScheme *newVarScheme=[MPWVarScheme store];
+    id rsrcScheme=[context schemeForName:@"rsrc"];
+//    NSLog(@"(parent) rsrc scheme: %@",rsrcScheme);
     [newVarScheme setContext:evaluator];
     [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"var"];
     [newSchemes setSchemeHandler:newVarScheme forSchemeName:@"default"];
+    [newSchemes setSchemeHandler:rsrcScheme forSchemeName:@"rsrc"];
     [evaluator setSchemes:newSchemes];
     [newSchemes release];
 
@@ -145,7 +149,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
     [newException addScriptFrame: frameDescription];
     NSString *myselfInTrace=    @"-[STScriptedMethod evaluateOnObject:parameters:]";    
     [newException addCombinedFrame:frameDescription frameToReplace:myselfInTrace previousTrace:[exception callStackSymbols]];
-    NSLog(@"new exception %@",newException);
+//    NSLog(@"new exception %@",newException);
     return newException;
 }
 

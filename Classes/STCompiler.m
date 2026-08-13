@@ -1247,6 +1247,7 @@ idAccessor(solver, setSolver)
     long endPos=[[self scanner] currentOffset]-1;
     NSString *methodBodyText=[[self scanner] makeTextFrom:startPos to:endPos];
     [method setScript:methodBodyText];
+    [method setContext:self];           // fallback context
     [method setMethodBody:[body statements]];
     return method;
 }
@@ -1259,7 +1260,6 @@ idAccessor(solver, setSolver)
         MPWMethodHeader *header=[[[MPWMethodHeader alloc] initWithScanner:[self scanner]] autorelease];
         method=[self parseMethodBodyWithHeader:header];
      }
-    
     return method;
 }
 
