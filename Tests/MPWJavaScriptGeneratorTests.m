@@ -1,93 +1,69 @@
 #import "MPWJavaScriptGeneratorTests.h"
-#import "MPWJavaScriptGenerator.h"
-#import <JavaScriptCore/JavaScriptCore.h>
+#import "STObjJGenerator.h"
+
+// The Objective-J backend emits Objective-J SOURCE — Objective-C syntax ([recv sel:],
+// @implementation … @end) that feeds the Cappuccino/Objective-J compiler — not the
+// objj_msgSend runtime JavaScript that compiler produces.  There is no Objective-J
+// toolchain in this environment, so these are source-level assertions.
 
 @implementation MPWJavaScriptGeneratorTests
 
-+(NSString*)cappuccinoRuntimeHarness
++(void)testMessageSendUsesBracketSyntax
 {
-    return @
-    "var __classes = {};\n"
-    "function sel_getUid(selector) { return selector; }\n"
-    "function objj_method(name, implementation, types) { this.method_name=name; this.method_imp=implementation; this.method_types=types; }\n"
-    "function __send(receiver, selector, args, startClass) {\n"
-    "  if (receiver == null) return receiver;\n"
-    "  for (var cls=startClass; cls; cls=cls.super_class) {\n"
-    "    var method=cls.methods[selector];\n"
-    "    if (method) return method.method_imp.apply(null, [receiver, selector].concat(args));\n"
-    "  }\n"
-    "  throw new Error('selector not found: ' + selector);\n"
-    "}\n"
-    "function __dispatch(receiver, selector) { return __send(receiver, selector, Array.prototype.slice.call(arguments, 2), this); }\n"
-    "function objj_allocateClassPair(superclass, name) {\n"
-    "  var cls={name:name, super_class:superclass, methods:{}, ivars:[], objj_msgSend:__dispatch};\n"
-    "  var superMeta=superclass && superclass.isa;\n"
-    "  cls.isa={name:name + '_meta', super_class:superMeta, methods:{}, objj_msgSend:__dispatch};\n"
-    "  return cls;\n"
-    "}\n"
-    "function objj_registerClassPair(cls) { __classes[cls.name]=cls; }\n"
-    "function objj_getClass(name) { return __classes[name] || null; }\n"
-    "function class_addMethods(cls, methods) { methods.forEach(function(method) { cls.methods[method.method_name]=method; }); }\n"
-    "function class_addIvars(cls, ivars) { cls.ivars=cls.ivars.concat(ivars); }\n"
-    "function objj_ivar(name, type) { this.name=name; this.type=type; }\n"
-    "function objj_msgSendSuper(info, selector) { return __send(info.receiver, selector, Array.prototype.slice.call(arguments, 2), info.super_class); }\n"
-    "var CPObject=objj_allocateClassPair(null, 'CPObject');\n"
-    "class_addMethods(CPObject.isa, [new objj_method('new', function(self) { return {isa:self}; }, ['id'])]);\n"
-    "objj_registerClassPair(CPObject);\n"
-    "String.prototype.isa={methods:{uppercaseString:new objj_method('uppercaseString', function(self) { return String(self).toUpperCase(); }, ['id'])}, objj_msgSend:__dispatch, super_class:null};\n";
+    NSString *j=[STObjJGenerator transpile:@"receiver label:'hello'."];
+    IDEXPECT(j,@"[receiver label:@\"hello\"]",@"message sends are Objective-J bracket syntax, not objj_msgSend");
 }
 
-+(JSContext*)contextEvaluating:(NSString*)javascript
++(void)testClassIsObjectiveJSource
 {
-    JSContext *context=[[[JSContext alloc] init] autorelease];
-    __block JSValue *exception=nil;
-    context.exceptionHandler=^(JSContext *ctx, JSValue *value) { exception=[value retain]; };
-    [context evaluateScript:[self cappuccinoRuntimeHarness]];
-    [context evaluateScript:javascript];
-    EXPECTNIL(exception, ([NSString stringWithFormat:@"JavaScript exception: %@\nGenerated code:\n%@",exception,javascript]));
-    [exception autorelease];
-    return context;
+    NSString *j=[STObjJGenerator transpile:@"class JSTest : NSObject { var title. -titleFor:value { value uppercaseString. } }"];
+    EXPECTTRUE([j containsString:@"@implementation JSTest"],([NSString stringWithFormat:@"@implementation, not objj_allocateClassPair:\n%@",j]));
+    EXPECTTRUE([j containsString:@"- (id)titleFor:(id)value"],([NSString stringWithFormat:@"Objective-J method header:\n%@",j]));
+    EXPECTTRUE([j containsString:@"[value uppercaseString]"],([NSString stringWithFormat:@"bracket message send in the body:\n%@",j]));
+    EXPECTFALSE([j containsString:@"objj_msgSend"],([NSString stringWithFormat:@"no runtime objj_msgSend leaks in:\n%@",j]));
+    EXPECTFALSE([j containsString:@"objj_allocateClassPair"],([NSString stringWithFormat:@"no runtime class allocation leaks in:\n%@",j]));
 }
 
-+(void)testJavaScriptMessageSendMatchesCappuccinoABI
++(void)testNSClassPrefixMapsToCP
 {
-    NSString *javascript=[MPWJavaScriptGenerator transpile:@"receiver label:'hello'."];
-    EXPECTTRUE([javascript containsString:@"receiver == null ? receiver : receiver.isa.objj_msgSend(receiver, \"label:\", \"hello\")"],
-               ([NSString stringWithFormat:@"Cappuccino message-send ABI: %@",javascript]));
+    // NSObject → CPObject (the same prefix swap maps NSString→CPString, etc.).
+    NSString *j=[STObjJGenerator transpile:@"class JSMapTest : NSObject { -greet { 'hi'. } }"];
+    EXPECTTRUE([j containsString:@"@interface JSMapTest : CPObject"],([NSString stringWithFormat:@"NS* superclass maps to CP*:\n%@",j]));
+    EXPECTFALSE([j containsString:@"NSObject"],([NSString stringWithFormat:@"no NS* prefix survives:\n%@",j]));
 }
 
-+(void)testJavaScriptClassOutputMatchesCappuccinoABI
++(void)testControlStructureLowersToNativeIf
 {
-    NSString *javascript=[MPWJavaScriptGenerator transpile:@"class JSTest : CPObject { var title. -titleFor:value { value uppercaseString. } }"];
-    EXPECTTRUE([javascript containsString:@"objj_allocateClassPair(objj_getClass(\"CPObject\"), \"JSTest\")"],@"class allocation ABI");
-    EXPECTTRUE([javascript containsString:@"class_addIvars(the_class"],@"ivar registration ABI");
-    EXPECTTRUE([javascript containsString:@"new objj_method(sel_getUid(\"titleFor:\")"],@"method registration ABI");
-    EXPECTTRUE([javascript containsString:@"objj_registerClassPair(the_class)"],@"class registration ABI");
+    NSString *j=[STObjJGenerator transpile:@"class JSIfTest : NSObject { -<void>classify:x { (x isEqual:'big') ifTrue:{ x := 1. } ifFalse:{ x := 2. }. } }"];
+    EXPECTTRUE([j containsString:@"if ( "],([NSString stringWithFormat:@"ifTrue:ifFalse: lowers to native if:\n%@",j]));
+    EXPECTTRUE([j containsString:@"} else {"],([NSString stringWithFormat:@"…with a native else:\n%@",j]));
+    EXPECTFALSE([j containsString:@"\"ifTrue:ifFalse:\""],([NSString stringWithFormat:@"no dynamic ifTrue:ifFalse: send remains:\n%@",j]));
 }
 
-+(void)testGeneratedJavaScriptClassAndMessageExecuteInJavaScriptCore
++(void)testToDoLowersToNativeForLoop
 {
-    NSString *javascript=[MPWJavaScriptGenerator transpile:@"class JSRuntimeTest : CPObject { -greet:name { name uppercaseString. } }"];
-    JSContext *context=[self contextEvaluating:javascript];
-    JSValue *result=[context evaluateScript:@"(function(){ var cls=objj_getClass('JSRuntimeTest'); var instance=cls.isa.objj_msgSend(cls, 'new'); return instance.isa.objj_msgSend(instance, 'greet:', 'hello'); })()"];
-    IDEXPECT(result.toString,@"HELLO",@"generated class and message execute in JavaScriptCore");
+    NSString *j=[STObjJGenerator transpile:@"class JSForTest : NSObject { -run:n { var total:int := 0. 1 to:n do:{ :i | total := total + i. }. total. } }"];
+    EXPECTTRUE([j containsString:@"for ( long i = 1;"],([NSString stringWithFormat:@"to:do: lowers to a native for loop:\n%@",j]));
+    EXPECTTRUE([j containsString:@"; i++ ) {"],([NSString stringWithFormat:@"…a real counting loop:\n%@",j]));
+    EXPECTTRUE([j containsString:@"total = (total + i)"],([NSString stringWithFormat:@"…with the primitive body lowered:\n%@",j]));
+    EXPECTFALSE([j containsString:@"\"to:do:\""],([NSString stringWithFormat:@"no dynamic to:do: send remains:\n%@",j]));
 }
 
-+(void)testGeneratedJavaScriptIvarAssignmentExecutesInJavaScriptCore
++(void)testTypedArithmeticLowersToOperator
 {
-    NSString *javascript=[MPWJavaScriptGenerator transpile:@"class JSIvarTest : CPObject { var value. -setAndGet:newValue { value := newValue. value. } }"];
-    JSContext *context=[self contextEvaluating:javascript];
-    JSValue *result=[context evaluateScript:@"(function(){ var cls=objj_getClass('JSIvarTest'); var instance=cls.isa.objj_msgSend(cls, 'new'); return instance.isa.objj_msgSend(instance, 'setAndGet:', 42); })()"];
-    INTEXPECT(result.toInt32,42,@"generated assignment and return execute in JavaScriptCore");
+    NSString *j=[STObjJGenerator transpile:@"class JSMathTest : NSObject { -compute:a with:b { var x:int := a. var y:int := b. x + y. } }"];
+    EXPECTTRUE([j containsString:@"(x + y)"],([NSString stringWithFormat:@"primitive + lowers to an operator:\n%@",j]));
 }
 
 +(NSArray*)testSelectors
 {
     return @[
-        @"testJavaScriptMessageSendMatchesCappuccinoABI",
-        @"testJavaScriptClassOutputMatchesCappuccinoABI",
-        @"testGeneratedJavaScriptClassAndMessageExecuteInJavaScriptCore",
-        @"testGeneratedJavaScriptIvarAssignmentExecutesInJavaScriptCore",
+        @"testMessageSendUsesBracketSyntax",
+        @"testClassIsObjectiveJSource",
+        @"testNSClassPrefixMapsToCP",
+        @"testControlStructureLowersToNativeIf",
+        @"testToDoLowersToNativeForLoop",
+        @"testTypedArithmeticLowersToOperator",
     ];
 }
 
