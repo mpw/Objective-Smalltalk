@@ -98,6 +98,8 @@
 {
     STClassDefinition *classDef=[[self compiler] compile:@"class __GeneratedObjC  { var s:String. }"];
     NSString *generated=[MPWObjCGenerator process:classDef];
+//    IDEXPECT(generated,@"",@"");
+
     EXPECTTRUE([generated containsString:@"NSString*"], @"MDA String maps to NSString");
 }
 
@@ -127,7 +129,7 @@
 
     STCompiler *compiler=[self compiler];
     NSArray *definitions=@[
-        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ key: 'value' } objectForKey:'key'. } -arrayLiteralResult { [ 'first', 'second' ] lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { ([ 1, 2, 3 ] collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } }"],
+        [compiler compile:@"class __ObjCGeneratorSmokeClass { var label. var counter:int. -messagePassing { 'hello' uppercaseString. } -literalResult { #{ #key: 'value' } objectForKey:'key'. } -arrayLiteralResult { #( 'first', 'second' ) lastObject. } -numberLiteralResult { 42. } -blockResult { { :value | value uppercaseString. } value:'block'. } -storeResult { smokestore:value. } -localsResult { a := 3. b := 4. a+b. } -conditionalResult:x { x < 3 ifTrue:{ 'small'. } ifFalse:{ 'big'. }. } -loopResult:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. } -whileResult { var a. a := 1. { a < 100. } whileTrue:{ a := a * 2. }. a. } -collectResult { (#( 1, 2, 3 ) collect:{ :i | i * 2. }) lastObject. } -primitiveSum: a to: b { var x:int := a. var y:int := b. x + y. } -labelFor: x { r := 'small'. (x isEqual:'big') ifTrue:{ r := 'BIG' }. r. } -countItems: coll { n := 0. coll do:{ :x | n := n + 1 }. n. } -greet: name { \"Hello, {name}!\". } -primitiveSumTo: n { var limit:int := n. var sum:int := 0. 1 to:limit do:{ :i | sum := sum + i. }. sum. } -bumpAndGet { this:counter := this:counter + 1. this:counter. } -describeWith: x { \"got {x} and label {this:label}\". } }"],
         [compiler compile:@"scheme __ObjCGeneratorSmokeStore : MPWDictStore { }"],
         [compiler compile:@"filter __ObjCGeneratorSmokeFilter |{ ^object uppercaseString. }"],
     ];
@@ -197,10 +199,33 @@
     IDEXPECT([instance performSelector:NSSelectorFromString(@"collectResult")],@(6),@"generated collect: higher-order message");
 }
 
++(void)testObjectiveCGeneratorEndToEndTypedInstanceVariable
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"bumpAndGet")],@(1),@"typed int ivar increments through its accessors");
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"bumpAndGet")],@(2),@"...and holds state");
+}
+
++(void)testObjectiveCGeneratorEndToEndPrimitiveForLoop
+{
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"primitiveSumTo:") withObject:@(5)],@(15),@"primitive to:do: accumulator runs as a C for loop");
+}
+
 +(void)testObjectiveCGeneratorEndToEndStringInterpolation
 {
     id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
     IDEXPECT([instance performSelector:NSSelectorFromString(@"greet:") withObject:@"World"],@"Hello, World!",@"generated string interpolation");
+}
+
++(void)testObjectiveCGeneratorEndToEndSchemeInterpolation
+{
+    // {this:label} resolves against self through the runtime environment while the
+    // bare local {x} is bound as a local — the wrapped-interpolation path.
+    id instance=[[[self loadObjectiveCGeneratorSmokeFixture] new] autorelease];
+    [instance performSelector:NSSelectorFromString(@"setLabel:") withObject:@"L"];
+    IDEXPECT([instance performSelector:NSSelectorFromString(@"describeWith:") withObject:@"X"],
+             @"got X and label L",@"this: interpolation resolves against self via the runtime environment");
 }
 
 +(void)testObjectiveCGeneratorEndToEndForeachLoop
@@ -315,6 +340,13 @@
     EXPECTTRUE([generated containsString:@"scalarAccessor( long, count, setCount )"], @"primitive ivar accessor");
 }
 
++(void)testTypedInstanceVariableIsRespectedThroughThisScheme
+{
+    NSString *generated=[self generateClass:@"class __TypedIvarPerson : NSObject { var age:int. -<void>advance { this:age := this:age + 1. } }"];
+    EXPECTTRUE([generated containsString:@"[self setAge:([self age] + 1)]"], @"an int ivar's arithmetic stays primitive C through its accessors");
+    EXPECTFALSE([generated containsString:@"add:"], @"not the boxed object-arithmetic form");
+}
+
 +(void)testSemanticTypeWithoutObjcClassPuntsToId
 {
     NSString *generated=[self generateClass:@"class __IvarMDA : NSObject { var t:oid. }"];
@@ -322,11 +354,18 @@
     EXPECTFALSE([generated containsString:@"Text"], @"the MDA type name is not emitted");
 }
 
-+(void)testToDoLowersToCForLoop
++(void)testToDoLowersToCForLoopWithPrimitiveVariable
 {
     NSString *generated=[self generateMethod:@"-loop:n { total := 0. 1 to:n do:{ :i | total := total + i. }. total. }"];
-    EXPECTTRUE([generated containsString:@"for ( long _stLoop0 = 1; _stLoop0 <= [n longValue]; _stLoop0++ ) {"], @"to:do: becomes a C for loop");
-    EXPECTTRUE([generated containsString:@"id i = @(_stLoop0);"], @"loop variable is boxed for the body");
+    EXPECTTRUE([generated containsString:@"for ( long i = 1; i <= [n longValue]; i++ ) {"], @"to:do: becomes a C for loop with a primitive counter");
+    EXPECTTRUE([generated containsString:@"total = [total add:@(i)];"], @"the primitive counter is boxed where the body needs an object");
+}
+
++(void)testToDoWithPrimitiveAccumulatorStaysPrimitive
+{
+    NSString *generated=[self generateMethod:@"-sumTo: n:int { var sum:int := 0. 1 to:n do:{ :i | sum := sum + i. }. sum. }"];
+    EXPECTTRUE([generated containsString:@"for ( long i = 1; i <= n; i++ ) {"], @"a primitive bound is raw");
+    EXPECTTRUE([generated containsString:@"sum = (sum + i);"], @"primitive accumulation stays C, no boxing");
 }
 
 +(void)testWhileTrueLowersToCWhileLoop
@@ -357,6 +396,25 @@
 {
     id parsed=[@"\"no placeholder\"." compileIn:[self compiler]];
     IDEXPECT([MPWObjCGenerator process:parsed], @"@\"no placeholder\"", @"no interpolation → plain string");
+}
+
++(void)testSchemeQualifiedInterpolationDefersToRuntime
+{
+    // A this: placeholder can't be a stringWithFormat %@ arg — its scheme is
+    // resolved by the environment at runtime, so we emit a wrapped interpolation.
+    id parsed=[@"\"Person: {this:name}\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed],
+             @"[STEvaluator interpolate:@\"Person: {this:name}\" forObject:self locals:@{}]",
+             @"this: placeholder defers to the runtime environment");
+}
+
++(void)testMixedInterpolationBindsBareLocals
+{
+    // Scheme-qualified paths go to self; bare names are bound as locals.
+    id parsed=[@"\"{greeting} {this:name}\"." compileIn:[self compiler]];
+    IDEXPECT([MPWObjCGenerator process:parsed],
+             @"[STEvaluator interpolate:@\"{greeting} {this:name}\" forObject:self locals:@{@\"greeting\": greeting}]",  // NB double-@ was a bug
+             @"bare local bound, this: left to self");
 }
 
 +(void)testThisSchemeReadGeneratesGetter
@@ -426,13 +484,17 @@
         @"testObjectIvarUsesAsteriskTypeAndObjectAccessor",
         @"testIdIvarUsesIdAccessor",
         @"testPrimitiveIvarUsesCTypeAndScalarAccessor",
+        @"testTypedInstanceVariableIsRespectedThroughThisScheme",
         @"testSemanticTypeWithoutObjcClassPuntsToId",
-        @"testToDoLowersToCForLoop",
+        @"testToDoLowersToCForLoopWithPrimitiveVariable",
+        @"testToDoWithPrimitiveAccumulatorStaysPrimitive",
         @"testWhileTrueLowersToCWhileLoop",
         @"testDoLowersToCForeachLoop",
         @"testInterpolatedStringGeneratesStringWithFormat",
         @"testInterpolatedStringWithMultiplePlaceholders",
         @"testDoubleQuotedStringWithoutPlaceholdersIsPlainString",
+        @"testSchemeQualifiedInterpolationDefersToRuntime",
+        @"testMixedInterpolationBindsBareLocals",
         @"testThisSchemeReadGeneratesGetter",
         @"testThisSchemeWriteGeneratesSetter",
         @"testStdoutGeneratesByteStreamStdout",
@@ -459,7 +521,10 @@
         @"testObjectiveCGeneratorEndToEndMessagePassingAndLiterals",
         @"testObjectiveCGeneratorEndToEndBlocks",
         @"testObjectiveCGeneratorEndToEndLocalsControlFlowAndLoops",
+        @"testObjectiveCGeneratorEndToEndTypedInstanceVariable",
+        @"testObjectiveCGeneratorEndToEndPrimitiveForLoop",
         @"testObjectiveCGeneratorEndToEndStringInterpolation",
+        @"testObjectiveCGeneratorEndToEndSchemeInterpolation",
         @"testObjectiveCGeneratorEndToEndForeachLoop",
         @"testObjectiveCGeneratorEndToEndLoweredIfStatement",
         @"testObjectiveCGeneratorEndToEndInstanceVariableAccessors",
