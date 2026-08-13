@@ -59,6 +59,34 @@ void help(void )
     return YES;
 }
 
+-(BOOL)test:(NSString*)bundlePath
+{
+    self.bundle = [STSiteBundle bundleWithPath:bundlePath];
+    NSDictionary *methods=[self.bundle methodDict];
+    NSArray *classNames=[methods allKeys];
+    int numberOfTests=0;
+    int successes=0;
+    int failures=0;
+    for (NSString *className in classNames) {
+        Class classUnderTest=NSClassFromString(className);
+        NSArray <NSString*> *tests=[classUnderTest testSelectors];
+        for (NSString *testName in tests ){
+//            NSLog(@"test: +[%@ %@]",className,testName);
+            SEL *testSelector = NSSelectorFromString(testName);
+            numberOfTests++;
+            @try {
+                [classUnderTest performSelector:testSelector];
+                successes++;
+            } @catch (id exception ) {
+                failures++;
+                NSLog(@"failure: %@",exception);
+            }
+        }
+    }
+    NSLog(@"%d tests %d failures %d succeses",numberOfTests,failures,successes);
+    return failures==0;
+}
+
 -(void)openInBrowser
 {
     NSLog(@"openInBrowser");
@@ -76,10 +104,15 @@ void help(void )
         for (int i=0;i<args.count;i++) {
             NSString *arg = args[i];
            if ( [arg hasPrefix:@"-"]) {
-                if ( [arg isEqual:@"-run"]) {
+               if ( [arg isEqual:@"-run"]) {
+                   i++;
+                   actionDone=[self run:args[i]];
+                   fprintf(stderr,"run %s on port %d!\n",[[[[self.bundle siteServer] delegate] description] UTF8String],self.port);
+               } else if ( [arg isEqual:@"-test"]) {
                     i++;
-                    actionDone=[self run:args[i]];
-                    fprintf(stderr,"run %s on port %d!\n",[[[[self.bundle siteServer] delegate] description] UTF8String],self.port);
+                    [self test:args[i]];
+                   actionDone=YES;
+                   return 1;
                 } else if ( [arg isEqual:@"-port"]) {
                     i++;
                     self.port=[args[i] intValue];
@@ -102,11 +135,11 @@ void help(void )
                     [generator generate];
                     actionDone=YES;
                     return 0;
+                } else {
+                    fprintf(stderr,"invalid argument: %s\n",[args[i] UTF8String]);
+                    help();
+                    break;
                 }
-            } else {
-                fprintf(stderr,"invalid argument: %s\n",[args[i] UTF8String]);
-                help();
-                break;
             }
         }
         if ( shouldOpen ) {

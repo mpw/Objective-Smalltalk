@@ -247,7 +247,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
             classDef = [[classDef statements] firstObject];
         }
         [self.interpreter evaluate:classDef];
-        NSLog(@"class def: %@",classDef);
+//        NSLog(@"class def: %@",classDef);
         if ( [classDef respondsToSelector:@selector(name)] && [classDef name] ) {
             [self.compileSuccessReporter writeObject:[classDef name]];
         }
@@ -259,7 +259,7 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
     [self loadFrameworks];
     for ( NSString *filename in [self sourceNames] ) {
         @autoreleasepool {
-            NSLog(@"compile %@",filename);
+//            NSLog(@"compile %@",filename);
             [self compileSourceFile:filename];
         }
     }
