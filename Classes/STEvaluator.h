@@ -61,6 +61,11 @@
 -(MPWScheme*)schemeForName:schemeName;
 -localVars;
 
+// Runtime support for generated code: interpolate a "..." template the way the
+// interpreter does, resolving scheme-qualified paths (this:name) against `object`
+// and bare names against the supplied locals.  Returns the interpolated string.
++(NSString*)interpolate:(NSString*)templateString forObject:object locals:(NSDictionary*)locals;
+
 
 @end
 

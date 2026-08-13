@@ -116,6 +116,30 @@
     return [MPWTypeDefinition descriptorForObjcCode:(unsigned char)*returnType];
 }
 
+-(MPWTypeDefinition*)argumentType:(int)index forSelector:(SEL)selector receiverType:(MPWTypeDefinition*)receiverType
+{
+    if ( !receiverType ) {
+        return nil;
+    }
+    Class receiverClass=NSClassFromString(receiverType.name);
+    if ( !receiverClass ) {
+        return nil;
+    }
+    NSMethodSignature *signature=[receiverClass instanceMethodSignatureForSelector:selector];
+    // Arguments 0 and 1 are self and _cmd.
+    if ( !signature || index+2 >= (int)signature.numberOfArguments ) {
+        return nil;
+    }
+    const char *argType=[signature getArgumentTypeAtIndex:index+2];
+    if ( !argType || !*argType ) {
+        return nil;
+    }
+    if ( *argType == 'r' ) {
+        argType++;
+    }
+    return [MPWTypeDefinition descriptorForObjcCode:(unsigned char)*argType];
+}
+
 @end
 
 
@@ -198,6 +222,11 @@ static NSSet *arithmeticSelectors(void)
     return nil;
 }
 
+-(MPWTypeDefinition*)argumentType:(int)index forSelector:(SEL)selector receiverType:(MPWTypeDefinition*)receiverType
+{
+    return nil;   // operators are resolved early-bound, so no hardcoded arg types
+}
+
 @end
 
 
@@ -217,6 +246,17 @@ static NSSet *arithmeticSelectors(void)
 {
     for ( id<STTypeProvider> provider in _providers ) {
         MPWTypeDefinition *result=[provider returnTypeForSelector:selector receiverType:receiverType];
+        if ( result ) {
+            return result;
+        }
+    }
+    return nil;
+}
+
+-(MPWTypeDefinition*)argumentType:(int)index forSelector:(SEL)selector receiverType:(MPWTypeDefinition*)receiverType
+{
+    for ( id<STTypeProvider> provider in _providers ) {
+        MPWTypeDefinition *result=[provider argumentType:index forSelector:selector receiverType:receiverType];
         if ( result ) {
             return result;
         }
@@ -452,6 +492,14 @@ static NSSet *arithmeticSelectors(void)
 
 -(id)typeAnnotateIn:(STTypeContext*)context
 {
+    NSString *selectorName=NSStringFromSelector(self.selector);
+    // A counted `to:do:` loop drives its variable with a primitive integer.
+    if ( [selectorName isEqual:@"to:do:"] && self.args.count == 2 &&
+         [self.args[1] isKindOfClass:[MPWBlockExpression class]] &&
+         [[self.args[1] arguments] count] == 1 ) {
+        [context declareName:[self.args[1] arguments][0] type:[MPWTypeDefinition descriptorForTypeName:@"int"]];
+    }
+
     id newReceiver=[self.receiver typeAnnotateIn:context];
     NSMutableArray *newArgs=[NSMutableArray arrayWithCapacity:[self.args count]];
     for ( id arg in self.args ) {
@@ -460,7 +508,6 @@ static NSSet *arithmeticSelectors(void)
     [self setReceiver:newReceiver];
     [self setArgs:newArgs];
 
-    NSString *selectorName=NSStringFromSelector(self.selector);
     BOOL isPrimitiveOperator=[comparisonSelectors() containsObject:selectorName] ||
                              [arithmeticSelectors() containsObject:selectorName];
     MPWTypeDefinition *receiverType=[newReceiver resultTypeIn:context];
@@ -479,6 +526,15 @@ static NSSet *arithmeticSelectors(void)
     if ( isPrimitiveNumericType(receiverType) ) {
         [self setReceiver:[STCoerce coerceExpression:newReceiver to:[MPWTypeDefinition idType] in:context]];
     }
+    // Coerce each argument to its parameter type: box a primitive passed to an
+    // object parameter, unbox an object passed to a primitive parameter.  An
+    // unknown parameter type defaults to id (objects are the default).
+    NSMutableArray *coercedArgs=[NSMutableArray arrayWithCapacity:newArgs.count];
+    for ( int i=0;i<(int)newArgs.count;i++ ) {
+        MPWTypeDefinition *paramType=[context.typeProvider argumentType:i forSelector:self.selector receiverType:receiverType];
+        [coercedArgs addObject:[STCoerce coerceExpression:newArgs[i] to:(paramType ?: [MPWTypeDefinition idType]) in:context]];
+    }
+    [self setArgs:coercedArgs];
     return self;
 }
 

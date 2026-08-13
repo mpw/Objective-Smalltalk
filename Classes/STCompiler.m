@@ -1,7 +1,7 @@
 /* STCompiler.m created by marcel on Mon 03-Jul-2000 */
 
 #import "STCompiler.h"
-#import "MPWJavaScriptGenerator.h"
+#import "STObjJGenerator.h"
 #import "STScanner.h"
 #import "MPWMessageExpression.h"
 #import "STIdentifierExpression.h"
@@ -1219,15 +1219,11 @@ idAccessor(solver, setSolver)
     return expr;
 }
 
--(NSString*)transpileToJavaScript:(NSString*)source
-{
-    return [self transpileToObjectiveJ:source];
-}
 
 -(NSString*)transpileToObjectiveJ:(NSString*)source
 {
     NSMutableString *objectiveJ=[NSMutableString string];
-    MPWJavaScriptGenerator *generator=[MPWJavaScriptGenerator streamWithTarget:objectiveJ];
+    STObjJGenerator *generator=[STObjJGenerator streamWithTarget:objectiveJ];
     [generator writeObject:[self compile:source]];
     return objectiveJ;
 }
