@@ -88,6 +88,7 @@ idAccessor( _signature, setSignature )
 
 -(NSInvocation*)invocationWithReceiver:msgReceiver args:(id*)args count:(int)argCount
 {
+//    NSLog(@"=== invocationWithReceiver %@",NSStringFromSelector(selector));
 	NSInvocation* invocation=nil;
 	if ( selector != (SEL)nil ) {
 //		char charVal;
@@ -131,7 +132,7 @@ idAccessor( _signature, setSignature )
                             break;
 						case '#':	//	treat classes like objects
 						case '@':
-//							NSLog(@"arg: %@",arg);
+///							NSLog(@"arg[%d]: %p %@",i,arg,arg);
 							if ( [arg respondsToSelector:@selector(isNotNil)] &&  ![arg isNotNil] ) {
 //								NSLog(@"arg is nil!");
 								arg = nil;
@@ -321,11 +322,14 @@ idAccessor( _signature, setSignature )
 -sendTo:msgReceiver withArguments:(id*)args count:(int)argCount
 {
 	id returnValue = nil;
-	
+//    NSLog(@"will send message %@ to receiver %@ with %d args",NSStringFromSelector(selector),msgReceiver,argCount);
 	NSInvocation* invocation=[self invocationWithReceiver:msgReceiver args:args count:argCount];
-	if ( invocation != nil ) {
+//    NSLog(@"got the invocation %@",invocation);
+    if ( invocation != nil ) {
 		[invocation setTarget:msgReceiver];
+//        NSLog(@"will invoke");
 		[invocation invoke];
+//        NSLog(@"did invoke %@ on %@",NSStringFromSelector(selector),msgReceiver);
 		if ( @selector(release) != selector ) {
 			returnValue=[self invocationReturnValue:invocation];
 		}

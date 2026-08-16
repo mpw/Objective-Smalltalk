@@ -85,7 +85,7 @@ idAccessor( method, _setMethod )
 -invokeWithArgs:(va_list)args
 {
 	id target=va_arg(args,id);
-//    NSLog(@"target=%p",target);
+//    NSLog(@"MPWMethodCallBack invokeWithArgs for selector %@ target=%p",NSStringFromSelector(selname),target);
 	return [self invokeWithTarget:target args:args];
 }
 

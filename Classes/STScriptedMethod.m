@@ -156,6 +156,7 @@ lazyAccessor( NSArray <MPWBlockExpression*>* , blocks, _setBlocks, findBlocks)
 
 -evaluateOnObject:target parameters:(NSArray*)parameters
 {
+//    NSLog(@"evaluate scripted method %@ with args: %@",[self methodName], parameters);
     id returnVal=nil;
     @autoreleasepool {
         id compiledMethod = [self compiledScript];
