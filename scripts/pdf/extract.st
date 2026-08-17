@@ -17,34 +17,34 @@ class Line {
       this:x > 225 and: this:x < 385.
    }
    -<bool>isSpoken {
-      this:x > 30 and: this:x < 70.
+      this:x > 30 and: this:x < 55.
    }
    -<bool>isSinging {
-      this:x > 70 and: this:x < 90.
+      this:x > 56 and: this:x < 90.
    }
    -<bool>isInstruction { 
       (this:text hasPrefix: '(' ) or: (this:text hasPrefix: '[' )
    }
-   -type {
+   -fountainType {
       var type ← 'unknown'.
       type ← self isInstruction ifTrue: {
-          'Instruction'.
+          'Parenthetical'.
       } ifFalse: {
           self isCharacter ifTrue: { 
              'Character'.
           } ifFalse: {
               self isSpoken ifTrue: { 
-                 'Spoken'.
+                 'Dialogue'.
               } ifFalse: {
                  self isSinging ifTrue: { 
-                    'Singing'. 
+                    'Lyrics'. 
                  }.
               }.
           }.
       }.
    }
    -description {
-      "x: {this:x} type: {this:type}:'{this:text}' y: {this:y}".
+      "x: {this:x} type: {this:fountainType}:'{this:text}' y: {this:y}".
    }
    -<int>compare:other {
        other y - this:y.
@@ -120,6 +120,20 @@ filter SceneExtractor : LineProcessor {
    }
 }.
 
+filter FountainCreator : LineProcessor
+{
+   var elements.
+   -initWithTarget:aTarget {
+         self ← super initWithTarget:aTarget.
+      this:elements ← #NSMutableArray[].
+      self.
+   }
+   -<void>writeLine:aLine {
+      this:elements addObject: (FNElement elementOfType: aLine fountainType text: aLine text ).
+      this:target ! aLine.
+   } 
+}
+
 
 filter WhiteSpaceRemover : LineProcessor {
      -<void>writeLine:aLine {
@@ -144,7 +158,8 @@ extension NSObject {
 pdf ← MPWPDFFile alloc initWithPdfData: file value .
 scenes ← #SceneExtractor{  scene: 'Scene Three' }.
 space ← #WhiteSpaceRemover{} 
-scenes → space → stdline.
+creator ← #FountainCreator{}.
+scenes → space → creator → stdline.
 writer ← #TextDumper{ target: scenes }.
 pdf graphicsInterpreter setTarget: writer.
 0 to: pdf pageCount - 1 do: { :i  | 
@@ -153,3 +168,7 @@ pdf graphicsInterpreter setTarget: writer.
    pdf renderPageNo:i.
    writer processPage.
 }.
+
+scene ← FNScript new.
+scene setElements: creator elements.
+stdout println: (FountainWriter bodyFromScript:scene).
