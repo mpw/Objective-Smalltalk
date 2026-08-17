@@ -21,6 +21,9 @@ class Line {
    -closeTo: y:int {
       (y - this:y) abs < 8.
    }
+   -<void>writeOnLineProcessor:aProcessor {
+      aProcessor writeLine:self.
+   }
 }.
 
 class TextDumper : MPWGraphicDumper
@@ -48,14 +51,70 @@ class TextDumper : MPWGraphicDumper
    }
    -<void>processPage {
        var sorted ← this:pageLines sorted.   
-       stdout do println: sorted each.
+       this:target do !  sorted each.
        this:pageLines ← NSMutableArray array.
 
    }
 }.
 
+filter LineProcessor : MPWFlattenStream {
+   -<SEL>streamWriterMessage
+   {
+      'writeOnLineProcessor:' 
+   }
+   -<void>writeLine: aLine:Line {
+      this:target ! aLine.
+   }
+}.
+
+filter SceneExtractor : LineProcessor {
+   var scene:String.
+   var emit.
+   -initWithTarget:aTarget {
+      self ← super initWithTarget:aTarget.
+      this:emit ← false.
+      this:scene ← ''.
+      self.
+   }
+   -<void>writeLine:aLine { 
+      var text ← aLine text.
+      (text containsString:'Scene ' ) ifTrue: {
+	 (text containsString: this:scene) ifTrue: { 
+            this:emit ← true.
+         } ifFalse: {
+            this:emit ← false.
+         }.
+      }.
+      this:emit ifTrue: { this:target ! aLine }.
+   }
+}.
+
+
+filter WhiteSpaceRemover : LineProcessor {
+     -<void>writeLine:aLine {
+         var str:String ← aLine text.
+         { str hasSuffix:' '} whileTrue: {
+              str ← str substringToIndex: str length - 1.
+         }.
+         aLine setText:str.
+         this:target ! aLine.
+     }
+
+}
+
+extension NSObject {
+    -<void>writeOnLineProcessor:aProcessor {
+        self flattenOntoStream: aProcessor.
+    }
+
+}.
+
+
 pdf ← MPWPDFFile alloc initWithPdfData: file value .
-writer ← #TextDumper{ target: stdout }.
+scenes ← #SceneExtractor{  scene: 'Scene Three' }.
+space ← #WhiteSpaceRemover{} 
+scenes → space → stdline.
+writer ← #TextDumper{ target: scenes }.
 pdf graphicsInterpreter setTarget: writer.
 0 to: pdf pageCount - 1 do: { :i  | 
    var pageNo ← i+1.
