@@ -2,6 +2,7 @@
 #-<void>convert: <ref>file
 framework:EGOS load.
 framework:EGOS_Cocoa load.
+framework:FountainFramework load.
 
 
 class Line {
@@ -9,11 +10,41 @@ class Line {
    var y.
    var text:String.
 
-   -inRange {
-      (this:y < 750) and: (this:y > 52).
+   -<bool>inRange {
+      this:y < 746 and: this:y > 52.
+   }
+   -<bool>isCharacter {
+      this:x > 225 and: this:x < 385.
+   }
+   -<bool>isSpoken {
+      this:x > 30 and: this:x < 70.
+   }
+   -<bool>isSinging {
+      this:x > 70 and: this:x < 90.
+   }
+   -<bool>isInstruction { 
+      (this:text hasPrefix: '(' ) or: (this:text hasPrefix: '[' )
+   }
+   -type {
+      var type ← 'unknown'.
+      type ← self isInstruction ifTrue: {
+          'Instruction'.
+      } ifFalse: {
+          self isCharacter ifTrue: { 
+             'Character'.
+          } ifFalse: {
+              self isSpoken ifTrue: { 
+                 'Spoken'.
+              } ifFalse: {
+                 self isSinging ifTrue: { 
+                    'Singing'. 
+                 }.
+              }.
+          }.
+      }.
    }
    -description {
-      "x: {this:x} '{this:text}' y: {this:y}".
+      "x: {this:x} type: {this:type}:'{this:text}' y: {this:y}".
    }
    -<int>compare:other {
        other y - this:y.
