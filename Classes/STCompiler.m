@@ -571,21 +571,23 @@ idAccessor(solver, setSolver)
 
 -objectifyScanned:object
 {
+    BOOL isStringLiteral = [object isKindOfClass:[MPWStringLiteral class]];
     TRACE( @"enter with object: ", object );
-    if ( [object isEqual:@"#"]  ) {
+    if ( [object isEqual:@"#"] ) {
         object = [self parseLiteral];
-    } else if ( [object isEqual:@"["] ) {
+    } else if ( [object isEqual:@"["] && !isStringLiteral) {
         object = [self parseLiteralArray:@"]"];
-    } else if ( [object isEqual:@"("] ) {
+    } else if ( [object isEqual:@"("] && !isStringLiteral) {
+        TRACE(@"open paren", [object class]);
         id closeParen;
         object = [self parseExpression];
         closeParen=[self nextToken];
 		NSAssert1( [closeParen isEqual:@")"], @"'(' not followed by ')': '%@'",closeParen);
-    } else if ( /* [object isEqual:@"["] || */ [object isEqual:@"{"] ) {
+    } else if ( /* [object isEqual:@"["] || */ [object isEqual:@"{"] && !isStringLiteral ) {
         object = [self parseBlockWithStart:object];
-    } else if ( [object isEqual:@"-"] ) {
+    } else if ( [object isEqual:@"-"]  && !isStringLiteral ) {
         object = [[self parseLiteral] negated];
-    } else if ( [object isEqual:@"$"] ) {
+    } else if ( [object isEqual:@"$"]  && !isStringLiteral ) {
         object = [object stringByAppendingString:[[self nextToken] stringValue]];
         object = [self lookupLocalVar:object];
     } else if ( [object isToken] && ![[object stringValue] isScheme] ) {
@@ -1953,6 +1955,14 @@ idAccessor(solver, setSolver)
     EXPECTTRUE(didRaise, @"did raise");
 }
 
++(void)testParseStringWithOpenParen
+{
+    STCompiler *compiler = [self compiler];
+    IDEXPECT([compiler evaluateScriptString:@"'('"],@"(",@"open paren in string");
+    IDEXPECT([compiler evaluateScriptString:@"'['"],@"[",@"open sqaure bracket in string");
+    IDEXPECT([compiler evaluateScriptString:@"'{'"],@"{",@"open curly brace in string");
+}
+
 +testSelectors
 {
     return @[ @"testCheckValidSyntax" ,
@@ -1984,6 +1994,7 @@ idAccessor(solver, setSolver)
               @"testParseEmptyDictionary",
               @"testParseEmptyLiteralDictAsReceiver",
               @"testTryingToUseRoundBracketsForReturnTypeRaises",
+              @"testParseStringWithOpenParen",
     ];
 }
 
