@@ -167,7 +167,9 @@ objectAccessor(NSString*, filename, setFilename )
 {
 	id  scriptSource=[[self script] objectEnumerator];
 	int line=1;
+    NSException *initalException=nil;
 	NSString *exprString=nil;
+    BOOL accumulatingAfterError=NO;
 	[self processArgsFromExecutionContext:executionContext];
 	NS_DURING
     NSMutableString *accumulatedExpression=[NSMutableString string];
@@ -180,14 +182,18 @@ objectAccessor(NSString*, filename, setFilename )
             if ( [exprString hasPrefix:@"!"]) {
                 shellExpr = [exprString substringFromIndex:1];
                 system([shellExpr UTF8String]);
+                accumulatingAfterError=NO;
+                initalException=nil;
                 [accumulatedExpression setString:@""];
             } else {
                 expr = [[executionContext evaluator] compile:accumulatedExpression];
+                accumulatingAfterError=NO;
+                initalException=nil;
                 [accumulatedExpression setString:@""];
             }
         } @catch (NSException *parseException ){
-//            NSLog(@"keep looking because of exception: %@",parseException);
-
+            initalException=parseException;
+            accumulatingAfterError=YES;
             line++;
             continue;
         }
@@ -201,6 +207,9 @@ objectAccessor(NSString*, filename, setFilename )
 		line++;
 		[pool release];
 	}
+    if ( accumulatingAfterError ) {
+        [initalException raise];
+    }
 	if ( [self shouldReallyEvaluateReturnValue] ) {
 //        NSLog(@"declared return: %@",[executionContext retval]);
         [executionContext evaluateReturnValue:[executionContext retval]];
