@@ -263,9 +263,9 @@ CONVENIENCEANDINIT( bundle, WithPath:(NSString*)newPath )
             [self compileSourceFile:filename];
         }
     }
-    NSLog(@"compiled all sources, setting flag");
+//    NSLog(@"compiled all sources, setting flag");
     self.sourcesCompiled=YES;
-    NSLog(@"compiled all sources, flag: %d",self.sourcesCompiled);
+//    NSLog(@"compiled all sources, flag: %d",self.sourcesCompiled);
 }
 
 -(NSDictionary*)methodDictForSourceFiles

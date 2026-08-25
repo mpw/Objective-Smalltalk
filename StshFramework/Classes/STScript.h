@@ -8,7 +8,7 @@
 
 #import <MPWFoundation/MPWFoundation.h>
 
-@class STShell;
+@class STShell,STBundle;
 
 @interface STScript : MPWObject {
 	id  filename;
@@ -18,6 +18,7 @@
 }
 
 @property (nonatomic, assign) bool shouldEvaluateReturnValue;
+@property (nonatomic, strong) STBundle* bundle;
 
 +scriptWithContentsOfFile:(NSString*)filename;
 

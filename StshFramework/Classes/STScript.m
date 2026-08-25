@@ -7,7 +7,7 @@
 //
 
 #import "STScript.h"
-#import <ObjectiveSmalltalk/MPWMethodHeader.h>
+#import <ObjectiveSmalltalk/ObjectiveSmalltalk.h>
 #import "STShell.h"
 #import "MPWShellCompiler.h"
 
@@ -38,16 +38,29 @@
 
 @implementation STScript
 
-idAccessor( data, setData )
+objectAccessor( NSData *, data, setData )
 idAccessor( methodHeader , setMethodHeader )
 idAccessor( script, setScript )
 objectAccessor(NSString*, filename, setFilename )
 
+
+
+
 +scriptWithContentsOfFile:(NSString*)filename
 {
-	STScript *script = [[[self alloc] initWithData:[NSData dataWithContentsOfFile:filename]] autorelease];
-  [script setFilename:filename];
-  return script;
+    NSFileManager *fm=[NSFileManager defaultManager];
+    BOOL isDirectory=NO;
+    BOOL exists = [fm fileExistsAtPath:filename isDirectory:&isDirectory];
+    STScript *script = nil;
+    if ( exists ) {
+        if ( isDirectory ) {
+            script = [[[self alloc] initWithBundle:[STBundle bundleWithPath:filename]] autorelease];
+        } else {
+            script = [[[self alloc] initWithData:[NSData dataWithContentsOfFile:filename]] autorelease];
+        }
+        [script setFilename:filename];
+    }
+    return script;
 }
 
 -initWithData:(NSData*)newData
@@ -56,6 +69,16 @@ objectAccessor(NSString*, filename, setFilename )
 	[self setData:newData];
 	[self parse];
 	return self;
+}
+
+-initWithBundle:(STBundle*)aBundle
+{
+    id <MPWHierarchicalStorage> store = [aBundle storeForSubDir:@"Workspaces"];
+    NSData *main=store[@"main.st"];
+    self = [self initWithData:main];
+    self.bundle = aBundle;
+    [aBundle compileAllSourceFiles];
+    return self;
 }
 
 
@@ -180,17 +203,17 @@ objectAccessor(NSString*, filename, setFilename )
         [accumulatedExpression appendString:exprString];
 		@try  {
             if ( [exprString hasPrefix:@"!"]) {
+                if (accumulatingAfterError) {
+                    [NSException raise:@"invalidshell" format:@"cannot include a shell command inside ObjS construct"];
+                }
                 shellExpr = [exprString substringFromIndex:1];
                 system([shellExpr UTF8String]);
-                accumulatingAfterError=NO;
-                initalException=nil;
-                [accumulatedExpression setString:@""];
             } else {
                 expr = [[executionContext evaluator] compile:accumulatedExpression];
-                accumulatingAfterError=NO;
-                initalException=nil;
-                [accumulatedExpression setString:@""];
             }
+            accumulatingAfterError=NO;
+            initalException=nil;
+            [accumulatedExpression setString:@""];
         } @catch (NSException *parseException ){
             initalException=parseException;
             accumulatingAfterError=YES;

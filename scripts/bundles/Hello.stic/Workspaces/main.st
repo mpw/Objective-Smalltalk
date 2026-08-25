@@ -1,0 +1,1 @@
+stdline ! 'Hello World'.

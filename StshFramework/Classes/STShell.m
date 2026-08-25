@@ -45,6 +45,9 @@
 {
     EditLine *currentLine;
     int level;
+    History *history_ptr;
+    HistEvent event;
+
 }
 
 boolAccessor( readingFile, _setReadingFile )
@@ -397,16 +400,23 @@ idAccessor( retval, setRetval )
     level--;
 }
 
+-(void)addToHistory:(NSString*)str
+{
+    if ( str.length > 1) {
+        [self.history addObject:str];
+        char *save=strdup([str UTF8String]);
+        history( history_ptr, &event, H_ENTER, save );
+    }
+}
+
 -(void)runInteractiveLoop
 {
     EditLine *el;
     const char *lineOfInput;
-    History *history_ptr;
-    HistEvent event;
     int count=1000;
     history_ptr=history_init();
     el=el_init( "stsh", stdin, stdout, stderr);
-
+    id deferedException=nil;
 
     
     el_set(el, EL_CLIENTDATA, self);
@@ -426,11 +436,15 @@ idAccessor( retval, setRetval )
         lineOfInput=el_gets(el,&count);
         if ( !lineOfInput) {
             level--;
+            [self addToHistory:[[currentInput copy] autorelease]];
             [currentInput setString:@""];
+            if (self.lastException) {
+                [(MPWByteStream*)[[[self evaluator] bindingForLocalVariableNamed:@"stderr" ]  value] println:self.lastException];
+                self.lastException=nil;
+            }
             continue;
             
         }
-        char *save;
  		if ( (lineOfInput[0]!='#') || (lineOfInput[1]=='(') ) {
 			id pool=[NSAutoreleasePool new];
             id expr = nil;
@@ -456,6 +470,7 @@ idAccessor( retval, setRetval )
             } @catch ( NSException *exception) {
 //                NSLog(@"might need more input, exception: %@, %@",exception,[exception callStackSymbols]);
                 if ( [[exception userInfo][@"mightNeedMoreInput"] boolValue]) {
+                    self.lastException=exception;
                     level=2;
                     continue;
                 }
@@ -496,13 +511,7 @@ idAccessor( retval, setRetval )
             self.lastException=nil;
 			[pool release];
 		}
-        if ( strlen(lineOfInput) > 1) {
-            save=malloc( strlen( lineOfInput) +2 );
-            strcpy( save, lineOfInput );
-            history( history_ptr, &event, H_ENTER, save );
-            count=1000;
-            [self.history addObject:[NSString stringWithUTF8String:lineOfInput]];
-        }
+        [self addToHistory:@(lineOfInput)];
     }
     fflush(stdout);
     fflush(stderr);
